@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>scripts/foil_script.xml</file>
+        <file>scripts/plane_script.xml</file>
+        <file>scripts/total_script.xml</file>
+        <file>scripts/boat_script.xml</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,24 @@
+- planform dims by default
+- remove interpolated fuse
+- revise OptimPlane
+- .fl5 v2
+- clean view shortcuts
+- biplane fin mesh
+- use of initStyleOption in QStyledItemDelegate?
+- redesign stab time controls
+- redesign Cp controls in 3d module
+- clean polar3d data read and autoname mess
+- insert project: handle plane overwrite
+- Speed up loading by removing unnecessary operations
+- VPW: vortex stretching, particle redistribution and induced drag predictions
+- compressibility corrections
+
+
+- setting up flow5
+    - directories
+    - opengl
+
+- panel methods: things to know
+    - numerical issues and singularities
+    - higher order unnecessary
+    - thin and thick surfaces

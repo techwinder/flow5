@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE XFL_SCRIPT>
+<xflscript version="1.0">
+    <!-- For convenience, all field names are case-insensitive, as an exception to the standard xml specification -->
+    <!-- Where applicable, default values will be used for all undefined fields -->
+    <!-- Wherever a field requires more than one value, values should be separated by commas (','); whitespaces are ignored -->
+    <!-- Specified file names should NOT have leading and trailing whitespaces -->
+    <Metadata>
+        <!-- Set this field to true to save all results to a target binary .fl5 file; default is true -->
+        <Make_project_file>true</Make_project_file>
+
+        <!-- uncomment the next line to set a project name; otherwise the default name will be flow5_hhmmss.fl5 -->
+        <!-- project_file_name>plane_test_project.fl5</project_file_name -->
+
+        <!-- The project file provided in the following line will be pre-loaded before the script's execution.
+        Specify either an absolute path, or a path relative to the directory of project files specified in the Directories section.
+        Should not be the same as the target project file name to avoid data overwrite. -->
+        <load_project_file>/home/techwinder/studies/xml/scripts/foils.xfl</load_project_file>
+
+        <!-- set this field either to TXT or CSV -->
+        <Polar_text_output_format>CSV</Polar_text_output_format>
+        <Directories>
+            <!-- The directory where the project file (.fl5) and all output files will be created;
+            If undefined, the output directory will be the user's home directory -->
+            <output_dir>/home/techwinder/studies/xml/scripts/output</output_dir>
+
+            <!-- The default directory where the xml plane definition files will be looked for -->
+            <plane_definition_xml_dir>/home/techwinder/studies/xml/planes/</plane_definition_xml_dir>
+
+            <!-- The default directory where the xml plane analysis files will be looked for -->
+            <plane_analysis_xml_dir>/home/techwinder/studies/xml/analyses_3d</plane_analysis_xml_dir>
+
+            <!-- The default directory where the foil geometry files (.dat) will be looked for -->
+            <foil_files_dir>/home/techwinder/studies/airfoils</foil_files_dir>
+
+            <!-- The default directory where the foil polar files (.plr) will be looked for -->
+            <foil_polars_dir>/home/techwinder/studies/polars</foil_polars_dir>
+
+            <!-- The default directory where the XFoil polar files (.txt) will be looked for.
+            All files will be loaded. The polars which cannot be linked to a foil, e.g. because the foil name
+            does not exist, will be discarded -->
+            <xfoil_polars_dir>/home/techwinder/studies/xfoil/</xfoil_polars_dir>
+
+            <!-- This parameter defines whether the directories containing the plane and analysis xml files
+            should be scanned recursively, i.e. including subdirs, or not.
+            The foils and polar directories will always be scanned recursively -->
+            <recursive_scan>false</recursive_scan>
+        </Directories>
+
+        <!-- Multithreading options -->
+        <MultiThreading>
+            <Allow_Multithreading>true</Allow_Multithreading>
+            <!-- Define the thread priority for non-Linux systems
+            Idle:         scheduled only when no other threads are running.
+            Lowest:       scheduled less often than LowPriority.
+            Low:          scheduled less often than NormalPriority.
+            Normal:       the default priority of the operating system.
+            High:         scheduled more often than NormalPriority.
+            Highest:      scheduled more often than HighPriority.
+            TimeCritical: scheduled as often as possible. -->
+            <Thread_Priority>Normal</Thread_Priority>
+            <!-- Define the max number of threads for the analysis; default is one -->
+            <Max_threads>10</Max_threads>
+        </MultiThreading>
+        <!-- define whether the panel analysis should be run in double precision (recommended) or not;
+        single precision requires less RAM but may lead to slight numerical instabilities -->
+        <Double_Precision>true</Double_Precision>
+    </Metadata>
+
+    <Plane_Analysis>
+        <Plane_Analysis_Output>
+            <!-- Set this field to true if the plane operating points are to be stored in the project file. -->
+            <make_oppoints>true</make_oppoints>
+            <!-- Set this field to true if the plane operating points are to be exported as csv files.
+                 Requires that the previous field is set to ue.-->
+            <make_oppoints_text_file>true</make_oppoints_text_file>
+            <!-- Set this field to true to export the panel data to the text file; default is false -->
+            <export_oppoint_Cp>false</export_oppoint_Cp>
+            <!-- Set this field to true to output one text or csv file for each plane polar -->
+            <make_polars_text_file>true</make_polars_text_file>
+            <!-- Set this field to true to export each plane mesh to an stl file -->
+            <export_stl_mesh>true</export_stl_mesh>
+        </Plane_Analysis_Output>
+
+        <Foil_Dat_Files>
+            <!-- The foil (.dat) files in text format to load prior to the plane analysis.
+            Specify either the absolute path, or the path relative to foil_files_dir provided in the Directories section.
+            If the recursive option has been set in the field recursive_scan, only the file name is required
+            Make sure that the foil names defined in the .dat files match exactly the ones specified in the plane definition files-->
+            <Foil_File_Name>CLARK Y.dat  </Foil_File_Name>
+            <Foil_File_Name>ag44ct-02r.dat</Foil_File_Name>
+        </Foil_Dat_Files>
+
+        <Foil_Polar_Files>
+            <!-- The polar (.plr) files to load prior to the plane analysis.
+            Specify either the absolute path, or the path relative to the directory of polar files provided in the Project section.
+            Make sure that the foil names defined in the .plr files match the ones specified in the plane definition files-->
+            <Polar_File_Name>NACA 0009.plr</Polar_File_Name>
+            <Polar_File_Name>NACA 2415.plr</Polar_File_Name>
+            <Polar_File_Name>mh42.plr</Polar_File_Name>
+            <Polar_File_Name>HQ 3.0 12.plr</Polar_File_Name>
+        </Foil_Polar_Files>
+
+        <Plane_Definition_Files>
+            <!-- Set this field to true if all files in the directory "plane_definition_xml_dir" should be loaded, and
+            to false if only the files explicitely specified in this section should be loaded; default is false -->
+            <Process_All_Files>false</Process_All_Files>
+            <!-- Uncomment the following field to specify which XML plane files to load -->
+            <Plane_File_Name>Flying Wing.xml</Plane_File_Name>
+        </Plane_Definition_Files>
+
+        <Plane_Analysis_Files>
+            <!-- Set this field to true if all the files in the directory "plane_analysis_xml_dir" should be loaded,
+            and to false if only the files specified in this section should be loaded; default is false -->
+            <Process_All_Files>false</Process_All_Files>
+
+            <!-- Predefined XML analysis files to load;
+            If the plane's name is defined in the analysis file, the analysis will be built for this specific plane;
+            If the plane's name was left blank in the analysis file, a copy of this analysis will be built for each plane object;
+            Specify either the absolute path or a path relative to the directory of plane analysis defined in the Directories section; -->
+           <!-- <Analysis_File_Name>T6_1-Quads-ThickSurf-VPW.xml</Analysis_File_Name>-->
+            <Analysis_File_Name>T2-TriUniform-ThickSurf.xml</Analysis_File_Name>
+            <!--Analysis_File_Name>T6_1-TriUniform-ThinSurf-alpha(0_00,1_00).xml</Analysis_File_Name-->
+            <!-- All valid (Plane, Analysis) pairs will be processed -->
+        </Plane_Analysis_Files>
+
+        <Plane_Analysis_Data>
+
+            <!-- These range of control parameters are used depending on the type of analysis -->
+            <!-- Any number of ranges can be specified for each type of analysis -->
+            <!-- Duplicate operating point requests will be discarded -->
+            <!-- min, max, increment -->
+
+            <!-- for Type 1, 2 analyses -->
+            <T12_Range>-2.0, 2.0, 0.5</T12_Range>
+            <T12_Range>2.0, 10.0, 1.0</T12_Range>
+
+            <!-- for Type 3 analyses -->
+            <T3_Range>-2.0, 2.0, 0.2</T3_Range>
+            <T3_Range>2.0, 10.0, 0.5</T3_Range>
+
+            <!-- for Type 5 sideslip analyses-->
+            <T5_Range>0.0, 10.0, 1.</T5_Range>
+
+            <!-- for Type 6 control analyses-->
+            <T6_Range>0.0, 7.0, 1.5</T6_Range>
+
+            <!-- for Type 7 stability analyses-->
+            <T7_Range>-1.0, 1.0, 0.5</T7_Range>
+
+            <!-- for Type 8 analyses: alpha, beta, Vinf -->
+            <!-- Note: speed unit is m/s -->
+            <T8_Range>3.0,  0.0,  15.0</T8_Range>
+            <T8_Range>3.0,  3.0,  15.0</T8_Range>
+            <T8_Range>3.0,  7.0,  15.0</T8_Range>
+            <T8_Range>3.0, 10.0,  15.0</T8_Range>
+
+            <!-- for Type 6 control analyses, the following section provides the settings for the viscous loop -->
+            <Viscous_Loop>
+                <Enable>false</Enable>
+                <Init_Virtual_Twist>false</Init_Virtual_Twist>
+                <Relax_Factor> 0.5 </Relax_Factor>
+                <Alpha_Precision>0.01</Alpha_Precision>
+                <Max_Iterations>30</Max_Iterations>
+            </Viscous_Loop>
+
+        </Plane_Analysis_Data>
+    </Plane_Analysis>
+</xflscript>
+
+
+
+
+
+
+
+
+
+
+

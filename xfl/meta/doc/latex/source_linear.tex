@@ -1,0 +1,243 @@
+\documentclass[a4paper, 11pt]{article}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{mathtools}
+\usepackage{color}
+ 
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+
+\begin{document}
+
+\title{Two dimensional linear source integrals}
+\author{techwinder}
+
+\maketitle
+  
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+ 
+ 
+\section{Point source in 2d }
+
+Let a point source of strength $\sigma$ be located at the origin of the plane $Oxy$
+Let $P(x,y)$ be a point of this plane. In polar coordinates $(r,\theta)$ the potential function is:
+\begin{equation} \label{phi_point}
+\phi = \frac{\sigma}{2\pi} \log{r}
+\end{equation}
+The stream function is:
+\begin{equation} \label{psi_point}
+\psi = \frac{\sigma}{2\pi} \theta
+\end{equation}
+The velocity is 
+\begin{equation}
+\begin{split}
+u_r &= \frac{\sigma}{2 \pi r} \\
+u_{\theta} &= 0
+\end{split}
+\end{equation}
+and in Cartesian coordinates
+\begin{equation}
+\begin{split} 
+u(x,y) &= u_r\cos{\theta} - u_{\theta} \sin{\theta} = \frac{\sigma}{2\pi} \frac{y}{x^2+y^2} \\
+v(x,y) &= u_r\sin{\theta} + u_{\theta} \cos{\theta} = \frac{\sigma}{2\pi} \frac{x}{x^2+y^2} 
+\end{split}
+\end{equation}
+
+
+\section{Linear source}
+\begin{figure} 
+\centering
+\includegraphics[width=13cm]{theta}
+\caption{Panel angles}
+\label{LocalAngles}
+\end{figure}
+Let $[A,B]$ be a segment with a linear varying source density such that $\sigma(A)=\sigma_1$ and $\sigma(B)=\sigma_2$. 
+
+To simplify the calculations, $[A,B]$ is aligned with the $x$ axis, so that $A = (x_1,0)$ and $B=(x_2,0)$
+
+Let $P(X,Y)$ be a point of the plane.
+
+Let $x$ be a point of the segment, i.e. $x_1\leq x \leq x_2$. The barycentric coordinates of $x$ are 
+$$\lambda_1(x) = \frac{x_2-x}{l}$$
+$$\lambda_2(x) = \frac{x-x_1}{l}$$
+with
+$$l = x_2-x_1$$
+In barycentric coordinates, the source density at a point $x$ is:
+$$\sigma(x) = \sigma_1\lambda_1(x) + \sigma_2\lambda_2(x)$$
+
+Rearranging the terms gives:
+$$\sigma(x) = \frac{1}{l}(\sigma_1x_2-\sigma_2x_1) + \frac{x}{l}(\sigma_2-\sigma_1)$$
+$$\sigma(x) = \frac{x_2-x}{l}\sigma_1 +  \frac{x-x_1}{l}\sigma_2 $$
+
+
+
+\section{Stream function}
+The stream function at a field point $P(X,Y)$ is obtained by integration of the elementary stream function defined in Eq. (\ref{psi_point}) over the segment $[A,B]$
+\begin{equation}
+\psi(X,Y) = \int_{x_1}^{x_2} \frac{\sigma(x)}{2\pi} \theta \,dx
+\end{equation}
+
+$$\psi(X,Y) = \frac{1}{2\pi l} \int_{x_1}^{x_2} \bigg( (\sigma_1x_2-\sigma_2x_1) + x(\sigma_2-\sigma_1)\bigg) \theta \,dx$$
+$$\psi(X,Y) = \frac{(\sigma_1x_2-\sigma_2x_1)}{2\pi l} \int_{x_1}^{x_2}  \theta \,dx +\frac{(\sigma_2-\sigma_1)}{2\pi l} \int_{x_1}^{x_2} x \theta \,dx$$
+After rearranging the terms, the stream function can be expressed as the sum of a constant part and a varying part:
+\begin{equation}
+\psi(X,Y) = \frac{(\sigma_1x_2-\sigma_2x_1)}{l}\psi_C + \frac{(\sigma_2-\sigma_1)}{l}\psi_L(x)
+\end{equation}
+
+Where the constant part is (K\&P 10.34 \& 10.37)
+\begin{equation}
+\begin{split}
+\psi_C(X,Y) &=  \frac{1}{2\pi}\int_{x_1}^{x_2}  \theta \,dx \\
+                   &= \frac{1}{2\pi} \bigg((X-x_1)\theta_1 - (X-x_2)\theta_2  + Y(\log{r_1}-\log{r_2}) \bigg)
+\end{split}
+\end{equation}
+The linear part is (K\&P 10.68 \& 10.71):
+\begin{equation}
+\begin{split}
+\psi_L(X,Y) &= \frac{1}{2\pi} \int_{x_1}^{x_2} x \theta \,dx  \\
+                   &= -\frac{1}{4\pi}\left[ XY\ln r^2 +Yx + \left(X^2-Y^2 - x^2\right) \theta \right]_{x_1}^{x_2}
+\end{split}
+\end{equation}
+
+
+Regroup terms in $\sigma_1$ and $\sigma_2$ to give a compact form to the stream function :
+\begin{equation}
+\psi(X,Y) = \frac{x_2 \psi_C - \psi_L}{l} \sigma_1 - \frac{x_1 \psi_C - \psi_L}{l} \sigma_2
+\end{equation}
+
+\underline{Notes}
+\begin{itemize}
+     \item If the source density is uniform over the panel, i.e. $\sigma_1=\sigma_2=\sigma$, then $\psi= \sigma \; \psi_C$
+     \item The 2d panel method requires that the stream function be evaluated at the panel's endpoints.
+     \item $\psi_C = \frac{\Psi^\sigma}{2 \pi} $  with $\Psi^\sigma$ given in eq. (6) of XFoil paper
+\end{itemize}
+
+
+
+
+\section{Potential}
+The same procedure is used to obtain the potential function:
+\begin{equation} 
+\phi(X,Y) = \int_{x_1}^{x_2} \frac{\sigma(x)}{2\pi} \log{r} \,dx 
+\end{equation}
+
+\begin{equation} 
+\begin{split}
+\phi(X,Y) &= \frac{1}{2\pi l} \int_{x_1}^{x_2} \bigg( (\sigma_1x_2-\sigma_2x_1) + x(\sigma_2-\sigma_1)\bigg) \log{r} \,dx \\
+               & = \frac{(\sigma_1x_2-\sigma_2x_1)}{2\pi l} \int_{x_1}^{x_2}  \log{r} \,dx  -\frac{(\sigma_2-\sigma_1)}{2\pi l} \int_{x_1}^{x_2} x \log{r} \,dx \\
+               & = \frac{(\sigma_1x_2-\sigma_2x_1)}{l}\phi_C(x) + \frac{(\sigma_2-\sigma_1)}{l}\phi_L(x)
+\end{split}
+\end{equation}
+
+Where the constant part is:
+\begin{equation} 
+\begin{split}
+\phi_C(X,Y) &=  \frac{1}{2\pi}\int_{x_1}^{x_2}  \log{r} \,dx \\
+                    &= \frac{1}{2\pi} \bigg((x_2\log{r_2}-x_1\log{r_1})+Y(\theta_2-\theta_1)-(x_2-x_1) \bigg)
+\end{split}
+\end{equation}
+
+and the linear part is:
+\begin{equation} 
+\begin{split}
+\phi_L(X,Y) &= \frac{1}{2\pi} \int_{x_1}^{x_2} x \log{r} \,dx = \frac{1}{2\pi} \int_{x_1}^{x_2} x\log{\sqrt{(X-x)^2+Y^2}} \,dx \\
+                   &=\frac{1}{2\pi}\left[ \frac{\left(x^2+Y^2-X^2\right)\ln\left(\left(x-X\right)^2+Y^2\right)-x^2-2Xx}{4}+XY\arctan\left(\frac{x-X}{Y}\right) \right]_{x_1}^{x_2}
+\end{split}
+\end{equation}
+
+
+Regroup terms in $\sigma_1$ and $\sigma_2$ for a compact expression of the potential function:
+$$\phi(X,Y) = \frac{x_2 \phi_C - \phi_L}{l} \sigma_1 - \frac{x_1 \phi_C - \phi_L}{l} \sigma_2$$
+
+
+\section{Velocity}
+
+
+\subsection{u component}
+\begin{equation} 
+u(X,Y) = \frac{1}{2\pi} \int_{x_1}^{x_2}  \frac{\sigma(x) (X-x)}{(X-x)^2+Y^2} \,dx
+\end{equation}
+$$u(X,Y) = \frac{1}{2\pi} \int_{x_1}^{x_2}  \frac{(\sigma_1x_2-\sigma_2x_1) + x(\sigma_2-\sigma_1)}{l}\frac{X-x}{(X-x)^2+Y^2} \,dx$$
+$$u(X,Y) = \frac{(\sigma_1x_2-\sigma_2x_1)}{l}u_C(x) + \frac{(\sigma_2-\sigma_1)}{l}u_L(x)$$
+
+
+with
+\begin{equation}
+u_C(X,Y) =  \frac{1}{2\pi}\int_{x_1}^{x_2}  \frac{X-x}{(X-x)^2+Y^2} \,dx =  \frac{1}{2\pi}(-\log{r_2}+\log{r_1})
+\end{equation}
+\begin{equation}
+\begin{split}
+u_L(X,Y) &=  \frac{1}{2\pi}\int_{x_1}^{x_2}  \frac{x(X-x)}{(X-x)^2+Y^2} \,dx \\
+               &=  \frac{1}{2\pi}\bigg(X(-\log{r_2}+\log{r_1}) -(x_2-x_1) +Y(\theta_2-\theta_1)\bigg) 
+\end{split}
+\end{equation}
+
+Regroup terms in $\sigma_1$ and $\sigma_2$:
+\begin{equation} \label{u_l}
+u(X,Y) = \frac{x_2 u_C - u_L}{l} \sigma_1 - \frac{x_1 u_C - u_L}{l} \sigma_2
+\end{equation}
+
+
+
+\subsection{v component}
+\begin{equation}
+v(X,Y) = \frac{1}{2\pi} \int_{x_1}^{x_2}  \frac{\sigma(x) Y}{(X-x)^2+Y^2} \,dx
+\end{equation}
+\begin{equation}
+\begin{split}
+v(X,Y) &= \frac{1}{2\pi} \int_{x_1}^{x_2}  \frac{(\sigma_1x_2-\sigma_2x_1) + x(\sigma_2-\sigma_1)}{l}\frac{Y}{(X-x)^2+Y^2} \,dx \\
+           &= \frac{(\sigma_1x_2-\sigma_2x_1)}{l}v_C(x) + \frac{(\sigma_2-\sigma_1)}{l}v_L(x)
+\end{split}
+\end{equation}
+
+with
+$$v_C(X,Y) =  \frac{1}{2\pi}\int_{x_1}^{x_2}  \frac{Y}{(X-x)^2+Y^2} \,dx =  \frac{1}{2\pi}(\theta_2-\theta_1)$$
+$$v_L(X,Y) =  \frac{1}{2\pi}\int_{x_1}^{x_2}  \frac{x Y}{(X-x)^2+Y^2} \,dx =  \frac{1}{2\pi}\bigg(Y(\log{r_2}-\log{r_1}) + X(\theta_2-\theta_1)\bigg)$$
+
+Regroup terms in $\sigma_1$ and $\sigma_2$ to obtain:
+\begin{equation}\label{v_l}
+v(X,Y) = \frac{x_2 v_C - v_L}{l} \sigma_1 - \frac{x_1 v_C - v_L}{l} \sigma_2
+\end{equation}
+
+
+\section{Foil$^{++}$}
+The panel method requires that the stream function (and velocity?) be evaluated at the end points of each uniform source panel. To avoid singularities, the uniform source distributions are replaced by piecewise linear source distributions so that the stream function and velocity components may be evaluated at the non-singular center point, as illustrated in Figure \ref{LocalAngles}.
+
+\begin{figure} 
+\centering
+\includegraphics[width=13cm]{two-piece-source}
+\caption{Linear source segments} 
+\label{LinSource}
+\end{figure} 
+
+The stream function at node $x_n$ is
+\begin{equation}
+\psi_n = \frac{x_b \psi_C - \psi_L}{l} \sigma_{n-1} - \frac{x_a \psi_C - \psi_L}{l} \sigma_n
+\end{equation}
+
+
+Using equations \ref{u_l} and \ref{v_l}, the source induced velocity at node $x_n$ is
+\begin{equation}
+\begin{split}
+u_n &=  \frac{x_b u_C- u_L}{l} \sigma_{n-1} - \frac{x_a u_C - u_L}{l} \sigma_n \\
+v_n &= \frac{x_b v_C - v_L}{l} \sigma_{n-1} - \frac{x_a v_C - v_L}{l} \sigma_n
+\end{split}
+\end{equation}
+
+
+
+\end{document}
+ 
+
+
+
+
+
+
+
+
+
+
+
+

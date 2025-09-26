@@ -1,0 +1,122 @@
+/****************************************************************************
+
+    flow5 application
+    Copyright (C) Andre Deperrois 
+    All rights reserved.
+
+*****************************************************************************/
+
+
+#include <QDataStream>
+
+#include "wingsection.h"
+
+
+
+WingSection::WingSection() : m_NXPanels{0}, m_NYPanels{0}, m_XPanelDist{xfl::COSINE}, m_YPanelDist{xfl::COSINE},
+    m_Chord{0}, m_Length{0}, m_YPosition{0}, m_YProj{0}, m_Offset{0}, m_Dihedral{0}, m_ZPos{0}, m_Twist{0}
+{
+}
+
+
+bool WingSection::serializeFl5(QDataStream &ar, bool bIsStoring)
+{
+    int k=0;
+    double dble=0;
+
+    // 500001 : new fl5 format;
+    int ArchiveFormat = 500001;
+
+    if(bIsStoring)
+    {
+        ar << ArchiveFormat;
+
+        ar << rightFoilName();
+        ar << leftFoilName();
+        ar << chord();
+        ar << yPosition();
+        ar << offset();
+        ar << dihedral();
+        ar << twist();
+        ar << nXPanels();
+        ar << nYPanels();
+
+        switch(xDistType())
+        {
+            case xfl::COSINE:      ar <<  1;  break;
+            case xfl::SINE:        ar <<  2;  break;
+            case xfl::INV_SINE:    ar << -2;  break;
+            case xfl::INV_SINH:    ar <<  3;  break;
+            case xfl::TANH:        ar <<  4;  break;
+            case xfl::EXP:         ar <<  5;  break;
+            case xfl::INV_EXP:     ar <<  6;  break;
+            case xfl::UNIFORM:
+            default:               ar <<  0;  break;
+        }
+
+        switch(yDistType())
+        {
+            case xfl::COSINE:      ar <<  1;  break;
+            case xfl::SINE:        ar <<  2;  break;
+            case xfl::INV_SINE:    ar << -2;  break;
+            case xfl::INV_SINH:    ar <<  3;  break;
+            case xfl::TANH:        ar <<  4;  break;
+            case xfl::EXP:         ar <<  5;  break;
+            case xfl::INV_EXP:     ar <<  6;  break;
+            case xfl::UNIFORM:
+            default:               ar <<  0;  break;
+        }
+
+        // space allocation for the future storage of more data, without need to change the format
+        int nSpares=10;
+        ar << nSpares;
+        for (int i=0; i<nSpares; i++) ar << 0;
+        for (int i=0; i<nSpares; i++) ar << 0.0;
+
+        return true;
+    }
+    else
+    {
+        ar >> ArchiveFormat;
+        if(ArchiveFormat!=500001) return false;
+
+        ar >> m_RightFoilName;
+        ar >> m_LeftFoilName;
+        ar >> m_Chord;
+        ar >> m_YPosition;
+        ar >> m_Offset;
+        ar >> m_Dihedral;
+        ar >> m_Twist;
+        ar >> m_NXPanels;
+        ar >> m_NYPanels;
+
+        ar >> k;
+        if     (k==1)  m_XPanelDist = xfl::COSINE;
+        else if(k==2)  m_XPanelDist = xfl::SINE;
+        else if(k==-2) m_XPanelDist = xfl::INV_SINE;
+        else if(k==3)  m_XPanelDist = xfl::INV_SINH;
+        else if(k==4)  m_XPanelDist = xfl::TANH;
+        else if(k==5)  m_XPanelDist = xfl::EXP;
+        else if(k==6)  m_XPanelDist = xfl::INV_EXP;
+        else           m_XPanelDist = xfl::UNIFORM;
+
+        ar >> k;
+        if     (k==1)  m_YPanelDist = xfl::COSINE;
+        else if(k==2)  m_YPanelDist = xfl::SINE;
+        else if(k==-2) m_YPanelDist = xfl::INV_SINE;
+        else if(k==3)  m_YPanelDist = xfl::INV_SINH;
+        else if(k==4)  m_YPanelDist = xfl::TANH;
+        else if(k==5)  m_YPanelDist = xfl::EXP;
+        else if(k==6)  m_YPanelDist = xfl::INV_EXP;
+        else           m_YPanelDist = xfl::UNIFORM;
+
+
+        // space allocation
+        int nSpares=0;
+        ar >> nSpares;
+        for (int i=0; i<nSpares; i++) ar >> k;
+        for (int i=0; i<nSpares; i++) ar >> dble;
+
+        return true;
+    }
+}

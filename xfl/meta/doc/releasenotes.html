@@ -1,0 +1,2018 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>flow5 Release notes </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="style.css" rel="stylesheet" type="text/css" />
+        <link rel="shortcut icon" href="https://flow5.tech/data/images/flow5.ico">
+    </head>
+    <body bgcolor="white" lang="EN">
+        <div id="wrapper">
+            <div id="paragraph">
+                <br>
+                <br>
+                <div id="flow5" align=center><IMG src="images/flow5.png" width=50%></div>
+
+                <h1>
+                    <center>
+                        Release Notes
+                    </center>
+                </h1>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.52, September 22, 2025
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                            <li>fixed AVL-type ctrl issues in T12358 polars</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>corrected the storage of the local induced drag and induced angle in 3d operating points;
+                                was storing and displaying the result of force summations instead of results calculated in the far-field plane</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                        </ul>
+                    </li>
+                    <li>UI
+                        <ul>
+                            <li>fixed minor compatibility issues with Wayland in OpenGL views</li>
+                            <li>minor UI improvements</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                            <li>code cleaning</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.51, June 8, 2025
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                            <li>de-activated the requirement for online connection for permanent licences</li>
+                            <li>upgraded the Windows binary package to Qt 6.8.2 which supports native dark mode</li>
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                            <li>fixed AVL-type ctrl issues in T12358 polars</li>
+                            <li>fixed a crash bug occurring with small triangular panels</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>fixed the inoperative multithreading when running a plane batch analysis for the first time</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                            <li>fixed the incorrect export of Cp distributions of boat operating points</li>
+                        </ul>
+                    </li>
+                    <li>UI
+                        <ul>
+                            <li>minor UI improvements</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                            <li>code cleaning</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+
+                <br>
+                <h3>
+                    flow5 v7.50, February 22, 2025
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                            <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN v7.50</li>
+                            <li>moved the file loading operations to a worker thread to enable dynamic feedback</li>
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                            <li>simplified the panel bunching method</li>
+                            <li>fixed occasional meshing failures in the plane editor</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>moved the T.E. flaps from the plane and foil objects to the polars;
+                            check <a href=https://flow5.tech/docs/flow5_doc/Modelling/TEFlaps.html>https://flow5.tech/docs/flow5_doc/Modelling/TEFlaps.html</a> for explanations</li>
+                            <li>modified the calculation of induced drag for triangular method for increased robustness in the handling of flaps; leads to a slight increase in the predicted value</li>
+                            <li>removed the option to keep results from failed 3d viscous interpolations; this is to prevent mixing of valid an invalid results</li>
+                            <li>removed the dynamic storage of 3d unit solutions to be compatible with flapped polars; the linear system is now solved at each new calculation</li>
+                            <li>added the calculation of stability derivatives and root locus modes to T1258 polars</li>
+                            <li>added AVL type controls to T12358 polars and restored them in T7 polars</li>
+                            <li>merged the interfaces of T12358 and T7 polars</li>
+                            <li>added an option to calculate viscous drag on the fly in 3d analyses using XFoil; will become active when flow5 goes open-source</li>
+                            <li>removed the differential BL analysis method</li>
+                            <li>added the calculation of the local induced angle to VPW calculations</li>
+                            <li>moved the viscous loop option to the plane analysis</li>
+                            <li>added T6 polars to the direct foil module; will become active when flow5 goes open-source</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                            <li>redesigned the scales interface for the display of operating points in 3d</li>
+                            <li>fixed a bunch of issues related to the calculation and display of streamlines</li>
+                            <li>removed the filter option in the polar graphs</li>
+                        </ul>
+                    </li>
+                    <li>UI
+                        <ul>
+                            <li>multiple minor improvements to the UI</li>
+                            <li>fixed some window issues specific to dual screens on linux</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                            <li>deep code cleaning</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+
+                <h3>
+                    flow5 v7.26, May, 2024
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>fixed minor issues in the plane scripting module</li>
+                            <li>added the wing's root bending moment to the list of optimization targets</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                        </ul>
+                    </li>
+                    <li>UI
+                        <ul>
+                            <li>Fixed some window issues specific to dual screens on linux</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+
+                <br>
+                <h3>
+                    flow5 v7.25, April, 2024
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                            <li>fixed several bugs in the export/import process of sails to xml files; format modified in the case of spline type sails</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>fixed the inverted angle of beta int the sail module which was accidentally introduced in v7.24 while fixing signs in the plane module</li>
+                            <li>fixed the issue with the scripted VLM analysis of planes which caused the fuselage panels to be inadvertently included</li>
+                            <li>added an option in plane and boat scripts to export meshes to STL</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                        </ul>
+                    </li>
+                    <li>UI
+                        <ul>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.24.1, December 9, 2023
+                </h3>
+                    <ul>
+                        <li>fixed the ineffective saving of graph variables in the application's settings</li>
+                    </ul>
+                <br>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.24, December 8, 2023
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                                <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN v7.24</li>
+                                <li>updated the code for compatibility with Qt6; the binaries are still released with the Qt5 libs for maximum compatibility with all platforms</li>
+                                <li>added a documentation page on the matter of <a href=https://flow5.tech/docs/flow5_doc/Releases/v724.html>higher lift predictions</a>
+                                    in the case of thick surface methods</li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                                <li>overhaul of the foil modification methods for simplicity and robustness</li>
+                                <li>improved the construction of the foil's leading edge and of the mid camber line around the L.E.</li>
+                                <li>improved the module to design and approximate a foil using one spline</li>
+                                <li>added options to copy wings and fuselage from one plane to another</li>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>overhauled and aligned all force, moment and derivative signs :
+                                    <ul>
+                                        <li>In the output of the non-dimensional stability derivatives, changed the incorrect labels of CLu, CLa and CLq to CZu, CZa and CZq respectively.
+                                            CLx and CZx have opposite signs since the wind's z_axis is pointing up and the stability's z-axis is pointing down;
+                                            this has been an opportunity to update <a href="https://flow5.tech/docs/flow5_doc/Validation/Stability.html">the benchmarking against AVL</a></li>
+                                        <li>changed the output of lateral moment coefficients Cl and Cn to be in wind axes instead of body axes</a>
+                                        <li>fixed the inverted sign of beta in T6 polars; now consistent with T5 polars, with the convention used in AVL and with the 3d view display;
+                                            existing polars will need to be recalculated;</li>
+                                        <li>fixed a bug which <a href=https://flow5.tech/docs/flow5_doc/Releases/v724.html>caused the body panels to be occasionally ignored</a>
+                                                in the calculation of moments</li>
+                                        <li>corrected a bug in the display of the 1/4 chord pitching moment in the operating point view in the case of triangle methods</li>
+                                        <li>
+                                            this has been an opportunity to clarify<a href="https://flow5.tech/docs/flow5_doc/Analysis/Moments.html"> axes and moment conventions used in flow5</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <li>added the "Closed_Inner_Side" field to the wing's xml definition file</li>
+                                <li>various improvements and bug fixes to the plane optimization module</li>
+                                <li>fixed a crash bug in the 2d foil optimization module</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                                <li>added an option to change all graph variables in one action in the plane polar and operating point views;
+                                    the option is located in the screen's bottom right container</li>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>fixed view updates in the floating 3d view</li>
+                                <li>fixed a crash bug when deleting a foil in the operating point view</li>
+                                <li>fixed a few more minor display bugs here and there</li>
+                                <li>added an option to set a default toolbar icon size</li>
+                                <li>removed all support for OpenGL versions older than 3.3; this had become a necessity to reduce the maintenance workload
+                                    and to simplify the code</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>fixed the bug which caused the export of a boat as a project to generate a corrupted file</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.23, June 4, 2022
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                                <li>fixed a crash bug occurring when exporting data from an analysis of an STL plane</li>
+                                <li>fixed a crash bug occurring when importing pre-v6.49 .xfl files</li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                            </ul>
+                        </li>
+                    </ul>
+                    <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.22, January 27, 2022
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                                <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN v7.21</li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                                <li>fixed an occasional crash bug when connecting triangular panels</li>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>fixed an error in the construction of wake panels in the case of models imported from STL meshes; this impacts the estimation of the induced drag.</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>added an experimental option to <a href=https://flow5.tech/docs/flow5_doc/Releases/v722.html>visualize flows</a>;</li>
+                                <li>fixed a bunch of minor issues in the 3d displays</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                            </ul>
+                        </li>
+                    </ul>
+                    <br>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.21, December 19, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                                <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN v7.21</li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                                <li>fixed an incompatibility between the re-use of existing RHS solutions and ground effects</li>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>added an option to <a href="https://flow5.tech/docs/flow5_doc/Analysis/GE.html#FS_Theory">model the water's free surface</a> intended for hydrofoil analyses;<br>
+                                    performed a benchmark with the results of <a href="https://flow5.tech/docs/flow5_doc/Validation/NASA_1232.html">Nasa report 1232</a>.</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>fixed a data corruption bug when duplicating external polars</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <br>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.20, December 11, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                                <li>fixed a crash bug occuring when modifying wings with small spanwise surfaces</li>
+                                <li>fixed a crash bug occuring when connecting panels in the case of a thin surface analysis</li>
+                                <li>added an option to check element edge lengths</li>
+                                <li>added an option to export/import airfoil .dat files together with the wing's xml file;
+                                    the option is set in the preferences Save/Export options"</li>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>Added a verification of compatibility of vortex core size and element edge length at the start of the analysis;
+                                the core size should be smaller than 1/50 the length of the smallest triangle edge, otherwise the analysis will not run.</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li></li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>fixed some compatibility issues with xflr5</li>
+                                <li>fixed a few more minor bugs</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <br>
+                <br>
+                <h3>
+                    flow5 v7.19, October 18, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>corrected an error in the construction of the VPW in the case of an analysis with side slip;
+                                    the beta angle was applied twice; second order impact on results</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>fixed the incorrect display of the vortons in the case of a T6 analysis with side slip</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>fixed a few more minor bugs</li>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.18, September 15, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>homogenized the signs of roll and pitch moment coefficients resulting from T5, T6 and T8 analyses; T5 analyses may need to be re-generated.</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                                <li>fixed issues related to the export of operating point data to the clipboard and to text files</li>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>fixed minor display issues in the rendering of triangular panels</li>
+                                <li>made minor improvements to the dynamic scaling of graphs</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>fixed an occasional crash bug occuring after the LLT analysis of a plane with a fuselage</li>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.17, August 22, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                                <li>added <a href="https://flow5.tech/docs/flow5_doc/Modelling/Connections.html">an alternative method </a> to connect the fuselage and wing meshes</li>
+                                <li>fixed crash bugs occurring during mesh connections in the plane editor</li>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>enabled the batch mode for LLT analyses</li>
+                                <li>removed the existing restriction to 4 threads of the optimization loop</li>
+                                <li>fixed the crash bug when running a scripted LLT analysis on a wing with flaps</li>
+                                <li>added panel data to the export of operating points to text files; cf. field "export_oppoint_Cp" in the <a href="https://flow5.tech/data/plane_script.xml">template script</a></li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>fixed the bug which prevented to load .plr files generated in xflr5v6.49 format</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <br>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.16, August 1, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                                <li>changed the packaging method of the linux package to support the oldest LTS distribution of Ubuntu (i.e. 18.04)</li>
+                                <li>updated the import of .xfl files to be compatible with xflr5 v6.49 - <b>flow5 v7.16 REQUIRES THE INSTALLATION OF XFLR5 v6.49</b></li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                                <li>added options to control the precision of wing exports to STEP files</li>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>added the freestream velocity field to the xml format of T5 polars</li>
+                                <li>added the the stability derivatives to the export files of T8 operating points</li>
+                                <li>added an option to set the auto-inertia flag in wing and fuselage xml files</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>corrected a bunch of minor bugs</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                            </ul>
+                        </li>
+                    </ul>
+                    <br>
+                <br>
+                <h3>
+                    flow5 v7.15, June 28, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>activated the scripting feature for T5 and T8 analyses; cf. the updated <a href="https://flow5.tech/data/plane_script.xml">script file</a>;<br>
+                                    updated xml templates for both analysis types can be generated by exporting an existing polar to xml in flow5.</li>
+                                <li>fixed a bug which created a conflict in the plane optimization module between wing section data and wing scaling data</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.14, June 15, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                                <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN v7.14</li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>corrected an error in the calculation of flap moments in the case of the tri-uniform method.</li>
+                                <li>added wing section data to the variables of the optimization module</li>
+                                <li>added an option to enter a user defined friction coefficient for the fuselage drag</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>more optimization of OpenGL methods for improved rendering speed</li>
+                                <li>more tweaks to improve the rendering of icons on high dpi screens</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.13, May 23, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                            <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN v7.13</li>
+                            <li>fixed a bunch of broken links in the online documentation</li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                                <li>corrected minor mapping errors of the geometry and mass parameters when exporting to AVL files</li>
+                                <li>changed the definition of the product of inertia Ixz to be the positive instead
+                                   of the negative sum <a href="https://sourceforge.net/p/xflr5/tickets/165/">as explained here</a>.
+                                   The sign error in the assembly of the inertia tensor has been corrected, with minor impact on the lateral modes</li>
+                                   </li>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>the solution method to the panel analyses has been modified to take better advantage of the problem's linearity
+                                    <ul>
+                                        <li>the detailed explanations are given <a href="https://flow5.tech/docs/flow5_doc/Analysis/LC.html">here</a></li>
+                                        <li>the change of logic has enabled the addition of the <a href="https://flow5.tech/docs/flow5_doc/Analysis/T8_polars.html">Type 8 analyses</a></li>
+                                        <li>this has been an opportunity to perform another round of <a href="https://flow5.tech/docs/flow5_doc/Validation/Stability.html">benchmarking against AVL</a></li>
+                                    </ul>
+                                </li>
+                                <li>corrected a sign error in the calculation of the derivative CXq in the case of triangle analyses; went unnoticed because this derivative is unused</li>
+                                <li>disabled the option to set parametric surface angles in the stability analyses: not forward compatible with the simplification of panel analyses</li>
+                                <li>fixed a crash bug which occured in the case of stability analyses with the tri-linear method</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>made some tweaks to improve the rendering on high dpi 4K monitors</li>
+                                <li>fixed the issues with the roll/pitch/yaw sliders and the auto z-rotation in the fine 3d controls</li>
+                                <li>added an option to set a custom size for the symbol on curves; the size is set in the Preferences/Graph/Other</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>code cleaning</li>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.12, May 10, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                                <li>fixed a crash bug which prevented the loading of large project files in Windows</li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                            <li>restored the type 5 beta polars; this has been an opportunity to perform <a href="https://flow5.tech/docs/flow5_doc/Analysis/T5_polars.html">another round of benchmarking</a></li>
+                            <li>corrected <a href="https://flow5.tech/docs/flow5_doc/Releases/v712.html">an error in the calculation of pressure coefficients in the case of thin surface analyses</a></li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>enabled the copying of multiple analyses from one plane to another in a single operation</li>
+                                <li>fixed minor bugs related to the use of locale settings for number formatting</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>code cleaning</li>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.11, May 2, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                                <li>fixed a bug which prevented the loading of files generated with versions older than beta 18</li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>fixed the crash bug in plane batch 2 analyses</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                                <li>fixed a bug which prevented the dynamic update of operating point data in the 3d view and in the polar graphs</li>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>more optimization of OpenGL methods for improved rendering speed</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>code cleaning</li>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.10, April 26, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                                <li>fixed the bugs linked to foil leading edge flaps</li>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>restored the dynamic selection of objects in the plane tree view when using the keyboard arrows</li>
+                                <li>fixed display issues on macOS for OpenGL context &gt; 3.1</li>
+                                <li><b>deprecated the support for OpenGL contexts &lt; 3.3</b> since all graphic cards less than 10 years old support OpenGL 3.3;
+                                       support for OpenGL 2.1 will be removed in a future version.</li>
+                                <li>optimized the OpenGL methods for improved display speed</li>
+                                <li>other minor bug fixes and improvements</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>tested successfully flow5 on <a href=https://flow5.tech/docs/flow5_doc/Performance.html#macOS>macOS M1 mini</a></li>
+                                <li><a href=https://flow5.tech/docs/flow5_doc/UI/ProjectSave.html>modified the save sequence of project files</a> to prevent accidental file corruption</li>
+                                <li>permanently disabled the auto-save feature to prevent accidental file corruption</li>
+                                <li>removed occasional crash bugs and minor memory leaks</li>
+                                <li>code cleaning</li>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <br>
+                <h3>
+                    flow5 v7.09, April 18, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>added an <a href=https://flow5.tech/docs/flow5_doc/MOPSO/3d_inverse.html>experimental module for 3d inverse design</a></li>
+                                <li>added a documentation page on the matter of <a href="https://flow5.tech/docs/flow5_doc/Post-processing/Cp3d.html">Cp Coefficients</a>
+                                <li>made various bug corrections and improvements to the plane optimization module</li>
+                                <li>corrected an error in the calculation of stability derivatives in the case of trilinear analyses</li>
+                                <li>optimized the construction of RHS vectors for reduced build times</li>
+                                <li>fixed the bug which caused the single-precision calculations to fail</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>improved the shader used to display panel forces</li>
+                                <li>fixed some minor issues with the import of external curves in graphs</li>
+                                <li>made minor improvements to the SVG export functions</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>code cleaning</li>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+
+                <h3>
+                    flow5 v7.08, March 31, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                                <li>
+                                    finished a first set of comparisons of <a href=https://flow5.tech/docs/flow5_doc/Sailboats/Fujin.html>sail measured performance to flow5 predictions</a>;
+                                    since these preliminary results tend to show that panel methods for flows around sails are limited to narrow upwind conditions,
+                                    the sail module will not be developed any further on the short term with the effort focusing instead
+                                    on the plane/hydrofoil module.
+                                </li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                                <li>corrected a bug in the construction of free meshes in the case of spline type sails</li>
+                                <li>fixed trailing edge issues in the case of imported STL sails whenever the sail is modified through transformations</li>
+                                <li>changed the orientation of spline sail panels in the case of ruled meshed for consistency with free meshes</li>
+                                <li>fixed minor issues in the import process of sails from STEP files</li>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>added an option to switch planes from within the optimization module</li>
+                                <li>restored the missing extra drag in a boat's analysis results</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                                <li>fixed the inverted display of Cp and Gamma in the case of tri-linear analyses of sailboats</li>
+                                <li>fixed a crash bug when exporting a boat's operating point data to a file</li>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>made minor improvements to the interface of the plane optimization module</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>code cleaning</li>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <h3>
+                    flow5 v7.07, March 20, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>added an <a href=https://flow5.tech/docs/flow5_doc/MOPSO/MOPSO.html>optimization module for airplanes</a>.</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>fixed minor display issues in macOS</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                                <li>fixed minor memory leaks</li>
+                                <li>code cleaning</li>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+
+
+
+                <br>
+                <h3>
+                    flow5 v7.06, February 20, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                                <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN v7.06</li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                                <li>minor tweaks, improvements and bug corrections to the thin sail free mesh module</li>
+                                <li>activated the export of spline type sails to STEP files</li>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>fixed a crash bug in the LLT analysis occurring when no operating point is generated</li>
+                                <li>fixed the inoperative angle variables in T6 control polars</li>
+                                <li>added a field to the plane script to export all plane operating points to text files;
+                                    see the <a href="https://flow5.tech/data/plane_script.xml">updated template</a>.</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>minor tweaks to the menus and shortcuts</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <h3>
+                    flow5 v7.05.1, February 8, 2021
+                </h3>
+                    <ul>
+                        <li>UI
+                            <ul>
+                                <li>fixed the bug specific to mac OS which caused menu buttons to be non interactive; fixed by reverting to Qt 5.12 instead of Qt 5.15; the dmg package has been updated with the same download link</li>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <h3>
+                    flow5 v7.05, February 7 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                              <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN v7.05</li>
+                                <li></li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                                <li>activated the inclusion of the hull in sailboat analyses;<u>valid only for fully emerged hulls such as in the case of the AC75</u></li>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>corrected a bug in the case of triangle analyses with ground/water effect which caused the contribution of the mirror wake to be ignored; slight effect on results</li>
+                                <li>corrected an error in the calculation of velocity vectors in the wake in the case of triangle methods;
+                                    impacts mainly the shape of the streamlines and of the VPW;
+                                    minor effect on results in the case of the VPW</li>
+                                <li>replaced the input of AWS an AWA by TWS and TWA for sailboat analyses</li>
+                                <li>fixed a crash bug when trying to run a plane analysis without a main wing</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                                <li>added the TW properties to the variables of sailboat polar graphs</li>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>added more number localization</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <h3>
+                    flow5 v7.04 January 25, 2021
+                </h3>
+                    <ul>
+                        <li>General
+                            <ul>
+                                <li>added on option to use locale settings for number formatting; the option is set in the Preferences/Application interface --- WORK IN PROGRESS ---</li>
+                            </ul>
+                        </li>
+                        <li>Modelling/Meshing
+                            <ul>
+                                <li>corrected bugs in the construction of ruled meshes of spline type sails; MESHES BUILT IN PAST VERSIONS MAY NEED TO BE RECONSTRUCTED IN v7.04</li>
+                                <li>corrected an occasional crash bug when duplicating a spline type sail</li>
+                            </ul>
+                        </li>
+                        <li>Analysis
+                            <ul>
+                                <li>fixed the incorrect velocity range in the case of T6/1 control polars</li>
+                                <li>fixed the non-varying mass parameter in T6 polars</li>
+                                <li>fixed issues with the linear system solver in the case of the 2d IBL method</li>
+                            </ul>
+                        </li>
+                        <li>Post-processing
+                            <ul>
+                            </ul>
+                        </li>
+                        <li>UI
+                            <ul>
+                                <li>fixed a number of minor issues with the 2d IBL solver</li>
+                            </ul>
+                        </li>
+                        <li>Other
+                            <ul>
+                            </ul>
+                        </li>
+                    </ul>
+                <br>
+                <h3>
+                    flow5 v7.03 January 16th, 2021
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                          <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN v7.03</li>
+                          <li>replaced all calls to LAPACKE routines by calls to LAPACK to enable the use of the native framework vecLib instead of MKL on macOS;
+                              the binary version of v7.03 for macOS is now  linked to vecLib; the performance is <a href="https://flow5.tech/docs/flow5_doc/Performance.html#macOS">comparable to that of the MKL version</a>.</li>
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                            <li>added options to export wing surfaces as NURBS or swept splines to a CAD file</li>
+                            <li>fixed length unit issues when exporting shapes to a STEP file</li>
+                            <li>improved the ruled and free meshers for Spline and NURBS sails</li>
+                            <li>corrected the inverted value of the taper ratio</li>
+                            <li>made minor improvements to the design interface of solid thick sails: <a href="https://flow5.tech/docs/flow5_doc/Sailboats/Windsurf.html" target="_blank">Windsurf.html</a></li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>added the boat speed as a variable to sail boat analyses; enables the computation of the <a href="https://flow5.tech/docs/flow5_doc/Sailboats/TW_AW.html" target="_blank">AWA as a function of altitude</a></li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                            <li>fixed minor things in the stability time graphs</li>
+                        </ul>
+                    </li>
+                    <li>UI
+                        <ul>
+                            <li>modified the filter in the object view to filter separately objects and polars</li>
+                            <li>improved the dark mode override settings</li>
+                            <li>fixed various minor display bugs</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                          <li>fixed a crash bug when importing legacy .xfl project files containing operating points</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.02 December 6, 2020
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                            <li>added the sail reference dimensions to the xml files</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>added an option to duplicate an existing analysis from another plane or boat (Ctrl+Shift+D)</li>
+                            <li>fixed length unit issues in the VPW definition of sailboat analyses</li>
+                            <li>fixed various issues with scripting of boat analyses</li>
+                            <li>added the spline type wind gradient to the boat analysis xml export/import</li>
+                            <li>added the rotation around Y to the variables of a sail analysis - intended for windsurfs</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                        </ul>
+                    </li>
+                    <li>UI
+                        <ul>
+                            <li>added a dark mode override for the application's style for Windows OS</li>
+                            <li>added a customizable filter on object and polar names in the object tree views</li>
+                            <li>added an option to customize the view scale factor when using the mouse wheel</li>
+                            <li>simplified the interface to insert an existing project file</li>
+                            <li>cleaned a few minor bugs</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                            <li>fixed a crash bug when importing legacy .xfl project files containing operating points</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01_beta_19 November 23, 2020
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                            <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN BETA_19</li>
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                            <li>added options to build free meshes as an alternative to ruled meshes for internal NURBS-type and Spline-type sails</li>
+                            <li>added a parameter to control mesh growth from the edges inwards</li>
+                            <li>fixed a crash bug when trying to display the panels of the hull in the boat editor</li>
+                            <li>fixed a crash bug when trying to move mesh nodes in the plane editor</li>
+                            <li>fixed a crash bug when trying to animate the mesh construction</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>modified the specification method of the wind gradient in the case of sail analyses so that it is defined with a spline and not as a parabola</li>
+                            <li>modified the calculation of the discard distance of vortons which is now measured from the origin of the body axes</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                            <li>fixed a crash bug when trying to display streamlines in the sailboat view</li>
+                            <li>corrected the export of foil polars to include all the polar data</li>
+                        </ul>
+                    </li>
+                    <li>UI
+                        <ul>
+                            <li>corrected a bunch of minor bugs in the sail module views</li>
+                            <li>restored the disabled foil menu when no foil is loaded</li>
+                            <li>improved the interface to load background images in the 2d and 3d views</li>
+                            <li>fixed minor UI bugs here and there</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01_beta_18 November 15, 2020
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                            <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN BETA_18</li>
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                            <li>improved the options to import sails from external STEP or STL files:
+                                <a href="https://flow5.tech/docs/flow5_doc/External_Sails.html" target="_blank">External_Sails.html</a></li>
+                            <li>corrected some mesh construction issues in the case of sailboats</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>optimized the calculation of the VPW to take better advantage of multi-threading</li>
+                            <li>modified the stability analyses to include AVL-type controls; see the <a href="https://flow5.tech/docs/flow5_doc/Stability_b18.html#control_surfaces" target="_blank">detailed explanations here</a></li>
+                            <li>deprecated the inertia parameters in the stability analyses</li>
+                            <li>modified the xml analysis files to include the AVL-type controls and to remove the deprecated inertia parameters</li>
+                            <li>modified the algorithm to better evaluate the Cp coefficients on panels connected to only 2 neighbours</li>
+                            <li>deprecated and removed the advanced editor for plane analysis objects</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                            <li>corrected the missing update of streamlines in the plane's 3d view when changing the operating point</li>
+                            <li>corrected the 3d display of forces on panels with normals aligned with the negative z-axis</li>
+                            <li>added lift and drag coefficients <u>in wind axes</u> to the list of variables in the sail polar graphs</li>
+                        </ul>
+                    </li>
+                    <li>UI
+                        <ul>
+                            <li>Added an option to load a background image in the 3d views</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                            <li>deep code cleaning</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+
+                <h3>
+                    flow5 v7.01_beta_17 October 25, 2020
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                            <li>added online documentation for the <a href="https://flow5.tech/docs/flow5_doc/STL_Sails.html" target="_blank">STL type sails</a></li>
+                            <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN BETA_17</li>
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                            <li>added an option to define thin sails from STL meshes</li>
+                            <li>added an option to multi-thread the fuselage cut operation; can be disabled in case the OCC algorithm turns out to be unstable</li>
+                            <li>restored the saving of panel distribution types for wing-type sails</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>restored a simplified and more robust version of the VPW live update</li>
+                            <li>restored the missing wind gradient factor in the sail analysis</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                            <li>corrected a bug which prevented the AVL type drag to be deleted from an existing polar</li>
+                            <li>corrected a crash bug when trying to edit a sail analysis without AVL-type drag</li>
+                        </ul>
+                    </li>
+                    <li>UI
+                        <ul>
+                            <li>corrected a crash bug when exiting the plane editor in the case of a plane without a fuselage</li>
+                            <li>corrected minor bugs in the spline to foil editor</li>
+                            <li>corrected a bunch of bugs in the sail analysis module</li>
+                            <li>more tweaks</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                            <li>fixed a few more occasional crash bugs</li>
+                            <li>code cleaning</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01_beta_16 October 10, 2020
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                            <li>added online documentation for the <a href="https://flow5.tech/docs/flow5_doc/UI/OpenGL.html" target="_blank">OpenGL settings</a></li>
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                            <li>corrected a bug which caused the inertia of STL-type planes not to be computed when loading the project</li>
+                            <li>added an option to scale xfl-type planes; also scales the position of the lumped masses</li>
+                            <li>moved the fuse mesh operations to a separate thread to enable cancelling when multithreading</li>
+                            <li>made more tweaks to the mesher to improve its robustness and the quality of the resulting mesh</li>
+                            <li>corrected a crash bug when trying to export a wing with an open TE to a STEP file</li>
+                            <li>corrected a bunch of minor bugs in the xfl-type fuselage editor</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>changed the input method of the vorton core size which is now entered as a fraction of the reference chord</li>
+                            <li>removed the option to set the VPW streamwise progression factor which is now hard-coded to the value 1</li>
+                            <li>changed the evaluation method of influence coefficients in the case of tri-uniform analyses, to eliminaite numerical errors in case of perpendicular triangles</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                            <li>added an option to modify the extra drag and AVL-type parabolic drag without deleting the rest of the polar data</li>
+                        </ul>
+                    </li>
+                    <li>UI
+                        <ul>
+                            <li>improved the responsiveness of the GUI when selecting planes, polars, and operating points</li>
+                            <li>corrected an incorrect scaling of the vorton display size when changing units in the preferences</li>
+                            <li>fixed a bunch of bugs in the sail analysis module</li>
+                            <li>removed some obsolete or useless features</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                            <li>fixed a few more crash bugs and other minor issues</li>
+                            <li>code cleaning</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01_beta_15 September 23rd, 2020
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                            <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN BETA_15</li>
+                            <li>updated the recommendations for the <a href="https://flow5.tech/docs/flow5_doc/VPW.html#VPWSettings" target="_blank">VPW settings</a></li>
+                            <li>added online documentation for the <a href="https://flow5.tech/docs/flow5_doc/Fuse_CAD.html" target="_blank">fuselage import from CAD files</a></li>
+                            <li>added online documentation for the <a href="https://flow5.tech/docs/flow5_doc/AFMesher.html" target="_blank">surface mesher</a></li>
+                            <li>added online documentation for <a href="https://flow5.tech/docs/flow5_doc/Batch.html" target="_blank">plane batch analyses</a></li>
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                            <li>improved the surface mesher for speed of execution and mesh quality</li>
+                            <li>corrected various modelling bugs in the case of wing type sails</li>
+                            <li>improved the shape healing features of the CAD fuse editor</li>
+                            <li>added an option to scale the background image in the xfl type fuselage editor</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>moved the vorton core size, the VPW length and the VPW iterations from the global settings to the analysis definition</li>
+                            <li>optimized the VPW calculations for faster execution</li>
+                            <li>disabled the option for live updating of the VPW during the analysis: creates too much code complexity and too many potential instabilities */
+                            <li>simplified the batch mode for plane analyses - uses now the pre-loaded analyses instead of xml files</li>
+                            <li>corrected some bad crash bugs and other minor things in the plane batch analysis module</li>
+                            <li>added optional AVL type parabolic profile drag to the polar; this is intended for STL-defined planes to compensate for the missing airfoil viscous drag</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                            <li>Fixed the empty display of the fuse drag variables in the polar graphs</li>
+                        </ul>
+                    </li>
+                    <li>GUI
+                        <ul>
+                            <li>corrected minor display bugs in the 3d sail views</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                            <li>corrected crash bug issues when loading projects including sailboats</li>
+                            <li>added a specific user-defined directory for STL files</li>
+                            <li>removed updates of user-defined directories on load/save operations</li>
+                            <li>code cleaning</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01_beta_14 September 3rd 2020
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                            <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN BETA_14</li>
+                        </ul>
+                    </li>
+                    <li>Modelling/Meshing
+                        <ul>
+                            <li>made various optimizations and bug corrections to the operations on STEP/IGES type fuselages</li>
+                            <li>improved the robustness of the surface mesher</li>
+                            <li>corrected an error and a crash bug in the import process of STL files</li>
+                            <li>improved the STL plane reader</li>
+                            <li>corrected the unit factor when exporting meshes to STL; meshes will be written using the active length unit</li>
+                            <li>added an option to import a plane's inertia from another plane</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>activated the analysis of planes defined by STL meshes; see the <a href="https://flow5.tech/docs/flow5_doc/STL_Planes.html" target="_blank">detailed explanations and step-by-step tutorial</a>. EXPERIMENTAL.</li>
+                            <li>fixed an occasional crash bug due to thread conflicts when constructing RHS vectors;
+                            as an indirect consequence RHS constructions are slightly slower than in beta 13</li>
+                            <li>corrected triangle connection errors in case of very thin trailing edges</li>
+                            <li>corrected an error in the evaluation of the moment induced by the pressure forces acting on the fuselage</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                           <li>restored the animation of stability modes and corrected the display of the roll mode</li>
+                           <li>corrected a bunch of minor bugs affecting the 3d view and the graphs</li>
+                        </ul>
+                    </li>
+                    <li>GUI
+                        <ul>
+                           <li>improved the display of formulas for OS dark mode settings</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                            <li>corrected a bug when exporting a plane with no foils as a project</li>
+                            <li>code cleaning</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01_beta_13 August 9th 2020
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                            <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN BETA_13</li>
+                            <li>modified the management of the max. thread count which is now made at application level instead of task level</li>
+                            <li>fixed project loading issues with boat polars</li>
+                            <li>removed a minor memory leak ocurring when discarding a wing edition</li>
+                        </ul>
+                    </li>
+                    <li>Meshing
+                        <ul>
+                            <li>Reduced the minimum acceptable size of triangular panels</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>modified the analysis method for T6 polars: the analyses are now performed in stability axes instead of body axes;
+                            this is to simplify calculations with sideslip or ground effect; no impact on results which are converted back to body axes.
+                            <b>Due to a modification of the 3d display rendering method, the operating points with vorton wakes will need to be re-created</b>.</li>
+                            <li>activated the sideslip for T6 analyses: <a href="https://flow5.tech/docs/flow5_doc/Jibe2.html#Lateral_2020">Jibe2_lateral</a></li>
+                            <li>activated the ground effect for the T6-VPW:  <a href="https://flow5.tech/docs/flow5_doc/GE.html" target="_blank">Ground effect</a></li>
+                            <li>added various minor optimizations to reduce the computation times of T6-VPW analyses</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                            <li>cleaned-up the main 3d view to better represent wake panels and vortons</li>
+                            <li>added lift and drag forces in wind axes to the list of variables of polar graphs</li>
+                            <li>corrected a missing velocity scale factor in the display of strip forces</li>
+                            <li>removed the option to display surface velocities - not useful and induces too much code complexity;
+                                replaced by the option to display the perturbation velocities in a crossflow plane.</li>
+                        </ul>
+                    </li>
+                    <li>GUI
+                        <ul>
+                            <li>modified the surface colour picker to use Google's material design colours</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01_beta_12 July 20th 2020
+                </h3>
+                This version introduces the Vortex Particle Wake. A description, a tutorial and a comparison to wind tunnel test results can be found in these documents:<br>
+                <a href="https://flow5.tech/docs/flow5_doc/Building_blocks.html" target="blank">Building_blocks.html</a><br>
+                <a href="https://flow5.tech/docs/flow5_doc/VPW.html" target="blank">VPW.html</a><br>
+                <a href="https://flow5.tech/docs/flow5_doc/Jibe2.html" target="blank">Jibe2.html</a><br>
+                <br>
+                You can also choose to watch the live explanations and the demo on Youtube:<br>
+                <a href="https://youtu.be/oGqaH3R6VvU" target="blank">flow5 - Introduction to the Vortex Particle Wake</a><br>
+                <a href="https://youtu.be/9SiEXYmqz6E" target="blank">flow5 - The Vortex Particle Wake</a><br>
+                <a href="https://youtu.be/woDpRZ_gcCk" target="blank">flow5 - The Jibe2 experiment</a><br>
+                <a href="https://youtu.be/tOMpIYfhwvA" target="blank">flow5 - VPW roll-ups (no commentary)</a><br>
+                <ul>
+                    <li>General
+                        <ul>
+                            <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN BETA_12</li>
+                        </ul>
+                    </li>
+                    <li>Modeling
+                        <ul>
+                            <li></li>
+                        </ul>
+                    </li>
+                    <li>Meshing
+                        <ul>
+                         <li>modified the position of the control point on degenerate quad panels at the side's LE and TE to be at the triangle's COG; very minor impact on results</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>first activation of the Vortex Particle Wake - EXPERIMENTAL</li>
+                            <li>corrected an error in the analyses of <b>quad polars with ground effect</b>; the induced drag was incorrectly evaluated - significant impact on results</li>
+                            <li>corrected the construction of the RHS vector in the case of control polars applied to planes with a fuselage; the RHS components were set to 0 on the fuselage; minor impact on results</li>
+                            <li>corrected an error which caused the last triangle of the wake columns to be skipped in triangle analyses; very minor impact on results</li>
+                            <li>disabled the Neumann BC for thick bodies - the method is inherently unstable</li>
+                            <li>disabled the LE and wing shape parameters in control polars - not of great use for prohibitive added complexity</li>
+                            <li>disabled the evaluation of lift and drag by summation of panel forces - imprecise results</li>
+                            <li>enabled viscous interpolation from Cl for T6 analyses; these analyses are incompatible with the viscous loop</li>
+                            <li>improved the convergence of T2 LLT analyses</li>
+                        </ul>
+                    </li>
+                    <li>GUI
+                        <ul>
+                            <li>grouped all the 3d scale controls into one tabbed widget</li>
+                            <li>set the same scale for surface velocity and downwash velocity</li>
+                            <li>minor improvements and corrections in the 3d views</li>
+                            <li>restored the missing curve style page in Windows in the fast graph settings</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01_beta_11 June 29th 2020
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                            <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN BETA_11</li>
+                        </ul>
+                    </li>
+                    <li>Modeling
+                        <ul>
+                            <li>added an option to design a NURBS fuse to fit a set of control points; see <a href=https://flow5.tech/docs/flow5_doc/beta_11.html target="_blank">here</a> for detailed explanations</li></li>
+                        </ul>
+                    </li>
+                    <li>Meshing
+                        <ul>
+                            <li>made more tweaks to the advancing front mesher to improve its robustness</li>
+                            <li>modified the triangle connections at the thick wing tips to improve symmetricity in the case of fins</li>
+                            <li>modified the triangle connections at the central section to improve Cp calculations for triangular analyses; <b>requires regeneration of the operating points</b></li>
+                            <li>corrected the connections of quad panels at surface tips to improve Cp evaluation in the case of 3d quad panel analysis</li>
+                            <li>added more check options and display helpers for quad meshes</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>modified the calculation of the pitching moment in the case of tri-linear analyses to use Cp values at nodes instead of an averaged Cp over the panel's area;
+                                see <a href=https://flow5.tech/docs/flow5_doc/beta_11.html target="_blank">here</a> for detailed explanations</li>
+                            <li>optimized for speed the construction of the RHS vectors using linear combinations; reduction of analysis times for t7 polars by 50%</li>
+                            <li>fixed non convergence issues of T6 polars using the tri-linear method</li>
+                            <li>hard-coded the position of the vortex and control point positions on the quad panels at 25% and 75% respectively to avoid unintentional mods when saving/loading settings</li>
+                        </ul>
+                    </li>
+                    <li>GUI
+                        <ul>
+                            <li>modified the display of pressure forces in the case of trilinear polars to display the arrows at the nodes instead of at the panels' center</li>
+                            <li>corrected the horizontal flip view so that it is performed around the z-axis instead of the y-axis</li>
+                            <li>added an option to export 2d views to SVG files</li>
+                            <li>made the length of panel forces independent of the selected pressure unit</li>
+                            <li>added a context menu to the analysis range tables</li>
+                            <li>added an option to offset the origin of the background image in 2d views</li>
+                            <li>restored the Ctrl+C and Ctrl+V shortcuts in the tables</li>
+                            <li>added a check for point mass duplicates when exiting the plane inertia dialog</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                            <li>corrected mapping errors when importing plane analyses from legacy .xfl project files</li>
+                            <li>removed a crash bug when trying to change the active polar while running an analysis</li>
+                            <li>removed some occasional and minor memory leaks</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01_beta_10 June 21st 2020
+                </h3>
+                <ul>
+                    <li>Analysis
+                        <ul>
+                            <li>corrected an error in the calculation of the stability derivative Xq - minor impact on longitudinal modes</li>
+                            <li>reduced the default value of the vortex core radius from 0.5mm to 0.05mm;
+                                the former value could create issues with small mesh elements;
+                                the value can be modified in the 3d analysis settings</li>
+                        </ul>
+                    </li>
+                    <li>GUI
+                        <ul>
+                            <li>fixed issues with the 3d display of spanwise lift, drag and downwash</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01.beta_09 June 14th 2020
+                </h3>
+                <ul>
+                    <li>General
+                        <ul>
+                            <li>added full compiler optimizations to improve execution speeds</li>
+                        </ul>
+                    </li>
+                    <li>Design
+                        <ul>
+                            <li>added an option to set the number of panels at the wing tips; recommendation is n>1; use n=1 to maintain compatibility with earlier versions</li>
+                        </ul>
+                    </li>
+                    <li>Analysis
+                        <ul>
+                            <li>improved the calculation of the induced drag which is now evaluated at half the wake's length;
+                            this prevents wake end effects which could cause apparent negative drag on the elevator;
+                            see <a href=https://flow5.tech/docs/flow5_doc/beta_09.html target="_blank">here</a> for detailed explanations</li>
+                            <li>improved the calculation algorithm for Cp coefficients in the case of the tri-linear method;<br>
+                                errors vs. theoretical results are now 0.25% for the sphere and 0.9% for the cylinder for a 5000 size mesh;
+                                project files and details: <a href="https://flow5.tech/docs/flow5_doc/Validation.html" target="_blank">Validation.html</a></li>
+                            </li>
+                            <li>added an option to run analyses using multiple aoa or ctrl ranges</li>
+                            <li>added a batch analysis mode using the xml analysis files</li>
+                            <li>added automatic update of inertia ranges when running a T6 or T7 analysis if auto-inertia is activated</li>
+                            <li>fixed the bug which caused the neutral point position not to be added to the polar variable in stability analyses</li>
+                            <li>corrected a minor error in the geometric construction of node normals on thin surfaces; very minor impact on results in the case of tri-linear analyses</li>
+                        </ul>
+                    </li>
+                    <li>Scripts
+                        <ul>
+                            <li>added handling of multiple ranges for the aoa and the control parameter;
+                            see the <a href="https://flow5.tech/data/plane_script.xml" target="_blank">updated template</a>.</li>
+                            <li>corrected a bug which caused the script to use <font face="Lucida Console, Monaco, monospace">CUSTOM</font> reference dimensions even if <font face="Lucida Console, Monaco, monospace">PROJECTED</font> or <font face="Lucida Console, Monaco, monospace">PLANFORM</font> were specified in the polar xml file</li>
+                            <li>added missing fields <font face="Lucida Console, Monaco, monospace">Include_Other_Wing_Area, Adjusted_Velocity, Delta_n</font> in the Xml analysis files; export analyses to get updated templates for each type.</li>
+                            <li>corrected a write error when exporting operating ranges of control polars to xml</li>
+                        </ul>
+                    </li>
+                    <li>Sail analysis module
+                        <ul>
+                            <li>corrected the moment variable in Boat polar plots which had a 2x factor in excess</li>
+                            <li>corrected various minor issues with the 3d display</li>
+                        </ul>
+                    </li>
+                    <li>Post-processing
+                        <ul>
+                            <li>restored the display of LLT operating points in wing graphs</li>
+                            <li>corrected minor GUI issues related to T3 speed polars</li>
+                            <li>corrected the display of the arrow representing the global force for negative lifts</li>
+                            <li>corrected the display of the location of the thick arrow representing the global force</li>
+                        </ul>
+                    </li>
+                    <li>Other
+                        <ul>
+                            <li>added an option to plot a fast graph with custom data in a floating window (Ctrl+G) - EXPERIMENTAL</li>
+                            <li>added multithreading to some lengthy geometry construction tasks</li>
+                            <li>fixed occasional crash bugs linked to async repaint of the main 3d view</li>
+                            <li>added an option to read custom line colours from the colorlist.txt file located in the application's directory; this file must hold 72 colours</li>
+                            <li>improved again the dark mode settings</li>
+                        </ul>
+                    </li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01.beta_08 May 17th 2020
+                </h3>
+
+                <ul>
+                    <li>General</li>
+                    <ul>
+                        <li>the format of the .fl5 project file has been modified; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN BETA_08</li>
+                        <li>the binary package for Windows has been compiled with msvc2019 instead of msvc2017; as a consequence, it may be necessary to run once the vc_redist.x64.exe executable if Microsoft's redistributable Visual C++ libraries are not installed on the system; this package can also be downloaded <a href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">from Microsoft</a>.</li>
+                        <li>the binary packages of this version makes use of a new licensing system</li>
+                    </ul>
+                    <li>Design</li>
+                    <ul>
+                        <li>added alternatives to <font face="Lucida Console, Monaco, monospace">SINE</font> and <font face="Lucida Console, Monaco, monospace">COSINE</font> distributions for less violent panel bunching - experimental</li>
+                        <li>corrected some minor issues when designing a foil from 1 or 2 splines</li>
+                    </ul>
+                    <li>Meshing
+                        <ul>
+                            <li>improved the advancing front mesher to avoid divergences in special cases of coincident vertices</li>
+                            <li>added automatic removal of null triangles which could hinder the analysis</li>
+                        </ul>
+                    </li>
+                    <li>Analysis</li>
+                    <ul>
+                        <li>corrected an error in VLM2 analysis which caused asymmetric results. Only apparent in the case of low spanwise panel densities and in presence of sweep;&nbsp;<b>impacts the results.</b></li>
+                        <li>corrected the construction of wake panels in the case of control polars; were aligned with the aoa direction, whereas they should be aligned with the x-axis since the geometry is rotated;&nbsp;<b> impacts the results.</b></li>
+                        <li>activated the ground effect option for Dirichlet BC, i.e. cases of thick surfaces and fuselage</li>
+                        <li>parallelized the computation of velocity vectors to reduce analysis times</li>
+                        <li>corrected a crash bug when running control polars</li>
+                    </ul>
+                    <li>Scripts</li>
+                    <ul>
+                        <li>restored the option to load foil .dat files</li>
+                        <li>made the search for .dat and .plr files recursive starting from the specified directories</li>
+                        <li>added an option to load XFoil-generated polar files in text format when running a script</li>
+                        <li>corrected a crash bug when requesting the export of all plane polars using either the GUI command or when running a script</li>
+                        <li>corrected a bug which caused xml plane files not to be found when running a script</li>
+                        <li>removed the obsolete legacy option <font face="Lucida Console, Monaco, monospace">Ignore_Body_Panels</font> in the analysis .xml files and replaced it with <font face="Lucida Console, Monaco, monospace">Include_Fuse_Moments</font>. Export an analysis to xml to get an updated template.</li>
+                    </ul>
+                    <li>3d views</li>
+                    <ul>
+                        <li>added sliders to fine-tune the 3d viewpoint</li>
+                        <li>added an option to display the ground surface in the 3d view if the ground effect is active</li>
+                        <li>added an option to use 2-colours based gradients for 3d colour maps</li>
+                        <li>added an option to display contour lines on top of the colour map for tri-linear operating points</li>
+                        <li>fixed the updates of the aoa and other values in the 3d view animation</li>
+                        <li>restored the highlighting of the selected frame in the fuse edition view</li>
+                        <li>added an option for model autorotation around the z axis</li>
+                        <li>fixed various issues with light settings</li>
+                    </ul>
+                    <li>Pre-processing</li>
+                    <ul>
+                        <li>modified the sorting of plane polars using the plane as first index and the polar name as second index; this displays the polars names in alphabetical order in the in-graph legend</li>
+                    </ul>
+                    <li>Post-processing</li>
+                    <ul>
+                        <li>fixed the slow computation times of streamlines along y-lines and z-lines</li>
+                        <li>corrected minor errors in the streamline algorithm</li>
+                        <li>added an option to display forces on parts in the 3d view; represented as arrows with origin at the 1/4 chord point</li>
+                        <li>corrected the output of forces on parts in the Operating Point properties box</li>
+                        <li>added the local strip forces to the operating point graphs</li>
+                        <li>corrected the plot of the Fx_FF variable to the polar graphs, so that it includes the viscous drag and to give it in wind axes rather than body axes</li>
+                        <li>corrected the plot of circulations in Operating Point graphs for VLM analyses</li>
+                    </ul>
+                    <li>UI</li>
+                    <ul>
+                        <li>implemented automatic copy of export file paths to the clipboard for quick insertion in external applications</li>
+                        <li>added an option to antialiase graph plots - active by default</li>
+                        <li>added an option to antialiase all 2d views - active by default</li>
+                        <li>added an option to export graphs to SVG images</li>
+                        <li>implemented curve deselection when clicking elsewhere than on a graph curve</li>
+                        <li>added new options for curve symbols - messes up existing cross symbols in legacy project files</li>
+                        <li>added a checkbox to toggle visibility of all curves</li>
+                        <li>multithreaded more tasks for increased UI responsiveness</li>
+                        <li>improved dark mode settings</li>
+                    </ul>
+                    <li>Sail design and analysis</li>
+                    <ul>
+                        <li>corrected minor interface issues in the 2d and 3d views</li>
+                    </ul>
+                    <li>OpenGL</li>
+                    <ul>
+                        <li>improved the options to test OpenGL contexts</li>
+                        <li>fixed the inoperative save of OpenGL settings</li>
+                        <li>improved antialiasing by multisampling for contexts >= 3.3</li>
+                        <li>removed unnecessary tasks when closing the app to speed up the exit process</li>
+                    </ul>
+                    <li>removed a few more minor bugs</li>
+                </ul>
+
+                <br>
+                <h3>
+                    flow5 v7.01.beta_07 March 25th 2020
+                </h3>
+                <ul>
+                    <li>modified the format of the .fl5 project file; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN BETA_07</li>
+                    <li>corrected minor bugs in the algorithm used to approximate a foil with a cubic spline</li>
+                    <li>modified the calculation method of angular derivatives for triangle methods - slight impact on results</li>
+                    <li>corrected an error in the calculation of the lateral stability derivatives Xq, Yr, Lr, Nr</li>
+                    <li>modified the calculation method of control derivatives: the angular position of the control surface is now set independently of the gain.</li>
+                    <li>corrected an error in the calculation of control derivatives due to a confusion between degrees and radians</li>
+                    <li>corrected the calculation of the vertical tail volume in the case of double fins - info only, no influence on results</li>
+                    <li>removed a few more minor bugs</li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01.beta_06 February 19th 2020
+                </h3>
+                <ul>
+                    <li>modified the format of the .fl5 project file; NEWLY SAVED FILES WILL NOT BE READABLE BY VERSIONS OLDER THAN BETA_06</li>
+                    <li>modified the input/output of the script files:
+                    <ul>
+                        <li>all output files are created directly in the specified output directory instead of a subdirectory; it is up to the user to specify or not the sub-dir in the output path</li>
+                        <li>plane polars output files take the name of the polar and are exported into a subdirectory with the plane's name</li>
+                        <li>the log file takes the name of the project file with the .log extension</li>
+                        <li>scripting in Windows now accepts the backslash in directory paths</li>
+                    </ul>
+                    </li>
+                    <li>improved the algorithm to build the intersection of wings and fuselage</li>
+                    <li>removed the SECONDWING option; all second wings are replaced with OTHERWING</li>
+                    <li>added an option to include the area of OTHERWINGs in the polar's reference area</li>
+                    <li>added an option to plot streamlines in a vertical plane</li>
+                    <li>modified the streamline generation algorithm for improved smoothness and for compatibility with future vortex particle wake</li>
+                    <li>fixed the error which corrupted the export of planes as project files</li>
+                    <li>restored the option to check for application updates</li>
+                    <li>modified the SVG export format for increased versatility</li>
+                    <li>added the vertical tail volume T_v=(S_fin x l_fin)/(S_wing x span_wing) to the output of the plane's properties</li>
+                    <li>removed a few more minor bugs</li>
+                </ul>
+                <br>
+
+                <h3>
+                    flow5 v7.01.beta_05 January 14th 2020
+                </h3>
+                <ul>
+                    <li>removed the hard-coded limit on the max. number of operating points/run; added an option tto set this limit in the 3d analysis settings.</li>
+                    <li>corrected a bug in glide polars which caused the calculated balanced speed to depend on aoa increment</li>
+                    <li>corrected the stability analysis of planes with fuselages to take into account the option to exclude the contribution of fuselage panel forces to moments</li>
+                    <li>corrected the length of the first streamline segment when applying an offset in the streamwise direction</li>
+                    <li>restored the option available in xflr5 to store operating points even if the viscous interpolation is unsuccessful</li>
+                    <li>restored the bending moment variable in the operating point graphs</li>
+                    <li>improved the construction of the geometry of wings with a center gap</li>
+                    <li>added an experimental option to export foil geometries to SVG files; export options can be set in the preferences</li>
+                    <li>added a menu entry to load a legacy xflr5 project file</li>
+                    <li>fixed occasional crash bugs when loading legacy xflr5 project files</li>
+                    <li>fixed the crash bug when trying to display surface velocities in the 3d view</li>
+                    <li>fixed more issues with macOS dark mode</li>
+                    <li>removed a few more minor bugs</li>
+                </ul>
+                <br>
+
+                <h3>
+                    flow5 v7.01.beta_04 January 4th 2020
+                </h3>
+                <ul>
+                    <li>modified the calculation of induced drag in the case of triangle analyses by averaging the downwash
+                        over the trailing panel's width instead of using the value at mid-panel;
+                        this improves the accuracy of the predictions in case of high velocity and
+                        pressure gradients, for instance where the wings connect to the fuselage</li>
+                    <li>corrected the error in the calculation of the fuselage form factor</li>
+                    <li>corrected the variables Fuselage Drag and Fuselage Drag Coefficient in the polar graphs</li>
+                    <li>added an option in the T1 & T2 analyses to interpolate viscous properties from Cl rather than Alpha, i.e. using the xflr5 method</li>
+                    <li>added the effective angle of attack defined in the Ting & Chaparro report to the list of operating point graph variables</li>
+                    <li>added the strip circulation to the list of operating point graph variables</li>
+                    <li>corrected a bug which prevented the saving of modifications of the fuselage geometry after edition</li>
+                    <li>corrected the algorithm to set a TE gap in the case of non-unit foil lengths</li>
+                    <li>more tweaks added to make the triangle mesher more robust</li>
+                    <li>fixed buffer overflow issues in the 3d display of streamlines</li>
+                    <li>added an option to paint streamlines using the wing's colour</li>
+                    <li>fixed some colour issues for macOS dark mode</li>
+                    <li>removed a few more minor bugs</li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01.beta_03 December 20th 2019
+                </h3>
+                <ul>
+                    <li>fixed the bug which caused the triangulation to disappear after a rotation action in the STL fuselage view </li>
+                    <li>fixed a bug which caused the triangular mesh not to be generated after the import of an STL file</li>
+                    <li>fixed a crash bug when importing a STEP file with undefined local surface normals</li>
+                    <li>added foil name display as tooltip when hovered over in the foil design view</li>
+                    <li>improved the robustness of the algorithm to modify a foil's TE gap</li>
+                    <li>updated the mac package with the missing MKL libraries for mac pro configurations</li>
+                    <li>added OpenGL shader logging to trace file</li>
+                    <li>forced the use of deprecated functions and v120 style shaders if the requested version of the OpenGL context is <3.3</li>
+                    <li>fixed some colour issues for macOS dark mode</li>
+                    <li>removed a few more minor bugs</li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01.beta_02 December 1st 2019 - First public release
+                </h3>
+                <ul>
+                    <li>implemented the fix for xflr5 bug report #147</li>
+                    <li>restored some missing shortcuts in the foil view</li>
+                    <li>corrected the display of plane streamlines with ground effect included</li>
+                    <li>improved the management of overlaid curves in graphs</li>
+                    <li>removed a few more bugs</li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01.beta_01 November 24th 2019
+                </h3>
+                <ul>
+                    <li>added an option to import and overlay external curves in graphs</li>
+                    <li>added an option to import plane polars and their data from an external source</li>
+                    <li>removed a few bugs</li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01.alpha_03 November 13th 2019
+                </h3>
+                <ul>
+                    <li>activated the advancing front mesher and deprecated the p-space mesher</li>
+                    <li>optimized for speed the lengthiest tasks of the display and of the analysis</li>
+                    <li>added an option to display the free edges of the triangle mesh</li>
+                    <li>added thickness representation to the geometry shader for OpenGL 3.3+</li>
+                    <li>corrected minor errors in the calculation of stability and control derivatives</li>
+                    <li>converted sail forces from wind axes to geometric axes, which makes more sense for boats</li>
+                    <li>added automatic unit scaling to meters when importing a STEP file</li>
+                    <li>added an option to import and overlay external curves in graphs</li>
+                    <li>added an option to import plane polars and their data from an external source</li>
+                    <li>removed a few bugs</li>
+                </ul>
+                <br>
+
+                <h3>
+                    flow5 v7.01.alpha_02 October 15th 2019
+                </h3>
+                <ul>
+                    <li>implemented glide polars for xflr5 request 141</li>
+                    <li>added wing design parameters to control polars</li>
+                    <li>set a temporary back-end project file instead of the sync project</li>
+                    <li>removed a few bugs</li>
+                </ul>
+                <br>
+                <h3>
+                    flow5 v7.01.alpha_01 September 28th 2019
+                </h3>
+                <ul>
+                    <li>enabled multithreading of the MKL routines on Windows and macOS</li>
+                    <li>restored the signal connections between docked and floating graphs</li>
+                    <li>restored the activation of plane polars when clicking curves in the polar graphs</li>
+                    <li>added an option to import .plr files from the menu</li>
+                    <li>added a menu link to the release notes</li>
+                    <li>activated the link to update checks</li>
+                    <li>removed a few crash bugs</li>
+                </ul>
+
+                <br>
+                <h3>
+                    flow5 v7.01.alpha_00 September 16th 2019 - Changes vs. xflr5 v6.47
+                </h3>
+                <ul>
+
+                    <li>Analysis
+                        <ul>
+                            <li>implementation of 3d Galerkin triangular panel method using uniform doublet densities</li>
+                            <li>addition of a linear panel methods for increased accuracy</li>
+                            <li>generalization of multithreading for relevant tasks</li>
+                            <li>addition of a viscous loop for control polars</li>
+                            <li>addition of control polars</li>
+                            <li>addition of scripting capability</li>
+                            <li>addition of the INTEL MKL fast matrix solvers</li>
+                            <li>addition of a fuselage drag model</li>
+                            <li>use of OCCT to export bodies to STEP or IGES format</li>
+                            <li>use of OCCT to export wings to STEP or IGES format</li>
+                            <li>use of OCCT for inertia properties</li>
+                            <li>removal of the hardcoded limit on the number of wings</li>
+                            <li>addition of the capability for standalone body analyses</li>
+                            <li>addition of the capability for multi body analyses</li>
+                            <li>addition of forces and moments acting on each of the plane's parts to the polar graphs</li>
+                        </ul>
+                    </li>
+                    <br>
+
+                    <li>GUI
+                        <ul>
+                            <li>customizable default line width for all curves</li>
+                            <li>pickable Cp values in the 3d views</li>
+                            <li>addition of copy/paste capability in tableviews</li>
+                            <li>import/export of inertia data from/to clipboard</li>
+                            <li>export of object data to the clipboard</li>
+                            <li>export of graph data to the clipboard in spreadsheet format</li>
+                            <li>new simplified and more intuitive fuse and plane edition forms</li>
+                            <li>improved plane, wing and fuse design interfaces, with 3d views</li>
+                            <li>addition of 3d views in the design dlg boxes</li>
+                            <li>capability to open the 3d view in a separate window</li>
+                            <li>capability to open graphs in separate windows</li>
+                            <li>interpolated cubic spline and extrapolated BSpline for foil design and retro-engineering</li>
+                            <li>customizable automatic format for polar names</li>
+                            <li>selective x-y zoom in graphs</li>
+                            <li>selectable and highlightable curves in graphs and legends</li>
+                            <li>addition of a secondary vertical axis in graphs</li>
+                            <li>storage of log files for each analysis in a user defined directory</li>
+                    </ul>
+                    </li>
+                    <br>
+
+                    <li>Sail7 merge
+                        <ul>
+                            <li>Addition of wing sails</li>
+                            <li>Removal of SailCut type sails</li>
+                            <li>Removal of hulls from the analysis</li>
+                        </ul>
+                    </li>
+                    <br>
+                    <li>Code
+                        <ul>
+                            <li>removed all hard-coded limits in the 3d analysis module</li>
+                            <li>huge code overhaul for improved stability and portability</li>
+                        </ul>
+                    </li>
+                    <br>
+
+                    <li>Features removed
+                    <ol>
+                        <li>Tilt. Geometry: was an experimental feature which generated more problems than it fixed</li>
+                        <li>textures - fun feature, but too much overhead work to maintain in flow5</li>
+                    </ol>
+                </ul>
+            </div>
+            <br><br><br>
+        </div>
+    </body>
+</html>

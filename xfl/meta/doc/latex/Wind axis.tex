@@ -1,0 +1,79 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper, portrait, margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage[export]{adjustbox}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xfrac}
+
+\graphicspath{{./figures/}}
+\renewcommand{\familydefault}{\sfdefault}
+
+ 
+\begin{document}
+
+\title{Geometrical and wind axes}
+\author{techwinder}
+
+\maketitle
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+
+The rotation are performed around 
+\begin{itemize}
+	\item the $y$-axis for the angle of attack $\alpha$
+	\item the $z_w$-axis for the angle of attack $\beta$
+\end{itemize}
+
+$$\begin{matrix}
+\begin{bmatrix}
+x  \\
+y  \\
+z 
+\end{bmatrix}_{wind} =
+\begin{bmatrix}
+\cos{\beta}\cos{\alpha}                    &\sin{\beta}         &\cos{\beta}\sin{\alpha}  \\
+-\sin{\beta}\cos{\alpha}                   &\cos{\beta}         &-\sin{\beta}\sin{\alpha}  \\
+-\sin{\alpha}                          &0               &\cos{\alpha}
+\end{bmatrix} 
+\end{matrix} 
+\begin{bmatrix}
+X  \\
+Y  \\
+Z 
+\end{bmatrix}$$
+
+$$\begin{matrix}
+\begin{bmatrix}
+X  \\
+Y  \\
+Z 
+\end{bmatrix} =
+\begin{bmatrix}
+\cos{\beta}\cos{\alpha}             &-\sin{\beta}\cos{\alpha}         &-\sin{\alpha}  \\
+\sin{\beta}                   &\cos{\beta}                 &0  \\
+\cos{\beta} \sin{\alpha}              &-\sin{\beta}\sin{\alpha}         &\cos{\alpha}
+\end{bmatrix} 
+\end{matrix} 
+\begin{bmatrix}
+x  \\
+y  \\
+z 
+\end{bmatrix}_{wind}$$
+
+\begin{figure} 
+\centering
+\includegraphics{wind}
+\caption{Wind direction}
+\label{wind}
+\end{figure}
+
+\end{document}
+
+
+
+
+

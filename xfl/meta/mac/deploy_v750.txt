@@ -1,0 +1,54 @@
+# Update the info.plist file with version info
+# Compile in release mode to make the flow5.app file
+
+setopt interactivecomments
+export VERSION=flow5_v7.50
+
+cd /Users/techwinder/techwing/build/xflow5/release/
+
+rm -rf $VERSION
+
+mkdir $VERSION
+
+cp -r flow5/flow5.app $VERSION
+
+# add Qt and OCC dependencies in the Frameworks directory
+/Users/techwinder/Qt/6.6.1/macos/bin/macdeployqt $VERSION/flow5.app
+
+
+# use -codesign option to codesign EACH AND EVERY app and lib in the package
+# alternative --> codesign them one by one
+## codesign recursively everything in the bundle
+codesign -s A65B1B4662C2FE184C23FE92FBDBCA4EB097CBE0 -o runtime --deep --force $VERSION/flow5.app
+
+# verify the signing
+# codesign --verify --verbose $VERSION/flow5.app
+# codesign -verify --verbose -d $VERSION/flow5.app
+
+
+#create the dmg
+rm $VERSION.dmg
+
+cp /Users/techwinder/techwing/xflow5/flow5/meta/mac/installation.txt $VERSION
+hdiutil create $VERSION.dmg -srcfolder $VERSION
+
+
+# get notarised
+# upload the .dmg to Apple’s servers:
+xcrun notarytool submit $VERSION.dmg --keychain-profile "flow5" --wait
+
+# Status Message: Package approved
+
+#staple the results to the dmg
+xcrun stapler staple -v $VERSION.dmg
+#The staple and validate action worked!
+
+
+#unpack the dmg somewhere and verify it:
+spctl -a -v flow5.app
+
+
+#That's it
+
+#Check package lib dependencies
+otool -L flow5.app/Contents/MacOS/flow5 

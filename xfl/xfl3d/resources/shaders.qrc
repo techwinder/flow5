@@ -1,0 +1,25 @@
+<RCC>
+    <qresource prefix="/">
+        <file>shaders/surface/surface_FS.glsl</file>
+        <file>shaders/surface/surface_VS.glsl</file>
+        <file>shaders/line/line_VS.glsl</file>
+        <file>shaders/line/line_GS.glsl</file>
+        <file>shaders/line/line_FS.glsl</file>
+        <file>shaders/point/point_FS.glsl</file>
+        <file>shaders/point/point_GS.glsl</file>
+        <file>shaders/point/point_VS.glsl</file>
+        <file>shaders/shadow/depth_FS.glsl</file>
+        <file>shaders/shadow/depth_VS.glsl</file>
+        <file>shaders/point2/point2_FS.glsl</file>
+        <file>shaders/point2/point2_VS.glsl</file>
+        <file>shaders/lorenz2/lorenz2_CS.glsl</file>
+        <file>shaders/flow/flow3d_CS.glsl</file>
+        <file>shaders/boids2/boids2_CS.glsl</file>
+        <file>shaders/shaders2d/fractal_VS.glsl</file>
+        <file>shaders/shaders2d/julia_FS.glsl</file>
+        <file>shaders/shaders2d/newton_FS.glsl</file>
+        <file>shaders/shaders2d/quat_FS.glsl</file>
+        <file>shaders/shaders2d/complex_FS.glsl</file>
+        <file>shaders/flow/flowVtx_CS.glsl</file>
+    </qresource>
+</RCC>

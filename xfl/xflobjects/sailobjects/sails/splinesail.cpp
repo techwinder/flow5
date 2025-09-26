@@ -1,0 +1,943 @@
+/****************************************************************************
+
+    flow5 application
+    Copyright (C) Andre Deperrois 
+    All rights reserved.
+
+*****************************************************************************/
+
+
+#include <BRepBuilderAPI_Sewing.hxx>
+#include <BRepOffsetAPI_ThruSections.hxx>
+#include <StdFail_NotDone.hxx>
+#include <BRepBuilderAPI_MakePolygon.hxx>
+
+
+#include <xflcore/units.h>
+#include <xflcore/xflcore.h>
+#include <xflgeom/geom2d/splines/bezierspline.h>
+#include <xflgeom/geom2d/splines/bspline.h>
+#include <xflgeom/geom2d/splines/cubicspline.h>
+#include <xflgeom/geom2d/splines/pointspline.h>
+#include <xflgeom/geom3d/bspline3d.h>
+#include <xflmath/constants.h>
+#include <xflocc/occ_globals.h>
+#include <xflobjects/sailobjects/sails/splinesail.h>
+
+
+
+SplineSail:: SplineSail(Spline::enumType type) : Sail()
+{
+    m_iActiveSection=0;
+    m_SplineType = type;
+    switch(m_SplineType)
+    {
+        case Spline::BSPLINE:         m_Description = "B-Spline type sail";           break;
+        case Spline::CUBIC:     m_Description = "Cubic spline type sail";       break;
+        case Spline::BEZIER:    m_Description = "Bezier spline type sail";      break;
+        case Spline::POINT:     m_Description = "Point spline type sail";       break;
+        default:                   m_Description = "Unsupported spline type";      break;
+    }
+    m_theStyle.m_Color = QColor(175,155,235,155);
+    m_Name = "Spline type sail";
+
+    m_EdgeSplit.resize(1);
+    m_EdgeSplit.first().resize(4);
+}
+
+
+SplineSail::SplineSail(SplineSail const &ssail) : Sail(ssail)
+{
+    m_SplineType = ssail.splineType();
+    clearSections();
+    for(int i=0; i<ssail.sectionCount(); i++)
+    {
+        Spline *pSpline = ssail.splineAt(i)->clone();
+        m_Spline.append(pSpline);
+    }
+    m_SectionPosition = ssail.m_SectionPosition;
+    m_Ry = ssail.m_Ry;
+    m_NZPanels = ssail.m_NZPanels;
+    m_ZDistrib = ssail.m_ZDistrib;
+
+    m_EdgeSplit = ssail.m_EdgeSplit;
+}
+
+
+void SplineSail::makeDefaultSail()
+{
+    m_Spline.clear();
+    m_SectionPosition.clear();
+    m_Ry.clear();
+    m_NZPanels = 11;
+    m_ZDistrib =xfl::TANH;
+
+
+    Spline *pSpline=nullptr;
+
+    m_SectionPosition.push_back(Vector3d(0,0,0));
+    m_Ry.push_back(0.0);
+    switch(m_SplineType)
+    {
+        default:
+        case Spline::BSPLINE:       pSpline=new BSpline();       break;
+        case Spline::BEZIER:  pSpline=new BezierSpline();  break;
+        case Spline::CUBIC:   pSpline=new CubicSpline();   break;
+        case Spline::POINT:   pSpline=new PointSpline();   break;
+    }
+    m_Spline.append(pSpline);
+    pSpline->resetSpline();
+    pSpline->setDegree(2);
+    pSpline->appendControlPoint(0.0,0.0);
+    pSpline->appendControlPoint(1.5,0.1);
+    pSpline->appendControlPoint(5.0,0.3);
+    pSpline->updateSpline();
+    pSpline->makeCurve();
+
+    m_SectionPosition.push_back(Vector3d(0,0,7));
+    m_Ry.push_back(-10.0);
+
+    switch(m_SplineType)
+    {
+        default:
+        case Spline::BSPLINE:       pSpline=new BSpline();       break;
+        case Spline::BEZIER:  pSpline=new BezierSpline();  break;
+        case Spline::CUBIC:   pSpline=new CubicSpline();   break;
+        case Spline::POINT:   pSpline=new PointSpline();   break;
+    }
+    m_Spline.append(pSpline);
+    pSpline->resetSpline();
+    pSpline->setDegree(2);
+    pSpline->appendControlPoint(0.0,0.0);
+    pSpline->appendControlPoint(0.2,0.05);
+    pSpline->appendControlPoint(0.5,0.1);
+    pSpline->updateSpline();
+    pSpline->makeCurve();
+
+    makeSurface();
+    makeTriangulation();
+    makeRuledMesh(Vector3d());
+    makeTriPanels(Vector3d());
+}
+
+
+SplineSail::~SplineSail()
+{
+    for(int is=0; is<m_Spline.size(); is++)
+    {
+        delete m_Spline[is];
+    }
+}
+
+
+void SplineSail::duplicate(const Sail *pSail)
+{
+    Sail::duplicate(pSail);
+    if(!pSail->isSplineSail()) return;
+
+    SplineSail const *pSS = dynamic_cast<SplineSail const*>(pSail);
+    m_SectionPosition = pSS->m_SectionPosition;
+    m_Ry       = pSS->m_Ry;
+
+    //  deep copy
+    for(int i=0; i<m_Spline.size(); i++)  delete m_Spline[i];
+    m_Spline.clear();
+    for(int is=0; is<pSS->m_Spline.size(); is++)
+    {
+        Spline *pSpline = pSS->m_Spline[is]->clone();
+        m_Spline.push_back(pSpline);
+    }
+    m_NZPanels     = pSS->m_NZPanels;
+    m_ZDistrib     = pSS->m_ZDistrib;
+
+    makeSurface();
+    makeTriangulation();
+}
+
+
+void SplineSail::createSection(int iSection)
+{
+    if(iSection>=sectionCount())
+    {
+        m_SectionPosition.append(m_SectionPosition.last());
+        m_SectionPosition.last().z += 0.5;
+        m_Ry.append(m_Ry.last());
+        Spline *pSpline = m_Spline.last()->clone();
+        m_Spline.append(pSpline);
+    }
+    else
+    {
+        if(iSection>0)
+        {
+            // insert before so that this new section has index iSection - is what the user expects
+            m_SectionPosition.insert(iSection, Vector3d());
+            m_SectionPosition[iSection].z = (m_SectionPosition[iSection-1].z+m_SectionPosition[iSection+1].z)/2.0;
+            m_Ry.insert(iSection, 0.0);
+            m_Ry[iSection] = (m_Ry[iSection-1]+m_Ry[iSection+1])/2.0;
+
+            //make a new averaged spline
+            Spline *pSpline = m_Spline.at(iSection)->clone();
+            m_Spline.insert(iSection, pSpline);
+            Spline const *bs0 = m_Spline.at(iSection-1);
+            Spline const *bs1 = m_Spline.at(iSection+1);
+            for(int ic=0; ic<pSpline->ctrlPointCount(); ic++)
+            {
+                pSpline->setCtrlPoint(ic, (bs0->controlPoint(ic)+bs1->controlPoint(ic))/2.0);
+                pSpline->setWeight(ic, (bs0->weight(ic)+bs1->weight(ic))/2.0);
+            }
+         }
+        else // iSection=0
+        {
+            m_SectionPosition.insert(iSection, Vector3d());
+            m_SectionPosition[iSection].z = m_SectionPosition[iSection+1].z-0.5;
+            m_Ry.insert(iSection, 0.0);
+            m_Ry[iSection] = m_Ry[iSection+1];
+            Spline *pSpline = m_Spline.at(iSection)->clone();
+            m_Spline.insert(iSection, pSpline);
+        }
+    }
+
+    makeSurface();
+}
+
+
+void SplineSail::deleteSection(int iSection)
+{
+    if(iSection<0 || iSection>=sectionCount()) return;
+
+    m_SectionPosition.removeAt(iSection);
+    m_Ry.removeAt(iSection);
+
+    Spline *pSpline = m_Spline.at(iSection);
+    m_Spline.removeAt(iSection);
+    delete pSpline;
+}
+
+
+void SplineSail::insertSection(int is, Spline *pSpline, Vector3d position, double ry)
+{
+    if(is>=sectionCount())
+    {
+        m_Spline.append(pSpline);
+        m_SectionPosition.append(position);
+        m_Ry.append(ry);
+    }
+    else
+    {
+        m_Spline.insert(is, pSpline);
+        m_SectionPosition.insert(is, position);
+        m_Ry.insert(is, ry);
+    }
+}
+
+
+bool SplineSail::serializeSailFl5(QDataStream &ar, bool bIsStoring)
+{
+    Sail::serializeSailFl5(ar, bIsStoring);
+
+    int k(0), n(0);
+    float xf(0),yf(0),zf(0);
+    Vector3d V0, V1, V2;
+
+    //500001: first .fl5 format
+    //500002: added refpanels in beta19
+    //500003: v7.03 added NZPanels and ZDist arrays
+    int ArchiveFormat=500003;// identifies the format of the file
+
+    int nIntSpares=0;
+    int nDbleSpares=0;
+
+    if(bIsStoring)
+    {
+        // storing code
+        ar << ArchiveFormat;
+
+        switch(m_SplineType)
+        {
+            default:
+            case Spline::BSPLINE:         ar<<0;    break;
+            case Spline::CUBIC:     ar<<1;    break;
+            case Spline::BEZIER:    ar<<2;    break;
+            case Spline::POINT:     ar<<3;    break;
+            case Spline::ARC:       ar<<4;    break;
+            case Spline::NACA4:     ar<<5;    break;
+        }
+
+        ar<<int(m_Spline.size());
+        for(int i=0; i<sectionCount(); i++)
+        {
+            if      (m_Spline.at(i)->isBSpline())      ar<<1;
+            else if (m_Spline.at(i)->isBezierSpline()) ar<<2;
+            else if (m_Spline.at(i)->isCubicSpline())  ar<<3;
+            else if (m_Spline.at(i)->isPointSpline())  ar<<4;
+            m_Spline.at(i)->serializeFl5(ar, bIsStoring);
+
+            ar << m_SectionPosition.at(i).x<<m_SectionPosition.at(i).y<<m_SectionPosition.at(i).z;
+            ar << m_Ry.at(i);
+            n=1; ar <<n;  //          ar << m_nZPanels.at(i);
+            n=0; ar <<n;  //          ar <<  xfl::UNIFORM;  break;
+        }
+
+        ar << int(m_RefTriangles.size());
+        for(int i=0; i<m_RefTriangles.size(); i++)
+        {
+            Triangle3d const &t3d = m_RefTriangles.at(i);
+            ar << t3d.vertexAt(0).xf() << t3d.vertexAt(0).yf() << t3d.vertexAt(0).zf();
+            ar << t3d.vertexAt(1).xf() << t3d.vertexAt(1).yf() << t3d.vertexAt(1).zf();
+            ar << t3d.vertexAt(2).xf() << t3d.vertexAt(2).yf() << t3d.vertexAt(2).zf();
+        }
+
+        ar << int(m_BotMidTEIndexes.size());
+        foreach(int idx, m_BotMidTEIndexes)   ar << idx;
+
+        ar << int(m_TopTEIndexes.size());
+        foreach(int idx, m_TopTEIndexes)      ar << idx;
+
+        // dynamic space allocation for the future storage of more data, without need to change the format
+        nIntSpares=0;
+        ar << nIntSpares;
+
+        nDbleSpares=0;
+        ar << nDbleSpares;
+
+        return true;
+    }
+    else
+    {
+        // loading code
+        ar >> ArchiveFormat;
+
+        if (ArchiveFormat<500001 || ArchiveFormat>500100)  return false;
+
+        ar >> n;
+        switch(n)
+        {
+            default:
+            case 0: m_SplineType = Spline::BSPLINE;             break;
+            case 1: m_SplineType = Spline::CUBIC;         break;
+            case 2: m_SplineType = Spline::BEZIER;        break;
+            case 3: m_SplineType = Spline::POINT;         break;
+            case 4: m_SplineType = Spline::ARC;           break;
+            case 5: m_SplineType = Spline::NACA4;         break;
+        }
+
+        ar>>n;
+        m_Spline.resize(n);
+        m_SectionPosition.resize(n);
+        m_Ry.resize(n);
+
+        for(int i=0; i<n; i++)
+        {
+            int type=0;
+            ar >> type;
+            switch (type) {
+                case 1:
+                {
+                    BSpline *pbs = new BSpline;
+                    m_Spline[i] = pbs;
+                    break;
+                }
+                case 2:
+                {
+                    BezierSpline *pbzs = new BezierSpline;
+                    m_Spline[i] = pbzs;
+                    break;
+                }
+                case 3:
+                {
+                    CubicSpline *pcs = new CubicSpline;
+                    m_Spline[i] = pcs;
+                    break;
+                }
+                case 4:
+                {
+                    PointSpline *pps = new PointSpline;
+                    m_Spline[i] = pps;
+                    break;
+                }
+                default:
+                    return false;
+            }
+            m_Spline[i]->serializeFl5(ar, bIsStoring);
+
+            ar >> m_SectionPosition[i].x >> m_SectionPosition[i].y >> m_SectionPosition[i].z;
+            ar >> m_Ry[i];
+            if(ArchiveFormat>=500003)
+            {
+                ar >> k;
+                ar >> k;
+            }
+            else
+            {
+            }
+        }
+
+        if( ArchiveFormat>=500002)
+        {
+            ar >> n;
+            m_RefTriangles.resize(n);
+            for(int i3=0; i3<n; i3++)
+            {
+                ar >> xf >> yf >> zf;
+                V0.set(double(xf), double(yf), double(zf));
+
+                ar >> xf >> yf >> zf;
+                V1.set(double(xf), double(yf), double(zf));
+
+                ar >> xf >> yf >> zf;
+                V2.set(double(xf), double(yf), double(zf));
+
+                m_RefTriangles[i3].setTriangle(V0, V1, V2);
+            }
+
+            ar >> n;
+            for(int i=0; i<n; i++)
+            {
+                ar >> k;
+                m_BotMidTEIndexes.append(k);
+            }
+
+            ar >> n;
+            for(int i=0; i<n; i++)
+            {
+                ar >> k;
+                m_TopTEIndexes.append(k);
+            }
+            if(m_RefTriangles.size()==0) clearTEIndexes(); // clean-up past mistakes
+        }
+        else
+        {
+            makeRuledMesh(Vector3d());
+        }
+
+        // space allocation
+        ar >> nIntSpares;
+        ar >> nDbleSpares;
+
+        makeSurface();
+        makeTriangulation();
+        updateStations();
+        return true;
+    }
+}
+
+
+Vector3d SplineSail::point(double xrel, double zrel, xfl::enumSurfacePosition ) const
+{
+    // interpolate between splines
+    if(xrel<0 || xrel>1.0) return Vector3d();
+ //   if(zrel<0 || zrel>1.0) return Vector3d();
+
+    if(xrel<=0.0) xrel = 0.00001;
+    if(xrel>=1.0) xrel = 0.99999;
+//    if(zrel<=0.0) zrel = 0.00001;
+//    if(zrel>=1.0) zrel = 0.99999;
+
+    double z = m_SectionPosition.front().z + zrel * (m_SectionPosition.last().z-m_SectionPosition.front().z);
+
+    // find the two splines surrounding zrel
+    int isec = -1;
+    double tau=1.0;
+    for(int i=0; i<sectionCount()-1; i++)
+    {
+        if(m_SectionPosition.at(i).z<=z && z <=m_SectionPosition.at(i+1).z)
+        {
+            double dz =  (m_SectionPosition[i+1].z - m_SectionPosition[i].z);
+            if(fabs(dz)>0.0) tau = (z-m_SectionPosition[i].z) / dz;
+            else             tau = 0.0;
+            isec = i;
+            break;
+        }
+    }
+    if(isec<0) return Vector3d();
+
+    Spline const *spl0 = m_Spline.at(isec);
+    Spline const *spl1 = m_Spline.at(isec+1);
+
+    double x0=0,y0=0,x1=0,y1=0;
+    spl0->splinePoint(xrel, x0, y0);
+    spl1->splinePoint(xrel, x1, y1);
+
+    Vector3d pt0, pt1;
+    pt0.set(x0,y0,m_SectionPosition.at(isec).z);
+    pt1.set(x1,y1,m_SectionPosition.at(isec+1).z);
+    pt0.rotateY(m_SectionPosition.at(isec), m_Ry.at(isec));
+    pt1.rotateY(m_SectionPosition.at(isec+1), m_Ry.at(isec+1));
+    return Vector3d(pt0.x*(1.0-tau)+pt1.x*tau, pt0.y*(1.0-tau)+pt1.y*tau, pt0.z*(1.0-tau)+pt1.z*tau);
+}
+
+
+double SplineSail::luffLength() const
+{
+    if(m_SectionPosition.size()<2) return 1.0;
+    return (m_SectionPosition.back() - m_SectionPosition.front()).norm();
+}
+
+
+double SplineSail::leechLength() const
+{
+    Vector3d pt0 = point(1.0,0.0);
+    Vector3d pt1 = point(1.0,1.0);
+    return (pt0-pt1).norm();
+}
+
+
+double SplineSail::footLength() const
+{
+    /** @todo make splinePoint method robust for end points */
+    Vector3d pt0 = point(0.00001,0.0);
+    Vector3d pt1 = point(0.99999,0.0);
+    return (pt0-pt1).norm();
+}
+
+
+Vector3d SplineSail::leadingEdgeAxis() const
+{
+    if(m_SectionPosition.size()<2) return Vector3d(0,0,1); // something wrong going on
+
+    Vector3d theTack = m_SectionPosition.front();
+    Spline const *pTackSpline = m_Spline.front();
+    theTack += Vector3d(pTackSpline->firstCtrlPoint().x, pTackSpline->firstCtrlPoint().y, 0.0);
+
+    Vector3d theHead = m_SectionPosition.back();
+    Spline const *pHeadSpline = m_Spline.back();
+    theHead += Vector3d(pHeadSpline->firstCtrlPoint().x, pHeadSpline->firstCtrlPoint().y, 0.0);
+
+    return (theHead-theTack).normalized();
+}
+
+
+void SplineSail::makeSurface()
+{
+    // set unused corner points
+    m_Tack = point(0,0);
+    m_Clew = point(1,0);
+    m_Head = point(0,1);
+    m_Peak = point(1,1);
+
+    for(int i=0; i<m_Spline.size(); i++)
+    {
+        m_Spline[i]->updateSpline();
+    }
+}
+
+
+void SplineSail::flipXZ()
+{
+    Sail::flipXZ();
+
+    for(int i=0; i<sectionCount(); i++)
+    {
+        m_SectionPosition[i].y = -m_SectionPosition[i].y;
+    }
+
+    for(int i=0; i<m_Spline.size(); i++)
+    {
+        Spline *pSpline = m_Spline[i];
+        for(int ic=0; ic<pSpline->ctrlPointCount(); ic++)
+        {
+            Vector2d &Pt = pSpline->controlPoint(ic);
+            Pt.y = -Pt.y;
+        }
+        pSpline->updateSpline();
+    }
+    makeSurface();
+}
+
+
+void SplineSail::scale(double XFactor, double YFactor, double ZFactor)
+{
+    Sail::scale(XFactor, YFactor, ZFactor);
+
+    // scale the sail from the tack
+    Vector3d const &tack = m_SectionPosition[0];
+    for(int i=0; i<sectionCount(); i++)
+    {
+        m_SectionPosition[i].x = tack.x + (m_SectionPosition[i].x-tack.x) * XFactor;
+        m_SectionPosition[i].y = tack.y + (m_SectionPosition[i].y-tack.y) * YFactor;
+        m_SectionPosition[i].z = tack.z + (m_SectionPosition[i].z-tack.z) * ZFactor;
+    }
+
+    for(int i=0; i<m_Spline.size(); i++)
+    {
+        Spline *pSpline = m_Spline[i];
+        Vector2d const &O = pSpline->firstCtrlPoint();
+        for(int ic=0; ic<pSpline->ctrlPointCount(); ic++)
+        {
+            Vector2d Pt = pSpline->controlPoint(ic);
+            Pt.x = O.x + (Pt.x-O.x) * XFactor;
+            Pt.y = O.y + (Pt.y-O.y) * YFactor;
+            pSpline->setCtrlPoint(ic, Pt);
+        }
+        pSpline->updateSpline();
+    }
+    makeSurface();
+}
+
+
+void SplineSail::translate(const Vector3d &T)
+{
+    Sail::translate(T);
+
+    for(int i=0; i<m_SectionPosition.size(); i++)
+        m_SectionPosition[i].translate(T);
+    makeSurface();
+    makeTriangulation();;
+}
+
+
+void SplineSail::updateActiveSpline()
+{
+    if(m_iActiveSection<0 || m_iActiveSection>sectionCount()) return;
+    m_Spline[m_iActiveSection]->updateSpline();
+    m_Spline[m_iActiveSection]->makeCurve();
+}
+
+
+void SplineSail::clearSections()
+{
+    for(int i=0; i<m_Spline.size(); i++)
+    {
+        delete m_Spline[i];
+    }
+    m_Spline.clear();
+    m_SectionPosition.clear();
+    m_Ry.clear();
+}
+
+
+void SplineSail::appendSpline(Spline *pSpline, Vector3d Pos, double Ry)
+{
+    m_Spline.append(pSpline);
+    m_SectionPosition.append(Pos);
+    m_Ry.append(Ry);
+}
+
+
+double SplineSail::twist() const
+{
+    Spline *pSpline = m_Spline.front();
+    double dx = pSpline->lastCtrlPoint().x - pSpline->firstCtrlPoint().x;
+    double dy = pSpline->lastCtrlPoint().y - pSpline->firstCtrlPoint().y;
+    double alfa0 = atan2(dy, dx)*180.0/PI;
+
+    pSpline = m_Spline.back();
+    dx = pSpline->lastCtrlPoint().x - pSpline->firstCtrlPoint().x;
+    dy = pSpline->lastCtrlPoint().y - pSpline->firstCtrlPoint().y;
+    double alfa1 = atan2(dy, dx)*180.0/PI;
+
+    return alfa1-alfa0;
+}
+
+
+void SplineSail::scaleTwist(double newtwist)
+{
+    double oldtwist = twist();
+    if(fabs(oldtwist)<ANGLEPRECISION) return; // Nothing to scale
+    double ratio = newtwist/oldtwist;
+    for(int i=0; i<m_Spline.count(); i++)
+    {
+        Spline *pSpline = m_Spline.at(i);
+        double dx = pSpline->lastCtrlPoint().x - pSpline->firstCtrlPoint().x;
+        double dy = pSpline->lastCtrlPoint().y - pSpline->firstCtrlPoint().y;
+        double splinetwist = atan2(dy, dx)*180.0/PI;
+        double deltaangle = ratio*splinetwist-splinetwist;
+        for(int ic=0; ic<pSpline->ctrlPointCount(); ic++)
+        {
+            Vector2d &pt = pSpline->controlPoint(ic);
+            pt.rotateZ(pSpline->firstCtrlPoint(), deltaangle);
+        }
+        pSpline->updateSpline();
+    }
+    // don't; do it only once in case of consecutive scale operations
+//    makeSurface();
+//    makeTriangulation();
+}
+
+
+void SplineSail::scaleAR(double newAR)
+{
+    double ar = aspectRatio();
+    if(ar<0.001)  return;
+    if(newAR<0.001) return;
+
+    double ratio = sqrt(newAR/ar);
+
+    for(int i=0; i<m_Spline.count(); i++)
+    {
+        Spline *pSpline = m_Spline.at(i);
+        pSpline->scale(1.0/ratio);
+
+        m_SectionPosition[i] *= ratio;
+    }
+}
+
+
+double SplineSail::leadingAngle(int iSection) const
+{
+    Spline const *pSpline = m_Spline.at(iSection);
+    double dx = pSpline->controlPoint(1).x - pSpline->firstCtrlPoint().x;
+    double dy = pSpline->controlPoint(1).y - pSpline->firstCtrlPoint().y;
+    return atan2(dy, dx)*180.0/PI;
+}
+
+
+double SplineSail::trailingAngle(int iSection) const
+{
+    Spline const *pSpline = m_Spline.at(iSection);
+    int n = pSpline->ctrlPointCount();
+    double dx = pSpline->lastCtrlPoint().x - pSpline->controlPoint(n-2).x;
+    double dy = pSpline->lastCtrlPoint().y - pSpline->controlPoint(n-2).y;
+    return atan2(dy, dx)*180.0/PI;
+}
+
+
+void SplineSail::setColor(QColor clr)
+{
+    m_theStyle.m_Color = clr;
+    for(int is=0; is<m_Spline.size(); is++)
+        m_Spline[is]->setColor(clr);
+}
+
+
+//BSPLINE, CUBICSPLINE, BEZIERSPLINE, POINTSPLINE, ARCSPLINE, NACA4SPLINE, OTHERSPLINE
+void SplineSail::convertSplines(Spline::enumType newtype)
+{
+    QVector<Spline*> oldsplines = m_Spline; // save the pointers
+    m_Spline.clear();
+
+    foreach (Spline *pOldSpline, oldsplines)
+    {
+        Spline *pNewSpline=nullptr;
+        switch (newtype)
+        {
+            default:
+            case Spline::BSPLINE:            pNewSpline = new BSpline;               break;
+            case Spline::BEZIER:       pNewSpline = new BezierSpline;          break;
+            case Spline::CUBIC:        pNewSpline = new CubicSpline;           break;
+            case Spline::POINT:        pNewSpline = new PointSpline;           break;
+         }
+        pNewSpline->setCtrlPoints(pOldSpline->ctrlPts());
+        pNewSpline->updateSpline();
+        pNewSpline->makeCurve();
+        m_Spline.append(pNewSpline);
+        delete pOldSpline;
+    }
+
+    m_SplineType = newtype;
+}
+
+
+void SplineSail::resizeSections(int nSections, int nPoints)
+{
+    // keep the top and bottom sections, and recreate as many as required in between
+
+    int N = sectionCount();
+    for(int is=N-2; is>0; is--)
+    {
+        deleteSection(is);
+    }
+
+    int nnew = nSections-2;
+    Spline *pBot = spline(0);
+    Spline *pTop = spline(N-1);
+    Vector3d bot = sectionPosition(0);
+    Vector3d top = sectionPosition(N-1);
+    double ry0 = sectionAngle(0);
+    double ry1 = sectionAngle(N-1);
+    for(int j=0; j<nnew; j++)
+    {
+        double tau = double(j+1)/double(nnew+1);
+        Vector3d newpos = bot + (top-bot) * tau;
+        double ry = ry0 + tau*(ry1-ry0);
+        Spline *pSpline = pBot->clone();
+        for(int ic=0; ic<int(pSpline->ctrlPointCount()); ic++)
+        {
+            Vector2d pt = pSpline->controlPoint(ic);
+            pt = pBot->controlPoint(ic) + (pTop->controlPoint(ic)-pBot->controlPoint(ic))*tau;
+            pSpline->setCtrlPoint(ic, pt);
+        }
+        insertSection(j+1, pSpline, newpos, ry);
+    }
+    setActiveSection(0);
+
+
+    //resize the number of points;
+    for(int is=0; is<sectionCount(); is++)
+    {
+        Spline *pSpline = spline(is);
+        pSpline->resizeControlPoints(nPoints);
+        pSpline->updateSpline();
+        pSpline->makeCurve();
+    }
+}
+
+
+double SplineSail::length() const
+{
+    double l = 1.0;
+    for(int i=0; i<m_Spline.count(); i++)
+    {
+        Spline const *pSpline = m_Spline.at(i);
+
+        if(pSpline->ctrlPointCount()>0)
+        {
+            l = std::max(l, pSpline->firstCtrlPoint().distanceTo(pSpline->lastCtrlPoint()));
+        }
+    }
+    return l;
+}
+
+
+bool SplineSail::makeOccShell(TopoDS_Shape &sailshape, QString &logmsg) const
+{
+    double stitchprecision = 1.e-6;
+    QString strong = "Processing wing "+ m_Name + "\n";
+    logmsg += strong;
+
+    BRepBuilderAPI_Sewing stitcher(stitchprecision);
+
+    BSpline3d b3d0, b3d1;
+    TopoDS_Wire Wire0, Wire1;
+
+    for(int iSpline=0; iSpline<sectionCount()-1; iSpline++)
+    {
+        switch(m_SplineType)
+        {
+            case Spline::BSPLINE:
+            {
+                makeBSpline3d(iSpline,   b3d0);
+                makeBSpline3d(iSpline+1, b3d1);
+                if(!occ::makeSplineWire(b3d0, Wire0, logmsg))
+                {
+                    logmsg += QString::asprintf("   Error making spline wire %d", iSpline);
+                    return false;
+                }
+
+                if(!occ::makeSplineWire(b3d1, Wire1, logmsg))
+                {
+                    logmsg += QString::asprintf("   Error making spline wire %d", iSpline+1);
+                    return false;
+                }
+                break;
+            }
+            default:
+            {
+                Vector3d pt3d;
+                Spline const *spl0 = m_Spline.at(iSpline);
+                Spline const *spl1 = m_Spline.at(iSpline+1);
+
+                BRepBuilderAPI_MakePolygon PolyMaker0;
+                for(int ic=0; ic<spl0->ctrlPointCount(); ic++)
+                {
+                    Vector2d const & pt = spl0->controlPoint(ic);
+
+                    pt3d.set(pt.x, pt.y, m_SectionPosition.at(iSpline).z);
+                    pt3d.rotateY(m_SectionPosition.at(iSpline), m_Ry.at(iSpline));
+                    PolyMaker0.Add(gp_Pnt(pt3d.x, pt3d.y, pt3d.z));
+                }
+                Wire0 = PolyMaker0.Wire();
+                if(!PolyMaker0.IsDone() || Wire0.IsNull())
+                {
+                    logmsg += QString::asprintf("   error making wire %d\n", iSpline);
+                    return false;
+                }
+
+                BRepBuilderAPI_MakePolygon PolyMaker1;
+                for(int ic=0; ic<spl1->ctrlPointCount(); ic++)
+                {
+                    Vector2d const & pt = spl1->controlPoint(ic);
+
+                    pt3d.set(pt.x, pt.y, m_SectionPosition.at(iSpline+1).z);
+                    pt3d.rotateY(m_SectionPosition.at(iSpline+1), m_Ry.at(iSpline+1));
+                    PolyMaker1.Add(gp_Pnt(pt3d.x, pt3d.y, pt3d.z));
+                }
+                Wire1 = PolyMaker1.Wire();
+                if(!PolyMaker1.IsDone() || Wire1.IsNull())
+                {
+                    logmsg += QString::asprintf("   error making wire %d\n", iSpline+1);
+                    return false;
+                }
+            }
+        }
+
+        // Sweep
+        BRepOffsetAPI_ThruSections Sweeper(false, false, 1.0e-4);
+/*        Sweeper.CheckCompatibility(true);
+        Sweeper.SetSmoothing(false);
+        Sweeper.SetParType(Approx_IsoParametric);
+        Sweeper.SetContinuity(GeomAbs_C0); */
+
+        Sweeper.AddWire(Wire0);
+        Sweeper.AddWire(Wire1);
+
+        try
+        {
+//            Sweeper.Build(); // does nothing according to OCC doc
+            TopoDS_Shape TopSweptShape = Sweeper.Shape(); // calls Build according to OCC doc
+            stitcher.Add(TopSweptShape);
+        }
+        catch(Standard_DomainError &)
+        {
+            logmsg += "     Standard_DomainError sweeping wires\n";
+        }
+        catch (StdFail_NotDone &)
+        {
+            logmsg += "   StdFail_NotDone sweeping wires\n";
+            return false;
+        }
+        catch (...)
+        {
+            logmsg += "   Unknown error sweeping section wires\n";
+            return false;
+        }
+    }
+
+    // stitch
+    stitcher.Perform();
+
+//    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
+//    After a successful sewing operation all faces have a coherent orientation.
+
+    try
+    {
+        sailshape = stitcher.SewedShape();
+    }
+    catch(Standard_TypeMismatch const &)
+    {
+        logmsg += "     SailShapes:: Type mismatch error\n";
+        return false;
+    }
+
+    logmsg += "\n";
+    return !sailshape.IsNull();
+}
+
+
+bool SplineSail::makeBSpline3d(int ispl, BSpline3d &spline3d) const
+{
+    if(ispl<0 || ispl>=sectionCount()) return false;
+
+    Spline const *spl = m_Spline.at(ispl);
+    BSpline const *bspl = dynamic_cast<BSpline const*>(spl);
+    if(!bspl) return false;
+
+    spline3d.resizeControlPoints(spl->ctrlPointCount());
+
+    for(int ic=0; ic<spl->ctrlPointCount(); ic++)
+    {
+        Vector2d const & pt = spl->controlPoint(ic);
+        Vector3d &pt3d = spline3d.controlPoint(ic);
+        pt3d.set(pt.x, pt.y, m_SectionPosition.at(ispl).z);
+        pt3d.rotateY(m_SectionPosition.at(ispl), m_Ry.at(ispl));
+    }
+    spline3d.setDegree(bspl->degree());
+    spline3d.updateSpline();
+    return !spline3d.isSingular();
+}
+
+
+
+
+
+

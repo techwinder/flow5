@@ -1,0 +1,316 @@
+/****************************************************************************
+
+    flow5 application
+    Copyright (C) Andre Deperrois 
+    All rights reserved.
+
+*****************************************************************************/
+
+#define _MATH_DEFINES_DEFINED
+
+#include <QDataStream>
+
+#include <xflobjects/objects3d/inertia/inertia.h>
+#include <xflcore/units.h>
+
+
+bool Inertia::serializeFl5(QDataStream &ar, bool bIsStoring)
+{
+    int nIntSpares=5;
+    int nDbleSpares=5;
+    int k=0;
+    double dble=0.0;
+
+    //500001 : new fl5 format;
+    int ArchiveFormat = 500001;
+    if(bIsStoring)
+    {
+        ar << ArchiveFormat;
+
+        ar << m_Mass_s;
+        ar << m_CoG_s.x << m_CoG_s.y << m_CoG_s.z;
+        ar << m_Ixx_s << m_Ixy_s << m_Ixz_s << m_Iyy_s << m_Iyz_s << m_Izz_s;
+
+        ar << pointMassCount();
+        for(int im=0; im<pointMassCount(); im++)
+        {
+            ar << pointMassAt(im).mass();
+            ar << pointMassAt(im).position().x << pointMassAt(im).position().y <<pointMassAt(im).position().z;
+            ar << pointMassAt(im).tag();
+        }
+
+        k=0;
+        ar << nIntSpares;
+        for(int i=0; i<nIntSpares; i++) ar<<k;
+
+        ar << nDbleSpares;
+        dble = 0;
+        for(int i=0; i<nDbleSpares; i++) ar<<dble;
+    }
+    else
+    {
+        ar >> ArchiveFormat;
+        if(ArchiveFormat!=500001) return false;
+
+        ar >> m_Mass_s;
+        ar >> m_CoG_s.x >> m_CoG_s.y >> m_CoG_s.z;
+        ar >> m_Ixx_s >> m_Ixy_s >> m_Ixz_s >> m_Iyy_s >> m_Iyz_s >> m_Izz_s;
+
+        clearPointMasses();
+        ar >> k;
+        double m=0,px=0,py=0,pz=0;
+        QString str;
+        for(int im=0; im<k; im++)
+        {
+            ar >> m >> px >> py >> pz;
+            ar >> str;
+            appendPointMass(m, Vector3d(px, py, pz), str);
+        }
+
+        ar >> nIntSpares;
+        for(int i=0; i<nIntSpares; i++) ar>>k;
+        ar >> nDbleSpares;
+        for(int i=0; i<nDbleSpares; i++) ar>>dble;
+    }
+    return true;
+}
+
+
+/** Returns the position of the CoG in body axis
+ * Includes both the structural and point masses
+ */
+Vector3d Inertia::CoG_t() const
+{
+    Vector3d cog = m_CoG_s * m_Mass_s;
+    for(int im=0; im<m_PointMass.size(); im++)
+    {
+        PointMass const &pm = m_PointMass.at(im);
+        cog += pm.position() * pm.mass();
+    }
+    double themass = totalMass();
+    if(fabs(themass)>0.0) return cog *1.0/themass;
+    else                  return Vector3d();
+}
+
+
+/**
+ * Returns the xx component of the inertia tensor, in the part's CoG frame, including
+ * both structural and point masses */
+double Inertia::Ixx_t() const
+{
+    Vector3d cogt = CoG_t();
+
+    Vector3d const &d = (cogt-m_CoG_s);
+    double ixx = m_Ixx_s + m_Mass_s*(d.y*d.y+d.z*d.z);
+
+    for(int im=0; im<m_PointMass.size(); im++)
+    {
+        PointMass const &pm = m_PointMass.at(im);
+        Vector3d const &p = pm.position()-cogt;
+        ixx += pm.mass() * (p.y*p.y+p.z*p.z);
+    }
+    return ixx;
+}
+
+
+/**
+ * Returns the yy component of the inertia tensor, in the part's CoG frame, including
+ * both structural and point masses */
+double Inertia::Iyy_t() const
+{
+    Vector3d cogt = CoG_t();
+
+    Vector3d const &d = (cogt-m_CoG_s);
+    double iyy = m_Iyy_s + m_Mass_s*(d.x*d.x+d.z*d.z);
+
+    for(int im=0; im<m_PointMass.size(); im++)
+    {
+        PointMass const &pm = m_PointMass.at(im);
+        Vector3d const &p = pm.position()-cogt;
+        iyy += pm.mass() * (p.x*p.x+p.z*p.z);
+    }
+    return iyy;
+}
+
+
+/**
+ * Returns the zz component of the inertia tensor, in the part's CoG frame, including
+ * both structural and point masses */
+double Inertia::Izz_t() const
+{
+    Vector3d cogt = CoG_t();
+
+    Vector3d const &d = (cogt-m_CoG_s);
+    double izz = m_Izz_s + m_Mass_s*(d.x*d.x+d.y*d.y);
+
+    for(int im=0; im<m_PointMass.size(); im++)
+    {
+        PointMass const &pm = m_PointMass.at(im);
+        Vector3d const &p = pm.position()-cogt;
+        izz += pm.mass() * (p.x*p.x+p.y*p.y);
+    }
+    return izz;
+}
+
+
+/**
+ * Returns the xy component of the inertia tensor, in the part's CoG frame, including
+ * both structural and point masses
+ *
+ * Sign modification of the products of inertia in v7.13 from negative to positive
+*/
+double Inertia::Ixy_t() const
+{
+    Vector3d cogt = CoG_t();
+
+    Vector3d const &d = m_CoG_s - cogt;
+    double ixy = m_Ixy_s + m_Mass_s* d.x*d.y;
+
+    for(int im=0; im<m_PointMass.size(); im++)
+    {
+        PointMass const &pm = m_PointMass.at(im);
+        Vector3d const &p = pm.position()-cogt;
+        ixy += pm.mass() * (p.x*p.y);
+    }
+    return ixy;
+}
+
+
+/**
+ * Returns the xz component of the inertia tensor, in the part's CoG frame, including
+ * both structural and point masses
+ *
+ * Sign modification of the products of inertia in v7.13 from negative to positive
+*/
+double Inertia::Ixz_t() const
+{
+    Vector3d cogt = CoG_t();
+
+    Vector3d const &d = m_CoG_s - cogt;
+    double ixz = m_Ixz_s + m_Mass_s*d.x*d.z;
+
+    for(int im=0; im<m_PointMass.size(); im++)
+    {
+        PointMass const &pm = m_PointMass.at(im);
+        Vector3d const &p = pm.position()-cogt;
+        ixz += pm.mass() * (p.x*p.z);
+    }
+    return ixz;
+}
+
+
+/**
+ * Returns the yz component of the inertia tensor, in the part's CoG frame, including
+ * both structural and point masses
+ *
+ * Sign modification of the products of inertia in v7.13 from negative to positive
+ */
+double Inertia::Iyz_t() const
+{
+    Vector3d cogt = CoG_t();
+
+    Vector3d const &d = m_CoG_s - cogt;
+    double iyz = m_Iyz_s + m_Mass_s*d.y*d.z;
+
+    for(int im=0; im<m_PointMass.size(); im++)
+    {
+        PointMass const &pm = m_PointMass.at(im);
+        Vector3d const &p = pm.position()-cogt;
+        iyz += pm.mass() * (p.y*p.z);
+    }
+    return iyz;
+}
+
+
+QString Inertia::toString() const
+{
+    QString sep =  " ";
+    QString strInertia, strange;
+
+    strInertia += "Structure only:\n";
+    strange = QString::asprintf("   mass = %11.5g ", structuralMass()*Units::kgtoUnit());
+    strange += Units::massUnitLabel() + "\n";
+    strInertia += strange;
+
+    strInertia += "   CoG: " + sep;
+    strange = QString::asprintf("%13.5g", CoG_s().x * Units::mtoUnit());
+    strInertia += strange + sep;
+    strange = QString::asprintf("%13.5g", CoG_s().y * Units::mtoUnit());
+    strInertia += strange + sep;
+    strange = QString::asprintf("%13.5g", CoG_s().z * Units::mtoUnit());
+    strInertia += strange + sep + Units::lengthUnitLabel();
+    strInertia += "\n";
+
+    strInertia += "   inertia in the structure's CoG frame:\n";
+    strange = QString::asprintf("      Ixx_struct_cog= %13.5g", Ixx_s()*Units::kgm2toUnit());
+    strInertia += strange + sep+ Units::inertiaUnitLabel() + "\n";
+    strange = QString::asprintf("      Iyy_struct_cog= %13.5g", Iyy_s()*Units::kgm2toUnit());
+    strInertia += strange + sep+ Units::inertiaUnitLabel() + "\n";
+    strange = QString::asprintf("      Izz_struct_cog= %13.5g", Izz_s()*Units::kgm2toUnit());
+    strInertia += strange + sep+ Units::inertiaUnitLabel() + "\n";
+    strange = QString::asprintf("      Ixz_struct_cog= %13.5g", Ixz_s()*Units::kgm2toUnit());
+    strInertia += strange + sep+ Units::inertiaUnitLabel() + "\n\n";
+
+    if(pointMassCount()>0)
+    {
+        strInertia += "Additional point masses:\n";
+        strInertia += "     Mass (" + Units::massUnitLabel() + ")" + sep;
+        strInertia += "        x ("    + Units::lengthUnitLabel() + ")" + sep;
+        strInertia += "        y ("    + Units::lengthUnitLabel() + ")" + sep;
+        strInertia += "        z ("    + Units::lengthUnitLabel() + ")" + sep;
+        strInertia += "\n";
+        for(int im=0; im<pointMassCount(); im++)
+        {
+            strange = QString::asprintf("  %11.5g ", pointMassAt(im).mass()*Units::kgtoUnit());
+            strInertia += strange + sep;
+            strange = QString::asprintf("  %11.5g ", pointMassAt(im).position().x*Units::mtoUnit());
+            strInertia += strange + sep;
+            strange = QString::asprintf("  %11.5g ", pointMassAt(im).position().y*Units::mtoUnit());
+            strInertia += strange + sep;
+            strange = QString::asprintf("  %11.5g ", pointMassAt(im).position().z*Units::mtoUnit());
+            strInertia += strange + sep ;
+            strange = QString::asprintf("  %s", pointMassAt(im).tag().toStdString().c_str());
+            strInertia += strange + "\n";
+        }
+        strInertia += "\n";
+    }
+
+    return strInertia;
+}
+
+
+void Inertia::scaleMasses(double scalefactor)
+{
+    m_Mass_s *= scalefactor;
+    for(int i=0; i<m_PointMass.size(); i++)
+        m_PointMass[i].setMass(m_PointMass[i].mass()*scalefactor);
+}
+
+
+void Inertia::scaleMassPositions(double scalefactor)
+{
+    for(int i=0; i<m_PointMass.size(); i++)
+        m_PointMass[i].setPosition(m_PointMass[i].position()*scalefactor);
+}
+
+
+void Inertia::translateMasses(Vector3d const & t)
+{
+    for(int i=0; i<m_PointMass.size(); i++)
+        m_PointMass[i].setPosition(m_PointMass[i].position()+t);
+}
+
+
+void Inertia::rotateMasses(Vector3d const &O, Vector3d const &axis, double theta)
+{
+    for(int i=0; i<m_PointMass.size(); i++)
+    {
+        Vector3d pos = m_PointMass[i].position();
+        pos.rotate(O, axis, theta);
+        m_PointMass[i].setPosition(pos);
+    }
+}
+
+
+
+

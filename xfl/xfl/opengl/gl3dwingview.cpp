@@ -1,0 +1,568 @@
+/****************************************************************************
+
+    flow5 application
+    Copyright (C) Andre Deperrois 
+    All rights reserved.
+
+*****************************************************************************/
+
+
+#define _MATH_DEFINES_DEFINED
+
+
+#include <QMouseEvent>
+#include <QPainter>
+
+#include <xfl/opengl/gl_xfl.h>
+
+#include <xfl3d/globals/gl_globals.h>
+#include <xfl/opengl/gl_occ.h>
+#include <xfl/controls/w3dprefs.h>
+#include <xfl/opengl/gl3dwingview.h>
+#include <xflcore/units.h>
+#include <xflgeom/geom_globals/geom_global.h>
+#include <xflobjects/objects3d/wing/surface.h>
+#include <xflobjects/objects3d/wing/wingxfl.h>
+#include <xflpanels/panels/panel3.h>
+
+
+gl3dWingView::gl3dWingView(QWidget *pParent) : gl3dXflView(pParent)
+{
+    m_pWing = nullptr;
+    m_iSection = -1;
+    m_bRightSide               = true;
+    m_bHighlightSection        = true;
+    m_bResetglSectionHighlight = true;
+    m_bResetglWing             = true;
+
+    m_nHighlightLines = m_HighlightLineSize=0;
+}
+
+
+gl3dWingView::~gl3dWingView()
+{
+    if(m_vboSurface.isCreated())          m_vboSurface.destroy();
+    if(m_vboOutline.isCreated())          m_vboOutline.destroy();
+    if(m_vboTessellation.isCreated())     m_vboTessellation.destroy();
+    if(m_vboTessNormals.isCreated())      m_vboTessNormals.destroy();
+    if(m_vboSectionHighlight.isCreated()) m_vboSectionHighlight.destroy();
+    if(m_vboTessNormals.isCreated())      m_vboTessNormals.destroy();
+}
+
+
+void gl3dWingView::glRenderView()
+{
+    if(!m_pWing) return;
+
+    WingXfl *pWingXfl = dynamic_cast<WingXfl*>(m_pWing);
+
+    QMatrix4x4 vmMat(m_matView*m_matModel);
+    QMatrix4x4 pvmMat(m_matProj*vmMat);
+    m_shadSurf.bind();
+    {
+        m_shadSurf.setUniformValue(m_locSurf.m_vmMatrix,  vmMat);
+        m_shadSurf.setUniformValue(m_locSurf.m_pvmMatrix, pvmMat);
+    }
+
+    m_shadLine.bind();
+    {
+        m_shadLine.setUniformValue(m_locLine.m_vmMatrix,  vmMat);
+        m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, pvmMat);
+    }
+    m_shadLine.release();
+
+    if(m_bSurfaces)   paintTriangles3Vtx(m_vboSurface, m_pWing->color(), false, isLightOn());
+    if(m_bOutline)    paintSegments(m_vboOutline, W3dPrefs::s_OutlineStyle);
+
+    if(pWingXfl)
+    {
+        if(m_bFoilNames && pWingXfl)  paintFoilNames(pWingXfl);
+    }
+
+    if(m_bTessellation)
+    {
+        paintSegments(m_vboTessellation, W3dPrefs::s_OutlineStyle);
+        paintSegments(m_vboTessNormals, Qt::yellow, 1);
+    }
+
+    if(m_bNormals)
+    {
+        paintNormals(m_vboNormals);
+    }
+
+    if(m_bMeshPanels && !m_bSurfaces)
+    {
+        paintTriPanels(m_vboTriMesh, false);
+        paintSegments(m_vboTriEdges, W3dPrefs::s_PanelStyle);
+    }
+    if(m_bShowMasses)
+    {
+        paintPartMasses(Vector3d(0.0,0.0,0.0), 0.0, "Structural mass", m_pWing->pointMasses(), m_iSelectedPartMass);
+
+        //plot CG
+        paintSphere(m_pWing->CoG_t(), W3dPrefs::s_MassRadius*2.0/double(m_glScalef), W3dPrefs::s_MassColor.darker());
+
+        double delta = 0.02/double(m_glScalef);
+        glRenderText(m_pWing->CoG_t().x, m_pWing->CoG_t().y, m_pWing->CoG_t().z + delta,
+                     "CoG "+QString("%1").arg(m_pWing->totalMass()*Units::kgtoUnit(), 0, 'f', 2)
+                     +Units::massUnitLabel(), W3dPrefs::s_MassColor.darker(), false, true);
+    }
+    if(m_iSection>=0 && m_bHighlightSection)
+    {
+        paintSegments(m_vboSectionHighlight, W3dPrefs::s_HighStyle, false);
+//        paintWingSectionHighlight();
+    }
+
+    if(m_bHighlightPanel && isPicking() && m_PickedPanelIndex>=0 && m_bMeshPanels)
+        highlightPickedPanel3(m_Panel3.at(m_PickedPanelIndex));
+
+    if(bPickNode() && m_bMeshPanels)
+    {
+        if(m_NodePair.first>=0 && m_NodePair.first<m_Nodes.size())
+        {
+            Node const &nd = m_Nodes.at(m_NodePair.first);
+            paintSphere(nd, s_NodeRadius/double(m_glScalef), Qt::green, true);
+        }
+        if(m_NodePair.second>=0 && m_NodePair.second<m_Nodes.size())
+        {
+            //unnecessary, pair is cleared immediately
+            Node const &nd = m_Nodes.at(m_NodePair.second);
+            paintSphere(nd, s_NodeRadius/double(m_glScalef), Qt::cyan, true);
+        }
+
+        if(m_PickedNodeIndex>=0 && m_PickedNodeIndex<m_Nodes.size())
+        {
+            Node const &nd = m_Nodes.at(m_PickedNodeIndex);
+            paintSphere(nd, s_NodeRadius/double(m_glScalef), Qt::red, true);
+        }
+    }
+    paintMeasure();
+}
+
+
+/**
+* Creates the VertexBufferObjects for OpenGL 3.0
+*/
+void gl3dWingView::glMake3dObjects()
+{
+    if(!m_pWing) return;
+    WingXfl *pWingXfl = dynamic_cast<WingXfl*>(m_pWing);
+
+    if(m_bResetglSectionHighlight || m_bResetglWing)
+    {
+        if(pWingXfl && m_iSection>=0)
+        {
+            glMakeWingSectionHighlight_seg(pWingXfl, m_iSection);
+        }
+        m_bResetglSectionHighlight = false;
+    }
+
+    if(m_bResetglWing)
+    {
+        m_bResetglWing = false;
+
+        if(pWingXfl)
+        {
+            pWingXfl->makeTriangulation(nullptr, W3dPrefs::s_iChordwiseRes);
+            gl::makeTriangles3Vtx(m_pWing->triangulation().triangles(), false, m_vboSurface);
+            gl::makeTrianglesOutline(m_pWing->triangulation().triangles(), Vector3d(), m_vboTessellation);
+            gl::makeSegments(pWingXfl->outline(), Vector3d(), m_vboOutline);
+        }
+
+        gl::makeTriangleNodeNormals(m_pWing->triangulation().triangles(), 0.05f, m_vboTessNormals);
+//        m_pglStdBuffers->glMakeTriangleNormals(triangles, 0.1f, m_vboTessNormals);
+
+        // wing triangular panels are not stored in the wing object, need to rebuild them on the fly
+        // and store them in this class to pick them
+        m_Panel3.clear();
+        m_Nodes.clear();
+
+        if(pWingXfl)
+        {
+            for (int j=0; j<pWingXfl->surfaceCount(); j++)
+            {
+                pWingXfl->surface(j).makeSideNodes(nullptr);
+            }
+        }
+
+        m_pWing->makeTriPanels(m_Panel3, m_Nodes, true);
+        gl::makeTriPanels(m_Panel3, Vector3d(), m_vboTriMesh);
+        gl::makeTriEdges(m_Panel3, Vector3d(), m_vboTriEdges);
+        gl::makePanelNormals(m_Panel3, 0.1f, m_vboNormals);
+    }
+}
+
+
+void gl3dWingView::mouseReleaseEvent(QMouseEvent *pEvent)
+{
+    if(!m_bHasMouseMoved && m_bP3Select)
+    {
+        Vector3d I;
+        if(pickPanel3(pEvent->pos(), m_Panel3, I))
+        {
+            emit panelSelected(m_PickedPanelIndex);
+        }
+    }
+    else
+    {
+        int draggeddistance = (m_PressedPoint-pEvent->pos()).manhattanLength();
+
+        if(draggeddistance<5 && (pEvent->button()==Qt::LeftButton) && bPickNode() && m_PickedNodeIndex>=0)
+        {
+            if(m_PickedNodeIndex<0)
+            {
+                // clear and start again node pair picking
+                m_NodePair = {-1,-1};
+                return;
+            }
+
+            if(m_NodePair.first<0) m_NodePair.first = m_PickedNodeIndex;
+            else if(m_NodePair.second<0)
+            {
+                m_NodePair.second = m_PickedNodeIndex;
+                //two valid node indexes, merge them
+                emit pickedNodePair(m_NodePair);
+                m_NodePair = {-1,-1};
+            }
+            else
+            {
+                //start again
+                m_NodePair = {m_PickedNodeIndex, -1};
+            }
+        }
+    }
+
+
+    gl3dXflView::mouseReleaseEvent(pEvent);
+
+    update();
+}
+
+
+void gl3dWingView::mouseMoveEvent(QMouseEvent *pEvent)
+{
+    int lastpickedindex = m_PickedPanelIndex;
+    if(pEvent->buttons() || pEvent->modifiers().testFlag(Qt::AltModifier))
+    {
+//        m_PickedIndex = -1;
+//        clearOutputInfo();
+        gl3dXflView::mouseMoveEvent(pEvent);
+        return;
+    }
+
+    if((!m_bHighlightPanel && !bPickNode())  || !m_bMeshPanels)
+    {
+        clearTopRightOutput();
+        m_PickedPanelIndex = -1;
+        return;
+    }
+
+    Vector3d I;
+    pickPanel3(pEvent->pos(), m_Panel3, I);
+
+    if(m_PickedPanelIndex<0 || m_PickedPanelIndex>m_Panel3.size())
+    {
+        m_PickedPanelIndex = -1;
+        m_PickedNodeIndex = -1;
+        clearTopRightOutput();
+        update();
+    }
+    else if(m_PickedPanelIndex!=lastpickedindex)
+    {
+        if(m_bHighlightPanel)
+        {
+            if(m_PickedPanelIndex>=0 && m_PickedPanelIndex<m_Panel3.size())
+            {
+                Panel3 const &p3 = m_Panel3.at(m_PickedPanelIndex);
+                gl::makeTriangle(p3.vertexAt(0), p3.vertexAt(1), p3.vertexAt(2), m_vboTriangle);
+
+                setTopRightOutput(p3.properties(false));
+            }
+        }
+        else if(bPickNode())
+        {
+            Panel3 const& p3 = m_Panel3.at(m_PickedPanelIndex);
+            int lastpickedindex = m_PickedNodeIndex;
+            pickPanelNode(p3, I, xfl::NOSURFACE);
+            if(m_PickedNodeIndex<0 || m_PickedNodeIndex>=m_Nodes.size())
+            {
+                m_PickedNodeIndex = -1;
+                clearTopRightOutput();
+            }
+            else if(m_PickedNodeIndex!=lastpickedindex)
+            {
+                if(m_PickedNodeIndex>=0 && m_PickedNodeIndex<m_Nodes.size())
+                {
+                    Node const &nd = m_Nodes.at(m_PickedNodeIndex);
+                    setTopRightOutput(nd.properties());
+                 }
+            }
+        }
+        update();
+    }
+}
+
+
+bool gl3dWingView::intersectTheObject(const Vector3d &AA,  const Vector3d &BB, Vector3d &I)
+{
+    Vector3d U = (BB-AA).normalized();
+    Vector3d N;
+    if (m_pWing->triangulation().intersect(AA, BB, I, N)) return true;
+    return false;
+}
+
+
+/** used only in WingDlg*/
+void gl3dWingView::paintWingSectionHighlight()
+{
+    QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
+
+    m_shadLine.bind();
+    {
+        m_vboSectionHighlight.bind();
+        {
+            m_shadLine.enableAttributeArray(m_locLine.m_attrVertex);
+            m_shadLine.setAttributeBuffer(m_locLine.m_attrVertex, GL_FLOAT, 0, 3, 3 * sizeof(GLfloat));
+
+            m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView*m_matModel);
+            m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
+
+            m_shadLine.setUniformValue(m_locLine.m_Thickness, float(W3dPrefs::highlightWidth()));
+            m_shadLine.setUniformValue(m_locLine.m_UniColor, W3dPrefs::highlightColor());
+            m_shadLine.setUniformValue(m_locLine.m_Pattern, gl::stipple(Line::SOLID));
+
+            int pos = 0;
+            for(int iLines=0; iLines<m_nHighlightLines; iLines++)
+            {
+                glDrawArrays(GL_LINE_STRIP, pos, m_HighlightLineSize);
+                pos += m_HighlightLineSize;
+            }
+
+            m_shadLine.disableAttributeArray(m_locLine.m_attrVertex);
+        }
+        m_vboSectionHighlight.release();
+    }
+    m_shadLine.release();
+}
+
+
+void gl3dWingView::glMakeWingSectionHighlight(WingXfl const *pWing, int iSectionHighLight, bool bRightSide)
+{
+    Node node;
+
+    if(iSectionHighLight<0 || iSectionHighLight>pWing->sectionCount())
+    {
+        m_vboSectionHighlight.destroy();
+        return;
+    }
+
+    int CHORDPOINTS = W3dPrefs::s_iChordwiseRes;
+    int iSection = 0;
+    int jSurf = 0;
+    for(int jSection=0; jSection<pWing->sectionCount(); jSection++)
+    {
+        if(jSection==iSectionHighLight) break;
+        if((jSection<pWing->sectionCount()-1) &&fabs(pWing->yPosition(jSection+1)-pWing->yPosition(jSection)) > WingXfl::minSurfaceLength())
+            iSection++;
+    }
+
+    m_HighlightLineSize = CHORDPOINTS * 2;
+    int bufferSize = m_HighlightLineSize *2 *3 ;
+    QVector<float> pHighlightVertexArray(bufferSize);
+
+    m_nHighlightLines = 0;
+    int iv=0;
+    if(iSection==0)
+    {
+        m_nHighlightLines++;
+        //define the inner left side surface
+        if(pWing->isTwoSided()) jSurf = pWing->m_Surface.size()/2 - 1;
+        else                    jSurf = pWing->m_Surface.size()   - 1;
+        if(jSurf>=0 && jSurf<pWing->m_Surface.size())
+        {
+            for (int lx=0; lx<CHORDPOINTS; lx++)
+            {
+                double xRel = double(lx)/double(CHORDPOINTS-1);
+                pWing->m_Surface.at(jSurf).getSideNode(xRel, true, xfl::TOPSURFACE, node);
+                pHighlightVertexArray[iv++] = node.xf();
+                pHighlightVertexArray[iv++] = node.yf();
+                pHighlightVertexArray[iv++] = node.zf();
+            }
+            for (int lx=CHORDPOINTS-1; lx>=0; lx--)
+            {
+                double xRel = double(lx)/double(CHORDPOINTS-1);
+                pWing->m_Surface.at(jSurf).getSideNode(xRel, true, xfl::BOTSURFACE, node);
+                pHighlightVertexArray[iv++] = node.xf();
+                pHighlightVertexArray[iv++] = node.yf();
+                pHighlightVertexArray[iv++] = node.zf();
+            }
+        }
+    }
+    else
+    {
+        if((pWing->isSymmetric() || bRightSide) && pWing->isTwoSided())
+        {
+            m_nHighlightLines++;
+            jSurf = pWing->m_Surface.size()/2 + iSection -1;
+            if(jSurf>=0 && jSurf<pWing->m_Surface.size())
+            {
+                for (int lx=0; lx<CHORDPOINTS; lx++)
+                {
+                    double xRel = double(lx)/double(CHORDPOINTS-1);
+                    pWing->m_Surface.at(jSurf).getSideNode(xRel, true, xfl::TOPSURFACE, node);
+                    pHighlightVertexArray[iv++] = node.xf();
+                    pHighlightVertexArray[iv++] = node.yf();
+                    pHighlightVertexArray[iv++] = node.zf();
+                }
+                for (int lx=CHORDPOINTS-1; lx>=0; lx--)
+                {
+                    double xRel = double(lx)/double(CHORDPOINTS-1);
+                    pWing->m_Surface.at(jSurf).getSideNode(xRel, true, xfl::BOTSURFACE, node);
+                    pHighlightVertexArray[iv++] = node.xf();
+                    pHighlightVertexArray[iv++] = node.yf();
+                    pHighlightVertexArray[iv++] = node.zf();
+                }
+            }
+        }
+
+        if(pWing->isSymmetric() || !bRightSide)
+        {
+            m_nHighlightLines++;
+            if(!pWing->isFin())  jSurf = pWing->m_Surface.size()/2 - iSection;
+            else                 jSurf = pWing->m_Surface.size()   - iSection;
+            if(jSurf>=0 && jSurf<pWing->m_Surface.size())
+            {
+                //plot A side outline
+                for (int lx=0; lx<CHORDPOINTS; lx++)
+                {
+                    double xRel = double(lx)/double(CHORDPOINTS-1);
+                    pWing->m_Surface.at(jSurf).getSideNode(xRel, false, xfl::TOPSURFACE, node);
+                    pHighlightVertexArray[iv++] = node.xf();
+                    pHighlightVertexArray[iv++] = node.yf();
+                    pHighlightVertexArray[iv++] = node.zf();
+                }
+
+                for (int lx=CHORDPOINTS-1; lx>=0; lx--)
+                {
+                    double xRel = double(lx)/double(CHORDPOINTS-1);
+                    pWing->m_Surface.at(jSurf).getSideNode(xRel, false, xfl::BOTSURFACE, node);
+                    pHighlightVertexArray[iv++] = node.xf();
+                    pHighlightVertexArray[iv++] = node.yf();
+                    pHighlightVertexArray[iv++] = node.zf();
+                }
+            }
+        }
+    }
+
+    m_vboSectionHighlight.destroy();
+    m_vboSectionHighlight.create();
+    m_vboSectionHighlight.bind();
+    m_vboSectionHighlight.allocate(pHighlightVertexArray.data(), bufferSize*int(sizeof(float)));
+    m_vboSectionHighlight.release();
+}
+
+
+void gl3dWingView::glMakeWingSectionHighlight_seg(WingXfl const *pWing, int iSectionHighLight)
+{
+    Node node;
+
+    if(iSectionHighLight<0 || iSectionHighLight>pWing->sectionCount())
+    {
+        m_vboSectionHighlight.destroy();
+        return;
+    }
+
+    int CHORDPOINTS = W3dPrefs::s_iChordwiseRes;
+    int iSection = 0;
+    int jSurf = 0;
+    for(int jSection=0; jSection<pWing->sectionCount(); jSection++)
+    {
+        if(jSection==iSectionHighLight) break;
+        if((jSection<pWing->sectionCount()-1) &&fabs(pWing->yPosition(jSection+1)-pWing->yPosition(jSection)) > WingXfl::minSurfaceLength())
+            iSection++;
+    }
+
+    QVector<Node> PtTopLeft, PtTopRight, PtBotLeft, PtBotRight;
+    QVector<float> HighlightVA;
+
+    int stride = 6; // 2 vertices/segment x3 space coordinates
+
+    int iv=0;
+    if(pWing->isTwoSided())
+    {
+        int buffersize = (CHORDPOINTS-1)   // number of segments
+                         *2                // top and bottom
+                         *2                // left and right
+                         *stride;
+        HighlightVA.resize(buffersize);
+
+        // left side
+        jSurf = pWing->surfaceCount()/2 - iSection;
+
+        Surface const &lsurf = pWing->surfaceAt(jSurf);
+        lsurf.getSidePoints_1(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, CHORDPOINTS, xfl::COSINE);
+        lsurf.getSidePoints_1(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, CHORDPOINTS, xfl::COSINE);
+
+        for(int i=0; i<CHORDPOINTS-1; i++)
+        {
+            // top segment
+            HighlightVA[iv++] = PtTopLeft.at(i).xf();
+            HighlightVA[iv++] = PtTopLeft.at(i).yf();
+            HighlightVA[iv++] = PtTopLeft.at(i).zf();
+
+            HighlightVA[iv++] = PtTopLeft.at(i+1).xf();
+            HighlightVA[iv++] = PtTopLeft.at(i+1).yf();
+            HighlightVA[iv++] = PtTopLeft.at(i+1).zf();
+
+            // bot segment
+            HighlightVA[iv++] = PtBotLeft.at(i).xf();
+            HighlightVA[iv++] = PtBotLeft.at(i).yf();
+            HighlightVA[iv++] = PtBotLeft.at(i).zf();
+
+            HighlightVA[iv++] = PtBotLeft.at(i+1).xf();
+            HighlightVA[iv++] = PtBotLeft.at(i+1).yf();
+            HighlightVA[iv++] = PtBotLeft.at(i+1).zf();
+        }
+        // right side
+        jSurf = pWing->surfaceCount()/2 + iSection -1;
+
+        Surface const &rsurf = pWing->surfaceAt(jSurf);
+        rsurf.getSidePoints_1(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, CHORDPOINTS, xfl::COSINE);
+        rsurf.getSidePoints_1(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, CHORDPOINTS, xfl::COSINE);
+
+        for(int i=0; i<CHORDPOINTS-1; i++)
+        {
+            // top segment
+            HighlightVA[iv++] = PtTopRight.at(i).xf();
+            HighlightVA[iv++] = PtTopRight.at(i).yf();
+            HighlightVA[iv++] = PtTopRight.at(i).zf();
+
+            HighlightVA[iv++] = PtTopRight.at(i+1).xf();
+            HighlightVA[iv++] = PtTopRight.at(i+1).yf();
+            HighlightVA[iv++] = PtTopRight.at(i+1).zf();
+
+            // bot segment
+            HighlightVA[iv++] = PtBotRight.at(i).xf();
+            HighlightVA[iv++] = PtBotRight.at(i).yf();
+            HighlightVA[iv++] = PtBotRight.at(i).zf();
+
+            HighlightVA[iv++] = PtBotRight.at(i+1).xf();
+            HighlightVA[iv++] = PtBotRight.at(i+1).yf();
+            HighlightVA[iv++] = PtBotRight.at(i+1).zf();
+        }
+
+            Q_ASSERT(iv==buffersize);
+
+    }
+
+
+    m_vboSectionHighlight.destroy();
+    m_vboSectionHighlight.create();
+    m_vboSectionHighlight.bind();
+    m_vboSectionHighlight.allocate(HighlightVA.data(), HighlightVA.size()*int(sizeof(float)));
+    m_vboSectionHighlight.release();
+}
+
+
+
+

@@ -1,0 +1,6 @@
+set APPPATH=D:\techwing\build\flow5\Qt_6.8.2_MSVC2019\release\xfl\
+set VERSION=flow5_v7.51
+windeployqt.exe --dir D:\techwing\release\%VERSION%_win64 --compiler-runtime --release D:\techwing\build\flow5\Qt_6.8.2_MSVC2019\release\xfl\flow5.exe
+
+
+

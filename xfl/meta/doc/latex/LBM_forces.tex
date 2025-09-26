@@ -1,0 +1,126 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper, portrait, margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage[export]{adjustbox}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xfrac}
+
+\graphicspath{{./figures/}}
+\renewcommand{\familydefault}{\sfdefault}
+
+ 
+\begin{document}
+
+\title{Lattice Boltzmann Method - Forces}
+\author{techwinder}
+
+\maketitle
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+
+\section{Introduction}
+In the case of the LBM, the forces acting on a body can be calculated either by integration of the stress over the obstacle's boundary or by the momentum exchange method. This document summarizes the implentation of both methods in flow5.
+
+\section{Methods}
+\subsection{Stress tensor}
+The viscous stress tensor is the sum of the pressure and viscosity or shear stress tensor (TK eq.15).
+\begin{equation}
+\overline{\sigma} = \overline{\sigma^p} + \overline{\sigma^{\nu} }
+\end{equation}
+\begin{equation}
+\overline{\sigma^p} = \begin{pmatrix}
+p & 0\\
+0 & p
+\end{pmatrix}
+\end{equation}
+\begin{equation}
+\overline{\sigma^{\nu} } = \rho \nu \; \overline{\epsilon}
+\end{equation}
+where $\overline{\epsilon}$ is the strain tensor:
+\begin{equation}
+\overline{\epsilon} = \frac{1}{2}\big[\frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i} \big]
+\end{equation}
+
+Alternatively, the deviatoric part of the stress tensor can be determined using the Chapman-Enskog analysis (TK eq.3.6, 4.14 and 6.4)
+\begin{equation}
+\overline{\sigma^{\nu}_{kl} } = -(1-\frac{\Delta_t}{2\tau}) \sum_{i} c_{ik} c_{il} f_i^{neq} = -(1-\frac{\Delta_t}{2\tau}) \Pi_{kl}^{(1)}
+\end{equation}
+where $f_i^{neq} = f_i-f_i^{eq}$ is the off-equilibriium part of the velocity distributions.
+
+The force acting on an infinitesimal area $dS$ of a boundary  with normal $\vec{n}$ is 
+\begin{equation}
+\vec{T} = \overline{\sigma} \cdot \vec{n} \, dS
+\end{equation}
+which can be decomposed into a normal induced by the hydrostatic pressure and a tangential shear force using projections.
+
+The normal force is
+\begin{equation}
+\vec{F}_n = (\vec{T} \cdot \vec{n}) \vec{n}
+\end{equation}
+and the wall shear stress (WSS TK 11.15) is
+\begin{equation}
+\vec{\tau} = \vec{T} - (\vec{T} \cdot \vec{n}) \vec{n}
+\end{equation}
+
+\subsection{Momentum exchange method} 
+flow5 implements the method described in \cite{TK}.
+
+
+\section{Implementation}
+Both methods mentioned in the previous section require special numerical treatment due to
+\begin{enumerate}
+   \item the staircase nature of the boundary which can lead to issues at the TE,
+   \item the discretized foil boundary and the potential gap at the foil's TE which can lead to a non-zero acting hydrostatic pressure on the foil.
+\end{enumerate}
+
+The fluid boundary cells are thos identified as having one neighbour cell inside the obstacle. Each fluid boundary cell is projected onto the foil's surface where the force is deemed to act. 
+
+\subsection{Hydrostatic pressure}
+Since the LBM calculates an absolute rather than a relative pressure as would be the case with a panel method, it is necessary to ensure 
+that the integral of the absolute pressure over the surface, i.e. Archimede's force, is zero. If this is not the case, the resulting load introduces a spurious and non-negligible term  in the evaluation of both lift and drag. Numerical experiments show that an  integration using a degree 5 Gaussian quadrature ensures that Archimedes's load is two orders of magnitude less than the lift load.
+
+Let $p = \rho c_s^2$ be the hydrostatic pressure at the fluid nodes, and let $p_0$ be the pressure at infinite distance.
+The resulting lift is the sum of the pressure forces on all fluid nodes. 
+
+\begin{equation}
+\begin{split}
+\vec{F} &= \int_S p \vec{n} dS = \int_S (p_0+\Delta p) \, \vec{n} \,dS \\
+        &=  p_0 \int_S \,\vec{n} \,dS + \int_S \Delta p \, \vec{n} \,dS 
+\end{split}
+\end{equation}
+
+The application of applying Gauss's theorem to the first integral gives:
+\begin{equation}
+\vec{F} =  \int_S \,\vec{n} \,dS = \int_V \, \nabla \vec{n} \,dV  =  \vec{0}
+\end{equation}
+since $\vec{n}$ is uniform.
+
+
+\newpage
+\begin{thebibliography}{9}
+
+\bibitem{TK} 
+Timm Krüger et al. 
+\textit{The Lattice Boltzmann Method}, Springer, 2017.
+
+\bibitem{Ladd} 
+Anthony J. C. Ladd.
+\textit{Numerical Simulations of Particulate Suspensions via a Discretized Boltzmann Equation Part I. Theoretical Foundation}, June 25, 1993.
+ 
+\bibitem{SL} 
+Y. Chen et al. 
+\textit{Momentum-exchange method in lattice Boltzmann simulations of particle-fluid interactions}, DOI: 10.1103/PhysRevE.88.013303, July 2013.
+
+ 
+\end{thebibliography}
+
+\end{document}
+
+
+
+
+

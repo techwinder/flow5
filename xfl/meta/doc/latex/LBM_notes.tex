@@ -1,0 +1,257 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper, portrait, margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage[export]{adjustbox}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xfrac}
+
+\graphicspath{{./figures/}}
+\renewcommand{\familydefault}{\sfdefault}
+
+ 
+\begin{document}
+
+\title{Lattice Boltzmann Method - Implementation notes}
+\author{techwinder}
+
+\maketitle
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+
+\section{Introduction}
+This document is a summary of the notes taken during the implementation in foil5 of an LBM 2d flow solver for airfoils. 
+\section{Lattice description}
+foil5 implements the d2q9 operator, with the convention illustrated in figure \ref{naca12top}.
+
+\begin{figure} 
+\centering
+\includegraphics[width=10cm]{d2q9.png}
+\caption{Directions of distributions}
+\label{naca12top}
+\end{figure}
+
+To simplify the imposition of boundary conditions, the velocity vectors have unit lengths 1 for the directions 1, 2, 3 and 4, and length $\sqrt{2}$ along the diagonal directions:
+\begin{equation}
+\label{Directions}
+\begin{split}
+c_0 &= (0,0) \\
+c_1 &= (1,0) \\
+c_2 &= (0,1) \\
+c_3 &= (-1,0) \\
+c_4 &= (0,-1) \\
+c_5 &= (1,1) \\
+c_6 &= (-1,1) \\
+c_7 &= (-1,-1) \\
+c_8 &= (1,-1) \\
+\end{split}
+\end{equation}
+
+The weight factors of the distributions are:
+\begin{equation}
+\begin{split}
+\label{Weight}
+w_0 &= \frac{4}{9}\\
+w_1 = w_2 = w_3 = w_4 &= \frac{1}{9}\\
+w_5 = w_6 = w_7 = w_8 &= \frac{1}{36}
+\end{split}
+\end{equation}
+
+
+The equilibrium distributions are:
+\begin{equation}
+f_i^{eq} =  w_i \, \rho \, \big( 1 + 3 \, c_i \cdot u + \frac{9}{2} (c_i \cdot u)^2 - \frac{3}{2} u \cdot u  \big)
+\end{equation}
+
+The first order moments at a given cell are:
+\begin{equation}
+\begin{split}
+\rho &= \sum_i{f_i} \\
+\rho \, u_x &= \sum_i{f_i} c_i^x \\
+\rho \, u_y &= \sum_i{f_i} c_i^y \\
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+\rho &=  f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8 \\
+\rho \, u_x &= f_1 - f_3 + f_5 - f_6 - f_7 + f_8 \\
+\rho \, u_y &= f_2 - f_4 + f_5 + f_6 - f_7 - f_8  \\
+\end{split}
+\end{equation}
+
+\section{Units} 
+In this paragraph and this paragraph only the superscript $^*$ denotes lattice units.
+\subsection{Length, time, density}
+The lattice units of length time and density are chosen to be equal to unity, which means that the conversion factors from lattice to physical units are 
+\begin{equation}
+\begin{split}
+C_l &= \Delta x\\
+C_t &= \Delta t\\
+C_{\rho} &= \rho\\
+\end{split}
+\end{equation}
+
+or equivalently
+\begin{equation}
+\begin{split}
+l_{phys.} &= C_l \, l^*\\
+t_{phys.} &= C_t \, t^*\\
+\rho_{phys.} &= C_{\rho} \, \rho^*
+\end{split}
+\end{equation}
+
+\subsection{Velocity}
+The conversion factor for velocities is deduced from the factors set for length and time:
+\begin{equation}
+\begin{split}
+C_u = C_l / C_t \\
+U = C_u \, U^{*}
+\end{split}
+\end{equation}
+
+\subsection{Pressure}
+The lattice pressure $p^*$ is related to the lattice density $\rho^*$ through (\cite{TK} eq. 7.15)
+\begin{equation}
+p^* = \rho^* c_s^2\\
+\end{equation}
+And the conversion factor is 
+\begin{equation}
+C_{p} = \frac{C_\rho \, C_l^2}{C_t^2} 
+\end{equation}
+
+
+\subsection{Viscosity and Reynolds number}
+The viscosity has the dimension of a square legnth to a time, so that 
+\begin{equation}
+\begin{split}
+C_{\nu} = C_l^2 / C_t  = C_l \, C_u \\
+\nu = C_{\nu} \, \nu^{*}
+\end{split}
+\end{equation}
+
+For a given Reynolds number $Re$ and a reference length $L$, the physical and latice velocities are
+\begin{equation}
+\begin{split}
+U = \frac{Re \, \nu}{L} \\
+U^* = U / C_u
+\end{split}
+\end{equation}
+Implictely, the Reynolds number is the same in both systems of units.
+
+\section{Relaxation time} 
+The convention for the relaxation parameter $\tau$ is the one used in TK 7.2.1, i.e. $\tau$ has the dimension of a time.
+
+$\tau$ is the physical parameter and $\tau^*$ is a dimensionless parameter such that
+\begin{equation}
+\tau = \tau^* C_t
+\end{equation}
+
+The kinematic lattice viscosity is related to the relaxation parameter according to (TK 7.2.1.1) 
+\begin{equation}
+\begin{split}
+\nu^* = c_s^2 (\tau^* - 1/2) \\
+\nu = c_s^2 (\tau^* - 1/2) \frac{\Delta x^2}{\Delta t}
+\end{split}
+\end{equation}
+This means that $\tau^*$, $\Delta x$ and $\Delta t$ are not independant.
+
+\section{Parameter selection}
+The choices made in foil5 follow the recommendations omade in TK §7.2.3.
+
+Since the goal is to analyse an airfoil, the reference length is its chord which is set to $L=1$ physical unit, e.g. meters.
+
+The problem is set up with:
+\begin{itemize}
+    \item The lattice width and height and the grid step $\Delta x$ which together define the number of cells
+    \item The Reynolds number $Re$
+    \item The kinematic viscosity $\nu$
+\end{itemize}
+The remaining parameters i.e the time step $\Delta t$ and the relaxation factor $\tau^*$ are free to choose to ensure stability and accuracy.
+
+The first option is to set the relaxation factor: $\tau^*= 0.6$. This defines the time step (TK eq. 7.27):
+$$\Delta t = c_s^2 (\tau^* - 1/2) \frac{\Delta x^2}{\nu}$$
+and the lattice viscosity:
+$$\nu^* = c_s^2 (\tau^* - 1/2)  = C_\nu \, \nu$$
+
+The physical velocity $U$ is
+$$U = \frac {Re \, \nu}{L}$$
+
+and the lattice velocity is 
+$$U^* = \frac{U} {C_u} = U \frac{\Delta t}{\Delta x}$$
+
+Finally the lattice Reynolds number is defined by taking the lattice grid step as length scale (TK eq. 7.19):
+$$Re_g = \frac{U_{max}^* \Delta x^*}{\nu^*} = \frac{U_{max}^*}{ c_s^2 (\tau^* - 1/2)} $$
+
+\textbf{Application:}
+
+$$Re = 1000$$
+$$\nu = 1.5 \, 10^{-5}$$
+$$\Delta x = 1/100 \, L$$ 
+$$L = 1 (m) $$
+
+With $c_s = 1/\sqrt{3}$ the rest of the parameters is deduced:
+$$\Delta t = 0.222$$
+$$U^* = 0.333$$
+$$\nu^* = 0.0333$$
+$$Re_g = 0.1$$
+
+
+\subsection{BGK operator}
+The relaxation factor for the BGK operator is $1/\tau$:
+$$\Omega_i(f) = - \frac{f_i-f_i^{eq}}{\tau} \Delta t = - \frac{f_i-f_i^{eq}}{\tau^*}$$
+\subsection{TRT and MRT}
+The relaxation rate $\omega$ is defined as
+$$\omega = \frac{1}{\tau}$$
+The TRT operator relaxes even-order moments i.e. $\rho$ etc. with $\omega^+$ and odd-order moments i.e. $u$ with $\omega^-$.
+
+$\omega^+$ is related to the kinematic shear viscosity (TK eq .10.47):
+$$\nu = c_s^2 \big(\frac{1}{\omega^+ \Delta t} -\frac{1}{2} \big) C_\nu$$
+$C_\nu$ is the conversion factor from lattice units to physical units in the case of viscosity:
+$$C_\nu = \frac{\Delta x^2}{\Delta t}$$
+$\omega^+$ is calculated using the previous equations:
+$$\omega^+ \Delta t= \frac{1}{ (\nu/c_s^2/C_\nu + 1/2)}$$
+$$\omega^+ \Delta t= \frac{2}{ (6\nu/C_\nu + 1)}$$
+$$\omega^+ \Delta t= \frac{2 C_\nu}{ (6\nu + C_\nu )}$$
+
+$\omega^-$ is a free parameter, which can be set indirectly using the "magic" parameter $\Lambda$ (TK eq. 10.43):
+$$\Lambda = \big(\frac{1}{\omega^+ \Delta t} -\frac{1}{2} \big) \big(\frac{1}{\omega^- \Delta t} -\frac{1}{2} \big)$$
+$\Lambda=1/4$ is the recommended value.
+\subsection{Cascading}
+The cascading or central moment collision operator is described in \cite{SL} and \cite{NP}. 
+The two papers disagree on the last component of the moment variation vector $-36 u_x  u_y \dots$ in \cite{SL} and $+36 u_x  u_y \dots$ in \cite{NP}. \textbf{[investigate]}.
+
+
+The effective relaxation parameter is
+$$\omega_{eff} = \frac{\Delta t}{\Delta t_R} = \omega^+ \Delta t$$
+
+\newpage
+\begin{thebibliography}{9}
+
+\bibitem{TK} 
+Timm Krüger et al. 
+\textit{The Lattice Boltzmann Method}, Springer, 2017.
+
+\bibitem{ZH} 
+Qisu Zou  and Xiaoyi He.
+\textit{On pressure and velocity flow boundary conditions and bounceback for the lattice Boltzmann BGK model}, arXiv:comp-gas/9611001v1, Nov. 1996.
+ 
+\bibitem{SL} 
+S. Leclaire et al. 
+\textit{Multiphase flow modeling of spinodal decomposition based on the cascaded lattice Boltzmann method}, Physica A 406 (2014) 307–319.
+
+\bibitem{NP} 
+N. Pellerin, S. Leclaire and M. Reggio. 
+\textit{An implementation of the Spalart–Allmaras turbulence model in a multi-domain lattice Boltzmann method for solving turbulent airfoil flows}, Computers and Mathematics with Applications 70 (2015) 3001–3018.
+ 
+\end{thebibliography}
+
+\end{document}
+
+
+
+
+

@@ -1,0 +1,118 @@
+/****************************************************************************
+
+    flow5 application
+    Copyright (C) Andre Deperrois 
+    All rights reserved.
+
+*****************************************************************************/
+
+#pragma once
+
+#include <QObject>
+#include <QFile>
+#include <QTextStream>
+
+#include <xflcore/enums_core.h>
+#include <xflcore/analysisrange.h>
+#include <xflcore/t8opp.h>
+
+class Plane;
+class WPolar;
+class LLTTask;
+class PlaneTask;
+class Task3d;
+
+class XflExecutor : public QObject
+{
+    Q_OBJECT
+
+    public:
+        XflExecutor(QWidget *pParent=nullptr);
+        ~XflExecutor();
+
+        void setEventDestination(QObject *pParent) {m_pEventDest=pParent;}
+
+        void setAnalysisStatus(xfl::enumAnalysisStatus status) {m_AnalysisStatus=status;}
+        bool isCancelled() const {return m_AnalysisStatus==xfl::CANCELLED;}
+        bool isRunning()   const {return m_AnalysisStatus==xfl::RUNNING;}
+        bool isPending()   const {return m_AnalysisStatus==xfl::PENDING;}
+        bool isFinished()  const {return m_AnalysisStatus==xfl::FINISHED || m_AnalysisStatus==xfl::CANCELLED;}
+
+        QString const &logFileName() const {return m_LogFileName;}
+
+        bool setLogFile(QString const &logfilename);
+        void setStdOutStream(bool bStdOut) {m_bStdOutStream = bStdOut;}
+        void traceLog(QString const &strMsg);
+        void closeLogFile();
+
+        WPolar *makeWPolar(const QString &pathName, const QString &xmlWPolarDirPath);
+        void makePlaneTasks(QString &logmsg);
+
+        void setPlanes(QList<Plane*> &planes) {m_oaPlane=planes;}
+        void makeWPolarArray(bool bRunAllPlaneAnalyses, QStringList &WPolarFileList,
+                             QString const &xmlWPolarDirPath, bool bRecursiveDirScan, QString &logmsg);
+        void makeWPolars(QMap<QString, bool> const&Analyses, QString const &xmlWPolarDirPath, QString &logmsg);
+        void setWPolars(QList<WPolar*> &polarlist) {m_oaWPolar=polarlist;}
+
+        void runLLTTask(LLTTask *pLLTTask);
+        void runPlaneTask(PlaneTask *pPlaneTask);
+        void cleanUpLLTTask(LLTTask *pLLTTask);
+        void cleanUpPlaneTask(PlaneTask *pPlaneTask);
+
+        void runPlaneAnalyses();
+
+        void setMakePOpps(bool b) {m_bMakePlaneOpps=b;}
+
+        QList<WPolar*> const & wPolars() const {return m_oaWPolar;}
+        QList<Plane*> const& planes() const {return m_oaPlane;}
+        QList<Task3d*> &planeTasks() {return m_PlaneExecList;}
+
+        void setT12Range(QVector<AnalysisRange> const&range) {m_T12Range=range;}
+        void setT3Range( QVector<AnalysisRange> const&range) {m_T3Range =range;}
+        void setT5Range( QVector<AnalysisRange> const&range) {m_T5Range =range;}
+        void setT6Range( QVector<AnalysisRange> const&range) {m_T6Range =range;}
+        void setT7Range( QVector<AnalysisRange> const&range) {m_T7Range =range;}
+        void setT8Range( QVector<T8Opp>         const&range) {m_T8Range =range;}
+
+        virtual void clearArrays();
+
+    signals:
+        void outputMessage(const QString &msg) const;
+        void cancelTask();
+        void taskFinished();
+        void taskStarted(int);
+
+    public slots:
+        void onRunExecutor();
+        void onCancel();
+
+    protected:
+
+        QObject *m_pEventDest;
+
+        QFile *m_pXFile;
+        QString m_LogFileName;
+        QTextStream m_OutLogStream;
+
+        bool m_bStdOutStream;
+
+        bool m_bMakePlaneOpps;
+
+        int m_nTaskStarted, m_nTaskDone;
+
+        xfl::enumAnalysisStatus m_AnalysisStatus;
+
+        QList<Plane*> m_oaPlane;
+        QList<WPolar*> m_oaWPolar;
+        QList<Task3d*> m_PlaneExecList;
+
+        // analysis variables
+        QVector<AnalysisRange> m_T12Range;
+        QVector<AnalysisRange> m_T3Range;
+        QVector<AnalysisRange> m_T5Range;
+        QVector<AnalysisRange> m_T6Range;
+        QVector<AnalysisRange> m_T7Range;
+        QVector<T8Opp>         m_T8Range;
+
+};
+

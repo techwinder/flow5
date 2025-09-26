@@ -1,0 +1,154 @@
+/****************************************************************************
+
+    flow5 application
+    Copyright (C) Andre Deperrois 
+    All rights reserved.
+
+*****************************************************************************/
+
+
+#define _MATH_DEFINES_DEFINED
+
+
+
+#include "xmlboatreader.h"
+#include <xflobjects/sailobjects/boat.h>
+#include <xflobjects/sailobjects/sails/sail.h>
+#include <xflobjects/sailobjects/sails/nurbssail.h>
+#include <xflobjects/sailobjects/sails/splinesail.h>
+#include <xflobjects/sailobjects/sails/wingsail.h>
+#include <xflobjects/objects3d/fuse/fusexfl.h>
+#include <xflobjects/objects3d/inertia/pointmass.h>
+#include <xflgeom/geom2d/splines/bspline.h>
+#include <xflgeom/geom2d/splines/bezierspline.h>
+#include <xflgeom/geom2d/splines/cubicspline.h>
+#include <xflgeom/geom2d/splines/pointspline.h>
+
+XmlBoatReader::XmlBoatReader(QFile &file) : XmlXSailReader(file)
+{
+    m_pBoat = nullptr;
+}
+
+
+bool XmlBoatReader::readXMLBoatFile()
+{
+    double lengthunit = 1.0;
+    double massunit = 1.0;
+    double velocityunit = 1.0;
+    double areaunit = 1.0;
+    double inertiaunit = 1.0;
+    Vector3d pos;
+
+    if (readNextStartElement())
+    {
+        if (name().toString() == "xflboat" && attributes().value("version").toString() == "1.0")
+        {
+            while(!atEnd() && !hasError() && readNextStartElement() )
+            {
+                if (name().toString().compare(QString("units"), Qt::CaseInsensitive)==0)
+                {
+                    readUnits(lengthunit, massunit, velocityunit, areaunit, inertiaunit);
+                }
+                else if (name().toString().compare(QString("Boat"), Qt::CaseInsensitive)==0)
+                {
+                    m_pBoat = new Boat;
+                    readBoat(m_pBoat, lengthunit, areaunit, massunit);
+                }
+                else
+                    skipCurrentElement();
+            }
+        }
+        else
+            raiseError("The file is not an xml boat v.1.0 definition file.");
+    }
+
+    if(hasError())
+    {
+        if(m_pBoat) delete m_pBoat;
+        m_pBoat = nullptr;
+    }
+
+    return !hasError();
+}
+
+
+/** */
+bool XmlBoatReader::readBoat(Boat *pBoat, double lengthunit, double areaunit, double massunit)
+{
+    if(!pBoat)
+    {
+        raiseError("Internal error: no boat defined");
+        return false;
+    }
+    while(!atEnd() && !hasError() && readNextStartElement())
+    {
+        if (name().toString().compare(QString("Name"),Qt::CaseInsensitive) ==0)
+        {
+            pBoat->setName(readElementText().trimmed());
+        }
+        else if (name().toString().compare(QString("description"), Qt::CaseInsensitive)==0)
+        {
+            pBoat->setDescription(readElementText().trimmed());
+        }
+        else if(name().toString().compare(QString("The_Style"), Qt::CaseInsensitive)==0)
+        {
+            LineStyle ls;
+            readTheStyle(ls);
+            pBoat->setTheStyle(ls);
+        }
+        else if (name().toString().compare(QString("body"), Qt::CaseInsensitive)==0)
+        {
+            FuseXfl *pFuseXfl = pBoat->appendNewXflHull();
+            if(!readFuseXfl(pFuseXfl, lengthunit, massunit))
+            {
+                return false;
+            }
+            pFuseXfl->makeFuseGeometry();
+        }
+        else if (name().toString().compare(QString("NURBSSail"), Qt::CaseInsensitive)==0)
+        {
+            NURBSSail *pSail = new NURBSSail;
+            Vector3d sailLE;
+
+            readNURBSSail(pSail, sailLE, lengthunit, areaunit);
+            if(!hasError())
+            {
+                pSail->setPosition(sailLE);
+                m_pBoat->appendSail(pSail);
+            }
+            else return false;
+        }
+        else if (name().toString().compare(QString("SplineSail"), Qt::CaseInsensitive)==0)
+        {
+            SplineSail *pSail = new SplineSail;
+            Vector3d sailLE;
+
+            readSplineSail(pSail, sailLE, lengthunit, areaunit);
+            if(!hasError())
+            {
+                pSail->setPosition(sailLE);
+                m_pBoat->appendSail(pSail);
+            }
+            else return false;
+        }
+        else if (name().toString().compare(QString("WingSail"), Qt::CaseInsensitive)==0)
+        {
+            WingSail *pWSail = new WingSail;
+            Vector3d sailLE;
+
+            readWingSail(pWSail, sailLE, lengthunit, areaunit);
+            if(!hasError())
+            {
+                pWSail->setPosition(sailLE);
+                m_pBoat->appendSail(pWSail);
+            }
+            else return false;
+        }
+        else
+            skipCurrentElement();
+    }
+
+    return(hasError());
+}
+
+

@@ -1,0 +1,76 @@
+\documentclass[a4paper, 11pt]{article}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{mathtools}
+\usepackage{color}
+\usepackage{bm}
+\usepackage{enumitem}
+\usepackage{csquotes}
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\renewcommand{\labelenumi}{\roman{enumi}}
+
+\begin{document}
+
+\title{TWA, AWA, TWS, AWS}
+\author{techwinder}
+
+\maketitle
+   
+\setlength{\parindent}{0pt}
+
+\section{Problem}
+The data required by flow5 to perform an analysis is the apparent wind angle (AWA) and apparent wind speed (AWS) as a function of altitude. These apparent quantities are those seen by an observer located on the moving boat. They are a function of the boat speed $\vec{V}_B$, of the true wind speed (TWS) and of the true wind angle (TWA).\newline
+The true wind angle is the same at all altitudes. However, because the true wind speed depends on altitude due to friction effects at sea level, the apparent wind angle is also a function of altitude as illustrated in figure 1. 
+
+\bigskip
+The choice made in flow5 is to have the user specify 
+\begin{itemize}
+	\item $\vec{V}_B$
+ 	\item $TWS_\infty$ and $TWA$ at high altitude
+ 	\item the wind gradient profile $f(h)$, with $f(\infty)=1$
+\end{itemize}
+and to calculate $AWA$ and $AWS$ as a function of altitude.
+
+\bigskip
+The problem can therefore be stated as follows:
+\begin{enumerate}
+	\item given $\vec{V}_B$ together with $AWA_\infty$ and $AWS_\infty$, find $TWS_\infty$ and $TWA$
+    \item given $TWS_\infty$, $TWA$ and the wind gradient function f(h), find $AWA = g(h)$
+\end{enumerate}
+ 
+\section{Finding $TWS_\infty$ and $TWA$}
+$$\vec{V}_{T}(\infty) = \vec{V}_{A} (\infty) + \vec{V}_B$$
+$$TWS_{\infty} = \Vert \vec{V}_{T}(\infty) \Vert$$
+$$\tan{(TWA)} = \frac{V_{Ty}}{V_{Tx}} = \frac{V_{Ay}}{V_{Ax}+V_{Bx}}$$
+
+
+
+\section{Finding $AWA = g(h)$}
+$$\vec{V}_T(h) = \vec{V}_T(\infty) f(h)$$
+$$TWS(h) = \Vert \vec{V}_{T}(h) \Vert$$
+$$\vec{V}_A(h) = \vec{V}_T(h)-\vec{V}_B$$
+$$\tan{(AWA)} = \frac{V_{Ay}}{V_{Ax}}  = \frac{V_{Ty}}{V_{Tx}-V_{B}}$$
+
+
+
+\begin{figure} 
+\includegraphics[width=13cm]{AWA}
+\caption{AWA and AWS}
+\end{figure}
+
+
+\end{document}
+ 
+
+
+
+
+
+
+
+
+
+
+
+

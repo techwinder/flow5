@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qss/flow5_dark.css</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,2 @@
+./configure -static -prefix /opt/Qt/5.12.5/gcc_64_static/ -nomake examples -nomake tests -skip qtwebengine -xcb OPENSSL_LIBS='-L/opt/Qt/Tools/OpenSSL/binary/lib/ -lssl -lcrypto' -openssl-linked -recheck-all 
+

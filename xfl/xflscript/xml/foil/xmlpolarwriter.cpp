@@ -1,0 +1,67 @@
+/****************************************************************************
+
+    flow5 application
+    Copyright (C) Andre Deperrois 
+    All rights reserved.
+
+*****************************************************************************/
+
+#include "xmlpolarwriter.h"
+#include <xflfoil/objects2d/polar.h>
+#include <xflobjects/objects_globals/objects_global.h>
+
+
+XmlPolarWriter::XmlPolarWriter(QFile &XFile) : XflXmlWriter(XFile)
+{
+}
+
+
+void XmlPolarWriter::writeXMLPolar(Polar *pPolar)
+{
+    if(!pPolar) return;
+
+    QString strange;
+
+    writeHeader();
+    writeStartElement("Polar");
+    {
+        writeTextElement("Foil_Name",  pPolar->foilName());
+        writeTextElement("Polar_Name", pPolar->name());
+        writeTextElement("Type",       polarType(pPolar->type()));
+        switch(pPolar->BLMethod())
+        {
+            default:
+            case BL::XFOIL:        writeTextElement("Method", "XFoil");        break;
+        }
+
+
+        if(!pPolar->isControlPolar())
+        {
+            writeTextElement("Fixed_Reynolds",           QString("%1").arg(pPolar->Reynolds(),11,'f',0));
+            writeTextElement("Fixed_AOA",                QString("%1").arg(pPolar->aoa(),11,'f',3));
+            writeTextElement("Mach",                     QString("%1").arg(pPolar->Mach(),7,'f', 2));
+            writeTextElement("ReType",                   QString("%1").arg(pPolar->ReType()));
+            writeTextElement("MaType",                   QString("%1").arg(pPolar->MaType()));
+            writeTextElement("NCrit",                    QString("%1").arg(pPolar->NCrit(),7,'f', 1));
+            writeTextElement("Forced_Top_Transition",    QString("%1").arg(pPolar->XTripTop(),7,'f', 2));
+            writeTextElement("Forced_Bottom_Transition", QString("%1").arg(pPolar->XTripBot(),7,'f', 2));
+        }
+    }
+    writeEndElement();
+    writeEndDocument();
+}
+
+
+void XmlPolarWriter::writeHeader()
+{
+    setAutoFormatting(true);
+
+    writeStartDocument();
+    writeDTD("<!DOCTYPE flow5>");
+    writeStartElement("Foil_Polar");
+    writeAttribute("version", "1.0");
+}
+
+
+
+

@@ -1,0 +1,131 @@
+\documentclass[a4paper, 11pt]{article}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{mathtools}
+\usepackage{color}
+\usepackage{bm}
+ 
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\renewcommand{\labelenumi}{\roman{enumi}}
+
+\begin{document}
+
+\title{Vortex particle wake - Implementation notes}
+\author{techwinder}
+
+\maketitle
+  
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+ 
+\section{Introduction}
+This documents summarizes the main points of the Vortex Particle Wake (VPW) implemented in flow5.
+The method is essentially as described in \cite{Willis_1}.
+
+The goal of the VPW is to replace the flat sheet wake model implemented in xflr5 and flow5, with a representation of 3d discrete particles. The main expected benefit are
+\begin{itemize}
+	\item the possibility to relax the wake while avoiding the numerical issues due to the low order representation of the doublet densities
+	\item the avoidance of strong numerical interactions of wake and body panels at the trailing edge of wings where they connect to the fuselage
+\end{itemize}
+ 
+
+\section{Vortex particle}
+
+A vortex particle, or vorton as it is called in ref \cite{Willis_1}, with index $p$ is defined by its position $\vec{R}_p$ and by its vorticity vector $\vec{\alpha}_p(\vec{R}, t)$.
+
+The discrete vector potential of the velocity field induced by a vorton is 
+\begin{equation}
+\vec{\Psi}_p(\vec{R}, t) = \frac{1}{4\pi} \vec{\alpha}_p(\vec{R}, t) \frac{1}{\|\vec{R}-\vec{R}_p \|}
+\end{equation}
+The vorticity induced velocity is:
+\begin{equation}
+\nabla\times\vec{\Psi}_p(\vec{R}, t) = \frac{1}{4\pi}  \nabla  \frac{1}{\|\vec{R}-\vec{R}_p \|} \times \vec{\alpha}_p(\vec{R}, t)
+\end{equation}
+
+\begin{equation}
+\nabla\times\vec{\Psi}_p(\vec{R}, t) = - \frac{1}{4\pi}  \frac{\vec{R}-\vec{R}_p }{\|\vec{R}-\vec{R}_p \|^3} \times \vec{\alpha}_p(\vec{R}, t)
+\end{equation}
+
+Similarly, the gradient of the velocity term used for the vorticity stretching in the vorticity evolution equation is:
+\begin{equation}
+\nabla \big( \nabla\times\vec{\Psi}_p(\vec{R}, t)  \big) =  \frac{1}{4\pi} \nabla \big( \nabla  \frac{1}{\|\vec{R}-\vec{R}_p \|} \times \vec{\alpha}_p(\vec{R}, t) \big)
+\end{equation}
+
+In Cartesian coordinates:
+$$\vec{r} = \vec{R}-\vec{R}_p $$
+$$\vec{\alpha}_p(\vec{R}, t) = \begin{pmatrix} \alpha_x \\ \alpha_y \\ \alpha_z\end {pmatrix}$$
+$$\nabla  \frac{1}{\|\vec{R}-\vec{R}_p \|} = -\frac{\vec{r}}{r^3}$$
+$$\vec{G} = \nabla  \frac{1}{\|\vec{R}-\vec{R}_p \|} \times \vec{\alpha}_p = -\frac{1}{r^3} \begin{pmatrix} x \\ y \\ z\end{pmatrix}
+\times  \begin{pmatrix} \alpha_x \\ \alpha_y \\ \alpha_z\end {pmatrix}$$
+$$\vec{G} = -\frac{1}{r^3}  \begin{pmatrix} y\alpha_z-z\alpha_y \\ z\alpha_x - x \alpha_z \\ x\alpha_y - y\alpha_x\end {pmatrix}
+$$
+
+$$\frac{d\vec{G}}{dx} = -\frac{1}{r^3}  \begin{pmatrix} 0\\ -\alpha_z \\ \alpha_y\end {pmatrix} + \frac{3x}{r^5} \begin{pmatrix} y\alpha_z-z\alpha_y \\ z\alpha_x - x \alpha_z \\ x\alpha_y - y\alpha_x\end {pmatrix}
+$$
+$$\frac{d\vec{G}}{dy} = -\frac{1}{r^3}  \begin{pmatrix} \alpha_z\\ 0 \\ -\alpha_x\end {pmatrix} + \frac{3y}{r^5} \begin{pmatrix} y\alpha_z-z\alpha_y \\ z\alpha_x - x \alpha_z \\ x\alpha_y - y\alpha_x\end {pmatrix}
+$$
+$$\frac{d\vec{G}}{dz} = -\frac{1}{r^3}  \begin{pmatrix} -\alpha_y\\ \alpha_x \\ 0\end {pmatrix} + \frac{3z}{r^5} \begin{pmatrix} y\alpha_z-z\alpha_y \\ z\alpha_x - x \alpha_z \\ x\alpha_y - y\alpha_x\end {pmatrix}
+$$
+
+
+\section{Wake panel to vorton}
+In the time independent problems considered in flow5, the doublet density is uniform along wake streamlines. The vortex direction is therefore aligned with the wake panel edges, and its intensity is equal to the gradient of the doublet density in the panel's direction normal to the freestream velocity, i.e. in the cross-flow plane.
+The cases of the uniform density and linear density need to be processed slightly differently.
+
+\begin{figure} 
+\centering
+\includegraphics[width=15cm]{uni_vortons}
+\caption{}
+ {\tabular[t]{@{}l@{}}Uniform doublet densities and equivalent vortons\endtabular}
+\label{naca12top}
+\end{figure}
+
+
+\begin{figure} 
+\centering
+\includegraphics[width=15cm]{lin_vortons}
+\caption{}
+ {\tabular[t]{@{}l@{}}Linear doublet densities and equivalent vortons\endtabular}
+\label{naca12top}
+\end{figure}
+
+
+In the uniform density case, this gradient is zero inside of the panel, and the jump in doublet densities occurs only at the streamwise panel edges. Two options can be considered to convert the wake panel into vortons:
+\begin{enumerate}
+	\item Introduce a vorton at the location of each streamwise edge; the vorticity of the vorton is proportional to the jump in doublet densities, and to the neighbour panel's surface
+	\item Approximate the doublet density by a continuous function in the cross-flow plane.
+\end{enumerate}
+The second option presents two advantages. Firstly, any number of vortons can be added in the cross-flow plane, and secondly, this allows a common processing method with the linear case
+
+
+
+\newpage
+\begin{thebibliography}{9}
+\bibitem{Willis_1} 
+David J. Willis, Jaime Peraire, Jacob K. White, \textit{A Combined pFFT-Multipole Tree Code, Unsteady Panel Method with Vortex Particle Wakes}, 43rd AIAA Aerospace Sciences Meeting and Exhibit, 10-13 January 2005, Reno. N.V.
+
+\bibitem{Willis_2} 
+David Joe Willis, \textit{An Unsteady, Accelerated, High Order Panel Method with Vortex Particle Wakes}, Massachusetts Institute of Technology, June 2006.
+
+ 
+\bibitem{Wang_1} 
+Youjiang Wang, Moustafa Abdel-Maksoud, Baowei Song, 
+\textit{A boundary element-vortex particle hybrid method with inviscid shedding scheme}, Computers and Fluids 168 (2018) 73–86.
+
+\end{thebibliography}
+
+\end{document}
+ 
+
+
+
+
+
+
+
+
+
+
+
+

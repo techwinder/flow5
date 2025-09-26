@@ -1,0 +1,1158 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper, portrait, margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage[export]{adjustbox}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xfrac}
+
+\graphicspath{{./figures/}}
+\renewcommand{\familydefault}{\sfdefault}
+
+ 
+\begin{document}
+
+\title{Differential solution method for the Inverse Boundary Layer problem with CS turbulent flow model - Implementation notes}
+\author{techwinder}
+
+\maketitle
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+
+\section{Introduction}
+This document is a summary of the notes taken during the implementation in Foil$^{++}$ of a flow solver for boundary layers around airfoils. 
+
+Foil$^{++}$ implements the boundary layer models developed by T. Cebeci in references \cite{CC} to \cite{TC2}. All together, the three books draw a comprehensive picture of the theoretical models, and the implementation methods. However, they cross-reference each other, each describes only a part of the overall model, and all exhibit many typos which has made it necessary to recalculate and correct many of the formulas.
+
+The inviscid flow solver follows strictly the methodology described by M. Drela in \cite{MD1}.
+ 
+This documents summarizes the final models and documents the choices made in the implementation of the BL numerical model.
+
+In what follows, 'C\&C' refers to \cite{CC}, 'TC'
+\begin{itemize}
+	\item  'C\&C' refers to ref. \cite{CC}
+	\item 'TC' refers to ref. \cite{TC}
+	\item 'TC2' refers to ref. \cite{TC2}
+	\item 'MD1' refers to ref. \cite{MD1} 
+	\item 'MD2' refers to ref. \cite{MD2} 
+\end{itemize}
+
+\section{BL Differential equations} 
+\subsection{Equation C\&C 4.5.1}
+\numberwithin{equation}{section}
+
+The momentum and continuity equations for flows with a pressure gradient are expressed as (C\&C .5.8c) :
+\begin{equation}
+f^{\prime\prime\prime} + \frac{m+1}{2} ff^{\prime\prime} + m \big(1-f^{\prime 2}\big) = x \big( u \frac{\partial u}{\partial x}  - v \frac{\partial f}{\partial x}  \big)
+\end{equation}
+This equation with its boundary conditions is solved in differential form using Keller's box method as described in C\&C paragraph 4.5.
+
+Discretization of equation C\&C (4.5.8c).
+\begin{equation} \label{FS_458c}
+(bv)^\prime + \frac{m+1}{2} fv + m(1-u^2) = x \big(u\frac{\partial u}{\partial x} - v\frac{\partial f}{\partial x}  \big)
+\end{equation}
+Center the equation about $x^{n-1/2}$:
+\begin{equation} \label{FS_458c-2}
+\frac{1}{2}(L^n+L^{n-1}) = T^{n-1/2} 
+\end{equation}
+with 
+\begin{equation}
+L^{n-1} = \big[ (bv)^\prime + \frac{m+1}{2} fv + m(1-u^2) \big]^{n-1} 
+\end{equation}
+and:
+\begin{equation}
+\begin{split}
+T^{n-1/2} &= x^{n-1/2} \big[u^{n-1/2}\frac{u^n-u^{n-1}}{k_n} - v^{n-1/2}\frac{f^n-f^{n-1}}{k_n} \big] \\
+                 &= \frac{x^{n-1/2}}{2k_n} \big[((u^n)^2-(u^{n-1})^2) - (v^n f^n-v^nf^{n-1}+v^{n-1}f^n-v^{n-1}f^{n-1}) \big] 
+\end{split}
+\end{equation}
+Introduce $\alpha_n, \alpha_1, \alpha_2$ parameters:
+\begin{equation}
+\alpha_n = \frac{x^{n-1/2}}{k_n}, \quad
+\alpha_1 = \frac{1+ m^n}{2} + \alpha_n,  \quad
+\alpha_2 = m^n +\alpha_n
+\end{equation}
+and rewrite \eqref{FS_458c-2} in the form of C\&C 4.5.14:
+\begin{equation}
+ [(bv)^{\prime}]^n + \frac{m^n+1}{2} (fv)^n + m^n(1-(u^2)^n) =2T^{n-1/2} - L^{n-1}
+\end{equation}
+\begin{equation}
+\begin{split}
+ [(bv)^{\prime}]^n + (\frac{m^n+1}{2}+\alpha_n) (fv)^n - (m^n+\alpha_n) (u^2)^n +\alpha_n (v^{n-1}f^n-v^nf^{n-1}) = \\
+  - L^{n-1} -m +\alpha_n ( -(u^{n-1})^2+v^{n-1}f^{n-1})
+ \end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+ [(bv)^{\prime}]^n +\alpha_1 (fv)^n -\alpha_2 (u^2)^n +\alpha_n (v^{n-1}f^n-v^nf^{n-1}) = R^{n-1}
+ \end{split}
+\end{equation}
+with
+\begin{equation}
+R^{n-1} =   - L^{n-1} -m^n +\alpha_n ( -(u^2)^{n-1}+(fv)^{n-1})
+\end{equation}
+Center about $\eta_{j-1/2}$:
+\begin{equation}
+\begin{split}
+\frac{1}{h_j} [(b_j^n v_j^n-b_{j-1}^n v_{j-1}^n)] &+\alpha_1 (fv)_{j-1/2}^n -\alpha_2 (u^2)_{j-1/2}^n \\
+     &+\alpha_n (v_{j-1/2}^{n-1}f_{j-1/2}^n-v_{j-1/2}^nf_{j-1/2}^{n-1}) = R_{j-1/2}^{n-1} \\
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split} 
+R_{j-1/2}^{n-1} &=   - L_{j-1/2}^{n-1} -m^n +\alpha_n ( -(u^2)_{j-1/2}^{n-1}+(fv)_{j-1/2}^{n-1}) \\
+L_{j-1/2}^{n-1} &=  \big[ \frac{1}{h_j}(b_j v_j - b_{j-1} v_{j-1}) + \frac{m^n+1}{2} (fv)_{j-1/2}  + m(1-(u^2)_{j-1/2} ) \big]^{n-1}
+\end{split}
+\end{equation}
+$\longrightarrow$ is identical to C\&C 4.5.15 and 4.5.16.
+\subsection{Equation C\&C 9.4.11}
+\numberwithin{equation}{section}
+Difference approximation of equation  C\&C 9.4.11, using the same method as for the direct equation C\&C section 4.5.1. Done to correct typos in C\&C.
+\begin{equation}
+(bv)^\prime + \lambda_1 m \big(\frac{1}{2}fv + (1-u^2) \big) +\frac{1}{2}fv =\xi \bigg(\frac{\partial}{\partial \xi} \big(\frac{u^2}{2} \big) - v\frac{\partial f}{\partial \xi}  - \lambda_2\frac{d}{d\xi}\big(\frac{w^2}{2} \big)\bigg)
+\end{equation}
+\begin{equation} \label{CC9.4.11}
+(bv)^\prime + \frac{1+\lambda_1 m}{2}fv +\lambda_1 m(1-u^2)  =\xi \bigg(\frac{\partial}{\partial \xi} \big(\frac{u^2}{2} \big) - v\frac{\partial f}{\partial \xi}  - \lambda_2\frac{d}{d\xi}\big(\frac{w^2}{2} \big)\bigg)
+\end{equation}
+
+The derivative of $(bv)^\prime$ is written as a finite difference in $\eta$:
+\begin{equation}
+\big[ (bv)^\prime \big]^n =  \frac{(bv)_j^n-(bv)_{j-1}^n}{h_j}
+\end{equation}
+First centering is done w.r.t $n$. Process each of the three terms of the left hand side of Eq. \eqref{CC9.4.11}:
+\begin{equation}
+lhs_1 = \frac{1}{2}\big[\frac{(bv)_j^n-(bv)_{j-1}^n}{h_j} + \frac{(bv)_j^{n-1}-(bv)_{j-1}^{n-1}}{h_j} \big]
+\end{equation}
+\begin{equation}
+lhs_2 = \frac{1+\lambda_1 m^{n-1/2}}{2}   \frac{(fv)^n+ (fv)^{n-1}}{2} 
+\end{equation}
+\begin{equation}
+\begin{split}
+lhs_3 &= \lambda_1 m^{n-1/2} \big[1- (u^2)\big]^{n-1/2}   \\
+          &= \frac{\lambda_1 m^{n-1/2} }{2}\big[\big(1- (u^2)\big)^{n-1}   + \big(1- (u^2)\big)^{n}   \big]\\
+          &= \frac{\lambda_1 m^{n-1/2} }{2}\big[2- 2 (u^2)^{n-1/2}  \big]= \lambda_1 m^{n-1/2} \big[1- (u^2)^{n-1/2}  \big]\\
+\end{split}
+\end{equation}
+
+Right hand side terms are
+\begin{equation}
+rhs_1 = \xi^{n-1/2} \bigg(\frac{(u^2)^n - (u^2)^{n-1} }{2 k_n}  \bigg) = \frac{\xi^{n-1/2}}{2 k_n} \big((u^2)^n - (u^2)^{n-1}  \big)
+\end{equation}
+\begin{equation}
+\begin{split}
+rhs_2 &=  -\xi^{n-1/2} v^{n-1/2} \big(\frac{f^n-f^{n-1}}{k_n} \big)  =  -\xi^{n-1/2}\big(\frac{f^n-f^{n-1}}{k_n} \big)  \big( \frac{v^{n}+v^{n-1}}{2} \big)\\
+          &=  - \frac{\xi^{n-1/2}}{2k_n} \big( f^nv^{n}+f^n v^{n-1}   -  f^{n-1}  v^{n}-f^{n-1}v^{n-1} \big) 
+\end{split}
+\end{equation}
+\begin{equation}
+rhs_3 =  -\lambda_2 \frac{\xi^{n-1/2}}{2 k_n}\big((w^2)^n - (w^2)^{n-1}  \big)
+\end{equation}
+$w$ is the normalized velocity at the edge of the boundary layer: $w=u_J$ so that
+\begin{equation}
+rhs_3 =  -\lambda_2 \frac{\xi^{n-1/2}}{2 k_n}\big((u_J^2)^n - (u_J^2)^{n-1}  \big)
+\end{equation}
+
+
+Center left and right hand side terms at $\eta_{j-1/2}$
+\begin{equation}
+lhs_1 = \frac{1}{2}\big[\frac{(bv)_j^n-(bv)_{j-1}^n}{h_j} + \frac{(bv)_j^{n-1}-(bv)_{j-1}^{n-1}}{h_j} \big]
+\end{equation}
+\begin{equation}
+lhs_2 = \frac{1+\lambda_1 m^{n-1/2}}{2}   \frac{(fv)_{j-1/2}^n+ (fv)_{j-1/2}^{n-1}}{2} 
+\end{equation}
+\begin{equation}
+lhs_3 = \lambda_1 m^{n-1/2} \big[1- (u^2)^{n-1/2}  \big]_{j-1/2} = \lambda_1 m^{n-1/2} \big[1- (u^2)_{j-1/2}^{n-1/2}  \big]\\
+\end{equation}
+
+Right hand side terms are
+\begin{equation}
+rhs_1 =  \frac{\xi^{n-1/2}}{2 k_n} \big((u^2)_{j-1/2}^n - (u^2)_{j-1/2}^{n-1}  \big)
+\end{equation}
+\begin{equation}
+rhs_2 =  - \frac{\xi^{n-1/2}}{2k_n} \big( f_{j-1/2}^nv_{j-1/2}^{n}+f_{j-1/2}^n v_{j-1/2}^{n-1}   -  f_{j-1/2}^{n-1}  v_{j-1/2}^{n}-f_{j-1/2}^{n-1}v_{j-1/2}^{n-1} \big) 
+\end{equation}
+$rhs_3$ is a fixed value for each column, not dependent on $j$:
+\begin{equation}
+rhs_3 =  -\lambda_2 \frac{\xi^{n-1/2}}{2 k_n}\big((u_J^2)^n - (u_J^2)^{n-1}  \big)
+\end{equation}
+
+Collect terms as in C\&C Eq. (9.4.13) in the form $ L = R_{j-1/2}^{n-1} = -L_{j-1/2}^{n-1} + K$
+\begin{equation}
+\begin{split}
+\frac{L}{2} &= \frac{1}{2}\big[\frac{(bv)_j^n-(bv)_{j-1}^n}{h_j}\big] + ( \frac{1}{4}+ \frac{\lambda_1 m^{n-1/2}}{4}  + \frac{\xi^{n-1/2}}{2k_n})(fv)_{j-1/2}^n \\
+   &+ \bigg(- \frac{\lambda_1 m^{n-1/2}}{2} - \frac{ \xi^{n-1/2} }{2 k_n} \bigg) (u^2)_{j-1/2}^n 
+   +\frac{\xi^{n-1/2}}{2k_n} \big(f_{j-1/2}^nv_{j-1/2}^{n-1}   -  f_{j-1/2}^{n-1}  v_{j-1/2}^{n} +\lambda_2 (u_J^2)^n  \big) 
+\end{split}
+\end{equation}
+\begin{equation}
+\frac{L_{j-1/2}^{n-1}}{2} = \frac{(bv)_j^{n-1}-(bv)_{j-1}^{n-1}}{2h_j}  +  (\frac{1}{2}+\frac{\lambda_1 m^{n-1/2}}{2})  \frac{ (fv)_{j-1/2}^{n-1}}{2} 
++ \lambda_1 m^{n-1/2} \big[1- \frac{(u^2)_{j-1/2}^{n-1}}{2}\big] 
+\end{equation}
+\begin{equation}
+\begin{split}
+\frac{K}{2} &= \frac{\xi^{n-1/2}}{2k_n}  (fv)_{j-1/2}^{n-1}  - \xi^{n-1/2} \bigg(\frac{ (u^2)_{j-1/2}^{n-1} }{2 k_n}  \bigg) + \lambda_2 \frac{\xi^{n-1/2}}{2 k_n}\big( (u_J^2)^{n-1}  \big) \\
+                    &= \frac{\xi^{n-1/2}}{2k_n}  \bigg[ (fv)_{j-1/2}^{n-1}  -  (u^2)_{j-1/2}^{n-1}  + \lambda_2  (u_J^2)^{n-1}  \bigg] \\
+\end{split}
+\end{equation}
+
+
+Multiply by 2
+\begin{equation}
+\begin{split}
+L &= \big(\frac{(bv)_j^n-(bv)_{j-1}^n}{h_j}\big)+ ( \frac{1+\lambda_1 m^{n-1/2}}{2} + \frac{\xi^{n-1/2}}{k_n})(fv)_{j-1/2}^n \\
+   &- \bigg( \lambda_1 m^{n-1/2} + \frac{ \xi^{n-1/2} }{k_n} \bigg) (u^2)_{j-1/2}^n 
+   +\frac{\xi^{n-1/2}}{k_n} \big(f_{j-1/2}^nv_{j-1/2}^{n-1}   -  f_{j-1/2}^{n-1}  v_{j-1/2}^{n} +\lambda_2 (u_J^2)^n  \big) 
+\end{split}
+\end{equation}
+\begin{equation}
+L_{j-1/2}^{n-1} = \frac{(bv)_j^{n-1}-(bv)_{j-1}^{n-1}}{h_j}  +  (1+\lambda_1 m^{n-1/2})  \frac{ (fv)_{j-1/2}^{n-1}}{2} 
++ \lambda_1 m^{n-1/2} \big[2- (u^2)_{j-1/2}^{n-1}\big] 
+\end{equation}
+\begin{equation}
+K = \frac{\xi^{n-1/2}}{k_n}  \bigg[ (fv)_{j-1/2}^{n-1}  -  (u^2)_{j-1/2}^{n-1}  + \lambda_2  (u_J^2)^{n-1}  \bigg] 
+\end{equation}
+
+Introduce $\alpha_n, \alpha_1, \alpha_2$ parameters:
+\begin{equation}
+\begin{split}
+\alpha_n &= \frac{\xi^{n-1/2}}{k_n} \\
+\alpha_1 &= \frac{1+\lambda_1 m^{n-1/2} }{2} + \alpha_n \\
+\alpha_2 &=\lambda_1 m^{n-1/2} +\alpha_n
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+L = &\big(\frac{(bv)_j^n-(bv)_{j-1}^n}{h_j}\big) + \alpha_1 (fv)_{j-1/2}^n - \alpha_2 (u^2)_{j-1/2}^n \\
+   &+\alpha_n \bigg[f_{j-1/2}^nv_{j-1/2}^{n-1}   -  f_{j-1/2}^{n-1}  v_{j-1/2}^{n} +\lambda_2 (u_J^2)^n  \bigg] 
+\end{split}
+\end{equation}
+\begin{equation}
+L_{j-1/2}^{n-1} = \frac{(bv)_j^{n-1}-(bv)_{j-1}^{n-1}}{h_j}  +  (1+\lambda_1 m^{n-1/2})  \frac{ (fv)_{j-1/2}^{n-1}}{2} 
++ \lambda_1 m^{n-1/2} \big[2- (u^2)_{j-1/2}^{n-1}\big] 
+\end{equation}
+\begin{equation}
+K = \alpha_n \bigg[ (fv)_{j-1/2}^{n-1}  -  (u^2)_{j-1/2}^{n-1}  + \lambda_2  (u_J^2)^{n-1}  \bigg] 
+\end{equation}
+
+
+\subsection{Differential equation for the IBL problem}
+\numberwithin{equation}{section}
+In the Inverse Boundary Layer (IBL) problem, the external velocity is an unknown variable which is computed as part of the BL solution. Using the transformation (TC 8.8.1)
+\begin{equation} \label{eq_TransformedVars}
+\begin{split}
+Y &= y\sqrt{\frac{u_\infty}{\nu x}} \\
+\psi (x,y) &= \sqrt{u_{\infty}\nu x} \;  F(\xi, Y)\\
+\xi  &= \frac{x}{L}
+\end{split}
+\end{equation}
+Denote by $w$ the normalized external velocity:
+\begin{equation}
+w = \frac{u_e}{u_\infty}
+\end{equation}
+The tangential component of the velocity is a function of $F$
+\begin{equation}\label{eq_u=f(F)}
+u= \frac{\partial \psi}{\partial y} =  \sqrt{u_\infty \nu x} \frac{\partial F}{\partial y} =  \sqrt{u_\infty \nu x} \frac{\partial F}{\partial Y}\sqrt{\frac{u_\infty}{\nu x}} = u_\infty  \frac{\partial F}{\partial Y}
+\end{equation} 
+The continuity and momentum equations become (TC 8.2.4):
+\begin{equation} \label{eq:FS}
+(bF^{\prime\prime})^\prime + \frac{1}{2} F  F^{\prime\prime} = \xi \big(F'\frac{\partial F'}{\partial \xi}  - F^{''}\frac{\partial F}{\partial \xi} \big) - \xi w \frac{dw}{d\xi}
+\end{equation}
+where the primes denote differentiation w.r.t. $Y$.
+
+The eddy viscosity is encompassed in the term $b$ (TC 8.2.8):
+\begin{equation}
+b= 1+\frac{\varepsilon_m}{\nu}
+\end{equation}
+
+The boundary conditions at the wall are 
+\begin{equation}
+Y=0, \quad F^{\prime}=0, \quad F=0
+\end{equation}
+The BC at the edge of the BL is defined by C\&C 9.4.1b:
+\begin{equation}
+Y = Y_e, \quad u_e = u_e^0 + u_e^\sigma 
+\end{equation}
+where $u_e^0$ is the inviscid external velocity and $u_e^\sigma$ is the source-induced velocity at station $\xi$. The derivation of the source densities and the implementation of the BC are developed in section \ref{BL_edge_BC}.
+
+A choice needs to be made for the value of $Y_e$. According to C\&C section 4.5.1: \begin{quote} ``[...] the transformed boundary layer thickness, $\eta_e$, is to be sufficiently large so that $u\rightarrow1$ asymptotically. The latter is usually satisfied when $v(\eta_e)$ is less than approximately $10^{-3}$.''\end{quote}
+
+
+\section{Boundary Layer integrals}
+\subsection{Definitions}
+Dynamic and kinematic viscosity
+$$ \mu = \nu \, \rho$$
+Wall shear stress
+\begin{equation}
+\tau_w = \mu \big(\frac{\partial u}{\partial y} \big)_w
+\end{equation}
+Friction velocity:
+\begin{equation}
+u_\tau = \sqrt{\frac{\tau_w}{\rho}}
+\end{equation}
+Variable name: wall scale parameter, wall Reynolds number:
+\begin{equation} \label{eq_y+}
+y^+ = \frac{u_\tau \, y}{\nu}
+\end{equation}
+Normalized streamwise velocity:
+\begin{equation}
+u^+ = \frac{u}{u_\tau}
+\end{equation}
+Displacement thickness:
+\begin{equation}\label{eq:displacement_thickness}
+\delta^* = \int_0^{\delta} {(1-\frac{u}{u_e}) \,dy}
+\end{equation}
+Momentum thickness:
+\begin{equation}\label{eq:momentum_thickness}
+\theta = \int_0^{\delta} {\frac{u}{u_e}(1-\frac{u}{u_e}) \,dy}
+\end{equation}
+Momentum thickness Reynolds number:
+\begin{equation}\label{eq:ReTheta}
+Re_\theta =\frac{u_e \theta}{\nu}
+\end{equation}
+Occasionally, the boundary layer Reynolds number may be encountered:
+\begin{equation}\label{eq:ReTheta}
+Re_\tau =\frac{u_\tau \theta}{\nu}
+\end{equation}
+Shape factor:
+\begin{equation}\label{eq:shape_factor}
+H = \frac{\delta^*}{\theta}
+\end{equation}
+
+\underline{Other}
+
+Vorticity:
+$$\omega = \frac{\partial u}{\partial y}-\frac{\partial v}{\partial x}$$
+where $u$ and $v$ denote the components of the velocity vector.
+
+\subsection{Coefficients in transformed variables}
+\subsubsection{Transformed variables}
+Let $U=u_e$ for the direct problem, and $U=u_\infty$ for the inverse problem.
+The transformed variables are
+\begin{equation}\eta = y \sqrt{\frac{U}{\nu x}}, \quad f(\eta) =\frac{1}{\sqrt{U \nu x}} \psi(x,y) \end{equation}
+Let $u_x$ denote the tangential component of the velocity at point $(x,y)$.
+$$u_x = \frac{\partial \psi}{\partial y} =  \sqrt{U\nu x} \; \frac{\partial f}{\partial \eta}\frac{\partial \eta}{\partial y} = U f^\prime$$
+\subsubsection{Displacement thickness}
+The displacement thickness is:
+\begin{equation} \label{disp_thickness}
+\begin{split}
+\delta^* &= \int_{0}^{y_e} (1-\frac{u_x}{u_e}) \;dy = \sqrt{\frac{\nu x}{U}} \int_{0}^{\eta_e} (1-\frac{u_x}{u_e}) \;d\eta  \\
+               &= \sqrt{\frac{\nu x}{U}} \int_{0}^{\eta_e} (1-\frac{U}{u_e} f^\prime) \; d\eta \\
+               & =  \sqrt{\frac{\nu x}{U}} \eta_e -  \sqrt{\frac{\nu x}{U}} \frac{U}{u_e} (f_e-f_w )   = \sqrt{\frac{\nu x}{U}} \eta_e -   \frac{\sqrt{\nu x U}}{u_e} (f_e-f_w ) 
+\end{split}
+\end{equation}
+With no surface mass transfer, i.e. $f_w=0$
+\begin{equation}
+\begin{split}
+\delta^* &= \sqrt{\frac{\nu x}{U}} \eta_e -  \frac{\sqrt{\nu x U}}{u_e} f_e  \\
+                &=  \sqrt{\frac{\nu x}{U}}(\eta_e - \frac{U}{u_e}f_e)
+\end{split}
+\end{equation} 
+\subsubsection{Momentum thickness}
+The momentum thickness is:
+\begin{equation}
+\begin{split}
+\theta &= \int_0^{y_e} \frac{u_x}{u_e} {(1-\frac{u_x}{u_e}) \; dy} \\
+            &= \frac{U}{u_e} \int_0^{y_e} f^\prime  {(1-\frac{U}{u_e} f^\prime)    \; dy} \\
+            &= \frac{U}{u_e}  \sqrt{\frac{\nu x}{U}}  \int_0^{\eta_e} f^\prime  {(1-\frac{U}{u_e} f^\prime)  \; d\eta} \\
+            &= \frac{\sqrt{\nu x U} }{u_e}   \int_0^{\eta_e} f^\prime  {(1-\frac{U}{u_e} f^\prime)  \; d\eta} \\
+\end{split}
+\end{equation}
+
+\subsubsection{Shear stress}
+The total shear stress is (C\&C section 3.3.1):
+\begin{equation}
+\tau = \mu \frac{\partial u}{\partial y} - \rho \overline{u'v'}
+\end{equation}
+where 
+\begin{itemize}
+	\item $u'$ and $v'$ denote the fluctuating parts of the velocity components in the RANS equations, and the overline denotes an average (C\&C 2.3.1).
+	\item $\mu$ is the dynamic viscosity
+\end{itemize}
+
+\subsubsection{Wall shear}
+The wall shear stress
+\begin{equation}
+\tau_w=\rho \big(\nu\frac{du_x}{dy}-\overline{u'v'} \big) 
+\end{equation}
+Near the wall, the normal component of the velocity $v^\prime=0$ so that
+\begin{equation}
+\tau_w = \rho \nu \big(\frac{du_x}{dy} \big)_w = \mu \big(\frac{du_x}{dy} \big)_w
+\end{equation} 
+\begin{equation}
+\begin{split}
+\tau_w &= \mu \big(\frac{\partial u_x}{\partial y}\big)_w  = \mu \, U \big(\frac{\partial f^\prime}{\partial y}\big)_w = \mu \, U \sqrt{\frac{U}{\nu x}} f^{\prime\prime}_w
+\end{split}
+\end{equation}
+
+\subsubsection{Friction velocity}
+The friction velocity is (C\&C Eq. 6.2.1)
+\begin{equation}
+u_\tau = \sqrt{\frac{\tau_w}{\rho}} 
+\end{equation}
+
+\subsubsection{Friction coefficient}
+The skin friction coefficient is (C\&C Eq. 3.3.11):
+\begin{equation}
+c_f = \frac{\tau_w}{\frac{1}{2} \rho u_e^2}
+\end{equation}
+
+ 
+\section{Laminar BL results}
+The results of the calculation of the top surface of a NACA0012 foil is given in figure \ref{naca12top}.
+The results are close to those of C\&C figures 4.9 to 4.11. Differences can be attributed to the possible difference of velocity profiles calculated by the respective panel methods, and to the initial BL profile at the stagnation point.
+
+The flow separation occurs at x=0.6 and the calculation breaks down at this point.
+
+\begin{figure} 
+\centering
+\includegraphics[width=15cm]{naca12top}
+\caption{}
+ {\tabular[t]{@{}l@{}}BL on the top surface of a NACA 0012 foil at $Re=3.10^6$ and $\alpha=0°$.  \\ $n_x=10$ in the stream direction and $n_{\eta}=15$ across the BL\endtabular}
+\label{naca12top}
+\end{figure}
+
+\section{Turbulence}
+
+\subsection{Mixing length models}
+\subsubsection{Concept}
+The calculation of turbulent layers requires a model for the Reynolds shear stress term which figures in the momentum equation. A simple model which is popular and adapted to aerodynamic flows over airfoils is the eddy viscosity concept first developed by Boussinesq with a mixing length formulation developed by Prandtl. According to C\&C, This type of model is less adapted to strong adverse pressure gradients and large separated flows such as occurs at stall.
+In the eddy-viscosity ($\nu_t$) approach, the boundary layer equations for turbulent flow are written in the same form as the equations for laminar flows. For a two dimensional incompressible flow, $\nu_t$ is defined by:
+\begin{equation}\label{eddy-visc}
+-\rho \overline{u^\prime v^\prime } = \rho \nu_t \frac{\partial u}{\partial y}
+\end{equation}
+
+In the mixing length ($l$) approach, the Reynolds shear stress is represented by 
+\begin{equation} \label{mixing_length}
+-\rho \overline{u^\prime v^\prime } = \rho l^2 \bigg(\frac{\partial u}{\partial y}\bigg)^2
+\end{equation}
+
+\subsubsection{Wall boundary layer}
+The mixing length is not uniform across the boundary layer. A typical model for wall boundary layers involves three separate models for each sub-layer of the BL.
+
+\underline{Close to the wall}
+\begin{equation}
+l = 0.46 y \big(1-\exp(y^+ / 26))
+\end{equation}
+with $y+$ given by Eq. \eqref{eq_y+}
+
+\underline{In the intermediate 'log' region}
+\begin{equation}
+l = 0.46y
+\end{equation}
+
+\underline{In the outer region}
+\begin{equation}
+l/ \delta = 0.085 \tanh\big(\frac{0.46y}{0.085\delta}\big)
+\end{equation}
+
+\subsubsection{Michel's formula}
+For boundary layers over non-porous flat plates (with  zero pressure gradient), C\&C propose Michel's formula valid across the whole BL (C\&C Eq. 6.3.7)
+\begin{equation}
+l/\delta =\big (1-\exp(-\frac{y}{A})\big) 0.085 \tanh \big(\frac{\kappa \, y}{0.085 \, \delta} \big)
+\end{equation}
+with $\kappa=0.41$ and $A=26\nu/ u_\tau$.
+
+\subsubsection{Results}
+The different mixing lengths over a flat plate for $Re = 10^6$ are given in figure \ref{Mixing_length_30k}.
+\begin{figure}
+\centering
+\includegraphics[width=15cm]{MixingLength}
+\caption{Mixing lengths for $Re=10^6$, cf. C\&C figure 6.11}
+\label{Mixing_length}
+\end{figure}
+
+\subsection{Cebeci-Smith turbulence model}
+The Cebeci-Smith turbulence model is a formulation widely used for wall boundary-layer flows. It models the Reynolds shear stress in the momentum equations using algebraic eddy viscosity (C\&C paragraph 6.3.1). This formulation is a two layer approach, which uses eddy viscosity for both the inner and outer layers.
+
+\underline{In the inner region:}
+\begin{equation}
+(\nu_t)_i = l^2  \mathopen| \frac{\partial u}{\partial y} \mathclose| \gamma_{tr} \qquad 0\leq y \leq y_c
+\end{equation}
+Note: the definition of $y_c$ was not found in C\&C chapter 6. It is defined as the smallest distance from the surface where  $\big(-\rho \overline{u^\prime v^\prime }\big)_{inner} = \big(-\rho \overline{u^\prime v^\prime }\big)_{outer}$
+
+The mixing length is given by
+\begin{equation} \label{mixlengthformula}
+l = \kappa y \bigg[  1-\exp(\frac{-y}{A}) \bigg]
+\end{equation}
+with $\kappa = 0.40$
+
+A is a damping length constant:
+\begin{equation}
+A = 26 \frac{\nu}{N u_\tau}
+\end{equation}
+
+\begin{equation}
+N = \sqrt{\frac{p^+}{v_w^+} \big( 1-e^{11.8 v_w^+}\big)  + e^{11.8 v_w^+}}
+\end{equation}
+
+\begin{equation}
+p^+ = \frac{\nu u_e}{u_\tau^3} \frac{du_e}{dx}, \qquad v_w^+= \frac{v_w}{u_\tau}
+\end{equation}
+
+
+\underline{In the outer region}
+\begin{equation}
+(\nu_t)_o = \alpha \int_0^\delta (u_e-u) dy \, \gamma_{tr} \gamma = \alpha u_e \delta^*  \, \gamma_{tr} \gamma  \qquad  y_c\leq y \leq \delta
+\end{equation}
+
+$\gamma$ accounts for the intermittency between laminar and turbulent flow behaviour in the outer region.
+\begin{equation}
+\gamma = \frac{1}{1+5.5\big( \frac{y}{\delta}\big)^6}
+\end{equation}
+where $\alpha=0.0168$
+
+$\delta$ is the y-location where $u/u_e=0.995$
+
+In the case of wall boundary layer flows with no mass transfer;  the mixing length in Eq. \eqref{mixing_length} may be defined by a unique formula for the whole layer:
+\begin{equation}
+\frac{l}{\delta} = \big[ 1-exp \big( -\frac{y}{A} \big) \big] 0.085 \tanh \bigg(\frac{\kappa}{0.085} \frac{y}{\delta} \bigg)
+\end{equation}
+with $\kappa=0.41$ and $A=26\nu / u_\tau$
+It may also use distinct expressions for the inner and outer layers. In the inner layer, Eq. \eqref{mixlengthformula} is used, and in the outer region:
+\begin{equation}
+l=0.085 \delta
+\end{equation}
+
+For a turbulent flow over a flat plate with no pressure gradients, the different mixing length formulas are illustrated in figure \ref{Mixing_length} and the Cebeci-Smith eddy viscosities in figure \ref{CC_fig611b}. These results compare to C\&C figure 6.11a \& 6.11b.
+
+\begin{figure}
+\centering
+\includegraphics[width=15cm]{CS_turb}
+\caption{Eddy viscosity over a flat plate with no pressure gradient}
+\label{CC_fig611b}
+\end{figure}
+
+
+\subsection{CS extensions}
+\subsubsection{Baldwin-Lomax}
+Not applicable for strong adverse pressure flows (TC2 section 5.5)
+
+\section{Inverse method} \label{Box_Method}
+\numberwithin{equation}{subsection}
+\subsection{Order reduction}
+Equation \eqref{eq:FS} is solved using Keller's box method. The differential equation is written as a first order system by introducing new variables $U$ and $V$:
+\begin{equation} \label{Diff_system}
+\begin{split}
+F' &= U \\
+U' &= V \\
+(bV)^\prime + \frac{1}{2} F  V &= \xi \big(F'\frac{\partial U}{\partial \xi}  - V\frac{\partial F}{\partial \xi} \big) - \xi w \frac{dw}{d\xi}
+\end{split}
+\end{equation}
+By definition, $w$ is a function of $\xi$ only, so that
+\begin{equation}
+w'=0
+\end{equation}
+The boundary conditions (BC) at the wall for a flow over a surface with no transpiration is
+\begin{equation} \label{eq_wall_BC}
+Y=0, \quad F=U=0
+\end{equation}
+The boundary conditions at the edge of the boundary layer is obtained by writing that the tangential velocity is the sum of the external inviscid velocity and of the source induced velocity
+\begin{equation} \label{eq_EdgeBC}
+Y=Y_e, \quad U=w, \quad w=\frac{u^0 + u^\sigma}{u_\infty}
+\end{equation}
+
+\subsection{BL edge boundary condition} \label{BL_edge_BC}
+
+\subsubsection{Derivation of equation C\&C 9.4.6 $ D = L u_\infty \sqrt{\frac{\xi}{R_L}}(Y_ew-F_e)$.}
+To solve the equation \eqref{Diff_system} at a given station $x$, the mass defect $D$ at each streamwise station needs to be expressed as a function of the column's variable $(F,U,V,w)$. (@todo check by numerical integration)
+
+Define the Reynolds number
+$$ R_L = \frac{u_\infty L}{\nu}$$
+where $L$ is the reference length of the problem.
+
+Recall the expression of the transformed variables in Eq. \eqref{eq_TransformedVars} and \eqref{eq_u=f(F)}
+$$ \xi = \frac{x}{L}, \quad Y = y \sqrt{\frac{u_\infty}{\nu x}} =y \sqrt{\frac{u_\infty}{\nu \xi L}}   , \quad   w = \frac{u_e}{u_\infty}$$
+$$u= \frac{\partial \psi}{\partial y} =  u_\infty  \frac{\partial F}{\partial Y} $$
+The mass defect is
+\begin{equation}
+\begin{split}
+D &= u_e \delta^* = u_e \int_{0}^{y_e} (1-\frac{u_x}{u_e}) \;dy = u_e y_e - \int_{0}^{y_e} \psi^\prime dy  = u_e y_e -  (\psi_e-\psi_w) \\
+    &= u_e y_e -  \sqrt{u_\infty \nu x} (F_e-F_w ) = u_e y_e -  \sqrt{u_\infty \nu L \xi} (F_e-F_w ) 
+\end{split}
+\end{equation} 
+With the assumption of no transpiration $F_w=0$:
+$$ D =  u_e y_e - \sqrt{u_\infty \nu L \xi} F_e =  u_e Y_e\sqrt{\frac{\nu \xi L}{u_\infty}} - \sqrt{u_\infty \nu L \xi} F_e= w Y_e\sqrt{\nu \xi L u_\infty}- \sqrt{u_\infty \nu L \xi} F_e$$
+$$ D =  \sqrt{\nu \xi L u_\infty}( w Y_e - F_e)  = L u_\infty  \sqrt{\frac{\nu \xi} {L u_\infty}}(  Y_e w - F_e)$$
+\begin{equation} \label{CC9.4.6}
+D = L u_\infty  \sqrt{\frac{\xi} {R_L}}( w Y_e - F_e)
+\end{equation}
+Define $\overline{D}$ as in C\&C Eq. 9.4.6
+$$\overline{D} =  \frac{D}{L u_\infty} = \sqrt{\frac{\xi} {R_L}}( w Y_e - F_e)$$
+
+\subsubsection{Boundary condition at $Y=Y_e$ }
+Denote the mass defect at each station as
+$$D_i = (u_e \, \delta^*)_i, \quad i\in [0\ldots N-1]$$
+so that
+$$u^\sigma =C_{ii} D_i^+ + \sum_{j=0}^{j<i} C_{ij} D_j^+ + \sum_{j=i+1}^{N-1} C_{ij} D_j^-$$
+where $D^-$ refers to the mass defects resulting from the previous sweep, and $D^+$ to those of the current sweep. $D_i^+$ is an unknown of the calculation for the current station.
+
+Recall the expression of the boundary condition \eqref{BL_edge_BC}  at the edge of the BL:
+$$Y=Y_e, \quad U=w, \quad w=\frac{u^0 + u^\sigma}{u_\infty}$$
+Using Eq. \eqref{CC9.4.6},  the BC becomes:
+$$w \,u_\infty = u_e^0 +  C_{ii} L u_\infty  \sqrt{\frac{\xi_i} {R_L}}( w Y_e - F_e) +\sum_{j=0}^{j<i} C_{ij} D_j^+ + \sum_{j=i+1}^{N-1} C_{ij} D_j^-$$
+Normalize by $Lu_\infty$  
+$$w /L = C_{ii}  \sqrt{\frac{\xi_i} {R_L}}( w Y_e - F_e) +\frac{1}{L u_\infty} \big(u_e^0 + \sum_{j=0}^{j<i} C_{ij} D_j^+ + \sum_{j=i+1}^{N-1} C_{ij} D_j^- \big)$$
+
+introduce the notations
+$$\lambda = C_{ii}\sqrt{\frac{\xi_i} {R_L}}$$
+$$g_i= \frac{1}{L u_\infty} \big(u_e^0 + \sum_{j=0}^{j<i} C_{ij} D_j^+ + \sum_{j=i+1}^{N-1} C_{ij} D_j^- \big)$$
+to obtain
+$$\frac{w}{L} = \lambda( w Y_e - F_e)  + g_i$$
+The BC at the edge of the BL is
+\begin{equation}
+Y=Y_e, \quad \lambda F_e + (\frac{1}{L}-\lambda Y_e) w = g_i
+\end{equation}
+which is \textcolor{red}{not} the same as C\&C 9.4.12b.
+
+The edge BC given in C\&C and TC is
+\begin{equation} \label{FS_BC}
+Y=Y_e: \quad U = w,\quad \lambda F_e + (1-\lambda Y_e)w = g_i
+\end{equation}
+
+
+
+\subsection{Discretization}
+
+In the streamwise direction, let the 2d surface be approximated by a set of $N$ stations $x_0 \ldots x_{N-1}$, and let
+$$\xi_i = \frac{x_i}{L}$$
+In the transverse direction, let the BL's thickness be approximated by a set of $J$ nodes $Y_0 \ldots Y_{J-1}$, with $Y_0=0$ corresponding to the wall, and $Y_{J-1}=Y_e$ is the edge of the BL. The edge of the BL is defined implicitely as the thickness such that $u_e/u_\infty = w = 0.995$ \textcolor{red}{(check)}.
+
+For each column, the values of the variables of the differential system \eqref{Diff_system} at node $j$ are denoted $(F_j, U_j, V_j, wj)$, $j\in[0,J-1]$. This makes for a total of $4J$ unknowns which require as many equations to solve.
+
+To do this, the differential system given by Eq. \eqref{Diff_system} is discretized between nodes $j-1$ and $j$, $j\in[1,J-1]$, and two wall BC and two edge BC are added to complete a set of $4J$ equations.
+ 
+The discretization of the differential system between nodes  $j-1$ and $j$, $j\in[1,J-1]$ is written as
+\begin{equation}\label{discretized_1}
+(F_j^n-F_{j-1}^n)/h_j = U_{j-1/2}^n   = \frac{1}{2} (U_{j-1}^n+U_j^n)
+\end{equation}
+\begin{equation}\label{discretized_2}
+(U_j^n-U_{j-1}^n)/h_j = V_{j-1/2}^n   = \frac{1}{2} (V_{j-1}^n+V_j^n)
+\end{equation}
+\begin{equation}\label{discretized_3}
+\big((bV)_j^n - (bV)_{j-1}^n\big)/h_j + \frac{1}{2} (FV)_{j-1/2}^n = \xi^{n} \bigg[U\frac{\partial U}{\partial \xi}  - V\frac{\partial F}{\partial \xi}  - w \frac{dw}{d\xi}\bigg]_{j-1/2}^n \\
+\end{equation}
+\begin{equation}\label{discretized_4}
+(w_j^n-w_{j-1}^n)/h_j =0 
+\end{equation}
+Equation \eqref{discretized_3} can  be written
+\begin{equation} \label{FSdiscretized}
+\big((bV)_j^n - (bV)_{j-1}^n\big)/h_j + \frac{1}{2} (FV)_{j-1/2}^n = \xi^{n} \bigg[\frac{1}{2} FLARE \frac{\partial U^2}{\partial \xi}  - V\frac{\partial F}{\partial \xi}  - \frac{1}{2	} \frac{dw^2}{d\xi}\bigg]_{j-1/2}^n
+\end{equation}
+$FLARE$ is the Fl{\"u}gge-Lotz-Reyhner parameter used to set $u\frac{\partial u}{\partial x}$ to zero whenever $u<0$. This avoids numerical instabilities in regions of negative velocity. It is set to 1 if $U_j>0$ and to 0 otherwise.
+
+In what follows, the superscript $^n$ is dropped to simplify the notation and for ease of reading. It is mentioned only when referring to the previous column $^{n-1}$.
+
+\subsection{Backwards differencing}
+\begin{figure}
+\centering
+\includegraphics[width=13cm]{back_diff}
+\caption{Keller's box discretization with backward difference in $\xi$}
+\label{back_diff}
+\end{figure}
+ In \cite{TC} section 8.8:
+\begin{quote} ``If there is [flow separation], then it is necessary to use backward difference formulas"''\end{quote}
+In \cite{TC} section 9.2.2:
+\begin{quote} ``Experience with the box method discussed in chapter 8 has shown that when profiles are used to start the turbulent flow calculations, the solutions at the subsequent x-locations tend to oscillate. [...] the author and his colleagues observed that if one uses backward difference approximations for the x-derivatives in the BL equations, rather than central differences as used in the box method, the solutions do not oscillate and are more stable.
+''\end{quote}
+See also in \cite{TC2} section 3.3.1.
+
+The derivative of a function $g$ in the $\xi$ direction is written
+\begin{equation}
+\begin{split}
+\big( \frac{\partial g}{\partial \xi}\big)^n &= A_1 \, g(\xi_{n-2}) +  A_2 \, g(\xi_{n-1}) +  A_3 \, g(\xi_{n}) \\
+                                                                        &= A_1 \, g^{n-2} +  A_2 \, g^{n-1} +  A_3 \, g^{n}
+\end{split}
+\end{equation}
+In the case of two points backward differencing, i.e. first order approximation:
+\begin{equation}
+A_1=0, \quad A_2=-\frac{1}{x_n-x_{n-1}}, \quad A_3=\frac{1}{x_n-x_{n-1}}
+\end{equation}
+In the case of three points backward differencing, i.e. second order approximation:
+\begin{equation}
+\begin{split}
+A_ 1&= \frac{x_n-x_{n-1}}{(x_{n-2}-x_{n-1})(x_{n-2}-x_{n})} \\
+A_2 &= \frac{x_n-x_{n-2}}{(x_{n-1}-x_{n-2})(x_{n-1}-x_{n})} \\
+A_3 &= \frac{2x_n-x_{n-1}-x_{n-2}}{(x_n-x_{n-2})(x_n-x_{n-1})}
+\end{split}
+\end{equation}
+
+Derivatives are required in the linearized FS equations (TC Eq. 9.2.24) (???):
+\begin{equation}
+\frac{\partial}{\partial g}\big( \frac{\partial g}{\partial \xi}\big)^n = A_3
+\end{equation}
+\begin{equation}
+\begin{split}
+\frac{\partial}{\partial g}\big( \frac{\partial g^2}{\partial \xi}\big)^n &= 2 \frac{\partial}{\partial g}\big(g \frac{\partial g}{\partial \xi}\big)^n \\
+   &= 2 \big( \frac{\partial g}{\partial g} \frac{\partial g}{\partial \xi} +g \frac{\partial^2 g}{\partial g \partial \xi} \big)^n \\
+   &= 2 \big( \frac{\partial g}{\partial \xi} +g \frac{\partial g}{ \partial \xi} \big)^n \\
+   &= 2 (1+g^n) (A_1 \, g^{n-2} +  A_2 \, g^{n-1} +  A_3 \, g^{n})
+\end{split}
+\end{equation}
+
+
+\subsection{Linearization}
+Assuming that the variables at station $n-1$ are known, the differential system \eqref{Diff_system} is non-linear and must be solved by an iterative method. 
+The variables $ (F, U, V, w)$  of column $n$ are initialized with the values at station $n-1$  which is the best guess available. The values at the next iteration, denoted by the superscript $^+$, are defined in the form
+\begin{equation}\label{eq:increments} 
+\begin{split}
+F_j^+ = F_j + \delta F_j\\
+U_j^+ = U_j + \delta U_j \\
+V_j^+ = V_j + \delta V_j  \\ 
+w_j^+ = w_j + \delta w_j 
+\end{split}
+\end{equation}
+Keller's box method allows to re-write the differential system \eqref{Diff_system} as a linear system where the unknowns are the increment values  $ (\delta F_j, \delta U_j, \delta V_j, \delta w_j)$.
+
+Convergence is deemed to have been reached when each increment value is less than a pre-set maximum value.
+ 
+Equations \eqref{discretized_1},  \eqref{discretized_2} and \eqref{discretized_4} are rewritten in the form  $ [A][\delta] = [B]$:
+\begin{equation} 
+\begin{split}
+- \delta F_{j-1}  + \delta F_j -\frac{h_j}{2} \delta U_{j-1} -\frac{h_j}{2} \delta U_j &= F_{j-1} - F_j + \frac{h_j}{2} (U_{j-1} + U_j) \\
+- \delta U_{j-1}  + \delta U_j -\frac{h_j}{2} \delta V_{j-1} -\frac{h_j}{2} \delta V_j &= U_{j-1} - U_j + \frac{h_j}{2} (V_{j-1} + V_j) \\
+-\delta w_{j-1} + \delta w_j   &=  w_{j-1} - w_j
+\end{split}
+\end{equation}
+The terms of equation \eqref{FSdiscretized} are linearized using first order Taylor expansions.
+With second order terms of the type $\delta f \; \delta g$ being dropped, and the equation rearranged to be in the form $ [A][\delta] + [B]$, each term of the equation becomes:
+
+\underline{Left hand side:}
+\begin{equation}
+\begin{split}
+\big[ (bV)_j^{n+} - (bV)_{j-1}^{n+} \big]/h_j &=\big[  b_j (V_j+\delta V_j) - b_{j-1} (V_{j-1}+\delta V_{j-1})   \big]/h_j \\
+                                                                 &=\big[  (b_j \delta V_j - b_{j-1} \delta V_{j-1} )  + (b_j V_j - b_{j-1} V_{j-1}) \big]/h_j 
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+\frac{1}{2} (FV)_{j-1/2}^{n+}&= \frac{1}{4} \big[ (FV)_{j-1}^{n+} + (FV)_{j}^{n+} \big] \\
+                                            &= \frac{1}{4} \big[ (F+\delta F)_{j-1} (V+\delta V)_{j-1} + (F+\delta F)_j (V+\delta V)_j \big] \\
+                                            &= \frac{1}{4} \big[ F_{j-1} \delta V_{j-1} +  V_{j-1} \delta F_{j-1} + F_j \delta V_j +  V_j \delta F_j \big] + \frac{1}{4} \big[ F_{j-1} V_{j-1}  + F_j V_j \big] \\
+                                            &= \frac{1}{4} \big[ F_{j-1} \delta V_{j-1} +  V_{j-1} \delta F_{j-1} + F_j \delta V_j +  V_j \delta F_j \big] + \frac{1}{2} (FV)_{j-1/2}^{n}  
+\end{split}
+\end{equation}
+
+\underline{Right hand side:}
+\begin{equation}
+\begin{split}
+ \xi \bigg[\frac{1}{2} \frac{\partial U^2}{\partial \xi}\bigg]_{j-1/2}^{n+} &= \frac{\xi}{4} \bigg[ \big(\frac{\partial U^2}{\partial \xi}\big)_{j-1}^{n+} + \big(\frac{\partial U^2}{\partial \xi}\big)_j^{n+} \bigg] \\
+  &=\frac{\xi}{4} \bigg[ \bigg(\frac{\partial U^2}{\partial \xi} + \frac{\partial}{\partial U} \big(\frac{\partial U^2}{\partial \xi} \big) \delta U\bigg)_{j-1} 
+ +  \bigg(\frac{\partial U^2}{\partial \xi} + \frac{\partial}{\partial U} \big(\frac{\partial U^2}{\partial \xi} \big) \delta U\bigg)_j\bigg] \\
+ &= \frac{\xi}{4} \bigg[\frac{\partial}{\partial U} \big(\frac{\partial U^2}{\partial \xi} \big)_{j-1} \delta U_{j-1} + \frac{\partial}{\partial U} \big(\frac{\partial U^2}{\partial \xi} \big)_j \delta U_j \bigg]  + \frac{\xi}{4} \bigg[\big(\frac{\partial U^2}{\partial \xi} \big)_{j-1} +  \big(\frac{\partial U^2}{\partial \xi} \big)_j \bigg] \\
+&= \frac{\xi}{2} \bigg[A_3 U_{j-1} \delta U_{j-1} + A_3U_j \delta U_j \bigg]  +  \xi \bigg[\frac{1}{2} \frac{\partial U^2}{\partial \xi}\bigg]_{j-1/2}^{n} 
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+\xi^{n} \bigg[ - V \frac{\partial F}{\partial \xi} \bigg]_{j-1/2}^{n+}
+                   &= -\frac{\xi^{n}}{2}  \big( (V \frac{\partial F}{\partial \xi}) _{j-1}^{n+} + ( V\frac{\partial F}{\partial \xi}) _j^{n+} \big) \\
+                   &= -\frac{\xi^{n}}{2}  \bigg( 
+                   \big((V+\delta V) (\frac{\partial F}{\partial \xi}+\frac{\partial}{\partial F} \frac{\partial F}{\partial \xi} \delta F) \big) _{j-1}  + \big((V+\delta V) (\frac{\partial F}{\partial \xi}+\frac{\partial}{\partial F} \frac{\partial F}{\partial \xi} \delta F) \big) _j  
+                   \bigg) \\
+                   &= -\frac{\xi^{n}}{2}  \bigg( 
+                     V_{j-1}  \big( \frac{\partial}{\partial F} \frac{\partial F}{\partial \xi} \big)_{j-1} \delta F_{j-1} + \big( \frac{\partial F}{\partial \xi} \big)_{j-1} \delta V_{j-1}
+                     + V_j  \big( \frac{\partial}{\partial F} \frac{\partial F}{\partial \xi} \big)_j \delta F_j + \big( \frac{\partial F}{\partial \xi} \big)_j \delta V_j \\
+                   &\qquad \qquad + V_{j-1} (\frac{\partial F}{\partial \xi} )_{j-1} + V_j (\frac{\partial F}{\partial \xi} )_j  \\
+                   &= -\frac{\xi^{n}}{2}  \bigg( 
+                     V_{j-1}  A_3 \, \delta F_{j-1} + \big( \frac{\partial F}{\partial \xi} \big)_{j-1} \delta V_{j-1}
+                     + V_j  A_3 \, \delta F_j + \big( \frac{\partial F}{\partial \xi} \big)_j \delta V_j \\
+                   &\qquad \qquad + V_{j-1} (\frac{\partial F}{\partial \xi} )_{j-1} + V_j (\frac{\partial F}{\partial \xi} )_j 
+                   \bigg) \\
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+-\xi \bigg[\frac{1}{2} \frac{\partial w^2}{\partial \xi}\bigg]_{j-1/2}^{n+} &= -\frac{\xi}{4} \bigg[ \big(\frac{\partial w^2}{\partial \xi}\big)_{j-1} + \big(\frac{\partial w^2}{\partial \xi}\big)_j \bigg] \\
+  &= -\frac{\xi}{4} \bigg[ \bigg(\frac{\partial w^2}{\partial \xi} + \frac{\partial}{\partial w} \big(\frac{\partial w^2}{\partial \xi} \big) \delta w\bigg)_{j-1} 
+ +  \bigg(\frac{\partial w^2}{\partial \xi} + \frac{\partial}{\partial w} \big(\frac{\partial w^2}{\partial \xi} \big) \delta w\bigg)_j\bigg] \\
+ &= -\frac{\xi}{4} \bigg[\frac{\partial}{\partial w} \big(\frac{\partial w^2}{\partial \xi} \big)_{j-1} \delta w_{j-1} + \frac{\partial}{\partial w} \big(\frac{\partial w^2}{\partial \xi} \big)_j \delta w_j \bigg]  + \frac{\xi}{4} \bigg[\big(\frac{\partial w^2}{\partial \xi} \big)_{j-1} +  \big(\frac{\partial w^2}{\partial \xi} \big)_j \bigg] \\
+&= -\frac{\xi}{2} \bigg[ A_3 w_{j-1} \delta w_{j-1} + A_3 w_j \delta w_j \bigg]  +  \xi \bigg[\frac{1}{2} \frac{\partial w^2}{\partial \xi}\bigg]_{j-1/2} \bigg]
+\end{split}
+\end{equation}
+
+\subsection{Matrix form}
+Introducing the vectors
+\begin{equation}
+\Delta_j = \begin{bmatrix}
+      \delta F_j  \\
+      \delta U_j  \\
+      \delta V_j  \\
+      \delta w_j 
+\end{bmatrix} 
+, \quad
+R_j = \begin{bmatrix}
+      r_{1j}  \\
+      r_{2j}  \\
+      r_{3j}  \\
+      r_{4j} 
+\end{bmatrix} 
+\end{equation}
+the linear system may be written in a traditional square matrix form and solved accordingly.
+
+With an appropriate ordering of the equations, i.e. inserting the BC on the first two and last two rows, the linear system may be arranged in a block diagonal form and the system may be solved using the block diagonal (Thomas) algorithm; this is the way recommended in TC and C\&C. All things equal, the block diagonal algorithm is faster than LU decomposition or Gaussian elimination.
+
+The main drawback is that the construction of the matrix is made slightly more complex. It is also likely that any personal implementation of the block diagonal algorithm will be slower than the all-purpose LU algorithm of the LAPACK library, which makes the block diagonal form more or less pointless.
+
+Therefore, given the small size of the matrix, it is deemed preferable to write it in the direct way and use the traditional LU solver. 
+
+The matrix is constructed by blocks of four equations corresponding to each node of the column. The four boundary conditions are added in the last four rows.
+\begin{equation}\label{eq:tridiagonal} 
+\begin{bmatrix}
+B_0   &A_0    \\
+        &       &... \\
+        &       &     &B_{J-2}  &A_{J-2}  \\
+        &       &     &           &B_{J-1}  &A_{J-1}   \\
+         &         &-BC- 
+\end{bmatrix} 
+\begin{bmatrix}
+\Delta_0 \\
+\Delta_1 \\
+... \\
+\Delta_{J-2} \\
+\Delta_{J-1} \\
+\end{bmatrix}
+=\begin{bmatrix}
+R_0 \\
+R_1 \\
+... \\
+R_{J-2} \\
+R_{J-1} \\
+\end{bmatrix}
+\end{equation}
+where $A_j$ and $B_j$ are 4$\times$4 matrices. 
+For $0 \leq j \leq J-1$ 
+\begin{equation}
+B_{j-1} = \begin{bmatrix}
+-1                                &-\frac{h_j}{2}                    &0                                        &0\\ 
+s_{4j}                          &s_{6j}                                 &s_{2j}                                 &s_{8j}\\
+0                                 &-1                                       &-\frac{h_j}{2}              &0 \\
+0                                 &0                                        &0                                         &-1
+\end{bmatrix} 
+, \quad
+A_{j-1} = \begin{bmatrix}
+1                                &-\frac{h_j}{2}                    &0                                         &0\\ 
+s_{3j}                          &s_{5j}                                 &s_{1j}                                 &s_{7j}\\
+0                                 &1                                        &-\frac{h_j}{2}              &0 \\
+0                                 &0                                         &0                                         &1
+\end{bmatrix} 
+\end{equation}
+with
+\begin{equation}
+\begin{split}
+s_{1j} &=  \frac{b_j}{h_j} + \frac{1}{4} F_j  + \frac{\xi}{2} \big(\frac{\partial F}{\partial \xi} \big)_j \\
+s_{2j} &= -\frac{b_{j-1}}{h_j} + \frac{1}{4} F_{j-1}  + \frac{\xi}{2} \big(\frac{\partial F}{\partial \xi} \big)_{j-1} \\
+s_{3j} &=  \frac{V_j}{4}  + \frac{\xi}{2} V_j A_3 \\
+s_{4j} &= \frac{V_{j-1}}{4} + \frac{\xi}{2} V_{j-1} A_3 \\
+s_{5j} &= -\frac{\xi}{2} A_3 U_j \\
+s_{6j} &= -\frac{\xi}{2} A_3 U_{j-1} \\
+s_{7j} &=   \frac{\xi}{2} A_3 w_j \\
+s_{8j} &=   \frac{\xi}{2} A_3 w_{j-1}
+\end{split}
+\end{equation} 
+
+and 
+\begin{equation}
+\begin{split}
+r_{1j} &=  F_{j-1} - F_j + h_j U_{j-1/2} \\
+r_{2j} &= -\frac{1}{h_j}(b_jV_j-b_{j-1}V_{j-1}) - \frac{1}{2} (FV)_{j-1/2} + \frac{\xi}{2} \big(\frac{\partial U^2}{\partial \xi}\big)_{j-1/2}\\
+          & \quad -\xi  \big( V\frac{\partial F}{\partial \xi}\big)_{j-1/2}   -  \frac{\xi}{2} \big(\frac{\partial w^2}{\partial \xi}\big)_{j-1/2}\\
+r_{3j} &=  U_{j-1} - U_j + h_j V_{j-1/2} \\
+r_{4j} &=  w_{j-1}-w_j 
+\end{split}
+\end{equation}
+The boundary conditions at the wall are 
+\begin{equation}
+Y=0 \; : \quad F=0, \quad U=0
+\end{equation}
+which are translated as 
+\begin{equation}
+\delta F_0 = 0, \quad \delta U_0 = 0
+\end{equation}
+
+The boundary conditions at the edge of the BL are 
+\begin{equation}
+Y=Y_e \; : \quad U=w, \quad \lambda F + (1-\lambda Y_e) w = g_i
+\end{equation}
+the first of which is translated as
+\begin{equation}
+\delta U_J - \delta w_J  =  w_J - U_J 
+\end{equation}
+and the second as
+\begin{equation}
+\begin{split}
+\lambda (F_J + \delta F_J) + (1-\lambda Y_J) (w_J+\delta w_J) = g_i \\
+\lambda \delta F_J + (1-\lambda Y_J) \delta w_J = g_i  - \lambda F_J-  (1-\lambda Y_J)w_J\\
+\gamma_1 \delta F_J +\gamma_2 \delta w_J = g_i  - \lambda F_J- \gamma_2 w_J\\
+\end{split}
+\end{equation}
+With (TC Eq. 8.8.17)
+\begin{equation} \label{eq_gamma}
+\begin{split}
+\gamma_3 &= g_i-(\gamma_1 F_J + \gamma_2 w_J) \\
+\gamma_1 &= \lambda \\
+\gamma_2 &= 1-\lambda Y_J \\
+\end{split}
+\end{equation}
+TC section  8.8.1: \begin{quote}
+``The parameters $\gamma_1, \gamma_2$ and $\gamma_3$ determine whether the system [...] is to be solved in standard or inverse form. For an inverse problem, they are represented by the expressions given in Eq. \eqref{eq_gamma}, and for a standard problem by $\gamma_1=0$, $\gamma_2=1$ and $\gamma_3=0$."
+\end{quote} 
+
+The BC are implemented in the  last four rows of the matrix as:
+\begin{equation}
+\begin{bmatrix}
+1                 &0            &\ldots                           &0                                  &0                 &0            &0 \\
+0                 &1            &\ldots                           &0                                  &0                 &0            &0 \\
+0                 &0            &\ldots                          & \gamma_1                 &0                  &0             &\gamma_2 \\
+0                 &0            &\ldots                           &0                                  &1                 &0            &-1
+\end{bmatrix} 
+, \quad
+R_J = \begin{bmatrix}
+0    \\
+0   \\
+\gamma_3 \\
+w_J - U_J
+\end{bmatrix} 
+\end{equation}
+
+
+\subsection{IBL Algorithm}
+The IBL algorithm can be summarized as follows:
+\begin{enumerate}
+	\item Compute the external velocity with the inviscid solver.
+	\item Evaluate the velocity influence coefficients $C_{in}$ of each source panel $i$ at each streamwise station $n$.
+	\item Initialize the BL values in the first column, e.g. with Blasius solution \textcolor{red}{(@todo check if TC proposes something else)}.
+	\item Sweep through streamwise stations, and solve the differential system at each station using the Newton iterations described in paragraph \ref{Box_Method}.
+	\item Iterate on the previous step, with each sweep using the blowing velocities obtained from the previous sweep;  TC recommends 3 times - or until convergence? 
+	\item Iterate on step (1) until convergence. The convergence criterion may be set on the values of the lift or drag coefficients (TC xxx).
+\end{enumerate}
+
+\subsection{BL displacement thickness}
+Recall the expression of the transformed variables in Eq. \eqref{eq_TransformedVars}
+$$ \xi = \frac{x}{L}, \quad Y = y \sqrt{\frac{u_\infty}{\nu x}} =y \sqrt{\frac{u_\infty}{\nu \xi L}}   , \quad   w = \frac{u_e}{u_\infty}$$
+
+The displacement thickness can be deduced from Eq. \eqref{CC9.4.6}
+\begin{equation} \label{eq_delta*}
+\delta^* = \frac{D}{u_e} = L \frac{u_\infty}{u_e}   \sqrt{\frac{\xi} {R_L}}( w Y_e - F_e) = L \sqrt{\frac{\xi} {R_L}} ( Y_e - \frac{F_e}{w})
+\end{equation}
+
+To avoid confusions, denote by $u_x$ the tangential component of the velocity.
+
+The displacement thickness is
+\begin{equation}
+\begin{split}
+\delta^* &=  \int_{0}^{y_e} (1-\frac{u_x}{u_e}) \;dy = y_e - \frac{1}{u_e}\int_{0}^{y_e} \psi^\prime dy  = y_e - \frac{1}{u_e} (\psi_e-\psi_w) \\
+    &= y_e - \frac{1}{u_e} \sqrt{u_\infty \nu x} (F_e-F_w ) = y_e - \frac{1}{u_e} \sqrt{u_\infty \nu L \xi} (F_e-F_w ) 
+\end{split}
+\end{equation} 
+
+The momentum thickness is
+$$\theta = \int_0^{y_e} \frac{u_x}{u_e}(1-\frac{u_x}{u_e})\, dy = \frac{1}{u_e}\int_0^{y_e} u_x \, dy -\frac{1}{(u_e)^2}\int_0^{y_e} u_x^2 \, dy $$
+$$\theta  = \frac{\psi_e-\psi_w}{u_e}-\frac{1}{(u_e)^2}\int_0^{y_e} ( u_x)^2 \, dy $$
+
+
+\newpage
+\section{Cross source influences} \label{par_CrossSection}
+\numberwithin{equation}{section}
+\subsection{Mass defect and equivalent source distribution}
+As recommended by both M. Drela and C\&C, the influence of the boundary layer thickness on the edge velocity is modelled by the wall transpiration technique, with the source strengths equal to the gradient of the mass defect.
+
+The mass defect $D$ is the missing mass flow inside the displacement thickness:
+\begin{equation}
+D = u_e \delta^*
+\end{equation}
+The source strength to represent this mass defect is 
+\begin{equation}
+\sigma = \frac{\partial D}{\partial x}
+\end{equation}
+
+\subsection{Surface discretization}
+Let the wall surface be discretized in $N$ stations $x_0 \ldots x_{N-1}$, and let panel $n$ be delimited by stations $n$ and $n+1$, as illustrated in figure \ref{two-piece-source}. This defines $N-1$ panels numbered from $0$ to $N-2$.  Note that there is one less panel than there are nodes.
+
+Denote the mass defect at each station as
+$$D_i = (u_e \, \delta^*)_i, \quad i\in [0\ldots N-1]$$
+
+Using TC notation, the source density on panel $j$ is the gradient of the mass defect, i.e.
+$$\sigma_j = \frac{1}{l_j}(D_{j+1}-D{j}), \quad j\in [0\ldots N-2]$$
+where $l_j$ is the panel's length.
+
+\subsection{End point singularity} \label{section_endpoint}
+\begin{figure} 
+\centering
+\includegraphics[width=15cm]{two-piece-source}
+\caption{Surface discretization} 
+\label{two-piece-source} 
+\end{figure}
+The velocity influence of a source distribution on a panel at any field point $P$ is well defined if $P$ does not lie on the panel, but the  tangential velocity exhibits a logarithmic singularity at the end-points. Also the normal velocity is discontinuous  across the panel, but only the tangential velocity is required for the IBL.
+
+To avoid the logarithmic singularity at a panel's the end-points, a fictitious panel $P_n^{\prime}$ joining nodes $n-1$ and $n+1$ is defined as illustrated in figure \ref{two-piece-source}, with  a source strength varying linearly from $\sigma_{n}$ to $\sigma_{n+1}$. As an alternative, $P_n^{\prime}$ may be the panel joining the center points of the adjacent panels, as is implicit in TC section 10.14.2.
+
+The tangential velocity induced at point $x_n$ by the linear source distribution on the panel is defined, even though the normal velocity is not. 
+
+\subsection{TC method: Hilbert integral C\&C 9.1.4b}
+\numberwithin{equation}{section}
+According to TC section 10.14.2, the influence of a source distribution $G$ at a point with coordinate $x$ is
+\begin{equation}
+u^\sigma(x) = \frac{1}{\pi} \int_{\xi_a}^{\xi_b} G(\lambda)  \frac{d\lambda}{x-\lambda}
+\end{equation}
+This integral is the influence of a uniform unit source density over a panel at a point located on the line that supports this panel. In effect, this assumes that the panels are distributed on a straight line, and surface curvature effects are ignored.
+Note also that this is twice the influence of a usual source panel.
+
+The method described in TC section 10.14.2 is developed here for verification and shift of indices by $-1$.
+
+Consider the integral
+\begin{equation}
+H= \frac{1}{\pi}\int_{\xi_a}^{\xi_b} G(\lambda) \frac{d\lambda}{\xi-\lambda}
+\end{equation}
+with
+\begin{equation}
+G(\lambda) = \frac{dD}{d\lambda}
+\end{equation}
+$D$ is assumed to be a linear function of $\lambda$ on each sub-segment $[\xi^n, \xi^{n+1}]$ of $[\xi_a, \xi_b]$,  so that the integrals on each sub-segment may be evaluated using the mid-point value
+$$G_{n+1/2} = \frac{D_{n+1}-D_{n}}{\xi^{n+1}-\xi^{n}}$$
+If $\xi \not\in [\xi^{n}, \xi^{n+1}]$
+\begin{equation}
+ \frac{1}{\pi}\int_{\xi^{n}}^{\xi^{n+1}} G(\lambda) \frac{d\lambda}{\xi-\lambda} =  \frac{1}{\pi}G_{n+1/2} \int_{\xi^n}^{\xi^{n+1}}  \frac{d\lambda}{\xi-\lambda} =  \frac{1}{\pi}G_{n+1/2} \log\frac{\xi-\xi^n}{\xi-\xi^{n+1}}
+\end{equation}
+so that
+\begin{equation}
+ \frac{1}{\pi}\int_{\xi^{n}}^{\xi^{n+1}} \frac{dD}{d\lambda} \frac{d\lambda}{\xi-\lambda} =  \frac{1}{\pi} \frac{D_{n+1}-D_{n}}{\xi^{n+1}-\xi^{n}} \log\frac{\xi-\xi^{n}}{\xi-\xi^{n+1}} = E_n (D_{n+1}-D_{n})
+\end{equation}
+with (error in TC 10.14.6)
+\begin{equation}
+E_n=  \frac{1}{\pi}\frac{1}{\xi^{n+1}-\xi^{n}} \log\frac{\xi-\xi^{n}}{\xi-\xi^{n+1}} 
+\end{equation}
+Here, compared to TC section 10.14.2, the factor $1/\pi$ has been included in the $E_i$ coefficients.
+
+The influence of segments $[\xi^{n-1}, \xi^n]$ and  $[\xi^n, \xi^{n+1}]$ at point $\xi^n$ is evaluated using the method given in section \ref{section_endpoint}.
+The resulting influences $E_{n-1}$ and $E_n$ are given in TC section 10.14.2 (shifted by 1 index). 
+
+Summing up terms, the Hilbert integral may be written
+$$H = \sum_{j=0}^{N-2} E_n(D_{j+1}-D_j)$$
+
+with $E_{ij} = E_j(x_i)$, the source induced velocity is
+\begin{equation} \label{eq_HIC}
+u^\sigma(x_i) =  \sum_{j=0}^{N-2} E_{ij}(D_{j+1}-D_j)
+\end{equation}
+
+\subsection{Airfoil geometry}
+Consider now the case of a non-flat geometry such as the surface of an airfoil. 
+
+Let $N$ be the total number of nodes on the airfoil's upper surface. These $N$ nodes define $N-1$ panels numbered from $0$ to $N-2$.
+
+The source induced tangential velocity is
+$$u^\sigma(x_i) = \sum_{j=0}^{N-2} S_{ij} \sigma_j$$
+where $S_{ij}$ denotes the influence of panel $j$ at node $i$. To avoid singularities, $S_{ii-1}$ and $S_{ii}$ need to be defined using the method described in section \ref{section_endpoint}.
+
+Using TC notation, the source density on panel $j$ is the gradient of the mass defect, i.e.
+$$\sigma_j = \frac{1}{l_j}(D_{j+1}-D{j}), \quad j\in [0\ldots N-2]$$
+where $l_j$ is the length of panel $j$.
+
+The source induced velocity is 
+$$u^\sigma(x_i) = \sum_{j=0}^{N-2} S_{ij} \frac{1}{l_j}(D_{j+1}-D_j)$$
+For consistency with TC, denote
+$$E_{ij} = \frac{S_{ij}}{l_j}$$
+so that the velocity is written as a function of the mass defects as
+\begin{equation}
+u^\sigma(x_i) = \sum_{j=0}^{N-2} E_{ij} (D_{j+1}-D_j)
+\end{equation}
+which is identical to Eq. \eqref{eq_HIC}. The terms $E_{ij}$ however are evaluated in 2d and not 1d, and as mentioned previously there is also a $\sfrac{1}{2}$ difference with the TC coefficients. 
+
+\subsection{Mass defect influence coefficients}
+The source induced velocity at point $x_i$ is:
+$$u^\sigma(x_i) = \sum_{j=0}^{N-2} E_{ij}(D_{j+1}-D_j)$$
+Group terms in $D_j$ to obtain
+$$u^\sigma(x_i) = - E_{i0}D_0 + \sum_{j=1}^{N-2} (-E_{ij} + E_{ij-1}) D_j + E_{iN-2}D_{N-1}$$
+In TC notation:
+$$C_{i0} = -E_{i0}$$
+$$C_{ij} = -E_{ij} + E_{ij-1}$$
+$$C_{iN-1} = E_{iN-2}$$
+so that
+$$u^\sigma(x_i) = \sum_{j=0}^{N-1} C_{ij} D_j$$
+
+\subsection{Coupling with inviscid solver}
+Once the solution to the BL problem is known, the influence of the displacement thickness on the inviscid solution needs to be recalculated.
+This is done using the method suggested in XFoil ref. document.
+
+\section{Wake modelling}
+\subsection{Boundary conditions}
+In \cite{MD2}, \begin{quote}``Laminar wakes do not occur in aerodynamic flows of interest and are not considered here''\end{quote}
+
+The wake is modelled as two BL flows each side of the streamline originating at the trailing edge. This streamline acts as the wall for the BL, and the corresponding boundary condition is (TC2 Eq. 8.8.26))
+\begin{equation}
+\eta=0, \quad f_0=0, \quad v_0=0
+\end{equation} 
+which replaces the BC given in equation \eqref{BL_edge_BC}.
+
+This implies that the initial velocity profiles at the wake's first station cannot be taken as the last profiles at the airfoil's trailing edge. A somewhat obscure procedure to construct the wake's initial velocity profile is proposed in TC2 section 3.4.9.
+
+\subsection{Wake turbulence}
+The extension of the Cebeci-Smith turbulence model to wake BL flows is given in TC2 section 3.4.6. A slightly different and more complicated model is proposed in TC section 8.8.
+\begin{equation}
+\nu_t(\eta) = (\nu_t)_w + \big[ (\nu_t)_{te}(\eta) - (\nu_t)_w\big] \; \exp\frac{-(x-x_{te})}{\lambda \, \delta_{te}}
+\end{equation}
+where
+$\delta_{te}$ is the BL thickness at the T.E., $\lambda=20$ (TC2), or  $\lambda=50$ (TC), $ (\nu_t)_{te}$ is the eddy viscosity at the trailing edge, and $(\nu_t)_w$ is the eddy viscosity in the far wake, given by 
+\begin{equation}
+(\nu_t)_w = 0.064 \int_{0}^{\infty} (u_e-u_x)\; dy
+\end{equation}
+where $u_x$ is the tangential velocity.
+
+In terms of transformed variables, and with a limitation of the integral to the edge of the BL, and using Eq. \eqref{disp_thickness}
+\begin{equation}
+\begin{split}
+(\nu_t)_w &= 0.064 \, u_e \int_{0}^{y_e} (1-\frac{u_x}{u_e})\; dy \\
+                 &= 0.064 \, u_e \, \delta^*\\
+                 &= 0.064 \, u_e \, \big[ y_e -  \sqrt{\frac{\nu x}{u_e}}  f_e  \big]
+\end{split}
+\end{equation}
+
+
+\newpage
+\section{Implementation details}
+\subsection{Transition and separation}
+C\&C p.108:
+\begin{quote} ``For low Reynolds number flows, the transition is separation induced, and the extent of the transition region can be significantly less than that computed by Eq. (5.2.4)''\end{quote}
+
+\subsection{T.E. velocity}
+The tangential velocity issued from the inviscid calculation exhibits sharp variations  at the T.E. These variations are the result do not have necessarily have physical meaning,  and hinder the convergence of the BL solver. To increase the robustness of the BL solver, the inviscid TE velocity is recalculated prior to the iterations by cubic interpolation over the previous two nodes of the airfoil and the first two nodes of the wake.
+
+
+\newpage
+\begin{thebibliography}{9}
+\bibitem{CC} 
+Tuncer Cebeci and Jean Cousteix. 
+\textit{Modeling and computation of boundary layer flows}, Springer, 2005.
+ 
+\bibitem{TC} 
+Tuncer Cebeci. 
+\textit{Analysis of turbulent flows with computer programs}, Elsevier, 2013.
+
+\bibitem{TC2} 
+Tuncer Cebeci. 
+\textit{An engineering approach to the calculation of aerodynamic flows}, Springer, 1999.
+
+\bibitem{MD1} 
+Mark Drela. 
+\textit{XFoil: An analysis and design system for low Reynolds number airfoils}. 
+Low Reynolds number aerodynamics, Springer-Verlag, Lec. notes in Eng. 54. 1989.
+
+\bibitem{MD2} 
+Mark Drela and Michael Giles. 
+\textit{Viscous-Inviscid analysis of transonic and low Reynolds number airfoils}. 
+AIAA Journal, Vol. 25, No. 10 (1987), pp. 1347-1355.
+
+
+ \end{thebibliography}
+
+\end{document}
+
+
+
+
+

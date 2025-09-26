@@ -1,0 +1,76 @@
+/****************************************************************************
+
+	flow5 application
+	Copyright (C) Andre Deperrois 
+	All rights reserved.
+
+*****************************************************************************/
+
+#pragma once
+
+
+#include <xflpanels/mesh/xflmesh.h>
+
+#include <xflpanels/panels/panel4.h>
+
+
+class Node;
+class Polar3d;
+
+class QuadMesh : public XflMesh
+{
+    public:
+        QuadMesh();
+        virtual ~QuadMesh() = default;
+
+        void clearMesh()   override {m_Panel4.clear(); m_Node.clear(); m_WakePanel4.clear();}
+        void clearPanels() override {m_Panel4.clear(); m_WakePanel4.clear();}
+        int nPanels() const override {return m_Panel4.size();}
+        int nWakePanels() const override {return m_WakePanel4.size();}
+        int panelCount() const override {return m_Panel4.size();}
+        int nWakeColumns() const override;
+
+        void meshInfo(QString &info) const override;
+        void cleanMesh(QString &logmsg) override;
+        void getMeshInfo(QString &log) const override;
+        void getLastTrailingPoint(Vector3d &pt) const override;
+
+        void rotate(double alpha, double beta, double phi) override;
+
+
+        void getFreeEdges(QVector<Segment3d> &freeedges, QVector<QPair<int, int> > &pairerrors) const;
+
+        void clearWakePanels() {m_WakePanel4.clear();}
+
+        void checkPanels(QString &log, bool bMinAngle, bool bMinArea, bool bWarp, QVector<int> &minanglelist, QVector<int> &minarealist, QVector<int> &warplist, double minangle, double minarea, double maxquadwarp);
+
+        Panel4 &panel(int index) {return m_Panel4[index];}
+        Panel4 const &panelAt(int index) const {return m_Panel4.at(index);}
+        Panel4 &lastPanel() {return m_Panel4.last();}
+        Panel4 const &lastPanel() const {return m_Panel4.last();}
+
+        QVector<Panel4> & panels() {return m_Panel4;}
+        QVector<Panel4> const & panels() const {return m_Panel4;}
+        void addPanel(Panel4 const &p4) {m_Panel4.push_back(p4);}
+        void addPanels(QVector<Panel4>const &Panel4list) {m_Panel4.append(Panel4list);}
+
+        QVector<Vector3d> ctrlPts(bool bVLM, double offset) const;
+
+        QVector<Panel4> & wakePanels() {return m_WakePanel4;}
+        QVector<Panel4> const & wakePanels() const {return m_WakePanel4;}
+        Panel4 const &wakePanel(int index) const {return m_WakePanel4.at(index);}
+
+        void removeLastPanel() {m_Panel4.pop_back();}
+
+        void makeWakePanels(double nxWakePanels, double wakepanelfactor, double TotalWakeLength, Vector3d const &WindDir, bool bAlignWakeTE);
+
+        static int makeWakePanels(QVector<Panel4> &m_Panel4, double nxWakePanels, double wakepanelfactor, double TotalWakeLength, Vector3d const &WindDir,
+                                  QVector<Panel4>&WakePanel4, QVector<Vector3d> &WakeNode, int &nWakeColumn, bool bAlignWakeTE);
+
+    private:
+        QVector<Panel4> m_Panel4;
+        QVector<Panel4> m_WakePanel4;
+
+};
+
+

@@ -1,0 +1,305 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper, portrait, margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage[export]{adjustbox}
+\usepackage{hyperref}
+
+\graphicspath{{./figures/}}
+\renewcommand{\familydefault}{\sfdefault}
+
+
+\begin{document} 
+
+\title{Blasius solution to the Falkner-Skan equation using 
+Keller's box method}
+\author{techwinder}
+
+\maketitle 
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+
+
+
+\section{Simplified Falkner-Skan equation}
+Using the similarity variable 
+$$\eta = y\sqrt{\frac{u_\infty}{\alpha\nu x}}$$
+The simplified Falkner-Skan (FS) equation can be written:
+\begin{equation} \label{eq:one}
+f^{'''} + \frac{\alpha}{2} f(\eta)f^{''}(\eta) = 0
+\end{equation}
+where $\alpha$ is a parameter.
+The boundary conditions are:
+\begin{equation} \label{eq:oneBC}
+f(0)=f^{'}(0)=0, \quad f^{'}(\infty) = 1
+\end{equation}
+
+\section{Keller's box}
+The idea of Keller's box method is to
+\begin{itemize}
+  \item Reduce the differential equation to a set of first order equations by introducing new variables
+  \item Discretize these equations using central differences
+  \item Execute the following algorithm 
+  \begin{itemize}
+     \item Linearize the equations using first order approximation
+     \item Initialize the unknowns with BC values where applicable and best guesses for the other components
+     \item Rewrite the system of equations in matrix form, including the boundary conditions, where the unknown is the difference between values from iterations $n$ and $n+1$.
+     \item Solve the system
+     \item Update the set of values and check for convergence
+  \end{itemize}
+\end{itemize}
+
+\section{Order reduction}
+The equation is broken into three first order equations by introducing new variables $u$ and $v$ defined by:
+\begin{equation}\label{eq:two}
+\begin{split}
+&\frac{df}{d\eta} = u \\
+& \frac{du}{d\eta} = v
+\end{split}
+\end{equation}
+
+FS equation becomes:
+\begin{equation}\label{eq:three} 
+\frac{dv}{d\eta}=-\frac{\alpha}{2}fv
+\end{equation}
+
+The boundary conditions given by equation \eqref{eq:oneBC} become:
+\begin{equation}\label{eq:threeBC} 
+f(0)=0, \qquad u(0)=0, \qquad u(\infty)=1
+\end{equation}
+
+\section{Discretization}
+The equations $\eqref{eq:two}$ and $\eqref{eq:three}$  are discretized at $J$ points, using central differences in $\eta$. The spacing between points $j-1$ and $j$ is $h_j$.
+\begin{equation}\label{eq:four} 
+\begin{split}
+\frac{f_j-f_{j-1}}{h_j}=u_{j-1/2}=\frac{1}{2}(u_j+u_{j-1}) \\
+\frac{u_j-u_{j-1}}{h_j}=v_{j-1/2}=\frac{1}{2}(v_j+v_{j-1}) \\
+\frac{v_j-v_{j-1}}{h_j}=-\frac{\alpha}{2}(fv)_{j-1/2}=-\frac{\alpha}{4} (f_jv_j+f_{j-1}v_{j-1})
+\end{split}
+\end{equation}
+with $j\in[0,J-1]$.
+
+\section{Newton linearization}
+Equations $\eqref{eq:four}$ are linearized in the first order:
+\begin{equation}\label{eq:five} 
+\begin{split}
+f_j^{n+1} = f_j^{n} + \delta f_j^{n} \\
+u_j^{n+1} = u_j^{n} + \delta u_j^{n} \\
+v_j^{n+1} = v_j^{n} + \delta v_j^{n} 
+\end{split}
+\end{equation}
+
+where $n$ is the iteration number. The solution is deemed to have converged if all $\delta$ are less than a maximum given value.
+
+Substituting the linearized values $\eqref{eq:five}$ in $\eqref{eq:four}$ gives:
+\begin{equation}\label{eq:six} 
+\begin{split}
+f_j^n + \delta f_j^n -f_{j-1}^n - \delta f_{j-1}^n &= \frac{h_j}{2}\big(u_j^n+\delta u_j^n + u_{j-1}^n+\delta u_{j-1}^n \big)\\
+u_j^n + \delta u_j^n -u_{j-1}^n - \delta u_{j-1}^n &= \frac{h_j}{2}\big(v_j^n+\delta v_j^n + v_{j-1}^n+\delta v_{j-1}^n \big)\\
+v_j^n + \delta v_j^n -v_{j-1}^n - \delta v_{j-1}^n &= -\frac{\alpha h_j}{4}\big((f_j^n + \delta f_j^n)(v_j^n + \delta v_j^n) + (f_{j-1}^n + \delta f_{j-1}^n)(v_{j-1}^n + \delta v_{j-1}^n)\big)
+\end{split}
+\end{equation}
+Neglecting second order terms, equations $\eqref{eq:six}$ can be rearranged as
+\begin{equation}\label{eq:seven} 
+\begin{split}
+- \delta f_{j-1}^n + \delta f_j^n  - \frac{h_j}{2} \big(\delta u_{j-1}^n + \delta u_j^n \big) = r_j^n \\
+- \delta u_{j-1}^n + \delta u_j^n  - \frac{h_j}{2} \big(\delta v_{j-1}^n + \delta v_j^n \big) = t_j^n \\
+(-1+\frac{\alpha h_j}{4} f_{j-1}^n) \delta v_{j-1}^n + (1+\frac{\alpha h_j}{4}f_j^n) \delta v_j^n  + \frac{\alpha h_j}{4} \big(v_{j-1}^n \delta f_{j-1}^n +  v_j^n \delta f_j^n \big) = s_j^n
+\end{split}
+\end{equation}
+
+with
+\begin{equation}\label{eq:eigth} 
+\begin{split}
+r_j^n &= f_{j-1}^n - f_j^n + h_j u_{j-1/2}^n \\
+t_j^n &= u_{j-1}^n - u_j^n + h_j v_{j-1/2}^n \\
+s_j^n &= v_{j-1}^n - v_j^n - \frac{\alpha h_j}{2} (fv)_{j-1/2}^n 
+\end{split}
+\end{equation}
+
+\section{Boundary conditions}
+The BC given by equation \eqref{eq:oneBC} may be implemented in two ways:\par
+\begin{enumerate}
+  \item values at the boundary are enforced in the equations
+  \item additional equations are introduced to account for the BC
+\end{enumerate}
+The second method is developed hereafter.\par
+
+
+Note: A derivative boundary condition could be implemented in either of two ways:
+\begin{enumerate}
+  \item Backward difference at the boundary
+$$\frac{\partial u}{\partial x}|_{i=N} = \frac{3u_N-4u_{N-1}+u_{N-2}}{2\Delta x}=0$$
+i.e.
+$$u_N = \frac{4u_{N-1}-u_{N-2}}{3}$$
+  \item False boundary
+$$\frac{\partial u}{\partial x}|_{i=N} = \frac{u_{N+1}-u_{N-1}}{\Delta x}=0$$
+i.e.
+$$u_{N+1} = u_{N-1}$$  
+\end{enumerate}
+In the present case the BC can be set directly on the variables and not on their derivatives.
+
+\section{Matrix form}
+
+The first two equations to consider are the translation of the boundary conditions $f(0)=0$ and $u(0)=0$.
+
+If $f^0$ and $u^0$ are initialized with $f_0^0=0$ and $u_0^0=0$, then to enforce $f_0^1=...=f_0^n = 0$ and $u_0^1=...=u_0^n = 0$  the first two equations must be 
+\begin{equation}
+\begin{split}
+\delta f_0^1 = ... = \delta f_0^n = 0\\
+\delta u_0^1 = ... = \delta u_0^n = 0\\
+\end{split}
+\end{equation}
+Similarly, the last equation to consider is the boundary condition $u(\infty)=1$, which, if $u^0$ is initialized with $u_{J-1}^0=1$, translates into 
+\begin{equation}
+\delta u_{J-1}^1 = ... = \delta u_{J-1}^n = 0\\
+\end{equation}
+
+The re-ordering of equations $\eqref{eq:seven}$ allows the problem to be written in matrix form:
+\begin{equation}\label{eq:nine_a} 
+A_j^n\delta_{j-1}^n + A_j^n\delta_{j}^n + C_j^n\delta_{j+1}^n = R_j^n
+\end{equation}
+
+Introducing the vector 
+\begin{equation}
+\Delta_j^n = \begin{bmatrix}
+\delta f_j^n  \\
+\delta u_j^n  \\
+\delta v_j^n 
+\end{bmatrix} 
+\end{equation}
+
+\begin{equation}\label{eq:nine} 
+\begin{bmatrix}
+B_0^n   &C_0^n  \\
+A_1^n   &B_1^n   &C_1^n  \\
+        &        &       &... \\
+        &        &       &     &A_{J-2}^n  &B_{J-2}^n  &C_{J-2}^n   \\
+        &        &       &     &           &A_{J-1}^n  &B_{J-1}^n   \\
+\end{bmatrix} 
+\begin{bmatrix}
+\Delta_0^n \\
+\Delta_1^n \\
+... \\
+\Delta_{J-2}^n \\
+\Delta_{J-1}^n \\
+\end{bmatrix}
+=\begin{bmatrix}
+R_0^n \\
+R_1^n \\
+... \\
+R_{J-2}^n \\
+R_{J-1}^n \\
+\end{bmatrix}
+\end{equation}
+
+with
+\begin{equation}
+\begin{split}
+A_j^n &= \begin{bmatrix}
+-1                                &-\frac{h_j}{2}   &0 \\
+\frac{\alpha h_j}{4} v_{j-1}^n    &0                &-1+\frac{\alpha h_j}{4} f_{j-1}^n \\
+0                                 &0                &0
+\end{bmatrix} \qquad 1 \leq j < J \\
+B_j^n &= \begin{bmatrix}
+1                                 &-\frac{h_j}{2}   &0 \\
+\frac{\alpha h_j}{4} v_{j}^n      &0                &1+\frac{\alpha h_j}{4} f_{j}^n \\
+0                                 &-1               &-\frac{h_{j+1}}{2}
+\end{bmatrix} \qquad 1 \leq j < J-1 \\
+C_j^n &= \begin{bmatrix}
+0                                 &0                &0 \\
+0                                 &0                &0 \\
+0                                 &1                &-\frac{h_{j+1}}{2}
+\end{bmatrix} \qquad 0 \leq j < J-1 \\
+R_j^n &= \begin{bmatrix}
+r_j^n  \\
+s_j^n  \\
+t_{j+1}^n 
+\end{bmatrix} \qquad 1 \leq j < J-1 \\
+\Delta_j^n &= \begin{bmatrix}
+\delta_j^n  \\
+\delta_j^n  \\
+\delta_{j+1}^n 
+\end{bmatrix} \qquad 0 \leq j < J \\
+\end{split}
+\end{equation}
+
+The boundary conditions are implemented on the first and last rows:
+\begin{equation}
+\begin{matrix}
+&B_0^n = \begin{bmatrix}
+1                                 &0                &0 \\
+0                                 &1                &0 \\
+0                                 &-1               &-\frac{h_1}{2}
+\end{bmatrix} 
+&R_0^n = \begin{bmatrix}
+0  \\
+0  \\
+t_{1}^n 
+\end{bmatrix} \\
+&B_{J-1}^n = \begin{bmatrix}
+1                                   &-\frac{h}{2}   &0 \\
+\frac{\alpha h_{J-1}}{4} v_{J-1}^n  &0                &1+\frac{\alpha h_{J-1}}{4} f_{J-1}^n \\
+0                                   &1                &0
+\end{bmatrix}
+\qquad
+&R_{J-1}^n = \begin{bmatrix}
+r_{J-1}^n  \\
+r_{J-1}^n  \\
+0 
+\end{bmatrix}
+\end{matrix}
+\end{equation}
+Note that to prevent $B_0$ from being singular, the third row of the initial block matrix has been completed with the third equation of the "regular" block matrices. This implies that
+\begin{itemize}
+  \item In the "regular" matrices, the third row indices will be one more than those of the first two rows
+  \item The last row of the last block matrices is available for the implementation of the BC $u(\infty)=0$
+\end{itemize}
+This \textit{ad hoc} ordering of the equations and of the BC allows to preserve the block tridiagonal structure with common definitions of the block matrices $A, B, C, R$.
+
+\section{Algorithm}
+The algorithm can be summarized as follows:
+\begin{enumerate}
+  \item Initialize $(f_j^0, u_j^0, v_j^0)$ with the BC and a best guess for the remaining values.
+  \item Solve \eqref{eq:nine} using a matrix solver to get $(\delta f_j^n, \delta u_j^n, \delta v_j^n) $; the block-Thomas algorithm is recommended for tridiagonal matrices
+  \item update $(f_j^n, u_j^n, v_j^n)  = (f_j^{n-1}, u_j^{n-1}, v_j^{n-1}) + (\delta f_j^n, \delta u_j^n, \delta v_j^n) $
+  \item Iterate until all increment values $\delta f_j^n, \delta u_j^n, \delta v_j^n $ are less than a given value
+\end{enumerate}
+
+\newpage
+\section{results}
+The profiles for the functions $f(\eta)$, $u(\eta)$ and $v(\eta)$ are given in figures 1 to 3.
+\begin{figure}
+\centering
+\includegraphics[width=12cm]{blasius-f}
+\caption{$f(\eta)$}
+\label{back_diff}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[width=12cm]{blasius-u}
+\caption{$u(\eta)$}
+\label{back_diff}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[width=12cm]{blasius-v}
+\caption{$v(\eta)$}
+\label{back_diff}
+\end{figure}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+

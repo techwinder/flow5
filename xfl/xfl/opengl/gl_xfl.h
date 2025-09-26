@@ -1,0 +1,70 @@
+/****************************************************************************
+
+    flow5 application
+    Copyright (C) Andre Deperrois
+    All rights reserved.
+
+*****************************************************************************/
+
+#pragma once
+
+#include <QOpenGLBuffer>
+
+#include <xflocc/occmeshparams.h>
+#include <xflpanels/panels/panel3.h>
+#include <xflpanels/panels/panel4.h>
+#include <xflpanels/panels/vorton.h>
+
+class SplineSail;
+class WingSail;
+class Boat;
+class BoatPolar;
+class FuseXfl;
+class Fuse;
+class FuseSections;
+
+// gl related methods using xfl objects
+
+namespace gl
+{
+    void makeQuadPanels(QVector<Panel4> const & panel4list, Vector3d const &pos, QOpenGLBuffer &vbo);
+    void makeQuadEdges(QVector<Panel4> const & panel4list, Vector3d const &pos, QOpenGLBuffer &vbo);
+    void makeTriPanels(QVector<Panel3> const &panel3, const Vector3d &position, QOpenGLBuffer &vbo);
+    void makeTriEdges(QVector<Panel3> const &panel3, const Vector3d &position, QOpenGLBuffer &vbo);
+    void makePanelNormals(QVector<Panel4> const &panel4list, float length, QOpenGLBuffer &vbo);
+    void makePanelNormals(QVector<Panel3> const &panel3, float length, QOpenGLBuffer &vbo);
+    void makeQuadNodeClrMap(QVector<Panel4> const &panel4list, const QVector<double> &data, double &lmin, double &lmax, bool bAuto, QOpenGLBuffer &vbo);
+    void makeTriUniColorMap(QVector<Panel3> const &panel3list, QVector<double> const &tab, double &lmin, double &lmax, bool bAuto, QOpenGLBuffer &vbo);
+    void makeTriangleNodeValues(QVector<Panel3> const &panel3, QVector<Node> const &NodeList, QVector<double> const &tab,
+                                QVector<double> &CpInf, QVector<double> &CpSup, QVector<double> &Cp100,
+                                double &lmin, double &lmax);
+
+    void makeTriLinColorMap(QVector<Panel3> const &panel3, QVector<Node> const &NodeList, QVector<double> const &Cp,
+                                               double lmin, double lmax, QOpenGLBuffer &vbo);
+    void makeTriangleContoursOnMesh(QVector<Panel3> const &panel3list, QVector<double> const &Cp,
+                                      double lmin, double lmax, QOpenGLBuffer &vbo);
+
+    void makeVortons_spheres(QVector<QVector<Vorton>> const &Vortons, QOpenGLBuffer &vbo);
+    void makeVortons(QVector<QVector<Vorton>> const &Vortons, QOpenGLBuffer &vbo);
+
+    void makePanelForces(QVector<Panel4> const &panel4list, QVector<double> const &Cp, float qDyn, bool bVLM, double &rmin, double &rmax, bool bAuto, double scale, QOpenGLBuffer &vbo);
+    void makePanelForces(QVector<Panel3> const &panel3list, QVector<double> const &Cp, float qDyn, double &rmin, double &rmax, bool bAuto, double scale, QOpenGLBuffer &vbo);
+    void makeSplineSailOutline(const SplineSail *pSSail, Vector3d const &pos, QOpenGLBuffer &vbo);
+    void makeWingSailOutline(const WingSail *pWSail, Vector3d const &pos, QOpenGLBuffer &vbo);
+    void makeSectionHighlight(const SplineSail *pSSail, Vector3d pos, QOpenGLBuffer &vbo);
+    void makeSectionHighlight(const WingSail *pWSail, Vector3d pos, QOpenGLBuffer &vbo);
+    void makeWind(Boat const *pBoat, BoatPolar const *pBoatPolar, QOpenGLBuffer &vbo);
+
+    void makeFuseXflQuadPanels(const FuseXfl *pFuseXfl, Vector3d position, QOpenGLBuffer &vbo);
+    void makeFuseXflFlatPanels(const FuseXfl *pFuseXfl, Vector3d position, QOpenGLBuffer &vbo);
+    void makeFuseXflSplinePanels(const FuseXfl *pFuseXfl, Vector3d position, QOpenGLBuffer &vbo);
+
+    void makeFuseTriMesh(const Fuse *pFuse, const Vector3d &pos, QOpenGLBuffer &vbo, QOpenGLBuffer &vboEdges);
+    void makeBodySplines_outline(const FuseXfl *pFuseXfl, const Vector3d &pos, QOpenGLBuffer &vbo);
+    void makeFuseXflFrames(const FuseXfl *pFuseXfl, Vector3d const &pos, int NXXXX, int NHOOOP, QOpenGLBuffer &vbo);
+    void makeFuseXflSections(const FuseSections *pFuseSecs, Vector3d const &pos, int NXXXX, int NHOOOP, QOpenGLBuffer &vbo);
+
+    void makeBodyFlatFaces_2triangles_outline(const FuseXfl *pBody, const Vector3d &pos, QOpenGLBuffer &vbo);
+
+}
+

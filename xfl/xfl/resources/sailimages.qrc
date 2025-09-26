@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>sailimages/sail7_16.png</file>
+        <file>sailimages/sail7_32.png</file>
+        <file>sailimages/sail7_64.png</file>
+        <file>sailimages/sail7_128.png</file>
+        <file>sailimages/sail7_256.png</file>
+        <file>sailimages/sail7_512.png</file>
+        <file>sailimages/sail7.png</file>
+        <file>sailimages/sailboat_256.png</file>
+        <file>sailimages/sailboat_512.png</file>
+        <file>sailimages/sailboat.png</file>
+        <file>sailimages/AC48.png</file>
+    </qresource>
+</RCC>

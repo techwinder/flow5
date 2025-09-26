@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE XFL_SCRIPT>
+<xflscript version="1.0">
+    <!-- For convenience, all field names are case insensitive - as an exception to the standard xml specification -->
+    <!-- Where applicable, default values will be used for all undefined fields -->
+    <!-- Wherever a field requires more than one value, values should be separated by commas (','); whitespaces are ignored -->
+    <!-- Specified file names should not have leading and trailing whitespaces -->
+    <Metadata>
+        <!-- Set this field to true to save all results to a target binary .fl5 file; default is true -->
+        <Make_project_file>true</Make_project_file>
+        <!-- uncomment the next line to set a project name; otherwise the default name will be flow5_hhmmss.fl5 -->
+        <!-- project_file_name>Boat_test_project</project_file_name -->
+        <!-- The project file provided in the following line will be pre-loaded before the script's execution.
+        Specify either an absolute path or a path relative to the directory of project files specified
+        in the Directories section.
+        Should not be the same as the target project file name to make to avoid data overwrite. -->
+        <load_project_file>/home/user/studies/fl5/test_boats.fl5</load_project_file>
+
+        <!-- set this field either to TXT or CSV -->
+        <Polar_text_output_format>CSV</Polar_text_output_format>
+        <Directories>
+            <!-- The directory where the project file (.fl5) and all output files will be created;
+            If undefined, the output directory will be the user's home directory -->
+            <output_dir>/home/user/studies/xml/scripts/output/</output_dir>
+            <!-- The default directory where the xml Boat definition files will be looked for -->
+            <boat_definition_xml_dir>/home/user/studies/xml/planes/</boat_definition_xml_dir>
+            <!-- The default directory where the xml Boat analysis files will be looked for -->
+            <Boat_analysis_xml_dir>/home/user/studies/xml/analyses_3d/</Boat_analysis_xml_dir>
+            <!-- The default directory where the foil geometry files (.dat) will be looked for -->
+            <foil_files_dir>/home/user/studies/airfoils</foil_files_dir>
+            <!-- The default directory where the foil analysis files (.xml) will be looked for -->
+            <foil_analysis_xml_dir>/home/user/studies/xml/foilanalysis</foil_analysis_xml_dir>
+            <!-- The default directory where the foil polar files (.plr) will be both
+            created after a foil analysis and looked for before the Boat analysis.
+            If undefined the files will be saved in the output directory -->
+            <foil_polars_dir>/home/user/studies/polars</foil_polars_dir>
+
+            <!-- This parameter defines whether the directories containing the plane and analysis xml files
+            should be scanned recursively, i.e. including subdirs, or not.
+            The foils and polar directories will always be scanned recursively -->
+            <recursive_scan>true</recursive_scan>
+        </Directories>
+        <!-- Multithreading options -->
+        <MultiThreading>
+            <Allow_Multithreading>true</Allow_Multithreading>
+            <!-- Define the thread priority for non-Linux systems
+            Idle:         scheduled only when no other threads are running.
+            Lowest:       scheduled less often than LowPriority.
+            Low:          scheduled less often than NormalPriority.
+            Normal:       the default priority of the operating system.
+            High:         scheduled more often than NormalPriority.
+            Highest:      scheduled more often than HighPriority.
+            TimeCritical: scheduled as often as possible. -->
+            <Thread_Priority>Normal</Thread_Priority>
+            <!-- Define the max number of threads for the foil analysis; default is one -->
+            <Max_threads>4</Max_threads>
+        </MultiThreading>
+        <!-- define whether the pane analysis should be run in double precision (recommended) or not;
+        single precision requires less RAM but may lead to slight numerical instabilities -->
+        <Double_Precision>true</Double_Precision>
+    </Metadata>
+
+    <Boat_Analysis>
+        <output>
+            <!-- Set this field to true if the boat operating points are to be stored in the project file. -->
+            <make_oppoints>true</make_oppoints>
+            <!-- Set this field to true to output one text or csv file for each Boat polar -->
+            <make_polars_text_file>true</make_polars_text_file>
+        </output>
+
+        <Foil_Dat_Files>
+            <!-- The foil (.dat) files in text format to load prior to the plane analysis.
+            Specify either the absolute path, or the path relative to foil_files_dir provided in the Directories section.
+            If the recursive option has been set in the field recursive_scan, only the file name is required
+            Make sure that the foil names defined in the .dat files match exactly the ones specified in the wingsail definition files-->
+            <Foil_File_Name>NACA 0009.dat  </Foil_File_Name>
+        </Foil_Dat_Files>
+
+        <Definition_Files>
+            <!-- Set this field to true if all files in the directory "Boat_definition_xml_dir" should be loaded, and
+            to false if only the files explicitely specified in this section should be loaded; default is false -->
+            <Process_All_Files>true</Process_All_Files>
+            <!-- Specify XML Boat files to load -->
+            <!-- Boat_File_Name></Boat_File_Name-->
+        </Definition_Files>
+
+        <Analysis_Files>
+            <!-- Set this field to true if all files in the directory "Boat_analysis_xml_dir" should be loaded, and
+            to false if only the files specified in this section should be loaded; default is false -->
+            <Process_All_Files>true</Process_All_Files>
+            <!-- Predefined XML analysis files to load;
+            If the Boat's name is defined in the analysis file, the analysis will be built for this specific Boat;
+            If the Boat's name was left blank in the analysis file, a copy of this analysis will be built for each Boat object;
+            Specify either the absolute path or a path relative to the directory of Boat analysis defined in the Directories section; -->
+            <!-- Analysis_File_Name>quad_analysis.xml</Analysis_File_Name -->
+            <!-- All valid (Plane, Analysis) pairs will be processed -->
+        </Analysis_Files>
+
+        <Analysis_Data>
+            <!-- The range of control polars: min, max, increment -->
+            <Control>0.0, 1.0, 0.25</Control>
+        </Analysis_Data>
+    </Boat_Analysis>
+</xflscript>
+
+
+
+ 

@@ -1,0 +1,208 @@
+\documentclass[a4paper, 11pt]{article}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{mathtools}
+\usepackage{color}
+\usepackage{bm}
+\usepackage{enumitem}
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\renewcommand{\labelenumi}{\roman{enumi}}
+
+\begin{document}
+
+\title{Neumann Boundary Conditions - Implementation notes}
+\author{techwinder}
+
+\maketitle
+   
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+ 
+\section{Introduction}
+\subsection{Objective}
+One of the most unsatisfactory assumptions made for the panel methods implemented in xflr5 is the flat wake model. In the case of the VLM, the wake is represented as straight line extending downstream in the x-direction from the endpoints of the bound vortices, irrespective of the angle of attack. Similarly, the panel methods use the assumption of a wake made of flat quad panels extending downstream from the trailing edges of the lifting surfaces. In both cases, the flat wake leads to an overestimation of both the induced lift and drag.
+
+
+The improvement of the model requires the implementation of a relaxed wake, and attempts in this direction have been made in xflr5. As it turns out, the wake roll-up is not a robust process. Numerical experiments have shown that, at best, it can give reasonable results in the case of standalone wing. In the case of geometries disturbed by a fuselage, the shape of the streamlines can be chaotic, and the implementation of a wake model using triangular or flat quad panels is impractical.
+
+A solution to this problem could be a wake description based on vortex filaments, or on vortex particles. This is the approach used in \cite{Willis}. It avoids altogether the self intersection of wake panels due to the wake roll-up process, and avoids also having wake panels shed from the main wing intersecting the tail panels. One of the drawback of the method is that there is no expression for the velocity potential associated to a vortex filament or to a vortex particle, which in turn means that this wake model is only compatible with Neumann BC.
+
+As a conclusion, the implementation of a wake model based on vortex filaments or vortex particles requires the use of Neumann BC for thick surfaces. The purpose of this document is to summarize the method and the choices made for the implementation in flow5.
+
+\subsection{Dirichlet BC}
+Neumann BC are already implemented in flow5 for thin surfaces, both for the VLM and panel methods. Before detailing how they are extended to thick surfaces, it is important to recall the main reasons which have made the Dirichlet BC robust and effective.
+
+In the case of thick surfaces, xflr5 implements the potential-based method described in \cite{Maskew}, which recommends the use of the interior Dirichlet BC. The method's other main feature is a formulation where the internal is flow equal to the onset flow. In this formulation the perturbation potential on the exterior surface is the doublet density, and the source distribution is the component of the freestream velocity normal to the surface.
+
+One reason put forward by the author for the robustness is that the formulation leads to a small potential jump across the body's surface, from the inner flow to the outer flow, because the greater part of the velocity jump is captured in the source singularities. This in turn means smaller doublet singularities. 
+
+The triangle-based Galerkin methods implemented in flow5 use the same model based on Dirichlet BC for thick surfaces.
+
+
+\section{Internal Neumann BC}
+\subsection{Method}
+\subsubsection{Potential}
+The general expression for the potential at any given point $P$ is expressed in terms of surface integrals of the velocity potential and its normal derivative over the boundary surface (\cite{Maskew} eq. (1)).
+
+\begin{equation}
+\begin{split}
+\label{Green}
+\Phi_P = &\frac{1}{4\pi} \iint_{S+W+S_\infty}  (\phi-\phi_i) \, \vec{n} \cdot \nabla(\frac{1}{r}) \,dS \\
+         - &\frac{1}{4\pi} \iint_{S+W+S_\infty} \frac{1}{r} \vec{n} \cdot (\nabla\phi-\nabla\phi_i)  \,dS
+\end{split}
+\end{equation}
+
+The first integral in \eqref{Green} represents the disturbance potential from a surface distribution of doublets with density $(\phi- \phi_i )$ per unit area and the second integral represents the contribution from a surface distribution of sources with density $-\vec{n}.(\nabla \phi-\nabla\phi_i)$ per unit area.
+
+The singularities, therefore, represent the jump in conditions across the boundary; the doublet density represents the local jump in potential and the source density represents the local jump in the normal component of the velocity.
+
+The influence of the singularities vanishes at infinity and the integral over $S_\infty$ reduces to $0$.
+
+With the additional assumption of a thin wake, equation \eqref{Green} becomes
+\begin{equation}
+\begin{split}
+\label{equation_2}
+\Phi_P = &\frac{1}{4\pi} \iint_{S}  (\phi-\phi_i) \, \vec{n} \cdot \nabla(\frac{1}{r}) \,dS \\
+       - &\frac{1}{4\pi} \iint_{S} \frac{1}{r} \vec{n} \cdot (\nabla\phi-\nabla\phi_i)  \,dS \\
+       + &\frac{1}{4\pi} \iint_{W}  (\Phi_U-\Phi_L) \, \vec{n} \cdot \nabla(\frac{1}{r}) \,dW \\
+       + &\phi_{\infty P}
+\end{split}
+\end{equation}
+
+
+\subsubsection{Boundary conditions and surface integrals}
+Only the solid boundary condition is considered in flow5. It requires that the velocity on the body's surface is tangent to that surface, or equivalently that $\vec{V}.\vec{n}=0$ on the surface. 
+
+\begin{figure} 
+\centering
+\includegraphics[width=10cm]{Neumann.png}
+\caption{Neumann boundary condition}
+\label{naca12top}
+\end{figure}
+
+
+To apply the condition, the potential and the velocity need to be evaluated on the surface itself, and the surface integrals in eq. \eqref{equation_2} become singular or hypersingular. This implies that great care must be taken with their numerical treatment. The methods used to perform these numerical integrations are those described in \cite{Maskew} for integrals over quadrilateral panels with uniform density, and those given in \cite{Carley} and \cite{SNF} for integrals over triangles with respectively uniform and linear singularity densities.
+ 
+\subsubsection{Singularity model}
+The enforcement of boundary conditions is not sufficient to determine a unique solution to \eqref{equation_2} in terms of surface singularities. A choice needs to be made to define which will be imposed at the outset, and which will be determined by calculation. 
+
+Building on the successful formulation used for the potential flow formulation with Dirichlet BC, the choices made here are
+\begin{enumerate}[label=(\roman*)]
+	\item to have the internal flow equal to the onset flow
+	\item to define the source densities and to solve the problem for the doublet densities
+	\item to choose the source densities to capture the whole extent of the normal velocity jump across the surface
+\end{enumerate}
+
+
+Denote the freestream velocity by $\vec{V}_{\infty}$, the velocity on a surface point P by $\vec{V}^o$ on the outside and by $\vec{V}^i$ on the inside. Since the normal velocity jump across a panel with unit source density is $4 \pi$, the source strength required to achieve condition (iii) is:
+\begin{equation}
+\label{eq_sigma}
+\sigma = \frac{1}{4 \pi}(\vec{V}^o-\vec{V}^i).\vec{n} 
+\end{equation}
+Substituting the requirement that $\vec{V}^o.\vec{n}=0$ in \eqref{eq_sigma} gives:
+\begin{equation}
+\sigma  = - \frac{1}{4 \pi} \vec{V}^i.\vec{n}= - \frac{1}{4 \pi}  \vec{V}_{\infty}.\vec{n}
+\end{equation}
+
+The source strength for each panel is therefore the same as in the case of the potential-based formulation and is defined at the outset of the calculation.
+
+
+The total velocity at the \underline{inside} control point $C_j$ is the sum of the freestream and perturbation velocities:
+\begin{equation}
+\label{vel_j}
+\vec{V}_j^i = \vec{V}_{\infty} + \sum^{n}_{k=0}{\mu_k\vec{D}_{jk}} + \sum^{n}_{k=0}{\sigma_k\vec{S}_{jk}} 
+\end{equation}
+where 
+$\mu_k\vec{D}_{jk}$ and $\sigma_k\vec{S}_{jk}$ are respectively the doublet and source velocity influences of panel $P_k$ at the control point $C_j$. Note that the location of the control point inside or outside only matters in the case of the source influence, since the normal velocity is continuous across a panel with a doublet density.
+
+
+The non-penetration condition on the body's surface is $\vec{V}^o.\vec{n}=0$:
+\begin{equation}
+\label{Neumann_BC}
+\vec{V}^o.\vec{n}= \vec{V}^i.\vec{n}+4\pi\sigma = \vec{V}^i.\vec{n} - \vec{V}_{\infty}.\vec{n} = 0
+\end{equation}
+
+
+Substituting in \eqref{Neumann_BC} the expression of the velocity $\vec{V}^i$ defined in \eqref{vel_j} gives
+\begin{equation} 
+\label{Linear_sys}
+\sum^{n}_{k=0}{\mu_k\vec{D}_{jk}}.\vec{n} + \sum^{n}_{k=0}{\sigma_k\vec{S}_{jk}} .\vec{n}  = 0
+\end{equation}
+
+Finally, writing this equation for each of the $n$ control points leads to a linear system of $n$ equations to solve for the $n$ unknown doublet densities $\mu_j$.
+
+\textbf{Notes}
+\begin{itemize}
+	\item Imposing instead external Neumann BC leads to the same linear system and to the same solution.
+	\item Although equation \eqref{Linear_sys} can be solved as is, each doublet density $\mu_i$ encompasses the total potential jump across the surface. This leads to high values of the doublet densities, and testing has shown that the numerical solution can be unstable. This is also the experience reported in \cite{Maskew}.
+	
+	For this reason, it is preferable to break down the potential into the known part which is the freestream potential and the unknown part corresponding to the body-induced perturbation. The problem is then solved for the latter, as detailed in the next section. This is the method recommended in \cite{Maskew}.
+\end{itemize}
+
+\subsection{Perturbation potential}
+The potential $\Phi_P$ at a point $P$ can be separated into the freestream potential $\Phi_\infty$ and the perturbation potential $\phi$, so that the problem is solved only for the latter part.
+
+\begin{equation}
+\Phi_P = \Phi_\infty + \phi
+\end{equation}
+
+
+The freestream potential is
+\begin{equation}
+\Phi_\infty =(V_{\infty})_x \,x + (V_{\infty})_y \,y  + (V_{\infty})_z \,z = \vec{V}_\infty \cdot \vec{P}
+\end{equation}
+
+and the doublet densities can be written as 
+\begin{equation}
+\label{mu_breakdown}
+\mu_k = \Phi_\infty + \mu_k^{\prime}
+\end{equation}
+
+
+Substituting in \eqref{Linear_sys} gives
+\begin{equation}
+\label{Linear_sys_perturb}
+\sum^{n}_{j=0}{(\Phi_\infty + \mu_k^{\prime}) \vec{D}_{jk}}.\vec{n} + \sum^{n}_{j=0}{\sigma_k\vec{S}_{jk}} .\vec{n}  = 0
+\end{equation}
+
+The freestream potential term can be transferred to the RHS, which leads to 
+\begin{equation}
+\
+\sum^{n}_{k=0}{ \mu_k^{\prime} \vec{D}_{jk}}.\vec{n} = -\sum^{n}_{k=0}{\Phi_\infty \vec{D}_{jk}}.\vec{n} -\sum^{n}_{k=0}{\sigma_k\vec{S}_{jk}} .\vec{n} 
+\end{equation}
+
+Once the linear system is solved for the $\mu_k^{\prime}$, the doublet densities can be reconstructed using \eqref{mu_breakdown}, and the other on-body and far-field quantities can be calculated.
+
+\newpage
+\begin{thebibliography}{9}
+\bibitem{Maskew} 
+Brian Maskew, \textit{VSAERO Theory Document. A Computer Program for Calculating Nonlinear Aerodynamic Characteristics of Arbitrary Configurations}, NASA Contractor report 4023, September 1987.
+
+\bibitem{Willis}
+David J. Willis, Jaime Peraire, Jacob K. White, \textit{A Combined pFFT-Multipole Tree Code, Unsteady
+Panel Method with Vortex Particle Wakes}, 43rd AIAA Aerospace Sciences Meeting and Exhibit, 10-13 January 2005, Reno. N.V.
+
+\bibitem{Carley}
+Michael J. Carley \textit{Analytical Formulae for Potential Integrals on Triangles.” Journal of Applied Mechanics 80.4 (2013)}
+
+\bibitem{SNF}
+Sylvain Nintcheu-Fata. \textit{Explicit expressions for 3D boundary integrals in potential theory}, Int. J. Numer. Meth. Engng 2009; 78:32–47.
+
+\end{thebibliography}
+
+\end{document}
+ 
+
+
+
+
+
+
+
+
+
+
+
+

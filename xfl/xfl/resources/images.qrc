@@ -1,0 +1,41 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/IBL.png</file>
+        <file>images/flow5_873x267.png</file>
+        <file>images/flow5_371x145.png</file>
+        <file>images/flow5_651x212.png</file>
+        <file>images/flow5_1287x429.png</file>
+        <file>images/V_glide.png</file>
+        <file>images/V_h.png</file>
+        <file>images/V_inf.png</file>
+        <file>images/param.png</file>
+        <file>images/control_angles.png</file>
+        <file>images/gain_angles.png</file>
+        <file>images/Lorenz.png</file>
+        <file>images/NACA_2415.svg</file>
+        <file>images/VPW.png</file>
+        <file>images/V_inf_inv.png</file>
+        <file>images/V_glide_inv.png</file>
+        <file>images/V_h_inv.png</file>
+        <file>images/gain_angles_inv.png</file>
+        <file>images/control_angles_inv.png</file>
+        <file>images/Lorenz_inv.png</file>
+        <file>images/param_inv.png</file>
+        <file>images/PSO_inv.png</file>
+        <file>images/PSO.png</file>
+        <file>images/Fuse_KS_inv.png</file>
+        <file>images/Fuse_KS.png</file>
+        <file>images/Fuse_PS_inv.png</file>
+        <file>images/Fuse_PS.png</file>
+        <file>images/Fuse_FF_inv.png</file>
+        <file>images/Fuse_FF.png</file>
+        <file>images/Fuse_Drag_inv.png</file>
+        <file>images/Fuse_Drag.png</file>
+        <file>images/extra_drag_inv.png</file>
+        <file>images/extra_drag.png</file>
+        <file>images/quadtex.png</file>
+        <file>images/HH.png</file>
+        <file>images/HH_inv.png</file>
+        <file>images/sizegrip.png</file>
+    </qresource>
+</RCC>

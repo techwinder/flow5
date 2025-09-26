@@ -1,0 +1,99 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper, portrait, margin=1in]{geometry}
+
+\usepackage{amsmath}
+
+
+\renewcommand{\familydefault}{\sfdefault}
+
+ 
+\begin{document}
+$$D =  \frac{1}{2} \; \rho \; V^2 \big(S\,(\mathit{Cd}_{\mathit{ind}} + \mathit{Cd}_{visc} + \mathit{Cd}_{\mathit{AVL}}) + \sum{S_i\; \mathit{Cdx}_i}\big)$$
+$$D = \frac{1}{2} \; \rho \; V^2 \; C_f \; \mathit{FF} \; \mathit{WA} $$
+$$\mathit{FF} = 1 \; + \; \frac{3}{2} \; \big(\frac{D}{L} \big)^{\frac{3}{2}} \; + \; 50 \; \big(\frac{D}{L} \big)^3 $$
+
+$$\frac{0.242}{\sqrt{C_f}} = \log(\mathit{Re} \, C_f) $$
+
+
+$$C_f = 0.455 \, \big(\frac{1}{\log{\mathit{Re}}}\big)^{2.58}$$
+
+
+\newpage
+\begin{equation}
+f_k(x) = \big(\sin{\pi \, x^{\frac{\log{0.5}}{\log{k/(n+1)}}}}  \big)^{t_2}
+\end{equation}
+
+
+
+\begin{equation}
+f_k(x) = \big(\sin{\pi \, x^{\frac{\log{0.5}}{\log{t_1} \frac{k}{n+1} } }  }  \big)^{t_2}
+\end{equation}
+
+
+
+
+\newpage
+
+$$CD_p = 0.0026\; \gamma_A + 0.005$$
+where $\gamma_A$ is the apparent wind angle in degrees.
+
+\begin{equation}
+\begin{split}
+x_{CE}= \frac{N_S}{Y_S} \\
+z_{CE}= \frac{K_S}{Y_S} 
+\end{split}
+\end{equation}
+where $K_S$ and $N_S$ are the moments around the $x$ and $z$ axes,
+
+and $Y_S$ is the component of the force along the $y$ axis.
+
+\newpage
+
+
+
+$$V_{\infty} = \sqrt{\frac{2mg}{\rho S C_L}}$$
+$$V_{\infty} = \sqrt{\frac{2mg}{\rho S \sqrt{C_L^2+C_D^2}}}$$
+$$\alpha = $$
+$$v = (1-ctrl) \times v_{min} + ctrl \times v_{max}$$
+$$\theta = \theta_0 + (1-ctrl) \times \theta_{min} + ctrl \times \theta_{max}$$
+$$\theta = \theta_0 + ctrl \times \Delta$$
+
+
+
+\newpage
+
+\begin{center}
+Lorenz attractor
+\begin{equation} 
+\begin{split}
+\frac{dx}{dt} &= \sigma(y-x) \\
+\frac{dy}{dt} &= x(\rho-z) - y \\
+\frac{dz}{dt} &= xy-\beta z
+\end{split}
+\end{equation}
+\end{center}
+
+
+\newpage
+
+\begin{center}
+\begin{equation} 
+\begin{split}
+P_i^{t+1} &= P_i^t +V_i^{t+1}  \\
+V_i^{t+1} &= w \, V_i^t  \\
+          &+ c_1 r_1 (P_{best(i)}^t-P_i^t) \\
+          &+ c_2 r_2 (P_{bestglobal}^t-P_i^t) 
+\end{split}
+\end{equation}
+\end{center}
+
+
+
+
+
+\end{document}
+
+
+
+
+

@@ -1,0 +1,190 @@
+/****************************************************************************
+
+    flow5 application
+    Copyright (C) Andre Deperrois 
+    All rights reserved.
+
+*****************************************************************************/
+
+
+
+#pragma once
+
+
+#include <QObject>
+
+
+#include <xflpanels/panels/vorton.h>
+#include <xflpanels/panels/vortex.h>
+#include <xflcore/enums_core.h>
+#include <xflobjects/objects3d/analysis/aeroforces.h>
+#include <xflobjects/objects3d/analysis/spandistribs.h>
+
+
+class Polar3d;
+class Panel;
+class StabDerivatives;
+class Vortex;
+
+class PanelAnalysis
+{
+    friend class Task3d;
+    friend class PlaneTask;
+    friend class BoatTask;
+
+    public:
+        PanelAnalysis();
+        virtual ~PanelAnalysis() = default;
+
+        void setAnalysisStatus(xfl::enumAnalysisStatus status) {m_AnalysisStatus=status;}
+        void cancelAnalysis() {m_AnalysisStatus=xfl::CANCELLED;}
+        bool isCancelled() const {return m_AnalysisStatus==xfl::CANCELLED;}
+        bool isRunning()   const {return m_AnalysisStatus==xfl::RUNNING;}
+        bool isPending()   const {return m_AnalysisStatus==xfl::PENDING;}
+        bool isFinished()  const {return m_AnalysisStatus==xfl::FINISHED || m_AnalysisStatus==xfl::CANCELLED;}
+
+        bool allocateMatrix(int N);
+
+        virtual Panel *panel(int p) = 0;
+        virtual Panel const *panelAt(int p) const = 0;
+        virtual bool initializeAnalysis(Polar3d const *pPolar3d, int nRHS);
+        virtual int  matSize() const = 0;
+        virtual int  makeWakePanels(Vector3d const &WindDirection, bool bVortonWake) = 0;
+        virtual void scaleResultsToSpeed(double ratio) = 0;
+        virtual void savePanels() = 0;
+        virtual void restorePanels() = 0;
+        virtual void makeInfluenceMatrix() = 0;
+        virtual void makeUnitRHSBlock(int iBlock) = 0;
+        virtual void makeRHSBlock(int iBlock, double *RHS, QVector<Vector3d> const &VField, Vector3d const*normals) const = 0;
+        virtual void makeUnitDoubletStrengths(double alpha, double beta) = 0;
+        virtual void makeWakeMatrixBlock(int iBlock) = 0;
+
+        virtual void makeMu(int qrhs) = 0;
+        virtual void makeLocalVelocities(QVector<double> const &uRHS, QVector<double> const &vRHS, QVector<double> const &wRHS,
+                                         QVector<Vector3d> &uVLocal, QVector<Vector3d> &vVLocal, QVector<Vector3d> &wVLocal,
+                                         Vector3d const &WindDirection) const = 0;
+        virtual void combineLocalVelocities(double alpha, double beta, QVector<Vector3d> &VLocal) const = 0;
+        virtual void computeOnBodyCp(QVector<Vector3d> const &VInf, QVector<Vector3d> const &VLocal, QVector<double>&Cp) const = 0;
+        virtual bool computeTrimmedConditions(double mass, Vector3d const &CoG, double &alphaeq, double &u0, bool bFuseMi) = 0;
+        virtual void forces(double const *Mu, double const *Sigma, double alpha, double beta, Vector3d const &CoG, bool bFuseMi, QVector<Vector3d> const &VInf, Vector3d &Force, Vector3d &Moment) = 0;
+        virtual void inducedForce(int nPanel3, double QInf, double alpha, double beta, int pos, Vector3d &ForceBodyAxes, SpanDistribs &SpanResFF) const = 0;
+        virtual void trefftzDrag(int nPanel3, double QInf, double alpha, double beta, int pos, Vector3d &Drag, SpanDistribs &SpanResFF) const = 0;
+        virtual int  nPanels() const = 0;
+        virtual void makeVertexDoubletDensities(QVector<double> const &muPanel, QVector<double> &muNode) const {(void)muPanel; (void)muNode;} //dummy virtual method to enable a call to P3analysis subclass...
+
+        virtual void makeVortons(double dl, double const *mu3Vertex, int pos3, int nPanel3, int nStations, int nVtn0,
+                                 QVector<Vorton> &vortons, QVector<Vortex> &vortexneg) const = 0;
+        virtual void makeRHSVWVelocities(QVector<Vector3d>& VPW, bool bVLM=false);
+        virtual void makeRHSVWVelocitiesBlock(int iFirst, int iLast, bool bVLM, Vector3d *Vpanel);
+        virtual void makeNegatingVortices(QVector<Vortex> &negvortices) = 0;
+
+        virtual void getVelocityVector(Vector3d const &C, double const *Mu, double const *Sigma, Vector3d &VT, double coreradius, bool bWakeOnly, bool bMultiThread) const = 0;
+
+        void makeUnitRHSVectors();
+        void makeWakeContribution();
+
+        void makeSourceStrengths(Vector3d const &WindDirection);
+        void makeSourceStrengths(QVector<Vector3d> const &WindDirection);
+
+        void vortonDrag(double alpha, double beta, double QInf, int n0, int nStations, Vector3d &Drag, SpanDistribs &SpanResFF) const;
+
+        void setVortons(const QVector<QVector<Vorton> > &vortons);
+
+        void combineUnitRHS(QVector<double> &RHS, const Vector3d &VInf, const Vector3d &Omega);
+        void makeRHS(const QVector<Vector3d> &VField, QVector<double> &RHS, const Vector3d *normals);
+
+        void addWakeContribution();
+        void computeStabilityDerivatives(  double alphaeq, double u0, Vector3d const &CoG, bool bFuseMi, StabDerivatives &SD, Vector3d &Force0, Vector3d &Moment0);
+        void computeTranslationDerivatives(double alphaeq, double u0, Vector3d const &CoG, bool bFuseMi, StabDerivatives &SD, Vector3d &Force0, Vector3d &Moment0);
+        void computeAngularDerivatives(    double alphaeq, double u0, Vector3d const &CoG, bool bFuseMi, StabDerivatives &SD);
+
+        void traceLog(const QString &str) const;
+        inline double sourceStrength(const Vector3d &normal, Vector3d const &Velocity) const {return -1.0/4.0/PI * Velocity.dot(normal);}
+        void releasePanelArrays();
+
+        Polar3d const *polar3d() const {return m_pPolar3d;}
+
+        void clearVortons() {m_Vorton.clear();}
+        void getVortonVelocity(Vector3d const &C, double vtncorelength, Vector3d &VelVtn, bool bMultiThread=false) const;
+        void getVortonRowVelocity(int iRow, Vector3d const &C, double vtncorelength, Vector3d *VelVtn) const;
+        void getVortonVelocityGradient(Vector3d const &C, double *G) const;
+
+        virtual void testResults(double alpha, double beta, double QInf) const = 0;
+
+        static void setMultiThread(bool bMulti) {s_bMultiThread=bMulti;}
+        static void setMaxThreadCount(int maxthreads) {s_MaxThreads=maxthreads;}
+        static void setDoublePrecision(bool bDouble) {s_bDoublePrecision=bDouble;}
+        static bool bDoublePrecision() {return s_bDoublePrecision;}
+
+        static void clearDebugPts() {s_DebugPts.clear(); s_DebugVecs.clear();}
+
+
+    protected:
+        bool LUfactorize();
+        virtual void backSubUnitRHS(double *uRHS, double *vRHS, double*wRHS, double *pRHS, double *qRHS, double*rRHS);
+        bool backSubRHS(QVector<double> &RHS);
+
+    protected:
+
+        mutable QString m_ErrorLog;
+
+        Polar3d const *m_pPolar3d;
+
+        std::vector<double> m_aijd;  /**< the matrix of panel influences - double precision; QVector is limited to 2 GB and is unusable*/
+        std::vector<float>  m_aijf;  /**< the matrix of panel influences - single precision; QVector is limited to 2 GB and is unusable*/
+        std::vector<int>    m_ipiv;  /** the array of pivot indices for the LAPACK LU solver */
+
+
+        // unit RHS for the 6 motion d.o.f
+        QVector<double> m_uRHS, m_vRHS, m_wRHS;
+        QVector<double> m_pRHS, m_qRHS, m_rRHS;
+
+        // for control derivatives
+
+        QVector<double> m_cRHS;
+
+        QVector<Vector3d> m_uVLocal;              /**< the array of unit velocity vectors for aoa=0,  in local coordinates */
+        QVector<Vector3d> m_vVLocal;              /**< the array of unit velocity vectors for beta=PI/2, in local coordinates */
+        QVector<Vector3d> m_wVLocal;              /**< the array of unit velocity vectors for aoa=PI/2, in local coordinates */
+
+        QVector<double> m_Cp;                /**< The array of pressure coefficients on the panels. 1 value/panel in the case of the quad methods, 3 values/panel in the case of the triangular methods */
+        QVector<double> m_Mu;                /**< The array of doublet strengths, or vortex circulations, associated to the panels. 1 value/panel in the case of the quad methods, 3 values/panel in the case of the triangular methods */
+        QVector<double> m_Sigma;             /**< The array of resulting source strengths of the analysis. 1 value/panel for all methods. */
+
+        bool m_bCancel; /** to interrupt the matrix solver only; */
+
+        bool m_bSequence;           /**< true if the calculation is should be performed for a range of aoa */
+        bool m_bWarning;     /**< true if one the OpPoints could not be properly interpolated */
+        bool m_bMatrixError;
+
+        xfl::enumAnalysisStatus m_AnalysisStatus;
+        QString m_LogFilePathName;
+        int m_nBlocks;              /** the number of row blocks for multithreading */
+
+        int m_nStations;          /**< the number of chordwise strips,
+                                   which is also the number of panels or stations in the spanwise direction,
+                                   which is also the number of wake columns*/
+
+
+        QVector<QVector<Vorton>> m_Vorton; /** The array of vorton rows. Vortons are organized in rows. Each row is located in a crossflow plane. The number of vortons is variable for each row, due to vortex stretching and vorton redistribution. */
+        QVector<Vortex> m_VortexNeg;    /** The array of negating vortices at the trailing edge of the trailing wake panel of each wake column. cf. Willis 2005 fig. 3*/
+
+
+        static bool s_bDoublePrecision;
+        static bool s_bMultiThread;
+        static int s_MaxThreads;
+
+        mutable double const *tmp_Mu;
+        mutable double const *tmp_Sigma;
+        mutable double tmp_coreradius;
+        mutable bool tmp_bWakeOnly;
+
+    public:
+        static QVector<Vector3d> s_DebugPts;
+        static QVector<Vector3d> s_DebugVecs;
+};
+
+
+
+
+

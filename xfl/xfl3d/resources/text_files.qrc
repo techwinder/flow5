@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>textfiles/galaxies.csv</file>
+        <file>textfiles/stl_mesh.stl</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,1030 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper, portrait, margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage[export]{adjustbox}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xfrac}
+
+\graphicspath{{./figures/}}
+\renewcommand{\familydefault}{\sfdefault}
+
+ 
+\begin{document}
+
+\title{Lattice Boltzmann Method - Implementation notes}
+\author{techwinder}
+
+\maketitle
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+
+\section{Introduction}
+This document is a summary of the notes taken during the implementation in foil5 of an LBM 2d flow solver for airfoils. 
+\section{Lattice description}
+foil5 implements the d2q9 operator, with the convention illustrated in figure \ref{naca12top}.
+
+\begin{figure} 
+\centering
+\includegraphics[width=10cm]{d2q9.png}
+\caption{Directions of distributions}
+\label{naca12top}
+\end{figure}
+
+To simplify the imposition of boundary conditions, the velocity vectors have unit lengths 1 for the directions 1, 2, 3 and 4, and length $\sqrt{2}$ along the diagonal directions:
+\begin{equation}
+\label{Directions}
+\begin{split}
+c_0 &= (0,0) \\
+c_1 &= (1,0) \\
+c_2 &= (0,1) \\
+c_3 &= (-1,0) \\
+c_4 &= (0,-1) \\
+c_5 &= (1,1) \\
+c_6 &= (-1,1) \\
+c_7 &= (-1,-1) \\
+c_8 &= (1,-1) \\
+\end{split}
+\end{equation}
+
+The weight factors of the distributions are:
+\begin{equation}
+\begin{split}
+\label{Weight}
+w_0 &= \frac{4}{9}\\
+w_1 = w_2 = w_3 = w_4 &= \frac{1}{9}\\
+w_5 = w_6 = w_7 = w_8 &= \frac{1}{36}
+\end{split}
+\end{equation}
+
+The first order moments at a given cell are:
+\begin{equation}
+\begin{split}
+\rho &= \sum_i{f_i} \\
+\rho \, u_x &= \sum_i{f_i} c_i^x \\
+\rho \, u_y &= \sum_i{f_i} c_i^y \\
+\end{split}
+\end{equation}
+Developing the relations and introducing the values of the unit velocity vectors gives:
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8 \\
+\rho \, u_x &= f_1 - f_3  + f_5 - f_6 - f_7 + f_8 \\
+\rho \, u_y &= f_2 - f_4 + f_5 + f_6 - f_7 - f_8
+\end{split}
+\end{equation}
+
+Using the definitions of the equilibrium distribution:
+$$f_i^{eq} = w_i \rho \, \big(1 + \frac{c_i \cdot u}{c_s^2} + \frac{(u \cdot c_i)^2}{2c_s^4} - \frac{u \cdot u}{2 c_s^2} \big)$$
+$$f_i^{eq} =  w_i \, \rho \, \big( 1 + 3 \, c_i \cdot u + \frac{9}{2} (c_i \cdot u)^2 - \frac{3}{2} u \cdot u  \big)$$
+
+\begin{equation}
+\begin{split}
+f_0^{eq} &= \frac{4}{9} \rho  \big(1 - \frac{3}{2} (u_x^2 + u_y^2)   \big)         \\
+f_1^{eq} &= \frac{1}{9} \rho  \big(1 + 3 u_x + \frac{9}{2} u_x^2 - \frac{3}{2}  (u_x^2 + u_y^2) \big)            \\
+f_2^{eq} &= \frac{1}{9} \rho  \big(1 + 3 u_y + \frac{9}{2} u_y^2 - \frac{3}{2}  (u_x^2 + u_y^2) \big)            \\ 
+f_3^{eq} &= \frac{1}{9} \rho  \big(1 - 3 u_x + \frac{9}{2} u_x^2 - \frac{3}{2}  (u_x^2 + u_y^2) \big)          \\
+f_4^{eq} &= \frac{1}{9} \rho  \big(1 - 3 u_y + \frac{9}{2} u_y^2 - \frac{3}{2}  (u_x^2 + u_y^2) \big)          \\
+f_5^{eq} &= \frac{1}{36} \rho \big( 1 + 3 \, (u_x+u_y) + \frac{9}{2} (u_x+u_y)^2 - \frac{3}{2} (u_x^2 + u_y^2)  \big)            \\
+f_6^{eq} &= \frac{1}{36} \rho \big( 1 + 3 \, (-u_x+u_y) + \frac{9}{2} (-u_x+u_y)^2 - \frac{3}{2} (u_x^2 + u_y^2)  \big)            \\
+f_7^{eq} &= \frac{1}{36} \rho \big( 1 + 3 \, (-u_x-u_y) + \frac{9}{2} (-u_x-u_y)^2 - \frac{3}{2} (u_x^2 + u_y^2)  \big)            \\
+f_8^{eq} &= \frac{1}{36} \rho \big( 1 + 3 \, (u_x-u_y) + \frac{9}{2} (u_x-u_y)^2 - \frac{3}{2} (u_x^2 + u_y^2) \big)            \\
+\end{split}
+\end{equation}
+After simplification:
+\begin{equation}
+\begin{split}
+f_0^{eq} &= \frac{4}{9} \rho  \big(1 - \frac{3}{2} (u_x^2 + u_y^2)   \big)         \\
+f_1^{eq} &= \frac{1}{9} \rho  \big(1 + 3 u_x + 3 u_x^2 - \frac{3}{2} u_y^2 \big)            \\
+f_2^{eq} &= \frac{1}{9} \rho  \big(1 + 3 u_y + 3 u_y^2 - \frac{3}{2} u_x^2 \big)            \\ 
+f_3^{eq} &= \frac{1}{9} \rho  \big(1 - 3 u_x + 3 u_x^2 - \frac{3}{2} u_y^2 \big)          \\
+f_4^{eq} &= \frac{1}{9} \rho  \big(1 - 3 u_y + 3 u_y^2 - \frac{3}{2} u_x^2 \big)          \\
+f_5^{eq} &= \frac{1}{36} \rho \big( 1 + 3 \, (u_x+u_y) + 9 u_x u_y +3 (u_x^2 + u_y^2)  \big)            \\
+f_6^{eq} &= \frac{1}{36} \rho \big( 1 - 3 \, (u_x-u_y) - 9 u_x u_y +3 (u_x^2 + u_y^2)  \big)            \\
+f_7^{eq} &= \frac{1}{36} \rho \big( 1 - 3 \, (u_x+u_y) + 9 u_x u_y +3 (u_x^2 + u_y^2)  \big)            \\
+f_8^{eq} &= \frac{1}{36} \rho \big( 1 + 3 \, (u_x-u_y) - 9 u_x u_y +3 (u_x^2 + u_y^2)  \big)            \\
+\end{split}
+\end{equation}
+
+\section{Boundary conditions} 
+This section uses the non-equilibrium bounce back (NEBB) method detailed in \cite{ZH}. 
+The assumption made in \cite{ZH} is that the bounce-back principle applies at boundaries 
+to the normal directions of the non-equilibrium part of the distributions. 
+
+All combinations of conditions at the vertical and horizontal walls may not be compatible.
+For instance a specification of a velocity at the inlet is incompatible with a no-slip condition on the horizontal wall 
+since $u_x$ would be overspecified to incompatible values $0$ and $u_{x0}$.  Numerical experiments show that this 
+leads to numerical instabilities.
+
+Therefore only the following combinations are considered.
+\begin{center}
+\begin{tabular}{| c | c | c | c |  c |} 
+ \hline
+   & \textbf{Inlet} & \textbf{Horizontal} & \textbf{Outlet} & \textbf{Comment}\\  
+ \hline
+ 1 &  velocity & velocity &  NRBC & pressure is unspecified \\ 
+ \hline
+ 2 & velocity &  velocity & pressure & pressure waves \\ 
+ \hline
+ 3 & pressure & velocity & pressure  & to be tested \\
+ \hline
+ 4 & pressure & velocity & NRBC & to be tested\\
+ \hline
+ 5 & NRBC & velocity & NRBC & to be tested\\
+ \hline
+ 6 & pressure & slip or no-slip & pressure & velocity is unspecified \\
+ \hline
+\end{tabular}
+\end{center}
+
+ The only cases of interest for the calculation of a foil are the first four.
+
+\section{Velocity B.C.}
+
+\subsection{Inlet}
+At the left inlet cells, $u_x$ and $u_y$ are specified and known.
+
+After the collision and streaming steps, the equilibrium distributions are known and so are the distributions $f_2$, $f_3$, $f_4$, $f_6$, $f_7$.
+The distributions $f_1$, $f_5$ and $f_8$ as well as the density $\rho$ are unknown. 
+
+The NEBB condition at the vertical walls is
+$$f_1-f_1^{eq} = f_3-f_3^{eq} $$
+so that
+$$f_1 = f_3 + \frac{2}{3} \rho u_x$$
+
+$\rho$, is determined by eliminating the unknowns variables from the expressions of the moments:
+$$\rho = \frac{1}{(1-u_x) } \big(f_0 + f_2  + f_4 + 2 (f_3 + f_6 + f_7) \big)$$
+
+$f_5$ and $f_8$ are determined by eliminating $f_1$ from the expressions of moments:
+\begin{equation}
+\begin{split}
+f_5 + f_8 &= \rho \, u_x - f_1 + f_3 + f_6 + f_7 = \rho \, u_x -\frac{2}{3} \rho u_x + f_6 + f_7  = \frac{1}{3} \rho u_x + f_6 + f_7 \\
+f_5 - f_8 &= \rho \, u_y - f_2 + f_4 - f_6 + f_7 = \rho \, u_y - f_6 + f_7 
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_5 &= \frac{1}{2}\big( \frac{1}{3} \rho u_x + f_6 + f_7  + \rho u_y - f_2 + f_4 - f_6 + f_7  \big) \\
+f_5 &= \frac{1}{2}\big( \frac{1}{3} \rho u_x + \rho u_y - f_2 + f_4 + 2 f_7  \big) \\
+\end{split}
+\end{equation}
+and
+\begin{equation}
+\begin{split}
+f_8 &= \frac{1}{2} \big( \frac{1}{3} \rho u_x + f_6 + f_7 -\rho u_y + f_2 - f_4 + f_6 - f_7 \big) \\
+\end{split}
+\end{equation}
+Finally:
+\begin{equation}
+\begin{split}
+\rho &= \frac{1}{(1-u_x) } \big(f_0 + f_2  + f_4 + 2 (f_3 + f_6 + f_7) \big) \\
+f_1 &= f_3 + \frac{2}{3} \rho u_x \\
+f_5 &= f_7 -\frac{1}{2} (f_2 - f_4) + \frac{1}{6} \rho u_x + \frac{1}{2} \rho u_y   \\
+f_8 &= f_6 +\frac{1}{2} (f_2 - f_4) + \frac{1}{6} \rho u_x - \frac{1}{2} \rho u_y  
+\end{split}
+\end{equation}
+This is identical to TK eq. 5.49 to 5.52 except for a typo in their last equation.
+
+
+\subsection{Outlet}
+At the right outlet cells, $u_x$ and $u_y$ are specified and known.
+
+After the collision and streaming steps, the equilibrium distributions are known and so are the distributions $f_1$, $f_2$, $f_4$, $f_5$, $f_8$.
+The distributions $f_6$, $f_3$ and $f_7	$ as well as the density $\rho$ are unknown. 
+
+The NEBB condition at the vertical walls is
+$$f_3-f_3^{eq} = f_1-f_1^{eq}$$
+so that
+$$f_3 = f_1 - \frac{2}{3} \rho u_x$$
+
+$\rho$, is determined by eliminating the unknowns variables from the expressions of the moments:
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8 \\
+\rho \, u_x &= f_1 - f_3  + f_5 - f_6 - f_7 + f_8 \\
+\rho \, u_y &= f_2 - f_4 + f_5 + f_6 - f_7 - f_8
+\end{split}
+\end{equation}
+
+$$\rho = \frac{1}{1+u_x} \big(f_0 + f_2  + f_4 + 2 (f_1 + f_5 + f_8) \big)$$
+
+$f_6$ and $f_7$ are determined by eliminating $f_1$ from the expressions of moments:
+\begin{equation}
+\begin{split}
+f_6 + f_7 &= -\rho \, u_x + f_1 - f_3 + f_5 + f_8  \\
+f_6 - f_7 &= \rho \, u_y - f_2 + f_4 - f_5 + f_8  
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_6 + f_7 &= -\rho u_x +\frac{2}{3} \rho u_x + f_5 + f_8  = -\frac{1}{3} \rho u_x + f_5 + f_8 \\
+f_6 - f_7 &= \rho \, u_y - (f_2 - f_4) - f_5 + f_8  
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_6 &= \frac{1}{2} \big(-\frac{1}{3} \rho u_x + f_5 + f_8 + \rho u_y - (f_2-f_4) - f_5 + f_8 \big)\\ 
+f_7 &= \frac{1}{2} \big(-\frac{1}{3} \rho u_x + f_5 + f_8 - \rho u_y + (f_2-f_4) + f_5 - f_8 \big)  
+\end{split}
+\end{equation}
+
+Finally:
+\begin{equation}
+\begin{split}
+\rho &= \frac{1}{1+u_x} \big(f_0 + f_2  + f_4 + 2 (f_1 + f_5 + f_8) \big) \\
+f_3 &= f_1 - \frac{2}{3} \rho u_x \\
+f_6 &= f_8 -\frac{1}{2} (f_2 - f_4) - \frac{1}{6} \rho u_x + \frac{1}{2} \rho u_y   \\
+f_7 &= f_5 +\frac{1}{2} (f_2 - f_4) - \frac{1}{6} \rho u_x - \frac{1}{2} \rho u_y  
+\end{split}
+\end{equation}
+
+
+
+\subsection{Bottom}
+On the bottom boundary, $u_x$ and $u_y$ are specified and known.
+
+After the collision and streaming steps, the distributions $f_1$, $f_3$, $f_4$, $f_7$, $f_8$ are known.
+The distributions $f_6$, $f_2$ and $f_5$ as well as the density $\rho$ are unknown. 
+
+The NEBB condition is
+$$f_2-f_2^{eq} = f_4-f_4^{eq}$$
+
+so that
+$$f_2 = f_4 + (f_2^{eq}-f_4^{eq}) = f_4 + \frac{2}{3} \rho u_y$$
+
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8 \\
+\rho \, u_x &= f_1 - f_3  + f_5 - f_6 - f_7 + f_8 \\
+\rho \, u_y &= f_2 - f_4 + f_5 + f_6 - f_7 - f_8
+\end{split}
+\end{equation}
+
+$\rho$, is determined by eliminating the unknown variables from the expressions of the moments:
+$$\rho = \frac{1}{(1-u_y) } \big(f_0 + f_1  + f_3 + 2 (f_4 + f_7 + f_8) \big)$$
+
+$f_5$ and $f_6$ are determined from the expressions of moments:
+\begin{equation}
+\begin{split}
+f_5  &= \frac{1}{2} \big( \rho (u_x+u_y) - f_1 - f_2 + f_3 + f_4 + 2 f_7 \big)\\
+f_6  &= \frac{1}{2} \big( \rho (u_y-u_x) + f_1 - f_2 - f_3 + f_4 + 2 f_8 \big) 
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_5  &= \frac{1}{2} \big( \rho (u_x+u_y) -\frac{2}{3} \rho u_y - f_1 + f_3  + 2 f_7 \big)\\
+f_6  &= \frac{1}{2} \big( \rho (u_y-u_x) -\frac{2}{3} \rho u_y + f_1 - f_3  + 2 f_8 \big) 
+\end{split}
+\end{equation}
+
+Finally:
+\begin{equation}
+\begin{split}
+\rho &= \frac{1}{(1-u_y) } \big(f_0 + f_1  + f_3 + 2 (f_4 + f_7 + f_8) \big) \\
+f_2 &= f_4 + \frac{2}{3} \rho u_y \\
+f_5 &= f_7 -\frac{1}{2} (f_1 - f_3) + \frac{1}{2} \rho u_x + \frac{1}{6} \rho u_y \\
+f_6 &= f_8 +\frac{1}{2} (f_1 - f_3) - \frac{1}{2} \rho u_x + \frac{1}{6} \rho u_y 
+\end{split}
+\end{equation}
+
+
+\subsection{Top}
+On the top boundary, $u_x$ and $u_y$ are specified and known.
+
+After the collision and streaming steps, the distributions $f_1$, $f_3$, $f_6$, $f_2$, $f_5$ are known.
+The distributions $f_7$, $f_4$ and $f_8$ as well as the density $\rho$ are unknown. 
+
+The NEBB conditions is
+$$f_4-f_4^{eq} = f_2-f_2^{eq}$$
+
+so that
+$$f_4 = f_2 - \frac{2}{3} \rho u_y$$
+
+$\rho$, is determined by eliminating the unknowns variables from the expressions of the moments:
+$$\rho = \frac{1}{(1+u_y) } \big(f_0 + f_1  + f_3 + 2 (f_2 + f_5 + f_6) \big)$$
+
+$f_7$ and $f_8$ are determined from the expressions of moments:
+\begin{equation}
+\label{Moment_eq}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8 \\
+\rho \, u_x &= f_1 - f_3  + f_5 - f_6 - f_7 + f_8 \\
+\rho \, u_y &= f_2 - f_4 + f_5 + f_6 - f_7 - f_8
+\end{split}
+\end{equation}
+\begin{equation}
+\begin{split}
+f_7  &= \frac{1}{2} \big(-\rho (u_x+u_y) + f_1 + f_2 - f_3 - f_4 + 2 f_5 \big)\\
+f_8  &= \frac{1}{2} \big( \rho (u_x-u_y) - f_1 + f_2 + f_3 - f_4 + 2 f_6 \big) 
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_7  &= f_5 - \frac{1}{2}  \rho (u_x+u_y) +\frac{1}{3} \rho u_y + \frac{1}{2} (f_1 - f_3) \\
+f_8  &= f_6 + \frac{1}{2}  \rho (u_x-u_y) +\frac{1}{3} \rho u_y - \frac{1}{2} (f_1 - f_3)   
+\end{split}
+\end{equation}
+
+Finally (TK 6.58):
+\begin{equation}
+\begin{split}
+\rho &= \frac{1}{(1+u_y) } \big(f_0 + f_1  + f_3 + 2 (f_2 + f_5 + f_6) \big)\\
+f_4 &= f_2 - \frac{2}{3} \rho u_y \\
+f_7 &= f_5 +\frac{1}{2} (f_1 - f_3) - \frac{1}{6} \rho u_y - \frac{1}{2} \rho u_x   \\
+f_8 &= f_6 -\frac{1}{2} (f_1 - f_3) - \frac{1}{6} \rho u_y + \frac{1}{2} \rho u_x 
+\end{split}
+\end{equation}
+
+\subsection{Corners}
+
+\subsubsection{Inlet bottom}
+
+After the collision and streaming steps, the equilibrium distributions are known and so are the distributions $f_3$, $f_4$, and $f_7$.
+
+The velocities $u_x$ and  $u_y$ are specified and known. 
+
+The distributions $f_0$, $f_1$, $f_2$, $f_5$, $f_6$ and $f_8$ as well as the density $\rho$ are the seven unknown variables.
+
+The bounce-back rule for the non-equilibrium part of the distributions normal to the inlet and to the boundary are:
+\begin{equation}
+\begin{split}
+f_1-f_1^{eq} &= f_3-f_3^{eq} \\
+f_2-f_2^{eq} &= f_4-f_4^{eq} \\
+f_5-f_5^{eq} &= f_7-f_7^{eq}
+\end{split}
+\end{equation}
+
+$f_1$, $f_2$ and $f_5$ are determined using the definitions of the equilibrium distribution \eqref{Eq_distrib}
+\begin{equation}
+\begin{split}
+f_1 &= f_3 \frac{2}{3} \rho u_x    \\
+f_2 &= f_4 \frac{2}{3} \rho u_y    \\
+f_5 &= f_7 \frac{1}{6} \rho (u_x+u_y)    \\
+\end{split}
+\end{equation}
+
+$f_6$, $f_8$ and $\rho$ are determined from the momentum expressions
+\begin{equation}
+\begin{split}
+\rho &=  f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8 \\
+\rho \, u_x &= f_1 - f_3 + f_5 - f_6 - f_7 + f_8 \\
+\rho \, u_y &= f_2 - f_4 + f_5 + f_6 - f_7 - f_8  \\
+\end{split}
+\end{equation}
+which simplify to
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8    \\
+\frac{1}{3}\rho \, u_x &= f_5 - f_6 - f_7 + f_8  = - f_6 + f_8 +\frac{1}{6} \rho (u_x+u_y)                           \\
+\frac{1}{3}\rho \, u_y &= f_5 + f_6 - f_7 - f_8  = + f_6 - f_8 +\frac{1}{6} \rho (u_x+u_y)  
+\end{split}
+\end{equation}
+The last two equations are identical.
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8    \\
+\frac{1}{6}\rho (u_x-u_y) &= - f_6 + f_8                            \\
+\end{split}
+\end{equation}
+The system misses one equation to be invertible (cf. TK Eq. 5.57).
+
+The method applied in \cite{ZH} is to assume uniform density locally, so that $\rho$ at the inlet bottom node can be taken equal to the density of its neighboring flow node.
+
+With $\rho$ known, $f_6$ and $f_8$ can be determined as follows:
+\begin{equation}
+\begin{split}
+f_6 &= \frac{1}{2} \big( \rho-(f_0+f_1+f_2+f_3+f_4+f_5+f_7) -\frac{1}{6} (u_x-u_y) \big)\\
+f_8 &= \frac{1}{2} \big( \rho-(f_0+f_1+f_2+f_3+f_4+f_5+f_7) +\frac{1}{6} (u_x-u_y) \big)\\
+f_8 &= f_6 + \frac{1}{6} \rho (u_x-u_y) 
+\end{split}
+\end{equation}
+
+and finally $f_0$ is set to ensure mass conservation:
+\begin{equation}
+f_0 = \rho - (f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8  ) \\
+\end{equation}
+
+
+\subsubsection{Inlet top}
+
+After the collision and streaming steps, the equilibrium distributions are known and so are the distributions $f_2$, $f_3$, and $f_6$.
+
+The velocity $u_x$ and $u_y$ are specified. $u_x$ is either $0$ if or $u_{x0}$. 
+
+The distributions $f_0$,  $f_1$, $f_4$, $f_5$, $f_7$ and $f_8$ as well as the density $\rho$ are the unknown variables.
+
+The bounce-back rule for the non-equilibrium part of the distributions normal to the inlet and to the boundary are:
+\begin{equation}
+\begin{split}
+f_1-f_1^{eq} &= f_3-f_3^{eq} \\
+f_2-f_2^{eq} &= f_4-f_4^{eq} \\
+f_6-f_6^{eq} &= f_8-f_8^{eq}
+\end{split}
+\end{equation}
+
+Using the definitions of the equilibrium distributions:
+\begin{equation}
+\begin{split}
+f_1 &= f_3 + \frac{2}{3} \rho u_x            \\ 
+f_4 &= f_2 -\frac{2}{3} \rho u_y            \\
+f_8 &= f_6 + \frac{1}{6} \rho (u_x-u_y)        \\
+\end{split}
+\end{equation}
+
+
+$\rho$, $f_5$ and $f_7$ are determined from the momentum expressions 
+\begin{equation}
+\begin{split}
+\rho &=  f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8 \\
+\rho u_x &= f_1 - f_3 + f_5 - f_6 - f_7 + f_8 \\
+\rho u_y &= f_2 - f_4 + f_5 + f_6 - f_7 - f_8  \\
+\end{split}
+\end{equation}
+which simplify to:
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8    \\
+\frac{1}{3}\rho  u_x &= f_5 - f_6 - f_7 + f_8                            \\
+\frac{1}{3}\rho  u_y &= f_5 + f_6 - f_7 - f_8
+\end{split}
+\end{equation}
+
+The last two equations are identical.
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8    \\
+\frac{1}{6}\rho  (u_x+u_y) &= f_5 - f_7 
+\end{split}
+\end{equation}
+
+As for the inlet bottom corner, uniform local density is assumed and the value of $\rho$ is set equal to that of its neighbour cell. With $\rho$ known, $f_5$ and $f_7$ can be determined as follows:
+\begin{equation}
+\begin{split}
+f_5 + f_7 &= \rho-(f_0+f_1+f_2+f_3+f_4+f_6+f_8) \\
+f_5 - f_7 &= \frac{1}{6} \rho (u_x +u_y)
+\end{split}
+\end{equation}
+
+finally
+\begin{equation}
+\begin{split}
+f_5 &= \frac{1}{2} ( \rho-(f_0+f_1+f_2+f_3+f_4+f_6+f_8) +\frac{1}{6} (u_x+u_y))\\
+f_7 &= \frac{1}{2} ( \rho-(f_0+f_1+f_2+f_3+f_4+f_6+f_8) -	\frac{1}{6} (u_x+u_y))\\
+f_5 - f_7 &= \frac{1}{6} \rho (u_x +u_y)
+\end{split}
+\end{equation}
+
+\subsubsection{Outlet bottom}
+
+After the collision and streaming steps, the equilibrium distributions are known and so are the distributions $f_1$, $f_4$, and $f_8$.
+
+The velocities $u_x$ and $u_y$ are specified and known.
+
+The distributions $f_0$, $f_2$, $f_3$, $f_5$, $f_6$ and $f_7$ as well as the density $\rho$ are the seven unknown variables.
+
+The bounce-back rule for the non-equilibrium part of the distributions normal to the inlet and to the boundary are:
+\begin{equation}
+\begin{split}
+f_3-f_3^{eq} &= f_1-f_1^{eq} \\
+f_2-f_2^{eq} &= f_4-f_4^{eq} \\
+f_6-f_6^{eq} &= f_8-f_8^{eq}
+\end{split}
+\end{equation}
+
+$f_2$, $f_3$ and $f_6$ are determined using the definitions of the equilibrium distribution \eqref{Eq_distrib}
+\begin{equation}
+\begin{split}
+f_2 &= f_4 + \frac{2}{3} \rho u_y    \\
+f_3 &= f_1 - \frac{2}{3} \rho u_x    \\
+f_6 &= f_8 - \frac{1}{6} \rho (u_x-u_y)    \\
+\end{split}
+\end{equation}
+
+$f_5$, $f_7$ and $\rho$ are determined from the expressions of moments
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8 \\
+\rho \, u_x &= f_1 - f_3  + f_5 - f_6 - f_7 + f_8 \\
+\rho \, u_y &= f_2 - f_4 + f_5 + f_6 - f_7 - f_8
+\end{split}
+\end{equation}
+
+which simplify to
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8    \\
+\frac{1}{3}\rho u_x &= f_5 - f_6 - f_7 + f_8  = f_5 - f_7 +\frac{1}{6} \rho (u_x-u_y)  \\
+\frac{1}{3}\rho u_y &= f_5 + f_6 - f_7 - f_8  = f_5 - f_7 -\frac{1}{6} \rho (u_x-u_y)  
+\end{split}
+\end{equation}
+The last two equations are identical.
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8    \\
+\frac{1}{6}\rho (u_x+u_y) &= f_5 - f_7                            \\
+\end{split}
+\end{equation}
+The system misses one equation to be invertible (cf. TK Eq. 5.57).
+
+The method applied in \cite{ZH} is to assume uniform density locally, so that $\rho$ at the inlet bottom node can be taken equal to the density of its neighboring flow node.
+
+With $\rho$ known, $f_5$ and $f_7$ can be determined as follows:
+\begin{equation}
+\begin{split}
+f_5 &= \frac{1}{2} \big( \rho-(f_0+f_1+f_2+f_3+f_4+f_6+f_8) +\frac{1}{6} \rho(u_x+u_y) \big)\\
+f_7 &= \frac{1}{2} \big( \rho-(f_0+f_1+f_2+f_3+f_4+f_6+f_8) -\frac{1}{6} \rho(u_x+u_y) \big)\\
+f_7 &= f_5 - \frac{1}{6} \rho (u_x+u_y) 
+\end{split}
+\end{equation}
+
+and finally $f_0$ is set to ensure mass conservation:
+\begin{equation}
+f_0 = \rho - (f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8  ) \\
+\end{equation}
+
+
+\subsubsection{Outlet top}
+
+
+After the collision and streaming steps, the equilibrium distributions are known and so are the distributions $f_1$, $f_2$, and $f_5$.
+
+The velocities $u_x$ and $u_y$ are specified and known.
+
+The distributions $f_0$, $f_3$, $f_4$, $f_6$, $f_7$ and $f_8$ as well as the density $\rho$ are the seven unknown variables.
+
+The bounce-back rule for the non-equilibrium part of the distributions normal to the inlet and to the boundary are:
+\begin{equation}
+\begin{split}
+f_1-f_1^{eq} &= f_3-f_3^{eq} \\
+f_4-f_4^{eq} &= f_2-f_2^{eq} \\
+f_7-f_7^{eq} &= f_5-f_5^{eq}
+\end{split}
+\end{equation}
+
+$f_3$, $f_4$ and $f_7$ are determined using the definitions of the equilibrium distribution \begin{equation}
+\begin{split}
+f_3 &= f_1 - \frac{2}{3} \rho u_x    \\
+f_4 &= f_2 - \frac{2}{3} \rho u_y    \\
+f_7 &= f_5 - \frac{1}{6} \rho (u_x+u_y)    \\
+\end{split}
+\end{equation}
+
+$f_6$, $f_8$ and $\rho$ are determined from the expressions of moments
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8 \\
+\rho \, u_x &= f_1 - f_3  + f_5 - f_6 - f_7 + f_8 \\
+\rho \, u_y &= f_2 - f_4 + f_5 + f_6 - f_7 - f_8
+\end{split}
+\end{equation}
+
+which simplify to
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8    \\
+\frac{1}{3}\rho u_x &= f_5 - f_6 - f_7 + f_8  = -f_6 + f_8 +\frac{1}{6} \rho (u_x+u_y)  \\
+\frac{1}{3}\rho u_y &= f_5 + f_6 - f_7 - f_8  = f_6 - f_8 +\frac{1}{6} \rho (u_x+u_y)  
+\end{split}
+\end{equation}
+The last two equations are identical.
+\begin{equation}
+\begin{split}
+\rho &= f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8    \\
+\frac{1}{6}\rho (-u_x+u_y) &= f_6 - f_8                            \\
+\end{split}
+\end{equation}
+The system misses one equation to be invertible (cf. TK Eq. 5.57).
+
+The method applied in \cite{ZH} is to assume uniform density locally, so that $\rho$ at the inlet bottom node can be taken equal to the density of its neighboring flow node.
+
+With $\rho$ known, $f_6$ and $f_8$ can be determined as follows:
+\begin{equation}
+\begin{split}
+f_6 &= \frac{1}{2} \big( \rho-(f_0+f_1+f_2+f_3+f_4+f_5+f_7) +\frac{1}{6} \rho (-u_x+u_y) \big)\\
+f_8 &= \frac{1}{2} \big( \rho-(f_0+f_1+f_2+f_3+f_4+f_5+f_7) -\frac{1}{6} \rho (-u_x+u_y) \big)\\
+f_8 &= f_6 - \frac{1}{6} \rho (-u_x+u_y) 
+\end{split}
+\end{equation}
+
+and finally $f_0$ is set to ensure mass conservation:
+\begin{equation}
+f_0 = \rho - (f_1 + f_2 + f_3 + f_4 + f_5 + f_6 + f_7 + f_8  ) \\
+\end{equation}
+
+
+\section{Density B.C.}
+\subsection{Inlet}
+At the left inlet cells, $\rho_{in}$ is specified and $u_y=0$.
+
+
+After the collision and streaming steps, the equilibrium distributions are known and so are the distributions $f_2$, $f_3$, $f_4$, $f_6$, $f_7$.
+The distributions $f_1$, $f_5$ and $f_8$ as well as the velocity $u_x$ are unknown. 
+
+
+Using the definitions of the equilibrium distribution and moment equations \eqref{Moment_eq}:
+\begin{equation}
+\begin{split}
+f_1 + f_5 + f_8 = \rho_{in} - (f_0 + f_2 + f_3 +f_4 + f_6 + f_7 ) \\
+f_1 + f_5 + f_8 = \rho_{in} u_x  + (f_3 + f_6 + f_7 ) \\
+\rho_{in} \, u_y = 0 = f_2 - f_4 + f_5 + f_6 - f_7 - f_8
+\end{split}
+\end{equation}
+
+$u_x$ is deduced from the first two equations
+\begin{equation}
+u_x = 1- \frac{f_0 + f_2 + f_4 + 2(f_3+f_6 + f_7)}{\rho_{in}}
+\end{equation}
+
+The NEBB condition determines $f_1$:
+\begin{equation}
+f_1 = f_1^{eq} + f_3-f_3^{eq} = f_3 + \frac{2}{3} \rho_{in} u_x
+\end{equation}
+
+$f_5$ and $f_8$ are determined by eliminating $f_1$ from the momentum equations:
+\begin{equation}
+\begin{split}
+f_5 = f_7 - \frac{1}{2} (f_2-f_4)  + \frac{1}{6} \rho_{in} u_x\\
+f_8 = f_6 + \frac{1}{2} (f_2-f_4)  + \frac{1}{6} \rho_{in} u_x\\
+\end{split}
+\end{equation}
+
+\subsection{Outlet}
+At the right outlet cells, $\rho_{out}$ is specified and $u_y=0$.
+
+After the collision and streaming steps, the equilibrium distributions are known and so are the distributions $f_1$, $f_2$, $f_4$, $f_5$, $f_8$.
+
+The distributions $f_3$, $f_6$ and $f_7$ as well as the velocity $u_x$ are unknown. 
+
+Using the definitions of the equilibrium distribution and moment equations \eqref{Moment_eq}:
+\begin{equation}
+\begin{split}
+f_3 + f_6 + f_7 = \rho_{out} - (f_0 + f_1 + f_2 + f_4 + f_5 + f_8 ) \\
+f_3 + f_6 + f_7 = -\rho_{out} u_x  + (f_1 + f_5 + f_8) \\
+\rho_{out} \, u_y = 0 = f_2 - f_4 + f_5 + f_6 - f_7 - f_8
+\end{split}
+\end{equation}
+
+or
+\begin{equation}
+\begin{split}
+f_3 + f_6 + f_7 = \rho_{out} - (f_0 + f_1 + f_2 + f_4 + f_5 + f_8 ) \\
+f_3 + f_6 + f_7 = -\rho_{out} u_x  + (f_1 + f_5 + f_8) \\
+f_6 - f_7  = -f_2 + f_4 - f_5 + f_8
+\end{split}
+\end{equation}
+
+$u_x$ is deduced from the first two equations
+\begin{equation}
+0 = \rho_{out} (1+u_x) - (f_0 + f_2 + f_4 + 2(f_1+f_5 + f_8))
+\end{equation}
+\begin{equation}
+u_x = -1 + \frac{f_0 + f_2 + f_4 + 2(f_1+f_5 + f_8)}{\rho_{out}}
+\end{equation}
+
+The NEBB condition determines $f_3$:
+\begin{equation}
+f_3 =  f_1- \frac{2}{3} \rho_{out} u_x
+\end{equation}
+
+
+\begin{equation}
+\begin{split}
+f_6 + f_7 = -\rho_{out} u_x  + (f_1 - f_3 + f_5 + f_8) \\
+f_6 - f_7  = -f_2 + f_4 - f_5 + f_8
+\end{split}
+\end{equation}
+
+
+\begin{equation}
+\begin{split}
+f_6 + f_7 = -\rho_{out} u_x  + \frac{2}{3} \rho_{out} u_x + (f_5 + f_8) \\
+f_6 - f_7  = -f_2 + f_4 - f_5 + f_8
+\end{split}
+\end{equation}
+
+
+\begin{equation}
+\begin{split}
+f_6 + f_7 = - \frac{1}{3} \rho_{out} u_x + (f_5 + f_8) \\
+f_6 - f_7  = -f_2 + f_4 - f_5 + f_8
+\end{split}
+\end{equation}
+
+
+\begin{equation}
+\begin{split}
+2 f_6 = - \frac{1}{3} \rho_{out} u_x + f_5 + f_8 -f_2 + f_4 - f_5 + f_8\\
+2 f_6 = 2 f_8 - \frac{1}{3} \rho_{out} u_x  -f_2 + f_4 \\
+f_6 = f_8 - \frac{1}{6} \rho_{out} u_x -\frac{1}{2}( f_2 - f_4 ) \\
+\end{split}
+\end{equation}
+
+
+\begin{equation}
+\begin{split}
+2 f_7 = - \frac{1}{3} \rho_{out} u_x + f_5 + f_8 + f_2 - f_4 + f_5 - f_8\\
+2 f_7 = 2 f_5 - \frac{1}{3} \rho_{out} u_x + f_5 + f_2 - f_4 + f_5 \\
+f_7 =  f_5 - \frac{1}{6} \rho_{out} u_x + \frac{1}{2} (f_2 - f_4) \\
+\end{split}
+\end{equation}
+
+
+Summing up, the relations are the same as for the inlet:
+\begin{equation}
+\begin{split}
+f_6 = f_8 - \frac{1}{6} \rho_{out} u_x -\frac{1}{2}( f_2 - f_4 ) \\
+f_7 =  f_5 - \frac{1}{6} \rho_{out} u_x + \frac{1}{2} (f_2 - f_4) \\
+\end{split}
+\end{equation}
+
+\subsection{Corner points}
+Using \cite{ZH} equations 24 and 25.
+
+\subsubsection{Inlet bottom}
+
+$\rho_{in}$ is specified and known.
+$f_3$, $f_4$ and $f_7$ are known after streaming from adjacent nodes.
+In the no-slip case, $u_x=u_y=0$.
+
+The unknowns are $f_1$, $f_2$ $f_5$, $f_6$ and $f_8$.
+
+Using NEBB at the inlet and taking into account that $u_x$ and $u_y$ are $0$:
+\begin{equation}
+f_1 = f_3+(f_1^{eq}-f_3^{eq}) = f_3
+\end{equation}
+Similarly using NEBB condition on the bottom wall:
+\begin{equation}
+f_2 = f_4+(f_4^{eq}-f_2^{eq}) = f_4
+\end{equation}
+
+Using \eqref{Inlet_rho}
+\begin{equation}
+\begin{split}
+f_1 + f_5 + f_8 = \rho_{in} - (f_0 + f_2 + f_3 +f_4 + f_6 + f_7 ) \\
+f_1 + f_5 + f_8 = \rho_{in} u_x  + (f_3 + f_6 + f_7 ) \\
+\rho_{in} \, u_y = 0 = f_2 - f_4 + f_5 + f_6 - f_7 - f_8
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_1 + f_5 + f_8 = \rho_{in} - (f_0 + f_2 + f_3 +f_4 + f_6 + f_7 ) \\
+f_1 + f_5 + f_8 =  f_3 + f_6 + f_7  \\
+f_2 - f_4 + f_5 + f_6 - f_7 - f_8 = 0
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_5 + f_8 = \rho_{in} - (f_0 + f_1 + f_2 + f_3 +f_4 + f_6 + f_7 ) \\
+f_5 + f_8 - f_6 - f_7 = 0 \\
+f_5 + f_6 - f_7 - f_8 = 0
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_5 = f_7 \\
+f_6 + f_8 = \rho_{in} - (f_0 + f_1 + f_2 + f_3 +f_4 + f_5 + f_7 ) \\
+f_6 = f_8 
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_5 = f_7 \\
+f_6 = f_8 = \frac{1}{2} (\rho_{in} - (f_0 + f_1 + f_2 + f_3 +f_4 + f_5 + f_7 ) \\
+\end{split}
+\end{equation}
+
+
+\subsubsection{Inlet top}
+
+$\rho_{in}$ is specified and known.
+$f_2$, $f_3$ and $f_6$ are known after streaming from adjacent nodes.
+In the no-slip case, $u_x=u_y=0$.
+
+The unknowns are $f_1$, $f_4$ $f_5$, $f_7$ and $f_8$.
+
+Using NEBB at the inlet and taking into account that $u_x$ and $u_y$ are $0$:
+\begin{equation}
+f_1 = f_3+(f_1^{eq}-f_3^{eq}) = f_3
+\end{equation}
+Similarly using NEBB condition on the bottom wall:
+\begin{equation}
+f_4 = f_2+(f_2^{eq}-f_4^{eq}) = f_2
+\end{equation}
+
+The same development as before leads to
+
+\begin{equation}
+\begin{split}
+f_1 + f_5 + f_8 &= \rho_{in} - (f_0 + f_2 + f_3 +f_4 + f_6 + f_7 ) \\
+f_5 &= f_7 \\
+f_8 &= f_6
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_5 + f_7 = 2 f_5 = 2 f_7 &=  \rho_{in} - (f_0 + f_1 + f_2 + f_3 +f_4 + f_6 + f_8) \\
+f_8 &= f_6
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_5 &= f_7  = \frac{1}{2} (\rho_{in} - (f_0 + f_1 + f_2 + f_3 +f_4 + f_6 + f_8)) \\
+f_8 &= f_6
+\end{split}
+\end{equation}
+
+\subsubsection{Outlet bottom}
+
+$\rho_{out}$ is specified and known.
+$f_1$, $f_4$ and $f_8$ are known after streaming from adjacent nodes.
+In the no-slip case, $u_x=u_y=0$.
+
+The unknowns are $f_2$, $f_3$ $f_5$, $f_6$ and $f_7$.
+
+Using NEBB at the inlet and taking into account that $u_x$ and $u_y$ are $0$:
+\begin{equation}
+\begin{split}
+f_3 &= f_1+(f_3^{eq}-f_1^{eq}) = f_1 \\
+f_2 &= f_4+(f_4^{eq}-f_2^{eq}) = f_4
+\end{split}
+\end{equation}
+
+Using \eqref{Inlet_rho}
+\begin{equation}
+\begin{split}
+f_1 + f_5 + f_8 &= \rho_{out} - (f_0 + f_2 + f_3 +f_4 + f_6 + f_7 ) \\
+f_1 + f_5 + f_8 &= f_3 + f_6 + f_7  \\
+0 &= f_2 - f_4 + f_5 + f_6 - f_7 - f_8
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_5 + f_7& = \rho_{out} - (f_0 + f_1 + f_2 + f_3 +f_4 + f_6 + f_8 ) \\
+f_5 + f_8 - f_6 - f_7 &= 0\\
+f_5 + f_6 - f_7 - f_8 &= 0 \\
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_5 + f_7 &= \rho_{out} - (f_0 + f_1 + f_2 + f_3 +f_4 + f_6 + f_8 ) \\
+f_5 &= f_7 \\
+f_6 &= f_8 \\
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_5 + f_7 &= 2f_5 = 2f_7 = \rho_{out} - (f_0 + f_1 + f_2 + f_3 +f_4 + f_6 + f_8 ) \\
+f_6 &= f_8 \\
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_5 &= f_7 = \frac{1}{2}(\rho_{out} - (f_0 + f_1 + f_2 + f_3 +f_4 + f_6 + f_8 ) )\\
+f_6 &= f_8 \\
+\end{split}
+\end{equation}
+
+\subsubsection{Outlet top}
+
+$\rho_{out}$ is specified and known.
+$f_1$, $f_2$ and $f_5$ are known after streaming from adjacent nodes.
+In the no-slip case, $u_x=u_y=0$.
+
+The unknowns are $f_3$, $f_4$ $f_6$, $f_7$ and $f_8$.
+
+Using NEBB at the inlet and taking into account that $u_x$ and $u_y$ are $0$:
+\begin{equation}
+\begin{split}
+f_3 &= f_1+(f_3^{eq}-f_1^{eq}) = f_1 \\
+f_4 &= f_2+(f_2^{eq}-f_4^{eq}) = f_2
+\end{split}
+\end{equation}
+
+Using \eqref{Inlet_rho}
+\begin{equation}
+\begin{split}
+f_6 + f_8 &= \rho_{out} - (f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_7 ) \\
+f_6 &= f_8 \\
+f_7 &= f_5 \\
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_6 + f_8 &= 2 f_6 = 2 f_8 = \rho_{out} - (f_0 + f_1 + f_2 + f_3 + f_4 + f_5 + f_7 ) \\
+f_6 &= f_8 \\
+f_7 &= f_5 \\
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+f_6 &= f_8 = \frac{1}{2}(\rho_{out} - (f_0 + f_1 + f_2 + f_3 +f_4 + f_5 + f_7 ) )\\
+f_7 &= f_5 \\
+\end{split}
+\end{equation}
+
+\section{Open boundary - NRBC-CBC}
+\subsection{Consistency}
+The CBC methods require to set both the density and the velocity to ensure that the transverse acoustic waves are not reflected. 
+If another type of BC is set for the adjacent top and bottom boundaries, this may create a conflict at the corners. 
+Numerical experiments show that this leads to instabilities and that the configuration is impractical.
+For this reason, absorbing layers should be preferred.
+
+\subsection{CBC - TK method 12.4.2}
+At the outlet cells, the moments $\rho$, $u_x$ and $u_y$ are calculated using the NRBC condition and are therefore known.
+TK §12.4.2 page 525: "The simplest choice is to replace the distribution functions at the boundary with an equilibrium
+distribution determined by the macroscopic variables $\rho$, $u_x$ and $u_y$."
+
+
+After the collision and streaming steps, the distributions $f_1$, $f_2$, $f_4$, $f_5$, $f_8$ are known.
+The missing distributions are $f_3$, $f_6$ and $f_7$ and their expression have been derived in the section above for prescribed velocity at the outlet:
+\begin{equation}
+\begin{split}
+f_3 &= f_1 - \frac{2}{3} \rho u_x \\
+f_6 &= f_8 - \frac{1}{2}( f_2 - f_4) - \frac{1}{6} \rho u_x  + \frac{1}{2}\rho u_y\\
+f_7 &= f_5 + \frac{1}{2} (f_2 - f_4) - \frac{1}{6} \rho u_x  - \frac{1}{2}\rho u_y\\
+\end{split}
+\end{equation}
+The above modifications ensure that the velocity at the outlet is equal to the specified velocity.
+According to \cite{GW} $f_0$ should be adjusted to ensure mass conservation.
+
+After modification, the density is
+$$\rho^{\prime} = f_0 + f_1 + f_2 + f_3 +f_4 + f_5 + f_6 + f_7 + f_8 $$
+Let $f^{\prime}_0$ be the modified central distrib required to ensure $\rho = \rho_{out}$:
+$$\rho_{out} = f^{\prime}_0 + f_1 + f_2 + f_3 +f_4 + f_5 + f_6 + f_7 + f_8 $$
+So that:
+$$f^{\prime}_0 = f_0 + \rho_{out} - \rho^{\prime}$$ 
+
+
+
+\subsection{Outlet - GW method}
+Use the BC2, BC3 or BC4 methods defined in \cite{LC}.
+
+\begin{enumerate}
+    \item BC2 = ZH = NEBB: compute missing distribs using the specified $\rho_b$ and $u_x$, then adjust only $f_0$ so ensure that the moments $\rho_b$ and $u_x$ are recovered when computing moments
+    \item BC3 = Regularized: compute missing distribs using the specified $\rho_b$ and $u_x$
+    \item BC4 = Regularized FD: compute missing distribs using the specified $\rho_b$ and $u_x$
+\end{enumerate}
+
+\newpage
+\begin{thebibliography}{9}
+
+\bibitem{TK} 
+Timm Krüger et al. 
+\textit{The Lattice Boltzmann Method}, Springer, 2017.
+ 
+\bibitem{NP} 
+N. Pellerin, S. Leclaire and M. Reggio. 
+\textit{An implementation of the Spalart–Allmaras turbulence
+model in a multi-domain lattice Boltzmann method for
+solving turbulent airfoil flows}, Computers and Mathematics with Applications 70 (2015) 3001–3018.
+ 
+\bibitem{ZH} 
+Qisu Zou  and Xiaoyi He.
+\textit{On pressure and velocity flow boundary conditions and bounceback for the lattice Boltzmann BGK model}, arXiv:comp-gas/9611001v1, Nov. 1996.
+ 
+\bibitem{LC} 
+J. Latt and B. Chopard.
+\textit{Straight velocity boundaries in the lattice Boltzmann method}, April 2008.
+
+\bibitem{MS}
+Martin B. Schlaffer.
+\textit{Non-reflecting Boundary Conditions for the Lattice Boltzmann Method}, Dissertation 28.05.2013.
+ 
+\bibitem{DH}
+D. Heube, A. Bartel, M. Ehrhardt.
+\textit{Characteristic boundary conditions in the lattice Boltzmann method for fluid and gas dynamics}, Journal of Computational and Applied Mathematics, May 2014.
+
+ 
+\bibitem{GW}
+G. Wissocq, N. Gourdain, O. Malaspinas, A. Eyssartier.
+\textit{Regularized characteristic boundary conditions for the Lattice-Boltzmann methods at high Reynolds number flows},  (2017) Journal of Computational Physics, vol. 331. pp. 1-18. ISSN 0021-9991.
+ 
+
+\end{thebibliography}
+
+\end{document}
+
+
+
+
+

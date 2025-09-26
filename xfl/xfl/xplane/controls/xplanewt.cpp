@@ -1,0 +1,166 @@
+/****************************************************************************
+
+    flow5 application
+    Copyright (C) Andre Deperrois 
+    All rights reserved.
+
+*****************************************************************************/
+
+#define _MATH_DEFINES_DEFINED
+
+#include <QSplitter>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+
+#include "xplanewt.h"
+#include <xfl/xplane/xplane.h>
+#include <xfl/xplane/glview/gl3dxplaneview.h>
+#include <xfl/opengl/gl3dgeomcontrols.h>
+#include <xfl/xplane/controls/popp3dctrls.h>
+#include <xfl/xplane/menus/xplaneactions.h>
+#include <xflobjects/objects3d/plane/planexfl.h>
+#include <xflobjects/objects3d/analysis/wpolar.h>
+
+QByteArray XPlaneWt::s_Geometry;
+QByteArray XPlaneWt::s_HSplitterSizes;
+
+XPlaneWt::XPlaneWt(XPlane *pXPlane, gl3dXPlaneView *pgl3dXPlaneView) : QWidget()
+{
+    setWindowTitle("3d floating view");
+    setAttribute(Qt::WA_DeleteOnClose);
+    setWindowFlags(Qt::WindowStaysOnTopHint);
+
+    m_pXPlane = pXPlane;
+
+    setupLayout();
+    m_pgl3dXPlaneFloatView->setSharedBuffers(pgl3dXPlaneView);
+    m_pgl3dXPlaneFloatView->setReferenceLength(pgl3dXPlaneView->objectReferenceLength());
+    m_pgl3dXPlaneFloatView->reset3dScale();
+}
+
+
+void XPlaneWt::updateView()
+{
+    m_pgl3dXPlaneFloatView->update();
+}
+
+
+void XPlaneWt::keyPressEvent(QKeyEvent *pEvent)
+{
+    bool bCtrl = (pEvent->modifiers() & Qt::ControlModifier);
+
+    switch (pEvent->key())
+    {
+        case Qt::Key_F4:
+        case Qt::Key_W:
+        {
+            if(bCtrl) hide();
+            pEvent->accept();
+            return;
+        }
+        default:
+            break;
+    }
+    pEvent->ignore();
+}
+
+
+void XPlaneWt::showEvent(QShowEvent *pEvent)
+{
+    QWidget::showEvent(pEvent);
+    restoreGeometry(s_Geometry);
+    if(s_HSplitterSizes.length()>0) m_pHSplitter->restoreState(s_HSplitterSizes);
+    setControls();
+}
+
+
+void XPlaneWt::hideEvent(QHideEvent *pEvent)
+{
+    QWidget::hideEvent(pEvent);
+    m_pXPlane->m_pActions->m_pOpen3dViewInNewWindow->setChecked(false);
+    s_HSplitterSizes  = m_pHSplitter->saveState();
+    s_Geometry = saveGeometry();
+}
+
+
+void XPlaneWt::setupLayout()
+{
+    QHBoxLayout *pMainLayout = new QHBoxLayout;
+    {
+        m_pHSplitter = new QSplitter(Qt::Horizontal, this);
+        {
+            m_pHSplitter->setChildrenCollapsible(false);
+            m_pgl3dXPlaneFloatView = new gl3dXPlaneView; // all buffers are shared with the main 3dview
+
+            QFrame *pCtrlFrame = new QFrame;
+            {
+                QVBoxLayout *pControlLayout = new QVBoxLayout;
+                {
+                    m_pPOpp3dControls = new POpp3dCtrls(m_pgl3dXPlaneFloatView, this);
+
+                    pControlLayout->addStretch();
+                    pControlLayout->addWidget(m_pPOpp3dControls);
+                }
+                pCtrlFrame->setLayout(pControlLayout);
+            }
+            m_pHSplitter->addWidget(m_pgl3dXPlaneFloatView);
+            m_pHSplitter->addWidget(pCtrlFrame);
+            m_pHSplitter->setStretchFactor(0,1);
+        }
+
+        pMainLayout->addWidget(m_pHSplitter);
+    }
+    setLayout(pMainLayout);
+
+    //exchange pointers
+    m_pgl3dXPlaneFloatView->setResultControls(m_pPOpp3dControls);
+}
+
+
+void XPlaneWt::setControls()
+{
+    m_pPOpp3dControls->setControls();
+}
+
+
+void XPlaneWt::updateObjectData()
+{
+    if(m_pXPlane->m_pCurPlane)
+    {
+        if(m_pXPlane->curWPolar())
+            m_pgl3dXPlaneFloatView->setBotLeftOutput(m_pXPlane->m_pCurPlane->planeData(m_pXPlane->curWPolar()->bIncludeOtherWingAreas()));
+        else
+            m_pgl3dXPlaneFloatView->setBotLeftOutput(m_pXPlane->m_pCurPlane->planeData(true));
+    }
+    else
+        m_pgl3dXPlaneFloatView->setBotLeftOutput(QString());
+
+    if(m_pXPlane->m_pCurPOpp)
+        m_pgl3dXPlaneFloatView->setBotRightOutput(m_pXPlane->planeOppData());
+    else
+        m_pgl3dXPlaneFloatView->setBotRightOutput(QString());
+}
+
+
+void XPlaneWt::loadSettings(QSettings &settings)
+{
+    settings.beginGroup("XPlaneWidget");
+    {
+        s_HSplitterSizes = settings.value("HSplitterSizes").toByteArray();
+        s_Geometry       = settings.value("WindowGeometry").toByteArray();
+    }
+    settings.endGroup();
+}
+
+
+void XPlaneWt::saveSettings(QSettings &settings)
+{
+    settings.beginGroup("XPlaneWidget");
+    {        
+        settings.setValue("HSplitterSizes",  s_HSplitterSizes);
+        settings.setValue("WindowGeometry", s_Geometry);
+    }
+    settings.endGroup();
+}
+
+

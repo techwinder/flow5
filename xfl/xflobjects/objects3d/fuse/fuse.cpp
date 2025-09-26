@@ -1,0 +1,689 @@
+﻿/****************************************************************************
+
+    flow5 application
+    Copyright (C) Andre Deperrois 
+    All rights reserved.
+
+*****************************************************************************/
+
+//#undef _MATH_DEFINES_DEFINED
+
+#include <string>
+
+#include <BRepBuilderAPI_Sewing.hxx>
+#include <BRepBuilderAPI_Transform.hxx>
+#include <BRepGProp.hxx>
+#include <BRepTools.hxx>
+#include <GProp_GProps.hxx>
+#include <TopExp_Explorer.hxx>
+#include <TopoDS.hxx>
+#include <TopoDS_Shell.hxx>
+#include <gp_Ax1.hxx>
+
+#include <QThread>
+#include <QFutureSynchronizer>
+#include <QtConcurrent/QtConcurrent>
+
+
+#include "fuse.h"
+
+#include <xflcore/units.h>
+#include <xflgeom/geom_globals/geom_global.h>
+#include <xflmath/constants.h>
+#include <xflobjects/objects3d/analysis/wpolar.h>
+#include <xflobjects/objects_globals/objects_global.h>
+#include <xflocc/occ_globals.h>
+#include <xflpanels/mesh/shell/afmesher.h>
+#include <xflpanels/panels/panel3.h>
+#include <xflpanels/panels/panel4.h>
+
+
+bool Fuse::s_bOccTessellator=true;
+
+Fuse::Fuse() : Part()
+{
+    m_Name = "Fuse name";
+
+    m_FuseType = Fuse::Other;
+
+    m_bLocked = false;
+
+    m_WettedArea = 0.0;
+    m_MaxWidth = 0.0;
+    m_MaxHeight = 0.0;
+    m_MaxFrameArea = 0.0;
+
+    m_rx=m_ry=m_rz=0.0;
+
+    // temporary variable for multithreaded fuse intersections
+    m_nBlocks = 0;
+
+    m_MaxElementSize  = 0.05;
+}
+
+
+/** The copy constructor. Reimplemented to perform deep copy on the arrays of shapes */
+Fuse::Fuse(const Fuse &aFuse)
+{
+    // don't call virtual method in constructor
+    duplicatePart(aFuse);
+    m_bLocked = false;
+
+    m_FuseType     = aFuse.m_FuseType;
+    m_WettedArea   = aFuse.m_WettedArea;
+    m_MaxWidth     = aFuse.m_MaxWidth;
+    m_MaxHeight    = aFuse.m_MaxHeight;
+    m_MaxFrameArea = aFuse.m_MaxFrameArea;
+
+    m_BaseTriangulation = aFuse.m_BaseTriangulation;
+    m_Triangulation = aFuse.m_Triangulation;
+
+    m_Shape = aFuse.m_Shape;
+    m_Shell = aFuse.m_Shell;
+
+    m_TriMesh     = aFuse.m_TriMesh;
+
+    m_MaxElementSize = aFuse.m_MaxElementSize;
+    m_OccMeshParams = aFuse.m_OccMeshParams;
+}
+
+
+void Fuse::duplicateFuse(Fuse const &aFuse)
+{
+    duplicatePart(aFuse);
+    m_bLocked = false;
+
+    m_FuseType     = aFuse.m_FuseType;
+    m_WettedArea   = aFuse.m_WettedArea;
+    m_MaxWidth     = aFuse.m_MaxWidth;
+    m_MaxHeight    = aFuse.m_MaxHeight;
+    m_MaxFrameArea = aFuse.m_MaxFrameArea;
+
+    m_BaseTriangulation = aFuse.m_BaseTriangulation;
+    m_Triangulation = aFuse.m_Triangulation;
+
+    m_Shape = aFuse.m_Shape;
+    m_Shell = aFuse.m_Shell;
+
+    m_TriMesh     = aFuse.m_TriMesh;
+
+    m_MaxElementSize = aFuse.m_MaxElementSize;
+    m_OccMeshParams = aFuse.m_OccMeshParams;
+}
+
+
+void Fuse::makeShellsFromShapes()
+{
+    m_Shell.Clear();
+    for(TopTools_ListIteratorOfListOfShape shapeit(m_Shape); shapeit.More(); shapeit.Next())
+    {
+        TopExp_Explorer shapeExplorer;
+        for (shapeExplorer.Init(shapeit.Value(),TopAbs_SHELL); shapeExplorer.More(); shapeExplorer.Next())
+        {
+            TopoDS_Shell aShell = TopoDS::Shell(shapeExplorer.Current());
+            m_Shell.Append(aShell);
+        }
+    }
+}
+
+
+/**
+ * Makes a default triangular mesh.
+ * Overriden for xfl and stl type fuses.
+ */
+int Fuse::makeDefaultTriMesh(QString &, QString const &)
+{
+/*    QVector<Triangle3d> triangulation;
+    if(m_Shell.Extent()<=0) return 0;
+    for(TopTools_ListIteratorOfListOfShape shapeit(m_Shell); shapeit.More(); shapeit.Next())
+    {
+        TopoDS_Shell aShell = TopoDS::Shell(shapeit.Value());
+        makeFl5ShellTriangulation(aShell, triangulation, logmsg);
+    }
+
+    m_TriMesh.makeMeshFromTriangles(triangulation, logmsg, prefix);
+    for(int i3=0; i3<m_TriMesh.nPanels(); i3++) m_TriMesh.panel(i3).setSurfacePosition(Xfl::FUSESURFACE);
+    for(int in=0; in<m_TriMesh.nNodes(); in++) m_TriMesh.node(in).setSurfacePosition(Xfl::FUSESURFACE);
+
+    return m_TriMesh.panelCount();*/
+
+    m_TriMesh.clearMesh();
+    return 0;
+}
+
+
+void Fuse::translateTriPanels(double tx, double ty, double tz)
+{
+    m_TriMesh.translatePanels(tx, ty, tz);
+}
+
+
+void Fuse::computeWettedArea()
+{
+    GProp_GProps aProps; // Global properties object
+    // initializing Global properties object with surface properties of aShell
+
+    TopoDS_ListIteratorOfListOfShape iterator;
+    int nShapes = 0;
+    for (iterator.Initialize(m_Shape); iterator.More(); iterator.Next())
+    {
+        int nShells = 0;
+        TopExp_Explorer shapeExplorer;
+        for (shapeExplorer.Init(iterator.Value(),TopAbs_SHELL); shapeExplorer.More(); shapeExplorer.Next())
+        {
+            // Computes the surface global properties of the shape S, i.e. the global properties induced by each face
+            // of the shape S, and brings them together with the global properties still retained by the framework SProps.
+            // If the current system of SProps was empty, its global properties become equal to the surface global
+            // properties of S. For this computation, no surface density is attached to the faces. Consequently, the
+            // added mass corresponds to the sum of the areas of the faces of S. The density of the component systems,
+            // i.e. that of each component of the current system of SProps, and that of S which is considered to be
+            // equal to 1, must be coherent. Note that this coherence cannot be checked. You are advised to use a
+            // framework for each different value of density, and then to bring these frameworks together into a
+            // global one. The point relative to which the inertia of the system is computed is the reference point
+            // of the framework SProps. Note : if your programming ensures that the framework SProps retains only
+            // surface global properties, brought together, for example, by the function SurfaceProperties, for
+            // objects the density of which is equal to 1 (or is not defined), the function Mass will return the
+            // total area of faces of the system analysed by SProps. Warning No check is performed to verify that the
+            // shape S retains truly surface properties. If S is simply a vertex, an edge or a wire, it is not considered
+            // to present any additional global properties. SkipShared is special flag, which allows to take in calculation
+            // shared topological entities or not For ex., if SkipShared = True, faces, shared by two or more shells,
+            // are taken into calculation only once.
+            GProp_GProps shellprops;
+            BRepGProp::SurfaceProperties(shapeExplorer.Current(), shellprops);
+            aProps.Add(shellprops, 1.0);
+            nShells++;
+        }
+        (void)nShells;
+        nShapes++;
+    }
+    (void)nShapes;
+
+    m_WettedArea = aProps.Mass(); // in m²
+}
+
+
+double Fuse::formFactor() const
+{
+    double dl = sqrt(m_MaxWidth*m_MaxWidth+m_MaxHeight*m_MaxHeight)/length();
+    return 1.0 + 1.5*pow(dl, 1.5) + 50.0*pow(dl,3);
+}
+
+
+void Fuse::clearOccTriangulation()
+{
+    for(TopTools_ListIteratorOfListOfShape ShapeIt(m_Shell); ShapeIt.More(); ShapeIt.Next())
+    {
+        BRepTools::Clean(ShapeIt.Value());
+    }
+}
+
+
+void Fuse::makeFuseGeometry()
+{
+    QString logmsg;
+    makeShellTriangulation(logmsg, "   ");
+    saveBaseTriangulation();
+    computeSurfaceProperties(logmsg, QString());
+}
+
+
+int Fuse::makeShellTriangulation(QString &logmsg, const QString &prefix)
+{    
+    QString strong;
+    logmsg.clear();
+
+    m_Triangulation.clear();
+
+    QVector<Triangle3d> triangles;
+
+    int iShell = 0;
+    for(TopTools_ListIteratorOfListOfShape shellitt(m_Shell); shellitt.More(); shellitt.Next())
+    {
+        if(s_bOccTessellator)
+            occ::shapeTriangulationWithOcc(shellitt.Value(), m_OccMeshParams, triangles);
+        else
+        {
+        }
+        iShell++;
+//        if(triangles.size()>2000) break;
+    }
+    (void)iShell;
+
+    m_Triangulation.setTriangles(triangles);
+
+    strong = QString::asprintf("Made %d triangles\n", triangleCount());
+    logmsg +=prefix + strong;
+    int nnodes = makeTriangleNodes();
+
+    strong = QString::asprintf("Made %d nodes\n", nnodes);
+    logmsg +=prefix + strong;
+    makeNodeNormals(false);
+
+    strong = QString::asprintf("Made node normals\n");
+    logmsg +=prefix + strong;
+
+    return triangleCount();
+}
+
+
+bool Fuse::stitchShells(TopoDS_Shell &fusedshell, QString &logmsg, QString prefix)
+{
+    // sew the Panels together
+    BRepBuilderAPI_Sewing stitcher(0.001);
+    int nFaces=0;
+
+    for(TopTools_ListIteratorOfListOfShape FaceIt(m_Shell); FaceIt.More(); FaceIt.Next())
+    {
+        stitcher.Add(FaceIt.Value());
+        nFaces++;
+    }
+
+    (void)nFaces;
+
+    try
+    {
+        QString strong;
+        logmsg += prefix + "Sewing shells\n";
+        stitcher.Perform();
+        TopoDS_Shape sewedShape = stitcher.SewedShape();
+        if(!sewedShape.IsNull())
+        {
+            strong = prefix + "Sewed shape is a "+ occ::shapeType(sewedShape)+"\n";
+            logmsg+= strong;
+
+            if(sewedShape.ShapeType()==TopAbs_SHELL)
+            {
+                fusedshell = TopoDS::Shell(stitcher.SewedShape()); // is a TopoDS_SHELL
+            }
+            else
+            {
+                strong = QString(prefix + "Nb of free edges=%1\n").arg(stitcher.NbFreeEdges());
+                logmsg += strong;
+                strong = QString(prefix + "Nb of contiguous edges=%1\n").arg(stitcher.NbContigousEdges());
+                logmsg += strong;
+            }
+        }
+        else
+        {
+            throw(11);
+        }
+    }
+    catch(Standard_TypeMismatch &ex)
+    {
+        QString strong;
+        strong = prefix + "Fused shells not made: " + QString(ex.GetMessageString())+"\n";
+        logmsg+= strong;
+        return false;
+    }
+    catch(...)
+    {
+        QString strong;
+        strong = prefix + "Unrecoverable error sewing shells\n";
+        logmsg+= strong;
+        return false;
+    }
+
+    return true;
+}
+
+
+void Fuse::scale(double XFactor, double YFactor, double ZFactor)
+{
+    for(int it=0; it<m_BaseTriangulation.nTriangles(); it++)
+        m_BaseTriangulation.triangle(it).scale(XFactor, YFactor, ZFactor);
+
+    for(int it=0; it<m_Triangulation.nTriangles(); it++) m_Triangulation.triangle(it).scale(XFactor, YFactor, ZFactor);
+    m_Length *= XFactor;
+
+    // scale the tri mesh, if any
+    /** @todo standardize with translate and rotate methods */
+    m_TriMesh.scale(XFactor, YFactor, ZFactor);
+}
+
+
+void Fuse::translate(Vector3d const &T)
+{
+    for(int it=0; it<m_BaseTriangulation.nTriangles(); it++)
+    {
+        m_BaseTriangulation.triangle(it).translate(T);
+    }
+
+    for(int it=0; it<m_Triangulation.nTriangles(); it++)
+    {
+        m_Triangulation.triangle(it).translate(T);
+    }
+    for(int i=0; i<m_Triangulation.nodeCount(); i++)
+    {
+        m_Triangulation.node(i).translate(T);
+    }
+}
+
+
+void Fuse::rotate(Vector3d const &origin, Vector3d const &axis, double theta)
+{
+    m_BaseTriangulation.rotate(origin, axis, theta);
+    m_Triangulation.rotate(origin, axis, theta);
+}
+
+
+void Fuse::computeAero(QVector<Panel4> const &panel4, const double *Cp,
+                       WPolar const *pWPolar, double Alpha, Vector3d &CP, Vector3d &Force, Vector3d &Moment) const
+{
+    double panellift=0.0, totallift=0.0;
+    Vector3d PanelForce, LeverArm;
+
+
+    Vector3d WindNormal = windNormal(Alpha, 0.0);
+
+    // Inviscid pressure forces
+    Vector3d FiBodyAxis(0,0,0);
+    Vector3d MiBodyAxis(0,0,0);
+    CP.set(0.0,0.0,0.0);
+    for (int p=0; p<nPanel4(); p++)
+    {
+        Panel4 const &p4 = panel4.at(m_FirstPanel4Index + p);
+        PanelForce = p4.normal() * (-Cp[p4.index()]) * p4.area();     // N/q
+        FiBodyAxis += PanelForce;                            // N/q
+
+        panellift = PanelForce.dot(WindNormal);              // N/q
+        totallift += panellift;                              // N/q
+        CP        += p4.CoG() * panellift;                   // N.m/q
+
+        LeverArm = p4.CoG() - pWPolar->CoG();                // m
+        MiBodyAxis += LeverArm * PanelForce;               // N.m/q
+    }
+
+    /** @todo need to choose a definition for the Centre of Pressure */
+    CP  *= 1.0/totallift;                           // N.m/q
+
+    Force = FiBodyAxis;
+    Moment = MiBodyAxis;
+}
+
+
+void Fuse::computeAero(QVector<Panel3> const &panel3, const double *Cp3Vtx,
+                       WPolar const *pWPolar, double Alpha, Vector3d &CP, Vector3d &Force, Vector3d &Moment) const
+{
+    double panellift=0.0, totallift=0.0;
+    Vector3d PanelForce, LeverArm;
+
+
+    //   Define wind axis
+    Vector3d WindDirection = windDirection(Alpha, 0.0);
+    Vector3d WindNormal = windNormal(Alpha, 0.0);
+
+    // Inviscid pressure forces
+    Vector3d FiBodyAxis(0,0,0);
+    Vector3d MiBodyAxis(0,0,0);
+    CP.set(0.0,0.0,0.0);
+    for (int p=0; p<nPanel3(); p++)
+    {
+        Panel3 const &p3 = panel3.at(m_FirstPanel3Index + p);
+        int index = p3.index();
+        PanelForce = p3.normal() * (-Cp3Vtx[3*index]) * p3.area();     // N/q
+        FiBodyAxis += PanelForce;                            // N/q
+
+        panellift = PanelForce.dot(WindNormal);              // N/q
+        totallift += panellift;                              // N/q
+        CP        += p3.CoG() * panellift;                   // N.m/q
+
+        LeverArm = p3.CoG() - pWPolar->CoG();                // m
+        MiBodyAxis += LeverArm * PanelForce;                 // N.m/q
+    }
+
+    /** @todo need to choose a definition for the Centre of Pressure */
+    CP *= 1.0/totallift;                           // N.m/q
+
+    Force = FiBodyAxis;
+    Moment = MiBodyAxis;
+}
+
+
+void Fuse::computeViscousForces(WPolar const *pWPolar, double Alpha, double QInf, Vector3d &Force, Vector3d &Moment) const
+{
+    Vector3d WindDirection = windDirection(Alpha, 0.0);
+
+    // add viscous drag force and moment
+    Vector3d FvBodyAxis(0,0,0);
+    Vector3d MvBodyAxis(0,0,0);
+    if(pWPolar->hasFuseDrag())
+    {
+        FvBodyAxis = WindDirection * pWPolar->fuseDrag(this, QInf);       // N/q
+        MvBodyAxis = FvBodyAxis * (m_Inertia.CoG_t()-pWPolar->CoG());                                       // N.m/q
+    }
+
+    // project viscous force on wind axes
+//    m_AF.setFuseDrag(FvBodyAxis.dot(WindDirection));        // N/q
+//    m_AF.setMv(MvBodyAxis);        // N.m/q   // =0
+
+    Force = FvBodyAxis;
+    Moment = MvBodyAxis;
+}
+
+
+bool Fuse::serializePartFl5(QDataStream &ar, bool bIsStoring)
+{
+    Part::serializePartFl5(ar, bIsStoring);
+
+    int n=0;
+
+    // 500001: new fl5 format;
+    // 500003; added max element size in beta 12
+    int ArchiveFormat = 500003;
+    if(bIsStoring)
+    {
+        ar << ArchiveFormat;
+
+        ar << m_LE.x << m_LE.y << m_LE.z;
+        ar << m_rx << m_ry << m_rz;
+
+        m_OccMeshParams.serializeParams(ar, bIsStoring);
+
+        ar << m_MaxElementSize;
+
+        n=0;
+        ar << n;
+        ar << n;
+    }
+    else
+    {
+        ar >> ArchiveFormat;
+        if(ArchiveFormat<500001 || ArchiveFormat>500003) return false;
+
+        ar >> m_LE.x >> m_LE.y >> m_LE.z;
+        ar >> m_rx >> m_ry >> m_rz;
+
+        if(ArchiveFormat>=500002)
+            m_OccMeshParams.serializeParams(ar, bIsStoring);
+
+        if(ArchiveFormat>=500003)
+            ar >> m_MaxElementSize;
+        else
+            m_MaxElementSize = m_OccMeshParams.maxElementSize();
+
+        ar >> n;
+        ar >> n;
+    }
+    return true;
+}
+
+
+void Fuse::computeStructuralInertia(Vector3d const &PartPosition)
+{
+    if(!m_bAutoInertia) return;
+    computeSurfaceInertia(m_Inertia, m_BaseTriangulation.triangles(), PartPosition);
+}
+
+
+void Fuse::getProperties(QString &props, QString const &prefix, bool )
+{
+    props.clear();
+
+    computeSurfaceProperties(props, prefix);
+
+    props.clear();
+    QString strong;
+    strong = QString::asprintf("Length          = %9.5g ", length()*Units::mtoUnit());
+    strong += Units::lengthUnitLabel() + "\n";
+    props +=  prefix + strong;
+
+    strong = QString::asprintf("Max. width      = %9.5g ", m_MaxWidth*Units::mtoUnit());
+    strong += Units::lengthUnitLabel() + "\n";
+    props +=  prefix + strong;
+
+    strong = QString::asprintf("Max. height     = %9.5g ", m_MaxHeight*Units::mtoUnit());
+    strong += Units::lengthUnitLabel() + "\n";
+    props +=  prefix + strong;
+
+    strong = QString::asprintf("Max. cross area = %9.5g ", m_MaxFrameArea*Units::m2toUnit());
+    strong += Units::areaUnitLabel() + "\n";
+    props +=  prefix + strong;
+
+    strong = QString::asprintf("Wetted area     = %9.5g ", wettedArea()*Units::m2toUnit());
+    strong += Units::areaUnitLabel();
+    props +=  prefix + strong+ "\n";
+
+    strong = QString::asprintf("Triangles       = %6d", nPanel3());
+    props +=  prefix + strong;
+}
+
+
+/** used in gl3dFuseView */
+bool Fuse::intersectFuseTriangulation(Vector3d const &A, Vector3d const &B, Vector3d &I) const
+{
+    Vector3d N;
+    return m_BaseTriangulation.intersect(A, B, I, N);
+}
+
+
+/** used for wing surface construction */
+bool Fuse::intersectFuse(Vector3d const &A, Vector3d const &B, Vector3d &I) const
+{
+    return intersectFuse(A,B,I,false);
+}
+
+
+bool Fuse::intersectFuse(Vector3d const &A, Vector3d const &B, Vector3d &I, bool bRightSide) const
+{
+    int nShapes = m_Shape.Extent();
+    QVector<bool> bIntersect(nShapes, false);
+    QVector<Vector3d> ISh(nShapes);
+
+    // note: littmle intereste in multithreading if only two shapes in the case of xflfuses
+/*    if(s_bMultiThreaded)
+    {
+        m_nBlocks = nShapes;
+        QFutureSynchronizer<void> futureSync;
+
+        int iShape=0;
+        for(TopTools_ListIteratorOfListOfShape shapeit(shapes()); shapeit.More(); shapeit.Next())
+        {
+            futureSync.addFuture(QtConcurrent::run(this, &Fuse::intersectFuseShape,
+                                                   shapeit.Value(), Segment3d(A,B), &ISh[iShape], &bIntersect[iShape], bRightSide));
+
+            iShape++;
+        }
+        futureSync.waitForFinished();
+    }
+    else*/
+    {   
+        int iShape = 0;
+        for(TopTools_ListIteratorOfListOfShape shapeit(m_Shape); shapeit.More(); shapeit.Next())
+        {
+            intersectFuseShape(shapeit.Value(), {A,B}, &ISh[iShape], &bIntersect[iShape], bRightSide);
+            iShape++;
+        }
+    }
+
+    bool bResult = false;
+    double dmax = 1.e10;
+    for(int i=0; i<nShapes; i++)
+    {
+        if(bIntersect[i])
+        {
+            bResult = true;
+            double d = sqrt((ISh.at(i).x-A.x)*(ISh.at(i).x-A.x)+(ISh.at(i).y-A.y)*(ISh.at(i).y-A.y)+(ISh.at(i).z-A.z)*(ISh.at(i).z-A.z));
+            if(d<dmax)
+            {
+                I = ISh[i];
+                dmax=d;
+            }
+        }
+    }
+
+    return bResult;
+}
+
+
+bool Fuse::intersectFuseShape(TopoDS_Shape &shape, Segment3d const &seg, Vector3d *I, bool *bIntersect, bool bRightSide) const
+{
+    if(occ::intersectShape(shape, seg, *I, bRightSide))
+    {
+        *bIntersect = true;
+        return true;
+    }
+    return false;
+}
+
+
+
+Fuse::enumType Fuse::bodyPanelType(QString strPanelType)
+{
+    strPanelType = strPanelType.trimmed();
+    if(strPanelType.compare("FLATPANELS", Qt::CaseInsensitive)==0) return Fuse::FlatFace;
+    else                                                           return Fuse::NURBS;
+}
+
+
+QString Fuse::bodyPanelType(Fuse::enumType panelType)
+{
+    switch(panelType)
+    {
+        case Fuse::FlatFace:  return "FLATPANELS";
+        case Fuse::NURBS: return "NURBS";
+        default: return QString();
+    }
+}
+
+
+void Fuse::listShells()
+{
+    QString strange;
+    QStringList strlist;
+    int ishell=0;
+    for(TopTools_ListIteratorOfListOfShape iterator(shells()); iterator.More(); iterator.Next())
+    {
+        strange = QString::asprintf("Shell %d ", ishell);
+        if     (iterator.Value().Orientation()==TopAbs_FORWARD)  strange += "is FORWARD";
+        else if(iterator.Value().Orientation()==TopAbs_REVERSED) strange += "is REVERSED";
+        qDebug("%s", strange.toStdString().c_str());
+
+        occ::listShapeContent(iterator.Value(), strange, "   ");
+        qDebug("%s", strange.toStdString().c_str());
+
+        ishell++;
+    }
+}
+
+
+void Fuse::listShapes()
+{
+    QString strange;
+//    QStringList strlist;
+    int ishell=0;
+    for(TopTools_ListIteratorOfListOfShape iterator(shapes()); iterator.More(); iterator.Next())
+    {
+        strange = QString::asprintf("Shell %d ", ishell);
+        if     (iterator.Value().Orientation()==TopAbs_FORWARD)  strange += "is FORWARD";
+        else if(iterator.Value().Orientation()==TopAbs_REVERSED) strange += "is REVERSED";
+        qDebug("%s", strange.toStdString().c_str());
+
+        occ::listShapeContent(iterator.Value(), strange, "   ");
+        qDebug("%s", strange.toStdString().c_str());
+
+        ishell++;
+    }
+}
+
+
+

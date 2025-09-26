@@ -1,0 +1,191 @@
+\documentclass[a4paper, 11pt]{article}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{mathtools}
+\usepackage{color}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\begin{document}
+
+\title{Linear Vortex - Stream function integrals}
+\author{techwinder}
+
+\maketitle
+
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+
+ 
+\section{General}
+Let a point vortex be located at the origin of the plane $Oxy$, with circulation  $\gamma$ and pointing in the direction $z$ normal to the plane.
+
+Let $P(x,y)$ be a point of this plane. In polar coordinates $(r,\theta)$ the potential function is:
+\begin{equation}\label{phi_point_vtx}
+\phi = -\frac{\gamma}{2\pi} \theta
+\end{equation}
+The stream function is
+\begin{equation}\label{psi_point_vtx}
+\psi = \frac{\gamma}{2\pi} \log{r}
+\end{equation}
+The velocity is
+\begin{equation}
+\begin{split}
+u_r &= 0 \\
+u_{\theta} &= -\frac{\gamma}{2 \pi r}
+\end{split}
+\end{equation}
+and in Cartesian coordinates:
+\begin{equation}
+\begin{split}
+u(x,y) &= u_r\cos{\theta} - u_{\theta} \sin{\theta} = \frac{\gamma}{2\pi} \frac{y}{x^2+y^2} \\
+v(x,y) &= u_r\sin{\theta} + u_{\theta} \cos{\theta} = -\frac{\gamma}{2\pi} \frac{x}{x^2+y^2}
+\end{split}
+\end{equation}
+
+
+\section{Linear vortex}
+\includegraphics{stream}
+Let $[A,B]$ be a segment with a linear varying circulation such that $\gamma(A)=\gamma_1$ and $\gamma(B)=\gamma_2$. 
+
+To simplify the calculations, $[A,B]$ is aligned with the $x$ axis, so that $A = (x_1,0)$ and $B=(x_2,0)$
+
+
+Let $x$ be a point of the segment, i.e. $x_1\leq x \leq x_2$. The barycentric coordinates of $x$ are 
+$$\lambda_1(x) = \frac{x_2-x}{l}$$
+$$\lambda_2(x) = \frac{x-x_1}{l}$$
+with
+$$l = x_2-x_1$$
+In barycentric coordinates, the circulation at a point $x$ is:
+\begin{equation}\gamma(x) = \gamma_1\lambda_1(x) + \gamma_2\lambda_2(x)\end{equation}
+
+Rearranging the terms gives
+\begin{equation} \label{gamma}
+\gamma(x) = \frac{1}{l}(\gamma_1x_2-\gamma_2x_1) + \frac{x}{l}(\gamma_2-\gamma_1)
+\end{equation}
+
+which includes a constant part:
+\begin{equation} C=\frac{1}{l}(\gamma_1x_2-\gamma_2x_1)\end{equation}
+
+and a linear part:
+\begin{equation}L(x)=\frac{x}{l}(\gamma_2-\gamma_1)\end{equation}
+
+
+\section{Stream function}
+Integrate eq. (\ref{psi_point_vtx}) using the expression of the vorticity given by eq. (\ref{gamma}) for the total influence of the vortex density on segment [A,B]:
+\begin{equation}
+\begin{split}
+\psi(X,Y) &= \int_{x_1}^{x_2} \frac{\gamma(x)}{2\pi} \log{r} \,dx \\
+               &= \frac{1}{2\pi l} \int_{x_1}^{x_2} \bigg( (\gamma_1x_2-\gamma_2x_1) + x(\gamma_2-\gamma_1)\bigg) \log{r} \,dx \\
+               &= \frac{(\gamma_1x_2-\gamma_2x_1)}{2\pi l} \int_{x_1}^{x_2}  \log{r} \,dx  +\frac{(\gamma_2-\gamma_1)}{2\pi l} \int_{x_1}^{x_2} x \log{r} \,dx \\
+               &= \frac{(\gamma_1x_2-\gamma_2x_1)}{l}\psi_C + \frac{(\gamma_2-\gamma_1)}{l}\psi_L(x)
+\end{split}
+\end{equation}
+
+
+Where the constant part is (K\&P 10.11 and 10.19  \textcolor{red}{- missing $x$ term in K\&P 10.19})
+\begin{equation}
+\begin{split}
+\psi_C &=  \frac{1}{2\pi}\int_{x_1}^{x_2}  \log{r} \,dx \\
+            &= \frac{1}{2\pi} \bigg((X-x_1)\log{r_1}-(X-x_2)\log{r_2}+Y(\theta_2-\theta_1)  - x_2+x_1\bigg)
+\end{split}
+\end{equation}
+and the linear part is (K\&P 10.44 and 10.50 \textcolor{red}{- missing $x^2/2$ term in K\&P 10.50})
+\begin{equation}
+\begin{split}
+\psi_L(X,Y) &= \frac{1}{2\pi} \int_{x_1}^{x_2} x \log{r} \,dx = \frac{1}{2\pi} \int_{x_1}^{x_2} x\log{\sqrt{(X-x)^2+Y^2}} \,dx \\
+                   &=\frac{1}{4\pi} \left[-\left(X^2-x^2-Y^2\right) \log r - \frac{x^2}{2} - Xx + 2 XY \theta  \right]_{x_1}^{x_2}
+\end{split}
+\end{equation}
+
+
+
+Regroup terms in $\gamma_1$ and $\gamma_2$:
+\begin{equation}
+\psi(X,Y) = \frac{x_2 \psi_C - \psi_L}{l} \gamma_1 - \frac{x_1 \psi_C - \psi_L}{l} \gamma_2
+\end{equation}
+
+
+\underline{Notes}
+\begin{itemize}
+     \item If the vorticity is uniform over the panel, i.e. $\gamma_1=\gamma_2=\gamma$, then $\psi= \gamma \; \psi_C$
+     \item $\psi_C$ is singular at the end points of the panel, but not $ \psi_L$  since $\lim(x\log(r))=0$.
+     \item $\psi_C = \frac{\Psi^+}{2 \pi} $  with $\Psi^+$ given in eq. (4) of XFoil paper
+     \item $\frac{\psi_L}{l} = \frac{\Psi^-}{4 \pi} $  with $\Psi^-$ given in eq. (5) of XFoil paper
+\end{itemize}
+
+
+\section{Velocity}
+\subsection{u component}
+\begin{equation}
+\begin{split}
+u(X,Y) &= \frac{1}{2\pi} \int_{x_1}^{x_2}  \frac{\gamma(x) Y}{(X-x)^2+Y^2} \,dx \\
+           &= \frac{1}{2\pi} \int_{x_1}^{x_2}  \frac{(\gamma_1x_2-\gamma_2x_1) + x(\gamma_2-\gamma_1)}{l}\frac{Y}{(X-x)^2+Y^2} \,dx \\
+           &= \frac{(\gamma_1x_2-\gamma_2x_1)}{l}u_C(x) + \frac{(\gamma_2-\gamma_1)}{l}u_L(x)
+\end{split}
+\end{equation}
+
+with
+\begin{equation}
+u_C(X,Y) =  \frac{1}{2\pi}\int_{x_1}^{x_2}  \frac{Y}{(X-x)^2+Y^2} \,dx =  \frac{1}{2\pi}(\beta_2-\beta_1)
+\end{equation}
+\begin{equation}
+\begin{split}
+u_L(X,Y) &=  \frac{1}{2\pi}\int_{x_1}^{x_2}  \frac{x Y}{(X-x)^2+Y^2} \,dx \\
+              &=  \frac{1}{2\pi}\bigg(Y(\log{r_2}-\log{r_1}) + X(\beta_2-\beta_1)\bigg)
+\end{split}
+\end{equation}
+
+
+
+Regroup terms in $\gamma_1$ and $\gamma_2$:
+\begin{equation}u(X,Y) = \frac{x_2 u_C - u_L}{l} \gamma_1 - \frac{x_1 u_C - u_L}{l} \gamma_2\end{equation}
+
+
+
+\subsection{v component}
+\begin{equation}
+\begin{split}
+v(X,Y)  &= -\frac{1}{2\pi} \int_{x_1}^{x_2}  \frac{\gamma(x) (X-x)}{(X-x)^2+Y^2} \,dx \\
+           &= -\frac{1}{2\pi} \int_{x_1}^{x_2}  \frac{(\gamma_1x_2-\gamma_2x_1) + x(\gamma_2-\gamma_1)}{l}\frac{X-x}{(X-x)^2+Y^2} \,dx \\
+           &= \frac{(\gamma_1x_2-\gamma_2x_1)}{l}v_C(x) + \frac{(\gamma_2-\gamma_1)}{l}v_L(x)
+\end{split}
+\end{equation}
+
+
+with
+\begin{equation}
+\begin{split}
+v_C(X,Y) &=  -\frac{1}{2\pi}\int_{x_1}^{x_2}  \frac{X-x}{(X-x)^2+Y^2} \,dx  \\
+              &=  \frac{1}{2\pi}(\log{r_2}-\log{r_1})
+\end{split}
+\end{equation}
+
+\begin{equation}
+\begin{split}
+v_L(X,Y) &=  -\frac{1}{2\pi}\int_{x_1}^{x_2}  \frac{x(X-x)}{(X-x)^2+Y^2} \,dx \\
+              &=  \frac{1}{2\pi}\bigg(X(\log{r_2}-\log{r_1}) +(x_2-x_1) -Y(\beta_2-\beta_1)\bigg)
+\end{split}
+\end{equation}
+
+
+Regroup terms in $\gamma_1$ and $\gamma_2$:
+\begin{equation}
+v(X,Y) = \frac{x_2 v_C - v_L}{l} \gamma_1 - \frac{x_1 v_C - v_L}{l} \gamma_2
+\end{equation}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+

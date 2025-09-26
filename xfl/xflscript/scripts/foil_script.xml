@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow5>
+<XFL_SCRIPT version="1.0">
+<!-- For convenience, all field names and values are case insensitive - as an exception to the standard xml specification -->
+<!-- Where applicable, default values will be used for all undefined fields -->
+<!-- Wherever a field requires more than one value, values should be separated by commas (','); whitespaces are ignored -->
+<!-- Specified file names should not have leading and trailing whitespaces -->
+    <Metadata>
+        <!-- Set this field to true to save all results in a binary .fl5 file; default is true -->
+        <make_project_file>true</make_project_file>
+                <!-- uncomment the next line to set a project name; otherwise the default name will be flow5_hhmmss.fl5 -->
+        <!-- project_file_name>plane_test_project</project_file_name -->
+        <!-- The project file provided in the following line will be pre-loaded before the script's execution.
+             Specify either an absolute path or a path relative to the directory of project files specified
+             in the Directories section.
+             Should not be the same as the project file name to make to avoid data overwrite. -->
+        <!--load_project_file>/home/techwinder/techwing/studies/005.fl5</load_project_file-->
+
+        <!-- set this field either to TXT or CSV -->
+        <polar_text_output_format>CSV</polar_text_output_format>
+        
+        <Directories>
+            <!-- The directory where the project file (.fl5) and all output files will be created;
+                 If undefined, the output directory will be the user's home directory -->
+            <output_dir>/home/techwinder/techwing/tmp</output_dir>
+            <!-- The default directory where the xml plane definition files will be looked for -->
+            <plane_definition_xml_dir>/home/techwinder/techwing/studies/xml/planes/</plane_definition_xml_dir>
+            <!-- The default directory where the xml plane analysis files will be looked for -->
+            <plane_analysis_xml_dir>/home/techwinder/techwing/studies/xml/planeanalysis</plane_analysis_xml_dir>
+            <!-- The default directory where the foil geometry files (.dat) will be looked for -->
+            <foil_files_dir>/home/techwinder/techwing/studies/airfoils</foil_files_dir>
+            <!-- The default directory where the foil analysis files (.xml) will be looked for -->
+            <foil_analysis_xml_dir>/home/techwinder/techwing/studies/xml/foilanalysis</foil_analysis_xml_dir>
+            <!-- The default directory where the foil polar files (.plr) will be both
+                 created after a foil analysis and looked for before the plane analysis.
+                 If undefined the files will be saved in the output directory -->
+            <!--foil_polars_dir>/home/techwinder/techwing/studies/polars</foil_polars_dir-->
+        </Directories>
+        
+        <!-- Multithreading options -->
+        <MultiThreading>
+            <Allow_Multithreading>true</Allow_Multithreading>
+            <!-- Define the thread priority for non-Linux systems
+                 Idle:         scheduled only when no other threads are running.
+                 Lowest:       scheduled less often than LowPriority.
+                 Low:          scheduled less often than NormalPriority.
+                 Normal:       the default priority of the operating system.
+                 High:         scheduled more often than NormalPriority.
+                 Highest:      scheduled more often than HighPriority.
+                 TimeCritical: scheduled as often as possible. -->
+            <Thread_Priority>Normal</Thread_Priority>
+            <!-- Define the max number of threads for the foil analysis; default is one -->
+            <Max_threads>4</Max_threads>
+        </MultiThreading>
+    </Metadata>
+
+    <!-- The following section is optional. If ommitted, only the plane analysis will be run -->
+    <Foil_Analysis>
+        <!-- The analysis will be run for all combinations of specified foils and analyses -->
+        <Foil_Files>
+            <!-- The foil .dat files to load.
+                 Specify either the absolute path, or the path relative to the foil file directory
+                 provided in the Project option section -->
+            <Foil_File_Name>fx/fx63120.dat</Foil_File_Name>
+            <Foil_File_Name>/home/techwinder/techwing/studies/airfoils/rg/rg14.dat</Foil_File_Name>
+        </Foil_Files>
+
+        <!-- The analysis will be run for BOTH the specified analysis files and for the batch analysis data -->
+        <!-- Specify in this section the foil analysis files to run, if any -->
+        <Analysis_Files>
+            <!-- Set this field to true if all files in the directory "foil_analysis_xml_dir" should be run, and
+                        to false if only the files specified in this section should be run; default is false -->
+            <Process_All_Files>false</Process_All_Files>
+            <!-- Predefined XML analysis files to load;
+            The analysis will be performed if the foil name defined in the analysis file matches a foil's name
+            If the foil's name was left blank in the analysis file, a copy of this polar will be built for each foil object
+            Specify either the absolute path or a path relative to the directory of foil analysis defined in the Directories section-->
+            <!--Analysis_File_Name>T6_polar.xml</Analysis_File_Name-->
+            <!--Analysis_File_Name>/home/techwinder/techwing/studies/xml/foilanalysis/T1_Re0_100_M0_00_N9_0.xml</Analysis_File_Name-->
+        </Analysis_Files>
+ 
+
+                <Range>
+            <!-- Specify min, max and increment values -->
+            <!-- define field Alpha or Cl if type 1, 2 or 3 analysis are requested-->
+            <Alpha>  -6.0, 12.0,  0.5 </Alpha>
+            <Cl>  -0.2, 1.0, 0.1 </Cl>
+            <!-- define field Reynolds if type 4 analysis are requested-->
+            <Reynolds>  1.e5, 2e5, 3e5, 5e5, 1.e6, 50000 </Reynolds>
+
+            <!-- For type 1-2-3 polars, set this field to true if the analysis should run for a range of aoa,
+                 and to false if it should run for a range of lift coefficients; the default is true -->
+            <Spec_Alpha>true</Spec_Alpha>
+            <!-- For type 1-2-3 polars, set this field to true if the analysis should start at alpha=0.0;
+                 The default is true-->
+            <From_Zero>true</From_Zero>
+        </Range>
+
+
+        <!-- Batch analysis data; if defined, the analysis specified in this section will be performed for all available foils -->
+        <Batch_Analysis_Data>
+            <Type_1234_Polars>
+                <!-- Polar_Type is either 1, 2, 3 or 4-->
+                <Polar_Type>1</Polar_Type>
+                <!-- For type 1 to 3 polars, set the field Spec_Alpha to true if runnning a range of aoa,
+                     or to false if running a range of lift coefficients. -->
+
+                <!-- Specify the forced transition locations for the analysis -->
+                <Forced_Top_Transition>0.15</Forced_Top_Transition>
+                <Forced_Bottom_Transition>0.35</Forced_Bottom_Transition>
+                <Batch_Range>
+                    <!-- Specify the range of batch variables to analyse;
+                         For type 123 polars, the fields used are (Reynolds, Mach, NCrit);
+                         For type 4 polars, the fields used are (Alpha, Mach, NCrit); -->
+                    <Alpha> -1.0, 3.0  </Alpha>
+                    <Reynolds>  1e5, 5e4, 1e6, 123456 , 5e5  , 345678, 3e6   </Reynolds>
+                    <!-- The number of Mach and NCrit values should match the number of Alpha or Reynolds values depending on the polar type, otherwise M=0.0 and NCrit=9 will be used for missing values -->
+                    <Mach>      0.0,   0.0,    0.0,   0.0</Mach>
+                    <NCrit>     12.0,   11.0,     10.0,   9.0,     8.0,   7.0,     6.0,   5.0 </NCrit>
+                </Batch_Range>
+            </Type_1234_Polars>
+
+        </Batch_Analysis_Data>
+
+
+        <Output>
+            <!-- set this field to true to make a .plr file for each foil; default is false -->
+            <make_polars_bin_file>true</make_polars_bin_file>
+            <!-- set this field to true to make one .csv or .txt file for each polar; default is false -->
+            <make_polars_text_file>true</make_polars_text_file>
+            <!-- set this field to true to keep the operating points in the project file .fl5,
+                 and to false to discard them; default is false -->
+            <make_oppoints>true</make_oppoints>
+        </Output>
+
+        <Options>
+            <!-- this field defines the max number of XFoil iterations for each operatiung point; default is 100 -->
+            <Max_XFoil_Iterations>100</Max_XFoil_Iterations>
+            <!-- set this field to true if the foils are to be repaneled before running the analysis -->
+            <Repanel_Foils>true</Repanel_Foils>
+            <!-- Define the number of panels to re-panel the foil; default is 100-->
+            <Foil_Panels>100</Foil_Panels>
+        </Options>
+
+    </Foil_Analysis>
+</XFL_SCRIPT>
+
+
+
+
+
+
+
+
+
+
+

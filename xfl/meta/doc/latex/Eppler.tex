@@ -1,0 +1,117 @@
+\documentclass[12pt]{article}
+\usepackage[a4paper, portrait, margin=1in]{geometry}
+\usepackage{mathtools}
+\usepackage[export]{adjustbox}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{xfrac}
+
+\graphicspath{{./figures/}}
+\renewcommand{\familydefault}{\sfdefault}
+
+ 
+\begin{document}
+
+\title{Implementation of Eppler's BL method}
+\author{techwinder}
+
+\maketitle
+
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+\section{Solution method}
+The method described in ref. \cite{Eppler} is a 2-equation integral method, using the integral momentum  equation
+\begin{equation} \label{eq_momentum}
+\frac{d\theta}{dx} + (2+H) \, \frac{dU_e}{dx} \frac{\theta}{U_e} = C_f
+\end{equation}
+and the kinetic energy equation 
+\begin{equation}\label{eq_energy}
+\frac{d\lambda}{dx} + 3 \, \frac{dU_e}{dx} \frac{\lambda}{U_e} = C_D
+\end{equation}
+
+where
+  \begin{itemize}
+     \item $H$ is the kinematic shape parameter 
+     \item $\theta$ is the momentum thickness
+     \item $\lambda$ is the kinetic thickness (usually noted as $\delta_3$; the variable $\lambda$ is chosen to alleviate subscripts)
+     \item $U_e$ is the edge velocity.
+     \item $C_f$ is the friction coefficient
+     \item $C_D$ is the dissipation coefficient
+  \end{itemize}
+
+Note that in \cite{Eppler} and in the equation above, the friction coefficient $C_f$ is
+\begin{equation}
+C_f = \frac{\tau_0}{\rho U_e^2}
+\end{equation}
+which is twice the usual definition.
+
+The primary unknowns chosen in ref. \cite{Eppler} are $\theta$ and the kinetic energy shape parameter $H^*$ defined by 
+$$H^* = \frac{\lambda}{\delta^*}$$
+However, since eq. (\ref{eq_energy}) is expressed in terms of $\lambda$, this variable is selected with $\theta$ to solve the non linear system made of equations (\ref{eq_momentum}) and (\ref{eq_energy}).
+
+The quantities $H$, $H^*$, $C_f$ and $C_D$ can be expressed in terms of $\theta$ and $\lambda$ using equations (46) through (50) of reference \cite{Eppler}.
+
+If the solution at a given streamwise station with index $0$ is known, the solution at the next station is obtained using a central difference (Crank-Nicolson) scheme. Let
+\begin{equation}
+\begin{split}
+f(\theta, \lambda) = \frac{\theta-\theta_0}{dx} + (2+H_{1/2}) \frac{u-u_0}{dx} \frac{\theta_{1/2}}{u_{1/2}} - C_{f\,1/2} \\
+g(\theta, \lambda) = \frac{\lambda-\lambda_0}{dx} + 3 \frac{u-u_0}{dx} \frac{\lambda_{1/2}}{u_{1/2}} - C_{D\,1/2} 
+\end{split}
+\end{equation}
+The subscript $_{1/2}$ refers to midpoint quantities, e.g.
+\begin{equation}
+H_{1/2} = \frac{H_0+H}{2}
+\end{equation}
+
+The discretized system 
+\begin{equation}\label{eq_discretized}
+\begin{split}
+f(\theta, \lambda) = 0\\
+g(\theta, \lambda) = 0
+\end{split}
+\end{equation}
+ is non linear and is solved using  a Newton-Raphson scheme in the form
+\begin{equation}
+\begin{bmatrix}
+\frac{\partial f}{\partial \theta}   &\frac{\partial f}{\partial \lambda}  \\
+\frac{\partial g}{\partial \theta}   &\frac{\partial g}{\partial \lambda}  
+\end{bmatrix} 
+\begin{bmatrix}
+\Delta \theta \\
+\Delta \lambda
+\end{bmatrix} 
+ = 
+ \begin{bmatrix}
+-f\\
+-g
+\end{bmatrix} 
+\end{equation}
+\begin{equation}
+\begin{split}
+\theta^{n} = \theta^{n-1}  +\Delta \theta \\
+\lambda^{n} = \lambda^{n-1}  +\Delta \lambda \\
+\end{split}
+\end{equation}
+The subscript $^n$ refers to the iteration number.
+The variables can be initialized with Blasius's solution, or with the quantities at station $0$.
+The convergence criterion is defined as a maximum value of  $\vert f \vert$ and $\vert g \vert$.
+
+
+\newpage
+\begin{thebibliography}{9}
+\bibitem{Eppler} 
+Richard Eppler, et al.
+\textit{A Computer Program for the Design and Analysis of Low-Speed Airfoils}. 
+NASA TM 80210, August 1980.
+
+
+ \end{thebibliography}
+
+\end{document}
+
+
+
+
+
