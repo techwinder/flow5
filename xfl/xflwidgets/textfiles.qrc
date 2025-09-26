@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>textfiles/colorlist.txt</file>
+        <file>textfiles/colors_google.txt</file>
+    </qresource>
+</RCC>

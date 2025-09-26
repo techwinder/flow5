@@ -1,0 +1,265 @@
+/****************************************************************************
+
+    flow5 application
+    Copyright (C) Andre Deperrois 
+    All rights reserved.
+
+*****************************************************************************/
+
+#include <QHBoxLayout>
+#include <QColorDialog>
+
+#include "section2doptions.h"
+#include <xflcore/xflcore.h>
+#include <xflwidgets/customwts/intedit.h>
+#include <xflwidgets/view/section2dwt.h>
+#include <xflwidgets/customwts/gridcontrol.h>
+#include <xflwidgets/line/linebtn.h>
+#include <xflwidgets/line/linemenu.h>
+#include <xflwidgets/color/colorbtn.h>
+#include <xflwidgets/customwts/floatedit.h>
+
+Grid Section2dOptions::s_RefGrid;
+bool Section2dOptions::s_bModified = false;
+
+Section2dOptions::Section2dOptions(QWidget *pParent) : QWidget(pParent)
+{
+    setupLayout();
+    connectSignals();
+}
+
+
+void Section2dOptions::setModified(bool bModified)
+{
+    s_bModified=bModified;
+}
+
+
+void Section2dOptions::onSetModified(bool bModified)
+{
+    s_bModified=bModified;
+}
+
+
+void Section2dOptions::onResetDefaults()
+{
+     s_RefGrid.setDefaults();
+     Section2dWt::setNPixelSelection(20);
+     Section2dWt::setAnimateTransitions(true);
+     Section2dWt::setAntiAliasing(true);
+     initWidgets();
+     setModified(true);
+}
+
+
+void Section2dOptions::setupLayout()
+{
+    m_pGroupBox.push_back(new QGroupBox("General"));
+    {
+        QVBoxLayout *pGeneralLayout = new QVBoxLayout;
+        {
+            QHBoxLayout *pDynamicLayout = new QHBoxLayout;
+            {
+                m_pchSpinAnimation = new QCheckBox("Enable mouse animations");
+                m_pdeSpinDamping = new FloatEdit;
+                m_pdeSpinDamping->setToolTip("Defines the damping of the animation at each frame update.<br>"
+                                             "Set to 0 for perpetual movement.");
+                QLabel *plabpcDamping = new QLabel("% damping");
+                pDynamicLayout->addWidget(m_pchSpinAnimation);
+                pDynamicLayout->addWidget(m_pdeSpinDamping);
+                pDynamicLayout->addWidget(plabpcDamping);
+                pDynamicLayout->addStretch();
+            }
+
+            QGridLayout*pSelectionLayout = new QGridLayout;
+            {
+                QLabel *pSelectionLabel = new QLabel("Point selection precision:");
+                QLabel *pSelectionUnit= new QLabel("pixels");
+
+                m_pieSelectionPixels = new IntEdit;
+                QString tip("<p>Defines the tolerance in pixels within which points are "
+                               "selected or highlighted when moving the mouse in 2d views</p>");
+                m_pieSelectionPixels->setToolTip(tip);
+
+                QLabel *plabSym = new QLabel("Symbol size:");
+                m_pieSymbolSize = new IntEdit;
+                m_pieSymbolSize->setToolTip("This value defines the half-size of symbols in the graphs and other 2d views.");
+                QLabel *plabPixels = new QLabel("x2 pixels");
+
+                pSelectionLayout->addWidget(pSelectionLabel,      1, 1);
+                pSelectionLayout->addWidget(m_pieSelectionPixels, 1, 2);
+                pSelectionLayout->addWidget(pSelectionUnit,       1, 3);
+                pSelectionLayout->addWidget(plabSym,              2, 1);
+                pSelectionLayout->addWidget(m_pieSymbolSize,      2, 2);
+                pSelectionLayout->addWidget(plabPixels,           2, 3);
+                pSelectionLayout->setColumnStretch(4,1);
+            }
+
+            m_pchAntiAliasing = new QCheckBox("Enable anti-aliasing");
+            m_pchAntiAliasing->setToolTip("Indicates that the paint engine should antialias edges of primitives if possible.");
+            QHBoxLayout *pColorLayout = new QHBoxLayout;
+            {
+                QLabel *plabHigh = new QLabel("Highlight style");
+                m_plbHigh = new LineBtn;
+                QLabel *plabSel = new QLabel("Selection style");
+                m_plbSelect = new LineBtn;
+
+                pColorLayout->addWidget(plabHigh);
+                pColorLayout->addWidget(m_plbHigh);
+                pColorLayout->addStretch();
+                pColorLayout->addWidget(plabSel);
+                pColorLayout->addWidget(m_plbSelect);
+                pColorLayout->addStretch();
+            }
+
+
+            pGeneralLayout->addLayout(pDynamicLayout);
+            pGeneralLayout->addWidget(m_pchAntiAliasing);
+            pGeneralLayout->addLayout(pSelectionLayout);
+            pGeneralLayout->addLayout(pColorLayout);
+        }
+        m_pGroupBox.last()->setLayout(pGeneralLayout);
+    }
+
+    m_pGroupBox.push_back(new QGroupBox("Axes and grids"));
+    {
+        QVBoxLayout *pGridDataLayout = new QVBoxLayout;
+        {
+            m_pGridControl = new GridControl;
+            pGridDataLayout->addWidget(m_pGridControl);
+            pGridDataLayout->addStretch();
+        }
+        m_pGroupBox.last()->setLayout(pGridDataLayout);
+    }
+
+    QVBoxLayout *pMainLayout = new QVBoxLayout;
+    {
+        for(int i=0; i<m_pGroupBox.size(); i++)
+        {
+            pMainLayout->addWidget(m_pGroupBox.at(i));
+        }
+        pMainLayout->addStretch();
+    }
+    setLayout(pMainLayout);
+}
+
+
+void Section2dOptions::connectSignals()
+{
+    connect(m_pGridControl,     SIGNAL(gridModified(bool)),   SLOT(onSetModified(bool)));
+    connect(m_plbHigh,          SIGNAL(clickedLB(LineStyle)), SLOT(onHighStyle(LineStyle)));
+    connect(m_plbSelect,        SIGNAL(clickedLB(LineStyle)), SLOT(onSelStyle(LineStyle)));
+
+    connect(m_pchSpinAnimation, SIGNAL(clicked(bool)),        SLOT(onSpinAnimation(bool)));
+}
+
+
+void Section2dOptions::initWidgets()
+{
+    m_pchSpinAnimation->setChecked(Section2dWt::bAnimateTransitions());
+    m_pdeSpinDamping->setValue(Section2dWt::spinDamping()*100.0);
+    m_pdeSpinDamping->setEnabled(Section2dWt::bAnimateTransitions());
+
+    m_pieSelectionPixels->setValue(Section2dWt::nPixelSelection());
+    m_pieSymbolSize->setValue(xfl::symbolSize());
+    m_pchAntiAliasing->setChecked(Section2dWt::bAntiAliasing());
+    m_pGridControl->initControls(&s_RefGrid);
+
+    m_plbHigh->setTheStyle(Section2dWt::highStyle());
+    m_plbSelect->setTheStyle(Section2dWt::selectStyle());
+}
+
+
+void Section2dOptions::readData()
+{
+    xfl::setSymbolSize(m_pieSymbolSize->value());
+    Section2dWt::setNPixelSelection(m_pieSelectionPixels->value());
+    Section2dWt::setAnimateTransitions(m_pchSpinAnimation->isChecked());
+    Section2dWt::setSpinDamping(m_pdeSpinDamping->value()/100.0);
+    Section2dWt::setAntiAliasing(m_pchAntiAliasing->isChecked());
+}
+
+
+void Section2dOptions::onSpinAnimation(bool bSpin)
+{
+    m_pdeSpinDamping->setEnabled(bSpin);
+}
+
+
+void Section2dOptions::showBox(int iBox)
+{
+    if(iBox<0)
+    {
+        for(int i=0; i<m_pGroupBox.size(); i++)
+            m_pGroupBox[i]->setVisible(true);
+    }
+    else
+    {
+        for(int i=0; i<m_pGroupBox.size(); i++)
+            m_pGroupBox[i]->setVisible(i==iBox);
+    }
+}
+
+
+void Section2dOptions::onHighStyle(LineStyle ls)
+{
+    LineMenu lm(nullptr, false);
+    lm.initMenu(ls);
+    lm.exec(QCursor::pos());
+
+    Section2dWt::setHighStyle(lm.theStyle());
+    m_plbHigh->setTheStyle(lm.theStyle());
+}
+
+
+void Section2dOptions::onSelStyle(LineStyle ls)
+{
+    LineMenu lm(nullptr, false);
+    lm.initMenu(ls);
+    lm.exec(QCursor::pos());
+
+    Section2dWt::setSelectStyle(lm.theStyle());
+    m_plbSelect->setTheStyle(lm.theStyle());
+}
+
+
+void Section2dOptions::loadSettings(QSettings &settings)
+{
+    settings.beginGroup("Section2dOptions");
+    {
+        Section2dWt::setAnimateTransitions(settings.value("AnimateTransitions", Section2dWt::bAnimateTransitions()).toBool());
+        Section2dWt::setNPixelSelection(   settings.value("NPixelSel",          Section2dWt::nPixelSelection()).toInt());
+        Section2dWt::setAntiAliasing(      settings.value("bAntiAliasing",      Section2dWt::bAntiAliasing()).toBool());
+
+        if(settings.contains("HighStyle_color"))
+        {
+            LineStyle ls;
+            ls.loadSettings(settings, "HighStyle");
+            Section2dWt::setHighStyle(ls);
+            ls.loadSettings(settings, "SelStyle");
+            Section2dWt::setSelectStyle(ls);
+         }
+
+        s_RefGrid.loadSettings(settings);
+    }
+    settings.endGroup();
+}
+
+
+void Section2dOptions::saveSettings(QSettings &settings)
+{
+    settings.beginGroup("Section2dOptions");
+    {
+        settings.setValue("AnimateTransitions", Section2dWt::bAnimateTransitions());
+        settings.setValue("NPixelSel",          Section2dWt::nPixelSelection());
+        settings.setValue("bAntiAliasing",      Section2dWt::bAntiAliasing());
+
+        Section2dWt::highStyle().saveSettings(settings, "HighStyle");
+        Section2dWt::selectStyle().saveSettings(settings, "SelStyle");
+
+        s_RefGrid.saveSettings(settings);
+    }
+    settings.endGroup();
+}
+
+
