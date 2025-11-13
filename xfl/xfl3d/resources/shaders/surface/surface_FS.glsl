@@ -1,7 +1,7 @@
 /****************************************************************************
 
-    flow5 application
-    Copyright (C) Andre Deperrois 
+    flow5
+    Copyright (C) 2025 André Deperrois 
     All rights reserved.
 
 *****************************************************************************/

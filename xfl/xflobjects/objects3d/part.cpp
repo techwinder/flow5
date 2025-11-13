@@ -1,8 +1,24 @@
 /****************************************************************************
 
-    flow5 application
-    Copyright (C) Andre Deperrois 
-    All rights reserved.
+    flow5
+    Copyright (C) 2025 André Deperrois 
+    
+    This file is part of flow5.
+
+    flow5 is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License,
+    or (at your option) any later version.
+
+    flow5 is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty
+    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+    See the GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with flow5.
+    If not, see <https://www.gnu.org/licenses/>.
+
 
 *****************************************************************************/
 
@@ -101,7 +117,7 @@ bool Part::serializePartFl5(QDataStream &ar, bool bIsStoring)
     //500002: added m_bReversed
     //500755: added compatibility provision for GmshParams;
 
-    int ArchiveFormat = 500755;
+    int ArchiveFormat = 50075;
     if(bIsStoring)
     {
         ar << ArchiveFormat;
@@ -116,6 +132,10 @@ bool Part::serializePartFl5(QDataStream &ar, bool bIsStoring)
         ar << m_bAutoInertia;
         bool bReverse=false; // deprecated
         ar << bReverse; // added format 500002
+
+        ar << dble; // m_GmshTessParams.m_MinSize;
+        ar << dble; // m_GmshTessParams.m_MaxSize;
+        ar << n; // m_GmshTessParams.m_nCurvature;
 
         ar << dble; // m_GmshParams.m_MinSize;
         ar << dble; // m_GmshParams.m_MaxSize;
@@ -150,8 +170,12 @@ bool Part::serializePartFl5(QDataStream &ar, bool bIsStoring)
             ar >> bReverse;
         }
 
-        if(ArchiveFormat>=500755)
+        if(ArchiveFormat>=500754)
         {
+            ar >> dble; // m_GmshTessParams.m_MinSize;
+            ar >> dble; // m_GmshTessParams.m_MaxSize;
+            ar >> n;    // m_GmshTEssParams.m_nCurvature;
+
             ar >> dble; // m_GmshParams.m_MinSize;
             ar >> dble; // m_GmshParams.m_MaxSize;
             ar >> n;    // m_GmshParams.m_nCurvature;
