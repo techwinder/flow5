@@ -32,7 +32,7 @@ CONFIG(release, debug|release) {
     CONFIG += optimize_full
 }
 
-CONFIG += c++20
+CONFIG += c++17
 
 # The path to the libraries' header files required by the code at compile time
 INCLUDEPATH += $$PWD/../XFoil-lib/
@@ -62,13 +62,43 @@ linux-g++ {
     # MAKE INSTALL
     INSTALLS += target desktop icon128
 
+    CONFIG += INTEL_MKL
+
+    INTEL_MKL {
+        #------------ MKL --------------------
+        #    MKL can use the c++ matrices in row major order order
+        DEFINES += INTEL_MKL
+
+        #   Ensure that the paths to the include files and to the binary libraries
+        #   are set either by defining them in the environment variables
+        #   or by setting them explicitely in the following two lines
+        #
+          INCLUDEPATH += /opt/intel/oneapi/mkl/latest/include/
+          LIBS += -L/opt/intel/oneapi/mkl/latest/lib/intel64/
+
+        #   The mkl libs to include may depend on MKL's version;
+        #   Follow Intel's procedure to determine which libs to include
+            LIBS += -lmkl_core -lmkl_intel_lp64  -lmkl_gnu_thread
+        #   LIBS += -lgomp
+        ##    LIBS += -lmkl_intel_thread -lmkl_sequential
+    } else {
+        # ---------------- system LAPACK/LAPACKE + CBLAS/OpenBLAS-----------------------------
+        DEFINES += OPENBLAS
+
+        #    LIBS += -L/etc/alternatives  #distro dependent
+            LIBS += -llapack -llapacke
+
+            #link to either the cblas (slow) or openblas (fast) library
+    #            LIBS += -lcblas
+            LIBS += -lopenblas
+
+    }
 
 
 #--------------------- GMSH ------------------------
-    INCLUDEPATH += /opt/gmsh-4.14.1-Linux64-sdk/include/
-    LIBS += -L/opt/gmsh-4.14.1-Linux64-sdk/lib
+    INCLUDEPATH += /usr/local/include/
+    LIBS += -L/usr/local/lib
     LIBS += -lgmsh
-
 
     #----------- OPENCASCADE -------------
     #   Ensure that the paths to the binary libraries
@@ -118,7 +148,7 @@ win32-msvc {
 #--------------------- GMSH ------------------------
     INCLUDEPATH += D:\bin\gmsh-4.14.1-Windows64-sdk/include/
     LIBS += -L"D:\bin\gmsh-4.14.1-Windows64-sdk/lib"
-    LIBS += -lgmsh.dll  # the default install name is gmsh.dll.lib
+    LIBS += -lgmsh.dll  # the file name is gmsh.dll.lib
 
 
 #------------ OPEN CASCADE --------------------------
@@ -160,15 +190,31 @@ macx {
     XFoil.path = Contents/Frameworks
     QMAKE_BUNDLE_DATA += XFoil
 
+
+    #-------fl5-lib
+    # link to the lib:
+    LIBS += -L$$OUT_PWD/../fl5-lib -lfl5-lib
+    # deploy the libs:
+    fl5-lib.files = $$OUT_PWD/../fl5-lib/libfl5-lib.1.dylib
+    fl5-lib.path = Contents/Frameworks
+    QMAKE_BUNDLE_DATA += fl5-lib
+
+
     #-------------OPENCASCADE -----------------
     # set the paths to the OpenCascade header and lib directories
     INCLUDEPATH += /usr/local/include/opencascade/
-    LIBS += -L/usr/local/lib/
+    LIBS += -L/usr/local/lib/    
+
 
     #_____________GMSH__________________
     INCLUDEPATH += /Users/techwinder/bin/gmsh-4.14.1-MacOSARM-sdk/include
-    LIBS += -L/Users/techwinder/bin/gmsh-4.14.1-MacOSARM-sdk/lib
+    LIBS += -L/usr/local/lib/
     LIBS += -lgmsh
+
+    # deploy the libs
+#    gmsh.files =/usr/local/lib/libgmsh.4.14.dylib
+#    gmsh.path = Contents/Frameworks
+#    QMAKE_BUNDLE_DATA += gmsh
 
 }
 
@@ -216,3 +262,5 @@ LIBS += \
     -lTKG2d \
     -lTKCDF \
     -lTKFillet \
+
+LIBS += -lgmsh

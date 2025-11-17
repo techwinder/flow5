@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 #include <string>
 #include <iostream>
 #include <thread>
@@ -147,9 +148,9 @@ int TriMesh::makeNodeArrayFromPanels(int firstnodeindex, std::string &logmsg, st
         }
     }
 
-    std::string strong;
-    strong = std::format("Extracted {0:d} nodes from the array of triangles\n", int(m_Node.size()));
-    logmsg += prefix + strong;
+    QString strong;
+    strong = QString::asprintf("Extracted %d nodes from the array of triangles\n", int(m_Node.size()));
+    logmsg += prefix + strong.toStdString();
     return int(m_Node.size());
 }
 
@@ -178,13 +179,13 @@ void TriMesh::setNodePanels()
 }
 
 
-void TriMesh::getMeshInfo(std::string &log) const
+void TriMesh::getMeshInfo(std::string &logmsg) const
 {
-    std::string strong;
+    QString strong;
 
-    strong = std::format("    Nbr. of triangles = {0:d}\n"
-                         "    Nbr. of nodes     = {1:d}", nPanels(), nNodes());
-    log += strong +"\n";
+    strong = QString::asprintf("    Nbr. of triangles = %d\n"
+                               "    Nbr. of nodes     = %d", nPanels(), nNodes());
+    QString log = strong +"\n";
     double minarea = 1.e10;
     double maxarea = 0.0;
     int minareaindex = -1, maxareaindex = -1;
@@ -219,21 +220,23 @@ void TriMesh::getMeshInfo(std::string &log) const
         }
         maxquality = std::max(maxquality, p3.qualityFactor(r,e));
     }
-    strong = std::format("    min. panel area = {:9.3g} ", minarea*Units::m2toUnit());
-    strong += Units::areaUnitLabel();
+    strong = QString::asprintf("    min. panel area = %9.3g ", minarea*Units::m2toUnit());
+    strong += QUnits::areaUnitLabel();
     log += strong;
-    strong = std::format(" for panel %d\n", minareaindex);
+    strong = QString::asprintf(" for panel %d\n", minareaindex);
     log += strong;
-    strong = std::format("    max. panel area = {:9.3g} ", maxarea*Units::m2toUnit());
-    strong += Units::areaUnitLabel();
+    strong = QString::asprintf("    max. panel area = %9.3g ", maxarea*Units::m2toUnit());
+    strong += QUnits::areaUnitLabel();
     log += strong;
-    strong = std::format(" for panel {:d}\n", maxareaindex);
+    strong = QString::asprintf(" for panel %d\n", maxareaindex);
     log += strong;
 
-    strong = std::format("    min. quality factor = {:7.3f} for panel {:d}\n", minquality, minqualityindex);
+    strong = QString::asprintf("    min. quality factor = %7.3f for panel %d\n", minquality, minqualityindex);
     log += strong;
-    strong = std::format("    max. quality factor = {:7.3f} for panel {:d}\n", maxquality, maxqualityindex);
+    strong = QString::asprintf("    max. quality factor = %7.3f for panel %d\n", maxquality, maxqualityindex);
     log += strong;
+
+    logmsg = log.toStdString();
 }
 
 
@@ -242,7 +245,8 @@ void TriMesh::checkPanels(std::string &logmsg,
                           std::vector<int> &skinnylist, std::vector<int> &minanglelist, std::vector<int>&minarealist, std::vector<int>&minsizelist,
                           double qualityfactor, double minangle, double minarea, double minsize)
 {
-    std::string strong;
+    QString strong;
+    QString log;
 
     //list skinny triangles
     int count(0);
@@ -259,22 +263,22 @@ void TriMesh::checkPanels(std::string &logmsg,
             {
                 skinnylist.push_back(p3.index());
                 count++;
-                strong = std::format("   Panel {0:4d} is skinny:  qual.={1:5.2f}", p3.index(), q);
-                logmsg += strong;
-                strong = std::format(", CC radius={0:5.2f}", r*Units::mtoUnit());
-                logmsg += strong + Units::lengthUnitLabel();
-                strong = std::format(", min. edge={0:5.2f}", e*Units::mtoUnit());
-                logmsg += strong + Units::lengthUnitLabel() + "\n";
+                strong = QString::asprintf("   Panel %4d is skinny:  qual.=%5.2f", p3.index(), q);
+                log += strong;
+                strong = QString::asprintf(", CC radius=%5.2f", r*Units::mtoUnit());
+                log += strong + QUnits::lengthUnitLabel();
+                strong = QString::asprintf(", min. edge=%5.2f", e*Units::mtoUnit());
+                log += strong + QUnits::lengthUnitLabel() + "\n";
             }
         }
         if(!skinnylist.size())
         {
-            logmsg = "   No skinny panel found\n\n";
+            log = "   No skinny panel found\n\n";
         }
         else
         {
-            strong = std::format("   Found %d skinny triangles\n\n", count);
-            logmsg += strong;
+            strong = QString::asprintf("   Found %d skinny triangles\n\n", count);
+            log += strong;
         }
     }
 
@@ -290,23 +294,23 @@ void TriMesh::checkPanels(std::string &logmsg,
             {
                 minanglelist.push_back(p3.index());
                 count++;
-                strong = std::format("   Panel {:4d} has min angle %5.1f", p3.index(), p3.minAngle());
+                strong = QString::asprintf("   Panel %4d has min angle %5.1f", p3.index(), p3.minAngle());
                 strong += DEGch + "\n";
-                logmsg += strong;
+                log += strong;
             }
         }
 
         if(!minanglelist.size())
         {
-            strong = std::format("   No panel found with vertex angle less than %.2f", minangle);
+            strong = QString::asprintf("   No panel found with vertex angle less than %.2f", minangle);
             strong += DEGch + "\n\n";
-            logmsg += strong + "\n\n";
+            log += strong + "\n\n";
         }
         else
         {
-            strong = std::format("   Found %d panels with a vertex angle less than %.2f", count, minangle);
+            strong = QString::asprintf("   Found %d panels with a vertex angle less than %.2f", count, minangle);
             strong += DEGch;
-            logmsg += strong + "\n\n";
+            log += strong + "\n\n";
         }
     }
 
@@ -322,8 +326,8 @@ void TriMesh::checkPanels(std::string &logmsg,
             {
                 minarealist.push_back(p3.index());
                 count++;
-                strong = std::format("   Panel {0:4d} has area {1:9g} ", p3.index(), p3.area()*Units::m2toUnit());
-                logmsg += strong + Units::areaUnitLabel() +"\n";
+                strong = QString::asprintf("   Panel %4d has area %9g ", p3.index(), p3.area()*Units::m2toUnit());
+                log += strong + QUnits::areaUnitLabel() +"\n";
             }
             //                else m_PanelHightlight.insert(i3, false);
         }
@@ -331,12 +335,12 @@ void TriMesh::checkPanels(std::string &logmsg,
 
         if(!minarealist.size())
         {
-            logmsg = "   No triangle with low area found\n";
+            log = "   No triangle with low area found\n";
         }
         else
         {
-            strong = std::format("   Found {0:d} panels with area less than {1:.3g} ", count, minarea*Units::m2toUnit());
-            logmsg += strong + Units::areaUnitLabel() + "\n\n";
+            strong = QString::asprintf("   Found %d panels with area less than %.3g ", count, minarea*Units::m2toUnit());
+            log += strong + QUnits::areaUnitLabel() + "\n\n";
         }
     }
 
@@ -360,28 +364,30 @@ void TriMesh::checkPanels(std::string &logmsg,
             {
                 minsizelist.push_back(p3.index());
                 count++;
-                strong = std::format("   Panel %4d has edge length %9g ", p3.index(), length*Units::mtoUnit());
-                logmsg += strong + Units::lengthUnitLabel() +"\n";
+                strong = QString::asprintf("   Panel %4d has edge length %9g ", p3.index(), length*Units::mtoUnit());
+                log += strong + QUnits::lengthUnitLabel() +"\n";
             }
         }
 
 
         if(!minsizelist.size())
         {
-            logmsg = "   No triangle with low edge length found\n";
+            log = "   No triangle with low edge length found\n";
         }
         else
         {
-            strong = std::format("   Found %d panels with edge length less than %.g ", count, minsize*Units::mtoUnit());
-            logmsg += strong + Units::lengthUnitLabel() + "\n\n";
+            strong = QString::asprintf("   Found %d panels with edge length less than %.g ", count, minsize*Units::mtoUnit());
+            log += strong + QUnits::lengthUnitLabel() + "\n\n";
         }
     }
+
+    logmsg = log.toStdString();
 }
 
 
 void TriMesh::listPanels(bool bConnections)
 {
-    std::string strange;
+    QString strange;
     if(bConnections)
         qDebug(" Panel   neigh0  neigh1   neigh2  Surf");
     else
@@ -390,9 +396,9 @@ void TriMesh::listPanels(bool bConnections)
     {
         Panel3 const &p3 = m_Panel3.at(i3);
         if(bConnections)
-            strange = std::format(" {0:4d}:  {1:4d}  {2:4d}  {3:4d}", p3.index(), p3.neighbour(0), p3.neighbour(1), p3.neighbour(2));
+            strange = QString::asprintf(" %4d:  %4d  %4d  %4d", p3.index(), p3.neighbour(0), p3.neighbour(1), p3.neighbour(2));
         else
-            strange = std::format(" {0:4d}:  {1:4d}  {2:4d}  {3:4d}  {4:4d}", p3.index(), p3.m_iPU, p3.m_iPD, p3.m_iPL, p3.m_iPR);
+            strange = QString::asprintf(" %4d:  %4d  %4d  %4d  %4d", p3.index(), p3.m_iPU, p3.m_iPD, p3.m_iPL, p3.m_iPR);
 
         switch(p3.surfacePosition())
         {
@@ -500,8 +506,8 @@ void TriMesh::makeConnectionsFromNodePosition(int i0, int np0, double MERGEDISTA
 {
     if(i0+np0>nPanels())
     {
-        std::string err = std::format("TriMesh::makeConnectionsFromNodePosition error: {0:d} {1:d} {2:d}", i0, np0, int(nPanels()));
-        std::cerr << err << std::endl;
+        QString err = QString::asprintf("TriMesh::makeConnectionsFromNodePosition error: %d %d %d", i0, np0, int(nPanels()));
+        std::cerr << err.toStdString() << std::endl;
         return;
     }
 
@@ -871,15 +877,18 @@ int TriMesh::cleanNullTriangles()
 }
 
 
-int TriMesh::cleanDoubleNodes(double precision, std::string &logmsg, std::string const &prefix)
+int TriMesh::cleanDoubleNodes(double precision, std::string &logmsg, std::string const &prefx)
 {
-    return cleanDoubleNodes(m_Panel3, m_Node, precision, logmsg, prefix);
+    return cleanDoubleNodes(m_Panel3, m_Node, precision, logmsg, prefx);
 }
 
 
 int TriMesh::cleanDoubleNodes(std::vector<Panel3> &panel3, std::vector<Node> &nodes,
-                              double precision, std::string &logmsg, std::string const &prefix)
+                              double precision, std::string &logmsg, std::string const &prefx)
 {
+    QString log;
+    QString prefix = QString::fromStdString(prefx);
+
     std::vector<int> doublenodes;
     std::vector<int> modpanels;
     for(uint in0=0; in0<nodes.size(); in0++)
@@ -927,8 +936,8 @@ int TriMesh::cleanDoubleNodes(std::vector<Panel3> &panel3, std::vector<Node> &no
         nodes.erase(nodes.begin() + doublenodes.at(in));
     }
 
-    logmsg = prefix + std::format("Removed {0:d} nodes\n", int(doublenodes.size()));
-    logmsg += prefix + std::format("New node count is {0:d} \n", int(nodes.size()));
+    log = prefix + QString::asprintf("Removed %d nodes\n", int(doublenodes.size()));
+    log += prefix + QString::asprintf("New node count is %d \n", int(nodes.size()));
 
     if(modpanels.size())
     {
@@ -939,22 +948,26 @@ int TriMesh::cleanDoubleNodes(std::vector<Panel3> &panel3, std::vector<Node> &no
             if(p3.isNullTriangle())
             {
                 panel3.erase(panel3.begin()+modpanels.at(i3));
-                logmsg += prefix + std::format("removing null panel %d\n", p3.index());
+                log += prefix + QString::asprintf("removing null panel %d\n", p3.index());
             }
             else
             {
-                logmsg += prefix + std::format("modifying panel %d\n", p3.index());
+                log += prefix + QString::asprintf("modifying panel %d\n", p3.index());
             }
         }
-        logmsg += prefix + std::format("New panel count is %d\n", int(panel3.size()));
+        log += prefix + QString::asprintf("New panel count is %d\n", int(panel3.size()));
     }
-    logmsg += "\n";
+    log += "\n";
+
+    logmsg = log.toStdString();
     return int(doublenodes.size());
 }
 
 
-int TriMesh::mergeFuseToWingNodes(double precision, std::string &logmsg, const std::string &prefix)
+int TriMesh::mergeFuseToWingNodes(double precision, std::string &logmsg, const std::string &prefx)
 {
+    QString prefix = QString::fromStdString(prefx);
+    QString logg;
     std::vector<int> doublenodes;
     std::vector<int> modpanels;
     for(int in0=0; in0<int(m_Node.size()); in0++)
@@ -1009,8 +1022,8 @@ int TriMesh::mergeFuseToWingNodes(double precision, std::string &logmsg, const s
         m_Node.erase(m_Node.begin() + doublenodes.at(in));
     }
 
-    logmsg = prefix + std::format("Removed {0:d} nodes\n", int(doublenodes.size()));
-    logmsg += prefix + std::format("New node count is {0:d} \n", int(m_Node.size()));
+    logg = prefix + QString::asprintf("Removed %d nodes\n", int(doublenodes.size()));
+    logg += prefix + QString::asprintf("New node count is %d \n", int(m_Node.size()));
 
     if(modpanels.size())
     {
@@ -1021,16 +1034,18 @@ int TriMesh::mergeFuseToWingNodes(double precision, std::string &logmsg, const s
             if(p3.isNullTriangle())
             {
                 m_Panel3.erase(m_Panel3.begin()+modpanels.at(i3));
-                logmsg += prefix + std::format("removing null panel %d\n", p3.index());
+                logg += prefix + QString::asprintf("removing null panel %d\n", p3.index());
             }
             else
             {
-                logmsg += prefix + std::format("modifying panel %d\n", p3.index());
+                logg += prefix + QString::asprintf("modifying panel %d\n", p3.index());
             }
         }
-        logmsg += prefix + std::format("New panel count is %d\n", nPanels());
+        logg += prefix + QString::asprintf("New panel count is %d\n", nPanels());
     }
-    logmsg += "\n";
+    logg += "\n";
+
+    logmsg = logg.toStdString();
     return int(doublenodes.size());
 }
 
@@ -1385,7 +1400,7 @@ void TriMesh::rebuildPanels()
 void TriMesh::makeMeshFromTriangles(std::vector<Triangle3d> const &triangulation, int firstindex, xfl::enumSurfacePosition pos,
                                     std::string &logmsg, std::string const &prefix)
 {
-    std::string strong;
+    QString strong;
     clearMesh();
 
     bool bDiscard = false;
@@ -1438,11 +1453,11 @@ void TriMesh::makeMeshFromTriangles(std::vector<Triangle3d> const &triangulation
         m_Panel3.back().setIndex(firstindex + nPanels()-1);
     }
 
-    strong = std::format("Discarded %d null triangles\n", nDiscard);
-    logmsg += prefix+strong;
+    strong = QString::asprintf("Discarded %d null triangles\n", nDiscard);
+    logmsg += prefix+strong.toStdString();
 
-    strong = std::format("Converted %d triangles to %d panels\n", int(triangulation.size()), nPanels());
-    logmsg += prefix+strong;
+    strong = QString::asprintf("Converted %d triangles to %d panels\n", int(triangulation.size()), nPanels());
+    logmsg += prefix+strong.toStdString();
 
     makeNodeArrayFromPanels(0, logmsg, prefix);
 }
@@ -1504,26 +1519,27 @@ void TriMesh::makeNodeNormals(bool bReversed)
  * and finally deletes the node.
  * Assumes that the connections have been made.
  */
-bool TriMesh::mergeNodes(int srcindex, int destindex, bool bDiscardNullPanels, std::string &log, std::string prefix)
+bool TriMesh::mergeNodes(int srcindex, int destindex, bool bDiscardNullPanels, std::string &logmsg, std::string prefx)
 {
-    std::string strange;
+    QString prefix = QString::fromStdString(prefx);
+    QString strange,logg;
     if(srcindex<0  || srcindex>=nNodes())
     {
-        strange = std::format("Invalid source index {0:d}\n", srcindex);
-        log = prefix + strange +prefix+"cancelling move operation\n\n";
+        strange = QString::asprintf("Invalid source index %d\n", srcindex);
+        logg = prefix + strange +prefix+"cancelling move operation\n\n";
         return false;
     }
     if(destindex<0 || destindex>=nNodes())
     {
-        strange = std::format("Invalid destination index {0:d}\n", destindex);
-        log = prefix + strange +prefix+"cancelling move operation\n\n";
+        strange = QString::asprintf("Invalid destination index %d\n", destindex);
+        logg = prefix + strange +prefix+"cancelling move operation\n\n";
         return false;
     }
 
     if(srcindex==destindex)
     {
-        strange = std::format("Source and destination indexes are identical {0:d}\n", srcindex);
-        log = prefix + strange +prefix+" cancelling move operation\n\n";
+        strange = QString::asprintf("Source and destination indexes are identical %d\n", srcindex);
+        logg = prefix + strange +prefix+" cancelling move operation\n\n";
         return false;
     }
 
@@ -1546,7 +1562,7 @@ bool TriMesh::mergeNodes(int srcindex, int destindex, bool bDiscardNullPanels, s
     }
     if (!bCommon)
     {
-        log = prefix + "The nodes do not form an edge of an existing triangle\n"+prefix+"cancelling move operation\n\n";
+        logg = prefix + "The nodes do not form an edge of an existing triangle\n"+prefix+"cancelling move operation\n\n";
         return false;
     }
 
@@ -1567,13 +1583,13 @@ bool TriMesh::mergeNodes(int srcindex, int destindex, bool bDiscardNullPanels, s
     }
     std::sort(modpanels.begin(), modpanels.end());
 
-    log += prefix + "Modifying triangles ";
+    logg += prefix + "Modifying triangles ";
     for(int it=int(modpanels.size())-1; it>=0; it--)
     {
-        strange = std::format(" %d", modpanels.at(it));
-        log += strange;
+        strange = QString::asprintf(" %d", modpanels.at(it));
+        logg += strange;
     }
-    log += "\n";
+    logg += "\n";
 
     if(bDiscardNullPanels)
     {
@@ -1586,12 +1602,14 @@ bool TriMesh::mergeNodes(int srcindex, int destindex, bool bDiscardNullPanels, s
                 if(p3.isNullTriangle())
                 {
                     m_Panel3.erase(m_Panel3.begin()+modpanels.at(it));
-                    strange = std::format("Discarding null triangle %d", modpanels.at(it));
-                    log += prefix + strange + "\n";
+                    strange = QString::asprintf("Discarding null triangle %d", modpanels.at(it));
+                    logg += prefix + strange + "\n";
                 }
             }
         }
     }
+
+    logmsg = logg.toStdString();
 
     return true;
 }

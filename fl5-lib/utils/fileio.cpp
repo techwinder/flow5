@@ -486,7 +486,7 @@ bool FileIO::serializeProjectXfl(QDataStream &ar, bool bIsStoring, PlanePolar *p
                         log = strong;
 
                         strong = QString::asprintf("      Forced Nx=%d at all sections of wing: ", nx);
-                        strong += pPlaneXfl->wing(iw)->name() + "\n";
+                        strong += QString::fromStdString(pPlaneXfl->wing(iw)->name()) + "\n";
                         log = strong;
                     }
                 }
@@ -870,10 +870,9 @@ bool FileIO::storeFoilsFl5(std::vector<Foil*>const &FoilSelection, QDataStream &
         for(int iopp=0; iopp<Objects2d::nOpPoints(); iopp++)
         {
             OpPoint *pOpp = Objects2d::opPointAt(iopp);
-            QString foilname = QString::fromStdString(pOpp->foilName());
             for(uint ifoil=0; ifoil<FoilList.size(); ifoil++)
             {
-                if(FoilList.at(ifoil)->name()==foilname) opplist.push_back(pOpp);
+                if(FoilList.at(ifoil)->name()==pOpp->foilName()) opplist.push_back(pOpp);
             }
         }
 

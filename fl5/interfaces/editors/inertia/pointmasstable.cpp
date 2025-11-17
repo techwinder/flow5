@@ -31,7 +31,7 @@
 #include <QMenu>
 
 #include "pointmasstable.h"
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/part.h>
 #include <interfaces/widgets/customwts/xfldelegate.h>
 

@@ -80,7 +80,7 @@ class FL5LIB_EXPORT Segment2d
         void setIndex(int idx) {m_Index=idx;}
         int index() const {return m_Index;}
 
-        std::string properties(bool bLong=true, std::string prefix="") const;
+        std::string properties(bool bLong=true, std::string prefx="") const;
 
     private:
         int m_Index;

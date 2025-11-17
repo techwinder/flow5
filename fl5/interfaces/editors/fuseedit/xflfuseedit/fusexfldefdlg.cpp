@@ -38,22 +38,23 @@
 #include <QHeaderView>
 
 
-#include <interfaces/opengl/controls/gl3dgeomcontrols.h>
-#include <interfaces/opengl/fl5views/gl3dfuseview.h>
-#include <core/qunits.h>
+
 #include <api/frame.h>
+#include <api/fusesections.h>
+#include <api/fusexfl.h>
 #include <api/quad3d.h>
+#include <api/units.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fuseframewt.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fuselinewt.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.h>
-#include <api/fusesections.h>
-#include <api/fusexfl.h>
-#include <interfaces/widgets/customwts/xfldelegate.h>
+#include <interfaces/opengl/controls/gl3dgeomcontrols.h>
+#include <interfaces/opengl/fl5views/gl3dfuseview.h>
 #include <interfaces/widgets/customwts/actionitemmodel.h>
 #include <interfaces/widgets/customwts/cptableview.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
+#include <interfaces/widgets/customwts/xfldelegate.h>
 
 
 QByteArray FuseXflDefDlg::s_MainSplitterSizes;

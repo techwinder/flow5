@@ -31,7 +31,7 @@
 #include "partinertiamodel.h"
 #include <api/inertia.h>
 
-#include <core/qunits.h>
+#include <api/units.h>
 
 PartInertiaModel::PartInertiaModel(QObject *parent)
     :QAbstractTableModel(parent)

@@ -84,8 +84,9 @@ class FL5LIB_EXPORT LLTTask : public Task3d
         void setLLTRange(const std::vector<double> &opplist) {m_AoAList = opplist;}
         void setObjects(PlaneXfl *pPlane, PlanePolar *pWPolar);
 
-        void run();
+        void run() override;
         void traceStdLog(std::string const &str) override;
+        void traceLog(QString const &str);
         void traceOpp(double alpha, std::vector<double>const &max_a, std::string const &msg);
 
         bool hasErrors() const override {return m_bError || m_bWarning;}
@@ -113,7 +114,7 @@ class FL5LIB_EXPORT LLTTask : public Task3d
         double alphaInduced(int k) const;
         double Beta(int m, int k) const;
         double Eta(int m) const;
-        void computeWing(double QInf, double Alpha, std::string &ErrorMessage);
+        void computeWing(double QInf, double Alpha, std::string &ErrMessage);
         void initializeVelocity(double alpha, double &QInf);
         int iterate(double &QInf, double const Alpha);
         void setBending(double QInf);

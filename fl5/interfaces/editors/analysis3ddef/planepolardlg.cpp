@@ -35,11 +35,10 @@
 
 #include "planepolardlg.h"
 #include <api/plane.h>
-#include <api/planexfl.h>
-#include <core/qunits.h>
-#include <api/utils.h>
 #include <api/planepolar.h>
-#include <modules/xplane/analysis/wpolarnamemaker.h>
+#include <api/planexfl.h>
+#include <api/units.h>
+#include <api/utils.h>
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/analysis3ddef/aerodatadlg.h>
@@ -48,6 +47,7 @@
 #include <interfaces/widgets/customwts/ctrltabledelegate.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
+#include <modules/xplane/analysis/wpolarnamemaker.h>
 
 PlanePolar PlanePolarDlg::s_WPolar;
 
@@ -199,7 +199,7 @@ void PlanePolarDlg::makeCommonControls()
                                       "i.e. identical to the method implemented in xflr5</p>");
                         m_prbViscFromCl->setToolTip(tipCl);
 
-                        m_prbViscFromAlpha = new QRadioButton("from "+ ALPHACHAR + " - viscous loop method");
+                        m_prbViscFromAlpha = new QRadioButton("from "+ ALPHAch + " - viscous loop method");
                         QString tipAlpha("<p>Activate this option to interpolate the viscous data from the local apparent aoa, "
                                          "i.e. identical to the method used for the viscous loop in control polars</p>");
                         m_prbViscFromAlpha->setToolTip(tipAlpha);
@@ -369,7 +369,7 @@ void PlanePolarDlg::makeCommonControls()
             m_pFlapModel->setColumnCount(2);
 
             QStringList labels;
-            labels << "Wing flap"<<"Angle (" +DEGCHAR +")" ;
+            labels << "Wing flap"<<"Angle (" +DEGch +")" ;
             m_pFlapModel->setHorizontalHeaderLabels(labels);
             m_pFlapModel->setHeaderData(0, Qt::Horizontal, Qt::AlignCenter, Qt::TextAlignmentRole);
             m_pFlapModel->setHeaderData(1, Qt::Horizontal, Qt::AlignCenter, Qt::TextAlignmentRole);

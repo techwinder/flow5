@@ -42,7 +42,7 @@
 #include <core/displayoptions.h>
 #include <modules/xplane/glview/gl3dxplaneview.h>
 #include <modules/xplane/xplane.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/xflcore.h>
 #include <api/utils.h>
 #include <api/geom_global.h>
@@ -557,7 +557,7 @@ void StabTimeCtrls::setControls()
 
     setMode(m_iCurrentMode);
 
-    strong = DEGCHAR + "/s";
+    strong = DEGch + "/s";
     if(isStabLongitudinal())
     {
         m_plabStab1->setText("<p>u<sub>0</sub>=</p>");

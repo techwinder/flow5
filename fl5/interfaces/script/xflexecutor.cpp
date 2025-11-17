@@ -255,7 +255,8 @@ void XflExecutor::makeWPolarArray(bool bRunAllPlaneAnalyses, QStringList &WPolar
 
                 m_oaWPolar.append(pWPolar);
                 Objects3d::addWPolar(pWPolar);
-                logmsg += "   the analysis "+pWPolar->name()+ " has been added for "+ pWPolar->planeName()+"\n";
+                logmsg += "   the analysis " + QString::fromStdString(pWPolar->name())+
+                          " has been added for " + QString::fromStdString(pWPolar->planeName())+"\n";
             }
             else
             {
@@ -294,7 +295,8 @@ void XflExecutor::makeWPolarArray(bool bRunAllPlaneAnalyses, QStringList &WPolar
 
                     m_oaWPolar.append(pNewWPolar);
                     Objects3d::addWPolar(pNewWPolar);
-                    logmsg += "   the analysis "+pNewWPolar->name()+ " has been added for "+ pPlane->name()+"\n";
+                    logmsg += "   the analysis "+QString::fromStdString(pNewWPolar->name())+
+                              " has been added for "+ QString::fromStdString(pPlane->name())+"\n";
                 }
                 delete pWPolar; // no further use
             }
@@ -308,7 +310,7 @@ void XflExecutor::makeWPolarArray(bool bRunAllPlaneAnalyses, QStringList &WPolar
     for(int i=0; i<m_oaWPolar.size(); i++)
     {
         PlanePolar const *pWPolar = m_oaWPolar.at(i);
-        if(!pWPolar->planeName().length()==0)
+        if(pWPolar->planeName().length()!=0)
         {
             bool bPlane(false);
             for(int ip=0; ip<m_oaPlane.size(); ip++)
@@ -321,7 +323,9 @@ void XflExecutor::makeWPolarArray(bool bRunAllPlaneAnalyses, QStringList &WPolar
             }
             if(!bPlane)
             {
-                logmsg += "   Warning: the polar "+pWPolar->name()+" is associated to plane "+pWPolar->planeName()+" which does not exist\n";
+                logmsg += "   Warning: the polar "+QString::fromStdString(pWPolar->name())+
+                        " is associated to plane "+QString::fromStdString(pWPolar->planeName())+
+                        " which does not exist\n";
             }
         }
     }
@@ -359,7 +363,8 @@ void XflExecutor::makeWPolars(QMap<QString, bool> const&Analyses, QString const 
                 // this WPolar has been defined for a specific plane
                 m_oaWPolar.append(pWPolar);
                 Objects3d::addWPolar(pWPolar);
-                logmsg += "   the analysis "+pWPolar->name()+ " has been added for "+ pWPolar->planeName()+"\n";
+                logmsg += "   the analysis " + QString::fromStdString(pWPolar->name())+
+                          " has been added for "+ QString::fromStdString(pWPolar->planeName())+"\n";
                 Plane const*pPlane = Objects3d::planeAt(pWPolar->planeName());
                 if(pPlane)
                 {
@@ -429,7 +434,8 @@ void XflExecutor::makeWPolars(QMap<QString, bool> const&Analyses, QString const 
 
                     m_oaWPolar.append(pNewWPolar);
                     Objects3d::addWPolar(pNewWPolar);
-                    logmsg += "   the analysis "+pNewWPolar->name()+ " has been added for "+ pPlane->name()+"\n";
+                    logmsg += "   the analysis "+QString::fromStdString(pNewWPolar->name())+
+                              " has been added for "+ QString::fromStdString(pPlane->name())+"\n";
                 }
                 delete pWPolar; // no further use
             }
@@ -668,7 +674,8 @@ void XflExecutor::makePlaneTasks(QString &logmsg)
                         }
                     }
 
-                    logmsg += "   added analysis for ("+pPlane->name()+", "+pWPolar->name()+")\n";
+                    logmsg += "   added analysis for ("+QString::fromStdString(pPlane->name())+
+                            ", "+QString::fromStdString(pWPolar->name())+")\n";
                 }
             }
         }

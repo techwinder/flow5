@@ -34,7 +34,7 @@
 
 #include "planeinertiamodel.h"
 #include <api/planexfl.h>
-#include <core/qunits.h>
+#include <api/units.h>
 
 PlaneInertiaModel::PlaneInertiaModel(PlaneXfl *pPlane, QObject *parent)
     :QAbstractTableModel(parent)

@@ -52,7 +52,7 @@
 #include <api/sailspline.h>
 #include <api/sailstl.h>
 #include <api/sailwing.h>
-#include <core/qunits.h>
+#include <api/units.h>
 
 #include <core/displayoptions.h>
 #include <core/saveoptions.h>
@@ -903,7 +903,7 @@ BoatPolar* XSail::insertNewBtPolar(BoatPolar *pNewPolar, Boat *pCurBoat)
     bExists = false;
     for (int k=0; k<NameList.count(); k++)
     {
-        if(pNewPolar->name()==NameList.at(k))
+        if(pNewPolar->name()==NameList.at(k).toStdString())
         {
             bExists = true;
             break;
@@ -942,7 +942,7 @@ BoatPolar* XSail::insertNewBtPolar(BoatPolar *pNewPolar, Boat *pCurBoat)
         for(int ipb=0; ipb<SailObjects::nBtPolars(); ipb++)
         {
             pOldBtPolar = SailObjects::btPolar(ipb);
-            if(pCurBoat && pOldBtPolar->name()==dlg.newName() && pOldBtPolar->boatName()==pCurBoat->name())
+            if(pCurBoat && pOldBtPolar->name()==dlg.newName().toStdString() && pOldBtPolar->boatName()==pCurBoat->name())
             {
                 pBtPolar = pOldBtPolar;
                 break;
@@ -1091,14 +1091,14 @@ void XSail::renameBtPolar(BoatPolar *pBtPolar, Boat const *pBoat)
     else if(resp==10)
     {
         //the user wants to overwrite an existing name
-        if(dlg.newName()==pBtPolar->name()) return; //what's the point?
+        if(dlg.newName().toStdString()==pBtPolar->name()) return; //what's the point?
 
         // it's a real overwrite
         // so find and delete the existing WPolar with the new name
         for(int ipb=0; ipb<SailObjects::nBtPolars(); ipb++)
         {
             BoatPolar *pOldBtPolar = SailObjects::btPolar(ipb);
-            if(pOldBtPolar->name()==dlg.newName() && pOldBtPolar->boatName()==m_pCurBoat->name())
+            if(pOldBtPolar->name()==dlg.newName().toStdString() && pOldBtPolar->boatName()==m_pCurBoat->name())
             {
                 SailObjects::deleteBtPolar(pOldBtPolar);
                 break;
@@ -1198,7 +1198,7 @@ Boat *XSail::setBoat(QString const &BoatName)
         for(int i=0; i<SailObjects::nBoats(); i++)
         {
             Boat *pBoat = SailObjects::boat(i);
-            if(pBoat->name()==BoatName) setBoat(pBoat);
+            if(pBoat->name()==BoatName.toStdString()) setBoat(pBoat);
         }
     }
     else
@@ -1264,7 +1264,7 @@ BoatPolar *XSail::setBtPolar(QString BPlrName)
         for(int j=0; j<SailObjects::nBtPolars(); j++)
         {
             BoatPolar *pBtPolar = SailObjects::btPolar(j);
-            if(pBtPolar->name()==BPlrName && pBtPolar->boatName()==m_pCurBoat->name())
+            if(pBtPolar->name()==BPlrName.toStdString() && pBtPolar->boatName()==m_pCurBoat->name())
             {
                 return setBtPolar(pBtPolar);
             }
@@ -1519,7 +1519,7 @@ void XSail::renameBoat(Boat *pBoat)
     for (int l=SailObjects::nBtPolars()-1;l>=0; l--)
     {
         BoatPolar *pBtPolar = SailObjects::btPolar(l);
-        if (pBtPolar->boatName() == OldName)
+        if (pBtPolar->boatName() == OldName.toStdString())
         {
             pBtPolar->setBoatName(pBoat->name());
         }
@@ -1527,7 +1527,7 @@ void XSail::renameBoat(Boat *pBoat)
     for (int l=SailObjects::nBtOpps()-1; l>=0; l--)
     {
         BoatOpp *pBtOpp = SailObjects::btOpp(l);
-        if (pBtOpp->boatName() == OldName)
+        if (pBtOpp->boatName() == OldName.toStdString())
         {
             pBtOpp->setBoatName(pBoat->name());
         }
@@ -3243,7 +3243,7 @@ Boat* XSail::setModifiedBoat(Boat *pModBoat)
             for (int k=0; k<SailObjects::nBoats(); k++)
             {
                 pBoat = SailObjects::boat(k);
-                if (pBoat->name() == renDlg.newName())
+                if (pBoat->name() == renDlg.newName().toStdString())
                 {
                     bExists = true;
                     break;

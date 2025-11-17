@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 #include <QDataStream>
 
@@ -601,14 +602,14 @@ double Foil::deRotate()
  */
 bool Foil::exportFoilToDat(std::string &out) const
 {
-    std::string strOut;
+    QString strOut;
 
     out = m_Name +"\n";
 
     for (int i=0; i<nNodes(); i++)
     {
-        strOut = std::format(" {0:11.7f}    {1:11.7f}\n", m_Node.at(i).x, m_Node.at(i).y);
-        out += strOut;
+        strOut = QString::asprintf(" %11.7f    %11.7f\n", m_Node.at(i).x, m_Node.at(i).y);
+        out += strOut.toStdString();
     }
 
     return true;
@@ -1879,72 +1880,72 @@ bool Foil::serializeFl5(QDataStream &ar, bool bIsStoring)
 
 std::string Foil::listCoords(bool bBaseCoords)
 {
-    std::string strCoords = "           x               y\n";
+    QString strCoords = "           x               y\n";
 
     if(bBaseCoords)
     {
         for(int i=0; i<nBaseNodes(); i++)
         {
-            strCoords += std::format(" {:13.5f}   {:13.5f}\n", xb(i), yb(i));
+            strCoords += QString::asprintf(" %13.5f   %13.5f\n", xb(i), yb(i));
         }
     }
     else
     {
         for(int i=0; i<nNodes(); i++)
         {
-            strCoords += std::format(" {:13.5f}   {:13.5f}\n", x(i), y(i));
+            strCoords += QString::asprintf(" %13.5f   %13.5f\n", x(i), y(i));
         }
     }
-    return strCoords;
+    return strCoords.toStdString();
 }
 
 
 std::string Foil::properties(bool bLong) const
 {
-    std::string props;
-    std::string strange;
+    QString props;
+    QString strange;
 
-    if(bLong && m_Description.length()!=0) props +=  m_Description+EOLch;
+    if(bLong && m_Description.length()!=0) props +=  QString::fromStdString(m_Description)+EOLch;
 
-    strange = std::format("Length           = {0:7.3f}\n",   length());
+    strange = QString::asprintf("Length           = %7.3f\n",   length());
     props += strange;
-    strange = std::format("Mid-line angle   = {0:7.3f}",     midLineAngle()) + DEGch + EOLch;
+    strange = QString::asprintf("Mid-line angle   = %7.3f",     midLineAngle()) + DEGch + EOLch;
     props += strange;
 
-    strange = std::format("Thickness        = {0:7.3f}%\n", maxThickness()*100.0);
+    strange = QString::asprintf("Thickness        = %7.3f%%\n", maxThickness()*100.0);
     props += strange;
-    strange = std::format("Max. thick. pos. = {0:7.3f}%\n", xThickness()*100.0);
+    strange = QString::asprintf("Max. thick. pos. = %7.3f%%\n", xThickness()*100.0);
     props += strange;
-    strange = std::format("Camber           = {0:7.3f}%\n", maxCamber()*100.0);
+    strange = QString::asprintf("Camber           = %7.3f%%\n", maxCamber()*100.0);
     props += strange;
-    strange = std::format("Max. camber pos. = {0:7.3f}%\n", xCamber()*100.0);
+    strange = QString::asprintf("Max. camber pos. = %7.3f%%\n", xCamber()*100.0);
     props += strange;
-    strange = std::format("T.E. gap         = {0:7.3f}%\n", TEGap()*100.0);
+    strange = QString::asprintf("T.E. gap         = %7.3f%%\n", TEGap()*100.0);
     props += strange;
 
     if(m_bLEFlap)
     {
         props += "L.E. flap:\n";
-        strange = std::format("   hinge pos. = ({0:g}%, {1:g}%)\n", m_LEXHinge*100.0, m_LEYHinge*100.0);
+        strange = QString::asprintf("   hinge pos. = (%g%%, %g%%)\n", m_LEXHinge*100.0, m_LEYHinge*100.0);
         props += strange;
-        strange = std::format("   flap angle = {0:5.2f}", m_LEFlapAngle) + DEGch + "\n";
+        strange = QString::asprintf("   flap angle = %5.2f", m_LEFlapAngle) + DEGch + "\n";
         props += strange;
     }
 
 
     if(m_bTEFlap)
     {
-        strange = std::format("T.E. flap hinge pos. = ({0:g}%, {1:g}%)\n", m_TEXHinge*100.0, m_TEYHinge*100.0);
+        strange = QString::asprintf("T.E. flap hinge pos. = (%g%%, %g%%)\n", m_TEXHinge*100.0, m_TEYHinge*100.0);
         props += strange;
     }
     else
         props += "No T.E. flap\n";
 
-    strange = std::format("Number of nodes  = {0:d}", nNodes());
+    strange = QString::asprintf("Number of nodes  = %d", nNodes());
     props += strange;
 
 
-    return props;
+    return props.toStdString();
 }
 
 /*

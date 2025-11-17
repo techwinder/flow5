@@ -38,7 +38,7 @@
 #include <interfaces/mesh/panelcheckdlg.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <interfaces/opengl/fl5views/gl3dxflview.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/xflcore.h>
 #include <api/plane.h>
 #include <interfaces/widgets/customdlg/doublevaluedlg.h>

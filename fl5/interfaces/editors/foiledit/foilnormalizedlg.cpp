@@ -133,8 +133,8 @@ void FoilNormalizeDlg::updateProperties()
     strange += QString::asprintf("L.E. position: x=%9f  y=%9f\n", m_pBufferFoil->LE().x, m_pBufferFoil->LE().y);
     strange += QString::asprintf("T.E. position: x=%9f  y=%9f\n", m_pBufferFoil->TE().x, m_pBufferFoil->TE().y);
     strange += QString::asprintf("Foil length       = %f\n", length);
-    strange += QString::asprintf("Camber line angle = %f", angle) + DEGCHAR + EOLCHAR;
-    m_ppto->onAppendQText(strange+EOLCHAR);
+    strange += QString::asprintf("Camber line angle = %f", angle) + DEGch + EOLch;
+    m_ppto->onAppendQText(strange+EOLch);
 }
 
 

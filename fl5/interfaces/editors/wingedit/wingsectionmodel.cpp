@@ -33,7 +33,7 @@
 #include "wingsectionmodel.h"
 
 #include <api/wingxfl.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 
 #include <core/xflcore.h>
@@ -84,10 +84,10 @@ QVariant WingSectionModel::headerData(int section, Qt::Orientation orientation, 
                 return QString("offset ("+str+")");
 
             case 3:
-                return QString("dihedral")+ DEGCHAR;
+                return QString("dihedral")+ DEGch;
 
             case 4:
-                return QString("twist")+ DEGCHAR;
+                return QString("twist")+ DEGch;
 
             case 5:
                 return QString("foil");

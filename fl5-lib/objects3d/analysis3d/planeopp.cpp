@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 #include <api/plane.h>
 #include <api/planestl.h>
@@ -192,9 +193,11 @@ void PlaneOpp::allocateMemory(int panel4ArraySize, int panel3ArraySize)
 }
 
 
-void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std::string &props) const
+void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std::string &properties) const
 {
-    std::string strong, strange;
+    QString props;
+    QString strong, strange;
+    QString lenlab = QUnits::lengthUnitLabel();
 
     Vector3d WindD = objects::windDirection(alpha(), beta());
 //    Vector3d WindN = windNormal(alpha(), beta());
@@ -221,79 +224,79 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
 
     if(m_bOut) props += "Point is out of the flight envelope\n";
 
-    strong = "Mass  = "+ std::format(" {0:9.3f} ", m_Mass*Units::kgtoUnit());
-    props += strong + Units::massUnitLabel() + EOLch;
+    strong = "Mass  = "+ QString::asprintf(" %9.3f ", m_Mass*Units::kgtoUnit());
+    props += strong + QUnits::massUnitLabel() + EOLch;
 
-    strong = "CoG_x = "+ std::format(" {0:9.3f} ", m_CoG.x*Units::mtoUnit());
-    strong += Units::lengthUnitLabel() + EOLch;
+    strong = "CoG_x = "+ QString::asprintf(" %9.3f ", m_CoG.x*Units::mtoUnit());
+    strong += lenlab + EOLch;
     props += strong;
 
-    strong = "CoG_z = "+ std::format(" {0:9.3f} ", m_CoG.z*Units::mtoUnit());
-    strong += Units::lengthUnitLabel() + EOLch;
+    strong = "CoG_z = "+ QString::asprintf(" %9.3f ", m_CoG.z*Units::mtoUnit());
+    strong += lenlab + EOLch;
     props += strong + EOLch;
 
-    strong = "V" + INFch + "    = "+ std::format(" {0:9.3f} ", m_QInf*Units::mstoUnit());
-    props += strong + Units::speedUnitLabel()+"\n";
+    strong = "V" + INFch + "    = "+ QString::asprintf(" %9.3f ", m_QInf*Units::mstoUnit());
+    props += strong + QUnits::speedUnitLabel()+"\n";
 
-    strong = ALPHAch + "     = "+ std::format(" {0:9.3f}", m_Alpha);
+    strong = ALPHAch + "     = "+ QString::asprintf(" %9.3f", m_Alpha);
     props += strong +  DEGch +"\n";
 
     if(fabs(m_Beta)>ANGLEPRECISION)
     {
-        strong = "Beta  = "+ std::format(" {0:9.3f}", m_Beta);
+        strong = "Beta  = "+ QString::asprintf(" %9.3f", m_Beta);
         props += strong + DEGch +"\n";
     }
     props += "\n";
 
     if(isType6() || isType7())
     {
-        strong = "Ctrl  = " +  std::format(" {0:9.3f}", m_Ctrl);
+        strong = "Ctrl  = " +  QString::asprintf(" %9.3f", m_Ctrl);
         props += strong +"\n";
 
     }
     if(isType7())
     {
-        strong  = "XNP          = "+ std::format(" {0:9.3f}", m_SD.XNP*Units::mtoUnit());
-        props += "\n"+strong +" " +Units::lengthUnitLabel()+"\n";
+        strong  = "XNP          = "+ QString::asprintf(" %9.3f", m_SD.XNP*Units::mtoUnit());
+        props += "\n"+strong +" " + lenlab +"\n";
 
-        strong = "Static margin = "+std::format(" {0:9.3f}", (m_SD.XNP-m_CoG.x)/pWPolar->referenceChordLength()*100.0);
+        strong = "Static margin = "+QString::asprintf(" %9.3f", (m_SD.XNP-m_CoG.x)/pWPolar->referenceChordLength()*100.0);
         props += strong + EOLch;
     }
 
-    strong = std::format("CP    = ({0:.3g}; {1:.3g}; {2:.3g}) ",
+    strong = QString::asprintf("CP    = (%.3g; %.3g; %.3g) ",
                          m_AF.centreOfPressure().x*Units::mtoUnit(),
                          m_AF.centreOfPressure().y*Units::mtoUnit(),
                          m_AF.centreOfPressure().z*Units::mtoUnit());
 
-    props += strong +Units::lengthUnitLabel() + EOLch + EOLch;
+    props += strong + lenlab + EOLch + EOLch;
 
-    strong  = "CL  = " +  std::format(" {0:13.7f}", m_AF.CL());
+    strong  = "CL  = " +  QString::asprintf(" %13.7f", m_AF.CL());
     props += strong +"\n";
-    strong  = "CD  = " +  std::format(" {0:13.7f}", m_AF.CD());
+    strong  = "CD  = " +  QString::asprintf(" %13.7f", m_AF.CD());
     props += strong +"\n";
-    strong  = "VCD = " +  std::format(" {0:13.7f}", m_AF.CDv());
+    strong  = "VCD = " +  QString::asprintf(" %13.7f", m_AF.CDv());
     props += strong +"\n";
-    strong  = "ICD = " +  std::format(" {0:13.7f}", m_AF.CDi());
-    props += strong +"\n";
-
-    strong  = "CY  = " +  std::format(" {0:13.7f}", m_AF.Cy());
+    strong  = "ICD = " +  QString::asprintf(" %13.7f", m_AF.CDi());
     props += strong +"\n";
 
-    strong  = "Cl  = " +  std::format(" {0:13.7f}", m_AF.Cli());
+    strong  = "CY  = " +  QString::asprintf(" %13.7f", m_AF.Cy());
     props += strong +"\n";
 
-    strong  = "Cm  = " +  std::format(" {0:13.7f}", m_AF.Cm());
-    props += strong +"\n";
-    strong  = "Cmi = " +  std::format(" {0:13.7f}", m_AF.Cmi());
-    props += strong +"\n";
-    strong  = "Cmv = " +  std::format(" {0:13.7f}", m_AF.Cmv());
+    strong  = "Cl  = " +  QString::asprintf(" %13.7f", m_AF.Cli());
     props += strong +"\n";
 
-    strong  = "Cn  = " +  std::format(" {0:13.7f}", m_AF.Cn());
+    strong  = "Cm  = " +  QString::asprintf(" %13.7f", m_AF.Cm());
     props += strong +"\n";
-    strong  = "Cni = " +  std::format(" {0:13.7f}", m_AF.Cni());
+    strong  = "Cmi = " +  QString::asprintf(" %13.7f", m_AF.Cmi());
     props += strong +"\n";
-    strong  = "Cnv = " +  std::format(" {0:13.7f}", m_AF.Cnv());
+    strong  = "Cmv = " +  QString::asprintf(" %13.7f", m_AF.Cmv());
+    props += strong +"\n";
+
+    strong  = "Cn  = " +  QString::asprintf(" %13.7f", m_AF.Cn());
+    props += strong +"\n";
+    strong  = "Cni = " +  QString::asprintf(" %13.7f", m_AF.Cni());
+    props += strong +"\n";
+    strong  = "Cnv = " +  QString::asprintf(" %13.7f", m_AF.Cnv());
     props += strong +"\n";
 
     props += "\n";
@@ -310,7 +313,7 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
         double mx = m_AF.Mi().x + m_AF.Mv().x;
         fx *= qDyn * Units::NtoUnit();
         mx *= qDyn * Units::NmtoUnit();
-        strong = std::format("   Fx={0:9.3g} {1:s}  Mx ={2:9.3g} {3:s}", fx, Units::forceUnitLabel().c_str(), mx, Units::momentUnitLabel().c_str());
+        strong = QString::asprintf("   Fx=%9.3g %s  Mx =%9.3g %s", fx, Units::forceUnitLabel().c_str(), mx, Units::momentUnitLabel().c_str());
         props += strong + EOLch;
 
         double fy = m_AF.fffy() + drag.y;
@@ -318,7 +321,7 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
         fy *= qDyn * Units::NtoUnit();
         my *= qDyn * Units::NmtoUnit();
 
-        strong = std::format("   Fy={0:9.3g} {1:s}  My ={2:9.3g} {3:s}", fy, Units::forceUnitLabel().c_str(), my, Units::momentUnitLabel().c_str());
+        strong = QString::asprintf("   Fy=%9.3g %s  My =%9.3g %s", fy, Units::forceUnitLabel().c_str(), my, Units::momentUnitLabel().c_str());
         props += strong + EOLch;
 
         double fz = m_AF.fffz() + drag.z;
@@ -326,7 +329,7 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
         fz *= qDyn * Units::NtoUnit();
         mz *= qDyn * Units::NmtoUnit();
 
-        strong = std::format("   Fz={0:9.3g} {1:s}  Mz ={2:9.3g} {3:s}", fz, Units::forceUnitLabel().c_str(), mz, Units::momentUnitLabel().c_str());
+        strong = QString::asprintf("   Fz=%9.3g %s  Mz =%9.3g %s", fz, Units::forceUnitLabel().c_str(), mz, Units::momentUnitLabel().c_str());
         props += strong + "\n\n";
 
         props += "Forces on parts, body axes:\n";
@@ -338,26 +341,26 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
             if(pWing && pWOpp)
             {
                 Vector3d drag = WindD * pWOpp->m_AF.viscousDrag();
-                props += "  " + pWing->name() + ":\n";
+                props += "  " + QString::fromStdString(pWing->name()) + ":\n";
                 double fx = pWOpp->m_AF.fffx() + drag.x;
                 double mx = pWOpp->m_AF.Mi().x + pWOpp->m_AF.Mv().x;
                 fx *= qDyn * Units::NtoUnit();
                 mx *= qDyn * Units::NmtoUnit();
-                strong = std::format("   Fx={0:9.3g} {1:s}  Mx ={2:9.3g} {3:s}", fx, Units::forceUnitLabel().c_str(), mx, Units::momentUnitLabel().c_str());
+                strong = QString::asprintf("   Fx=%9.3g %s  Mx =%9.3g %s", fx, Units::forceUnitLabel().c_str(), mx, Units::momentUnitLabel().c_str());
                 props += strong + EOLch;
 
                 double fy = pWOpp->m_AF.fffy() + drag.y;
                 double my = pWOpp->m_AF.Mi().y + pWOpp->m_AF.Mv().y;
                 fy *= qDyn * Units::NtoUnit();
                 my *= qDyn * Units::NmtoUnit();
-                strong = std::format("   Fy={0:9.3g} {1:s}  My ={2:9.3g} {3:s}", fy, Units::forceUnitLabel().c_str(), my, Units::momentUnitLabel().c_str());
+                strong = QString::asprintf("   Fy=%9.3g %s  My =%9.3g %s", fy, Units::forceUnitLabel().c_str(), my, Units::momentUnitLabel().c_str());
                 props += strong + EOLch;
 
                 double fz = pWOpp->m_AF.fffz() + drag.z;
                 double mz = pWOpp->m_AF.Mi().z + pWOpp->m_AF.Mv().z;
                 fz *= qDyn * Units::NtoUnit();
                 mz *= qDyn * Units::NmtoUnit();
-                strong = std::format("   Fz={0:9.3g} {1:s}  Mz ={2:9.3g} {3:s}", fz, Units::forceUnitLabel().c_str(), mz, Units::momentUnitLabel().c_str());
+                strong = QString::asprintf("   Fz=%9.3g %s  Mz =%9.3g %s", fz, Units::forceUnitLabel().c_str(), mz, Units::momentUnitLabel().c_str());
                 props += strong + EOLch;
             }
         }
@@ -368,26 +371,26 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
 
             Vector3d drag = WindD * m_FuseAF.at(ifuse).viscousDrag();
             Fuse const *pFuse = pPlaneXfl->fuseAt(ifuse);
-            props += "  " + pFuse->name() + ":\n";
+            props += "  " + QString::fromStdString(pFuse->name()) + ":\n";
             double fx = m_FuseAF.at(ifuse).fffx() +drag.x;
             double mx = m_FuseAF.at(ifuse).Mi().x + m_FuseAF.at(ifuse).Mv().x;
             fx *= qDyn * Units::NtoUnit();
             mx *= qDyn * Units::NmtoUnit();
-            strong = std::format("   Fx={0:9.3g} {1:s}  Mx ={2:9.3g} {3:s}", fx, Units::forceUnitLabel().c_str(), mx, Units::momentUnitLabel().c_str());
+            strong = QString::asprintf("   Fx=%9.3g %s  Mx =%9.3g %s", fx, Units::forceUnitLabel().c_str(), mx, Units::momentUnitLabel().c_str());
             props += strong + EOLch;
 
             double fy = m_FuseAF.at(ifuse).fffx() + drag.y;
             double my = m_FuseAF.at(ifuse).Mi().y + m_FuseAF.at(ifuse).Mv().y;
             fy *= qDyn * Units::NtoUnit();
             my *= qDyn * Units::NmtoUnit();
-            strong = std::format("   Fy={0:9.3g} {1:s}  My ={2:9.3g} {3:s}", fy, Units::forceUnitLabel().c_str(), my, Units::momentUnitLabel().c_str());
+            strong = QString::asprintf("   Fy=%9.3g %s  My =%9.3g %s", fy, Units::forceUnitLabel().c_str(), my, Units::momentUnitLabel().c_str());
             props += strong + EOLch;
 
             double fz = m_FuseAF.at(ifuse).fffx() + drag.z;
             double mz = m_FuseAF.at(ifuse).Mi().z + m_FuseAF.at(ifuse).Mv().z;
             fz *= qDyn * Units::NtoUnit();
             mz *= qDyn * Units::NmtoUnit();
-            strong = std::format("   Fz={0:9.3g} {1:s}  Mz ={2:9.3g} {3:s}", fz, Units::forceUnitLabel().c_str(), mz, Units::momentUnitLabel().c_str());
+            strong = QString::asprintf("   Fz=%9.3g %s  Mz =%9.3g %s", fz, Units::forceUnitLabel().c_str(), mz, Units::momentUnitLabel().c_str());
             props += strong + EOLch;
         }
     }
@@ -404,11 +407,11 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
 
         for(uint iwo=0; iwo<m_WingOpp.size(); iwo++)
         {
-            props += "  " + WOpp(iwo).wingName() +"\n";
+            props += "  " + QString::fromStdString(WOpp(iwo).wingName()) +"\n";
             for(int i=0; i<WOpp(iwo).m_nFlaps; i++)
             {
-                strange = std::format("    Flap_{0:d} = {1:8.4f} ", i+1, WOpp(iwo).m_FlapMoment[i]*Units::NmtoUnit());
-                props += strange + Units::momentUnitLabel() + EOLch;
+                strange = QString::asprintf("    Flap_%d = %8.4f ", i+1, WOpp(iwo).m_FlapMoment[i]*Units::NmtoUnit());
+                props += strange + QString::fromStdString(Units::momentUnitLabel()) + EOLch;
             }
         }
     }
@@ -420,24 +423,24 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
     {
         props += "\n";
         props += "Non-dimensional stability derivatives:\n";
-        props += std::format("  CXu = {0:11g}\n", m_SD.CXu);
-        props += std::format("  CZu = {0:11g}\n", m_SD.CZu);
-        props += std::format("  Cmu = {0:11g}\n", m_SD.Cmu);
-        props += std::format("  CXa = {0:11g}\n", m_SD.CXa);
-        props += std::format("  CZa = {0:11g}\n", m_SD.CZa);
-        props += std::format("  Cma = {0:11g}\n", m_SD.Cma);
-        props += std::format("  CXq = {0:11g}\n", m_SD.CXq);
-        props += std::format("  CZq = {0:11g}\n", m_SD.CZq);
-        props += std::format("  Cmq = {0:11g}\n", m_SD.Cmq);
-        props += std::format("  CYb = {0:11g}\n", m_SD.CYb);
-        props += std::format("  Clb = {0:11g}\n", m_SD.Clb);
-        props += std::format("  Cnb = {0:11g}\n", m_SD.Cnb);
-        props += std::format("  CYp = {0:11g}\n", m_SD.CYp);
-        props += std::format("  Clp = {0:11g}\n", m_SD.Clp);
-        props += std::format("  Cnp = {0:11g}\n", m_SD.Cnp);
-        props += std::format("  CYr = {0:11g}\n", m_SD.CYr);
-        props += std::format("  Clr = {0:11g}\n", m_SD.Clr);
-        props += std::format("  Cnr = {0:11g}\n", m_SD.Cnr);
+        props += QString::asprintf("  CXu = %11g\n", m_SD.CXu);
+        props += QString::asprintf("  CZu = %11g\n", m_SD.CZu);
+        props += QString::asprintf("  Cmu = %11g\n", m_SD.Cmu);
+        props += QString::asprintf("  CXa = %11g\n", m_SD.CXa);
+        props += QString::asprintf("  CZa = %11g\n", m_SD.CZa);
+        props += QString::asprintf("  Cma = %11g\n", m_SD.Cma);
+        props += QString::asprintf("  CXq = %11g\n", m_SD.CXq);
+        props += QString::asprintf("  CZq = %11g\n", m_SD.CZq);
+        props += QString::asprintf("  Cmq = %11g\n", m_SD.Cmq);
+        props += QString::asprintf("  CYb = %11g\n", m_SD.CYb);
+        props += QString::asprintf("  Clb = %11g\n", m_SD.Clb);
+        props += QString::asprintf("  Cnb = %11g\n", m_SD.Cnb);
+        props += QString::asprintf("  CYp = %11g\n", m_SD.CYp);
+        props += QString::asprintf("  Clp = %11g\n", m_SD.Clp);
+        props += QString::asprintf("  Cnp = %11g\n", m_SD.Cnp);
+        props += QString::asprintf("  CYr = %11g\n", m_SD.CYr);
+        props += QString::asprintf("  Clr = %11g\n", m_SD.Clr);
+        props += QString::asprintf("  Cnr = %11g\n", m_SD.Cnr);
         props += "\n";
 
         if(m_SD.ControlNames.size())
@@ -445,13 +448,13 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
             props += "Non-dimensional control derivatives:\n";
             for(uint i=0; i<m_SD.ControlNames.size(); i++)
             {
-                props += "  " + m_SD.ControlNames.at(i) + EOLch;
-                props += std::format("    CXd = {0:11g}\n", m_SD.CXe.at(i));
-                props += std::format("    CYd = {0:11g}\n", m_SD.CYe.at(i));
-                props += std::format("    CZd = {0:11g}\n", m_SD.CZe.at(i));
-                props += std::format("    Cld = {0:11g}\n", m_SD.CLe.at(i));
-                props += std::format("    Cmd = {0:11g}\n", m_SD.CMe.at(i));
-                props += std::format("    Cnd = {0:11g}\n", m_SD.CNe.at(i));
+                props += "  " + QString::fromStdString(m_SD.ControlNames.at(i)) + EOLch;
+                props += QString::asprintf("    CXd = %11g\n", m_SD.CXe.at(i));
+                props += QString::asprintf("    CYd = %11g\n", m_SD.CYe.at(i));
+                props += QString::asprintf("    CZd = %11g\n", m_SD.CZe.at(i));
+                props += QString::asprintf("    Cld = %11g\n", m_SD.CLe.at(i));
+                props += QString::asprintf("    Cmd = %11g\n", m_SD.CMe.at(i));
+                props += QString::asprintf("    Cnd = %11g\n", m_SD.CNe.at(i));
             }
         }
 
@@ -468,39 +471,39 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
             c = m_EigenValue[im];
             objects::modeProperties(c, OmegaN, Omega1, Dsi);
 
-            if(c.imag()>=0.0) strange = "  " + LAMBDAch + std::format(" = {0:9.4g} + {1:9.4g}i", c.real(), c.imag());
-            else              strange = "  " + LAMBDAch + std::format(" = {0:9.4g} - {1:9.4g}i", c.real(), qAbs(c.imag()));
+            if(c.imag()>=0.0) strange = "  " + LAMBDAch + QString::asprintf(" = %9.4g + %9.4gi", c.real(), c.imag());
+            else              strange = "  " + LAMBDAch + QString::asprintf(" = %9.4g - %9.4gi", c.real(), qAbs(c.imag()));
             props += strange +"\n";
 
-            strange = std::format("  F (natural)  = {0:9.3f} Hz", OmegaN/2.0/PI);
+            strange = QString::asprintf("  F (natural)  = %9.3f Hz", OmegaN/2.0/PI);
             props += strange +"\n";
 
-            strange = std::format("  F (damped)   = {0:9.3f} Hz", Omega1/2.0/PI);
+            strange = QString::asprintf("  F (damped)   = %9.3f Hz", Omega1/2.0/PI);
             props += strange +"\n";
 
-            strange = "  " + XIch + std::format("            = {0:9.3f} ", Dsi);
+            strange = "  " + XIch + QString::asprintf("            = %9.3f ", Dsi);
             props += strange +"\n";
 
             props += "  Normalized eigenvector:\n";
             angle = m_EigenVector[im][3];
             c = m_EigenVector[im][0]/u0;
-            if(c.imag()>=0.0) strange = std::format("    u/u0          = {0:9.4g} + {1:9.4g}i", c.real(), c.imag());
-            else              strange = std::format("    u/u0          = {0:9.4g} - {1:9.4g}", c.real(), qAbs(c.imag()));
+            if(c.imag()>=0.0) strange = QString::asprintf("    u/u0          = %9.4g + %9.4gi", c.real(), c.imag());
+            else              strange = QString::asprintf("    u/u0          = %9.4g - %9.4g", c.real(), qAbs(c.imag()));
             props += strange +"\n";
 
             c = m_EigenVector[im][1]/u0;
-            if(c.imag()>=0.0) strange = std::format("    w/u0          = {0:9.4g} + {1:9.4g}i",c.real(),c.imag());
-            else              strange = std::format("    w/u0          = {0:9.4g} - {1:9.4g}i",c.real(),qAbs(c.imag()));
+            if(c.imag()>=0.0) strange = QString::asprintf("    w/u0          = %9.4g + %9.4gi",c.real(),c.imag());
+            else              strange = QString::asprintf("    w/u0          = %9.4g - %9.4gi",c.real(),qAbs(c.imag()));
             props += strange +"\n";
 
             c = m_EigenVector[im][2]/(2.0*u0/mac);
-            if(c.imag()>=0.0) strange = std::format("    q/(2.u0.MAC)  = {0:9.4g} + {1:9.4g}i", c.real(), c.imag());
-            else              strange = std::format("    q/(2.u0.MAC)  = {0:9.4g} - {1:9.4g}i", c.real(), qAbs(c.imag()));
+            if(c.imag()>=0.0) strange = QString::asprintf("    q/(2.u0.MAC)  = %9.4g + %9.4gi", c.real(), c.imag());
+            else              strange = QString::asprintf("    q/(2.u0.MAC)  = %9.4g - %9.4gi", c.real(), qAbs(c.imag()));
             props += strange +"\n";
 
             c = m_EigenVector[im][3]/angle;
-            if(c.imag()>=0.0) strange = "    " + THETAch + std::format(" (rad)       = {0:9.4g} + {1:9.4g}i", c.real(), c.imag());
-            else              strange = "    " + THETAch + std::format(" (rad)       = {0:9.4g} - {1:9.4g}i", c.real(), qAbs(c.imag()));
+            if(c.imag()>=0.0) strange = "    " + THETAch + QString::asprintf(" (rad)       = %9.4g + %9.4gi", c.real(), c.imag());
+            else              strange = "    " + THETAch + QString::asprintf(" (rad)       = %9.4g - %9.4gi", c.real(), qAbs(c.imag()));
             props += strange +"\n\n";
         }
 
@@ -510,27 +513,27 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
             c = m_EigenValue[im];
             objects::modeProperties(c, OmegaN, Omega1, Dsi);
 
-            if(c.imag()>=0.0) strange = "  " + LAMBDAch + std::format(" = {0:9.4g} + {1:9.4g}i", c.real(), c.imag());
-            else              strange = "  " + LAMBDAch + std::format(" = {0:9.4g} - {1:9.4g}i", c.real(), qAbs(c.imag()));
+            if(c.imag()>=0.0) strange = "  " + LAMBDAch + QString::asprintf(" = %9.4g + %9.4gi", c.real(), c.imag());
+            else              strange = "  " + LAMBDAch + QString::asprintf(" = %9.4g - %9.4gi", c.real(), qAbs(c.imag()));
             props += strange +"\n";
 
 
-            strange = std::format("  F (natural)  = {0:9.3f} Hz", OmegaN/2.0/PI);
+            strange = QString::asprintf("  F (natural)  = %9.3f Hz", OmegaN/2.0/PI);
             props += strange +"\n";
 
-            strange = std::format("  F (damped)   = {0:9.3f} Hz", Omega1/2.0/PI);
+            strange = QString::asprintf("  F (damped)   = %9.3f Hz", Omega1/2.0/PI);
             props += strange +"\n";
 
-            strange = "  " + XIch + std::format("            = {0:9.3f} ", Dsi);
+            strange = "  " + XIch + QString::asprintf("            = %9.3f ", Dsi);
             props += strange +"\n";
 
             if(fabs(c.real())>PRECISION && fabs(c.imag())<PRECISION)
             {
-                strange = std::format(    "  Time to double = {0:9.3f} s", log(2)/fabs(c.real()));
+                strange = QString::asprintf(    "  Time to double = %9.3f s", log(2)/fabs(c.real()));
                 props += strange +"\n";
                 if(c.real()<0.0)
                 {
-                    strange = std::format("  Time constant  = {0:9.3f}", -1.0/c.real());
+                    strange = QString::asprintf("  Time constant  = %9.3f", -1.0/c.real());
                     props += strange +"\n";
                 }
             }
@@ -540,77 +543,79 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
             angle = m_EigenVector[im][3];
 
             c = m_EigenVector[im][0]/u0;
-            if(c.imag()>=0.0) strange = std::format("    v/u0          = {0:9.4g} + {1:9.4g}i", c.real(), c.imag());
-            else              strange = std::format("    v/u0          = {0:9.4g} - {1:9.4g}",  c.real(), qAbs(c.imag()));
+            if(c.imag()>=0.0) strange = QString::asprintf("    v/u0          = %9.4g + %9.4gi", c.real(), c.imag());
+            else              strange = QString::asprintf("    v/u0          = %9.4g - %9.4g",  c.real(), qAbs(c.imag()));
             props += strange +"\n";
 
             c = m_EigenVector[im][1]/(2.0*u0/span);
-            if(c.imag()>=0.0) strange = std::format("    p/(2.u0.Span) = {0:9.4g} + {1:9.4g}i", c.real(), c.imag());
-            else              strange = std::format("    p/(2.u0.Span) = {0:9.4g} - {1:9.4g}",  c.real(), qAbs(c.imag()));
+            if(c.imag()>=0.0) strange = QString::asprintf("    p/(2.u0.Span) = %9.4g + %9.4gi", c.real(), c.imag());
+            else              strange = QString::asprintf("    p/(2.u0.Span) = %9.4g - %9.4g",  c.real(), qAbs(c.imag()));
             props += strange +"\n";
 
             c = m_EigenVector[im][2]/(2.0*u0/span);
-            if(c.imag()>=0.0) strange = std::format("    r/(2.u0.Span) = {0:9.4g} + {1:9.4g}i", c.real(), c.imag());
-            else              strange = std::format("    r/(2.u0.Span) = {0:9.4g} - {1:9.4g}",  c.real(), qAbs(c.imag()));
+            if(c.imag()>=0.0) strange = QString::asprintf("    r/(2.u0.Span) = %9.4g + %9.4gi", c.real(), c.imag());
+            else              strange = QString::asprintf("    r/(2.u0.Span) = %9.4g - %9.4g",  c.real(), qAbs(c.imag()));
             props += strange +"\n";
 
             c = m_EigenVector[im][3]/angle;
-            if(c.imag()>=0.0) strange = "    " + PHIch + std::format(" (rad)       = {0:9.4g} + {1:9.4g}i", c.real(), c.imag());
-            else              strange = "    " + PHIch + std::format(" (rad)       = {0:9.4g} - {1:9.4g}",  c.real(), qAbs(c.imag()));
+            if(c.imag()>=0.0) strange = "    " + PHIch + QString::asprintf(" (rad)       = %9.4g + %9.4gi", c.real(), c.imag());
+            else              strange = "    " + PHIch + QString::asprintf(" (rad)       = %9.4g - %9.4g",  c.real(), qAbs(c.imag()));
             props += strange +"\n\n";
         }
     }
 
     if(isTriLinearMethod())
     {
-        strange = std::format("Nodes values = {0:d}", int(m_NodeValue.size()));
+        strange = QString::asprintf("Nodes values = %d", int(m_NodeValue.size()));
         props += strange;
     }
     else if(isTriUniformMethod())
     {
-        strange = std::format("Panel values = {0:d}", m_nPanel3);
+        strange = QString::asprintf("Panel values = %d", m_nPanel3);
         props += strange;
     }
     else if(isQuadMethod())
     {
-        strange = std::format("Panel values = {0:d}", m_nPanel4);
+        strange = QString::asprintf("Panel values = %d", m_nPanel4);
         props += strange;
     }
 
     if(m_Vorton.size())
     {
-        strange = std::format("Vortons: {0:d} rows x {0:d} columns", int(m_Vorton.size()), int(m_Vorton.front().size()));
+        strange = QString::asprintf("Vortons: %d rows x %d columns", int(m_Vorton.size()), int(m_Vorton.front().size()));
         props += "\n" + strange;
     }
+
+    properties = props.toStdString();
 }
 
 
 std::string PlaneOpp::name() const
 {
-    std::string strange;
+    QString strange;
 
     if(isType8())
     {
-        strange  = std::format("{0:.2f}", alpha()) + DEGch + " ";
-        strange += std::format("{0:.2f}", beta()) + DEGch + " ";
-        strange += std::format("{0:.2f}", QInf()*Units::mstoUnit()) + " " +Units::speedUnitLabel();
+        strange  = QString::asprintf("%2f", alpha()) + DEGch + " ";
+        strange += QString::asprintf("%2f", beta()) + DEGch + " ";
+        strange += QString::asprintf("%2f", QInf()*Units::mstoUnit()) + " " + QUnits::speedUnitLabel();
     }
-    else if(isType7()) strange = std::format("{0:.3f}", ctrl());
-    else if(isType6()) strange = std::format("{0:.3f}", ctrl());
-    else if(isType5()) strange = std::format("{0:.3f}", beta())  + DEGch;
-    else               strange = std::format("{0:.3f}", alpha()) + DEGch;
+    else if(isType7()) strange = QString::asprintf("%.3f", ctrl());
+    else if(isType6()) strange = QString::asprintf("%.3f", ctrl());
+    else if(isType5()) strange = QString::asprintf("%.3f", beta())  + DEGch;
+    else               strange = QString::asprintf("%.3f", alpha()) + DEGch;
 
-    return strange;
+    return strange.toStdString();
 }
 
 
 std::string PlaneOpp::title(bool bLong) const
 {
-    std::string strange;
+    QString strange;
 
     if(bLong)
     {
-        strange = planeName() + " / ";
+        strange = QString::fromStdString(planeName()) + " / ";
         if     (isLLTMethod())         strange += "LLT";
         else if(isVLM1())              strange += "VLM1";
         else if(isVLM2())              strange += "VLM2";
@@ -621,13 +626,13 @@ std::string PlaneOpp::title(bool bLong) const
         strange +=" / ";
     }
 
-    if(isType7())  strange += std::format("ctrl={0:g}-", ctrl());
+    if(isType7())  strange += QString::asprintf("ctrl=%g-", ctrl());
 
-    strange += std::format("{0:5.2f}", m_Alpha) + DEGch + "_";
-    if(fabs(m_Beta)>ANGLEPRECISION)  strange += std::format("{0:5.2f}", m_Beta) + DEGch + "_";
-    strange += std::format("{0:5.2f}", QInf()*Units::mstoUnit()) + Units::speedUnitLabel();
+    strange += QString::asprintf("%5.2f", m_Alpha) + DEGch + "_";
+    if(fabs(m_Beta)>ANGLEPRECISION)  strange += QString::asprintf("%5.2f", m_Beta) + DEGch + "_";
+    strange += QString::asprintf("%5.2f", QInf()*Units::mstoUnit()) + QUnits::speedUnitLabel();
 
-    return strange;
+    return strange.toStdString();
 }
 
 
@@ -1384,9 +1389,9 @@ void PlaneOpp::buildStateMatrices(int nAVLCtrls)
 }
 
 
-bool PlaneOpp::solveEigenvalues(std::string &log)
+bool PlaneOpp::solveEigenvalues(std::string &logmsg)
 {
-    log.clear();
+    QString log;
 
     std::complex<double> rLong[4];
     std::complex<double> rLat[4];
@@ -1425,7 +1430,7 @@ bool PlaneOpp::solveEigenvalues(std::string &log)
     {
         if(!matrix::eigenVector(m_ALong, rLong[i], vLong+i*4))
         {
-            log += std::format("Error extracting longitudinal eigenvector for mode {0:d}\n", i);
+            log += QString::asprintf("Error extracting longitudinal eigenvector for mode %d\n", i);
             return false;
         }
     }
@@ -1446,7 +1451,7 @@ bool PlaneOpp::solveEigenvalues(std::string &log)
     {
         if(!matrix::eigenVector(m_ALat, rLat[i], vLat+i*4))
         {
-            log += std::format("Error extracting lateral eigenvector for mode {0:d}\n", i);
+            log += QString::asprintf("Error extracting lateral eigenvector for mode %d\n", i);
             return false;
         }
     }
@@ -1460,19 +1465,22 @@ bool PlaneOpp::solveEigenvalues(std::string &log)
         for(int l=0; l<4; l++)  m_EigenVector[i+4][l] = vLat[4*i+l];
 
     }
+
+    logmsg = log.toStdString();
+
     return true;
 }
 
 
-void PlaneOpp::outputEigen(std::string &log)
+void PlaneOpp::outputEigen(std::string &logmsg)
 {
-    log.clear();
+    QString log;
 
-    std::string str;
+    QString str;
     str = "      ___Longitudinal modes___\n\n";
     log += str;
 
-    str = std::format("      Eigenvalue:  {0:9.4g} + {1:9.4g}i   |   {2:9.4g} + {3:9.4g}i   |   {4:9.4g} + {5:9.4g}i   |   {6:9.4g} + {7:9.4g}i\n",
+    str = QString::asprintf("      Eigenvalue:  %9.4g + %9.4gi   |   %9.4g + %9.4gi   |   %9.4g + %9.4gi   |   %9.4g + %9.4gi\n",
             m_EigenValue[0].real(), m_EigenValue[0].imag(),
             m_EigenValue[1].real(), m_EigenValue[1].imag(),
             m_EigenValue[2].real(), m_EigenValue[2].imag(),
@@ -1480,7 +1488,7 @@ void PlaneOpp::outputEigen(std::string &log)
     log += str;
     log += "                    _____________________________________________________________________________________________________\n";
 
-    str = std::format("      Eigenvector: {0:9.4g} + {1:9.4g}i   |   {2:9.4g} + {3:9.4g}i   |   {4:9.4g} + {5:9.4g}i   |   {6:9.4g} + {7:9.4g}i\n",
+    str = QString::asprintf("      Eigenvector: %9.4g + %9.4gi   |   %9.4g + %9.4gi   |   %9.4g + %9.4gi   |   %9.4g + %9.4gi\n",
             m_EigenVector[0][0].real(),  m_EigenVector[0][0].imag(),
             m_EigenVector[1][0].real(),  m_EigenVector[1][0].imag(),
             m_EigenVector[2][0].real(),  m_EigenVector[2][0].imag(),
@@ -1489,7 +1497,7 @@ void PlaneOpp::outputEigen(std::string &log)
 
     for (int i=1; i<4; i++)
     {
-        str = std::format("                   {0:9.4g} + {1:9.4g}i   |   {2:9.4g} + {3:9.4g}i   |   {4:9.4g} + {5:9.4g}i   |   {6:9.4g} + {7:9.4g}i\n",
+        str = QString::asprintf("                   %9.4g + %9.4gi   |   %9.4g + %9.4gi   |   %9.4g + %9.4gi   |   %9.4g + %9.4gi\n",
                 m_EigenVector[0][i].real(),  m_EigenVector[0][i].imag(),
                 m_EigenVector[1][i].real(),  m_EigenVector[1][i].imag(),
                 m_EigenVector[2][i].real(),  m_EigenVector[2][i].imag(),
@@ -1501,7 +1509,7 @@ void PlaneOpp::outputEigen(std::string &log)
     str = "      ___Lateral modes___\n\n";
     log += str;
 
-    str = std::format("      Eigenvalue:  {0:9.4g} + {1:9.4g}i   |   {2:9.4g} + {3:9.4g}i   |   {4:9.4g} + {5:9.4g}i   |   {6:9.4g} + {7:9.4g}i\n",
+    str = QString::asprintf("      Eigenvalue:  %9.4g + %9.4gi   |   %9.4g + %9.4gi   |   %9.4g + %9.4gi   |   %9.4g + %9.4gi\n",
             m_EigenValue[4].real(), m_EigenValue[4].imag(),
             m_EigenValue[5].real(), m_EigenValue[5].imag(),
             m_EigenValue[6].real(), m_EigenValue[6].imag(),
@@ -1509,7 +1517,7 @@ void PlaneOpp::outputEigen(std::string &log)
     log += str;
     log += "                    _____________________________________________________________________________________________________\n";
 
-    str = std::format("      Eigenvector: {0:9.4g} + {1:9.4g}i   |   {2:9.4g} + {3:9.4g}i   |   {4:9.4g} + {5:9.4g}i   |   {6:9.4g} + {7:9.4g}i\n",
+    str = QString::asprintf("      Eigenvector: %9.4g + %9.4gi   |   %9.4g + %9.4gi   |   %9.4g + %9.4gi   |   %9.4g + %9.4gi\n",
             m_EigenVector[4][0].real(),  m_EigenVector[4][0].imag(),
             m_EigenVector[5][0].real(),  m_EigenVector[5][0].imag(),
             m_EigenVector[6][0].real(),  m_EigenVector[6][0].imag(),
@@ -1518,12 +1526,12 @@ void PlaneOpp::outputEigen(std::string &log)
 
     for (int i=1; i<4; i++)
     {
-        str = std::format("                   {0:9.4g} + {1:9.4g}i   |   {2:9.4g} + {3:9.4g}i   |   {4:9.4g} + {5:9.4g}i   |   {6:9.4g} + {7:9.4g}i\n",
+        str = QString::asprintf("                   %9.4g + %9.4gi   |   %9.4g + %9.4gi   |   %9.4g + %9.4gi   |   %9.4g + %9.4gi\n",
                 m_EigenVector[4][i].real(),  m_EigenVector[4][i].imag(),
                 m_EigenVector[5][i].real(),  m_EigenVector[5][i].imag(),
                 m_EigenVector[6][i].real(),  m_EigenVector[6][i].imag(),
                 m_EigenVector[7][i].real(),  m_EigenVector[7][i].imag());
         log += str;
     }
-
+    logmsg = log.toStdString();
 }

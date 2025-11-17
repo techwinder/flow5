@@ -307,7 +307,7 @@ void gl3dSpace::glRenderView()
                      degTo24(galaxy.m_Ra),
                      Qt::darkYellow);
         glRenderText(m_DaLoc.x+0.02f/m_glScalef,m_DaLoc.y+0.02f/m_glScalef,m_DaLoc.z,
-                     QString::asprintf("Da = %g", galaxy.m_Da)+DEGCHAR,
+                     QString::asprintf("Da = %g", galaxy.m_Da)+DEGch,
                      Qt::darkYellow);
     }
 

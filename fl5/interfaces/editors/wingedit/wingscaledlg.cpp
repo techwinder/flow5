@@ -33,7 +33,7 @@
 #include "wingscaledlg.h"
 
 #include <api/wingxfl.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <core/xflcore.h>
@@ -288,7 +288,7 @@ void WingScaleDlg::initDialog(double const &RefSpan, double const &RefChord, dou
     m_plabRefChord->setText(strong);
 
     strong = QString("%1").arg(m_RefSweep,8,'f',2);
-    strong += DEGCHAR;
+    strong += DEGch;
     m_plabRefSweep->setText(strong);
 
     strong = QString("%1").arg(m_RefTwist,8,'f',2);

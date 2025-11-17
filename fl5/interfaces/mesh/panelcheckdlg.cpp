@@ -31,7 +31,7 @@
 #include <QPushButton>
 
 #include "panelcheckdlg.h"
-#include <core/qunits.h>
+#include <api/units.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 

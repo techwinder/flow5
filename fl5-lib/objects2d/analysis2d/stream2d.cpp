@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 #include <algorithm>
 #include <thread>
 
@@ -866,9 +867,8 @@ Foil* Stream2d::makeBlasiusSigma(double alpha, double qinf, double coef, bool bM
     if(bMakeFoil)
     {
         Foil *pFoil = new Foil(&m_Foil);
-        std::string strange;
-        strange = std::format("_{:.2f}", alpha);
-        pFoil->setName("Blasius"+strange+DEGch);
+        QString strange = QString::asprintf("_%2f", alpha);
+        pFoil->setName("Blasius"+(strange+DEGch).toStdString());
             pFoil->setLineStipple(Line::DASH);
         pFoil->setVisible(true);
 

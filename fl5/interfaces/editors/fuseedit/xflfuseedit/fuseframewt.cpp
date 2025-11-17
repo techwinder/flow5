@@ -29,13 +29,15 @@
 #include <QApplication>
 
 #include "fuseframewt.h"
-#include <core/displayoptions.h>
-#include <core/xflcore.h>
 #include <api/frame.h>
-#include <interfaces/view2d/paint2d.h>
 #include <api/fusesections.h>
 #include <api/fusexfl.h>
-#include <core/qunits.h>
+#include <api/units.h>
+
+#include <core/displayoptions.h>
+#include <core/xflcore.h>
+#include <interfaces/view2d/paint2d.h>
+
 
 bool FuseFrameWt::s_bCurFrameOnly = false;
 

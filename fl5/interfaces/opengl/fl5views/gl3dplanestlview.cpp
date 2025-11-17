@@ -36,7 +36,7 @@
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/globals/gl_xfl.h>
 #include <interfaces/opengl/globals/gl_globals.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/geom_global.h>
 #include <api/planestl.h>
 

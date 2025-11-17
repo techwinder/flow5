@@ -59,9 +59,10 @@
 #include <api/sailspline.h>
 #include <api/sailstl.h>
 #include <api/sailwing.h>
+#include <api/units.h>
 
 
-#include <core/qunits.h>
+
 #include <core/saveoptions.h>
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>
@@ -551,7 +552,7 @@ void BoatDlg::customEvent(QEvent *pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent const *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        m_ppto->onAppendStdText(pMsgEvent->msg());
+        m_ppto->onAppendQText(pMsgEvent->msg());
     }
     else
         QDialog::customEvent(pEvent);
@@ -727,7 +728,8 @@ void BoatDlg::onImportHullXML()
 void BoatDlg::onImportHullCAD()
 {
     double dimension=0;
-    std::string logmsg;
+    QString logmsg;
+    std::string strlog;
 
     m_ppto->appendPlainText("Importing CAD file...\n");
 
@@ -740,8 +742,8 @@ void BoatDlg::onImportHullCAD()
 
     pNewHullOcc->setName(fi.baseName().toStdString());
 
-    bool bImport = occ::importCADShapes(filename.toStdString(), pNewHullOcc->shapes(), dimension, logmsg);
-    m_ppto->onAppendStdText(logmsg+"\n");
+    bool bImport = occ::importCADShapes(filename.toStdString(), pNewHullOcc->shapes(), dimension, strlog);
+    m_ppto->onAppendQText(QString::fromStdString(strlog)+"\n");
 
     if(!bImport)
     {
@@ -756,13 +758,14 @@ void BoatDlg::onImportHullCAD()
 
     gmesh::makeFuseTriangulation(pNewHullOcc, logmsg, "   ");
     pNewHullOcc->saveBaseTriangulation();
-    pNewHullOcc->computeSurfaceProperties(logmsg, "   ");
-    m_ppto->onAppendStdText(logmsg+"\n");
+    pNewHullOcc->computeSurfaceProperties(strlog, "   ");
+    logmsg += QString::fromStdString(strlog);
+    m_ppto->onAppendQText(logmsg+"\n");
 
     m_ppto->onAppendStdText("Making default triangular mesh\n");
     logmsg.clear();
-    pNewHullOcc->makeDefaultTriMesh(logmsg, "");
-    m_ppto->onAppendStdText(logmsg+"\n");
+    pNewHullOcc->makeDefaultTriMesh(strlog, "");
+    m_ppto->onAppendStdText(strlog+"\n");
 
     m_pBoat->appendHull(pNewHullOcc);
     fillHullList();
@@ -1171,9 +1174,10 @@ void BoatDlg::onImportSailFromCAD()
 
                     if(bodystitcher.IsDone() && !bodystitcher.Shape().IsNull())
                     {
-                        std::string strange = std::format("Adding FACE {0:d} as a sail\n", ishape+1);
-                        occ::listShapeContent(bodystitcher.Shape(), strange);
-                        m_ppto->onAppendStdText(strange +"\n");
+                        QString strange = QString::asprintf("Adding FACE %d as a sail\n", ishape+1);
+                        std::string str;
+                        occ::listShapeContent(bodystitcher.Shape(), str);
+                        m_ppto->onAppendQText(strange + QString::fromStdString(str) +"\n");
                         
                         SailOcc *pNewSail = new SailOcc;
                         pNewSail->setName(QString::asprintf("Sail %d", ishape+1).toStdString());

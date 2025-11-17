@@ -382,7 +382,7 @@ PlanePolar* Objects3d::insertNewWPolar(PlanePolar *pNewWPolar, Plane const*pCurP
     bExists = false;
     for (int k=0; k<NameList.count(); k++)
     {
-        if(pNewWPolar->name()==NameList.at(k))
+        if(pNewWPolar->name()==NameList.at(k).toStdString())
         {
             bExists = true;
             break;
@@ -409,7 +409,8 @@ PlanePolar* Objects3d::insertNewWPolar(PlanePolar *pNewWPolar, Plane const*pCurP
         for(int ipb=0; ipb<nPolars(); ipb++)
         {
              PlanePolar *pOldWPolar = wPolarAt(ipb);
-            if(pCurPlane && pOldWPolar->name()==dlg.newName() && pOldWPolar->planeName()==pCurPlane->name())
+            if(pCurPlane && pOldWPolar->name()==dlg.newName().toStdString() &&
+               pOldWPolar->planeName()==pCurPlane->name())
             {
                 pWPolar = pOldWPolar;
                 break;
@@ -483,7 +484,7 @@ void Objects3d::renamePlane(QString const &PlaneName)
         for (int l=nPolars()-1;l>=0; l--)
         {
             PlanePolar *pWPolar = wPolarAt(l);
-            if (pWPolar->planeName() == OldName)
+            if (pWPolar->planeName() == OldName.toStdString())
             {
                 pWPolar->setPlaneName(pPlane->name());
             }
@@ -491,7 +492,7 @@ void Objects3d::renamePlane(QString const &PlaneName)
         for (int l=nPOpps()-1;l>=0; l--)
         {
             PlaneOpp *pPOpp = POppAt(l);
-            if (pPOpp->planeName() == OldName)
+            if (pPOpp->planeName() == OldName.toStdString())
             {
                 pPOpp->setPlaneName(pPlane->name());
             }
@@ -515,14 +516,14 @@ void Objects3d::renameWPolar(PlanePolar *pWPolar, Plane const *pPlane)
     else if(resp==10)
     {
         //the user wants to overwrite an existing name
-        if(dlg.newName()==pWPolar->name()) return; //what's the point?
+        if(dlg.newName().toStdString()==pWPolar->name()) return; //what's the point?
 
         // it's a real overwrite
         // so find and delete the existing WPolar with the new name
         for(int ipb=0; ipb<Objects3d::nPolars(); ipb++)
         {
             pOldWPolar = Objects3d::wPolarAt(ipb);
-            if(pOldWPolar->name()==dlg.newName() && pOldWPolar->planeName()==pPlane->name())
+            if(pOldWPolar->name()==dlg.newName().toStdString() && pOldWPolar->planeName()==pPlane->name())
             {
                 Objects3d::deleteWPolar(pOldWPolar);
                 break;
@@ -1053,7 +1054,7 @@ void Objects3d::fillSectionCp3Linear(Boat const *pBoat, BoatOpp const *pBtOpp, i
 
 void Objects3d::makePlaneTriangulation(Plane *pPlane)
 {
-    std::string logmsg;
+    QString logmsg;
     for(int i=0; i<pPlane->nFuse(); i++)
     {
         Fuse *pFuse =  pPlane->fuse(i);
@@ -1065,7 +1066,7 @@ void Objects3d::makePlaneTriangulation(Plane *pPlane)
 
 void Objects3d::makeBoatTriangulation(Boat *pBoat)
 {
-    std::string logmsg;
+    QString logmsg;
     for(int i=0; i<pBoat->nHulls(); i++)
     {
         Fuse *pFuse =  pBoat->hull(i);

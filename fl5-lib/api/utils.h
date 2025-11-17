@@ -34,18 +34,40 @@
 #include <QDataStream>
 
 
-#define ALPHAch      std::string("\u03B1")
-#define BETAch       std::string("\u03B2")
-#define LAMBDAch     std::string("\u03BB")
-#define NUch         std::string("\u03BD")
-#define PHIch        std::string("\u03C6")
-#define RHOch        std::string("\u03C1")
-#define THETAch      std::string("\u03B8")
-#define XIch         std::string("\u03BE")
-#define DEGch        std::string("\u00B0")
-#define INFch        std::string("\u221e")
-#define SQUAREch     std::string("\u00b2")
-#define EOLch        std::string("\n")
+#define ALPHAstr      std::string("\u03B1")
+#define BETAstr       std::string("\u03B2")
+#define LAMBDAstr     std::string("\u03BB")
+#define NUstr         std::string("\u03BD")
+#define PHIstr        std::string("\u03C6")
+#define RHOstr        std::string("\u03C1")
+#define THETAstr      std::string("\u03B8")
+#define XIstr         std::string("\u03BE")
+#define DEGstr        std::string("\u00B0")
+#define INFstr        std::string("\u221e")
+#define SQUAREstr     std::string("\u00b2")
+#define EOLstr        std::string("\n")
+
+#define PIch         QString(QChar(0x03C0))
+#define ALPHAch      QString(QChar(0x03B1))
+#define BETAch       QString(QChar(0x03B2))
+#define GAMMAch      QString(QChar(0x03B3))
+#define DELTAch      QString(QChar(0x03B4))
+#define DELTACAPch   QString(QChar(0x0394)) // Capital
+#define ZETAch       QString(QChar(0x03B6))
+#define LAMBDAch     QString(QChar(0x03BB))
+#define NUch         QString(QChar(0x03BD))
+#define PHIch        QString(QChar(0x03C6))
+#define RHOch        QString(QChar(0x03C1))
+#define SIGMAch      QString(QChar(0x03C3))
+#define THETAch      QString(QChar(0x03B8))
+#define XIch         QString(QChar(0x03BE))
+#define TAUch        QString(QChar(0x03C4))
+#define DEGch        QString(QChar(0x00B0))
+#define INFch        QString(QChar(0x221e))
+#define TIMESch      QString(QChar(0x00d7))
+#define SQUAREch     QString(QChar(0x00b2))
+#define EOLch        QString("\n")
+
 
 #include <api/fl5lib_global.h>
 #include <api/fl5color.h>

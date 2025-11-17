@@ -37,7 +37,7 @@
 #include <api/nurbssurface.h>
 #include <api/sail.h>
 #include <api/sailnurbs.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/boatedit/sailsectionview.h>
@@ -421,11 +421,11 @@ void SailNurbsDlg::updateSailSectionOutput()
     QString info, props;
 
     info = QString::asprintf("Leading angle  = %7.2f", pNS->leadingAngle(m_iActiveSection));
-    props = info + DEGCHAR + ("\n");
+    props = info + DEGch + ("\n");
 
 
     info = QString::asprintf("Trailing angle = %7.2f", pNS->trailingAngle(m_iActiveSection));
-    props += info + DEGCHAR;
+    props += info + DEGch;
 
     m_p2dSectionView->setOutputInfo(props);
 }
@@ -465,7 +465,7 @@ void SailNurbsDlg::makeTables()
     m_pSectionModel->setRowCount(3);//temporary
     m_pSectionModel->setColumnCount(3);
     m_pSectionModel->setHeaderData(0, Qt::Horizontal, "z ("+QUnits::lengthUnitLabel()+")");
-    m_pSectionModel->setHeaderData(1, Qt::Horizontal, "angle (" + DEGCHAR + ")");
+    m_pSectionModel->setHeaderData(1, Qt::Horizontal, "angle (" + DEGch + ")");
     m_pSectionModel->setHeaderData(2, Qt::Horizontal, "Actions");
     m_pSectionModel->setActionColumn(2);
     m_pcptSections->setModel(m_pSectionModel);

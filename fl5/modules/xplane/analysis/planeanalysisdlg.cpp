@@ -197,7 +197,7 @@ void PlaneAnalysisDlg::customEvent(QEvent *pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent const *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        m_ppto->onAppendStdText(pMsgEvent->msg());
+        m_ppto->onAppendQText(pMsgEvent->msg());
 
         if(m_pActiveTask && (m_pActiveTask->wPolar()->isType6() || m_pActiveTask->wPolar()->isType7()))
         {
@@ -365,7 +365,7 @@ PlaneTask* PlaneAnalysisDlg::analyze(Plane *pPlane, PlanePolar *pWPolar, std::ve
     m_ppto->clear();
     m_plabTaskInfo->clear();
 
-    onOutputMessage(QString::fromStdString(fl5::versionName(true)) + EOLCHAR);
+    onOutputMessage(QString::fromStdString(fl5::versionName(true)) + EOLch);
 
     QDateTime dt = QDateTime::currentDateTime();
     QString str = dt.toString();

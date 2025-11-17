@@ -39,7 +39,7 @@
 #include <api/fusexfl.h>
 #include <api/xmlfusewriter.h>
 
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/saveoptions.h>
 #include <interfaces/editors/fuseedit/bodyscaledlg.h>
 #include <interfaces/editors/fuseedit/bodytransdlg.h>

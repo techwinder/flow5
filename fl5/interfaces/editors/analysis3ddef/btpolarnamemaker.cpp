@@ -25,10 +25,11 @@
 
 
 #include "btpolarnamemaker.h"
-#include <core/qunits.h>
+
 #include <api/boatpolar.h>
 #include <api/boat.h>
 #include <api/sail.h>
+#include <api/units.h>
 
 
 bool BtPolarNameMaker::s_bMethod=true;

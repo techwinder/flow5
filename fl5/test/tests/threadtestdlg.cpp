@@ -110,7 +110,7 @@ void ThreadTestDlg::customEvent(QEvent *pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent const*pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        m_ppto->onAppendStdText("Received event: " + pMsgEvent->msg()+"\n");
+        m_ppto->onAppendQText("Received event: " + pMsgEvent->msg()+"\n");
     }
     else
         QDialog::customEvent(pEvent);
@@ -198,7 +198,7 @@ void ThreadTestDlg::producer()
         std::this_thread::sleep_for(std::chrono::milliseconds(100));   // simulate some pause between productions
         produced.a++;
         produced.b = cos(1.7964394*double(produced.a));
-        produced.txt = std::format("prod[{:d}]. = {:g}", produced.a, produced.b);
+        produced.txt = QString::asprintf("prod[%d]. = %g", produced.a, produced.b).toStdString();
 
         // Access the Q under the lock:
         std::unique_lock<std::mutex> lck(mtx);
@@ -236,7 +236,7 @@ void ThreadTestDlg::consumer()
 //    std::cout << "exiting consumer" << std::endl;
 
 
-    MessageEvent *pMsgEvent = new MessageEvent("Done consuming\n");
+    MessageEvent *pMsgEvent = new MessageEvent(QString("Done consuming\n"));
     qApp->postEvent(this, pMsgEvent);
 }
 
@@ -258,7 +258,7 @@ void ThreadTestDlg::runComm()
     std::thread p(&ThreadTestDlg::producer, this);
 //    std::thread c(&ThreadTestDlg::consumer, this); // no need - consume in this thread instead
 
-    MessageEvent *pMsgEvent = new MessageEvent("All threads started\n"); // notify the UI thread
+    MessageEvent *pMsgEvent = new MessageEvent(QString("All threads started\n")); // notify the UI thread
     qApp->postEvent(this, pMsgEvent);
 
     while(m_Prod.a<MAX_PROD)
@@ -275,13 +275,13 @@ void ThreadTestDlg::runComm()
         std::this_thread::sleep_for(std::chrono::milliseconds(200));    // simulate some calculation
     }
 
-    pMsgEvent = new MessageEvent("Joining threads....\n");
+    pMsgEvent = new MessageEvent(QString("Joining threads....\n"));
     qApp->postEvent(this, pMsgEvent);
 
     p.join();
 //    c.join();
 
-    pMsgEvent = new MessageEvent(" --- > joined\n");
+    pMsgEvent = new MessageEvent(QString(" --- > joined\n"));
     qApp->postEvent(this, pMsgEvent);
 }
 

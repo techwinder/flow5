@@ -34,10 +34,11 @@
 #include <QMessageBox>
 
 #include "t6polardlg.h"
-#include <api/planexfl.h>
-#include <core/qunits.h>
-#include <api/utils.h>
+
 #include <api/planepolar.h>
+#include <api/planexfl.h>
+#include <api/units.h>
+#include <api/utils.h>
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/analysis3ddef/extradragwt.h>
@@ -113,7 +114,7 @@ void T6PolarDlg::fillOppRangePage()
 
 
     ind = m_pOppRangeControlModel->index(0, 0, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, "V"+INFCHAR);
+    m_pOppRangeControlModel->setData(ind, "V"+INFch);
     ind = m_pOppRangeControlModel->index(0, 1, QModelIndex());
     m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(0).ctrlMin()*Units::mstoUnit());
     ind = m_pOppRangeControlModel->index(0, 2, QModelIndex());
@@ -122,31 +123,31 @@ void T6PolarDlg::fillOppRangePage()
     m_pOppRangeControlModel->setData(ind, QUnits::speedUnitLabel());
 
     ind = m_pOppRangeControlModel->index(1, 0, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, ALPHACHAR);
+    m_pOppRangeControlModel->setData(ind, ALPHAch);
     ind = m_pOppRangeControlModel->index(1, 1, QModelIndex());
     m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(1).ctrlMin());
     ind = m_pOppRangeControlModel->index(1, 2, QModelIndex());
     m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(1).ctrlMax());
     ind = m_pOppRangeControlModel->index(1, 3, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, DEGCHAR);
+    m_pOppRangeControlModel->setData(ind, DEGch);
 
     ind = m_pOppRangeControlModel->index(2, 0, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, BETACHAR);
+    m_pOppRangeControlModel->setData(ind, BETAch);
     ind = m_pOppRangeControlModel->index(2, 1, QModelIndex());
     m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(2).ctrlMin());
     ind = m_pOppRangeControlModel->index(2, 2, QModelIndex());
     m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(2).ctrlMax());
     ind = m_pOppRangeControlModel->index(2, 3, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, DEGCHAR);
+    m_pOppRangeControlModel->setData(ind, DEGch);
 
     ind = m_pOppRangeControlModel->index(3, 0, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, PHICHAR);
+    m_pOppRangeControlModel->setData(ind, PHIch);
     ind = m_pOppRangeControlModel->index(3, 1, QModelIndex());
     m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(3).ctrlMin());
     ind = m_pOppRangeControlModel->index(3, 2, QModelIndex());
     m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(3).ctrlMax());
     ind = m_pOppRangeControlModel->index(3, 3, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, DEGCHAR);
+    m_pOppRangeControlModel->setData(ind, DEGch);
 }
 
 
@@ -693,7 +694,7 @@ void T6PolarDlg::fillAngleControlList()
 
     m_pAngleControlModel->setRowCount(s_WPolar.nAngleRangeCtrls());//temporary
     QString  strong;
-    QString strdeg = DEGCHAR;
+    QString strdeg = DEGch;
     QModelIndex ind;
 
     int nctrls = 0;

@@ -24,7 +24,8 @@
 
 #define _MATH_DEFINES_DEFINED
 
-#include <format>
+#include <QString>
+
 
 #include <QDataStream>
 #include <QString>

@@ -74,7 +74,7 @@ void FoilSVGWriter::writeFoil(Foil const *pFoil)
         writeAttribute("width",   QString::asprintf("%dpt", int(w)));
         writeAttribute("height",  QString::asprintf("%dpt", int (h)));
         writeAttribute("viewbox", QString::asprintf("%d %d %d %d", 0, 0,int(w), int(h)));
-        writeTextElement("title", pFoil->name());
+        writeTextElement("title", QString::fromStdString(pFoil->name()));
 
         QString strange, str;
 

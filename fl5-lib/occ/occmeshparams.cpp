@@ -23,7 +23,8 @@
 *****************************************************************************/
 
 
-#include <format>
+#include <QString>
+
 
 #include <QDataStream>
 
@@ -50,22 +51,22 @@ void OccMeshParams::setDefaults()
 std::string OccMeshParams::listParams(std::string const &prefix)
 {
     std::string list;
-    std::string strange;
+    QString strange;
     if(m_bLinDefAbs)
     {
-        strange = std::format("Absolute lin. defl. = {0:.3f}", m_LinDeflectionAbs*Units::mtoUnit());
-        strange += Units::lengthUnitLabel() + "\n";
+        strange = QString::asprintf("Absolute lin. defl. = %.3f", m_LinDeflectionAbs*Units::mtoUnit());
+        strange += QUnits::lengthUnitLabel() + "\n";
     }
     else
     {
-        strange = std::format("Relative lin. defl. = {0:.1f}", m_LinDeflectionRel*100.0);
+        strange = QString::asprintf("Relative lin. defl. = %.1f", m_LinDeflectionRel*100.0);
         strange += DEGch + "\n";
     }
-    list += prefix + strange;
+    list += prefix + strange.toStdString();
 
-    strange = std::format("Angular deviation = {0:.1f}", m_AngularDeviation);
+    strange = QString::asprintf("Angular deviation = %.1f", m_AngularDeviation);
     strange+= DEGch+"\n";
-    list += prefix + strange;
+    list += prefix + strange.toStdString();
 
     return list;
 }

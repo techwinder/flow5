@@ -52,7 +52,7 @@ class FL5LIB_EXPORT FuseStl : public Fuse
 
         bool serializePartFl5(QDataStream &ar, bool bIsStoring) override;
 
-        void computeSurfaceProperties(std::string &logmsg, const std::string &prefix) override;
+        void computeSurfaceProperties(std::string &msg, const std::string &prefx) override;
         void computeWettedArea() override ;
 
         int makeDefaultTriMesh(std::string &logmsg, const std::string &prefix) override;

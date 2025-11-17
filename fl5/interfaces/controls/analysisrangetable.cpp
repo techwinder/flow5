@@ -81,7 +81,7 @@ AnalysisRangeTable::AnalysisRangeTable(QWidget *pParent) : CPTableView(pParent)
     m_pRangeModel->setHeaderData(0, Qt::Horizontal, QString());
     m_pRangeModel->setHeaderData(1, Qt::Horizontal, "Min.");
     m_pRangeModel->setHeaderData(2, Qt::Horizontal, "Max.");
-    m_pRangeModel->setHeaderData(3, Qt::Horizontal, DELTACAPCHAR);
+    m_pRangeModel->setHeaderData(3, Qt::Horizontal, DELTACAPch);
     setModel(m_pRangeModel);
 
     m_pRangeDelegate = new XflDelegate(this);

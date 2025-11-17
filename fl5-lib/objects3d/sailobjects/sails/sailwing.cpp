@@ -763,19 +763,19 @@ void SailWing::properties(std::string &props, const std::string &frontspacer, bo
     {
         props += frontspacer + "   Wing type sail\n";
     }
-    strange = std::format("   Luff length    = {0:7.3g}", luffLength()*Units::mtoUnit());
+    strange = QString::asprintf("   Luff length    = %7.3g", luffLength()*Units::mtoUnit());
     props += frontspacer + strange + strlength+ EOLChar;
-    strange = std::format("   Leech length   = {0:7.3g}", leechLength()*Units::mtoUnit());
+    strange = QString::asprintf("   Leech length   = %7.3g", leechLength()*Units::mtoUnit());
     props += frontspacer + strange + strlength+ EOLChar;
-    strange = std::format("   Foot length    = {0:7.3g}", footLength()*Units::mtoUnit());
+    strange = QString::asprintf("   Foot length    = %7.3g", footLength()*Units::mtoUnit());
     props += frontspacer + strange + strlength+ EOLChar;
-    strange = std::format("   Area           = {0:7.3g}",  area()*Units::m2toUnit());
+    strange = QString::asprintf("   Area           = %7.3g",  area()*Units::m2toUnit());
     props += frontspacer + strange + strarea+ EOLChar;
-    strange = std::format("   Aspect ratio   = {0:7.3g}", aspectRatio());
+    strange = QString::asprintf("   Aspect ratio   = %7.3g", aspectRatio());
     props += frontspacer + strange + "\n";
-    strange = std::format("   Top twist      = {0:7.3g}", twist());
+    strange = QString::asprintf("   Top twist      = %7.3g", twist());
     props += frontspacer + strange + DEGChar+ EOLChar;
-    strange = std::format("   Triangle count = {0:d}", m_RefTriangles.size());
+    strange = QString::asprintf("   Triangle count = %d", m_RefTriangles.size());
     props += frontspacer + strange;
 }*/
 

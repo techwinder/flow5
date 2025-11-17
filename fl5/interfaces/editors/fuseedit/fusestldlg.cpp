@@ -35,7 +35,7 @@
 #include "fusestldlg.h"
 
 #include <core/saveoptions.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/geom_global.h>
 #include <interfaces/editors/inertia/partinertiadlg.h>
 #include <api/fusestl.h>

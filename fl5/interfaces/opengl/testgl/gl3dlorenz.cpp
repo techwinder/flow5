@@ -104,9 +104,9 @@ gl3dLorenz::gl3dLorenz(QWidget *pParent) : gl3dTestGLView (pParent)
                     m_plbStyle  = new LineBtn(s_ls);
                     connect(m_plbStyle, SIGNAL(clickedLB(LineStyle)), SLOT(onLineStyle(LineStyle)));
 
-                    QLabel *pLabSigma     = new QLabel(SIGMACHAR+"=");
-                    QLabel *pLabRho       = new QLabel(RHOCHAR+"=");
-                    QLabel *pLabBeta      = new QLabel(BETACHAR+"=");
+                    QLabel *pLabSigma     = new QLabel(SIGMAch+"=");
+                    QLabel *pLabRho       = new QLabel(RHOch+"=");
+                    QLabel *pLabBeta      = new QLabel(BETAch+"=");
                     QLabel *pLabX0        = new QLabel("X<sub>0</sub>=");
                     QLabel *pLabY0        = new QLabel("Y<sub>0</sub>=");
                     QLabel *pLabZ0        = new QLabel("Z<sub>0</sub>=");

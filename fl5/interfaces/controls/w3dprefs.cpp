@@ -34,21 +34,21 @@
 #include <QColorDialog>
 #include <QPushButton>
 
+#include <api/fl5color.h>
+#include <api/sail.h>
+#include <api/units.h>
+#include <core/displayoptions.h>
+#include <core/xflcore.h>
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/controls/arcball.h>
 #include <interfaces/opengl/controls/colourlegend.h>
 #include <interfaces/opengl/views/gl3dview.h>
-#include <core/displayoptions.h>
-#include <core/xflcore.h>
-#include <core/qunits.h>
-#include <api/fl5color.h>
-#include <interfaces/widgets/color/colorgraddlg.h>
 #include <interfaces/widgets/color/colorbtn.h>
+#include <interfaces/widgets/color/colorgraddlg.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/line/linebtn.h>
 #include <interfaces/widgets/line/linemenu.h>
-#include <api/sail.h>
 
 bool W3dPrefs::s_bSaveViewPoints(true);
 bool W3dPrefs::s_bShowRefLength(false);

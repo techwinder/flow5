@@ -28,7 +28,7 @@
 #include <QGroupBox>
 
 #include <options/unitswt.h>
-#include <core/qunits.h>
+#include <api/units.h>
 
 
 UnitsWt::UnitsWt(QWidget *parent): QWidget(parent)

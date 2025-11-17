@@ -23,7 +23,8 @@
 *****************************************************************************/
 
 #pragma once
-#include <string>
+
+#include <QString>
 
 #include <api/fl5lib_global.h>
 
@@ -35,7 +36,7 @@ class PolarNameMaker
 
     public:
         PolarNameMaker(Polar *pPolar);
-        static std::string makeName(const Polar *pPolar);
+        static QString makeName(const Polar *pPolar);
 
     private:
         Polar *m_pPolar;

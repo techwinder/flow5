@@ -48,7 +48,7 @@ class FL5LIB_EXPORT QuadMesh : public XflMesh
 
         void meshInfo(std::string &info) const override;
         void cleanMesh(std::string &logmsg) override;
-        void getMeshInfo(std::string &log) const override;
+        void getMeshInfo(std::string &logmsg) const override;
         void getLastTrailingPoint(Vector3d &pt) const override;
 
         void rotate(double alpha, double beta, double phi) override;

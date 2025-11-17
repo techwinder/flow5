@@ -43,9 +43,9 @@ XmlXSailWriter::XmlXSailWriter(QFile &XFile) : XflXmlWriter(XFile)
 void XmlXSailWriter::writeMetaData(Sail const*pSail, Vector3d const &position)
 {
     double lengthunit = Units::mtoUnit();
-    writeTextElement("Name", pSail->name());
+    writeTextElement("Name", QString::fromStdString(pSail->name()));
     writeTheStyle(pSail->theStyle());
-    writeTextElement("Description", pSail->description());
+    writeTextElement("Description", QString::fromStdString(pSail->description()));
     writeComment(QString("The following field defines the sail's position relative to the boat"));
     writeTextElement("Position",QString("%1, %2, %3").arg(position.x*lengthunit, 11,'g',5)
                                                      .arg(position.y*lengthunit, 11,'g',5)
@@ -64,8 +64,8 @@ void XmlXSailWriter::writeNURBSSail(SailNurbs const *pNSail, Vector3d const &pos
 
         writeTextElement("x_panels", QString("%1").arg(pNSail->nXPanels()));
         writeTextElement("z_panels", QString("%1").arg(pNSail->nZPanels()));
-        writeTextElement("x_panel_distribution", xfl::distributionType(pNSail->xDistType()));
-        writeTextElement("z_panel_distribution", xfl::distributionType(pNSail->zDistType()));
+        writeTextElement("x_panel_distribution", QString::fromStdString(xfl::distributionType(pNSail->xDistType())));
+        writeTextElement("z_panel_distribution", QString::fromStdString(xfl::distributionType(pNSail->zDistType())));
 
         std::vector<int> dummyarray(pNSail->frameCount());
 
@@ -94,10 +94,10 @@ void XmlXSailWriter::writeSplineSail(const SailSpline *pSSail, Vector3d const &p
 
         writeComment(QString("The two following fields define the number of mesh panels in the horizontal and vertical directions"));
         writeTextElement("x_panels", QString ("%1").arg(pSSail->nXPanels()));
-        writeTextElement("x_panel_distribution", xfl::distributionType(pSSail->xDistType()));
+        writeTextElement("x_panel_distribution", QString::fromStdString(xfl::distributionType(pSSail->xDistType())));
 
         writeTextElement("z_panels", QString ("%1").arg(pSSail->nZPanels()));
-        writeTextElement("z_panel_distribution", xfl::distributionType(pSSail->zDistType()));
+        writeTextElement("z_panel_distribution", QString::fromStdString(xfl::distributionType(pSSail->zDistType())));
 
         for(int iSection=0; iSection<pSSail->sectionCount(); iSection++)
         {
@@ -148,13 +148,13 @@ void XmlXSailWriter::writeWingSail(const SailWing *pWSail, Vector3d const &posit
                                                                   .arg(pWSail->sectionPosition(iSection).z*lengthunit, 11,'g',5));
                 writeTextElement("Ry", QString ("%1").arg(pWSail->sectionAngle(iSection)));
 
-                writeTextElement("FoilName", QString("%1").arg(sec.foilName()));
-                writeTextElement("Chord",    QString("%1").arg(sec.chord()));
-                writeTextElement("Twist",    QString("%1").arg(sec.twist()));
-                writeTextElement("NXpanels", QString("%1").arg(sec.nxPanels()));
-                writeTextElement("NZpanels", QString("%1").arg(sec.nzPanels()));
-                writeTextElement("x_panel_distribution", xfl::distributionType(sec.xDistType()));
-                writeTextElement("z_panel_distribution", xfl::distributionType(sec.zDistType()));
+                writeTextElement("FoilName", QString::asprintf("%s", sec.foilName().c_str()));
+                writeTextElement("Chord",    QString::asprintf("%g", sec.chord()));
+                writeTextElement("Twist",    QString::asprintf("%g", sec.twist()));
+                writeTextElement("NXpanels", QString::asprintf("%d", sec.nxPanels()));
+                writeTextElement("NZpanels", QString::asprintf("%d", sec.nzPanels()));
+                writeTextElement("x_panel_distribution", QString::fromStdString(xfl::distributionType(sec.xDistType())));
+                writeTextElement("z_panel_distribution", QString::fromStdString(xfl::distributionType(sec.zDistType())));
             }
             writeEndElement();
         }

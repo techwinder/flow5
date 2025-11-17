@@ -31,7 +31,7 @@
 #include <QLabel>
 
 #include "aerodatadlg.h"
-#include <core/qunits.h>
+#include <api/units.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 
 // International Standard Atmosphere

@@ -44,7 +44,7 @@
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <interfaces/opengl/fl5views/gl3dplanexflview.h>
 #include <core/saveoptions.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/objects3d.h>
 #include <api/planexfl.h>
 #include <interfaces/widgets/customdlg/stringvaluedlg.h>
@@ -550,7 +550,7 @@ void PlaneXflInertiaDlg::onExportToAVL()
                  .arg(0.0,10, 'g', 3)
                  .arg(pWing->Ixz_s()/Iunit,10, 'g', 3)
                  .arg(0.0,10, 'g', 3);
-        strong += pWing->name();
+        strong += QString::fromStdString(pWing->name());
         out << strong+"\n";
 
     }
@@ -587,7 +587,7 @@ void PlaneXflInertiaDlg::onExportToAVL()
                      .arg(m_pPlaneXfl->pointMassAt(i).position().x/Lunit, 10, 'g', 3)
                      .arg(m_pPlaneXfl->pointMassAt(i).position().y/Lunit, 10, 'g', 3)
                      .arg(m_pPlaneXfl->pointMassAt(i).position().z/Lunit, 10, 'g', 3);
-            strong += " ! " + m_pPlaneXfl->pointMassAt(i).tag();
+            strong += " ! " + QString::fromStdString(m_pPlaneXfl->pointMassAt(i).tag());
             out << strong+"\n";
         }
     }
@@ -611,7 +611,7 @@ void PlaneXflInertiaDlg::onExportToAVL()
                              .arg((pWing->pointMassAt(i).position().y+T.y)/Lunit, 10, 'g', 3)
                              .arg((pWing->pointMassAt(i).position().z+T.z)/Lunit, 10, 'g', 3);
 
-                    strong += " ! " + pWing->pointMassAt(i).tag();
+                    strong += " ! " + QString::fromStdString(pWing->pointMassAt(i).tag());
                     out << strong+"\n";
                 }
             }
@@ -632,7 +632,7 @@ void PlaneXflInertiaDlg::onExportToAVL()
                          .arg((pFuse->pointMassAt(i).position().x+T.x)/Lunit, 10, 'g', 3)
                          .arg((pFuse->pointMassAt(i).position().y+T.y)/Lunit, 10, 'g', 3)
                          .arg((pFuse->pointMassAt(i).position().z+T.z)/Lunit, 10, 'g', 3);
-                strong += " ! " + pFuse->pointMassAt(i).tag();
+                strong += " ! " + QString::fromStdString(pFuse->pointMassAt(i).tag());
                 out << strong+"\n";
             }
         }

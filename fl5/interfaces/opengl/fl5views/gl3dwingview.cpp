@@ -37,7 +37,7 @@
 #include <api/surface.h>
 #include <api/wingxfl.h>
 #include <api/panel3.h>
-#include <core/qunits.h>
+#include <api/units.h>
 
 
 gl3dWingView::gl3dWingView(QWidget *pParent) : gl3dXflView(pParent)

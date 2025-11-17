@@ -26,7 +26,8 @@
 
 #include <iostream>
 #include <thread>
-#include <format>
+#include <QString>
+
 
 #include <api/panelanalysis.h>
 
@@ -118,17 +119,17 @@ bool PanelAnalysis::allocateMatrix(int N)
     }
     catch(std::bad_alloc &exception)
     {
-        std::string strong(exception.what());
+        QString strong(exception.what());
         strong += ": error allocating memory for the influence matrix\n";
-        strong += std::format("Request for {0:7.2f} Mb failed\n", gb);
-        traceStdLog(strong);
+        strong += QString::asprintf("Request for %7.2f Mb failed\n", gb);
+        traceLog(strong);
         return false;
     }
     catch(...)
     {
-        std::string strong("Undetermined error during memory allocation for the influence matrix\n");
-        strong += std::format("Request for {0:7.2f} Mb failed\n", gb);
-        traceStdLog(strong);
+        QString strong("Undetermined error during memory allocation for the influence matrix\n");
+        strong += QString::asprintf("Request for %7.2f Mb failed\n", gb);
+        traceLog(strong);
         return false;
     }
 
@@ -137,6 +138,10 @@ bool PanelAnalysis::allocateMatrix(int N)
     return true;
 }
 
+void PanelAnalysis::traceLog(QString const &str) const
+{
+    traceStdLog(str.toStdString());
+}
 
 void PanelAnalysis::traceStdLog(std::string const &str) const
 {

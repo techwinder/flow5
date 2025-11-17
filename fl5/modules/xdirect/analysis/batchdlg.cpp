@@ -118,7 +118,7 @@ void BatchDlg::makeCommonWts()
                         QHBoxLayout *pRangeSpecLayout = new QHBoxLayout;
                         {
                             QLabel *plabSpec = new QLabel("Specify:");
-                            m_prbAlpha = new QRadioButton(ALPHACHAR);
+                            m_prbAlpha = new QRadioButton(ALPHAch);
                             m_prbCl = new QRadioButton("Cl");
                             pRangeSpecLayout->addWidget(plabSpec);
                             pRangeSpecLayout->addWidget(m_prbAlpha);
@@ -238,16 +238,16 @@ void BatchDlg::customEvent(QEvent * pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent const *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        m_ppto->onAppendStdText(pMsgEvent->msg());
+        m_ppto->onAppendQText(pMsgEvent->msg());
     }
     else if(pEvent->type() == XFOIL_TASK_END_EVENT)
     {
         XFoilTaskEvent *pXFEvent = static_cast<XFoilTaskEvent *>(pEvent);
         m_nTaskDone++; //one down, more to go
+        QString strong = QString::asprintf("%3d/%3d/%3d  ", m_nTaskStarted, m_nTaskDone, m_nAnalysis);
         std::string str = "   ...Finished "+ pXFEvent->task()->foil()->name()+" / "+ pXFEvent->task()->polar()->name()+"\n";
-        std::string strong = std::format("{:3d}/{:3d}/{:3d}  ", m_nTaskStarted, m_nTaskDone, m_nAnalysis);
 
-        m_ppto->onAppendStdText(strong + str);
+        m_ppto->onAppendQText(strong + QString::fromStdString(str));
 
         if(s_bUpdatePolarView)
         {
@@ -482,7 +482,7 @@ void BatchDlg::onUpdatePolarView()
 
 void BatchDlg::batchLaunch()
 {
-    std::string strong;
+    QString strong;
 
     std::vector<std::thread> threads;
 
@@ -539,8 +539,8 @@ void BatchDlg::batchLaunch()
         //launch it
         m_nTaskStarted++;
 
-        strong = std::format("{:3d}/{:3d}/{:3d}  ", m_nTaskStarted, m_nTaskDone, m_nAnalysis);
-        strong += "Starting "+ analysis.pFoil->name()+'/'+analysis.pPolar->name() + "\n";
+        strong = QString::asprintf("%3d/%3d/%3d  ", m_nTaskStarted, m_nTaskDone, m_nAnalysis);
+        strong += QString::fromStdString("Starting "+ analysis.pFoil->name()+'/'+analysis.pPolar->name() + "\n");
         qApp->postEvent(this, new MessageEvent(strong));
         threads.push_back(std::thread(&XFoilTask::run, pXFoilTask));
     }
@@ -566,7 +566,7 @@ void BatchDlg::batchLaunch()
             }
             else
                 bAllFinished = false;
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+//            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
     while(!bAllFinished);

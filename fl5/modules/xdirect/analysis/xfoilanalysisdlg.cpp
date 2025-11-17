@@ -281,7 +281,7 @@ void XFoilAnalysisDlg::customEvent(QEvent * pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent const *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        m_ppto->onAppendStdText(pMsgEvent->msg());
+        m_ppto->onAppendQText(pMsgEvent->msg());
     }
     else if(pEvent->type() == XFOIL_TASK_END_EVENT)
     {

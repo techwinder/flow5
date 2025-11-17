@@ -111,7 +111,7 @@ class FL5LIB_EXPORT FuseXfl : public Fuse
         virtual int makeShape(std::string &log);
         void makeBodySplineShape(std::string &logmsg);
         void makeBodySplineShape_old(std::string &logmsg);
-        void makeBodyFlatPanelShape_with2Triangles(std::string &tracelog);
+        void makeBodyFlatPanelShape_with2Triangles(std::string &logmsg);
         void makeBodyFlatPanelShape_withSpline(std::string &tracelog);
 
 
@@ -158,7 +158,7 @@ class FL5LIB_EXPORT FuseXfl : public Fuse
         std::vector<Panel4> const &quadPanels() const {return m_Panel4;}
         Panel4 const &panel4(int idx) const {return m_Panel4.at(idx);}
 
-        void computeSurfaceProperties(std::string &logmsg, std::string const &prefix) override;
+        void computeSurfaceProperties(std::string &msg, std::string const &prefx) override;
 
 
         bool serializePartXFL(QDataStream &ar, bool bIsStoring, int format);

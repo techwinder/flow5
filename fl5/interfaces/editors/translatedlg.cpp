@@ -28,7 +28,7 @@
 
 #include "translatedlg.h"
 #include <interfaces/widgets/customwts/floatedit.h>
-#include <core/qunits.h>
+#include <api/units.h>
 
 QByteArray TranslateDlg::s_WindowGeometry;
 

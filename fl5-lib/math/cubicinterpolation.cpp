@@ -24,7 +24,8 @@
 
 #include <cstring>
 #include <iostream>
-#include <format>
+#include <QString>
+
 
 #include <api/cubicinterpolation.h>
 
@@ -401,7 +402,7 @@ void testCubicInterpolation()
     for(int i=0; i<N; i++)
     {
         float t=c3.x_().front()+ (c3.x_().back()-c3.x_().front())*float(i)/float(N-1);
-        std::cout << std::format("  {:13.7g}  {:13.7g}", t, c3.splineValue(t))<<std::endl;
+        std::cout << QString::asprintf("  %13.7g  %13.7g", t, c3.splineValue(t)).toStdString()<<std::endl;
     }
 }
 
@@ -429,7 +430,7 @@ void testRecipe()
         float t = X[0] + float(i)/float(N-1) * (X[n-1]-X[0]);
 
         float y = c3Recipe(X, Y, y2a, n, t);
-        std::cout << std::format("  {:13.5g}  {:13.7g}", t, y);
+        std::cout << QString::asprintf("  %13.5g  %13.7g", t, y).toStdString();
     }
 
     delete [] y2a;

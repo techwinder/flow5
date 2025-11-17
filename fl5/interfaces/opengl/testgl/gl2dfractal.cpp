@@ -127,7 +127,7 @@ gl2dFractal::gl2dFractal(QWidget *pParent) : gl2dView(pParent)
             QHBoxLayout *pWidthLayout = new QHBoxLayout;
             {
                 QLabel *plabImgWidth = new QLabel("Image size=");
-                QLabel *plabTimes = new QLabel(TIMESCHAR);
+                QLabel *plabTimes = new QLabel(TIMESch);
                 QLabel *plabPixel = new QLabel("pixels");
                 pWidthLayout->addWidget(plabImgWidth);
                 pWidthLayout->addWidget(m_pieWidth);

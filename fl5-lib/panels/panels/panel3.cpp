@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 #include <api/panel3.h>
 
@@ -430,44 +431,44 @@ void Panel3::rotate(Vector3d const &HA, Vector3d const &Axis, double angle)
 
 std::string Panel3::properties(bool bLong) const
 {
-    std::string props, strange;
+    QString props, strange;
 
-    props = std::format("Triangular Panel {0:d}\n", m_index);
+    props = QString::asprintf("Triangular Panel %d\n", m_index);
 
     if(m_bNullTriangle) props +="   ***** NULL triangle *****\n";
 
 
     for(int in=0; in<3; in++)
     {
-        strange = std::format("  Node({0:4d}) = ({1:9.3f}, {2:9.3f}, {3:9.3f}) ", m_S[in].index(),
+        strange = QString::asprintf("  Node(%4d) = (%9.3f, %9.3f, %9.3f) ", m_S[in].index(),
                                     round(m_S[in].x*Units::mtoUnit()*1000.0)/1000.0,
                                     round(m_S[in].y*Units::mtoUnit()*1000.0)/1000.0,
                                     round(m_S[in].z*Units::mtoUnit()*1000.0)/1000.0);
-        strange += Units::lengthUnitLabel() + "\n";
+        strange += QUnits::lengthUnitLabel() + "\n";
         props += strange;
     }
 
-    strange = std::format("  Normal  = ({0:9.3f}, {1:9.3f}, {2:9.3f})\n", m_Normal.x, m_Normal.y, m_Normal.z);
+    strange = QString::asprintf("  Normal  = (%9.3f, %9.3f, %9.3f)\n", m_Normal.x, m_Normal.y, m_Normal.z);
     props += strange;
 
-    strange = std::format("  CoG     = ({0:9.3f}, {1:9.3f}, {2:9.3f}) ",
+    strange = QString::asprintf("  CoG     = (%9.3f, %9.3f, %9.3f) ",
                                 round(m_CoG_g.x*Units::mtoUnit()*1000.0)/1000.0,
                                 round(m_CoG_g.y*Units::mtoUnit()*1000.0)/1000.0,
                                 round(m_CoG_g.z*Units::mtoUnit()*1000.0)/1000.0);
-    strange += Units::lengthUnitLabel() + "\n";
+    strange += QUnits::lengthUnitLabel() + "\n";
     props += strange;
 
-    strange = std::format("  Area    = {0:.5g} ", m_SignedArea*Units::m2toUnit());
-    props += strange + Units::areaUnitLabel() + "\n";
+    strange = QString::asprintf("  Area    = %.5g ", m_SignedArea*Units::m2toUnit());
+    props += strange + QUnits::areaUnitLabel() + "\n";
 
-    strange = std::format("  Angles  = ({0:5.1f}, {1:5.1f}, {2:5.1f}) ", m_Angle[0], m_Angle[1], m_Angle[2]);
+    strange = QString::asprintf("  Angles  = (%5.1f, %5.1f, %5.1f) ", m_Angle[0], m_Angle[1], m_Angle[2]);
     props += strange + DEGch + "\n";
 
-    strange = std::format("  Edges   = ({0:9.3f}, {1:9.3f}, {2:9.3f}) ",
+    strange = QString::asprintf("  Edges   = (%9.3f, %9.3f, %9.3f) ",
                                 round(edge(0).length()*Units::mtoUnit()*1000.0)/1000.0,
                                 round(edge(1).length()*Units::mtoUnit()*1000.0)/1000.0,
                                 round(edge(2).length()*Units::mtoUnit()*1000.0)/1000.0);
-    strange += Units::lengthUnitLabel();
+    strange += QUnits::lengthUnitLabel();
     props += strange;
 
     if(isSkinny())
@@ -476,10 +477,10 @@ std::string Panel3::properties(bool bLong) const
         double q=0,r=0,e=0;
         q = qualityFactor(r,e);
         props += "  Triangle is skinny:\n";
-        strange = std::format("    quality factor = {0:7g} > {1:7g}\n", q, s_Quality);
+        strange = QString::asprintf("    quality factor = %7g > %7g\n", q, s_Quality);
         props += strange;
-        strange = std::format("    circumradius   = {0:7g} ", r*Units::mtoUnit());
-        strange += Units::lengthUnitLabel();
+        strange = QString::asprintf("    circumradius   = %7g ", r*Units::mtoUnit());
+        strange += QUnits::lengthUnitLabel();
         props += strange;
     }
 
@@ -497,12 +498,12 @@ std::string Panel3::properties(bool bLong) const
     }
     props += strange;
 
-    strange = std::format("  Vertex indexes:  {0:4d}  {1:4d}  {2:4d}\n", m_S[0].index(), m_S[1].index(), m_S[2].index());
+    strange = QString::asprintf("  Vertex indexes:  %4d  %4d  %4d\n", m_S[0].index(), m_S[1].index(), m_S[2].index());
     props += strange;
 
-    strange = std::format("  Neighbours:      {0:4d}  {1:4d}  {2:4d}\n", m_Neighbour[0], m_Neighbour[1], m_Neighbour[2]);
+    strange = QString::asprintf("  Neighbours:      %4d  %4d  %4d\n", m_Neighbour[0], m_Neighbour[1], m_Neighbour[2]);
     props += strange;
-    strange = std::format("                   PU={0:d}  PD={1:d}  PL={2:d}  PR={3:d}\n", m_iPU, m_iPD, m_iPL, m_iPR);
+    strange = QString::asprintf("                   PU=%d  PD=%d  PL=%d  PR=%d\n", m_iPU, m_iPD, m_iPL, m_iPR);
     props += strange;
 
     if(isPositiveOrientation()) props += "  Positive orientation";
@@ -512,9 +513,9 @@ std::string Panel3::properties(bool bLong) const
     {
         props += "\n";
         props += "  Panel is trailing:\n";
-        strange = std::format("    Downstream wake panel  index = {0:d}\n", m_iWake);
+        strange = QString::asprintf("    Downstream wake panel  index = %d\n", m_iWake);
         props += strange;
-        strange = std::format("    Downstream wake column index = {0:d}", m_iWakeColumn);
+        strange = QString::asprintf("    Downstream wake column index = %d", m_iWakeColumn);
         props += strange;
     }
     else if (isLeading())
@@ -525,21 +526,21 @@ std::string Panel3::properties(bool bLong) const
     if(m_bIsTrailing)
     {
         props +="\n";
-        strange = std::format("  Opposite index = {0:d}", m_iOppositeIndex);
+        strange = QString::asprintf("  Opposite index = %d", m_iOppositeIndex);
         props += strange;
     }
 
-    if(!bLong) return props;
+    if(!bLong) return props.toStdString();
 
     props += "\n  Local frame:\n";
-    strange = std::format("    l      = ({0:7.2f}, {1:7.2f}, {2:7.2f})\n", m_l.x, m_l.y, m_l.z);
+    strange = QString::asprintf("    l      = (%7.2f, %7.2f, %7.2f)\n", m_l.x, m_l.y, m_l.z);
     props += strange;
-    strange = std::format("    m      = ({:7.2f}, {:7.2f}, {:7.2f})\n", m_m.x, m_m.y, m_m.z);
+    strange = QString::asprintf("    m      = (%7.2f, %7.2f, %7.2f)\n", m_m.x, m_m.y, m_m.z);
     props += strange;
-    strange = std::format("    Normal = ({:7.2f}, {:7.2f}, {:7.2f})", m_Normal.x, m_Normal.y, m_Normal.z);
+    strange = QString::asprintf("    Normal = (%7.2f, %7.2f, %7.2f)", m_Normal.x, m_Normal.y, m_Normal.z);
     props += strange;
 
-    return props;
+    return props.toStdString();
 }
 
 

@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 #include <QDataStream>
 
@@ -104,14 +105,17 @@ void Sail::duplicate(Sail const*pSail)
 }
 
 
-void Sail::properties(std::string &props, const std::string &frontspacer, bool bFull) const
+void Sail::properties(std::string &properties, const std::string &prefix, bool bFull) const
 {
-    std::string strlength = Units::lengthUnitLabel();
-    std::string strarea = Units::areaUnitLabel();
-    std::string strange;
+    QString strlength = QUnits::lengthUnitLabel();
+    QString strarea = QUnits::areaUnitLabel();
+    QString strange;
+
+    QString props;
+    QString frontspacer = QString::fromStdString(prefix);
 
     props.clear();
-    props += frontspacer + m_Name + EOLch;
+    props += frontspacer + QString::fromStdString(m_Name) + EOLch;
     if(bFull)
     {
         if     (isNURBSSail())  props += frontspacer + "   NURBS type sail\n";
@@ -120,20 +124,22 @@ void Sail::properties(std::string &props, const std::string &frontspacer, bool b
         else if(isStlSail())    props += frontspacer + "   STL type sail\n";
         else if(isOccSail())    props += frontspacer + "   CAD type sail\n";
     }
-    strange = std::format("   Luff length    = {0:7.3g}", luffLength()*Units::mtoUnit());
+    strange = QString::asprintf("   Luff length    = %7.3g", luffLength()*Units::mtoUnit());
     props += frontspacer + strange + strlength+ EOLch;
-    strange = std::format("   Leech length   = {0:7.3g}", leechLength()*Units::mtoUnit());
+    strange = QString::asprintf("   Leech length   = %7.3g", leechLength()*Units::mtoUnit());
     props += frontspacer + strange + strlength+ EOLch;
-    strange = std::format("   Foot length    = {0:7.3g}", footLength()*Units::mtoUnit());
+    strange = QString::asprintf("   Foot length    = %7.3g", footLength()*Units::mtoUnit());
     props += frontspacer + strange + strlength+ EOLch;
-    strange = std::format("   Area           = {0:7.3g}",  area()*Units::m2toUnit());
+    strange = QString::asprintf("   Area           = %7.3g",  area()*Units::m2toUnit());
     props += frontspacer + strange + strarea+ EOLch;
-    strange = std::format("   Aspect ratio   = {0:7.3g}", aspectRatio());
+    strange = QString::asprintf("   Aspect ratio   = %7.3g", aspectRatio());
     props += frontspacer + strange + "\n";
-    strange = std::format("   Top twist      = {0:7.3g}", twist());
+    strange = QString::asprintf("   Top twist      = %7.3g", twist());
     props += frontspacer + strange + DEGch+ EOLch;
-    strange = std::format("   Triangle count = {0:d}", m_RefTriangles.size());
+    strange = QString::asprintf("   Triangle count = %d", int(m_RefTriangles.size()));
     props += frontspacer + strange;
+
+    properties = props.toStdString();
 }
 
 

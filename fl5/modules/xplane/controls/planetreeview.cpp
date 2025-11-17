@@ -34,7 +34,7 @@
 #include <modules/xplane/controls/analysis3dctrls.h>
 #include <modules/xplane/menus/xplanemenus.h>
 
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/xflcore.h>
 #include <api/objects3d.h>
 #include <api/objects_global.h>

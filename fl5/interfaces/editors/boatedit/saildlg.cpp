@@ -51,7 +51,8 @@
 #include <api/sail.h>
 #include <api/sailnurbs.h>
 #include <api/trimesh.h>
-#include <core/qunits.h>
+#include <api/units.h>
+
 
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
@@ -974,7 +975,7 @@ m_pSail->makeTriPanels(Vector3d());*/
     else if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        m_ppto->onAppendStdText(pMsgEvent->msg());
+        m_ppto->onAppendQText(pMsgEvent->msg());
     }
     else
         QDialog::customEvent(pEvent);

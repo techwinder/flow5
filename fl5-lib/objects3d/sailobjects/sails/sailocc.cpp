@@ -154,7 +154,7 @@ bool SailOcc::serializeSailFl5(QDataStream &ar, bool bIsStoring)
             }
             catch(...)
             {
-                qDebug()<<"Error converting Rrep for CAD sail " + m_Name;
+                qDebug()<< "Error converting Rrep for CAD sail " + QString::fromStdString(m_Name);
                 return false;
             }
 
@@ -200,54 +200,58 @@ void SailOcc::makeTriangulation(int , int )
 }
 
 
-void SailOcc::properties(std::string &props, const std::string &frontspacer, bool bFull) const
+void SailOcc::properties(std::string &properties, const std::string &prefx, bool bFull) const
 {
-    std::string strlength = Units::lengthUnitLabel();
-    std::string strarea = Units::areaUnitLabel();
-    std::string strange;
+    QString props;
+    QString frontspacer = QString::fromStdString(prefx);
+    QString strlength = QUnits::lengthUnitLabel();
+    QString strarea = QUnits::areaUnitLabel();
+    QString strange;
     Vector3d foot = m_Clew-m_Tack;
     Vector3d gaff = m_Peak-m_Head;
     double bottwist = atan2(foot.y, foot.x)*180.0/PI;
     double toptwist = atan2(gaff.y, gaff.x)*180.0/PI;
 
     props.clear();
-    props += frontspacer + m_Name +"\n";
+    props += frontspacer + QString::fromStdString(m_Name) +"\n";
     if(bFull)
     {
         props += frontspacer + "   CAD type sail\n";
     }
-    strange = std::format("   Luff length    = {0:7.3g}", luffLength()*Units::mtoUnit());
+    strange = QString::asprintf("   Luff length    = %7.3g", luffLength()*Units::mtoUnit());
     props += frontspacer + strange + strlength+ EOLch;
-    strange = std::format("   Leech length   = {0:7.3g}", leechLength()*Units::mtoUnit());
+    strange = QString::asprintf("   Leech length   = %7.3g", leechLength()*Units::mtoUnit());
     props += frontspacer + strange + strlength+ EOLch;
-    strange = std::format("   Foot length    = {0:7.3g}", footLength()*Units::mtoUnit());
+    strange = QString::asprintf("   Foot length    = %7.3g", footLength()*Units::mtoUnit());
     props += frontspacer + strange + strlength+ EOLch;
-    strange = std::format("   Wetted area    = {0:7.3g} ", m_WettedArea*Units::m2toUnit());
+    strange = QString::asprintf("   Wetted area    = %7.3g ", m_WettedArea*Units::m2toUnit());
     props += frontspacer + strange + strarea+"\n";
-    strange = std::format("   Head twist     = {0:7.3g} ", toptwist);
+    strange = QString::asprintf("   Head twist     = %7.3g ", toptwist);
     props += frontspacer + strange+ DEGch + "\n";
-    strange = std::format("   Foot twist     = {0:7.3g} ", bottwist);
+    strange = QString::asprintf("   Foot twist     = %7.3g ", bottwist);
     props += frontspacer + strange+ DEGch + "\n";
-    strange = std::format("   Aspect ratio   = {0:7.3g} ", aspectRatio());
+    strange = QString::asprintf("   Aspect ratio   = %7.3g ", aspectRatio());
     props += frontspacer + strange + "\n";
-    strange = std::format("   Triangle count = {0:d}", int(m_RefTriangles.size()));
+    strange = QString::asprintf("   Triangle count = %d", int(m_RefTriangles.size()));
     props += frontspacer + strange + "\n";
 
     if(m_Shape.Size()<=1)
-        strange = std::format("   Sail is made of {0:d} shape", m_Shape.Size());
+        strange = QString::asprintf("   Sail is made of %d shape", m_Shape.Size());
     else
-        strange = std::format("   Sail is made of {0:d} shapes", m_Shape.Size());
+        strange = QString::asprintf("   Sail is made of %d shapes", m_Shape.Size());
 
     props += frontspacer+strange;
     if(bFull)
     {
         props +="\n";
+        std::string str;
         for(TopTools_ListIteratorOfListOfShape shapeit(m_Shape); shapeit.More(); shapeit.Next())
         {
-            occ::listShapeContent(shapeit.Value(), strange, frontspacer);
-            props += frontspacer+strange;
+            occ::listShapeContent(shapeit.Value(), str, prefx);
+            props += frontspacer+QString::fromStdString(str);
         }
     }
+    properties = props.toStdString();
 }
 
 

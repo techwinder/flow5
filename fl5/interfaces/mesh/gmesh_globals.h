@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include <string>
+#include <QString>
 
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Face.hxx>
@@ -50,11 +50,11 @@ namespace gmesh
     std::string getNumberOption(std::string name);
     std::string getStringOption(std::string name);
 
-    void listModelEntities(std::string &list);
-    void listModel(std::string &list);
+    void listModelEntities(QString &list);
+    void listModel(QString &list);
 
-    void convertFromGmsh(std::vector<Triangle3d> &triangles, std::string &log);
-    void convertTriangles(std::vector<std::size_t>const&elementTags, std::vector<Vector3d> const &node, std::vector<Triangle3d> &m_Triangles, std::string &log);
+    void convertFromGmsh(std::vector<Triangle3d> &triangles, QString &log);
+    void convertTriangles(std::vector<std::size_t>const&elementTags, std::vector<Vector3d> const &node, std::vector<Triangle3d> &m_Triangles, QString &log);
     void makeModelCurves(std::vector<std::vector<Vector3d> > &curves);
     void makeModelVertices(std::vector<Vector3d>&vertices);
     bool getVertex(int tag, Vector3d &vertex);
@@ -72,7 +72,7 @@ namespace gmesh
     double wettedArea();
 
 
-    bool wingToBRep(WingXfl const*pWing, std::string &brep, std::string &log);
+    bool wingToBRep(WingXfl const*pWing, std::string &brep, QString &log);
     bool fuseNurbsToBRep(FuseNurbs const*pFuse, std::string &brep, std::string &log);
     bool fuseQuadsToBRep(FuseFlatFaces const*pFuse, std::string &brep, std::string &log);
 
@@ -82,12 +82,12 @@ namespace gmesh
 
     bool intersectBrep(const std::string &brep, const std::vector<Node> &A, const std::vector<Node> &B, std::vector<Vector3d> &I, std::vector<bool> &bIntersect);
 
-    void tessellateBRep(const std::string &BRep, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log);
-    void tessellateShape(TopoDS_Shape const&Shape, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log);
-    void tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log);
+    void tessellateBRep(const std::string &BRep, GmshParams const &params, std::vector<Triangle3d> &triangles, QString &log);
+    void tessellateShape(TopoDS_Shape const&Shape, GmshParams const &params, std::vector<Triangle3d> &triangles, QString &log);
+    void tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std::vector<Triangle3d> &triangles, QString &log);
 
     void makeSailOccTriangulation(SailOcc *pSailOcc);
-    int makeFuseTriangulation(Fuse *pFuse, std::string &logmsg, const std::string &prefix="");
+    int makeFuseTriangulation(Fuse *pFuse, QString &logmsg, const QString &prefix="");
 
     std::string tempFile();
 }

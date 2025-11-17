@@ -35,7 +35,7 @@
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <api/wingxfl.h>
 #include <api/sail.h>
-#include <core/qunits.h>
+#include <api/units.h>
 
 SailScaleDlg::SailScaleDlg(QWidget *pParent) : QDialog(pParent)
 {

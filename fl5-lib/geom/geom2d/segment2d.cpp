@@ -23,7 +23,8 @@
 *****************************************************************************/
 
 
-#include <format>
+#include <QString>
+
 
 #include <api/segment2d.h>
 #include <api/triangle2d.h>
@@ -107,28 +108,29 @@ std::vector<Segment2d> Segment2d::split() const
 }
 
 
-std::string Segment2d::properties(bool bLong, std::string prefix) const
+std::string Segment2d::properties(bool bLong, std::string prefx) const
 {
-    std::string props, strong;
-    strong = std::format("V0 = ( {0:7g}, {1:7g} )\n", m_Vtx0.x, m_Vtx0.y);
+    QString prefix = QString::fromStdString(prefx);
+    QString props, strong;
+    strong = QString::asprintf("V0 = ( %7g, %7g )\n", m_Vtx0.x, m_Vtx0.y);
     props = prefix.append(strong);
-    strong = std::format("V1 = ( {0:7g}, {1:7g} )\n", m_Vtx1.x, m_Vtx1.y);
+    strong = QString::asprintf("V1 = ( %7g, %7g )\n", m_Vtx1.x, m_Vtx1.y);
     props.append(prefix).append(strong); // check append order!
 
-    if(!bLong) return props;
+    if(!bLong) return props.toStdString();
 
     props += "\n";
 
-    strong = std::format("CoG = ( {0:9g}, {1:9g} )\n", midPoint().x, midPoint().y);
+    strong = QString::asprintf("CoG = ( %9g, %9g )\n", midPoint().x, midPoint().y);
     props.append(prefix).append(strong); // check append order!
 
-    strong = std::format("U   = (){0:9g}, {1:9g})\n", unitDir().x, unitDir().y);
+    strong = QString::asprintf("U   = ()%9g, %9g)\n", unitDir().x, unitDir().y);
     props.append(prefix).append(strong); // check append order!
 
-    strong = std::format("Length = {0:g}", length());
+    strong = QString::asprintf("Length = %g", length());
     props.append(prefix).append(strong); // check append order!
 
-    return props;
+    return props.toStdString();
 }
 
 

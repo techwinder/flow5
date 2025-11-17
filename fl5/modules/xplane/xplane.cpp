@@ -151,7 +151,7 @@
 #include <api/mctriangle.h>
 #include <api/panel3.h>
 #include <api/panel4.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 #include <interfaces/mesh/gmesh_globals.h>
 
@@ -304,7 +304,7 @@ XPlane::XPlane(MainFrame *pMainFrame) : QObject()
     m_StabPlrGraph.at(0)->setCurveModel(m_StabPlrCurveModel.back());
     m_StabPlrGraph.at(0)->setGraphType(GRAPH::STABPOLARGRAPH);
     m_StabPlrGraph.at(0)->setXVariableList({"Real"});
-    m_StabPlrGraph.at(0)->setYVariableList({"Imag/2"+PICHAR});
+    m_StabPlrGraph.at(0)->setYVariableList({"Imag/2"+PIch});
     m_StabPlrGraph.at(0)->setXMin( 0.0);
     m_StabPlrGraph.at(0)->setXMax( 0.1);
     m_StabPlrGraph.at(0)->setYMin(0, -0.01);
@@ -321,7 +321,7 @@ XPlane::XPlane(MainFrame *pMainFrame) : QObject()
     m_StabPlrGraph.at(1)->setCurveModel(m_StabPlrCurveModel.back());
     m_StabPlrGraph.at(1)->setGraphType(GRAPH::STABPOLARGRAPH);
     m_StabPlrGraph.at(1)->setXVariableList({"Real"});
-    m_StabPlrGraph.at(1)->setYVariableList({"Imag/2"+PICHAR});
+    m_StabPlrGraph.at(1)->setYVariableList({"Imag/2"+PIch});
     m_StabPlrGraph.at(1)->setXMin( 0.0);
     m_StabPlrGraph.at(1)->setXMax( 0.1);
     m_StabPlrGraph.at(1)->setYMin(0, -0.01);
@@ -1786,19 +1786,19 @@ void XPlane::resetPrefs()
 
     if(m_pCurPlane)
     {
-        std::string props = m_pCurPlane->planeData(true);
+        QString props = QString::fromStdString(m_pCurPlane->planeData(true));
         if(m_pCurWPolar)
         {
-            props = m_pCurPlane->planeData(m_pCurWPolar->bIncludeOtherWingAreas());
+            props = QString::fromStdString(m_pCurPlane->planeData(m_pCurWPolar->bIncludeOtherWingAreas()));
             props +="\n";
-            std::string strange;
+            QString strange;
             if(m_pCurWPolar->isQuadMethod() && m_pCurPlane->isXflType())
             {
                 PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pCurPlane);
-                strange = std::format("Quad panels     = {0:d}", pPlaneXfl->quadMesh().nPanels());
+                strange = QString::asprintf("Quad panels     = %d", pPlaneXfl->quadMesh().nPanels());
             }
             else if(m_pCurWPolar->isTriangleMethod())
-                strange = std::format("Triangles       = {0:d}", m_pCurPlane->triMesh().nPanels());
+                strange = QString::asprintf("Triangles       = %d", m_pCurPlane->triMesh().nPanels());
             props += strange;
         }
 
@@ -2637,7 +2637,7 @@ void XPlane::onEditCurFuse()
         pFuse->setColor(pModFuse->color());
         pFuse->setOccTessParams(pModFuse->occTessParams());
         pFuse->setGmshTessParams(pModFuse->gmshTessParams());
-        std::string strange;
+        QString strange;
 //        pFuse->makeShellTriangulation(strange, QString());
         gmesh::makeFuseTriangulation(pFuse, strange);
         m_pgl3dXPlaneView->resetglGeom();
@@ -3171,7 +3171,7 @@ void XPlane::onWingProps()
     pWing->getProperties(props, "   ");
 
     std::string strange;
-    strange = "Properties of wing " + pWing->name() + EOLch;
+    strange = "Properties of wing " + pWing->name() + EOLstr;
     displayStdMessage(strange+props+"\n\n", true, false);
 }
 
@@ -3184,7 +3184,7 @@ void XPlane::onFuseProps()
 
     pPlaneXfl->fuse(0)->getProperties(props, "   ");
 
-    std::string strange = "Properties of fuse " + pPlaneXfl->fuse(0)->name() + EOLch;
+    std::string strange = "Properties of fuse " + pPlaneXfl->fuse(0)->name() + EOLstr;
     displayStdMessage(strange+props+"\n\n", true, false);
 }
 
@@ -3692,7 +3692,7 @@ void XPlane::onHidePlaneWPolars()
     for (int i=0; i<Objects3d::nPolars(); i++)
     {
         pWPolar = Objects3d::wPolarAt(i);
-        if (pWPolar->planeName() == PlaneName)
+        if (pWPolar->planeName() == PlaneName.toStdString())
         {
             pWPolar->setVisible(false);
             if(pWPolar->isStabilityPolar()) pWPolar->setPointStyle(Line::NOSYMBOL);
@@ -4048,7 +4048,7 @@ void XPlane::onShowPlaneWPolars()
     for (i=0; i<Objects3d::nPolars(); i++)
     {
         pWPolar = Objects3d::wPolarAt(i);
-        if (pWPolar->planeName() == PlaneName) pWPolar->setVisible(true);
+        if (pWPolar->planeName()==PlaneName.toStdString()) pWPolar->setVisible(true);
     }
 
 
@@ -4215,15 +4215,15 @@ void XPlane::setStabTimeYVariables(bool bLong)
     {
         m_TimeGraph[0]->setYVariableList({"u ("+QUnits::speedUnitLabel()+")"});
         m_TimeGraph[1]->setYVariableList({"w ("+QUnits::speedUnitLabel()+")"});
-        m_TimeGraph[2]->setYVariableList({"q ("+DEGCHAR+"/s)"});
-        m_TimeGraph[3]->setYVariableList({THETACHAR + " ("+DEGCHAR+")"});
+        m_TimeGraph[2]->setYVariableList({"q ("+DEGch+"/s)"});
+        m_TimeGraph[3]->setYVariableList({THETAch + " ("+DEGch+")"});
     }
     else
     {
         m_TimeGraph[0]->setYVariableList({"v ("+QUnits::speedUnitLabel()+")"});
-        m_TimeGraph[1]->setYVariableList({"p ("+DEGCHAR+"/s)"});
-        m_TimeGraph[2]->setYVariableList({"r ("+DEGCHAR+"/s)"});
-        m_TimeGraph[3]->setYVariableList({PHICHAR + " ("+DEGCHAR+")"});
+        m_TimeGraph[1]->setYVariableList({"p ("+DEGch+"/s)"});
+        m_TimeGraph[2]->setYVariableList({"r ("+DEGch+"/s)"});
+        m_TimeGraph[3]->setYVariableList({PHIch + " ("+DEGch+")"});
     }
 }
 
@@ -4449,26 +4449,26 @@ QString XPlane::planeOppData()
     int linelength = 25;
     str = QUnits::speedUnitLabel();
     int l = str.length();
-    if     (l==2) strong = "V" + INFCHAR + QString(" = "+format).arg(m_pCurPOpp->m_QInf*Units::mstoUnit(), 8, 'f', 3);
-    else if(l==3) strong = "V" + INFCHAR + QString(" = "+format).arg(m_pCurPOpp->m_QInf*Units::mstoUnit(), 8, 'f', 3);
-    else if(l==4) strong = "V" + INFCHAR + QString(" = "+format).arg(m_pCurPOpp->m_QInf*Units::mstoUnit(), 7, 'f', 2);
+    if     (l==2) strong = "V" + INFch + QString(" = "+format).arg(m_pCurPOpp->m_QInf*Units::mstoUnit(), 8, 'f', 3);
+    else if(l==3) strong = "V" + INFch + QString(" = "+format).arg(m_pCurPOpp->m_QInf*Units::mstoUnit(), 8, 'f', 3);
+    else if(l==4) strong = "V" + INFch + QString(" = "+format).arg(m_pCurPOpp->m_QInf*Units::mstoUnit(), 7, 'f', 2);
     else          strong = QString();
 
 
     for(int i=strong.length(); i<linelength; i++) strong = " "+strong;
     Result += strong + " " + str + "\n";
 
-    strong = ALPHACHAR + QString(" = " + format).arg(m_pCurPOpp->alpha(), 8, 'f', 3);
+    strong = ALPHAch + QString(" = " + format).arg(m_pCurPOpp->alpha(), 8, 'f', 3);
     for(int i=strong.length(); i<linelength; i++) strong = " "+strong;
-    Result += strong + DEGCHAR + "\n";
+    Result += strong + DEGch + "\n";
 
-    strong = BETACHAR + QString(" = " + format).arg(m_pCurPOpp->beta(),   8, 'f', 3);
+    strong = BETAch + QString(" = " + format).arg(m_pCurPOpp->beta(),   8, 'f', 3);
     for(int i=strong.length(); i<linelength; i++) strong = " "+strong;
-    Result += strong + DEGCHAR + "\n";
+    Result += strong + DEGch + "\n";
 
-    strong = PHICHAR + QString(" = " + format).arg(m_pCurPOpp->phi(),     8, 'f', 3);
+    strong = PHIch + QString(" = " + format).arg(m_pCurPOpp->phi(),     8, 'f', 3);
     for(int i=strong.length(); i<linelength; i++) strong = " "+strong;
-    Result += strong + DEGCHAR + "\n";
+    Result += strong + DEGch + "\n";
 
     strong = QString("CL = " + format).arg(m_pCurPOpp->m_AF.CL(), 8, 'f', 3);
     for(int i=strong.length(); i<linelength; i++) strong = " "+strong;
@@ -4952,18 +4952,18 @@ void XPlane::setWPolar(PlanePolar *pWPolar)
         }
     }
 
-    std::string props = m_pCurPlane->planeData(pWPolar->bIncludeOtherWingAreas());
-    std::string strange;
+    QString props = QString::fromStdString(m_pCurPlane->planeData(pWPolar->bIncludeOtherWingAreas()));
+    QString strange;
     if(m_pCurPlane->isXflType())
     {
         props +="\n";
         if(pWPolar->isQuadMethod())
         {
             PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pCurPlane);
-            strange = std::format("Quad panels     = {0:d}", pPlaneXfl->quadMesh().nPanels());
+            strange = QString::asprintf("Quad panels     = %d", pPlaneXfl->quadMesh().nPanels());
         }
         else if(pWPolar->isTriangleMethod())
-            strange = std::format("Triangles       = {0:d}", m_pCurPlane->triMesh().nPanels());
+            strange = QString::asprintf("Triangles       = %d", m_pCurPlane->triMesh().nPanels());
     }
     props += strange;
 
@@ -5949,7 +5949,7 @@ void XPlane::onCurveClicked(Curve*pCurve, int ipt)
                         setPlaneOpp(pPOpp);
                         m_pPlaneTreeView->selectPlaneOpp(pPOpp);
                         m_pPlaneTreeView->setCurveParams();
-                        QString strange = "Selected the operating point: "+QString::fromStdString(pPOpp->planeName()+"/"+pPOpp->name()) + EOLCHAR;
+                        QString strange = "Selected the operating point: "+QString::fromStdString(pPOpp->planeName()+"/"+pPOpp->name()) + EOLch;
                         displayMessage(strange, false, true);
                         updateView();
                         s_pMainFrame->m_pPOppTiles->update();
@@ -6239,7 +6239,7 @@ void XPlane::outputNodeProperties(int nodeindex, double pickedval)
 
     if(m_pCurWPolar)
     {
-        strange = QString::fromStdString(node.properties()) + EOLCHAR;
+        strange = QString::fromStdString(node.properties()) + EOLch;
     }
     if(m_pCurPOpp && (m_pPOpp3dCtrls->m_b3dCp || m_pPOpp3dCtrls->m_bGamma || m_pPOpp3dCtrls->m_bPanelForce))
     {
@@ -6342,10 +6342,11 @@ void XPlane::onOpenAnalysisWindow()
 void XPlane::onMeshInfo()
 {
     if(!m_pCurPlane || !m_pCurWPolar) return;
-    std::string log;
-    std::string strange, strong;
+    QString log;
+    QString strange, strong;
+    std::string str;
 
-    log = m_pCurPlane->name() + "\n";
+    log = QString::fromStdString(m_pCurPlane->name()) + EOLch;
 
     if(m_pCurWPolar->isQuadMethod() && m_pCurPlane->isXflType())
     {
@@ -6356,19 +6357,20 @@ void XPlane::onMeshInfo()
         for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
         {
             WingXfl const*pWing = pPlaneXfl->wingAt(iw);
-            strange = pWing->name();
-            strong = std::format("= {0:4d} quads\n", pWing->nPanel4());
+            strange = QString::fromStdString(pWing->name());
+            strong = QString::asprintf("= %4d quads\n", pWing->nPanel4());
             log += "    " + strange + strong;
         }
 
         for(int ifuse=0; ifuse<pPlaneXfl->nFuse(); ifuse++)
         {
             Fuse const*pFuse = pPlaneXfl->fuseAt(ifuse);
-            strange = pFuse->name();
-            strong = std::format("= {0:4d} quads\n", pFuse->nPanel4());
+            strange = QString::fromStdString(pFuse->name());
+            strong = QString::asprintf("= %4d quads\n", pFuse->nPanel4());
             log += "    " + strange + strong;
         }
-        pPlaneXfl->quadMesh().getMeshInfo(log);
+        pPlaneXfl->quadMesh().getMeshInfo(str);
+        log += QString::fromStdString(str);
     }
     else if(m_pCurWPolar->isTriangleMethod())
     {
@@ -6382,30 +6384,31 @@ void XPlane::onMeshInfo()
             for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
             {
                 WingXfl const*pWing = pPlaneXfl->wingAt(iw);
-                strange = pWing->name();
-                strong = std::format("= {0:4d} triangles\n", pWing->nPanel3());
+                strange = QString::fromStdString(pWing->name());
+                strong = QString::asprintf("= %4d triangles\n", pWing->nPanel3());
                 log += "    " + strange + strong;
             }
 
             for(int ifuse=0; ifuse<pPlaneXfl->nFuse(); ifuse++)
             {
                 Fuse const*pFuse = pPlaneXfl->fuseAt(ifuse);
-                strange = pFuse->name();
-                strong = std::format("= {0:4d} triangles\n", pFuse->nPanel3());
+                strange = QString::fromStdString(pFuse->name());
+                strong = QString::asprintf("= %4d triangles\n", pFuse->nPanel3());
                 log += "    " + strange + strong;
             }
         }
         else
         {
-            strange = m_pCurPlane->name();
-            strong = std::format("= %4d triangles\n", m_pCurPlane->nPanel3());
+            strange = QString::fromStdString(m_pCurPlane->name());
+            strong = QString::asprintf("= %4d triangles\n", m_pCurPlane->nPanel3());
             log += "    " + strange + strong;
         }
-        m_pCurPlane->triMesh().getMeshInfo(log);
+        m_pCurPlane->triMesh().getMeshInfo(str);
+        log += QString::fromStdString(str);
     }
     log += "\n";
 
-    displayStdMessage(log, true, false);
+    displayMessage(log, true, false);
 }
 
 
@@ -6984,11 +6987,11 @@ void XPlane::exportMainDataToString(PlaneOpp const *pPOpp, Plane const*pPlane, Q
     if(filetype==xfl::CSV) sep = textsep+ " ";
 
 
-    poppdata += pPOpp->planeName()+"\n";
-    poppdata += pPOpp->polarName()+"\n\n";
-    poppdata +=   ALPHACHAR.rightJustified(17, ' ') + sep
-                + BETACHAR.rightJustified(17, ' ') + sep
-                + PHICHAR.rightJustified(17, ' ') + sep
+    poppdata += QString::fromStdString(pPOpp->planeName())+"\n";
+    poppdata += QString::fromStdString(pPOpp->polarName())+"\n\n";
+    poppdata +=   ALPHAch.rightJustified(17, ' ') + sep
+                + BETAch.rightJustified(17, ' ') + sep
+                + PHIch.rightJustified(17, ' ') + sep
                 + QString("ctrl").rightJustified(17, ' ') + sep
                 + QString("VInf("+QUnits::speedUnitLabel()+")").rightJustified(17, ' ') +"\n";
 
@@ -7112,7 +7115,7 @@ void XPlane::exportMainDataToString(PlaneOpp const *pPOpp, Plane const*pPlane, Q
 
             for(uint i=0; i<pPOpp->m_SD.ControlNames.size(); i++)
             {
-                poppdata += pPOpp->m_SD.ControlNames.at(i) + "\n";
+                poppdata += QString::fromStdString(pPOpp->m_SD.ControlNames.at(i)) + "\n";
                 strange = QString::asprintf("%17g", pPOpp->m_SD.CXe.at(i));            poppdata += strange+sep;
                 strange = QString::asprintf("%17g", pPOpp->m_SD.CYe.at(i));            poppdata += strange+sep;
                 strange = QString::asprintf("%17g", pPOpp->m_SD.CZe.at(i));            poppdata += strange+sep;
@@ -7135,7 +7138,7 @@ void XPlane::exportMainDataToString(PlaneOpp const *pPOpp, Plane const*pPlane, Q
                 //if there are any flaps
                 if(pPOpp->WOpp(iw).m_FlapMoment.size())
                 {
-                    poppdata += pPlaneXfl->wingAt(iw)->name() +"\n";
+                    poppdata += QString::fromStdString(pPlaneXfl->wingAt(iw)->name()) +"\n";
                     for (int l=0; l<pPOpp->WOpp(iw).m_nFlaps; l++)
                     {
                         strange = QString::asprintf("Flap_%d_moment=%11.5g ", l+1, pPOpp->WOpp(iw).m_FlapMoment.at(l)*Units::NmtoUnit());
@@ -7167,7 +7170,7 @@ void XPlane::exportMainDataToString(PlaneOpp const *pPOpp, Plane const*pPlane, Q
     title += QString("F.x").rightJustified(17, ' ') + sep;
     title += QString("F.y").rightJustified(17, ' ') + sep;
     title += QString("F.z").rightJustified(17, ' ') + sep;
-    title += GAMMACHAR.rightJustified(17, ' ');
+    title += GAMMAch.rightJustified(17, ' ');
     title += '\n';
 
     if(pPlane->isXflType())
@@ -7180,7 +7183,7 @@ void XPlane::exportMainDataToString(PlaneOpp const *pPOpp, Plane const*pPlane, Q
 
             WingOpp const &aWOpp = pPOpp->WOpp(iw);
 
-            poppdata += pPlaneXfl->wingAt(iw)->name()+'\n';
+            poppdata += QString::fromStdString(pPlaneXfl->wingAt(iw)->name())+'\n';
             poppdata += title;
             for(int i=0; i<aWOpp.m_NStation; i++)
             {

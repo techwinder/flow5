@@ -172,7 +172,7 @@ gl3dTexture::gl3dTexture(QWidget *pParent) : gl3dTestGLView (pParent)
                     QHBoxLayout *pSizeLayout = new QHBoxLayout;
                     {
                         QLabel *plabImgWidth = new QLabel("Image size=");
-                        QLabel *plabTimes = new QLabel(TIMESCHAR);
+                        QLabel *plabTimes = new QLabel(TIMESch);
                         QLabel *plabPixel = new QLabel("pixels");
                         m_pieWidth  = new IntEdit(s_ImgSize.width());
                         m_pieHeight = new IntEdit(s_ImgSize.height());

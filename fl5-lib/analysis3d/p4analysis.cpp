@@ -25,7 +25,8 @@
 
 #define _MATH_DEFINES_DEFINED
 
-#include <format>
+#include <QString>
+
 #include <thread>
 #include <iostream>
 
@@ -268,9 +269,9 @@ void P4Analysis::makeMatrixBlock(int iBlock)
 
                 if(std::isnan(V.x) || std::isnan(V.y) || std::isnan(V.z))
                 {
-                    std::string strange;
-                    strange = std::format("      *** numerical error when calculating the influence of panel {0:d} on panel {1:d} ***\n", k4, i4);
-                    traceStdLog(strange);
+                    QString strange;
+                    strange = QString::asprintf("      *** numerical error when calculating the influence of panel %d on panel %d ***\n", k4, i4);
+                    traceLog(strange);
                     m_bMatrixError = true;
                     return;
                 }
@@ -292,9 +293,9 @@ void P4Analysis::makeMatrixBlock(int iBlock)
 
                 if(std::isnan(phi))
                 {
-                    std::string strange;
-                    strange = std::format("      *** numerical error when calculating the influence of panel {0:d} on panel {1:d} ***\n", k4, i4);
-                    traceStdLog(strange);
+                    QString strange;
+                    strange = QString::asprintf("      *** numerical error when calculating the influence of panel %d on panel %d ***\n", k4, i4);
+                    traceLog(strange);
                     m_bMatrixError = true;
                     return;
                 }
@@ -1940,8 +1941,8 @@ bool P4Analysis::computeTrimmedConditions(double mass, Vector3d const &CoG, doub
     if(Lift<=PRECISION)
     {
         u0 = -100.0;
-        std::string strong = std::format("        Found a negative lift for Alpha={0:.3f}.... skipping the angle...\n", alphaeq);
-        traceStdLog("\n"+strong);
+        QString strong = QString::asprintf("        Found a negative lift for Alpha=%.3f.... skipping the angle...\n", alphaeq);
+        traceLog("\n"+strong);
         m_bWarning = true;
         return false;
     }

@@ -53,7 +53,7 @@ class FL5LIB_EXPORT SailOcc : public ExternalSail
         void makeDefaultSail() override {}
         void makeSurface() override {}
         void makeTriangulation(int nx=s_iXRes, int nz=s_iZRes) override;
-        void properties(std::string &props, std::string const &prefix, bool bFull=false) const override;
+        void properties(std::string &properties, std::string const &prefx, bool bFull=false) const override;
         void resizeSections(int , int ) override {}
         void rotate(const Vector3d &origin, Vector3d const &axis, double theta) override;
         void scale(double XFactor, double YFactor, double ZFactor) override;

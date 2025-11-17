@@ -24,7 +24,8 @@
 
 #define _MATH_DEFINES_DEFINED
 
-#include <format>
+#include <QString>
+
 #include <thread>
 
 
@@ -89,8 +90,8 @@ bool P3Analysis::initializeAnalysis(Polar3d const *pPolar3d, int nRHS)
         if(!allocateMatrix(N)) return false;
 
         int memsize =     allocateRHS3(nRHS);
-        std::string strange = std::format("Allocating {0:.2f} Mb for {1:d} RHS vectors", double(memsize)/1024.0/1024.0, nRHS);
-        traceStdLog(strange+"\n\n");
+        QString strange = QString::asprintf("Allocating %2f Mb for %d RHS vectors", double(memsize)/1024.0/1024.0, nRHS);
+        traceLog(strange+"\n\n");
     }
 
     m_bWarning  = false;
@@ -399,7 +400,7 @@ double P3Analysis::getPotential(Vector3d const &C, double const *mu, double cons
         phiT += phiSource * sigma[i3];
 
         getDoubletInfluence(C, p3, nullptr, phiBasis, 0.0, true);
-//        strange += std::format("   {0:9g}", phiBasis[0]+phiBasis[1]+phiBasis[2]);
+//        strange += QString::asprintf("   %9g", phiBasis[0]+phiBasis[1]+phiBasis[2]);
         phiT += phiBasis[0]*mu[3*i3] + phiBasis[1]*mu[3*i3+1] + phiBasis[2]*mu[3*i3+2];
 
         // Is the panel shedding a wake?
@@ -1280,12 +1281,12 @@ bool P3Analysis::computeTrimmedConditions(double mass, Vector3d const &CoG, doub
     if(Lift<=PRECISION)
     {
         u0 = -100.0;
-        std::string strong;
+        QString strong;
         strong = "        Found a negative lift for " + ALPHAch;
-        strong = std::format("={0:.5f}", alphaeq) + DEGch;
+        strong = QString::asprintf("=%.5f", alphaeq) + DEGch;
         strong = ".... skipping the angle...\n";
         m_bWarning = true;
-        traceStdLog("\n"+strong);
+        traceLog("\n"+strong);
         return false;
     }
     else

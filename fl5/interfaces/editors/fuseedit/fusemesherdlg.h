@@ -105,6 +105,7 @@ class FuseMesherDlg : public QDialog
         GMesherWt *m_pGMesherWt;
 
         QSplitter *m_pHSplitter;
+        QSplitter *m_pVSplitter;
         QDialogButtonBox *m_pButtonBox;
 
         QTabWidget *m_ptabViewWt;
@@ -129,7 +130,7 @@ class FuseMesherDlg : public QDialog
         static bool s_bOutline, s_bSurfaces, s_bVLMPanels, s_bAxes, s_bShowMasses;
 
 
-        static QByteArray s_HSplitterSizes;
+        static QByteArray s_HSplitterSizes, s_VSplitterSizes;
         static QByteArray s_Geometry;
 
         static Quaternion s_ab_quat_fuse;

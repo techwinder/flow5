@@ -52,7 +52,8 @@
 #include <api/sailocc.h>
 #include <api/occ_globals.h>
 #include <api/flow5events.h>
-#include <core/qunits.h>
+#include <api/units.h>
+
 
 
 
@@ -261,7 +262,7 @@ void SailOccDlg::customEvent(QEvent *pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        m_ppto->onAppendStdText(pMsgEvent->msg());
+        m_ppto->onAppendQText(pMsgEvent->msg());
     }
     else if(pEvent->type() == MESH_UPDATE_EVENT)
     {      

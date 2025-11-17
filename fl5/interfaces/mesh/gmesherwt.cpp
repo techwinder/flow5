@@ -51,7 +51,7 @@
 #include <api/sailspline.h>
 #include <api/sailstl.h>
 #include <api/sailwing.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 
 #include <core/xflcore.h>
@@ -313,7 +313,7 @@ int GMesherWt::meshAlgo()
         iAlgo = 1;
     }
 
-    emit outputMsg("Using mesh algo.: " + m_pcbMeshAlgo->currentText()+EOLCHAR);
+    emit outputMsg("Using mesh algo.: " + m_pcbMeshAlgo->currentText()+EOLch);
     return iAlgo;
 }
 
@@ -326,7 +326,7 @@ void GMesherWt::onCheckLogger()
 
     for(uint i=m_iLoggerStack; i<log.size(); i++)
     {
-        m_pptoGmsh->onAppendQText(QString::fromStdString(log.at(i))+EOLCHAR);
+        m_pptoGmsh->onAppendQText(QString::fromStdString(log.at(i))+EOLch);
     }
 
     m_iLoggerStack = int(log.size());
@@ -475,7 +475,7 @@ void GMesherWt::onHandleMeshResults(bool bError)
 
     if(error.length())
     {
-        emit outputMsg("---ERROR---\n" + QString::fromStdString(error)+EOLCHAR+EOLCHAR);
+        emit outputMsg("---ERROR---\n" + QString::fromStdString(error)+EOLch+EOLch);
     }
 
     onCheckLogger();

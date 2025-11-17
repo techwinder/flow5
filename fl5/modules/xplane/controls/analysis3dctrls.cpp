@@ -42,7 +42,7 @@
 #include <api/planetask.h>
 #include <core/xflcore.h>
 #include <api/utils.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/planeopp.h>
 #include <api/planepolar.h>
 #include <interfaces/widgets/customwts/floatedit.h>
@@ -72,7 +72,7 @@ void Analysis3dCtrls::setupLayout()
 
     QVBoxLayout *pAnalysisLayout = new QVBoxLayout;
     {
-        m_plabParamName = new QLabel(ALPHACHAR);
+        m_plabParamName = new QLabel(ALPHAch);
         m_plabParamName->setAlignment(Qt::AlignHCenter);
 
         m_pswTables = new QStackedWidget;
@@ -125,13 +125,13 @@ void Analysis3dCtrls::setParameterLabels()
             case xfl::T2POLAR:
             case xfl::T3POLAR:
             {
-                m_plabParamName->setText(ALPHACHAR);
+                m_plabParamName->setText(ALPHAch);
                 break;
             }
             case xfl::T4POLAR:
             {
 //                QString str = QUnits::speedUnitLabel();
-                m_plabParamName->setText("V"+INFCHAR);
+                m_plabParamName->setText("V"+INFch);
                 break;
             }
             case xfl::T6POLAR:
@@ -142,7 +142,7 @@ void Analysis3dCtrls::setParameterLabels()
             }
             case xfl::T5POLAR:
             {
-                m_plabParamName->setText(BETACHAR);
+                m_plabParamName->setText(BETAch);
                 break;
             }
             case xfl::T8POLAR:

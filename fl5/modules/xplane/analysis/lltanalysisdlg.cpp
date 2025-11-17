@@ -333,14 +333,14 @@ void LLTAnalysisDlg::customEvent(QEvent *pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent const *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        m_ppto->onAppendStdText(pMsgEvent->msg());
+        m_ppto->onAppendQText(pMsgEvent->msg());
     }
     else if(pEvent->type() == LLT_OPP_EVENT)
     {
         LLTOppEvent *pOppEvent = static_cast<LLTOppEvent*>(pEvent);
 
         Curve *pCurve = m_pIterGraph->addCurve();
-        pCurve->setName(ALPHACHAR + QString::asprintf("=%.2f", pOppEvent->alpha()) + DEGCHAR);
+        pCurve->setName(ALPHAch + QString::asprintf("=%.2f", pOppEvent->alpha()) + DEGch);
 
         m_ppto->onAppendStdText(pOppEvent->message());
 
@@ -427,7 +427,7 @@ void LLTAnalysisDlg::analyze()
     log += strange;
     strange = QString::asprintf("Max iterations     = %d\n", LLTTask::maxIter());
     log += strange;
-    strange = ALPHACHAR + QString::asprintf(" precision        = %g",LLTTask::convergencePrecision()) + DEGCHAR + "\n";
+    strange = ALPHAch + QString::asprintf(" precision        = %g",LLTTask::convergencePrecision()) + DEGch + "\n";
     log += strange;
     strange = QString::asprintf("Number of stations = %d\n", LLTTask::nSpanStations());
     log += strange;

@@ -47,7 +47,7 @@
 #include <api/planepolar.h>
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/analysis3ddef/t123578polardlg.h>
 #include <interfaces/editors/editobjectdelegate.h>
@@ -1028,7 +1028,7 @@ void OptimPlaneDlg::onSwarm()
     onOutputMessage(strange+"\n");
 
     listObjectives(strange);
-    onOutputMessage(strange+EOLCHAR);
+    onOutputMessage(strange+EOLch);
 
     if(nActive==0)
     {
@@ -1211,14 +1211,14 @@ void OptimPlaneDlg::fillResults()
 void OptimPlaneDlg::listObjectives(QString &list) const
 {
     list.clear();
-    list = "Objectives:" + EOLCHAR;
+    list = "Objectives:" + EOLch;
 
     for(int iobj=0; iobj<m_Objective.size(); iobj++)
     {
         OptObjective const &obj = m_Objective.at(iobj);
         if(obj.m_bActive)
         {
-            list += "   " + QString::fromStdString(obj.m_Name) + QString::asprintf(": %7g", obj.m_Target) + EOLCHAR;
+            list += "   " + QString::fromStdString(obj.m_Name) + QString::asprintf(": %7g", obj.m_Target) + EOLch;
         }
     }
 
@@ -1325,7 +1325,7 @@ void OptimPlaneDlg::onVariableChanged(QModelIndex,QModelIndex)
     QString strange, prefix("   ");
     readVariables(nActive, strange, prefix); // to save the changes on the fly in case the user switches planes
 
-    strange = EOLCHAR + "Active variables:" + EOLCHAR + strange +EOLCHAR;
+    strange = EOLch + "Active variables:" + EOLch + strange +EOLch;
     onOutputMessage(strange);
 }
 
@@ -1359,7 +1359,7 @@ void OptimPlaneDlg::makeOptVariables()
     OptVars.resize(nvars); // first line is aoa
 
     int ivar=0;
-    OptVars[ivar++] = {ALPHAch, s_AlphaMin, s_AlphaMax};
+    OptVars[ivar++] = {ALPHAstr, s_AlphaMin, s_AlphaMax};
     OptVars[ivar++] = {"Mass",  m_pPlaneXfl->totalMass()};
     OptVars[ivar++] = {"CoG.x", m_pPlaneXfl->CoG_t().x};
     OptVars[ivar++] = {"CoG.z", m_pPlaneXfl->CoG_t().z};
@@ -1765,7 +1765,7 @@ void OptimPlaneDlg::getUnit(int ivar, double &factor, QString &labunit) const
     if(ivar==0)
     {
         factor  = 1.0;
-        labunit = DEGCHAR;
+        labunit = DEGch;
     }
     else if(ivar==1)
     {
@@ -1803,7 +1803,7 @@ void OptimPlaneDlg::getUnit(int ivar, double &factor, QString &labunit) const
                     case 8:
                     case 9:
                         factor  = 1.0;
-                        labunit = DEGCHAR;
+                        labunit = DEGch;
                         return;
                     case 10:
                         factor  = Units::m2toUnit();
@@ -1831,7 +1831,7 @@ void OptimPlaneDlg::getUnit(int ivar, double &factor, QString &labunit) const
                     case 3:
                     case 4:
                         factor  = 1.0;
-                        labunit = DEGCHAR;
+                        labunit = DEGch;
                         return;
                 }
             }

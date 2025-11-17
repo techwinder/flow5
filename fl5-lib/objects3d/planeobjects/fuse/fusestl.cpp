@@ -23,7 +23,8 @@
 *****************************************************************************/
 
 
-#include <format>
+#include <QString>
+
 
 #include <QDataStream>
 
@@ -75,29 +76,32 @@ void FuseStl::computeWettedArea()
 }
 
 
-void FuseStl::computeSurfaceProperties(std::string &logmsg, const std::string &prefix)
+void FuseStl::computeSurfaceProperties(std::string &msg, const std::string &prefx)
 {
 //    computeWettedArea();
 
     m_Triangulation.computeSurfaceProperties(m_Length, m_MaxWidth, m_MaxHeight, m_WettedArea);
 
-    std::string strong;
+    QString strong, logmsg;
+    QString prefix = QString::fromStdString(prefx);
 
-    strong = std::format("Length          = {0:9.5g} ", length()*Units::mtoUnit());
-    strong += Units::lengthUnitLabel() + "\n";
+    strong = QString::asprintf("Length          = %9.5g ", length()*Units::mtoUnit());
+    strong += QUnits::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 
-    strong = std::format("Max. width      = {0:9.5g} ", m_MaxWidth*Units::mtoUnit());
-    strong += Units::lengthUnitLabel() + "\n";
+    strong = QString::asprintf("Max. width      = %9.5g ", m_MaxWidth*Units::mtoUnit());
+    strong += QUnits::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 
-    strong = std::format("Max. height     = {0:9.5g} ", m_MaxHeight*Units::mtoUnit());
-    strong += Units::lengthUnitLabel() + "\n";
+    strong = QString::asprintf("Max. height     = %9.5g ", m_MaxHeight*Units::mtoUnit());
+    strong += QUnits::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 
-    strong = std::format("Wetted area     = {0:9.5g} ", m_WettedArea*Units::m2toUnit());
-    strong += Units::areaUnitLabel();
+    strong = QString::asprintf("Wetted area     = %9.5g ", m_WettedArea*Units::m2toUnit());
+    strong += QUnits::areaUnitLabel();
     logmsg += prefix + strong;
+
+    msg = logmsg.toStdString();
 }
 
 

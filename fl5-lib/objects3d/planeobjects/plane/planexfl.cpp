@@ -23,7 +23,8 @@
 *****************************************************************************/
 
 
-#include <format>
+#include <QString>
+
 
 #include <api/planexfl.h>
 #include <api/fusenurbs.h>
@@ -991,9 +992,9 @@ WingXfl* PlaneXfl::addWing(xfl::enumType wingtype)
     m_Wing.back().setUniqueIndex();
     makeUniqueIndexList();
 
-    std::string strange;
-    strange = std::format("Wing_{:d}", nWings());
-    m_Wing.back().setName(strange);
+    QString strange;
+    strange = QString::asprintf("Wing_%d", nWings());
+    m_Wing.back().setName(strange.toStdString());
 
     return &m_Wing.back();
 }
@@ -1052,9 +1053,9 @@ WingXfl* PlaneXfl::duplicateWing(int iWing)
     m_Wing.push_back(m_Wing[iWing]);
     if(m_Wing[iWing].isMainWing()) m_Wing.back().setWingType(xfl::OtherWing);
 
-    std::string strange;
-    strange = std::format("Wing_{:d}", nWings());
-    m_Wing.back().setName(strange);
+    QString strange;
+    strange = QString::asprintf("Wing_%d", nWings());
+    m_Wing.back().setName(strange.toStdString());
 
     createSurfaces();
     return &m_Wing.back();
@@ -1068,9 +1069,9 @@ Fuse* PlaneXfl::duplicateFuse(int iFuse)
     Fuse *pFuse = m_Fuse[iFuse]->clone();
     m_Fuse.push_back(pFuse);
 
-    std::string strange;
-    strange = std::format("Fuse_{:d}", nFuse());
-    m_Fuse.back()->setName(strange);
+    QString strange;
+    strange = QString::asprintf("Fuse_%d", nFuse());
+    m_Fuse.back()->setName(strange.toStdString());
 
     return m_Fuse.back();
 }
@@ -1591,91 +1592,91 @@ Fuse *PlaneXfl::makeNewFuse(Fuse::enumType bodytype)
 
 std::string PlaneXfl::planeData(bool bOtherWings) const
 {
-    std::string Result;
-    std::string str1;
-    std::string strange;
-    std::string lengthlab, arealab, masslab;
-    lengthlab = Units::lengthUnitLabel();
-    arealab = Units::areaUnitLabel();
-    masslab = Units::massUnitLabel();
+    QString Result;
+    QString str1;
+    QString strange;
+    QString lengthlab, arealab, masslab;
+    lengthlab = QUnits::lengthUnitLabel();
+    arealab = QUnits::areaUnitLabel();
+    masslab = QUnits::massUnitLabel();
 
     WingXfl const *pMainWing = mainWing();
 
 
-    str1 = std::format("Wing span       = {0:9.3f} ", planformSpan()*Units::mtoUnit());
+    str1 = QString::asprintf("Wing span       = %9.3f ", planformSpan()*Units::mtoUnit());
     str1 += lengthlab;
     strange += str1 +"\n";
 
-    str1 = std::format("xyProj. span    = {0:9.3f} ", projectedSpan()*Units::mtoUnit());
+    str1 = QString::asprintf("xyProj. span    = %9.3f ", projectedSpan()*Units::mtoUnit());
     str1 += lengthlab;
     strange += str1 +"\n";
 
-    str1 = std::format("Wing area       = {0:9.3f} ", planformArea(bOtherWings) * Units::m2toUnit());
+    str1 = QString::asprintf("Wing area       = %9.3f ", planformArea(bOtherWings) * Units::m2toUnit());
     str1 += arealab;
     strange += str1 +"\n";
 
-    str1   = std::format("Projected area  = {0:9.3f} ", projectedArea(bOtherWings) * Units::m2toUnit());
+    str1   = QString::asprintf("Projected area  = %9.3f ", projectedArea(bOtherWings) * Units::m2toUnit());
     str1 += arealab;
     strange += str1 +"\n";
 
-    Result = std::format("Mass            = {0:9.3f} ", totalMass()*Units::kgtoUnit());
+    Result = QString::asprintf("Mass            = %9.3f ", totalMass()*Units::kgtoUnit());
     Result += masslab;
     strange += Result +"\n";
 
-    Result = std::format("CoG = ({0:.3f}, {1:.3f}, {2:.3f}) ", m_Inertia.CoG_t().x*Units::mtoUnit(), m_Inertia.CoG_t().y*Units::mtoUnit(), m_Inertia.CoG_t().z*Units::mtoUnit());
+    Result = QString::asprintf("CoG = (%.3f, %.3f, %.3f) ", m_Inertia.CoG_t().x*Units::mtoUnit(), m_Inertia.CoG_t().y*Units::mtoUnit(), m_Inertia.CoG_t().z*Units::mtoUnit());
     Result += lengthlab;
     strange += Result +"\n";
 
     if(pMainWing)
     {
-        Result = std::format("Wing load       = {0:9.3f}", totalMass()*Units::kgtoUnit()/projectedArea(bOtherWings)/Units::m2toUnit());
+        Result = QString::asprintf("Wing load       = %9.3f", totalMass()*Units::kgtoUnit()/projectedArea(bOtherWings)/Units::m2toUnit());
         Result += " "+ masslab + "/" + arealab;
         strange += Result +"\n";
     }
 
     if(hasStab())
     {
-        str1 = std::format("Tail volume (H) = {0:9.3f}", tailVolumeHorizontal());
+        str1 = QString::asprintf("Tail volume (H) = %9.3f", tailVolumeHorizontal());
         strange += str1 +"\n";
     }
 
 
     if(hasFin())
     {
-        str1 = std::format("Tail volume (V) = {0:9.3f}", tailVolumeVertical());
+        str1 = QString::asprintf("Tail volume (V) = %9.3f", tailVolumeVertical());
         strange += str1 +"\n";
     }
 
     if(pMainWing)
     {
-        str1 = std::format("Root chord      = {0:9.3f} ", pMainWing->rootChord()*Units::mtoUnit());
+        str1 = QString::asprintf("Root chord      = %9.3f ", pMainWing->rootChord()*Units::mtoUnit());
         Result = str1+ lengthlab;
         strange += Result +"\n";
     }
 
-    str1 = std::format("MAC             = {0:9.3f} ", mac()*Units::mtoUnit());
+    str1 = QString::asprintf("MAC             = %9.3f ", mac()*Units::mtoUnit());
     Result = str1+ lengthlab;
     strange += Result +"\n";
 
     if(pMainWing)
     {
-        str1 = std::format("Tip twist       = {0:9.3f}", pMainWing->tipTwist()) + DEGch;
+        str1 = QString::asprintf("Tip twist       = %9.3f", pMainWing->tipTwist()) + DEGch;
         strange += str1 +"\n";
     }
 
-    str1 = std::format("Aspect Ratio    = {0:9.3f}", aspectRatio());
+    str1 = QString::asprintf("Aspect Ratio    = %9.3f", aspectRatio());
     strange += str1 +"\n";
 
-    str1 = std::format("Taper Ratio     = {0:9.3f}", taperRatio());
+    str1 = QString::asprintf("Taper Ratio     = %9.3f", taperRatio());
     strange += str1 +"\n";
 
     if(pMainWing)
     {
-        str1 = std::format("Root-Tip Sweep  = {0:9.3f}",pMainWing->averageSweep()) + DEGch;
+        str1 = QString::asprintf("Root-Tip Sweep  = %9.3f",pMainWing->averageSweep()) + DEGch;
         strange += str1;
     }
 
-    return strange;
+    return strange.toStdString();
 }
 
 
@@ -1962,7 +1963,7 @@ std::string PlaneXfl::flapName(int iFlap) const
 
         for(int iflap=0; iflap<wing.nFlaps(); iflap++)
         {
-            if(iFlap==ic) return wing.name() + std::format("_flap_{:d}", iflap+1);
+            if(iFlap==ic) return wing.name() + QString::asprintf("_flap_%d", iflap+1).toStdString();
             ic++;
         }
     }
@@ -2039,7 +2040,7 @@ std::string PlaneXfl::controlSurfaceName(int iCtrl) const
 
         for(int iflap=0; iflap<wing.nFlaps(); iflap++)
         {
-            if(iCtrl==ic) return wing.name() + std::format("_flap_{:d}", iflap+1);
+            if(iCtrl==ic) return wing.name() + QString::asprintf("_flap_%d", iflap+1).toStdString();
             ic++;
         }
     }
@@ -2047,14 +2048,14 @@ std::string PlaneXfl::controlSurfaceName(int iCtrl) const
 }
 
 
-void PlaneXfl::setRangePositions4(PlanePolar const *pWPolar, double t, std::string &outstring)
+void PlaneXfl::setRangePositions4(PlanePolar const *pWPolar, double t, std::string &outstr)
 {
     assert(pWPolar->isType6());
 
     Vector3d H, Origin;
     Vector3d YVector(0.0, 1.0, 0.0);
-    std::string strange;
-
+    QString strange;
+    QString outstring;
 
     for(int iw=0; iw<nWings(); iw++)
     {
@@ -2071,8 +2072,8 @@ void PlaneXfl::setRangePositions4(PlanePolar const *pWPolar, double t, std::stri
             H.set(0.0, 1.0, 0.0);
 
             double totalAngle = ryAngle(iw) + deltaangle;
-            strange = "      Rotating " + pWing->name();
-            outstring += strange +  std::format(" by {0:f}°, total angle is {1:f}", deltaangle, totalAngle) + DEGch + EOLch;
+            strange = "      Rotating " + QString::fromStdString(pWing->name());
+            outstring += strange +  QString::asprintf(" by %f°, total angle is %f", deltaangle, totalAngle) + DEGch + EOLch;
 
             Origin = wingLE(iw);
 
@@ -2098,9 +2099,9 @@ void PlaneXfl::setRangePositions4(PlanePolar const *pWPolar, double t, std::stri
 
                 if (fabs(deltaangle)>FLAPANGLEPRECISION)
                 {
-                    strange = std::format("- rotating flap {0:d} by {1:f}°", iCtrl, deltaangle);
+                    strange = QString::asprintf("- rotating flap %d by %f°", iCtrl, deltaangle);
 
-                    strange = "      " + pWing->name()+strange + EOLch;
+                    strange = "      " + QString::fromStdString(pWing->name()) +strange + EOLch;
                     outstring +=strange;
 
                     if(pWPolar->isQuadMethod())
@@ -2120,17 +2121,20 @@ void PlaneXfl::setRangePositions4(PlanePolar const *pWPolar, double t, std::stri
     }
 
     outstring  +="\n";
+
+    outstr = outstring.toStdString();
 }
 
 
-void PlaneXfl::setRangePositions3(PlanePolar const *pWPolar, double t, std::string &outstring)
+void PlaneXfl::setRangePositions3(PlanePolar const *pWPolar, double t, std::string &outstr)
 {
     assert(pWPolar->isType6());
     assert(pWPolar->isTriangleMethod());
+    QString outstring;
 
     Vector3d H, Origin;
     Vector3d YVector(0.0, 1.0, 0.0);
-    std::string strange;
+    QString strange;
     double totalAngle(0), deltaangle(0);
 
     if(pWPolar->isTriLinearMethod())
@@ -2155,8 +2159,8 @@ void PlaneXfl::setRangePositions3(PlanePolar const *pWPolar, double t, std::stri
             H.set(0.0, 1.0, 0.0);
 
             totalAngle = ryAngle(iw) + deltaangle;
-            strange = "      Rotating " + pWing->name();
-            outstring += strange + std::format(" by {0:.3f}°, total angle is {1:.3f}°\n", deltaangle, totalAngle);
+            strange = "      Rotating " + QString::fromStdString(pWing->name());
+            outstring += strange + QString::asprintf(" by %.3f°, total angle is %.3f°\n", deltaangle, totalAngle);
 
             Origin = wingLE(iw);
             rotateWingNodes(triPanels(), nodes, pWing, Origin, YVector, deltaangle);
@@ -2179,9 +2183,9 @@ void PlaneXfl::setRangePositions3(PlanePolar const *pWPolar, double t, std::stri
                     else
                         totalAngle = deltaangle;
 
-                    strange = std::format("- rotating flap {0:d} by {1:.3f}°, total flap angle is {2:.3f}°", iCtrl, deltaangle, totalAngle);
+                    strange = QString::asprintf("- rotating flap %d by %.3f°, total flap angle is %.3f°", iCtrl, deltaangle, totalAngle);
 
-                    strange = "      " + pWing->name() + strange + EOLch;
+                    strange = "      " + QString::fromStdString(pWing->name()) + strange + EOLch;
                     outstring += strange;
 
                     rotateFlapNodes(triPanels(), nodes, surf, surf.hingePoint(), surf.hingeVector(), deltaangle);
@@ -2195,6 +2199,8 @@ void PlaneXfl::setRangePositions3(PlanePolar const *pWPolar, double t, std::stri
     TriMesh::rebuildPanelsFromNodes(triPanels(), nodes);
 
     outstring  +="\n";
+
+    outstr = outstring.toStdString();
 }
 
 
@@ -2275,12 +2281,13 @@ double PlaneXfl::flapPosition(AngleControl const &avlc, int iWing, int iFlap) co
 }
 
 
-void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstring)
+void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstr)
 {
 //    auto t0 = std::chrono::high_resolution_clock::now();
     assert(pWPolar->isType12358() || pWPolar->isType7());
 
-    std::string strange;
+    QString outstring;
+    QString strange;
 
     outstring += "Setting flap positions\n";
 
@@ -2300,7 +2307,7 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstring)
 
         if(iw>=pWPolar->nFlapCtrls())
         {
-            outstring += "      No flap settings defined for " + pWing->name() + " ... skipping" + EOLch;
+            outstring += "      No flap settings defined for " + QString::fromStdString(pWing->name()) + " ... skipping" + EOLch;
             break; // correcting past errors
         }
 
@@ -2310,7 +2317,7 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstring)
 
         int iFlap=0;
 
-        outstring += "   " + pWing->name() +":\n";
+        outstring += "   " + QString::fromStdString(pWing->name()) +":\n";
 
         for (int jSurf=0; jSurf<pWing->nSurfaces(); jSurf++)
         {
@@ -2321,7 +2328,7 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstring)
 
                 if (fabs(flapangle)>FLAPANGLEPRECISION)
                 {
-                    strange = std::format("      rotating flap {0:d} by {1:g}", iFlap, flapangle) + DEGch + EOLch;
+                    strange = QString::asprintf("      rotating flap %d by %g", iFlap, flapangle) + DEGch + EOLch;
 
                     outstring += strange;
 
@@ -2354,6 +2361,7 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstring)
 
     outstring  +="\n";
 
+    outstr = outstring.toStdString();
 /*
     auto t1 = std::chrono::high_resolution_clock::now();
     int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();

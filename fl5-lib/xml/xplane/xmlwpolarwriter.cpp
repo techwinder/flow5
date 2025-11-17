@@ -80,10 +80,10 @@ void XmlWPolarWriter::writeWPolarData(PlanePolar const *pWPolar)
     QString strange;
     writeStartElement("Polar");
     {
-        writeTextElement("Polar_Name", pWPolar->name());
+        writeTextElement("Polar_Name", QString::fromStdString(pWPolar->name()));
 
         writeComment("For scripts and batch analyses: if the plane's name is left blank, the analysis will be associated to all available planes");
-        writeTextElement("Plane_Name", pWPolar->planeName());
+        writeTextElement("Plane_Name", QString::fromStdString(pWPolar->planeName()));
 
         writeTheStyle(pWPolar->theStyle());
         writeComment("Available analysis types are: FIXEDSPEEDPOLAR, FIXEDLIFTPOLAR, GLIDEPOLAR, CONTROLPOLAR, STABILITYPOLAR, T8POLAR");
@@ -167,7 +167,7 @@ void XmlWPolarWriter::writeWPolarData(PlanePolar const *pWPolar)
                         AngleControl const &ctrl = pWPolar->AVLCtrl(ie);
                         writeStartElement("Control");
                         {
-                            writeTextElement("Name", ctrl.name());
+                            writeTextElement("Name", QString::fromStdString(ctrl.name()));
                             strange.clear();
                             for(int ic=0; ic<ctrl.nValues(); ic++)
                             {

@@ -58,16 +58,20 @@ class XFoilTask;
 class FL5LIB_EXPORT MessageEvent : public QEvent
 {
     public:
-
         MessageEvent(std::string const &msg): QEvent(MESSAGE_EVENT)
+        {
+            m_Msg = QString::fromStdString(msg);
+        }
+
+        MessageEvent(QString const &msg): QEvent(MESSAGE_EVENT)
         {
             m_Msg = msg;
         }
 
-        std::string const & msg() const {return m_Msg;}
+        QString const & msg() const {return m_Msg;}
 
     private:
-        std::string m_Msg;
+        QString m_Msg;
 };
 
 

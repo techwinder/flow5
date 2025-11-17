@@ -38,7 +38,7 @@
 #include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/controls/w3dprefs.h>
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/fuseocc.h>
 #include <api/fusesections.h>
 #include <api/fusestl.h>

@@ -65,7 +65,7 @@ class FL5LIB_EXPORT OpPoint : public XflObject
 
         void setHingeMoments(const Foil *pFoil);
 
-        void exportOpp(std::string &outstring, const std::string &Version, bool bCSV, const std::string &textseparator) const;
+        void exportOpp(std::string &out, const std::string &Version, bool bCSV, const std::string &textseparator) const;
 
         std::string properties(const std::string &textseparator, bool bData=false) const;
 

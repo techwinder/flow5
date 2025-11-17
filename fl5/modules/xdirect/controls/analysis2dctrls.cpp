@@ -72,10 +72,10 @@ void Analysis2dCtrls::setupLayout()
 
         QHBoxLayout *pSpecVarsLayout = new QHBoxLayout;
         {
-            m_prbAlpha    = new QRadioButton(ALPHACHAR);
+            m_prbAlpha    = new QRadioButton(ALPHAch);
             m_prbCl       = new QRadioButton("Cl");
             m_prbReynolds = new QRadioButton("Reynolds");
-            m_prbTheta    = new QRadioButton(THETACHAR);
+            m_prbTheta    = new QRadioButton(THETAch);
             pSpecVarsLayout->addStretch();
             pSpecVarsLayout->addWidget(m_prbAlpha);
             pSpecVarsLayout->addWidget(m_prbCl);

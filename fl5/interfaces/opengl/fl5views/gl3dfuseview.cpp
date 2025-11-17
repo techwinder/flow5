@@ -46,7 +46,7 @@
 #include <api/fusesections.h>
 #include <api/fusestl.h>
 #include <api/fusexfl.h>
-#include <core/qunits.h>
+#include <api/units.h>
 
 
 gl3dFuseView::gl3dFuseView(QWidget *pParent) : gl3dXflView(pParent)

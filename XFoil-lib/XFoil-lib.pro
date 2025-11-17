@@ -42,7 +42,7 @@ linux-g++{
     inc.files += xfoil.h xfoil_params.h
 
 
-    target.path = $$PREFIX/lib/$$TARGET
+    target.path = $$PREFIX/lib
 
     # MAKE INSTALL
     INSTALLS += target inc
@@ -59,8 +59,6 @@ win32 {
 
 
 macx{
-#    CONFIG += lib_bundle
-#    CONFIG += i386
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     QMAKE_MAC_SDK = macosx
     QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64

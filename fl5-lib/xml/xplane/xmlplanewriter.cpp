@@ -60,10 +60,10 @@ void XmlPlaneWriter::writeXMLPlane(PlaneXfl const &plane, bool bWriteFoils)
             writeUnits();
             writeStartElement("Plane");
             {
-                writeTextElement("Name", plane.name());
+                writeTextElement("Name", QString::fromStdString(plane.name()));
                 if(plane.description().length())
                 {
-                    writeTextElement("Description", plane.description());
+                    writeTextElement("Description", QString::fromStdString(plane.description()));
                 }
 
                 writeTheStyle(plane.theStyle());

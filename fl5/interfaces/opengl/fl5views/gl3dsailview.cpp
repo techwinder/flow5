@@ -59,7 +59,7 @@
 #include <api/sailstl.h>
 #include <api/sailwing.h>
 #include <api/trimesh.h>
-#include <core/qunits.h>
+#include <api/units.h>
 
 gl3dSailView::gl3dSailView(QWidget *pSailDlg) : gl3dXflView(pSailDlg)
 {

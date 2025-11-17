@@ -40,6 +40,7 @@
 #include <interfaces/editors/fuseedit/shapefixerdlg.h>
 #include <interfaces/exchange/cadexportdlg.h>
 #include <interfaces/mesh/afmesher.h>
+#include <interfaces/mesh/gmesh_globals.h>
 #include <interfaces/mesh/gmesherwt.h>
 #include <interfaces/mesh/mesherwt.h>
 #include <interfaces/mesh/meshevent.h>
@@ -51,13 +52,12 @@
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 
+
 #include <api/vector3d.h>
 #include <api/constants.h>
 #include <api/fuseocc.h>
 #include <api/occ_globals.h>
-#include <core/qunits.h>
-#include <interfaces/mesh/gmesh_globals.h>
-
+#include <api/units.h>
 
 bool FuseOccDlg::s_bfl5Mesher(false);
 
@@ -324,7 +324,7 @@ void FuseOccDlg::customEvent(QEvent *pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent const *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        updateStdOutput(pMsgEvent->msg());
+        updateOutput(pMsgEvent->msg());
     }
     else if(pEvent->type() == MESH_UPDATE_EVENT)
     {
@@ -491,11 +491,9 @@ void FuseOccDlg::onShapeFix()
     m_pFuse->makeShellsFromShapes();
 
     updateOutput("Making shell triangulation\n");
-    std::string str;
-
-    gmesh::makeFuseTriangulation(m_pFuse, str, prefix.toStdString());
-    strange = QString::fromStdString(str);
-    updateOutput("Tessellation:\n"+strange+"\n");
+    QString str;
+    gmesh::makeFuseTriangulation(m_pFuse, str, prefix);
+    updateOutput("Tessellation:\n"+str+"\n");
 
     updateProperties();
 

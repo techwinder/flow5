@@ -39,7 +39,7 @@ class FL5LIB_EXPORT BoatOpp : public Opp3d
         BoatOpp();
         BoatOpp(Boat *pBoat, BoatPolar *pBtPolar, int nPanel3, int nPanel4);
         bool serializeBoatOppFl5(QDataStream &ar, bool bIsStoring);
-        void getProperties(const Boat *pBoat, double density, std::string &BOppProperties, bool bLongOutput=false) const;
+        void getProperties(const Boat *pBoat, double density, std::string &props, bool bLongOutput=false) const;
 
         std::string const &boatName() const {return m_BoatName;}
         void setBoatName(std::string const &name) {m_BoatName=name;}
@@ -65,8 +65,8 @@ class FL5LIB_EXPORT BoatOpp : public Opp3d
         void setSailForceFF(std::vector<Vector3d>const &forcesFF)   {m_SailForceFF  = forcesFF;}
         void setSailForceSum(std::vector<Vector3d>const &forcesSum) {m_SailForceSum = forcesSum;}
 
-        void exportMainDataToString(const Boat *pBoat, std::string &poppdata, xfl::enumTextFileType filetype, const std::string &textsep) const;
-        void exportPanel3DataToString(const Boat *pBoat, xfl::enumTextFileType exporttype, std::string &paneldata) const;
+        void exportMainDataToString(const Boat *pBoat, std::string &data, xfl::enumTextFileType filetype, const std::string &textsep) const;
+        void exportPanel3DataToString(const Boat *pBoat, xfl::enumTextFileType exporttype, std::string &data) const;
 
 
     private:

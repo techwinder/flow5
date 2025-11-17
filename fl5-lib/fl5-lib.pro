@@ -13,7 +13,7 @@ DEFINES += FL5LIB_LIBRARY
 
 
 
-CONFIG += c++20
+CONFIG += c++17
 
 
 # The path to the libraries' header files required by the code at compile time
@@ -39,7 +39,7 @@ linux-g++ {
     inc.path = $$INCLUDEDIR
     inc.files += api/*.h
 
-    target.path = $$PREFIX/lib/$$TARGET
+    target.path = $$PREFIX/lib
 
     # MAKE INSTALL
     INSTALLS += target inc
@@ -61,8 +61,8 @@ linux-g++ {
 
         #   The mkl libs to include may depend on MKL's version;
         #   Follow Intel's procedure to determine which libs to include
-            LIBS += -lmkl_intel_lp64  -lmkl_core -lmkl_gnu_thread
-            LIBS += -lgomp
+            LIBS += -lmkl_core -lmkl_intel_lp64  -lmkl_gnu_thread
+        #   LIBS += -lgomp
         ##    LIBS += -lmkl_intel_thread -lmkl_sequential
     } else {
         # ---------------- system LAPACK/LAPACKE + CBLAS/OpenBLAS-----------------------------
@@ -129,21 +129,18 @@ win32-msvc {
 
 macx {
     DEFINES += MAC_OS
+    DEFINES += GL_SILENCE_DEPRECATION   #Shame
 
 
     QMAKE_MAC_SDK = macosx
     QMAKE_APPLE_DEVICE_ARCHS = arm64
+    QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
 
-
-    DEFINES += GL_SILENCE_DEPRECATION   #Shame
 
     #-------XFoil
     # link to the lib:
     LIBS += -L$$OUT_PWD/../XFoil-lib -lXFoil
-    # deploy the libs:
-    XFoil.files = $$OUT_PWD/../XFoil-lib/libXFoil.1.dylib
-    XFoil.path = Contents/Frameworks
-    QMAKE_BUNDLE_DATA += XFoil
+
 
     #-------------OPENCASCADE -----------------
     # set the paths to the OpenCascade header and lib directories

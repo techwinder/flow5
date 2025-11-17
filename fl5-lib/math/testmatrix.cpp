@@ -21,7 +21,8 @@
 
 
 *****************************************************************************/
-#include <format>
+#include <QString>
+
 #include <iostream>
 #include <cstring>
 
@@ -312,7 +313,7 @@ void testBlockThomas()
     {
         for(int i=0; i<n; i++)
         {
-            for(int j=0; j<p; j++) std::cout << std::format(" {:13.7g}", X[i][j]) << std::endl;
+            for(int j=0; j<p; j++) std::cout << QString::asprintf(" %13.7g", X[i][j]).toStdString() << std::endl;
         }
     }
 }
@@ -499,7 +500,7 @@ void testLapacke4(int rank)
     if(info>0)
     {
         std::cout <<  "The diagonal element of the triangular factor of A,\n"  << std::endl;
-        std::cout <<  std::format("U({:d},{:d}) is zero, so that A is singular;\n", info, info) << std::endl;
+        std::cout <<  QString::asprintf("U(%d,%d) is zero, so that A is singular;\n", info, info).toStdString() << std::endl;
         std::cout <<  "the solution could not be computed.\n"  << std::endl;
         return;
     }
@@ -559,7 +560,7 @@ void testLapacke12()
 #endif
     if( info > 0 ) {
         std::cout <<  "The diagonal element of the triangular factor of A,\n"  << std::endl;
-        std::cout <<  std::format("U{:d},{:d}) is zero, so that A is singular;\n", info, info)  << std::endl;
+        std::cout <<  QString::asprintf("U%d,%d) is zero, so that A is singular;\n", info, info).toStdString()  << std::endl;
         std::cout <<  "the solution could not be computed.\n"  << std::endl;
         return;
     }

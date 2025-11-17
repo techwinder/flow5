@@ -739,7 +739,7 @@ void BatchXFoilDlg::onAnalyze()
                                                              s_ReList.at(iRe), s_MachList.at(iRe), s_NCritList.at(iRe),
                                                              s_XTop, s_XBot);
 
-                    pNewPolar->setName(PolarNameMaker::makeName(pNewPolar));
+                    pNewPolar->setName(PolarNameMaker::makeName(pNewPolar).toStdString());
 
                     Polar *pOldPolar = Objects2d::polar(pFoil, pNewPolar->name());
 

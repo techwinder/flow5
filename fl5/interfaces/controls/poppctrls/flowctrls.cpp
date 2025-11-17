@@ -32,21 +32,22 @@
 #include <QButtonGroup>
 
 #include "flowctrls.h"
-#include <interfaces/controls/w3dprefs.h>
-#include <globals/mainframe.h>
-#include <modules/xplane/xplane.h>
-#include <modules/xsail/xsail.h>
-#include <modules/xplane/glview/gl3dxplaneview.h>
-#include <modules/xsail/view/gl3dxsailview.h>
-#include <interfaces/opengl/views/gl3dview.h>
-#include <core/displayoptions.h>
-#include <core/qunits.h>
-#include <api/planeopp.h>
+
 #include <api/boatopp.h>
+#include <api/planeopp.h>
+#include <api/units.h>
+#include <core/displayoptions.h>
+#include <globals/mainframe.h>
+#include <interfaces/controls/w3dprefs.h>
+#include <interfaces/opengl/views/gl3dview.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/line/linebtn.h>
 #include <interfaces/widgets/line/linemenu.h>
+#include <modules/xplane/glview/gl3dxplaneview.h>
+#include <modules/xplane/xplane.h>
+#include <modules/xsail/view/gl3dxsailview.h>
+#include <modules/xsail/xsail.h>
 
 
 XPlane *FlowCtrls::s_pXPlane(nullptr);

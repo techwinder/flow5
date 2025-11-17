@@ -64,6 +64,6 @@ class FL5LIB_EXPORT SailStl : public ExternalSail
         void makeTriangulation(int nx=s_iXRes, int nz=s_iZRes) override;
         void setTriangles(std::vector<Triangle3d> const &triangles) override;
 
-        void properties(std::string &props, std::string const &prefix, bool bFull=false) const override;
+        void properties(std::string &sailprops, std::string const &prefx, bool bFull=false) const override;
 };
 

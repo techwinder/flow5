@@ -44,7 +44,7 @@
 
 #include <modules/xplane/analysis/planeanalysisdlg.h>
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/xflcore.h>
 #include <api/utils.h>
 #include <interfaces/graphs/containers/graphwt.h>
@@ -384,7 +384,7 @@ void Analysis3dSettings::setupLayout()
                     pGraph->setName("Vortex model");
                     pGraph->setCurveModel(new CurveModel);
                     pGraph->setXVariableList({"r ("+QUnits::lengthUnitLabel()+")"});
-                    pGraph->setYVariableList({"V_"+THETACHAR});
+                    pGraph->setYVariableList({"V_"+THETAch});
                     pGraph->setLegendPosition(Qt::AlignTop|Qt::AlignLeft);
                     pGraph->setLegendVisible(true);
                     pGraph->setScaleType(GRAPH::RESETTING);

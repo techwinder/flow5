@@ -61,7 +61,7 @@ class FL5LIB_EXPORT FuseOcc : public Fuse
         bool isOccType()      const override {return true;}
         bool isStlType()      const override {return false;}
 
-        void getProperties(std::string &props, const std::string &prefix, bool bFull=false) override;
+        void getProperties(std::string &properties, const std::string &prefix, bool bFull=false) override;
 
         void reverseFuse();
 

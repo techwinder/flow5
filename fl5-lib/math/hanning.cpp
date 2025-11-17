@@ -24,7 +24,8 @@
 
 #include <iostream>
 #include <cmath>
-#include <format>
+#include <QString>
+
 
 #include <api/hanning.h>
 #include <api/constants.h>
@@ -132,7 +133,7 @@ void testHanning(std::vector<double> &xt, std::vector<double> &series, std::vect
     std::cout << ("            x       signal     filtered")  << std::endl;
     for(unsigned int i=0; i<series.size(); i++)
     {
-        std::cout << std::format("  {0:11.5g}  {1:11.5g}  {2:11.5g}", xt.at(i), series.at(i), yF.at(i)) << std::endl;
+        std::cout << QString::asprintf("  %11.5g  %11.5g  %11.5g", xt.at(i), series.at(i), yF.at(i)).toStdString() << std::endl;
     }
 }
 

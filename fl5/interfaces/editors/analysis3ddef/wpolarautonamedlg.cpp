@@ -30,9 +30,10 @@
 #include <QGroupBox>
 
 #include "wpolarautonamedlg.h"
-#include <core/qunits.h>
+
 #include <api/planepolar.h>
 #include <api/planexfl.h>
+#include <api/units.h>
 #include <modules/xplane/analysis/wpolarnamemaker.h>
 
 

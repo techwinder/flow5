@@ -60,8 +60,8 @@ void XmlFuseWriter::writeXMLFuse(FuseXfl const *pFuse)
 
     writeStartElement("xflfuse");
     {
-        writeTextElement("Name", pFuse->name());
-        writeTextElement("Description", pFuse->description());
+        writeTextElement("Name", QString::fromStdString(pFuse->name()));
+        writeTextElement("Description", QString::fromStdString(pFuse->description()));
 
         writeComment("If the field AUTOINERTIA is set to TRUE, the fields COG and COG_I** will be ignored");
         writeTextElement("AutoInertia", xfl::boolToString(pFuse->bAutoInertia()));

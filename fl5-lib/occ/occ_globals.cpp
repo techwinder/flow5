@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 #include <iostream>
 #include <filesystem>
 
@@ -127,21 +128,22 @@ std::string occ::shapeOrientation(const TopoDS_Shape &aShape)
 }
 
 
-int occ::listSubShapes(TopoDS_Shape const &aShape, TopAbs_ShapeEnum SubShapeType, std::vector<std::string> &strList, std::string prefix)
+int occ::listSubShapes(TopoDS_Shape const &aShape, TopAbs_ShapeEnum SubShapeType, std::vector<std::string> &strList, std::string prefx)
 {
-    std::string strange;
+    QString prefix = QString::fromStdString(prefx);
+    QString strange;
     strList.clear();
     TopExp_Explorer shapeExplorer;
     int nSub = 0;
     for(shapeExplorer.Init(aShape, SubShapeType); shapeExplorer.More(); shapeExplorer.Next())
     {
         TopoDS_Shape aSub = shapeExplorer.Current();
-        strange = std::format("SubShape {0:2d}:  ", nSub);
-        strange = prefix + strange + shapeType(aSub);
+        strange = QString::asprintf("SubShape %2d:  ", nSub);
+        strange = prefix + strange + QString::fromStdString(shapeType(aSub));
         if     (aSub.Orientation()==TopAbs_FORWARD)  strange += "_FORWARD";
         else if(aSub.Orientation()==TopAbs_REVERSED) strange += "_REVERSED";
 
-        strList.push_back(strange);
+        strList.push_back(strange.toStdString());
 
         nSub++;
     }
@@ -151,89 +153,94 @@ int occ::listSubShapes(TopoDS_Shape const &aShape, TopAbs_ShapeEnum SubShapeType
 
 void occ::listAllSubShapes(TopoDS_Shape const &aShape, std::vector<std::string> &strList)
 {
-    strList.clear();
+
     TopExp_Explorer shapeExplorer;
     int nSub = 0;
 
     nSub = 0;
     for (shapeExplorer.Init(aShape, TopAbs_COMPOUND); shapeExplorer.More(); shapeExplorer.Next()) nSub++;
-    strList.push_back(std::format("Nb. COMPOUND  = {:d}", nSub));
+    strList.push_back(QString::asprintf("Nb. COMPOUND  = %d", nSub).toStdString());
 
     nSub = 0;
     for (shapeExplorer.Init(aShape, TopAbs_COMPSOLID); shapeExplorer.More(); shapeExplorer.Next()) nSub++;
-    strList.push_back(std::format("Nb. COMPSOLID = {:d}", nSub));
+    strList.push_back(QString::asprintf("Nb. COMPSOLID = %d", nSub).toStdString());
 
     nSub = 0;
     for (shapeExplorer.Init(aShape, TopAbs_SOLID); shapeExplorer.More(); shapeExplorer.Next()) nSub++;
-    strList.push_back(std::format("Nb. SOLID     = {:d}", nSub));
+    strList.push_back(QString::asprintf("Nb. SOLID     = %d", nSub).toStdString());
 
     nSub = 0;
     for (shapeExplorer.Init(aShape, TopAbs_SHELL); shapeExplorer.More(); shapeExplorer.Next()) nSub++;
-    strList.push_back(std::format("Nb. SHELL     = {:d}", nSub));
+    strList.push_back(QString::asprintf("Nb. SHELL     = %d", nSub).toStdString());
 
     nSub = 0;
     for (shapeExplorer.Init(aShape, TopAbs_FACE); shapeExplorer.More(); shapeExplorer.Next()) nSub++;
-    strList.push_back(std::format("Nb. FACE      = {:d}", nSub));
+    strList.push_back(QString::asprintf("Nb. FACE      = %d", nSub).toStdString());
 
     nSub = 0;
     for (shapeExplorer.Init(aShape, TopAbs_WIRE); shapeExplorer.More(); shapeExplorer.Next()) nSub++;
-    strList.push_back(std::format("Nb. WIRE      = {:d}", nSub));
+    strList.push_back(QString::asprintf("Nb. WIRE      = %d", nSub).toStdString());
 
     nSub = 0;
     for (shapeExplorer.Init(aShape, TopAbs_EDGE); shapeExplorer.More(); shapeExplorer.Next()) nSub++;
-    strList.push_back(std::format("Nb. EDGE      = {:d}", nSub));
+    strList.push_back(QString::asprintf("Nb. EDGE      = %d", nSub).toStdString());
 
     nSub = 0;
     for (shapeExplorer.Init(aShape, TopAbs_VERTEX); shapeExplorer.More(); shapeExplorer.Next()) nSub++;
-    strList.push_back(std::format("Nb. VERTEX    = {:d}", nSub));
+    strList.push_back(QString::asprintf("Nb. VERTEX    = %d", nSub).toStdString());
 }
 
 
-void occ::listShapeContent(TopoDS_Shape const &shape, std::string &logmsg, std::string const &prefix, bool bFull)
+void occ::listShapeContent(TopoDS_Shape const &shape, std::string &logmsg, std::string const &prefx, bool bFull)
 {
-    logmsg = prefix +"Shape is a " + occ::shapeType(shape) + " made of\n";
+    QString prefix = QString::fromStdString(prefx);
+    QString logg;
+    logg = prefix +"Shape is a " + QString::fromStdString(occ::shapeType(shape)) + " made of\n";
     std::vector<std::string> strList;
 
     int nSolids = occ::listSubShapes(shape, TopAbs_SOLID, strList);
-    logmsg += prefix + std::format("   {0:d} SOLID(s)\n", nSolids);
+    logg += prefix + QString::asprintf("   %d SOLID(s)\n", nSolids);
     if(bFull)
     {
         for(std::string const& str : strList)
         {
-            logmsg += prefix + "      "+ str + "\n";
+            logg += prefix + "      "+ QString::fromStdString(str) + "\n";
         }
     }
 
     int nShells = occ::listSubShapes(shape, TopAbs_SHELL, strList);
-    logmsg += prefix + std::format("   {0:d} SHELL(s)\n", nShells);
+    logg += prefix + QString::asprintf("   %d SHELL(s)\n", nShells);
     if(bFull)
     {
         for(std::string const& str : strList)
         {
-            logmsg += prefix + "      "+ str + "\n";
+            logg += prefix + "      "+ QString::fromStdString(str) + "\n";
         }
     }
 
     int nFaces  = listSubShapes(shape, TopAbs_FACE, strList);
-    logmsg += prefix + std::format("   {0:d} FACE(s)\n", nFaces);
+    logg += prefix + QString::asprintf("   %d FACE(s)\n", nFaces);
     if(bFull)
     {
         for(std::string const& str : strList)
         {
-            logmsg += prefix + "      "+ str + "\n";
+            logg += prefix + "      "+ QString::fromStdString(str) + "\n";
         }
     }
 
     int nWires  = occ::listSubShapes(shape, TopAbs_WIRE, strList);
-    logmsg += prefix + std::format("   {0:d} WIRE(s)\n", nWires);
+    logg += prefix + QString::asprintf("   %d WIRE(s)\n", nWires);
     int nEdges  = occ::listSubShapes(shape, TopAbs_EDGE, strList);
-    logmsg += prefix + std::format("   {0:d} EDGE(s)", nEdges);
-    logmsg += "\n";
+    logg += prefix + QString::asprintf("   %d EDGE(s)", nEdges);
+    logg += "\n";
+
+    logmsg = logg.toStdString();
 }
 
 
 void occ::checkShape(TopoDS_Shape const &shape, std::string & logmsg, std::string const & prefix)
 {
+    logmsg.clear();
 /*    logmsg += prefix + std::string("Shape status:\n");
     logmsg += prefix + std::string("   checked:  ") + (shape.Checked()  ? "true" : "false") + std::string("\n");
     logmsg += prefix + std::string("   closed:   ") + (shape.Closed()   ? "true" : "false") + std::string("\n");
@@ -526,7 +533,7 @@ void occ::findWires(const TopoDS_Shape &theshape, TopoDS_Wire &theOuterWire, Top
         nClosed++;
     }
     (void)nClosed;
-//    strange = std::format("   Includes %d closed wires\n", nClosed);
+//    strange = QString::asprintf("   Includes %d closed wires\n", nClosed);
 //    logmsg += prefix + strange;
 
     const TopoDS_Compound& openwires = shapeAnalyzer.GetOpenWires();
@@ -537,7 +544,7 @@ void occ::findWires(const TopoDS_Shape &theshape, TopoDS_Wire &theOuterWire, Top
         nOpen++;
     }
     (void)nOpen;
-//    strange = std::format("   Includes {:d} open wires\n", nOpen);
+//    strange = QString::asprintf("   Includes %d open wires\n", nOpen);
 //    logmsg += prefix + strange;
 }
 
@@ -568,7 +575,7 @@ void occ::findEdges(TopoDS_Shape const &theshape, TopoDS_ListOfShape &edges, std
         }
     }
 
-    strange = std::format("   Found {:d} valid EDGE\n   Found {:d} invalid EDGE\n", nValid, nInvalid);
+    strange = QString::asprintf("   Found %d valid EDGE\n   Found %d invalid EDGE\n", nValid, nInvalid).toStdString();
     logmsg.append(strange);
 }
 
@@ -929,8 +936,8 @@ void occ::stitchFaces(double stitchprecision, TopoDS_Shape &theshape, TopoDS_She
         stitcher.Add(aSub);
     }
     stitcher.Perform();
-    logmsg += std::format("   Nb of free edges={0:d}\n", stitcher.NbFreeEdges());
-    logmsg += std::format("   Nb of contiguous edges={0:d}\n", stitcher.NbContigousEdges());
+    logmsg += QString::asprintf("   Nb of free edges=%d\n", stitcher.NbFreeEdges()).toStdString();
+    logmsg += QString::asprintf("   Nb of contiguous edges=%d\n", stitcher.NbContigousEdges()).toStdString();
 
 /*    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
     After a successful sewing operation all faces have a coherent orientation.*/
@@ -987,8 +994,8 @@ bool occ::makeFuseSolid(Fuse *pFuse, TopoDS_Solid &solidshape, std::string &logm
         }
         // stitch
         stitcher.Perform();
-        logmsg += std::format("   Nb of free edges={0:d}\n",       stitcher.NbFreeEdges());
-        logmsg += std::format("   Nb of contiguous edges={0:d}\n", stitcher.NbContigousEdges());
+        logmsg += QString::asprintf("   Nb of free edges=%d\n",       stitcher.NbFreeEdges()).toStdString();
+        logmsg += QString::asprintf("   Nb of contiguous edges=%d\n", stitcher.NbContigousEdges()).toStdString();
 
 
 //    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
@@ -1205,8 +1212,8 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
 
     // stitch
     stitcher.Perform();
-    logmsg += std::format("   Nb of free edges={0:d}\n", stitcher.NbFreeEdges());
-    logmsg += std::format("   Nb of contiguous edges={0:d}\n", stitcher.NbContigousEdges());
+    logmsg += QString::asprintf("   Nb of free edges=%d\n", stitcher.NbFreeEdges()).toStdString();
+    logmsg += QString::asprintf("   Nb of contiguous edges=%d\n", stitcher.NbContigousEdges()).toStdString();
 
 //    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
 //    After a successful sewing operation all faces have a coherent orientation.
@@ -1232,7 +1239,9 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
 
             logmsg += "   Wing stitching result is " + occ::shapeType(wingshape) + "\n";
 
-            occ::checkShape(wingshape, logmsg, "   ");
+            std::string str;
+            occ::checkShape(wingshape, str, "   ");
+            logmsg += "   " + pWing->name() +": "+  str;
         }
     }
     catch(Standard_TypeMismatch const &)
@@ -1240,7 +1249,6 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
         logmsg += "     WingShapes:: Type mismatch error\n";
     }
 
-    logmsg += "\n";
 }
 
 
@@ -1692,10 +1700,10 @@ bool occ::importBRep(std::string const &filename, TopoDS_ListOfShape &shapes, do
 bool occ::importSTEP(const std::string &filename, TopoDS_ListOfShape &shapes, double &dimension, std::string &logmsg)
 {
     std::string msg;
+    QString logg;
+    QString strange;
 
-    std::string strange;
-
-    logmsg.clear();
+    logg.clear();
 //    logmsg += "   Assuming file length unit is mm - scale the model and re-tessellate if necessary\n";
 
 //    TCollection_AsciiString  aFilePath = std::string::fromStdString(filename).toUtf8().data();
@@ -1722,7 +1730,7 @@ bool occ::importSTEP(const std::string &filename, TopoDS_ListOfShape &shapes, do
         Handle(StepData_StepModel)  stepmodel = aReader.StepModel();
         if(stepmodel.IsNull())
         {
-            logmsg += "   Unknown error importing STEP model\n";
+            logg += "   Unknown error importing STEP model\n";
             return false;
         }
 
@@ -1745,46 +1753,46 @@ bool occ::importSTEP(const std::string &filename, TopoDS_ListOfShape &shapes, do
         //        aReader.PrintCheckLoad(failsonly, IFSelect_ItemsByEntity);
 
         int nbr = aReader.NbRootsForTransfer();
-        std::string strong;
+        QString strong;
 
         for (Standard_Integer n=1; n<=nbr; n++)
         {
             try
             {
-                strong = std::format("   Transferring  root {0:d}/{1:d}\n", n, nbr);
-                logmsg += strong;
+                strong = QString::asprintf("   Transferring  root %d/%d\n", n, nbr);
+                logg += strong;
 
                 aReader.ClearShapes();
-                bool ok = aReader.TransferRoot(n);
+                bool bOk = aReader.TransferRoot(n);
                 int nbs = aReader.NbShapes();
-                strong = std::format("      Loading {0:d} shape(s)\n", nbs);
-                logmsg += strong;
+                strong = QString::asprintf("      Loading %d shape(s)\n", nbs);
+                logg += strong;
 
 
                 IFSelect_PrintCount mode = IFSelect_ItemsByEntity;
 
                 aReader.PrintCheckLoad(false, mode);
-                if (ok==true && nbs>0)
+                if (bOk && nbs>0)
                 {
                     for (int i=1; i<=nbs; i++)
                     {
                         TopoDS_Shape aShape = aReader.Shape(i);
                         shapes.Append(aShape);
                         listShapeContent(aShape, msg, "      ");
-                        logmsg += msg;
+                        logg += QString::fromStdString(msg);
                     }
                 }
-                logmsg += "\n";
+                logg += "\n";
             }
             catch(...)
             {
-                logmsg += "   Unknown error importing STEP model\n";
+                logg += "   Unknown error importing STEP model\n";
                 return false;
             }
         }
 
-        strange = std::format("   Imported {0:d} shape(s)\n", shapes.Extent());
-        logmsg += strange;
+        strange = QString::asprintf("   Imported %d shape(s)\n", shapes.Extent());
+        logg += strange;
 
         // get some kind of reference dimension
         dimension=0.0;
@@ -1813,10 +1821,10 @@ bool occ::importSTEP(const std::string &filename, TopoDS_ListOfShape &shapes, do
                 catch(Geom_UndefinedValue const &ex)
                 {
 
-                    strange  = "Exception raised when calculating object length: " + std::string(ex.GetMessageString());
+                    strange  = "Exception raised when calculating object length: " + QString::fromStdString(ex.GetMessageString());
                     strange += "\n";
                     strange += "Aborting\n";
-                    logmsg += strange;
+                    logg += strange;
 
                     return false;
                 }
@@ -1834,8 +1842,8 @@ bool occ::importSTEP(const std::string &filename, TopoDS_ListOfShape &shapes, do
             (void)iFace;
         }
 
-        strong = std::format("   Reference length to display the model= {0:7.2f} meters\n\n", dimension);
-        logmsg += strong;
+        strong = QString::asprintf("   Reference length to display the model= %7.2f meters\n\n", dimension);
+        logg += strong;
 /*        Handle(ShapeFix_Shell) SFS = new ShapeFix_Shell();
         for(TopoDS_ListIteratorOfListOfShape bodyIt(occbody.m_Shell); bodyIt.More(); bodyIt.Next())
         {
@@ -1846,13 +1854,15 @@ bool occ::importSTEP(const std::string &filename, TopoDS_ListOfShape &shapes, do
     else
     {
         strange = "Error importing STEP file\n";
-        logmsg += strange;
+        logg += strange;
 
         return false;
     }
 
     strange = "Importing STEP file...  DONE\n\n";
-    logmsg += strange;
+    logg += strange;
+
+    logmsg = logg.toStdString();
     return true;
 }
 
@@ -2372,6 +2382,7 @@ bool occ::makeOCCSplineFromBSpline3d(BSpline3d const &b3d, Handle(Geom_BSplineCu
 
 void occ::makeOCCNURBSFromNurbs(NURBSSurface const &nurbs, bool bXZSymmetric, Handle(Geom_BSplineSurface)& hnurbs, std::string &logmsg)
 {
+    logmsg.clear();
     std::string strong;
 
     int nu = nurbs.frameCount();
@@ -2603,15 +2614,19 @@ void occ::rotateShape(TopoDS_Shape &shape, Vector3d const &O, Vector3d const &ax
 bool occ::makeWing2NurbsShape(WingXfl const *pWing, double stitchprecision, int degree, int nCtrlPoints, int nOutPoints,
                               TopoDS_Shape &wingshape, std::string &logmsg)
 {
+    QString logg;
+
+    std::string str;
+
     if(!pWing)
     {
-        logmsg += "No wing to process\n";
+        logg += "No wing to process\n";
         return false;
     }
     std::string strange;
 
     std::string strong = "Processing wing "+ pWing->name() + "\n";
-    logmsg += strong;
+    logg += QString::fromStdString(strong);
 
     BRepBuilderAPI_Sewing stitcher(stitchprecision);
 
@@ -2628,8 +2643,10 @@ bool occ::makeWing2NurbsShape(WingXfl const *pWing, double stitchprecision, int 
             BRepBuilderAPI_MakeWire WireMaker;
             surf.makeSectionHalfSpline(true,  true, degree, nCtrlPoints, nOutPoints, b3dtop);
             surf.makeSectionHalfSpline(false, true, degree, nCtrlPoints, nOutPoints, b3dbot);
-            makeSplineWire(b3dtop, TopWire, logmsg);
-            makeSplineWire(b3dbot, BotWire, logmsg);
+            makeSplineWire(b3dtop, TopWire, str);
+            logg += QString::fromStdString(str);
+            makeSplineWire(b3dbot, BotWire, str);
+            logg += QString::fromStdString(str);
             WireMaker.Add(TopWire);
             WireMaker.Add(BotWire);
 
@@ -2650,19 +2667,19 @@ qDebug()<<"occspliness"<<HBotCurve->Degree()<<HBotCurve->NbPoles()<<HTopCurve->D
 
             if(!WireMaker.IsDone())
             {
-                logmsg += "   Error making left tip WIRE\n";
+                logg += "   Error making left tip WIRE\n";
                 return false;
             }
             TopoDS_Wire RightWire = WireMaker.Wire();
             if(RightWire.IsNull())
             {
-                logmsg += "   Error making left tip WIRE\n";
+                logg += "   Error making left tip WIRE\n";
                 return false;
             }
             BRepBuilderAPI_MakeFace FaceMaker(RightWire);
             if(!FaceMaker.IsDone())
             {
-                logmsg += "   Error making left tip FACE\n";
+                logg += "   Error making left tip FACE\n";
             }
             else
             {
@@ -2676,8 +2693,11 @@ qDebug()<<"occspliness"<<HBotCurve->Degree()<<HBotCurve->NbPoles()<<HTopCurve->D
         {
             surf.makeSectionHalfSpline(true,  false, degree, nCtrlPoints, nOutPoints, b3dtop);
             surf.makeSectionHalfSpline(false, false, degree, nCtrlPoints, nOutPoints, b3dbot);
-            makeSplineWire(b3dtop, TopWire, logmsg);
-            makeSplineWire(b3dbot, BotWire, logmsg);
+            makeSplineWire(b3dtop, TopWire, str);
+            logg += QString::fromStdString(str);
+
+            makeSplineWire(b3dbot, BotWire, str);
+            logg += QString::fromStdString(str);
 
             //assemble the top and bot wires to make a profile
             BRepBuilderAPI_MakeWire WireMaker;
@@ -2685,19 +2705,19 @@ qDebug()<<"occspliness"<<HBotCurve->Degree()<<HBotCurve->NbPoles()<<HTopCurve->D
             WireMaker.Add(BotWire);
             if(!WireMaker.IsDone())
             {
-                logmsg += "   Error making right tip WIRE\n";
+                logg += "   Error making right tip WIRE\n";
                 return false;
             }
             TopoDS_Wire RightWire = WireMaker.Wire();
             if(RightWire.IsNull())
             {
-                logmsg += "   Error making right tip WIRE\n";
+                logg += "   Error making right tip WIRE\n";
                 return false;
             }
             BRepBuilderAPI_MakeFace FaceMaker(RightWire);
             if(!FaceMaker.IsDone())
             {
-                logmsg += "   Error making right tip FACE\n";
+                logg += "   Error making right tip FACE\n";
             }
             else
             {
@@ -2726,7 +2746,8 @@ qDebug()<<"occspliness"<<HBotCurve->Degree()<<HBotCurve->NbPoles()<<HTopCurve->D
 
             //------Build the right NURBS surface-----
             Handle(Geom_BSplineSurface) HNURBSSurface;
-            makeOCCNURBSFromNurbs(nurbs, false, HNURBSSurface, logmsg);
+            makeOCCNURBSFromNurbs(nurbs, false, HNURBSSurface, str);
+            logg += QString::fromStdString(str);
             TopoDS_Face NURBSface;
             //-----make a shell from the surface-----
             try
@@ -2734,7 +2755,7 @@ qDebug()<<"occspliness"<<HBotCurve->Degree()<<HBotCurve->NbPoles()<<HTopCurve->D
                 BRepBuilderAPI_MakeFace shellmaker(HNURBSSurface,1.e-5);
                 if(!shellmaker.IsDone())
                 {
-                    logmsg += "   Error making SHELL from NURBS... \n";
+                    logg += "   Error making SHELL from NURBS... \n";
                     return false;
                 }
 
@@ -2742,18 +2763,18 @@ qDebug()<<"occspliness"<<HBotCurve->Degree()<<HBotCurve->NbPoles()<<HTopCurve->D
 
                 if(NURBSface.IsNull())
                 {
-                    logmsg += "   NURBS shape is NULL\n";
+                    logg += "   NURBS shape is NULL\n";
                     return false;
                 }
             }
             catch (StdFail_NotDone const &ex)
             {
-                logmsg += "   BRepBuilderAPI_MakeShell::StdFail_NotDone" + std::string(ex.GetMessageString()) +"\n";
+                logg += "   BRepBuilderAPI_MakeShell::StdFail_NotDone" + QString(ex.GetMessageString()) +"\n";
                 return false;
             }
             catch (...)
             {
-                logmsg += "   BRepBuilderAPI_MakeShell::Unknown failure\n";
+                logg += "   BRepBuilderAPI_MakeShell::Unknown failure\n";
                 return false;
             }
 
@@ -2787,9 +2808,9 @@ for(int iu=1; iu<3; iu++)
 
     // stitch
     stitcher.Perform();
-    logmsg += std::format("   Nb of free edges       = {0:d}\n", stitcher.NbFreeEdges());
-    logmsg += std::format("   Nb of contiguous edges = {0:d}\n", stitcher.NbContigousEdges());
-    logmsg += std::format("   Nb of multiple edges   = {0:d}\n", stitcher.NbMultipleEdges());
+    logg += QString::asprintf("   Nb of free edges       = %d\n", stitcher.NbFreeEdges());
+    logg += QString::asprintf("   Nb of contiguous edges = %d\n", stitcher.NbContigousEdges());
+    logg += QString::asprintf("   Nb of multiple edges   = %d\n", stitcher.NbMultipleEdges());
 
 //    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
 //    After a successful sewing operation all faces have a coherent orientation.
@@ -2806,18 +2827,18 @@ for(int iu=1; iu<3; iu++)
             BRepBuilderAPI_MakeSolid solidMaker(WingShellShape);
             if(!solidMaker.IsDone())
             {
-                logmsg += "   Solid not made... \n";
+                logg += "   Solid not made... \n";
                 wingshape.Nullify();
                 return false;
             }
             wingshape = solidMaker.Shape();
 
-            logmsg += "   Wing stitching result is " +shapeType(wingshape) + "\n";
+            logg += "   Wing stitching result is " + QString::fromStdString(shapeType(wingshape)) + "\n";
 
             listShapeContent(wingshape, strange, "   ", true);
-            logmsg += strange+"\n";
+            logg += QString::fromStdString(strange) +"\n";
 
-            checkShape(wingshape, logmsg, "   ");
+            checkShape(wingshape, str, "   ");
 /*            BRepCheck_Analyzer ShapeAnalyzer(wingshape);
             if(ShapeAnalyzer.IsValid()) logmsg += "   Shape topology is VALID\n\n";
             else                        logmsg += "   Shape topology is NOT VALID\n";*/
@@ -2825,10 +2846,13 @@ for(int iu=1; iu<3; iu++)
     }
     catch(Standard_TypeMismatch const &ex)
     {
-        logmsg += "     BRepBuilderAPI_MakeSolid::Standard_TypeMismatch " + std::string(ex.GetMessageString()) +"\n";
+        logg += "     BRepBuilderAPI_MakeSolid::Standard_TypeMismatch " + QString(ex.GetMessageString()) +"\n";
     }
 
-    logmsg += "\n";
+    logg += "\n";
+
+    logmsg = logg.toStdString();
+
     return true;
 }
 
@@ -2836,14 +2860,17 @@ for(int iu=1; iu<3; iu++)
 bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int degree, int nCtrlPoints, int nOutPoints,
                               TopoDS_Shape &wingshape, std::string &logmsg)
 {
+
     if(!pWing)
     {
         logmsg += "No wing to process\n";
         return false;
     }
 
-    std::string strong = "Processing wing "+ pWing->name() + "\n";
-    logmsg += strong;
+    std::string str;
+    QString logg;
+    QString strong = "Processing wing "+ QString::fromStdString(pWing->name()) + "\n";
+    logg += strong;
 
     BRepBuilderAPI_Sewing stitcher(stitchprecision);
 
@@ -2855,30 +2882,34 @@ bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int 
         Surface const &surf = pWing->surfaceAt(iSurf);
 
         if(!surf.makeSectionHalfSpline(true,  true, degree, nCtrlPoints, nOutPoints, b3dtopleft) ||
-           !makeSplineWire(b3dtopleft, TopLeftWire, logmsg))
+           !makeSplineWire(b3dtopleft, TopLeftWire, str))
         {
-            logmsg += std::format("   Error making top left spline of surface {0:d}", iSurf);
+            logg += QString::fromStdString(str);
+            logg += QString::asprintf("   Error making top left spline of surface %d", iSurf);
             return false;
         }
 
         if(!surf.makeSectionHalfSpline(false, true, degree, nCtrlPoints, nOutPoints, b3dbotleft) ||
-           !makeSplineWire(b3dbotleft, BotLeftWire, logmsg))
+           !makeSplineWire(b3dbotleft, BotLeftWire, str))
         {
-            logmsg += std::format("   Error making bottom left spline of surface {0:d}", iSurf);
+            logg += QString::fromStdString(str);
+            logg += QString::asprintf("   Error making bottom left spline of surface %d", iSurf);
             return false;
         }
 
         if(!surf.makeSectionHalfSpline(true,  false, degree, nCtrlPoints, nOutPoints, b3dtopright) ||
-           !makeSplineWire(b3dtopright, TopRightWire, logmsg))
+           !makeSplineWire(b3dtopright, TopRightWire, str))
         {
-            logmsg += std::format("   Error making top right spline of surface {0:d}", iSurf);
+            logg += QString::fromStdString(str);
+            logg += QString::asprintf("   Error making top right spline of surface %d", iSurf);
             return false;
         }
 
         if(!surf.makeSectionHalfSpline(false, false, degree, nCtrlPoints, nOutPoints, b3dbotright) ||
-           !makeSplineWire(b3dbotright, BotRightWire, logmsg))
+           !makeSplineWire(b3dbotright, BotRightWire, str))
         {
-            logmsg += std::format("   Error making bottom right spline of surface {0:d}", iSurf);
+            logg += QString::fromStdString(str);
+            logg += QString::asprintf("   Error making bottom right spline of surface %d", iSurf);
             return false;
         }
 
@@ -2891,19 +2922,19 @@ bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int 
 
             if(!LeftWireMaker.IsDone())
             {
-                logmsg += "   Error making left tip WIRE\n";
+                logg += "   Error making left tip WIRE\n";
                 return false;
             }
             TopoDS_Wire LeftWire = LeftWireMaker.Wire();
             if(LeftWire.IsNull())
             {
-                logmsg += "   Error making left tip WIRE\n";
+                logg += "   Error making left tip WIRE\n";
                 return false;
             }
             BRepBuilderAPI_MakeFace FaceMaker(LeftWire);
             if(!FaceMaker.IsDone())
             {
-                logmsg += "   Error making left tip FACE\n";
+                logg += "   Error making left tip FACE\n";
             }
             else
             {
@@ -2921,19 +2952,19 @@ bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int 
             RightWireMaker.Add(BotRightWire);
             if(!RightWireMaker.IsDone())
             {
-                logmsg += "   Error making right tip WIRE\n";
+                logg += "   Error making right tip WIRE\n";
                 return false;
             }
             TopoDS_Wire RightWire = RightWireMaker.Wire();
             if(RightWire.IsNull())
             {
-                logmsg += "   Error making right tip WIRE\n";
+                logg += "   Error making right tip WIRE\n";
                 return false;
             }
             BRepBuilderAPI_MakeFace FaceMaker(RightWire);
             if(!FaceMaker.IsDone())
             {
-                logmsg += "   Error making right tip FACE\n";
+                logg += "   Error making right tip FACE\n";
             }
             else
             {
@@ -2968,16 +2999,16 @@ bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int 
         }
         catch(Standard_DomainError const &)
         {
-            logmsg += "     Standard_DomainError sweeping wires\n";
+            logg += "     Standard_DomainError sweeping wires\n";
         }
         catch (StdFail_NotDone &)
         {
-            logmsg += "   StdFail_NotDone sweeping wires\n";
+            logg += "   StdFail_NotDone sweeping wires\n";
             return false;
         }
         catch (...)
         {
-            logmsg += "   Unknown error sweeping section wires\n";
+            logg += "   Unknown error sweeping section wires\n";
             return false;
         }
     }
@@ -3000,32 +3031,34 @@ bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int 
             BRepBuilderAPI_MakeSolid solidMaker(WingShellShape);
             if(!solidMaker.IsDone())
             {
-                logmsg += "   Solid not made... \n";
+                logg += "   Solid not made... \n";
                 wingshape.Nullify();
                 return false;
             }
             wingshape = solidMaker.Shape().Reversed();
 
-            logmsg += "   Wing stitching result is " +shapeType(wingshape) + "\n";
+            logg += "   Wing stitching result is " + QString::fromStdString(shapeType(wingshape)) + "\n";
 
             std::string log;
 
             checkShape(wingshape, log, "   ");
-            logmsg += log;
+            logg += QString::fromStdString(log);
             log.clear();
-            listShapeContent(wingshape, logmsg, "   ", true);
+            listShapeContent(wingshape, str, "   ", true);
 
-            logmsg += std::format("   Nb. of free edges={0:d}\n",       stitcher.NbFreeEdges());
-            logmsg += std::format("   Nb. of contiguous edges={0:d}\n", stitcher.NbContigousEdges());
+            logg += QString::fromStdString(str);
+
+            logg += QString::asprintf("   Nb. of free edges=%d\n",       stitcher.NbFreeEdges());
+            logg += QString::asprintf("   Nb. of contiguous edges=%d\n", stitcher.NbContigousEdges());
         }
     }
     catch(Standard_TypeMismatch const &)
     {
-        logmsg += "     WingShapes:: Type mismatch error\n";
+        logg += "     WingShapes:: Type mismatch error\n";
         return false;
     }
 
-    logmsg += "\n";
+    logg += "\n";
     return true;
 }
 
@@ -3177,8 +3210,8 @@ bool occ::makeWingSplineSweepMultiSections(WingXfl const *pWing, double stitchpr
 
     // stitch
     stitcher.Perform();
-    logmsg += std::format("   Nb of free edges={0:d}\n", stitcher.NbFreeEdges());
-    logmsg += std::format("   Nb of contiguous edges={0:d}\n", stitcher.NbContigousEdges());
+    logmsg += QString::asprintf("   Nb of free edges=%d\n", stitcher.NbFreeEdges()).toStdString();
+    logmsg += QString::asprintf("   Nb of contiguous edges=%d\n", stitcher.NbContigousEdges()).toStdString();
 
 //    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
 //    After a successful sewing operation all faces have a coherent orientation.

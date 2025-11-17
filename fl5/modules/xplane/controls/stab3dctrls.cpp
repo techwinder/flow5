@@ -35,7 +35,7 @@
 #include <api/geom_global.h>
 #include <api/planeopp.h>
 #include <api/planexfl.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 #include <api/planepolar.h>
 #include <core/displayoptions.h>
@@ -444,12 +444,12 @@ void Stab3dCtrls::getPosition(PlaneOpp const*pPOpp, int iMode, double t)
 void Stab3dCtrls::updateDof()
 {
     QString strange;
-    strange   = QString::asprintf("x  = %9.5f ", m_ModeState[0] * Units::mtoUnit()) + QUnits::lengthUnitLabel() + EOLCHAR;
-    strange  += QString::asprintf("y  = %9.5f ", m_ModeState[1] * Units::mtoUnit()) + QUnits::lengthUnitLabel() + EOLCHAR;
-    strange  += QString::asprintf("z  = %9.5f ", m_ModeState[2] * Units::mtoUnit()) + QUnits::lengthUnitLabel() + EOLCHAR;
-    strange  += QString::asprintf("rx = %9.5f",  m_ModeState[3]*180.0/PI) + DEGCHAR + EOLCHAR;
-    strange  += QString::asprintf("ry = %9.5f",  m_ModeState[4]*180.0/PI) + DEGCHAR + EOLCHAR;
-    strange  += QString::asprintf("rz = %9.5f",  m_ModeState[5]*180.0/PI) + DEGCHAR + EOLCHAR;
+    strange   = QString::asprintf("x  = %9.5f ", m_ModeState[0] * Units::mtoUnit()) + QUnits::lengthUnitLabel() + EOLch;
+    strange  += QString::asprintf("y  = %9.5f ", m_ModeState[1] * Units::mtoUnit()) + QUnits::lengthUnitLabel() + EOLch;
+    strange  += QString::asprintf("z  = %9.5f ", m_ModeState[2] * Units::mtoUnit()) + QUnits::lengthUnitLabel() + EOLch;
+    strange  += QString::asprintf("rx = %9.5f",  m_ModeState[3]*180.0/PI) + DEGch + EOLch;
+    strange  += QString::asprintf("ry = %9.5f",  m_ModeState[4]*180.0/PI) + DEGch + EOLch;
+    strange  += QString::asprintf("rz = %9.5f",  m_ModeState[5]*180.0/PI) + DEGch + EOLch;
 
     m_plabdof->setText(strange);
     m_plabdof->adjustSize();

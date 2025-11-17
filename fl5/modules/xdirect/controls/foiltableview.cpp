@@ -79,7 +79,7 @@ void FoilTableView::makeFoilTable()
     m_pFoilModel->setHeaderData(3,  Qt::Horizontal, "Camber (%)");
     m_pFoilModel->setHeaderData(4,  Qt::Horizontal, "at (%)");
     m_pFoilModel->setHeaderData(5,  Qt::Horizontal, "Points");
-    m_pFoilModel->setHeaderData(6,  Qt::Horizontal, "TE Flap ("+DEGCHAR+")");
+    m_pFoilModel->setHeaderData(6,  Qt::Horizontal, "TE Flap ("+DEGch+")");
     m_pFoilModel->setHeaderData(7,  Qt::Horizontal, "TE XHinge (%)");
     m_pFoilModel->setHeaderData(8,  Qt::Horizontal, "TE YHinge (%)");
     m_pFoilModel->setHeaderData(9,  Qt::Horizontal, "Show");
@@ -124,7 +124,7 @@ void FoilTableView::selectFoil(Foil *pFoil)
         QStandardItem *pItem = m_pFoilModel->item(row,0);
         if(!pItem) return;
         QString foilname = pItem->text();
-        if(foilname==pFoil->name())
+        if(foilname==QString::fromStdString(pFoil->name()))
         {
             setCurrentIndex(m_pFoilModel->index(row,0));
             break;

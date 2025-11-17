@@ -107,7 +107,7 @@ class FL5LIB_EXPORT PlaneOpp : public Opp3d
         bool serializePOppXFL(QDataStream &ar, bool bIsStoring);
         bool serializeFl5(QDataStream &ar, bool bIsStoring);
 
-        void getProperties(const Plane *pPlane, const PlanePolar *pWPolar, std::string &PlaneOppProperties) const;
+        void getProperties(const Plane *pPlane, const PlanePolar *pWPolar, std::string &properties) const;
 
 
         std::string name() const override;
@@ -115,8 +115,8 @@ class FL5LIB_EXPORT PlaneOpp : public Opp3d
 
         void computeStabilityInertia(const double *Inertia);
         void buildStateMatrices(int nAVLCtrls);
-        bool solveEigenvalues(std::string &log);
-        void outputEigen(std::string &log);
+        bool solveEigenvalues(std::string &logmsg);
+        void outputEigen(std::string &logmsg);
 
         double mass() const {return m_Mass;}
         Vector3d const &cog() const {return m_CoG;}

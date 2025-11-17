@@ -67,9 +67,9 @@ void XmlBtPolarWriter::writeBtPolarData(BoatPolar const *pBtPolar)
 
    writeStartElement("Polar");
    {
-       writeTextElement("Polar_Name", pBtPolar->name());
+       writeTextElement("Polar_Name", QString::fromStdString(pBtPolar->name()));
        writeComment("For scripts: if the boat's name is left blank, the analysis will be associated to all available boats");
-       writeTextElement("Boat_Name", pBtPolar->boatName());
+       writeTextElement("Boat_Name", QString::fromStdString(pBtPolar->boatName()));
        writeComment("Boat polars are necessarily of the control type");
 
        writeTheStyle(pBtPolar->theStyle());

@@ -57,7 +57,7 @@
 #include <api/utils.h>
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/trace.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/poppctrls/crossflowctrls.h>
@@ -1241,7 +1241,7 @@ void gl3dXSailView::glRenderOppBuffers()
                 y = (2.0*(O.y)+ AWS.y)/2.0;
                 z = (2.0*(O.z)+ AWS.z)/2.0;
                 glRenderText(x+0.015/double(m_glScalef), y+0.015/double(m_glScalef), z+0.015/double(m_glScalef),
-                             "AWS" + INFCHAR + QString::asprintf("=%g ", AWS.norm()*Units::mstoUnit())+QUnits::speedUnitLabel(),
+                             "AWS" + INFch + QString::asprintf("=%g ", AWS.norm()*Units::mstoUnit())+QUnits::speedUnitLabel(),
                              xfl::fromfl5Clr(W3dPrefs::s_WindStyle.m_Color).darker(), true);
 
                 if(Vb>0.01)
@@ -1250,7 +1250,7 @@ void gl3dXSailView::glRenderOppBuffers()
                     y=(2.0*(O.y)+ TWS.y)/2.0;
                     z=(2.0*(O.z)+ TWS.z)/2.0;
                     glRenderText(x+0.015/double(m_glScalef), y+0.015/double(m_glScalef), z+0.015/double(m_glScalef),
-                                 "TWS"+INFCHAR+QString::asprintf("=%g ", TWS_inf.norm()*Units::mstoUnit())+QUnits::speedUnitLabel(),
+                                 "TWS"+INFch+QString::asprintf("=%g ", TWS_inf.norm()*Units::mstoUnit())+QUnits::speedUnitLabel(),
                                  xfl::fromfl5Clr(W3dPrefs::s_WindStyle.m_Color), true);
 
                     paintThinArrow(O+AWS, VB, Qt::darkCyan, W3dPrefs::s_WindStyle.m_Width, W3dPrefs::s_WindStyle.m_Stipple, m_matModel);
@@ -2484,9 +2484,7 @@ void gl3dXSailView::makeBoids()
 
 void gl3dXSailView::moveBoids()
 {
-#ifdef Q_OS_MAC
-    return;
-#endif
+#ifndef Q_OS_MAC
 
     if(oglMajor()*10+oglMinor()<43) return;
 
@@ -2535,6 +2533,7 @@ void gl3dXSailView::moveBoids()
     }
     m_shadFlow.release();
 
+#endif
 }
 
 

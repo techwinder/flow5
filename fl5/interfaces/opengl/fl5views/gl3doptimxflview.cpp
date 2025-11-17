@@ -29,6 +29,7 @@
 #include <QOpenGLPaintDevice>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QQuaternion>
 
 #include "gl3doptimxflview.h"
 #include <interfaces/controls/poppctrls/crossflowctrls.h>

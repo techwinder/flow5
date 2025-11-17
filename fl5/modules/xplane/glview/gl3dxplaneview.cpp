@@ -60,7 +60,7 @@
 
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/trace.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/poppctrls/crossflowctrls.h>
@@ -3560,9 +3560,8 @@ void gl3dXPlaneView::glMakeFlowBuffers()
 
 void gl3dXPlaneView::moveBoids()
 {
-#ifdef Q_OS_MAC
-    return;
-#endif
+#ifndef Q_OS_MAC
+
 
     if(oglMajor()*10+oglMinor()<43) return;
 
@@ -3611,6 +3610,7 @@ void gl3dXPlaneView::moveBoids()
     }
     m_shadFlow.release();
 
+#endif
 }
 
 

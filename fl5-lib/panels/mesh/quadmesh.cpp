@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 #include <api/quadmesh.h>
 #include <api/geom_global.h>
@@ -62,13 +63,13 @@ void QuadMesh::rotate(double alpha, double beta, double phi)
 }
 
 
-void QuadMesh::getMeshInfo(std::string &log) const
+void QuadMesh::getMeshInfo(std::string &logmsg) const
 {
-    std::string strong;
+    QString log, strong;
     double minarea(0), maxarea(0);
     int minareaindex(0), maxareaindex(0);
 
-    strong = std::format("    Nbr of quads = {0:d}, Nbr of nodes = {1:d}", nPanels(), nNodes());
+    strong = QString::asprintf("    Nbr of quads = %d, Nbr of nodes = %d", nPanels(), nNodes());
     log += strong +"\n";
     minarea = 1.e10;
     maxarea = 0.0;
@@ -88,24 +89,27 @@ void QuadMesh::getMeshInfo(std::string &log) const
         }
     }
 
-    strong = std::format("    min. panel area = {0:9.3g} ", minarea*Units::m2toUnit());
-    strong += Units::areaUnitLabel();
+    strong = QString::asprintf("    min. panel area = %9.3g ", minarea*Units::m2toUnit());
+    strong += QUnits::areaUnitLabel();
     log += strong;
-    strong = std::format(" for panel %d\n", minareaindex);
+    strong = QString::asprintf(" for panel %d\n", minareaindex);
     log += strong;
-    strong = std::format("    max. panel area = {0:9.3g} ", maxarea*Units::m2toUnit());
-    strong += Units::areaUnitLabel();
+    strong = QString::asprintf("    max. panel area = %9.3g ", maxarea*Units::m2toUnit());
+    strong += QUnits::areaUnitLabel();
     log += strong;
-    strong = std::format(" for panel %d\n", maxareaindex);
+    strong = QString::asprintf(" for panel %d\n", maxareaindex);
     log += strong;
+
+    logmsg = log.toStdString();
 }
 
 
-void QuadMesh::checkPanels(std::string &log, bool bMinAngle, bool bMinArea, bool bWarp,
+void QuadMesh::checkPanels(std::string &logmsg, bool bMinAngle, bool bMinArea, bool bWarp,
                            std::vector<int> &minanglelist, std::vector<int>&minarealist, std::vector<int>&warplist,
                            double minangle, double minarea, double maxquadwarp)
 {
-    std::string strong;
+    QString log;
+    QString strong;
     int count = 0;
 
     if(bMinAngle)
@@ -120,7 +124,7 @@ void QuadMesh::checkPanels(std::string &log, bool bMinAngle, bool bMinArea, bool
             {
                 minanglelist.push_back(i4);
                 count++;
-                strong = std::format("   Panel {0:4d} has min angle {1:5.1f}",i4, minangle);
+                strong = QString::asprintf("   Panel %4d has min angle %5.1f",i4, minangle);
                 strong += DEGch + "\n";
                 log += strong;
             }
@@ -128,12 +132,12 @@ void QuadMesh::checkPanels(std::string &log, bool bMinAngle, bool bMinArea, bool
 
         if(!minanglelist.size())
         {
-            strong = std::format("No panel with vertex angle less than {0:.2f}", minangle);
+            strong = QString::asprintf("No panel with vertex angle less than %2f", minangle);
             strong += DEGch + "found\n";
         }
         else
         {
-            strong = std::format("Found {0:d} panels with a vertex angle less than {1:.2f}", count, minangle);
+            strong = QString::asprintf("Found %d panels with a vertex angle less than %2f", count, minangle);
             strong += DEGch;
             log += strong + "\n\n";
         }
@@ -150,8 +154,8 @@ void QuadMesh::checkPanels(std::string &log, bool bMinAngle, bool bMinArea, bool
             {
                 minarealist.push_back(i4);
                 count++;
-                strong = std::format("   Panel {0:4d} has area {1:9.3g} ", i4, panel(i4).area()*Units::m2toUnit());
-                log += strong + Units::areaUnitLabel() +"\n";
+                strong = QString::asprintf("   Panel %4d has area %9.3g ", i4, panel(i4).area()*Units::m2toUnit());
+                log += strong + QUnits::areaUnitLabel() +"\n";
             }
     //                else m_PanelHightlight.insert(i4, false);
         }
@@ -162,8 +166,8 @@ void QuadMesh::checkPanels(std::string &log, bool bMinAngle, bool bMinArea, bool
         }
         else
         {
-            strong = std::format("Found {0:d} panels with area less than {1:.3g}", count, minarea*Units::m2toUnit());
-            log += strong + Units::areaUnitLabel() + "\n";
+            strong = QString::asprintf("Found %d panels with area less than %.3g", count, minarea*Units::m2toUnit());
+            log += strong + QUnits::areaUnitLabel() + "\n";
         }
     }
 
@@ -179,23 +183,25 @@ void QuadMesh::checkPanels(std::string &log, bool bMinAngle, bool bMinArea, bool
             {
                 warplist.push_back(i4);
                 count++;
-                strong = std::format("   Panel {0:4d} has warp = {1:7.2g}", i4, warp);
+                strong = QString::asprintf("   Panel %4d has warp = %7.2g", i4, warp);
                 log += strong + DEGch +"\n";
             }
     //                else m_PanelHightlight.insert(i4, false);
         }
         if(!warplist.size())
         {
-            strong = std::format("No panel with warp greater than {0:.2f}", maxquadwarp);
+            strong = QString::asprintf("No panel with warp greater than %2f", maxquadwarp);
             strong += DEGch + "found\n";
             log += strong;
         }
         else
         {
-            strong = std::format("Found {0:d} panels with warp greater than {1:.2f}", count, maxquadwarp);
+            strong = QString::asprintf("Found %d panels with warp greater than %2f", count, maxquadwarp);
             log += strong + DEGch + "\n";
         }
     }
+
+    logmsg = log.toStdString();
 }
 
 

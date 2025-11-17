@@ -54,7 +54,7 @@
 #include <api/fusestl.h>
 #include <api/fusexfl.h>
 #include <api/geom_global.h>
-#include <interfaces/mesh/gmesh_globals.h>
+#include <api/units.h>
 #include <api/objects2d.h>
 #include <api/objects3d.h>
 #include <api/objects_global.h>
@@ -72,7 +72,6 @@
 #include <core/saveoptions.h>
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>
-#include <core/qunits.h>
 #include <interfaces/editors/fuseedit/flatfaceconverterdlg.h>
 #include <interfaces/editors/fuseedit/fusemesherdlg.h>
 #include <interfaces/editors/fuseedit/fuseoccdlg.h>
@@ -89,6 +88,7 @@
 #include <interfaces/editors/wingedit/wingscaledlg.h>
 #include <interfaces/exchange/stlwriterdlg.h>
 #include <interfaces/mesh/afmesher.h>
+#include <interfaces/mesh/gmesh_globals.h>
 #include <interfaces/mesh/gmesherwt.h>
 #include <interfaces/mesh/mesherwt.h>
 #include <interfaces/mesh/meshevent.h>
@@ -599,7 +599,7 @@ void PlaneXflDlg::customEvent(QEvent *pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent const*pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        updateStdOutput(pMsgEvent->msg());
+        updateOutput(pMsgEvent->msg());
     }
     else if(pEvent->type() == MESH_UPDATE_EVENT)
     {
@@ -1031,10 +1031,10 @@ void PlaneXflDlg::onUpdatePlaneProps()
 {
     if(!m_pPlane) return;
 
-    std::string strange, str1, str2;
-    str1 = std::format("Quads          = {0:5d}\n", m_pPlaneXfl->nPanel4());
-    str2 = std::format("Triangles      = {0:5d}",   m_pPlaneXfl->nPanel3());
-    strange = m_pPlaneXfl->planeData(true) + "\n" + str1 + str2;
+    QString strange, str1, str2;
+    str1 = QString::asprintf("Quads          = %5d\n", m_pPlaneXfl->nPanel4());
+    str2 = QString::asprintf("Triangles      = %5d",   m_pPlaneXfl->nPanel3());
+    strange = QString::fromStdString(m_pPlaneXfl->planeData(true)) + "\n" + str1 + str2;
 
     m_pglPlaneView->setBotLeftOutput(strange);
 }
@@ -1110,7 +1110,7 @@ void PlaneXflDlg::onImportOtherFuse()
         if(!pPlane) return;
         for(int ifuse=0; ifuse<pPlane->nFuse(); ifuse++)
         {
-            if(pPlane->fuseAt(ifuse)->name()==dlg.objectName())
+            if(pPlane->fuseAt(ifuse)->name()==dlg.objectName().toStdString())
             {
                 Fuse *pFuse = pPlane->fuseAt(ifuse)->clone();
                 m_pPlaneXfl->addFuse(pFuse);
@@ -1137,7 +1137,7 @@ void PlaneXflDlg::onImportOtherWing()
         {
             QString wingname = dlg.objectName();
             WingXfl const *pWing= pPlane->wingAt(iw);
-            if(pWing->name()==wingname)
+            if(pWing->name()==wingname.toStdString())
             {
                 WingXfl *pNewWing = new WingXfl();
                 pNewWing->duplicate(pWing);
@@ -1157,8 +1157,8 @@ void PlaneXflDlg::onImportOtherWing()
 void PlaneXflDlg::onInsertFuseOcc()
 {
     double dimension(0);
-    std::string logmsg;
-
+    QString logmsg;
+    std::string str;
     updateOutput("Importing CAD file...\n");
 
     QString filter = "CAD Files (*.brep *stp *step)";
@@ -1170,8 +1170,8 @@ void PlaneXflDlg::onInsertFuseOcc()
     pFuseOcc->setName(fi.baseName().toStdString());
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    bool bImport = occ::importCADShapes(filename.toStdString(), pFuseOcc->shapes(), dimension, logmsg);
-    updateStdOutput(logmsg+"\n");
+    bool bImport = occ::importCADShapes(filename.toStdString(), pFuseOcc->shapes(), dimension, str);
+    updateStdOutput(str+"\n");
 
     if(!bImport)
     {
@@ -1194,12 +1194,13 @@ void PlaneXflDlg::onInsertFuseOcc()
     else
     {
         m_ppto->appendPlainText("---Making shell triangulation-----\n");
+        std::string str;
         logmsg.clear();
         updateOutput("Making shell triangulation\n");
         gmesh::makeFuseTriangulation(pFuseOcc, logmsg, "   ");
         pFuseOcc->saveBaseTriangulation();
-        pFuseOcc->computeSurfaceProperties(logmsg, "   ");
-        updateStdOutput(logmsg+"\n");
+        pFuseOcc->computeSurfaceProperties(str, "   ");
+        updateStdOutput(logmsg.toStdString() + str+"\n");
         m_ppto->appendPlainText("---updating plane-----\n");
         onUpdatePlane();
     }
@@ -2098,7 +2099,7 @@ void PlaneXflDlg::onPartListClicked(QModelIndex)
  */
 void PlaneXflDlg::onCutFuse()
 {
-    std::string strange;
+    QString strange;
 
     readParams();
 
@@ -2122,9 +2123,10 @@ void PlaneXflDlg::onCutFuse()
     }
 
     s_StitchPrecision = m_pfeStitchPrecision->value()/Units::mtoUnit();
-    strange = std::format("Stitching faces with precision {0:g} ", s_StitchPrecision*Units::mtoUnit());
-    strange += QUnits::lengthUnitLabel().toStdString() + "\n";
-    updateStdOutput(strange);
+    strange = QString::asprintf("Stitching faces with precision %g ", s_StitchPrecision*Units::mtoUnit());
+    strange += QUnits::lengthUnitLabel() + "\n";
+    updateOutput(strange);
+    strange.clear();
 
     TopTools_ListOfShape WingShapeList;
     WingShapeList.Clear();
@@ -2202,8 +2204,9 @@ void PlaneXflDlg::onCutFuse()
     //restore the shells before attempting to cut
     if(pFuse->isXflType())
     {
+        std::string str;
         FuseXfl *pFuseXfl = dynamic_cast<FuseXfl*>(pFuse);
-        pFuseXfl->makeShape(strange); // will build both the shapes and the shells
+        pFuseXfl->makeShape(str); // will build both the shapes and the shells
     }
     else
         pFuse->makeShellsFromShapes();
@@ -2226,7 +2229,8 @@ void PlaneXflDlg::onCutFuse()
         pFuse->makeShellsFromShapes();
     }
 
-    pFuse->makeDefaultTriMesh(strange, ""); // just for xfl and stl
+    std::string str;
+    pFuse->makeDefaultTriMesh(str, ""); // just for xfl and stl
 
     m_pPlaneXfl->makeTriMesh(true);
 
@@ -2239,16 +2243,16 @@ void PlaneXflDlg::onCutFuse()
 
 void PlaneXflDlg::cutFuseShapes(Fuse *pFuse, Vector3d const &fusepos, TopoDS_ListOfShape &tools)
 {
-    std::string strong, strange;
+    QString strong, strange;
     if(pFuse->shapeCount()<=0)
     {
-        updateStdOutput("   Fuse has no topology shapes to cut.\n");
+        updateOutput("   Fuse has no topology shapes to cut.\n");
         return;
     }
     pFuse->makeShellsFromShapes();
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    updateStdOutput("Cutting body shape with selected wings...\n");
+    updateOutput("Cutting body shape with selected wings...\n");
 
     // make cutting list
    TopTools_ListIteratorOfListOfShape itwing;
@@ -2288,16 +2292,16 @@ void PlaneXflDlg::cutFuseShapes(Fuse *pFuse, Vector3d const &fusepos, TopoDS_Lis
         theKnife.SetTools(tools);
         theKnife.SetRunParallel(s_bParallelCut);
 //        theKnife.SetFuzzyValue(1.e-4);
-        strange = std::format("   Using fuzzy value {0:g}", theKnife.FuzzyValue()*Units::mtoUnit());
-        strange += QUnits::lengthUnitLabel().toStdString() + "\n";
-        updateStdOutput(strange);
+        strange = QString::asprintf("   Using fuzzy value %g", theKnife.FuzzyValue()*Units::mtoUnit());
+        strange += QUnits::lengthUnitLabel() + "\n";
+        updateOutput(strange);
 
         // run the algorithm
         theKnife.Build();
 
         if (theKnife.HasErrors() || !theKnife.IsDone())
         {
-            updateStdOutput("Error cutting shape with wings\n");
+            updateOutput("Error cutting shape with wings\n");
             QApplication::restoreOverrideCursor();
             return;
         }
@@ -2309,8 +2313,8 @@ void PlaneXflDlg::cutFuseShapes(Fuse *pFuse, Vector3d const &fusepos, TopoDS_Lis
 
         for (compexplorer.Init(compound, TopAbs_SHELL); compexplorer.More(); compexplorer.Next())
         {
-            strange = std::format("   Cutting shell {0:d}\n", iShell+1);
-            updateStdOutput(strange);
+            strange = QString::asprintf("   Cutting shell %d\n", iShell+1);
+            updateOutput(strange);
 
             if(compexplorer.Current().Orientation()==TopAbs_REVERSED)
                 pFuse->appendShell(compexplorer.Current().Reversed());
@@ -2321,34 +2325,35 @@ void PlaneXflDlg::cutFuseShapes(Fuse *pFuse, Vector3d const &fusepos, TopoDS_Lis
         }
     }
 
-    strange = std::format("   Time to cut the fuse: {0:.3f} s\n\n", double(t.elapsed())/1000.0);
-    updateStdOutput(strange);
+    strange = QString::asprintf("   Time to cut the fuse: %.3f s\n\n", double(t.elapsed())/1000.0);
+    updateOutput(strange);
 
-    strong = std::format("   Cut operation has produced {0:d} shell(s)\n",pFuse->shells().Extent());
-    updateStdOutput(strong);
+    strong = QString::asprintf("   Cut operation has produced %d shell(s)\n\n",pFuse->shells().Extent());
+    updateOutput(strong);
     int iShell=0;
 
     strange.clear();
     for(TopTools_ListIteratorOfListOfShape shellit(pFuse->shells()); shellit.More(); shellit.Next())
     {
-        strange += std::format("   Shell {0:d}:\n", iShell);
-        occ::listShapeContent(shellit.Value(), strong, "      ");
-        strange += strong;
+        strange += QString::asprintf("   Shell %d:\n", iShell);
+        std::string str;
+        occ::listShapeContent(shellit.Value(), str, "      ");
+        strange += QString::fromStdString(str);
         iShell++;
     }
-    updateStdOutput(strange+"\n");
+    updateOutput(strange+"\n");
 
 
     pFuse->clearTriangles();
     pFuse->clearTriangleNodes();
 
-    std::string logmsg;
+    QString logmsg;
 
     gmesh::makeFuseTriangulation(pFuse, logmsg, "   ");
-    updateStdOutput(logmsg);
+    updateOutput(logmsg);
 
-    strong = std::format("   New triangulation has {0:d} elements\n", pFuse->nTriangles());
-    updateStdOutput(strong+"\n\n");
+    strong = QString::asprintf("   New triangulation has %d elements\n", pFuse->nTriangles());
+    updateOutput(strong+"\n\n");
 
     QApplication::restoreOverrideCursor();
 }
@@ -2360,16 +2365,15 @@ void PlaneXflDlg::cutFuseShapes(Fuse *pFuse, Vector3d const &fusepos, TopoDS_Lis
  */
 void PlaneXflDlg::cutFuseXflRightShapes(Fuse *pFuse, Vector3d const &fusepos, TopoDS_ListOfShape &tools)
 {
-    std::string strong, strange;
+    QString strong, strange;
     FuseXfl *pFuseXfl = dynamic_cast<FuseXfl*>(pFuse);
 
-    std::string logmsg;
+    QString logmsg;
     // remake the shells which may have been modified by a previous cut
 //    logmsg = "Making fuse shape\n";
 //    pFuseXfl->makeShape(logmsg);
-
-    updateStdOutput(logmsg+"\n");
-    logmsg .clear();
+//    updateStdOutput(logmsg+"\n");
+//    logmsg .clear();
 
     int nshells = pFuseXfl->m_RightSideShell.Size();
     if(nshells<0)
@@ -2433,9 +2437,9 @@ void PlaneXflDlg::cutFuseXflRightShapes(Fuse *pFuse, Vector3d const &fusepos, To
         return;
     }
 
-    updateStdOutput("   DONE\n");
-    strange = std::format("   Time to cut the fuse: {0:.3f} s\n\n", double(t.elapsed())/1000.0);
-    updateStdOutput(strange);
+    updateOutput("   DONE\n");
+    strange = QString::asprintf("   Time to cut the fuse: %.3f s\n\n", double(t.elapsed())/1000.0);
+    updateOutput(strange);
 
     TopoDS_Shape compound = theKnife.Shape();
     TopExp_Explorer compexplorer;
@@ -2445,27 +2449,29 @@ void PlaneXflDlg::cutFuseXflRightShapes(Fuse *pFuse, Vector3d const &fusepos, To
 
     for (compexplorer.Init(compound, TopAbs_SHELL); compexplorer.More(); compexplorer.Next())
     {
-        strange = std::format("   shell {0:d} content:\n", iShell+1);
-        updateStdOutput(strange);
+        strange = QString::asprintf("   shell %d content:\n", iShell+1);
+        updateOutput(strange);
 
         TopoDS_Shell rightsideshell = TopoDS::Shell(compexplorer.Current());
         pFuseXfl->appendRightSideShell(rightsideshell);
-        occ::listShapeContent(compexplorer.Current(), strange, "      ");
-        updateStdOutput(strange);
+        std::string str;
+        occ::listShapeContent(compexplorer.Current(), str, "      ");
+        updateStdOutput(str);
         iShell++;
     }
 
-    strong = std::format("   Cut operation has produced {0:d} shell(s)\n",iShell);
-    updateStdOutput(strong);
+    strong = QString::asprintf("   Cut operation has produced %d shell(s)\n\n",iShell);
+    updateOutput(strong);
 
 //    pFuseXfl->makeShellTriangulation(logmsg, "   ");
+
     gmesh::makeFuseTriangulation(pFuse, logmsg, "   ");
 
-    updateStdOutput(logmsg);
+    updateOutput(logmsg);
 
-    strong = std::format("   The new fuse tessellation has {0:d} elements\n", pFuseXfl->nTriangles());
+    strong = QString::asprintf("   The new fuse tessellation has %d elements\n", pFuseXfl->nTriangles());
     strong += "\n______\n\n";
-    updateStdOutput(strong);
+    updateOutput(strong);
 
     QApplication::restoreOverrideCursor();
 }
@@ -2585,10 +2591,10 @@ void PlaneXflDlg::onTessellation()
         pFuse->setOccTessParams(dlg.occParameters());
         pFuse->setGmshTessParams(dlg.gmshParameters());
         m_bChanged = true;
-        std::string strange;
+        QString strange;
 //        pFuse->makeShellTriangulation(strange, "   ");
         gmesh::makeFuseTriangulation(pFuse, strange, "   ");
-        updateStdOutput(strange);
+        updateOutput(strange);
 
         gl3dPlaneXflView*pglPlaneXflView = dynamic_cast<gl3dPlaneXflView*>(m_pglPlaneView);
         pglPlaneXflView->resetgl3dFuse();
@@ -3264,13 +3270,14 @@ void PlaneXflDlg::onInsertCADShape()
     else
     {
         m_ppto->appendPlainText("---Making shell triangulation-----\n");
-        std::string logmsg;
+        QString logmsg;
         updateOutput("Making shell triangulation\n");
 //        pFuseOcc->makeShellTriangulation(logmsg, "   ");
         gmesh::makeFuseTriangulation(pFuseOcc, logmsg, "   ");
         pFuseOcc->saveBaseTriangulation();
-        pFuseOcc->computeSurfaceProperties(logmsg, "   ");
-        updateStdOutput(logmsg+"\n");
+        std::string str;
+        pFuseOcc->computeSurfaceProperties(str, "   ");
+        updateStdOutput(str+"\n");
         m_ppto->appendPlainText("---updating plane-----\n");
         onUpdatePlane();
     }
@@ -3524,7 +3531,7 @@ void PlaneXflDlg::onDeleteP3Selection()
         return;
     }
 
-    std::string strange;
+    QString strange;
 
 //    pglPlaneXflView->setP3Selecting(false);
 
@@ -3536,8 +3543,8 @@ void PlaneXflDlg::onDeleteP3Selection()
 
             if(pFuse->panel3At(i3).index()+pFuse->firstPanel3Index()==iPanel3)
             {
-                strange = std::format("Deleting panel {0:d}\n", iPanel3);
-                updateStdOutput(strange);
+                strange = QString::asprintf("Deleting panel %d\n", iPanel3);
+                updateOutput(strange);
 
                 pFuse->triMesh().removePanelAt(i3);
 
@@ -3549,12 +3556,13 @@ void PlaneXflDlg::onDeleteP3Selection()
     }
     Q_ASSERT(pglPlaneXflView->p3SelectionCount()==0);
 
-    strange = std::format("\nTriangle count = {0:d}\n", pFuse->nPanel3());
-    strange += std::format("Node count     = {0:d}\n", int(pFuse->nodes().size()));
+    strange = QString::asprintf("\nTriangle count = %d\n", pFuse->nPanel3());
+    strange += QString::asprintf("Node count     = %d\n", int(pFuse->nodes().size()));
     strange += "\n_______\n\n";
-    updateStdOutput(strange);
+    updateOutput(strange);
 
-    pFuse->triMesh().makeNodeArrayFromPanels(0, strange, "  ");
+    std::string str;
+    pFuse->triMesh().makeNodeArrayFromPanels(0, str, "  ");
     takePicture();
 
     onUpdateMesh();

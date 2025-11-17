@@ -166,7 +166,7 @@ void FoilPolarDlg::setupLayout()
             m_plabHinge = new QLabel;
             QHBoxLayout *pTEAngleLayout = new QHBoxLayout;
             {
-                QLabel *plabTEFlapAngle = new QLabel(THETACHAR + "=");
+                QLabel *plabTEFlapAngle = new QLabel(THETAch + "=");
                 m_pfeTheta = new FloatEdit;
                 m_pfeTheta->setToolTip("<p>The trailing edge flap angle.<br>"
                                        "The flap angle is fixed in T1234 polars and is the analysis variable in T6 polars.</p>");
@@ -439,7 +439,7 @@ void FoilPolarDlg::setPlrName()
 {
     if(m_bAutoName)
     {
-        s_Polar.setName(PolarNameMaker::makeName(&s_Polar));
+        s_Polar.setName(PolarNameMaker::makeName(&s_Polar).toStdString());
         m_pleAnalysisName->setText(QString::fromStdString(s_Polar.name()));
     }
 }

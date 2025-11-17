@@ -49,7 +49,7 @@
 #include <api/xmlwpolarwriter.h>
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/analysisrangetable.h>
@@ -636,7 +636,7 @@ void BatchXmlDlg::updateAnalysisProperties(PlanePolar const *pWPolar)
         pWPolar->getProperties(strangeprops, nullptr);
         QString strange;
         strange  = "Plane name:    " + QString::fromStdString(pWPolar->planeName())+"\n";
-        strange += "Analysis name: " + pWPolar->name()+"\n";
+        strange += "Analysis name: " + QString::fromStdString(pWPolar->name())+"\n";
         m_pptoAnalysisProps->setPlainText(strange);
         m_pptoAnalysisProps->onAppendStdText(strangeprops);
         m_pptoAnalysisProps->moveCursor(QTextCursor::Start);
@@ -1213,7 +1213,7 @@ void BatchXmlDlg::onAnalyze()
     {
         strange = "Planes to analyze:\n";
         for(int ip=0; ip<planelist.size(); ip++)
-            strange += "   " + planelist.at(ip)->name() + "\n";
+            strange += "   " + QString::fromStdString(planelist.at(ip)->name()) + "\n";
         onMessage(strange+"\n");
     }
 
@@ -1294,11 +1294,11 @@ void BatchXmlDlg::onPlaneTaskStarted(int iTask)
 
     PlaneTask const *pPlaneTask = dynamic_cast<PlaneTask const*>(pTask);
     if(pPlaneTask)
-        strange += pPlaneTask->plane()->name() + " / "+pPlaneTask->wPolar()->name();
+        strange += QString::fromStdString(pPlaneTask->plane()->name() + " / "+pPlaneTask->wPolar()->name());
 
     LLTTask *pLLTTask = dynamic_cast<LLTTask*>(pTask);
     if(pLLTTask)
-        strange += pLLTTask->plane()->name() + " / "+pLLTTask->wPolar()->name();
+        strange += QString::fromStdString(pLLTTask->plane()->name() + " / "+pLLTTask->wPolar()->name());
 
     m_plabStatus->setText(strange);
 }

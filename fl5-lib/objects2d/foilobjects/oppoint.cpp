@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 #include <api/oppoint.h>
 
@@ -162,37 +163,40 @@ void OpPoint::setHingeMoments(Foil const*pFoil)
 }
 
 
-void OpPoint::exportOpp(std::string &outstring, const std::string &Version, bool bCSV, std::string const &textseparator) const
+void OpPoint::exportOpp(std::string &out, const std::string &Version, bool bCSV, std::string const &textseparator) const
 {
-    std::string strong;
-    std::string line, sep;
+    QString outstring;
+    QString strong;
+    QString line, sep;
 
-    outstring = Version+"\n";
+    outstring = QString::fromStdString(Version)+"\n";
 
-    strong = m_FoilName + "\n";
+    strong = QString::fromStdString(m_FoilName) + "\n";
     outstring += strong;
-    strong = m_PlrName + "\n";
+    strong = QString::fromStdString(m_PlrName) + "\n";
     outstring += strong;
 
-    if(bCSV) sep = textseparator;
+    if(bCSV) sep = QString::fromStdString(textseparator);
     else     sep = " ";
 
-    strong = std::format("Alpha{0:.3f}", m_Alpha);
+    strong = QString::asprintf("Alpha%.3f", m_Alpha);
     line +=  strong + sep + " ";
-    strong = std::format("Re={0:.0f}", m_Reynolds);
+    strong = QString::asprintf("Re=%.0f", m_Reynolds);
     line +=  strong + sep + " ";
-    strong = std::format("Ma{0:.3f}", m_Mach);
+    strong = QString::asprintf("Ma%.3f", m_Mach);
     line +=  strong + sep + " ";
-    strong = std::format("NCrit{0:.3f}", m_NCrit);
+    strong = QString::asprintf("NCrit%.3f", m_NCrit);
     line +=  strong;
     outstring += line + "\n";
+
+    out = outstring.toStdString();
 }
 
 
 std::string OpPoint::name() const
 {
-    std::string name = m_FoilName + std::format("-Re={0:g}-", m_Reynolds) + ALPHAch +  std::format("={0:.2f}", m_Alpha) + DEGch;
-    return name;
+    QString name = QString::fromStdString(m_FoilName) + QString::asprintf("-Re=%g-", m_Reynolds) + ALPHAch +  QString::asprintf("=%2f", m_Alpha) + DEGch;
+    return name.toStdString();
 }
 
 
@@ -447,47 +451,47 @@ bool OpPoint::serializeOppFl5(QDataStream &ar, bool bIsStoring)
 
 std::string OpPoint::properties(std::string const & textseparator, bool bData) const
 {
-    std::string props;
-    std::string strong;
+    QString props;
+    QString strong;
     props.clear();
 
-    props += THETAch + std::format("     = {0:g}", m_Theta) + DEGch +"\n";
-    props += std::format("Re    = {0:g}\n",     m_Reynolds);
-    props += ALPHAch + std::format("     = {0:g}", m_Alpha) + DEGch +"\n";
-    props += std::format("Mach  = {0:g}\n",     m_Mach);
-    props += std::format("NCrit = {0:g}\n",     m_NCrit);
-    props += std::format("Cl    = {0:11.5f}\n", m_Cl);
-    props += std::format("Cd    = {0:11.5f}\n", m_Cd);
-    props += std::format("Cl/Cd = {0:11.5f}\n", m_Cl/m_Cd);
-    props += std::format("Cm    = {0:11.5f}\n", m_Cm);
-    props += std::format("Cdp   = {0:11.5f}\n", m_Cdp);
-    props += std::format("Cpmn  = {0:11.5f}\n", m_Cpmn);
-    props += std::format("XCP   = {0:11.5f}\n", m_XCP);
+    props += THETAch + QString::asprintf("     = %g", m_Theta) + DEGch +"\n";
+    props += QString::asprintf("Re    = %g\n",     m_Reynolds);
+    props += ALPHAch + QString::asprintf("     = %g", m_Alpha) + DEGch +"\n";
+    props += QString::asprintf("Mach  = %g\n",     m_Mach);
+    props += QString::asprintf("NCrit = %g\n",     m_NCrit);
+    props += QString::asprintf("Cl    = %11.5f\n", m_Cl);
+    props += QString::asprintf("Cd    = %11.5f\n", m_Cd);
+    props += QString::asprintf("Cl/Cd = %11.5f\n", m_Cl/m_Cd);
+    props += QString::asprintf("Cm    = %11.5f\n", m_Cm);
+    props += QString::asprintf("Cdp   = %11.5f\n", m_Cdp);
+    props += QString::asprintf("Cpmn  = %11.5f\n", m_Cpmn);
+    props += QString::asprintf("XCP   = %11.5f\n", m_XCP);
 
     props += "\n";
     props += "Transition locations:\n";
-    strong += std::format("   Top side     = {0:11.5f}\n", m_XTrTop);
-    strong += std::format("   Bottom side  = {0:11.5f}\n", m_XTrBot);
+    strong += QString::asprintf("   Top side     = %11.5f\n", m_XTrTop);
+    strong += QString::asprintf("   Bottom side  = %11.5f\n", m_XTrBot);
     props += strong + "\n";
 
     props += "\n";
     if(m_bTEFlap)
     {
-        props += std::format("T.E. flap moment = {0:g}\n", m_TEHMom);
+        props += QString::asprintf("T.E. flap moment = %g\n", m_TEHMom);
     }
     if(m_bLEFlap)
     {
-        props += std::format("L.E. flap moment = {0:g}\n", m_m_LEHMom);
+        props += QString::asprintf("L.E. flap moment = %g\n", m_m_LEHMom);
     }
 
     if(bData)
     {
         std::string str;
         exportOpp(str, "", false, textseparator);
-        props += "\n"+str;
+        props += "\n"+ QString::fromStdString(str);
     }
 
-    return props;
+    return props.toStdString();
 }
 
 

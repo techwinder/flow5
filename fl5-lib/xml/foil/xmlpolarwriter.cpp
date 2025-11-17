@@ -43,8 +43,8 @@ void XmlPolarWriter::writeXMLPolar(Polar *pPolar)
     writeHeader();
     writeStartElement("Polar");
     {
-        writeTextElement("Foil_Name",  pPolar->foilName());
-        writeTextElement("Polar_Name", pPolar->name());
+        writeTextElement("Foil_Name",  QString::fromStdString(pPolar->foilName()));
+        writeTextElement("Polar_Name", QString::fromStdString(pPolar->name()));
         writeTextElement("Type",       xml::polarType(pPolar->type()));
         switch(pPolar->BLMethod())
         {

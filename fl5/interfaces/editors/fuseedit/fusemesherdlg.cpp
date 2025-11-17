@@ -37,7 +37,7 @@
 #include <unistd.h>
 #endif
 
-#include <format>
+#
 
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
@@ -72,7 +72,7 @@
 #include <api/fusexfl.h>
 #include <api/occ_globals.h>
 #include <api/panel3.h>
-#include <core/qunits.h>
+#include <api/units.h>
 
 
 bool FuseMesherDlg::s_bfl5Mesher(false);
@@ -81,6 +81,7 @@ int FuseMesherDlg::s_ViewIndex = 1;
 
 QByteArray FuseMesherDlg::s_Geometry;
 QByteArray FuseMesherDlg::s_HSplitterSizes;
+QByteArray FuseMesherDlg::s_VSplitterSizes;
 
 bool FuseMesherDlg::s_bOutline    = true;
 bool FuseMesherDlg::s_bSurfaces   = true;
@@ -142,109 +143,125 @@ void FuseMesherDlg::setupLayout()
                 m_ptabViewWt->addTab(pOccViewFrame,"3d shape");
             }
 
-            QFrame *pCmdFrame = new QFrame;
+            m_pVSplitter = new QSplitter(Qt::Vertical);
             {
-                QVBoxLayout *pCmdLayout = new QVBoxLayout;
+                m_pVSplitter->setChildrenCollapsible(false);
+                QFrame *pCmdFrame = new QFrame;
                 {
-
-                    QFrame *pfrFreeMesh = new QFrame;
+                    QVBoxLayout *pCmdLayout = new QVBoxLayout;
                     {
-                        QVBoxLayout *pMeshLayout = new QVBoxLayout;
+
+                        QFrame *pfrFreeMesh = new QFrame;
                         {
-                            QHBoxLayout *pMeshSelLayout = new QHBoxLayout;
+                            QVBoxLayout *pMeshLayout = new QVBoxLayout;
                             {
-                                QButtonGroup *pGroup = new QButtonGroup;
+                                QHBoxLayout *pMeshSelLayout = new QHBoxLayout;
                                 {
-                                    m_prbfl5Mesher = new QRadioButton("flow5 mesher");
-                                    m_prbGMesher   = new QRadioButton("Gmsh");
-                                    m_prbfl5Mesher->setChecked(s_bfl5Mesher);
-                                    m_prbGMesher->setChecked(!s_bfl5Mesher);
+                                    QButtonGroup *pGroup = new QButtonGroup;
+                                    {
+                                        m_prbfl5Mesher = new QRadioButton("flow5 mesher");
+                                        m_prbGMesher   = new QRadioButton("Gmsh");
+                                        m_prbfl5Mesher->setChecked(s_bfl5Mesher);
+                                        m_prbGMesher->setChecked(!s_bfl5Mesher);
 
-                                    pGroup->addButton(m_prbfl5Mesher);
-                                    pGroup->addButton(m_prbGMesher);
+                                        pGroup->addButton(m_prbfl5Mesher);
+                                        pGroup->addButton(m_prbGMesher);
+                                    }
+                                    pMeshSelLayout->addStretch();
+                                    pMeshSelLayout->addWidget(m_prbfl5Mesher);
+                                    pMeshSelLayout->addWidget(m_prbGMesher);
+                                    pMeshSelLayout->addStretch();
                                 }
-                                pMeshSelLayout->addStretch();
-                                pMeshSelLayout->addWidget(m_prbfl5Mesher);
-                                pMeshSelLayout->addWidget(m_prbGMesher);
-                                pMeshSelLayout->addStretch();
+
+                                m_pMesherWt = new MesherWt(this);
+                                m_pMesherWt->showPickEdge(false);
+                    #ifdef QT_DEBUG
+                                m_pMesherWt->showDebugBox(true);
+                    #endif
+                                m_pGMesherWt = new GMesherWt(this);
+                                m_pMesherWt->setVisible(s_bfl5Mesher);
+                                m_pGMesherWt->setVisible(!s_bfl5Mesher);
+                                pMeshLayout->addLayout(pMeshSelLayout);
+                                pMeshLayout->addWidget(m_pMesherWt);
+                                pMeshLayout->addWidget(m_pGMesherWt);
                             }
-
-                            m_pMesherWt = new MesherWt(this);
-                            m_pMesherWt->showPickEdge(false);
-                #ifdef QT_DEBUG
-                            m_pMesherWt->showDebugBox(true);
-                #endif
-                            m_pGMesherWt = new GMesherWt(this);
-                            m_pMesherWt->setVisible(s_bfl5Mesher);
-                            m_pGMesherWt->setVisible(!s_bfl5Mesher);
-                            pMeshLayout->addLayout(pMeshSelLayout);
-                            pMeshLayout->addWidget(m_pMesherWt);
-                            pMeshLayout->addWidget(m_pGMesherWt);
+                            pfrFreeMesh->setLayout(pMeshLayout);
                         }
-                        pfrFreeMesh->setLayout(pMeshLayout);
-                    }
 
 
-                    QHBoxLayout *pCheckNodesLayout = new QHBoxLayout;
-                    {
-                        m_ppbMoveNode = new QPushButton("Move node");
-                        QString tip = "<p>Use this option to move a fuselage node and to merge it with another.<br>"
-                                         "Select first the source node to move, then the destination node.</p>";
-                        m_ppbMoveNode->setToolTip(tip);
-                        m_ppbMoveNode->setCheckable(true);
-                        m_ppbUndoLastMerge = new QPushButton("Undo last");
-                        QPushButton *pCheckMenuBtn = new QPushButton("Actions");
+                        QHBoxLayout *pCheckNodesLayout = new QHBoxLayout;
                         {
-                            QMenu *pCheckMeshMenu = new QMenu("Actions");
+                            m_ppbMoveNode = new QPushButton("Move node");
+                            QString tip = "<p>Use this option to move a fuselage node and to merge it with another.<br>"
+                                             "Select first the source node to move, then the destination node.</p>";
+                            m_ppbMoveNode->setToolTip(tip);
+                            m_ppbMoveNode->setCheckable(true);
+                            m_ppbUndoLastMerge = new QPushButton("Undo last");
+                            QPushButton *pCheckMenuBtn = new QPushButton("Actions");
                             {
-                                m_pCheckMesh        = new QAction("Check mesh", this);
-                                m_pConnectPanels    = new QAction("Connect panels", this);
-                                m_pConnectPanels->setShortcut(QKeySequence(Qt::ALT | Qt::Key_C));
-                                m_pCheckFreeEdges   = new QAction("Check free edges", this);
-                                m_pCheckFreeEdges->setShortcut(QKeySequence(Qt::ALT | Qt::Key_G));
-                                m_pClearHighlighted = new QAction("Clear highlighted", this);
-                                m_pClearHighlighted->setShortcut(QKeySequence(Qt::ALT | Qt::Key_L));
-                                m_pRestoreFuseMesh = new QAction("Restore default mesh",this);
-                                m_pCleanDoubleNode = new QAction("Clean double nodes", this);
+                                QMenu *pCheckMeshMenu = new QMenu("Actions");
+                                {
+                                    m_pCheckMesh        = new QAction("Check mesh", this);
+                                    m_pConnectPanels    = new QAction("Connect panels", this);
+                                    m_pConnectPanels->setShortcut(QKeySequence(Qt::ALT | Qt::Key_C));
+                                    m_pCheckFreeEdges   = new QAction("Check free edges", this);
+                                    m_pCheckFreeEdges->setShortcut(QKeySequence(Qt::ALT | Qt::Key_G));
+                                    m_pClearHighlighted = new QAction("Clear highlighted", this);
+                                    m_pClearHighlighted->setShortcut(QKeySequence(Qt::ALT | Qt::Key_L));
+                                    m_pRestoreFuseMesh = new QAction("Restore default mesh",this);
+                                    m_pCleanDoubleNode = new QAction("Clean double nodes", this);
 
-                                pCheckMeshMenu->addAction(m_pCheckMesh);
-                                pCheckMeshMenu->addAction(m_pConnectPanels);
-                                pCheckMeshMenu->addAction(m_pCheckFreeEdges);
-                                pCheckMeshMenu->addAction(m_pClearHighlighted);
-                                pCheckMeshMenu->addSeparator();
-                                pCheckMeshMenu->addAction(m_pCleanDoubleNode);
-                                pCheckMeshMenu->addSeparator();
-                                pCheckMeshMenu->addAction(m_pRestoreFuseMesh);
+                                    pCheckMeshMenu->addAction(m_pCheckMesh);
+                                    pCheckMeshMenu->addAction(m_pConnectPanels);
+                                    pCheckMeshMenu->addAction(m_pCheckFreeEdges);
+                                    pCheckMeshMenu->addAction(m_pClearHighlighted);
+                                    pCheckMeshMenu->addSeparator();
+                                    pCheckMeshMenu->addAction(m_pCleanDoubleNode);
+                                    pCheckMeshMenu->addSeparator();
+                                    pCheckMeshMenu->addAction(m_pRestoreFuseMesh);
+                                }
+                                pCheckMenuBtn->setMenu(pCheckMeshMenu);
                             }
-                            pCheckMenuBtn->setMenu(pCheckMeshMenu);
+
+                            pCheckNodesLayout->addWidget(pCheckMenuBtn);
+                            pCheckNodesLayout->addStretch();
+                            pCheckNodesLayout->addWidget(m_ppbMoveNode);
+                            pCheckNodesLayout->addWidget(m_ppbUndoLastMerge);
                         }
 
-                        pCheckNodesLayout->addWidget(pCheckMenuBtn);
-                        pCheckNodesLayout->addStretch();
-                        pCheckNodesLayout->addWidget(m_ppbMoveNode);
-                        pCheckNodesLayout->addWidget(m_ppbUndoLastMerge);
+                        pCmdLayout->addWidget(pfrFreeMesh);
+                        pCmdLayout->addLayout(pCheckNodesLayout);
                     }
-
-                    m_ppto = new PlainTextOutput;
-
-                    m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Save | QDialogButtonBox::Discard);
-                    {
-                        QPushButton *pClearOutput = new QPushButton("Clear output");
-                        m_pButtonBox->addButton(pClearOutput, QDialogButtonBox::ActionRole);
-                        connect(pClearOutput, SIGNAL(clicked()), m_ppto,  SLOT(clear()));
-                        connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onButton(QAbstractButton*)));
-                    }
-
-                    pCmdLayout->addWidget(pfrFreeMesh);
-                    pCmdLayout->addLayout(pCheckNodesLayout);
-                    pCmdLayout->addWidget(m_ppto);
-                    pCmdLayout->setStretchFactor(m_ppto, 1);
-                    pCmdLayout->addWidget(m_pButtonBox);
+                    pCmdFrame->setLayout(pCmdLayout);
                 }
-                pCmdFrame->setLayout(pCmdLayout);
+
+                QFrame *pBotFrame = new QFrame;
+                {
+                    QVBoxLayout *pBotLayout = new QVBoxLayout;
+                    {
+                        m_ppto = new PlainTextOutput;
+
+                        m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Save | QDialogButtonBox::Discard);
+                        {
+                            QPushButton *pClearOutput = new QPushButton("Clear output");
+                            m_pButtonBox->addButton(pClearOutput, QDialogButtonBox::ActionRole);
+                            connect(pClearOutput, SIGNAL(clicked()), m_ppto,  SLOT(clear()));
+                            connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onButton(QAbstractButton*)));
+                        }
+                        pBotLayout->addWidget(m_ppto);
+                        pBotLayout->addWidget(m_pButtonBox);
+                        pBotLayout->setStretchFactor(m_ppto, 1);
+                    }
+                    pBotFrame->setLayout(pBotLayout);
+                }
+
+                m_pVSplitter->addWidget(pCmdFrame);
+                m_pVSplitter->addWidget(pBotFrame);
             }
+
+
             m_pHSplitter->addWidget(m_ptabViewWt);
-            m_pHSplitter->addWidget(pCmdFrame);
+            m_pHSplitter->addWidget(m_pVSplitter);
             m_pHSplitter->setStretchFactor(0,5);
             m_pHSplitter->setStretchFactor(1,1);
 
@@ -353,11 +370,12 @@ void FuseMesherDlg::loadSettings(QSettings &settings)
     {
         s_Geometry       = settings.value("WindowGeometry").toByteArray();
         s_HSplitterSizes = settings.value("HSplitSize").toByteArray();
+        s_VSplitterSizes = settings.value("VSplitSize").toByteArray();
         s_ViewIndex      = settings.value("ViewIndex3d", s_ViewIndex).toInt();
 
         AFMesher::setAnimationPause(settings.value("AnimInterval", AFMesher::animationPause()).toInt());
 
-        s_bfl5Mesher     = settings.value("bfl5Mesher",        s_bfl5Mesher).toBool();
+        s_bfl5Mesher     = settings.value("bfl5Mesher",   s_bfl5Mesher).toBool();
         s_bOutline       = settings.value("bOutline",     s_bOutline).toBool();
         s_bSurfaces      = settings.value("bSurfaces",    s_bSurfaces).toBool();
         s_bVLMPanels     = settings.value("bVLMPanels",   s_bVLMPanels).toBool();
@@ -375,6 +393,7 @@ void FuseMesherDlg::saveSettings(QSettings &settings)
     {
         settings.setValue("WindowGeometry", s_Geometry);
         settings.setValue("HSplitSize",     s_HSplitterSizes);
+        settings.setValue("VSplitSize",     s_VSplitterSizes);
         settings.setValue("ViewIndex3d",    s_ViewIndex);
 
         settings.setValue("AnimInterval",   AFMesher::animationPause());
@@ -403,6 +422,7 @@ void FuseMesherDlg::showEvent(QShowEvent *pEvent)
     QDialog::showEvent(pEvent);
     restoreGeometry(s_Geometry);
     if(s_HSplitterSizes.length()>0) m_pHSplitter->restoreState(s_HSplitterSizes);
+    if(s_VSplitterSizes.length()>0) m_pVSplitter->restoreState(s_VSplitterSizes);
 
     m_pglFuseView->setFlags(s_bOutline, s_bSurfaces, s_bVLMPanels, s_bAxes, s_bShowMasses, false, false, false, false);
     m_pglShapeView->setFlags(s_bOutline, s_bSurfaces, true, s_bAxes, s_bShowMasses, false, false, false, false);
@@ -420,6 +440,7 @@ void FuseMesherDlg::hideEvent(QHideEvent *pEvent)
 
     s_Geometry = saveGeometry();
     s_HSplitterSizes  = m_pHSplitter->saveState();
+    s_VSplitterSizes  = m_pVSplitter->saveState();
     s_ViewIndex = m_ptabViewWt->currentIndex();
 
     s_bOutline    = m_pglFuseView->bOutline();
@@ -688,16 +709,17 @@ void FuseMesherDlg::customEvent(QEvent *pEvent)
 
         if(pMeshEvent->isFinal())
         {
-            std::string strange;
+            QString strange;
+            std::string str;
             strange = "   Making mesh from triangles\n";
-            m_pFuse->triMesh().makeMeshFromTriangles(pMeshEvent->triangles(), 0, xfl::FUSESURFACE, strange, "      ");
-            m_ppto->onAppendStdText(strange);
+            m_pFuse->triMesh().makeMeshFromTriangles(pMeshEvent->triangles(), 0, xfl::FUSESURFACE, str, "      ");
+            m_ppto->onAppendQText(strange+QString::fromStdString(str));
 
-            strange = std::format("\nTriangle count = {0:d}\n", m_pFuse->nPanel3());
-            m_ppto->onAppendStdText(strange);
-            strange = std::format(  "Node count     = {0:d}\n", int(m_pFuse->nodes().size()));
+            strange = QString::asprintf("\nTriangle count = %d\n", m_pFuse->nPanel3());
+            m_ppto->onAppendQText(strange);
+            strange = QString::asprintf("Node count     = %d\n", int(m_pFuse->nodes().size()));
             strange += "\n_______\n\n";
-            m_ppto->onAppendStdText(strange);
+            m_ppto->onAppendQText(strange);
         }
 
         QVector<int> high;
@@ -713,7 +735,7 @@ void FuseMesherDlg::customEvent(QEvent *pEvent)
     else if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        m_ppto->onAppendStdText(pMsgEvent->msg());
+        m_ppto->onAppendQText(pMsgEvent->msg());
     }
     else
         QDialog::customEvent(pEvent);

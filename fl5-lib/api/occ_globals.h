@@ -54,9 +54,9 @@ namespace occ
     FL5LIB_EXPORT std::string shapeType(const TopoDS_Shape &aShape);
     FL5LIB_EXPORT std::string shapeOrientation(TopoDS_Shape const &aShape);
 
-    FL5LIB_EXPORT int listSubShapes(TopoDS_Shape const &aShape, TopAbs_ShapeEnum SubShapeType, std::vector<std::string> &strList, std::string prefix="");
-    FL5LIB_EXPORT void listAllSubShapes(TopoDS_Shape const &aShape, std::vector<std::string> &strList);
-    FL5LIB_EXPORT void listShapeContent(TopoDS_Shape const &shape, std::string &logmsg, const std::string &prefix="", bool bFull=false);
+    FL5LIB_EXPORT int listSubShapes(TopoDS_Shape const &aShape, TopAbs_ShapeEnum SubShapeType, std::vector<std::string> &strList, std::string prefx="");
+    FL5LIB_EXPORT void listAllSubShapes(TopoDS_Shape const &aShape, std::vector<std::string> &strlist);
+    FL5LIB_EXPORT void listShapeContent(TopoDS_Shape const &shape, std::string &logmsg, const std::string &prefx="", bool bFull=false);
     FL5LIB_EXPORT void  checkShape(TopoDS_Shape const &shape, std::string &logmsg, const std::string &prefix);
 
     FL5LIB_EXPORT bool makeOCCSplineFromPoints(std::vector<Vector3d> const &pointList, Handle(Geom_BSplineCurve)& theSpline, std::string &logmsg);

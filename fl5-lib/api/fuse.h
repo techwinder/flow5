@@ -96,7 +96,7 @@ class FL5LIB_EXPORT Fuse : public Part
         void clearShells() {m_Shell.Clear();}
         int shellCount() const {return m_Shell.Extent();}
         void appendShell(TopoDS_Shape const &shell) {m_Shell.Append(shell);}
-        bool stitchShells(TopoDS_Shell &fusedshell, std::string &logmsg, std::string prefix);
+        bool stitchShells(TopoDS_Shell &fusedshell, std::string &logmsg, std::string prefx);
         void clearOccTriangulation();
 
         // Methods related to geometry
@@ -124,7 +124,7 @@ class FL5LIB_EXPORT Fuse : public Part
 
         virtual bool serializePartFl5(QDataStream &ar, bool bIsStoring) override;
 
-        virtual void getProperties(std::string &props, const std::string &prefix, bool bFull=false);
+        virtual void getProperties(std::string &properties, const std::string &prefx, bool bFull=false);
 
         OccMeshParams const &occTessParams() const {return m_OccTessParams;}
         void setOccTessParams(OccMeshParams const &params) {m_OccTessParams=params;}

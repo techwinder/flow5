@@ -23,7 +23,8 @@
 *****************************************************************************/
 
 
-#include <format>
+#include <QString>
+
 
 #include <api/planestl.h>
 #include <api/objects_global.h>
@@ -262,61 +263,61 @@ void PlaneSTL::computeSurfaceProperties()
 
 std::string PlaneSTL::planeData(bool) const
 {
-    std::string strange, strong, prefix;
+    QString strange, strong, prefix;
 
-    std::string lengthlab, surfacelab, masslab, arealab;
-    lengthlab   = Units::lengthUnitLabel();
-    surfacelab  = Units::areaUnitLabel();
-    masslab     = Units::massUnitLabel();
-    arealab     = Units::areaUnitLabel();
+    QString lengthlab, surfacelab, masslab, arealab;
+    lengthlab   = QUnits::lengthUnitLabel();
+    surfacelab  = QUnits::areaUnitLabel();
+    masslab     = QUnits::massUnitLabel();
+    arealab     = QUnits::areaUnitLabel();
 
-    strong = std::format("Ref. span length  = {0:7g} ", m_ReferenceSpan*Units::mtoUnit());
+    strong = QString::asprintf("Ref. span length  = %7g ", m_ReferenceSpan*Units::mtoUnit());
     strong += lengthlab;
     strange += strong+ EOLch;
 
-    strong = std::format("Ref. area         = {0:7g} ", m_ReferenceArea*Units::m2toUnit());
-    strong += Units::areaUnitLabel();
+    strong = QString::asprintf("Ref. area         = %7g ", m_ReferenceArea*Units::m2toUnit());
+    strong += QUnits::areaUnitLabel();
     strange += strong+ EOLch;
 
-    strong = std::format("Ref. chord length = {0:7g} ", m_ReferenceChord*Units::mtoUnit());
+    strong = QString::asprintf("Ref. chord length = %7g ", m_ReferenceChord*Units::mtoUnit());
     strong += lengthlab;
     strange += strong+ EOLch;
 
-    strong = std::format("Mass              = {0:7g} ", totalMass()*Units::kgtoUnit());
+    strong = QString::asprintf("Mass              = %7g ", totalMass()*Units::kgtoUnit());
     strong += masslab;
     strange += strong+ EOLch;
 
-    strong = std::format("CoG = (%.3f, %.3f, %.3f) ", m_Inertia.CoG_t().x*Units::mtoUnit(), m_Inertia.CoG_t().y*Units::mtoUnit(), m_Inertia.CoG_t().z*Units::mtoUnit());
+    strong = QString::asprintf("CoG = (%.3f, %.3f, %.3f) ", m_Inertia.CoG_t().x*Units::mtoUnit(), m_Inertia.CoG_t().y*Units::mtoUnit(), m_Inertia.CoG_t().z*Units::mtoUnit());
     strong += lengthlab;
     strange += strong+ EOLch;
 
-    strong = std::format("Wing Load         = {0:7g} ", totalMass()*Units::kgtoUnit()/m_ReferenceArea/Units::m2toUnit());
+    strong = QString::asprintf("Wing Load         = %7g ", totalMass()*Units::kgtoUnit()/m_ReferenceArea/Units::m2toUnit());
     strong += masslab + "/" + surfacelab;
     strange += strong+ EOLch;
 
-    strong = std::format("Length            = %9.5g ", m_Length*Units::mtoUnit());
+    strong = QString::asprintf("Length            = %9.5g ", m_Length*Units::mtoUnit());
     strong += lengthlab+ EOLch;
     strange += prefix + strong;
 
-    strong = std::format("Max. width        = %9.5g ", m_Span*Units::mtoUnit());
+    strong = QString::asprintf("Max. width        = %9.5g ", m_Span*Units::mtoUnit());
     strong += lengthlab+ EOLch;
     strange += prefix + strong;
 
-    strong = std::format("Max. height       = %9.5g ", m_Height*Units::mtoUnit());
+    strong = QString::asprintf("Max. height       = %9.5g ", m_Height*Units::mtoUnit());
     strong += lengthlab+ EOLch;
     strange += prefix + strong;
 
-    strong = std::format("Wetted area       = %9.5g ", m_WettedArea*Units::m2toUnit());
+    strong = QString::asprintf("Wetted area       = %9.5g ", m_WettedArea*Units::m2toUnit());
     strong += arealab + EOLch;
     strange += prefix + strong;
 
-    strong = std::format("Triangulation     = %d", m_Triangulation.nTriangles());
+    strong = QString::asprintf("Triangulation     = %d", m_Triangulation.nTriangles());
     strange += prefix + strong+ EOLch;
 
-    strong = std::format("Triangular panels = %d", m_RefTriMesh.nPanels());
+    strong = QString::asprintf("Triangular panels = %d", m_RefTriMesh.nPanels());
     strange += prefix + strong;
 
-    return strange;
+    return strange.toStdString();
 }
 
 

@@ -35,7 +35,8 @@
 #include <api/planexfl.h>
 #include <api/polar3d.h>
 #include <api/planepolar.h>
-#include <core/qunits.h>
+#include <api/units.h>
+
 #include <interfaces/editors/analysis3ddef/extradragwt.h>
 #include <interfaces/editors/analysis3ddef/wpolarautonamedlg.h>
 #include <interfaces/widgets/customwts/cptableview.h>

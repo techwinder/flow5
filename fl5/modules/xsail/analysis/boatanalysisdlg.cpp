@@ -138,7 +138,7 @@ void BoatAnalysisDlg::customEvent(QEvent *pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        onOutputStdMessage(pMsgEvent->msg());
+        onOutputMessage(pMsgEvent->msg());
         if(m_pActiveTask)
         {
             double ctrl = m_pActiveTask->ctrlParam();

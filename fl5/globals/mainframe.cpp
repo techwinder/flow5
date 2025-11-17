@@ -47,7 +47,6 @@
 
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
 #include <core/saveoptions.h>
 #include <core/trace.h>
 #include <core/xflcore.h>
@@ -207,6 +206,7 @@
 #include <api/sailwing.h>
 #include <api/splinefoil.h>
 #include <api/testpanels.h>
+#include <api/units.h>
 #include <api/utils.h>
 #include <api/wingxfl.h>
 
@@ -300,20 +300,20 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
 
     gl2dView::setImageSize(pScreen->size());
 
-    displayMessage(strange + EOLCHAR, false);
+    displayMessage(strange + EOLch, false);
 
     strange = "Directories:\n";
-    strange += "   Last used :       " + SaveOptions::lastDirName() + EOLCHAR;
-    strange += "   Foil .dat files:  " + SaveOptions::datFoilDirName() + EOLCHAR;
-    strange += "   Polar .plr files: " + SaveOptions::plrPolarDirName() + EOLCHAR;
-    strange += "   Plane .xml files: " + SaveOptions::xmlPlaneDirName() + EOLCHAR;
-    strange += "   Polar .xml files: " + SaveOptions::xmlWPolarDirName() + EOLCHAR;
-    strange += "   CAD files:        " + SaveOptions::CADDirName() + EOLCHAR;
-    strange += "   STL files:        " + SaveOptions::STLDirName() + EOLCHAR;
-    strange += "   Temporary files:  " + SaveOptions::tempDirName() + EOLCHAR;
-    strange += "   File exports:     " + SaveOptions::lastExportDirName() + EOLCHAR;
+    strange += "   Last used :       " + SaveOptions::lastDirName() + EOLch;
+    strange += "   Foil .dat files:  " + SaveOptions::datFoilDirName() + EOLch;
+    strange += "   Polar .plr files: " + SaveOptions::plrPolarDirName() + EOLch;
+    strange += "   Plane .xml files: " + SaveOptions::xmlPlaneDirName() + EOLch;
+    strange += "   Polar .xml files: " + SaveOptions::xmlWPolarDirName() + EOLch;
+    strange += "   CAD files:        " + SaveOptions::CADDirName() + EOLch;
+    strange += "   STL files:        " + SaveOptions::STLDirName() + EOLch;
+    strange += "   Temporary files:  " + SaveOptions::tempDirName() + EOLch;
+    strange += "   File exports:     " + SaveOptions::lastExportDirName() + EOLch;
 
-    displayMessage(strange + EOLCHAR, false);
+    displayMessage(strange + EOLch, false);
 
     if(SaveOptions::bAutoSave())
     {
@@ -1569,7 +1569,7 @@ void MainFrame::onLoadFoilFile()
             QFileInfo fi(PathName);
             if (!fi.exists() || !fi.isReadable())
             {
-                QString strange = "   ...Could not open the file "+ PathName + EOLCHAR;
+                QString strange = "   ...Could not open the file "+ PathName + EOLch;
                 displayMessage(strange, true);
                 continue;
             }
@@ -1618,7 +1618,7 @@ void MainFrame::onLoadPlrFile()
             plrFile.setFileName(PathName);
             if (!plrFile.open(QIODevice::ReadOnly))
             {
-                QString strange = "   ...Could not open the file "+ PathName + EOLCHAR;
+                QString strange = "   ...Could not open the file "+ PathName + EOLch;
                 displayMessage(strange, true);
                 continue;
             }
@@ -2047,7 +2047,7 @@ void MainFrame::onInsertProject()
         return;
     }
 
-    QString strange = "Importing the file "+ pathname + EOLCHAR;
+    QString strange = "Importing the file "+ pathname + EOLch;
     displayMessage(strange, false);
 
 
@@ -2480,7 +2480,7 @@ bool MainFrame::saveProject(const QString &filepath)
     }
 
 
-    displayMessage(EOLCHAR + "Saving project "+filepath + EOLCHAR, false);
+    displayMessage(EOLch + "Saving project "+filepath + EOLch, false);
     QDataStream ar(&fpb);
     FileIO saver;
     connect(&saver, SIGNAL(displayMessage(QString)), m_pLogMessageDlg, SLOT(onAppendMessage(QString)));
@@ -4408,13 +4408,13 @@ void MainFrame::handleScriptResults()
         {
             if(!stldir.mkpath(stldir.path()))
             {
-                m_pLogWt->onOutputMessage("Failed to create the STL export directory: "+stldir.path()+EOLCHAR);
+                m_pLogWt->onOutputMessage("Failed to create the STL export directory: "+stldir.path()+EOLch);
             }
         }
 
         if(stldir.exists())
         {
-           m_pLogWt->onOutputMessage("Exporting STL meshes to directory: "+stldir.path()+EOLCHAR);
+           m_pLogWt->onOutputMessage("Exporting STL meshes to directory: "+stldir.path()+EOLch);
            exportAllStlMesh(stldir.path());
         }
     }
@@ -4429,7 +4429,7 @@ void MainFrame::handleScriptResults()
         }
         else
         {
-            QString strange = "Error saving the project "+ FilePath+EOLCHAR;
+            QString strange = "Error saving the project "+ FilePath+EOLch;
             m_pLogWt->onOutputMessage(strange);
         }
     }

@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-#include <format>
+#
 
 #include <QApplication>
 #include <QClipboard>
@@ -179,7 +179,7 @@ XDirect::XDirect(MainFrame *pMainFrame)
 void XDirect::makeBLGraphs()
 {
     QStringList XVarList = {"X"};
-    QStringList OppVarList = {"Cp", "Ue", "D*", THETACHAR, "H"};
+    QStringList OppVarList = {"Cp", "Ue", "D*", THETAch, "H"};
 
     for(int ig=0; ig<MAXGRAPHS; ig++)
     {
@@ -1631,7 +1631,7 @@ void XDirect::onDeleteFoilPolars()
     QString strong;
 
     strong = "Are you sure you want to delete polars and oprating points\n";
-    strong +="associated to "+s_pCurFoil->name()  + "?";
+    strong +="associated to "+QString::fromStdString(s_pCurFoil->name()) + "?";
     if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, "Question", strong,
                                                   QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel))
         return;
@@ -2337,8 +2337,7 @@ void XDirect::onImportJavaFoilPolar()
                 default: break;
             }
 
-            pPolar->setName(std::format("T{:d}_Re{:.0f}_M{:.2f}_JavaFoil",
-                                         type, pPolar->Reynolds()/1000000.0, pPolar->Mach()));
+            pPolar->setName(QString::asprintf("T%d_Re%.0f_M%.2f_JavaFoil",type, pPolar->Reynolds()/1000000.0, pPolar->Mach()).toStdString());
 
             fl5Color clr = xfl::randomfl5Color(!DisplayOptions::isLightTheme());
             pPolar->setLineColor(clr);
@@ -2952,7 +2951,7 @@ void XDirect::onRenameCurPolar()
             for (k=0; k<Objects2d::nPolars(); k++)
             {
                 pPolar = Objects2d::polarAt(k);
-                if ((pPolar->foilName()==s_pCurFoil->name()) && (pPolar->name() == renameDlg.newName()))
+                if ((pPolar->foilName()==s_pCurFoil->name()) && (pPolar->name() == renameDlg.newName().toStdString()))
                 {
                     bExists = true;
                     break;
@@ -2963,7 +2962,7 @@ void XDirect::onRenameCurPolar()
                 for (l=Objects2d::nOpPoints()-1;l>=0; l--)
                 {
                     pOpp = Objects2d::opPointAt(l);
-                    if (pOpp->polarName() == OldName &&  pOpp->foilName() == s_pCurFoil->name())
+                    if (pOpp->polarName() == OldName.toStdString() &&  pOpp->foilName() == s_pCurFoil->name())
                     {
                         pOpp->setPolarName(renameDlg.newName().toStdString());
                     }
@@ -2979,7 +2978,7 @@ void XDirect::onRenameCurPolar()
             for (k=0; k<Objects2d::nPolars(); k++)
             {
                 pPolar = Objects2d::polarAt(k);
-                if (pPolar->name() == renameDlg.newName())
+                if (pPolar->name() == renameDlg.newName().toStdString())
                 {
 //                    bExists = true;
                     break;
@@ -3005,7 +3004,7 @@ void XDirect::onRenameCurPolar()
             for (l=Objects2d::nOpPoints()-1;l>=0; l--)
             {
                 pOpp = Objects2d::opPointAt(l);
-                if (pOpp->polarName() == OldName &&    pOpp->foilName() == s_pCurFoil->name())
+                if (pOpp->polarName() == OldName.toStdString() && pOpp->foilName() == s_pCurFoil->name())
                 {
                     pOpp->setPolarName(renameDlg.newName().toStdString());
                 }
@@ -3164,7 +3163,7 @@ Polar* XDirect::insertNewPolar(Polar *pNewPolar)
     bExists = false;
     for (int k=0; k<NameList.count(); k++)
     {
-        if(pNewPolar->name()==NameList.at(k))
+        if(pNewPolar->name()==NameList.at(k).toStdString())
         {
             bExists = true;
             break;
@@ -3610,8 +3609,8 @@ QString XDirect::oppData(OpPoint const *pOpp) const
     strong = strong.rightJustified(linelength,' ');
     OpPointProperties += strong +"\n";
 
-    strong = ALPHACHAR + QString::asprintf("     = %9.3f", pOpp->m_Alpha);
-    strong += DEGCHAR;
+    strong = ALPHAch + QString::asprintf("     = %9.3f", pOpp->m_Alpha);
+    strong += DEGch;
     strong = strong.rightJustified(linelength,' ');
     OpPointProperties += strong +"\n";
 
@@ -3657,9 +3656,9 @@ QString XDirect::oppData(OpPoint const *pOpp) const
 
     strong = QString::asprintf("bot trans. = %9.3f ", pOpp->m_XTrBot);
     strong = strong.rightJustified(linelength,' ');
-    OpPointProperties += strong + EOLCHAR;
+    OpPointProperties += strong + EOLch;
 
-    strong = THETACHAR + QString::asprintf("     = %9.3f", pOpp->theta()) + DEGCHAR;
+    strong = THETAch + QString::asprintf("     = %9.3f", pOpp->theta()) + DEGch;
     strong = strong.rightJustified(linelength,' ');
     OpPointProperties += strong;
 

@@ -145,7 +145,7 @@ void PlainTextOutput::onAppendQText(QString const &sometext)
 void PlainTextOutput::appendEOL(int n)
 {
     moveCursor(QTextCursor::End);
-    for(int k=0; k<n; k++)  insertPlainText(EOLCHAR);
+    for(int k=0; k<n; k++)  insertPlainText(EOLch);
     moveCursor(QTextCursor::End);
     ensureCursorVisible();
 

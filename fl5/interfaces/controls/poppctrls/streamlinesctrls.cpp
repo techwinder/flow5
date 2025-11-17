@@ -46,7 +46,7 @@
 #include <modules/xplane/glview/gl3dxplaneview.h>
 #include <modules/xsail/view/gl3dxsailview.h>
 
-#include <core/qunits.h>
+#include <api/units.h>
 
 StreamLineCtrls::eStreamStart StreamLineCtrls::s_pos = StreamLineCtrls::TRAILINGEDGE;
 int StreamLineCtrls::s_NX = 50;

@@ -46,7 +46,7 @@
 #include <api/sailocc.h>
 #include <api/sailspline.h>
 #include <api/sailwing.h>
-#include <core/qunits.h>
+#include <api/units.h>
 
 bool gl3dBoatView::s_bSurfaces = true;
 bool gl3dBoatView::s_bOutline = true;

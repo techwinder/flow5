@@ -35,7 +35,7 @@
 #include <api/xml_globals.h>
 
 #include <core/enums_core.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/xflcore.h>
 #include <modules/xobjects.h>
 
@@ -313,10 +313,10 @@ void ObjectTreeView::fillWingTreeView(const WingXfl *pWing)
                 dataItem = xfl::prepareDoubleRow("", "offset", wingsec.offset()*Units::mtoUnit(), QUnits::lengthUnitLabel());
                 sectionFolder.front()->appendRow(dataItem);
 
-                dataItem = xfl::prepareDoubleRow("", "dihedral", wingsec.dihedral(), DEGCHAR);
+                dataItem = xfl::prepareDoubleRow("", "dihedral", wingsec.dihedral(), DEGch);
                 sectionFolder.front()->appendRow(dataItem);
 
-                dataItem = xfl::prepareDoubleRow("", "twist", wingsec.twist(), DEGCHAR);
+                dataItem = xfl::prepareDoubleRow("", "twist", wingsec.twist(), DEGch);
                 sectionFolder.front()->appendRow(dataItem);
 
                 dataItem = xfl::prepareIntRow("", "x-panels", wingsec.nXPanels());

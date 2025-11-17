@@ -61,7 +61,7 @@ class FL5LIB_EXPORT BoatPolar : public Polar3d
 
         void addPoint(const BoatOpp *pBtOpp);
         double getVariable(int iVar, int iPoint) const;
-        void getProperties(std::string &PolarProperties, xfl::enumTextFileType filetype=xfl::CSV, bool bData=false) const;
+        void getProperties(std::string &props, xfl::enumTextFileType filetype=xfl::CSV, bool bData=false) const;
         void exportBtPlr(std::string &outstring, xfl::enumTextFileType filetype=xfl::CSV, bool bDataOnly=false) const;
 
         void copy(BoatPolar const *pBoatPolar);
@@ -127,7 +127,7 @@ class FL5LIB_EXPORT BoatPolar : public Polar3d
         void trueWindSpeed(double ctrl, double z, Vector3d &VT) const;
         void apparentWind(double ctrl, double z, Vector3d &AWS) const;
 
-        void getBtPolarData(std::string &polardata, const std::string &sep) const;
+        void getBtPolarData(std::string &data, const std::string &separator) const;
         double variable(int iVariable, int index) const;
 
         double bufferWakeLength() const override {return m_BufferWakeFactor * referenceChordLength();}

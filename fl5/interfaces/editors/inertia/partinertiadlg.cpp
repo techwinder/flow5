@@ -45,7 +45,7 @@
 #include "partinertiamodel.h"
 
 #include <core/saveoptions.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/inertia/pointmasstable.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
@@ -465,7 +465,7 @@ void PartInertiaDlg::onExportToAVL()
                      .arg(pm.position().x/Lunit, 10, 'g', 3)
                      .arg(pm.position().y/Lunit, 10, 'g', 3)
                      .arg(pm.position().z/Lunit, 10, 'g', 3);
-            strong += " ! " + pm.tag();
+            strong += " ! " + QString::fromStdString(pm.tag());
             out << strong+"\n";
         }
     }

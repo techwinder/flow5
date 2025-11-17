@@ -33,7 +33,8 @@
 #include <QPushButton>
 
 #include "bodytransdlg.h"
-#include <core/qunits.h>
+
+#include <api/units.h>
 
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>

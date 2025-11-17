@@ -184,7 +184,7 @@ gl2dQuat::gl2dQuat(QWidget *pParent) : gl2dView(pParent)
                     QGridLayout *pImageLayout = new QGridLayout;
                     {
                         QLabel *plabImgWidth = new QLabel("Image size=");
-                        QLabel *plabTimes = new QLabel(TIMESCHAR);
+                        QLabel *plabTimes = new QLabel(TIMESch);
                         QLabel *plabPixel = new QLabel("pixels");
                         pImageLayout->addWidget(plabImgWidth, 1, 1);
                         pImageLayout->addWidget(m_pieWidth,   1, 2);
@@ -440,7 +440,7 @@ void gl2dQuat::onSlice()
             str1 = "Slice.w =";
             break;
         case 6:
-            str0 = "Slice." + THETACHAR +" =";
+            str0 = "Slice." + THETAch +" =";
             str1 = "Slice.length =";
             break;
     }

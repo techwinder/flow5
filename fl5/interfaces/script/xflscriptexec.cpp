@@ -752,7 +752,7 @@ bool XflScriptExec::runScript(QString const &scriptpath)
     strange = "Available foils:\n";
     for(int i=0; i<Objects2d::nFoils(); i++)
     {
-        strange += "   " + Objects2d::foilAt(i)->name() + "\n";
+        strange += "   " + QString::fromStdString(Objects2d::foilAt(i)->name()) + "\n";
     }
     traceLog(strange+"\n");
 
@@ -1055,7 +1055,7 @@ Polar * XflScriptExec::createPolar(Foil const *pFoil, double Re, double Mach, do
     if(polarType!=xfl::T4POLAR)  pNewPolar->setReynolds(Re);
     else                               pNewPolar->setAoaSpec(0.0);
 
-    pNewPolar->setName(PolarNameMaker::makeName(pNewPolar));
+    pNewPolar->setName(PolarNameMaker::makeName(pNewPolar).toStdString());
     return pNewPolar;
 }
 

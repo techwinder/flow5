@@ -71,6 +71,12 @@ Task3d::~Task3d()
 }
 
 
+void Task3d::traceLog(const QString &str)
+{
+    traceStdLog(str.toStdString());
+}
+
+
 void Task3d::traceStdLog(std::string const &str)
 {
     VPWReport report;

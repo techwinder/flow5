@@ -42,9 +42,10 @@
 #include "shapefixerdlg.h"
 #include <api/fuse.h>
 #include <api/occ_globals.h>
+#include <api/units.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
-#include <core/qunits.h>
+
 
 QByteArray ShapeFixerDlg::s_Geometry;
 double ShapeFixerDlg::s_Precision = 1.e-4; //no idea
@@ -276,7 +277,7 @@ void ShapeFixerDlg::onStitchShapes()
                 }
                 stitchedshape = solidMaker.Shape();
 
-                logmsg += "   Stitching result is " + occ::shapeType(stitchedshape) + "\n";
+                logmsg += "   Stitching result is " + QString::fromStdString(occ::shapeType(stitchedshape)) + "\n";
 
                 BRepCheck_Analyzer ShapeAnalyzer(stitchedshape);
                 if(ShapeAnalyzer.IsValid()) logmsg += "   Shape topology is VALID \n\n";

@@ -35,7 +35,7 @@
 #include <api/boat.h>
 #include <api/boatpolar.h>
 #include <api/sail.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 
 #include <core/displayoptions.h>
@@ -204,7 +204,7 @@ void BtPolarDlg::fillVariableList()
     ind = m_pBtVariableModel->index(row, 2, QModelIndex());
     m_pBtVariableModel->setData(ind, s_BtPolar.m_TWAMax);
     ind = m_pBtVariableModel->index(row, 3, QModelIndex());
-    m_pBtVariableModel->setData(ind, DEGCHAR);
+    m_pBtVariableModel->setData(ind, DEGch);
 
     // row 3 is the bank angle range
     row++;
@@ -215,7 +215,7 @@ void BtPolarDlg::fillVariableList()
     ind = m_pBtVariableModel->index(row, 2, QModelIndex());
     m_pBtVariableModel->setData(ind, s_BtPolar.m_PhiMax);
     ind = m_pBtVariableModel->index(row, 3, QModelIndex());
-    m_pBtVariableModel->setData(ind, DEGCHAR);
+    m_pBtVariableModel->setData(ind, DEGch);
 
     // row 4 is the range of Ry
     row++;
@@ -230,7 +230,7 @@ void BtPolarDlg::fillVariableList()
     m_pBtVariableModel->setData(ind, s_BtPolar.RyMax());
     m_pBtVariableModel->setData(ind, "<p>Defines the maximum rotation around the Y axis</p>", Qt::ToolTipRole);
     ind = m_pBtVariableModel->index(row, 3, QModelIndex());
-    m_pBtVariableModel->setData(ind, DEGCHAR);
+    m_pBtVariableModel->setData(ind, DEGch);
 
     // the next set of rows are the sail angles
     for(int is=0; is<m_pBoat->nSails(); is++)
@@ -247,7 +247,7 @@ void BtPolarDlg::fillVariableList()
         m_pBtVariableModel->setData(ind, s_BtPolar.m_SailAngleMax[is]);
         m_pBtVariableModel->setData(ind, "<p>Defines the sail's max. rotation around its luff axis</p>", Qt::ToolTipRole);
         ind = m_pBtVariableModel->index(row, 3, QModelIndex());
-        m_pBtVariableModel->setData(ind, DEGCHAR);
+        m_pBtVariableModel->setData(ind, DEGch);
     }
 //    m_pBtVariableModel->blockSignals(false);
 }

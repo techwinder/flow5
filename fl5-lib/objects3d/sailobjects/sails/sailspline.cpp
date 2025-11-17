@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 #include <BRepBuilderAPI_Sewing.hxx>
 #include <BRepOffsetAPI_ThruSections.hxx>
@@ -802,10 +803,12 @@ double SailSpline::length() const
 
 bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) const
 {
+    QString logg;
     double stitchprecision = 1.e-6;
-    std::string strong = "Processing wing "+ m_Name + "\n";
-    logmsg += strong;
+    QString strong = "Processing wing "+ QString::fromStdString(m_Name) + "\n";
+    logg += strong;
 
+    std::string occstr;
     BRepBuilderAPI_Sewing stitcher(stitchprecision);
 
     BSpline3d b3d0, b3d1;
@@ -819,17 +822,24 @@ bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) cons
             {
                 makeBSpline3d(iSpline,   b3d0);
                 makeBSpline3d(iSpline+1, b3d1);
-                if(!occ::makeSplineWire(b3d0, Wire0, logmsg))
+                if(!occ::makeSplineWire(b3d0, Wire0, occstr))
                 {
-                    logmsg += std::format("   Error making spline wire {0:d}", iSpline);
+                    logg += QString::asprintf("   Error making spline wire %d", iSpline);
                     return false;
                 }
 
-                if(!occ::makeSplineWire(b3d1, Wire1, logmsg))
+                logg += QString::fromStdString(occstr);
+                occstr.clear();
+
+                if(!occ::makeSplineWire(b3d1, Wire1, occstr))
                 {
-                    logmsg += std::format("   Error making spline wire {0:d}", iSpline+1);
+                    logg += QString::asprintf("   Error making spline wire %d", iSpline+1);
                     return false;
                 }
+
+                logg += QString::fromStdString(occstr);
+                occstr.clear();
+
                 break;
             }
             default:
@@ -850,7 +860,7 @@ bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) cons
                 Wire0 = PolyMaker0.Wire();
                 if(!PolyMaker0.IsDone() || Wire0.IsNull())
                 {
-                    logmsg += std::format("   error making wire {0:d}\n", iSpline);
+                    logg += QString::asprintf("   error making wire %d\n", iSpline);
                     return false;
                 }
 
@@ -866,7 +876,7 @@ bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) cons
                 Wire1 = PolyMaker1.Wire();
                 if(!PolyMaker1.IsDone() || Wire1.IsNull())
                 {
-                    logmsg += std::format("   error making wire {0:d}\n", iSpline+1);
+                    logg += QString::asprintf("   error making wire %d\n", iSpline+1);
                     return false;
                 }
             }
@@ -890,16 +900,16 @@ bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) cons
         }
         catch(Standard_DomainError &)
         {
-            logmsg += "     Standard_DomainError sweeping wires\n";
+            logg += "     Standard_DomainError sweeping wires\n";
         }
         catch (StdFail_NotDone &)
         {
-            logmsg += "   StdFail_NotDone sweeping wires\n";
+            logg += "   StdFail_NotDone sweeping wires\n";
             return false;
         }
         catch (...)
         {
-            logmsg += "   Unknown error sweeping section wires\n";
+            logg += "   Unknown error sweeping section wires\n";
             return false;
         }
     }
@@ -916,11 +926,13 @@ bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) cons
     }
     catch(Standard_TypeMismatch const &)
     {
-        logmsg += "     SailShapes:: Type mismatch error\n";
+        logg += "     SailShapes:: Type mismatch error\n";
         return false;
     }
 
-    logmsg += "\n";
+    logg += "\n";
+
+    logmsg = logg.toStdString();
     return !sailshape.IsNull();
 }
 

@@ -120,7 +120,7 @@ void SailCadReaderDlg::onImportFile()
     int ishape=0;
     for(TopTools_ListIteratorOfListOfShape shellit(m_ListOfShape); shellit.More(); shellit.Next())
     {
-        m_ppto->onAppendStdText(std::format("Shape {0:d}:\n", ishape));
+        m_ppto->onAppendQText(QString::asprintf("Shape %d:\n", ishape));
         occ::listShapeContent(shellit.Value(), log, "   ");
         m_ppto->onAppendStdText(logmsg + log +"\n");
         ishape++;
@@ -133,7 +133,7 @@ void SailCadReaderDlg::customEvent(QEvent *pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent const *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        m_ppto->onAppendStdText(pMsgEvent->msg());
+        m_ppto->onAppendQText(pMsgEvent->msg());
 
     }
     else

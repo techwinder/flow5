@@ -145,7 +145,7 @@ void XflXmlWriter::writePointMass(const PointMass &pm)
 {
     writeStartElement("Point_Mass");
     {
-        writeTextElement("Tag", pm.tag());
+        writeTextElement("Tag", QString::fromStdString(pm.tag()));
         writeTextElement("Mass", QString("%1").arg(pm.mass()*Units::kgtoUnit(),7,'f',3));
         writeTextElement("coordinates",QString("%1, %2, %3").arg(pm.position().x*Units::mtoUnit(), 11,'g',5)
                                                             .arg(pm.position().y*Units::mtoUnit(), 11,'g',5)
@@ -181,12 +181,12 @@ void XflXmlWriter::writeXflFuse(const FuseXfl &xflfuse, const Vector3d &position
     NURBSSurface const &nurbs = xflfuse.nurbs();
     writeStartElement("body");
     {
-        writeTextElement("Name", xflfuse.name());
+        writeTextElement("Name", QString::fromStdString(xflfuse.name()));
         writeColor(xflfuse.color());
 
         if(xflfuse.description().length())
         {
-            writeTextElement("Description", xflfuse.description());
+            writeTextElement("Description", QString::fromStdString(xflfuse.description()));
         }
 
         writeTextElement("Position",QString("%1, %2, %3").arg(position.x*Units::mtoUnit(), 11,'g',5)
@@ -365,11 +365,11 @@ void XflXmlWriter::writeWing(WingXfl const &wing, Vector3d WingLE, double Rx, do
 {
     writeStartElement("wing");
     {
-        writeTextElement("Name", wing.name());
+        writeTextElement("Name", QString::fromStdString(wing.name()));
         writeComment("Available options are MAINWING, SECONDWING, ELEVATOR, FIN, OTHERWING");
         writeTextElement("Type", xml::wingType(wing.wingType()));
         writeColor(wing.color());
-        writeTextElement("Description", wing.description());
+        writeTextElement("Description", QString::fromStdString(wing.description()));
         writeTextElement("Position",QString("%1, %2, %3").arg(WingLE.x*Units::mtoUnit(), 11,'g',5)
                                                          .arg(WingLE.y*Units::mtoUnit(), 11,'g',5)
                                                          .arg(WingLE.z*Units::mtoUnit(), 11,'g',5));
@@ -398,18 +398,18 @@ void XflXmlWriter::writeWing(WingXfl const &wing, Vector3d WingLE, double Rx, do
                     writeTextElement("Dihedral",             QString("%1").arg(ws.m_Dihedral, 7, 'f', 3));
                     writeTextElement("Twist",                QString("%1").arg(ws.m_Twist, 7, 'f', 3));
                     writeTextElement("x_number_of_panels",   QString("%1").arg(ws.m_NXPanels));
-                    writeTextElement("x_panel_distribution", xfl::distributionType(ws.m_XPanelDist));
+                    writeTextElement("x_panel_distribution", QString::fromStdString(xfl::distributionType(ws.m_XPanelDist)));
                     writeTextElement("y_number_of_panels",   QString("%1").arg(ws.m_NYPanels));
-                    writeTextElement("y_panel_distribution", xfl::distributionType(ws.m_YPanelDist));
+                    writeTextElement("y_panel_distribution", QString::fromStdString(xfl::distributionType(ws.m_YPanelDist)));
                     if(bWriteFoils)
                     {
-                        writeTextElement("Left_Side_Foil_File",  ws.m_LeftFoilName +".dat");
-                        writeTextElement("Right_Side_Foil_File", ws.m_RightFoilName+".dat");
+                        writeTextElement("Left_Side_Foil_File",  QString::fromStdString(ws.m_LeftFoilName) +".dat");
+                        writeTextElement("Right_Side_Foil_File", QString::fromStdString(ws.m_RightFoilName)+".dat");
                     }
                     else
                     {
-                        writeTextElement("Left_Side_FoilName",  ws.m_LeftFoilName);
-                        writeTextElement("Right_Side_FoilName", ws.m_RightFoilName);
+                        writeTextElement("Left_Side_FoilName",  QString::fromStdString(ws.m_LeftFoilName));
+                        writeTextElement("Right_Side_FoilName", QString::fromStdString(ws.m_RightFoilName));
                     }
 
                 }
@@ -427,8 +427,8 @@ void XflXmlWriter::writeWing(WingXfl const &wing, Vector3d WingLE, double Rx, do
     for(int is=0; is<wing.nSections(); is++)
     {
         WingSection const &ws = wing.section(is);
-        if(!foilnames.contains(ws.leftFoilName()))  foilnames.append(QString::fromStdString(ws.leftFoilName()));
-        if(!foilnames.contains(ws.rightFoilName())) foilnames.append(QString::fromStdString(ws.rightFoilName()));
+        if(!foilnames.contains(QString::fromStdString(ws.leftFoilName())))  foilnames.append(QString::fromStdString(ws.leftFoilName()));
+        if(!foilnames.contains(QString::fromStdString(ws.rightFoilName()))) foilnames.append(QString::fromStdString(ws.rightFoilName()));
     }
 
     for(int is=0; is<foilnames.size(); is++)

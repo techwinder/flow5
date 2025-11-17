@@ -54,7 +54,7 @@
 #include <api/part.h>
 #include <api/objects_global.h>
 #include <api/occ_globals.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <interfaces/mesh/gmesh_globals.h>
 
 bool FuseDlg::s_bOutline    = true;
@@ -491,13 +491,13 @@ void FuseDlg::onTessellation()
 
         m_pFuse->clearOccTriangulation();
         m_bDescriptionChanged = true;
-        std::string strange;
+        QString strange;
 //        m_pFuse->makeShellTriangulation(strange, QString());
 
         gmesh::makeFuseTriangulation(m_pFuse, strange);
         m_pglFuseView->resetFuse();
         updateView();
-        updateStdOutput("\n"+strange+"\n");
+        updateOutput("\n"+strange+"\n");
         QApplication::restoreOverrideCursor();
     }
 }

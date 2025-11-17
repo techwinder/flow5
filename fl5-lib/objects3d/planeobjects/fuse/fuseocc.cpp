@@ -26,7 +26,8 @@
 
 #include <string>
 #include <sstream>
-#include <format>
+#include <QString>
+
 
 #include <QDataStream>
 
@@ -210,19 +211,21 @@ bool FuseOcc::serializePartFl5(QDataStream &ar, bool bIsStoring)
 }
 
 
-void FuseOcc::getProperties(std::string &props, std::string const &prefix, bool bFull)
+void FuseOcc::getProperties(std::string &properties, std::string const &prefx, bool bFull)
 {
-    Fuse::getProperties(props, prefix);
+    Fuse::getProperties(properties, prefx);
 
     if(bFull)
     {
-        std::string strange;
-        strange = std::format("Fuse is made of {0:d} shapes\n", m_Shape.Size());
-        props += "\n"+prefix+strange;
+        QString strange;
+        strange = QString::asprintf("Fuse is made of %d shapes\n", int(m_Shape.Size()));
+        properties += "\n"+prefx+strange.toStdString();
+
+        std::string occstr;
         for(TopTools_ListIteratorOfListOfShape shapeit(m_Shape); shapeit.More(); shapeit.Next())
         {
-            occ::listShapeContent(shapeit.Value(), strange, prefix);
-            props += prefix+strange;
+            occ::listShapeContent(shapeit.Value(), occstr, prefx);
+            properties += prefx+occstr;
         }
     }
 }
@@ -340,19 +343,19 @@ void FuseOcc::computeSurfaceProperties(std::string &logmsg, const std::string &p
     m_MaxHeight = fabs(zmax-zmin);
 
     std::string strong;
-    strong = std::format("Length          = {0:9.5g} ", length()*Units::mtoUnit());
+    strong = QString::asprintf("Length          = %9.5g ", length()*Units::mtoUnit()).toStdString();
     strong += Units::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 
-    strong = std::format("Max. width      = {0:9.5g} ", m_MaxWidth*Units::mtoUnit());
+    strong = QString::asprintf("Max. width      = %9.5g ", m_MaxWidth*Units::mtoUnit()).toStdString();
     strong += Units::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 
-    strong = std::format("Max. height     = {0:9.5g} ", m_MaxHeight*Units::mtoUnit());
+    strong = QString::asprintf("Max. height     = %9.5g ", m_MaxHeight*Units::mtoUnit()).toStdString();
     strong += Units::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 
-    strong = std::format("Wetted area     = {0:9.5g} ", m_WettedArea*Units::m2toUnit());
+    strong = QString::asprintf("Wetted area     = %9.5g ", m_WettedArea*Units::m2toUnit()).toStdString();
     strong += Units::areaUnitLabel();
     logmsg += prefix + strong;
 }

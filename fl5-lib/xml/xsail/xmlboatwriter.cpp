@@ -67,8 +67,8 @@ void XmlBoatWriter::writeXMLBoat(Boat const &boat)
 
     writeStartElement("Boat");
     {
-        writeTextElement("Name", boat.name());
-        writeTextElement("Description", boat.description());
+        writeTextElement("Name",        QString::fromStdString(boat.name()));
+        writeTextElement("Description", QString::fromStdString(boat.description()));
 
         writeTheStyle(boat.theStyle());
 

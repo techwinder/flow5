@@ -191,7 +191,7 @@ Polar *foil::importAnalysisFromXml(std::string const &pathname)
     if(polarReader.hasError())
     {
         std::string errorMsg = polarReader.errorString().toStdString() +
-                               std::format("\nline {:d} column {:d}", int(polarReader.lineNumber()), int(polarReader.columnNumber()));
+                               QString::asprintf("\nline %d column %d", int(polarReader.lineNumber()), int(polarReader.columnNumber())).toStdString();
         globals::pushToLog(errorMsg);
 
         delete pPolar;

@@ -35,7 +35,7 @@
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/exponentialslider.h>
 
-#include <core/qunits.h>
+#include <api/units.h>
 
 double GLLightDlg::s_VerticalAngle = 60.0;
 double GLLightDlg::s_ViewDistance = 15.0;

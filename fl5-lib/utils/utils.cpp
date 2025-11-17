@@ -25,7 +25,8 @@
 #include <fstream>
 #include <iostream>
 #include <iomanip>
-#include <format>
+#include <QString>
+
 
 #include <QString>
 
@@ -378,17 +379,17 @@ QString xfl::boolToString(bool b)
 
 std::string xfl::MklVersion()
 {
-    std::string strange;
+    QString strange;
 
 #ifdef INTEL_MKL
     MKLVersion Version;
 
     mkl_get_version(&Version);
 
-    strange += std::format("<p><b>Version: </b>{:d}.{:d}.{:d}<br>", Version.MajorVersion, Version.MinorVersion, Version.UpdateVersion);
-    strange += std::format("<b>Processor optimization: </b> %s", Version.Processor) + "</p>";
+    strange += QString::asprintf("<p><b>Version: </b>%d.%d.%d<br>", Version.MajorVersion, Version.MinorVersion, Version.UpdateVersion);
+    strange += QString::asprintf("<b>Processor optimization: </b> %s", Version.Processor) + "</p>";
 #endif
-    return strange;
+    return strange.toStdString();
 }
 
 

@@ -37,28 +37,6 @@ struct fl5Color;
 struct LineStyle;
 
 
-
-#define PICHAR         QString(QChar(0x03C0))
-#define ALPHACHAR      QString(QChar(0x03B1))
-#define BETACHAR       QString(QChar(0x03B2))
-#define GAMMACHAR      QString(QChar(0x03B3))
-#define DELTACHAR      QString(QChar(0x03B4))
-#define DELTACAPCHAR   QString(QChar(0x0394)) // Capital
-#define ZETACHAR       QString(QChar(0x03B6))
-#define LAMBDACHAR     QString(QChar(0x03BB))
-#define NUCHAR         QString(QChar(0x03BD))
-#define PHICHAR        QString(QChar(0x03C6))
-#define RHOCHAR        QString(QChar(0x03C1))
-#define SIGMACHAR      QString(QChar(0x03C3))
-#define THETACHAR      QString(QChar(0x03B8))
-#define XICHAR         QString(QChar(0x03BE))
-#define TAUCHAR        QString(QChar(0x03C4))
-#define DEGCHAR        QString(QChar(0x00B0))
-#define INFCHAR        QString(QChar(0x221e))
-#define TIMESCHAR      QString(QChar(0x00d7))
-#define EOLCHAR        QString("\n")
-
-
 namespace xfl
 {
     extern bool g_bLocalize;

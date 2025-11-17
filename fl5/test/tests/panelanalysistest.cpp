@@ -34,7 +34,7 @@
 #include <api/p3linanalysis.h>
 #include <api/p3unianalysis.h>
 #include <api/p4analysis.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/xflcore.h>
 #include <core/displayoptions.h>
 #include <interfaces/graphs/controls/graphoptions.h>

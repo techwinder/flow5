@@ -29,12 +29,12 @@
 
 #include "sailstldlg.h"
 
-#include <core/qunits.h>
+#include <api/sailstl.h>
+#include <api/units.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <interfaces/opengl/fl5views/gl3dsailview.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
-#include <api/sailstl.h>
 
 
 

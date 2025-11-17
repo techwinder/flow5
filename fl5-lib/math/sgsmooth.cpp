@@ -25,7 +25,8 @@
 
 #include <cstring>
 #include <string>
-#include <format>
+#include <QString>
+
 
 
 
@@ -244,7 +245,7 @@ void testSmoothNonUniform()
     bool bSmooth = sgsmooth::smooth_nonuniform(degree, nPts, x0, y0, y);
     if(!bSmooth)
     {
-        std::string strange = std::format("  Smoothing failed deg={:d}  nPts={:d}\n",degree, nPts);
+//        QString strange = QString::asprintf("  Smoothing failed deg=%d  nPts=%d\n",degree, nPts);
         return;
     }
 }

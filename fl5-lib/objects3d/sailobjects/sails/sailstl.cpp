@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 #include <api/sailstl.h>
 
@@ -200,11 +201,13 @@ void SailStl::flipXZ()
 }
 
 
-void SailStl::properties(std::string &props, const std::string &frontspacer, bool bFull) const
+void SailStl::properties(std::string &sailprops, const std::string &prefx, bool bFull) const
 {
-    std::string strlength = Units::lengthUnitLabel();
-    std::string strarea = Units::areaUnitLabel();
-    std::string strange;
+    QString props;
+    QString strlength = QUnits::lengthUnitLabel();
+    QString strarea = QUnits::areaUnitLabel();
+    QString strange;
+    QString frontspacer = QString::fromStdString(prefx);
 
     Vector3d foot = (m_Clew-m_Tack);
     Vector3d gaff = m_Peak-m_Head;
@@ -212,28 +215,30 @@ void SailStl::properties(std::string &props, const std::string &frontspacer, boo
     double toptwist = atan2(gaff.y, gaff.x)*180.0/PI;
 
     props.clear();
-    props += frontspacer + m_Name +"\n";
+    props += frontspacer + QString::fromStdString(m_Name) +"\n";
     if(bFull)
     {
         props += frontspacer + "   STL type sail\n";
     }
-    strange = std::format("   Luff length  = {0:7.3f} ", luffLength()*Units::mtoUnit());
+    strange = QString::asprintf("   Luff length  = %7.3f ", luffLength()*Units::mtoUnit());
     props += frontspacer + strange + strlength+"\n";
-    strange = std::format("   Leech length = {0:7.3f} ", leechLength()*Units::mtoUnit());
+    strange = QString::asprintf("   Leech length = %7.3f ", leechLength()*Units::mtoUnit());
     props += frontspacer + strange + strlength+"\n";
-    strange = std::format("   Foot length  = {0:7.3f} ", footLength()*Units::mtoUnit());
+    strange = QString::asprintf("   Foot length  = %7.3f ", footLength()*Units::mtoUnit());
     props += frontspacer + strange + strlength+"\n";
-    strange = std::format("   Wetted area  = {0:7.3f} ", m_WettedArea*Units::m2toUnit());
+    strange = QString::asprintf("   Wetted area  = %7.3f ", m_WettedArea*Units::m2toUnit());
     props += frontspacer + strange + strarea + "\n";
-    strange = std::format("   Head twist   = {0:7.3f} ", toptwist);
+    strange = QString::asprintf("   Head twist   = %7.3f ", toptwist);
     props += frontspacer + strange+ DEGch + "\n";
-    strange = std::format("   Foot twist   = {0:7.3f} ", bottwist);
+    strange = QString::asprintf("   Foot twist   = %7.3f ", bottwist);
     props += frontspacer + strange+ DEGch + "\n";
-    strange = std::format("   Aspect ratio = {0:7.3f} ", aspectRatio());
+    strange = QString::asprintf("   Aspect ratio = %7.3f ", aspectRatio());
     props += frontspacer + strange+"\n";
 
-    strange = std::format("   Triangle count = {0:d}", m_Triangulation.nTriangles());
+    strange = QString::asprintf("   Triangle count = %d", m_Triangulation.nTriangles());
     props += frontspacer + strange;
+
+    sailprops = props.toStdString();
 }
 
 

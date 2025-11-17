@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 
 #include <api/boat.h>
@@ -762,22 +763,24 @@ Fuse const * Boat::hull() const
 
 std::string Boat::properties(bool bFull) const
 {
-    std::string props, strange, frontspacer;
+    QString props, strange, frontspacer;
 
     if(m_Description.length())
-        props = m_Description +"\n";
+        props = QString::fromStdString(m_Description) +"\n";
 
     if(m_Sail.size()<=1)
-        props += std::format("Boat is made of {0:d} sail\n", nSails());
+        props += QString::asprintf("Boat is made of %d sail\n", nSails());
     else
-        props += std::format("Boat is made of {0:d} sails\n", nSails());
+        props += QString::asprintf("Boat is made of %d sails\n", nSails());
 
     if(bFull)
     {
+        std::string str;
+        std::string spacer = frontspacer.toStdString();
         for(int is=0; is<nSails(); is++)
         {
-            m_Sail.at(is)->properties(strange, frontspacer);
-            props += strange;
+            m_Sail.at(is)->properties(str, spacer);
+            props += QString::fromStdString(str);
             props += "\n";
         }
     }
@@ -785,20 +788,20 @@ std::string Boat::properties(bool bFull) const
     {
         if(m_Sail.size()>0)
         {
-            props += std::format("Main sail area  = {0:g}", m_Sail.at(0)->refArea()*Units::m2toUnit());
-            props += " "+Units::areaUnitLabel() + "\n";
+            props += QString::asprintf("Main sail area  = %g", m_Sail.at(0)->refArea()*Units::m2toUnit());
+            props += " " + QUnits::areaUnitLabel() + "\n";
         }
         if(m_Sail.size()>1)
         {
-            props += std::format("Jib area        = {0:g}", m_Sail.at(1)->refArea()*Units::m2toUnit());
-            props += " "+Units::areaUnitLabel() + "\n";
+            props += QString::asprintf("Jib area        = %g", m_Sail.at(1)->refArea()*Units::m2toUnit());
+            props += " " + QUnits::areaUnitLabel() + "\n";
         }
     }
 
-    strange = std::format("Boat triangle panels = {0:d}", refTriMesh().nPanels());
+    strange = QString::asprintf("Boat triangle panels = %d", refTriMesh().nPanels());
     props += strange;
 
-    return props;
+    return props.toStdString();
 }
 
 

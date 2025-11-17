@@ -50,7 +50,7 @@
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <api/planestl.h>
-#include <core/qunits.h>
+#include <api/units.h>
 
 bool PlaneSTLDlg::s_bGuessOpposite = false;
 QByteArray PlaneSTLDlg::s_VSplitterSizes;

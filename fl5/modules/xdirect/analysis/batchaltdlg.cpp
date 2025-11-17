@@ -281,7 +281,7 @@ void BatchAltDlg::setObjectProperties(QModelIndex index)
                 {
                     props = QString::fromStdString(pFoil->description() + "\n\n");
                 }
-                props += pFoil->properties(false);
+                props += QString::fromStdString(pFoil->properties(false));
             }
         }
     }

@@ -43,7 +43,7 @@
 #include <api/planexfl.h>
 #include <api/polar.h>
 #include <api/surface.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/wingxfl.h>
 
 #include <interfaces/editors/inertia/partinertiadlg.h>

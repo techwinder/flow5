@@ -9,7 +9,6 @@
 
 
 HEADERS += \
-    $$PWD/qunits.h \
     $$PWD/displayoptions.h \
     $$PWD/enums_core.h \
     $$PWD/fontstruct.h \

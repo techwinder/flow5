@@ -23,7 +23,8 @@
 *****************************************************************************/
 
 #include <sstream>
-#include <format>
+#include <QString>
+#include <QTextStream>
 
 #include <api/utils.h>
 #include <api/constants.h>
@@ -33,7 +34,7 @@
 #include <api/geom_params.h>
 #include <api/fl5core.h>
 
-std::vector<std::string> Polar::s_VariableNames = {ALPHAch + " ("+DEGch + ")", THETAch + " ("+DEGch + ")", "Cl", "Cd", "Cdp", "Cm",
+std::vector<std::string> Polar::s_VariableNames = {ALPHAstr + " ("+DEGstr + ")", THETAstr + " ("+DEGstr + ")", "Cl", "Cd", "Cdp", "Cm",
                                      "HMom", "Cpmin", "Cl/Cd", "|Cl|^(3/2)/Cd", "1/sqrt(Cl)", "Re", "XCp",
                                      "Xtr_top", "Xtr_bot"};
 
@@ -84,21 +85,21 @@ Polar::Polar(const Polar &polar)
 
 void Polar::exportToString(std::string &outstring, bool bDataOnly, bool bCSV) const
 {
-    std::string strong, Header;
-    std::stringstream out;
+    QString strong, Header;
+    QTextStream out;
 
 
     if(!bDataOnly)
     {
-        strong = fl5::versionName(true);
+        strong = QString::fromStdString(fl5::versionName(true));
 
         strong += "\n\n";
         out << strong;
         strong =(" Calculated polar for: ");
-        strong += m_FoilName + "\n\n";
+        strong += QString::fromStdString(m_FoilName) + "\n\n";
         out << strong;
 
-        strong = std::format(" {:d} {:d}", m_ReType, m_MaType);
+        strong = QString::asprintf(" %d %d", m_ReType, m_MaType);
 
         if     (m_ReType==1) strong += (" Reynolds number fixed       ");
         else if(m_ReType==2) strong += (" Reynolds number ~ 1/sqrt(CL)");
@@ -110,10 +111,10 @@ void Polar::exportToString(std::string &outstring, bool bDataOnly, bool bCSV) co
         strong +="\n\n";
         out << strong;
 
-        strong=std::format(" xtrf =   {:.3f} (top)        {:.3f} (bottom)\n", m_XTripTop, m_XTripBot,'f',3);
+        strong=QString::asprintf(" xtrf =   %.3f (top)        %.3f (bottom)\n", m_XTripTop, m_XTripBot);
         out << strong;
 
-        strong = std::format(" Mach = {:7.3f}     Re = {:9.3f} e 6     Ncrit = {:7.3f}\n\n", m_Mach, Reynolds()/1.e6, m_ACrit);
+        strong = QString::asprintf(" Mach = %7.3f     Re = %9.3f e 6     Ncrit = %7.3f\n\n", m_Mach, Reynolds()/1.e6, m_ACrit);
         out << strong;
     }
 
@@ -129,18 +130,18 @@ void Polar::exportToString(std::string &outstring, bool bDataOnly, bool bCSV) co
         }
         for (uint j=0; j<m_Alpha.size(); j++)
         {
-            if(!bCSV) strong = std::format(" {:7.3f}  {:7.4f}  {:8.5f}  {:8.5f}  {:7.4f}", m_Alpha[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j],7,'f',4);
-            else      strong = std::format(" {:7.3f}, {:7.4f}, {:8.5f}, {:8.5f}, {:7.4f}", m_Alpha[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j],7,'f',4);
+            if(!bCSV) strong = QString::asprintf(" %7.3f  %7.4f  %8.5f  %8.5f  %7.4f", m_Alpha[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
+            else      strong = QString::asprintf(" %7.3f, %7.4f, %8.5f, %8.5f, %7.4f", m_Alpha[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
 
             out << strong;
             if(m_XTrTop[j]<990.0)
             {
-                if(!bCSV) strong=std::format("  {:6.4f}  {:6.4f}", m_XTrTop[j], m_XTrBot[j]);
-                else      strong=std::format(", {:6.4f}, {:6.4f}", m_XTrTop[j], m_XTrBot[j]);
+                if(!bCSV) strong=QString::asprintf("  %6.4f  %6.4f", m_XTrTop[j], m_XTrBot[j]);
+                else      strong=QString::asprintf(", %6.4f, %6.4f", m_XTrTop[j], m_XTrBot[j]);
                 out << strong;
             }
-            if(!bCSV) strong=std::format("  {:7.4f}  {:7.4f}  {:7.4f}\n", m_Cpmn[j], m_HMom[j], m_XCp[j]);
-            else      strong=std::format(", {:7.4f}, {:7.4f}, {:7.4f}\n", m_Cpmn[j], m_HMom[j], m_XCp[j]);
+            if(!bCSV) strong=QString::asprintf("  %7.4f  %7.4f  %7.4f\n", m_Cpmn[j], m_HMom[j], m_XCp[j]);
+            else      strong=QString::asprintf(", %7.4f, %7.4f, %7.4f\n", m_Cpmn[j], m_HMom[j], m_XCp[j]);
             out << strong;
             }
     }
@@ -156,23 +157,23 @@ void Polar::exportToString(std::string &outstring, bool bDataOnly, bool bCSV) co
         }
         for(uint j=0; j<m_Alpha.size(); j++)
         {
-            if(!bCSV) strong=std::format(" {:7.3f} {:8.0f}  {:7.4f}  {:8.5f}  {:8.5f}  {:7.4f}", m_Alpha[j], m_Re[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
-            else      strong=std::format(" {:7.3f} {:8.0f}  {:7.4f}  {:8.5f}  {:8.5f}  {:7.4f}", m_Alpha[j], m_Re[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
+            if(!bCSV) strong=QString::asprintf(" %7.3f %8.0f  %7.4f  %8.5f  %8.5f  %7.4f", m_Alpha[j], m_Re[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
+            else      strong=QString::asprintf(" %7.3f %8.0f  %7.4f  %8.5f  %8.5f  %7.4f", m_Alpha[j], m_Re[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
             out << strong;
             if(m_XTrTop[j]<990.0)
             {
-                if(!bCSV) strong=std::format("  {:6.4f}  {:6.4f}", m_XTrTop[j], m_XTrBot[j]);
-                else      strong=std::format(",{:6.4f},{:6.4f}", m_XTrTop[j], m_XTrBot[j]);;
+                if(!bCSV) strong=QString::asprintf("  %6.4f  %6.4f", m_XTrTop[j], m_XTrBot[j]);
+                else      strong=QString::asprintf(",%6.4f,%6.4f", m_XTrTop[j], m_XTrBot[j]);;
                 out << strong;
             }
-            if(!bCSV) strong=std::format("  {:7.4f}  {:7.4f}  {:7.4f}\n", m_Cpmn[j], m_HMom[j], m_XCp[j]);
-            else      strong=std::format(",{:7.4f},{:7.4f},{:7.4f}\n",    m_Cpmn[j], m_HMom[j], m_XCp[j]);
+            if(!bCSV) strong=QString::asprintf("  %7.4f  %7.4f  %7.4f\n", m_Cpmn[j], m_HMom[j], m_XCp[j]);
+            else      strong=QString::asprintf(",%7.4f,%7.4f,%7.4f\n",    m_Cpmn[j], m_HMom[j], m_XCp[j]);
             out << strong;
         }
     }
     out << "\n\n";
 
-    outstring = out.str();
+    outstring = out.readAll().toStdString();
 }
 
 
@@ -750,9 +751,9 @@ void Polar::setType(xfl::enumPolarType type)
 
 std::string Polar::properties()
 {
-    std::string polarprops;
+    QString polarprops;
 
-    std::string strong;
+    QString strong;
     polarprops.clear();
 
 
@@ -762,7 +763,7 @@ std::string Polar::properties()
         case BL::NOBLMETHOD:    polarprops += "BL Solver: Blasius\n";       break;
     }
 
-    strong = std::format("Type = {0:d}", m_Type+1);
+    strong = QString::asprintf("Type = %d", m_Type+1);
     if     (m_Type==xfl::T1POLAR) strong += " (Fixed speed)\n";
     else if(m_Type==xfl::T2POLAR) strong += " (Fixed lift)\n";
     else if(m_Type==xfl::T4POLAR) strong += " (Fixed angle of attack)\n";
@@ -771,77 +772,77 @@ std::string Polar::properties()
 
     if( (isType123() || isType4()))
     {
-        strong = "T.E. flap angle: " + THETAch + std::format(" = {0:g}", m_TEFlapAngle) + DEGch + EOLch;
+        strong = "T.E. flap angle: " + THETAch + QString::asprintf(" = %g", m_TEFlapAngle) + DEGch + EOLch;
         polarprops += strong;
     }
 
 
     if(m_Type==xfl::T1POLAR)
     {
-        strong = std::format("Reynolds    = {0:.0f}\n", Reynolds());
+        strong = QString::asprintf("Reynolds    = %.0f\n", Reynolds());
         polarprops += strong;
-        strong = std::format("Mach        = {0:5.2f}\n", m_Mach);
+        strong = QString::asprintf("Mach        = %5.2f\n", m_Mach);
         polarprops += strong;
     }
     else if(m_Type==xfl::T2POLAR)
     {
-        strong = std::format("Re.sqrt(Cl) = {0:.0f}\n",Reynolds());
+        strong = QString::asprintf("Re.sqrt(Cl) = %.0f\n",Reynolds());
         polarprops += strong;
-        strong = std::format("Ma.sqrt(Cl) = {0:5.2f}\n",m_Mach);
+        strong = QString::asprintf("Ma.sqrt(Cl) = %5.2f\n",m_Mach);
         polarprops += strong;
     }
     else if(m_Type==xfl::T3POLAR)
     {
-        strong = std::format("Re.Cl       = {0:.0f}\n",Reynolds());
+        strong = QString::asprintf("Re.Cl       = %.0f\n",Reynolds());
         polarprops += strong;
-        strong = std::format("Mach        = {0:.2f}\n",m_Mach);
+        strong = QString::asprintf("Mach        = %2f\n",m_Mach);
         polarprops += strong;
     }
     else if(m_Type==xfl::T4POLAR)
     {
-        strong = ALPHAch + std::format("           = {0:5.2f}",m_aoaSpec) + DEGch +"\n";
+        strong = ALPHAch + QString::asprintf("           = %5.2f",m_aoaSpec) + DEGch +"\n";
         polarprops += strong;
-        strong = std::format("Mach        = {0:5.2f}\n",m_Mach);
+        strong = QString::asprintf("Mach        = %5.2f\n",m_Mach);
         polarprops += strong;
     }
     else if(m_Type==xfl::T6POLAR)
     {
-        strong = ALPHAch + std::format("           = {0:5.2f}",m_aoaSpec) + DEGch +"\n";
+        strong = ALPHAch + QString::asprintf("           = %5.2f",m_aoaSpec) + DEGch +"\n";
         polarprops += strong;
 
-        strong = std::format("Reynolds    = {0:.0f}\n", Reynolds());
+        strong = QString::asprintf("Reynolds    = %.0f\n", Reynolds());
         polarprops += strong;
-        strong = std::format("Mach        = {0:5.2f}\n", m_Mach);
+        strong = QString::asprintf("Mach        = %5.2f\n", m_Mach);
         polarprops += strong;
     }
 
 
-    strong = std::format("NCrit       = {0:5.2f}\n", m_ACrit);
+    strong = QString::asprintf("NCrit       = %5.2f\n", m_ACrit);
     polarprops += strong;
 
-    strong = std::format("Forced top trans.    = {0:.2f}\n", m_XTripTop);
+    strong = QString::asprintf("Forced top trans.    = %2f\n", m_XTripTop);
     polarprops += strong;
 
-    strong = std::format("Forced bottom trans. = {0:.2f}\n", m_XTripBot);
+    strong = QString::asprintf("Forced bottom trans. = %2f\n", m_XTripBot);
     polarprops += strong;
 
     if(isType12())
     {
-        strong = ALPHAch + std::format("0 = {0:5.2f}", getZeroLiftAngle());
+        strong = ALPHAch + QString::asprintf("0 = %5.2f", getZeroLiftAngle());
         polarprops += strong + DEGch + EOLch;
 
         double positive=0, negative=0;
         getStallAngles(negative, positive);
-        strong = std::format("stall angle- = {0:5.2f}", negative);
+        strong = QString::asprintf("stall angle- = %5.2f", negative);
         polarprops += strong + DEGch + EOLch;
-        strong = std::format("stall angle+ = {0:5.2f}", positive);
+        strong = QString::asprintf("stall angle+ = %5.2f", positive);
         polarprops += strong + DEGch + EOLch;
     }
 
-    strong = std::format("Number of data points = {0:d}", int(m_Alpha.size()));
+    strong = QString::asprintf("Number of data points = %d", int(m_Alpha.size()));
     polarprops += "\n" +strong;
 
-    return polarprops;
+    return polarprops.toStdString();
 }
 
 

@@ -127,7 +127,7 @@ void LogWt::customEvent(QEvent *pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        onOutputStdMessage(pMsgEvent->msg());
+        onOutputMessage(pMsgEvent->msg());
     }
     else
         QWidget::customEvent(pEvent);

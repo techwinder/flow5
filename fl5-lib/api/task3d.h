@@ -87,6 +87,7 @@ class FL5LIB_EXPORT Task3d
         void stopVPWIterations() {m_bStopVPWIterations = true;}
 
         void traceVPWLog(double ctrl);
+        void traceLog(const QString &str);
         virtual void traceStdLog(const std::string &str);
 
         static void setCancelled(bool bCancel) {s_bCancel=bCancel;}

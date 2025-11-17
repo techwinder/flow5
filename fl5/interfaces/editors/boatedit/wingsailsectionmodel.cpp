@@ -36,7 +36,7 @@
 
 #include "wingsailsectionmodel.h"
 #include <api/sailwing.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 #include <core/xflcore.h>
 
@@ -81,11 +81,11 @@ QVariant WingSailSectionModel::headerData(int section, Qt::Orientation orientati
             case 1:
                 return QString("z ("+str+")");
             case 2:
-                return QString("Ry")+ DEGCHAR;
+                return QString("Ry")+ DEGch;
             case 3:
                 return QString("chord ("+str+")");
             case 4:
-                return QString("twist")+ DEGCHAR;
+                return QString("twist")+ DEGch;
             case 5:
                 return QString("foil");
             case 6:

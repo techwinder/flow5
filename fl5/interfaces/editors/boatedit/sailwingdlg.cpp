@@ -39,7 +39,7 @@
 #include <api/foil.h>
 #include <api/objects2d.h>
 #include <api/sailwing.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 #include <api/wingsailsection.h>
 #include <core/xflcore.h>
@@ -303,10 +303,10 @@ void SailWingDlg::updateSailSectionOutput()
 
     QString info, props;
     info = QString::asprintf("Leading angle  = %7.2f", sec.twist() +atan(pFoil->camberSlope(0.0))*180.0/PI);
-    props = info + DEGCHAR + "\n";
+    props = info + DEGch + "\n";
 
     info = QString::asprintf("Trailing angle = %7.2f", sec.twist()+atan(pFoil->camberSlope(1.0))*180.0/PI);
-    props += info + DEGCHAR;
+    props += info + DEGch;
 
     m_p2dSectionView->setOutputInfo(props);
 }

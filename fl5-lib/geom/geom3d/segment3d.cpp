@@ -22,7 +22,8 @@ flow5 application
 
         *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 #include <api/segment3d.h>
 
@@ -170,28 +171,29 @@ std::vector<Segment3d> Segment3d::split(double maxsize) const
 }
 
 
-std::string Segment3d::properties(bool bLong, std::string prefix) const
+std::string Segment3d::properties(bool bLong, std::string pref) const
 {
-    std::string props, strong;
-    strong = std::format("v0  = ({0:11.7f}, {1:11.7f}, {2:11.7f})\n",  m_S[0].x, m_S[0].y, m_S[0].z);
+    QString props, strong;
+    QString prefix = QString::fromStdString(pref);
+    strong = QString::asprintf("v0  = (%11.7f, %11.7f, %11.7f)\n",  m_S[0].x, m_S[0].y, m_S[0].z);
     props = prefix.append(strong);
-    strong = std::format("v1  = ({0:11.7f}, {1:11.7f}, {2:11.7f})",    m_S[1].x, m_S[1].y, m_S[1].z);
+    strong = QString::asprintf("v1  = (%11.7f, %11.7f, %11.7f)",    m_S[1].x, m_S[1].y, m_S[1].z);
     props += prefix.append(strong);
 
-    if(!bLong) return props;
+    if(!bLong) return props.toStdString();
 
     props += "\n";
 
-    strong = std::format("CoG = ( {0:9g}, {1:9g}, {2:9g} )\n", m_CoG.x, m_CoG.y, m_CoG.z);
+    strong = QString::asprintf("CoG = ( %9g, %9g, %9g )\n", m_CoG.x, m_CoG.y, m_CoG.z);
     props += prefix.append(strong);
 
-    strong = std::format("U   = ( {0:9g}, {1:9g}, {2:9g} )\n", m_U.x, m_U.y, m_U.z);
+    strong = QString::asprintf("U   = ( %9g, %9g, %9g )\n", m_U.x, m_U.y, m_U.z);
     props += prefix + strong;
 
-    strong = std::format("Length = {0:9g}", m_Length);
+    strong = QString::asprintf("Length = %9g", m_Length);
     props += prefix + strong;
 
-    return props;
+    return props.toStdString();
 }
 
 

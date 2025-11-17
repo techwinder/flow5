@@ -171,7 +171,7 @@ void FoilTEGapDlg::onApply()
 
     m_pBufferFoil->initGeometry();
 
-    m_pBufferFoil->setName(m_pRefFoil->name()+std::format("_TEgap {:.2f}%", m_pBufferFoil->TEGap()*100.0));
+    m_pBufferFoil->setName(m_pRefFoil->name()+QString::asprintf("_TEgap %.2f%%", m_pBufferFoil->TEGap()*100.0).toStdString());
 
     m_bModified = true;
 

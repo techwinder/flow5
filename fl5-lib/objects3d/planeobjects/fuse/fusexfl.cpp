@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 
 
@@ -309,9 +310,11 @@ int FuseXfl::makeShape(std::string &log)
 }
 
 
-void FuseXfl::computeSurfaceProperties(std::string &logmsg, const std::string &prefix)
+void FuseXfl::computeSurfaceProperties(std::string &msg, const std::string &prefx)
 {
-    std::string strong;
+    QString prefix = QString::fromStdString(prefx);
+    QString logmsg;
+    QString strong;
 
     // computeWettedArea();
     // makeQuadMesh(0);
@@ -392,25 +395,27 @@ void FuseXfl::computeSurfaceProperties(std::string &logmsg, const std::string &p
 
     m_Length = length();
 
-    strong = std::format("Length            = {0:11g} ", m_Length*Units::mtoUnit());
-    strong += Units::lengthUnitLabel();
+    strong = QString::asprintf("Length            = %11g ", m_Length*Units::mtoUnit());
+    strong += QUnits::lengthUnitLabel();
     logmsg += prefix + strong + "\n";
 
-    strong = std::format("Total wetted area = {0:11g} ", m_WettedArea*Units::m2toUnit());
-    strong += Units::areaUnitLabel();
+    strong = QString::asprintf("Total wetted area = %11g ", m_WettedArea*Units::m2toUnit());
+    strong += QUnits::areaUnitLabel();
     logmsg += prefix + strong + "\n";
 
-    strong = std::format("Max. frame area   = {0:11g} ", m_MaxFrameArea*Units::m2toUnit());
-    strong += Units::areaUnitLabel();
+    strong = QString::asprintf("Max. frame area   = %11g ", m_MaxFrameArea*Units::m2toUnit());
+    strong += QUnits::areaUnitLabel();
     logmsg += prefix + strong + "\n";
 
-    strong = std::format("Max. frame width  = {0:11g} ", m_MaxWidth*Units::mtoUnit());
-    strong += Units::lengthUnitLabel();
+    strong = QString::asprintf("Max. frame width  = %11g ", m_MaxWidth*Units::mtoUnit());
+    strong += QUnits::lengthUnitLabel();
     logmsg += prefix + strong + "\n";
 
-    strong = std::format("Max. frame height = {0:11g} ", m_MaxHeight*Units::mtoUnit());
-    strong += Units::lengthUnitLabel();
+    strong = QString::asprintf("Max. frame height = %11g ", m_MaxHeight*Units::mtoUnit());
+    strong += QUnits::lengthUnitLabel();
     logmsg += prefix + strong + "\n";
+
+    msg = logmsg.toStdString();
 }
 
 
@@ -1261,8 +1266,8 @@ bool FuseXfl::isClosedVolume(std::string &report) const
     }
     if(!bisFrameClosed)
     {
-        std::string strong = std::format("The end points of frame {0:d} are not in the plane of symetry (y=0)", iFrame);
-        report += strong + "\n";
+        QString strong = QString::asprintf("The end points of frame %d are not in the plane of symetry (y=0)", iFrame);
+        report += strong.toStdString() + "\n";
         bClosed = false;
     }
 
@@ -1711,12 +1716,13 @@ void FuseXfl::makeBodySplineShape_old(std::string &logmsg)
 }
 
 
-void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &tracelog)
+void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &logmsg)
 {
     Vector3d P1, P2, P3;
-    std::string strong;
     TopTools_ListOfShape RightFaceList;
+    QString tracelog;
 
+    std::string occstr;
     for (int k=0; k<sideLineCount()-1;k++)
     {
         for (int j=0; j<frameCount()-1;j++)
@@ -1737,12 +1743,15 @@ void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &tracelog)
                 }
 
                 TopoDS_Face face;
-                occ::makeFaceFromTriangle(P1, P2, P3, face, tracelog);
+
+                occ::makeFaceFromTriangle(P1, P2, P3, face, occstr);
 
                 if(!face.IsNull()) RightFaceList.Append(face);
             }
         }
     }
+
+    tracelog = QString::fromStdString(occstr);
 
     // sew the Panels together
     BRepBuilderAPI_Sewing stitcher(0.001);
@@ -1756,13 +1765,13 @@ void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &tracelog)
     TopoDS_Shell RightBodyShell;
     try
     {
-        strong = std::format("   Sewing {0:d} left faces", nFaces) + "\n";
+        QString strong = QString::asprintf("   Sewing %d left faces", nFaces) + "\n";
         tracelog+= strong;
         stitcher.Perform();
         TopoDS_Shape sewedShape = stitcher.SewedShape();
         if(!sewedShape.IsNull())
         {
-            strong = "   Sewed shape is a "+ occ::shapeType(sewedShape)+"\n";
+            strong = "   Sewed shape is a "+ QString::fromStdString(occ::shapeType(sewedShape))+"\n";
             tracelog+= strong;
 
             if(sewedShape.ShapeType()==TopAbs_SHELL)
@@ -1772,16 +1781,17 @@ void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &tracelog)
             }
             else
             {
-                strong = std::format("   Nb of free edges={0:d}\n", stitcher.NbFreeEdges());
+                strong = QString::asprintf("   Nb of free edges=%d\n", stitcher.NbFreeEdges());
                 tracelog += strong;
-                strong = std::format("   Nb of contiguous edges={0:d}\n", stitcher.NbContigousEdges());
+                strong = QString::asprintf("   Nb of contiguous edges=%d\n", stitcher.NbContigousEdges());
                 tracelog += strong;
             }
         }
     }
     catch(Standard_TypeMismatch const &ex)
     {
-        strong = "   Left body shells not made: " + std::string(ex.GetMessageString())+"\n";
+        QString strong;
+        strong = "   Left body shells not made: " + QString::fromStdString(ex.GetMessageString())+"\n";
         tracelog+= strong;
     }
 
@@ -1802,14 +1812,16 @@ void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &tracelog)
 
     LeftBodyShell = TopoDS::Shell(trfSym.Shape());
     m_Shape.Append(LeftBodyShell);
+
+    logmsg = tracelog.toStdString();
 }
 
 
-void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &tracelog)
+void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &logmsg)
 {
     Vector3d P1, P2, P3, P4;
     std::vector<Vector3d> Pt;
-    std::string strong;
+    QString strong, tracelog;
 
     // define parameters
     Standard_Real Tol = 0.00001;
@@ -1821,6 +1833,8 @@ void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &tracelog)
     Handle(GeomFill_SimpleBound) bnd[5];
     TopoDS_Shell SideShell[2];// cannot use symmetry and reverse, need to actually build the edges in the right order
 
+
+    std::string occstr;
     // side 0 is right, side 1 is left
     for(int iSide=0; iSide<2; iSide++)
     {
@@ -1888,7 +1902,7 @@ void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &tracelog)
                 {
                     //make a triangle
                     TopoDS_Face face;
-                    occ::makeFaceFromTriangle(Pt.at(0), Pt.at(1), Pt.at(2), face, tracelog);
+                    occ::makeFaceFromTriangle(Pt.at(0), Pt.at(1), Pt.at(2), face, occstr);
                     if(face.IsNull())
                     {
                         tracelog += "   Error making face from 3 points... \n";
@@ -1898,6 +1912,9 @@ void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &tracelog)
                 }
             }
         }
+
+        tracelog += QString::fromStdString(occstr);
+        occstr.clear();
 
         //sew the Panels together
         BRepBuilderAPI_Sewing stitcher(0.003);
@@ -1910,13 +1927,13 @@ void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &tracelog)
 
         try
         {
-            strong = std::format("   Sewing {0:d} faces", nFaces) + "\n";
+            strong = QString::asprintf("   Sewing %d faces", nFaces) + "\n";
             tracelog+= strong;
             stitcher.Perform();
             TopoDS_Shape sewedShape = stitcher.SewedShape();
             if(!sewedShape.IsNull())
             {
-                strong = "   Sewed shape is a "+occ::shapeType(sewedShape)+"\n";
+                strong = "   Sewed shape is a "+ QString::fromStdString(occ::shapeType(sewedShape))+"\n";
                 tracelog+= strong;
 
                 if(sewedShape.ShapeType()==TopAbs_SHELL)
@@ -1928,19 +1945,20 @@ void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &tracelog)
                 }
                 else
                 {
-                    strong = std::format("   Nb. of free edges={0:d}\n", stitcher.NbFreeEdges());
+                    strong = QString::asprintf("   Nb. of free edges=%d\n", stitcher.NbFreeEdges());
                     tracelog += strong;
-                    strong = std::format("   Nb. of contiguous edges={0:d}\n", stitcher.NbContigousEdges());
+                    strong = QString::asprintf("   Nb. of contiguous edges=%d\n", stitcher.NbContigousEdges());
                     tracelog += strong;
                 }
             }
         }
         catch(Standard_TypeMismatch const &ex)
         {
-            strong = "   Right side body shells not made: " + std::string(ex.GetMessageString())+"\n";
-            tracelog+= strong;
+            std::string strong = "   Right side body shells not made: " + std::string(ex.GetMessageString())+"\n";
+            tracelog += QString::fromStdString(strong);
         }
     }
+    logmsg = tracelog.toStdString();
 }
 
 
@@ -1972,9 +1990,9 @@ void FuseXfl::getProperties(std::string &props, const std::string &prefix, bool 
 {
     Fuse::getProperties(props, prefix);
 
-    std::string strong;
-    strong = std::format("Quads           = {0:6d}", quadCount());
-    props += "\n" + prefix + strong;
+    QString strong;
+    strong = QString::asprintf("Quads           = %6d", quadCount());
+    props += "\n" + prefix + strong.toStdString();
 }
 
 

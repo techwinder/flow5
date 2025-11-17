@@ -35,7 +35,7 @@
 #include <api/boatopp.h>
 #include <api/boatpolar.h>
 #include <api/sailobjects.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/poppctrls/opp3dscalesctrls.h>
@@ -128,7 +128,7 @@ void XSailDisplayCtrls::setupLayout(Qt::Orientation , bool )
         m_pchPartForces     = new QCheckBox("Part forces");
         m_pchMoment         = new QCheckBox("Moments");
         m_pchCp             = new QCheckBox("Cp");
-        m_pchGamma          = new QCheckBox(GAMMACHAR);
+        m_pchGamma          = new QCheckBox(GAMMAch);
         QString gammatip("<p>Displays the distribution of doublet densities or vortex strengths.<br>"
                          "This is the main result of the potential flow calculation, and <u>all other results</u> "
                          "are derived from this distribution. It is therefore important that it "

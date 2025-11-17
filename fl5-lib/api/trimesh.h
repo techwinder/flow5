@@ -49,7 +49,7 @@ class FL5LIB_EXPORT TriMesh : public XflMesh
         int nWakePanels() const override {return int(m_WakePanel3.size());}
         int nWakeColumns() const override {return m_nWakeColumns;}
         int panelCount() const override {return int(m_Panel3.size());}
-        void getMeshInfo(std::string &log) const override;
+        void getMeshInfo(std::string &logmsg) const override;
         void getLastTrailingPoint(Vector3d &pt) const override;
 
         void rotate(double alpha, double beta, double phi) override;
@@ -89,7 +89,7 @@ class FL5LIB_EXPORT TriMesh : public XflMesh
         void makeMeshFromTriangles(const std::vector<Triangle3d> &triangulation, int firstindex, xfl::enumSurfacePosition pos, std::string &logmsg, const std::string &prefix);
         void makeMeshTriangleBlock();
 
-        void checkPanels(std::string &log, bool bSkinny, bool bMinAngle, bool bMinArea, bool bMinSize, std::vector<int> &skinnylist, std::vector<int> &minanglelist, std::vector<int> &minarealist, std::vector<int> &minsizelist, double qualityfactor, double minangle, double minarea, double minsize);
+        void checkPanels(std::string &logmsg, bool bSkinny, bool bMinAngle, bool bMinArea, bool bMinSize, std::vector<int> &skinnylist, std::vector<int> &minanglelist, std::vector<int> &minarealist, std::vector<int> &minsizelist, double qualityfactor, double minangle, double minarea, double minsize);
 
         void removePanelAt(int index);
         void removeLastPanel() {m_Panel3.pop_back();}
@@ -116,8 +116,8 @@ class FL5LIB_EXPORT TriMesh : public XflMesh
 
         void listPanels(bool bConnections=false);
 
-        int cleanDoubleNodes(double precision, std::string &logmsg, const std::string &prefix);
-        static int cleanDoubleNodes(std::vector<Panel3> &panel3, std::vector<Node> &nodes, double precision, std::string &logmsg, const std::string &prefix);
+        int cleanDoubleNodes(double precision, std::string &logmsg, const std::string &prefx);
+        static int cleanDoubleNodes(std::vector<Panel3> &panel3, std::vector<Node> &nodes, double precision, std::string &logmsg, const std::string &prefx);
 
         void scale(double sx, double sy, double sz);
 
@@ -128,8 +128,8 @@ class FL5LIB_EXPORT TriMesh : public XflMesh
         bool connectTrailingEdges(std::vector<int> &errorlist);
         void checkTrailingEdges(std::vector<int> &errorlist);
 
-        bool mergeNodes(int srcindex, int destindex, bool bDiscardNullPanels, std::string &log, std::string prefix);
-        int mergeFuseToWingNodes(double precision, std::string &logmsg, const std::string &prefix);
+        bool mergeNodes(int srcindex, int destindex, bool bDiscardNullPanels, std::string &logmsg, std::string prefx);
+        int mergeFuseToWingNodes(double precision, std::string &logmsg, const std::string &prefx);
 
 
         static int makeWakePanels(std::vector<Panel3> &Panel3List, int nxWakePanels, double wakepanelfactor, double TotalWakeLength, const Vector3d &WindDir, std::vector<Panel3> &WakePanel3, int &nWakeColumn, bool bAlignWakeTE);

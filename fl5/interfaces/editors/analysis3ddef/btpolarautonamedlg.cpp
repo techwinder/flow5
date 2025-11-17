@@ -35,8 +35,7 @@
 #include <api/boatpolar.h>
 #include <api/boat.h>
 #include <api/sail.h>
-
-#include <core/qunits.h>
+#include <api/units.h>
 
 
 BtPolarAutoNameDlg::BtPolarAutoNameDlg() : QDialog()

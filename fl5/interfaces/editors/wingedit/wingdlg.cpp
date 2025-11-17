@@ -39,7 +39,7 @@
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <interfaces/opengl/fl5views/gl3dwingview.h>
 #include <core/saveoptions.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/inertia/partinertiadlg.h>
 #include <interfaces/editors/planeedit/planexfldlg.h>

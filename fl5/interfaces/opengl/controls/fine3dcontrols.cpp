@@ -102,7 +102,7 @@ void Fine3dControls::setupLayout()
         {
             m_pchZAnimate   = new QCheckBox("Auto z-rotation");
             m_pdeZAnimAngle = new FloatEdit(gl3dView::zAnimAngle());
-            QLabel *pLabDeg = new QLabel(DEGCHAR + "@60Hz");
+            QLabel *pLabDeg = new QLabel(DEGch + "@60Hz");
 
             pZAnimLayout->addWidget(m_pchZAnimate);
             pZAnimLayout->addWidget(m_pdeZAnimAngle);

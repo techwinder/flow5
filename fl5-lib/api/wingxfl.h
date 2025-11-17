@@ -281,7 +281,7 @@ class FL5LIB_EXPORT WingXfl : public Part
 
         void resizeSpanDistribs(int nStations=-1);
 
-        void getProperties(std::string &props, const std::string &prefix) const;
+        void getProperties(std::string &properties, const std::string &prefx) const;
 
         double flapMomentAt(int iFlap) const {return m_FlapMoment.at(iFlap);}
 

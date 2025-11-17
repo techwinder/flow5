@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
 
 /** It's not a planar-SLG, but it still is a Straight Line Graph */
 
@@ -330,13 +330,14 @@ bool SLG3d::intersect(Segment3d const & segment, std::vector<int> &intersected, 
 
 void SLG3d::list(std::string &logmsg, bool bLong)
 {
-    std::string strange, prefix;
+    QString strange;
+    std::string prefix;
     int iseg = 0;
     prefix = "   ";
     for(auto it=begin(); it!=end(); it++)
     {
-        strange = std::format("Seg3d {0:d}\n", iseg);
-        logmsg += strange + it->properties(bLong, prefix) + "\n";
+        strange = QString::asprintf("Seg3d %d\n", iseg);
+        logmsg += strange.toStdString() + it->properties(bLong, prefix) + "\n";
         iseg++;
     }
 }

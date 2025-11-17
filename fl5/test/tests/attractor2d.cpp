@@ -171,7 +171,7 @@ Attractor2d::Attractor2d(QWidget *parent) : QWidget{parent}
                     QHBoxLayout *pWidthLayout = new QHBoxLayout;
                     {
                         QLabel *plabImgWidth = new QLabel("Image size=");
-                        QLabel *plabTimes = new QLabel(TIMESCHAR);
+                        QLabel *plabTimes = new QLabel(TIMESch);
                         QLabel *plabPixel = new QLabel("pixels");
                         m_pieWidth  = new IntEdit(s_ImgSize.width());
                         m_pieHeight = new IntEdit(s_ImgSize.height());

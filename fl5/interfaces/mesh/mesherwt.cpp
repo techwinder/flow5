@@ -36,7 +36,7 @@
 
 
 #include <interfaces/mesh/panelcheckdlg.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/sail.h>
 #include <api/occ_globals.h>
 #include <interfaces/mesh/meshevent.h>

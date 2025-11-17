@@ -26,7 +26,8 @@
 
 #include <thread>
 #include <iostream>
-#include <format>
+#include <QString>
+
 
 
 #include <api/geom_global.h>
@@ -77,9 +78,9 @@ void P3LinAnalysis::makeMatrixBlock(int iBlock)
 
             if(std::isnan(sp[0]) || std::isnan(sp[1]) || std::isnan(sp[2]))
             {
-                std::string strange;
-                strange = std::format("      *** numerical error when calculating the influence of panel {0:d} on panel {1:d} ***\n", k3, i3);
-                traceStdLog(strange);
+                QString strange;
+                strange = QString::asprintf("      *** numerical error when calculating the influence of panel %d on panel %d ***\n", k3, i3);
+                traceLog(strange);
                 m_bMatrixError = true;
                 return;
             }
@@ -160,12 +161,12 @@ void P3LinAnalysis::makeWakeMatrixBlock(int iBlock)
                 // calculate the contribution of the wake column shed by p3k
                 if(!scalarProductWake(p3i, p3k.iWake(), scalarLeft, scalarRight))
                 {
-                    std::string strange;
-                    strange = std::format("*** numerical error calculating the scalar products of panel {0:d} with the wake contribution of TE panel {1:d}\n", i3, k3);
+                    QString strange;
+                    strange = QString::asprintf("*** numerical error calculating the scalar products of panel %d with the wake contribution of TE panel %d\n", i3, k3);
                     strange += "*** aborting calculation \n";
                     m_bMatrixError = true;
                     m_bWarning = true;
-                    traceStdLog(strange);
+                    traceLog(strange);
                     return;
                 }
                 for(int ib=0; ib<3; ib++)
@@ -624,7 +625,7 @@ void P3LinAnalysis::makeNodeDoubletSurfaceVelocity(int iNode, std::vector<double
     while(Xrnd.dot(nnormal)>0.25 && Xrnd.dot(nnormal)<0.75 && iter<50);
     if(iter>=50)
     {
-        traceStdLog(std::format("      ***** Error making doublet derivative at node {0:d}\n", iNode));
+        traceLog(QString::asprintf("      ***** Error making doublet derivative at node %d\n", iNode));
         uNode.set(0,0,0);
         wNode.set(0,0,0);
         return;

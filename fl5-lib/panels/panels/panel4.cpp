@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 
 #include <api/panel4.h>
@@ -780,29 +781,29 @@ double Panel4::length() const
 
 std::string Panel4::properties(bool bLong) const
 {
-    std::string props, strong;
+    QString props, strong;
+    QString strange;
 
-    props = std::format("Quad Panel {:d}\n", m_index);
+    props = QString::asprintf("Quad Panel %d\n", m_index);
 
-    strong = std::format("  CoG  = ({:7.3f}, {:7.3f}, {:7.3f})", m_CollPt.x*Units::mtoUnit(), m_CollPt.y*Units::mtoUnit(), m_CollPt.z*Units::mtoUnit());
-    strong += Units::lengthUnitLabel() + "\n";
+    strong = QString::asprintf("  CoG  = (%7.3f, %7.3f, %7.3f)", m_CollPt.x*Units::mtoUnit(), m_CollPt.y*Units::mtoUnit(), m_CollPt.z*Units::mtoUnit());
+    strong += QUnits::lengthUnitLabel() + "\n";
     props += strong;
 
-    strong = std::format("  Area = {:.3g} ", m_Area*Units::m2toUnit());
-    props += strong + Units::areaUnitLabel() + "\n";
+    strong = QString::asprintf("  Area = %.3g ", m_Area*Units::m2toUnit());
+    props += strong + QUnits::areaUnitLabel() + "\n";
 
-    strong = std::format("  Warp angle = {:.2f} ", warpAngle());
+    strong = QString::asprintf("  Warp angle = %2f ", warpAngle());
     props += strong + DEGch + "\n";
 
-    strong = std::format("  Min. internal angle = {:.2f} ", minAngle());
+    strong = QString::asprintf("  Min. internal angle = %2f ", minAngle());
     props += strong + DEGch + "\n";
 
-    props += std::format("  Width  = {0:5g} ", width() *Units::mtoUnit()) + Units::lengthUnitLabel() + "\n";
-    props += std::format("  Length = {0:5g} ", length()*Units::mtoUnit()) + Units::lengthUnitLabel() + "\n";
+    props += QString::asprintf("  Width  = %5g ", width() *Units::mtoUnit()) + QUnits::lengthUnitLabel() + "\n";
+    props += QString::asprintf("  Length = %5g ", length()*Units::mtoUnit()) + QUnits::lengthUnitLabel() + "\n";
 
-    if(!bLong) return props;
+    if(!bLong) return props.toStdString();
 
-    std::string strange;
     if(m_bPositiveOrientation) props += "  Positive orientation\n";
     else                       props += "  Negative orientation\n";
 
@@ -818,49 +819,49 @@ std::string Panel4::properties(bool bLong) const
     }
     props += strange;
 
-    strange = std::format("  Neighbours: PU{:4d}  PD{:4d}  PL{:4d}  PR{:4d}\n", m_iPU, m_iPD, m_iPL, m_iPR);
+    strange = QString::asprintf("  Neighbours: PU%4d  PD%4d  PL%4d  PR%4d\n", m_iPU, m_iPD, m_iPL, m_iPR);
     props += strange;
 
-    strange = std::format("  Vertices:   LA{:4d}  LB{:4d}  TA{:4d}  TB{:4d}\n", m_iLA, m_iLB, m_iTA, m_iTB);
+    strange = QString::asprintf("  Vertices:   LA%4d  LB%4d  TA%4d  TB%4d\n", m_iLA, m_iLB, m_iTA, m_iTB);
     props += strange;
 
 /*    for(int i=0; i<4; i++)
     {
-        strange = std::format("  Node%d:  %13.5g  %13.5g  %13.5g\n", i, m_Node[i].x, m_Node[i].y, m_Node[i].z);
+        strange = QString::asprintf("  Node%d:  %13.5g  %13.5g  %13.5g\n", i, m_Node[i].x, m_Node[i].y, m_Node[i].z);
         props += strange;
     }*/
-    strange = std::format("  Nd_LA:  {:13.5g}  {:13.5g}  {:13.5g}\n", LA().x, LA().y, LA().z);
+    strange = QString::asprintf("  Nd_LA:  %13.5g  %13.5g  %13.5g\n", LA().x, LA().y, LA().z);
     props += strange;
-    strange = std::format("  Nd_LB:  {:13.5g}  {:13.5g}  {:13.5g}\n", LB().x, LB().y, LB().z);
+    strange = QString::asprintf("  Nd_LB:  %13.5g  %13.5g  %13.5g\n", LB().x, LB().y, LB().z);
     props += strange;
-    strange = std::format("  Nd_TA:  {:13.5g}  {:13.5g}  {:13.5g}\n", TA().x, TA().y, TA().z);
+    strange = QString::asprintf("  Nd_TA:  %13.5g  %13.5g  %13.5g\n", TA().x, TA().y, TA().z);
     props += strange;
-    strange = std::format("  Nd_TB:  {:13.5g}  {:13.5g}  {:13.5g}\n", TB().x, TB().y, TB().z);
+    strange = QString::asprintf("  Nd_TB:  %13.5g  %13.5g  %13.5g\n", TB().x, TB().y, TB().z);
     props += strange;
 
-    strange = std::format("  Normal: {:13.7f}  {:13.7f}  {:13.7f}\n", m_Normal.x, m_Normal.y, m_Normal.z);
+    strange = QString::asprintf("  Normal: %13.7f  %13.7f  %13.7f\n", m_Normal.x, m_Normal.y, m_Normal.z);
     props += strange;
-    strange = std::format("  CollPt: {:13.7f}  {:13.7f}  {:13.7f}\n", m_CollPt.x, m_CollPt.y, m_CollPt.z);
+    strange = QString::asprintf("  CollPt: %13.7f  %13.7f  %13.7f\n", m_CollPt.x, m_CollPt.y, m_CollPt.z);
     props += strange;
-    strange = std::format("  CtrlPt: {:13.7f}  {:13.7f}  {:13.7f}\n", m_CtrlPt.x, m_CtrlPt.y, m_CtrlPt.z);
+    strange = QString::asprintf("  CtrlPt: %13.7f  %13.7f  %13.7f\n", m_CtrlPt.x, m_CtrlPt.y, m_CtrlPt.z);
     props += strange;
-    strange = std::format("  Vortex: {:13.7f}  {:13.7f}  {:13.7f}\n", trailingVortex().x, trailingVortex().y, trailingVortex().z);
+    strange = QString::asprintf("  Vortex: %13.7f  %13.7f  %13.7f\n", trailingVortex().x, trailingVortex().y, trailingVortex().z);
     props += strange;
 
     props += "  Local frame:\n";
-    strange = std::format("    l      = ({:7.2f}, {:7.2f}, {:7.2f})\n", m_l.x, m_l.y, m_l.z);
+    strange = QString::asprintf("    l      = (%7.2f, %7.2f, %7.2f)\n", m_l.x, m_l.y, m_l.z);
     props += strange;
-    strange = std::format("    m      = ({:7.2f}, {:7.2f}, {:7.2f})\n", m_m.x, m_m.y, m_m.z);
+    strange = QString::asprintf("    m      = (%7.2f, %7.2f, %7.2f)\n", m_m.x, m_m.y, m_m.z);
     props += strange;
-    strange = std::format("    Normal = ({:7.2f}, {:7.2f}, {:7.2f})\n", m_Normal.x, m_Normal.y, m_Normal.z);
+    strange = QString::asprintf("    Normal = (%7.2f, %7.2f, %7.2f)\n", m_Normal.x, m_Normal.y, m_Normal.z);
     props += strange;
 
     if(isTrailing())
     {
         props += "  Panel is trailing:\n";
-        strange = std::format("    Downstream wake panel  index = {:d}\n", m_iWake);
+        strange = QString::asprintf("    Downstream wake panel  index = %d\n", m_iWake);
         props += strange;
-        strange = std::format("    Downstream wake column index = {:d}\n", m_iWakeColumn);
+        strange = QString::asprintf("    Downstream wake column index = %d\n", m_iWakeColumn);
         props += strange;
     }
     else if (isLeading())
@@ -868,7 +869,7 @@ std::string Panel4::properties(bool bLong) const
         props += "  Panel is leading\n";
     }
 
-    return props;
+    return props.toStdString();
 }
 
 

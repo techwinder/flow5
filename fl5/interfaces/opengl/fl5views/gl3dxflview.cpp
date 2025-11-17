@@ -68,7 +68,7 @@
 #include <api/boat.h>
 #include <api/sail.h>
 #include <api/panel4.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 
 
@@ -335,9 +335,9 @@ void gl3dXflView::paintFlaps(PlaneXfl const* pPlaneXfl, PlanePolar const*pWPolar
             if(surf.hasTEFlap())
             {
                 Vector3d const pos = (surf.TB()+surf.TA())/2.0;
-                QString strange = QString::asprintf("Flap %d ", iFlap+1) + EOLCHAR;
+                QString strange = QString::asprintf("Flap %d ", iFlap+1) + EOLch;
                 if(pAVLC)
-                    strange += THETACHAR + QString::asprintf("=%g", pAVLC->value(iFlap)) + DEGCHAR + EOLCHAR;
+                    strange += THETAch + QString::asprintf("=%g", pAVLC->value(iFlap)) + DEGch + EOLch;
                 if(pPOpp && iw<pPOpp->nWOpps())
                 {
                     if(iFlap<pPOpp->WOpp(iw).m_FlapMoment.size())

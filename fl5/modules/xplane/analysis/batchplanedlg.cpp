@@ -50,7 +50,7 @@
 
 #include <core/displayoptions.h>
 #include <core/fontstruct.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/analysisrangetable.h>
@@ -311,7 +311,7 @@ void BatchPlaneDlg::customEvent(QEvent *pEvent)
     if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent const *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        m_ppto->onAppendStdText(pMsgEvent->msg());
+        m_ppto->onAppendQText(pMsgEvent->msg());
     }
     else if(pEvent->type()==TASK3D_END_EVENT)
     {
@@ -609,7 +609,7 @@ void BatchPlaneDlg::onAnalyze()
     {
         strange = "Planes to analyze:\n";
         for(int ip=0; ip<planelist.size(); ip++)
-            strange += "   " + planelist.at(ip)->name() + "\n";
+            strange += "   " + QString::fromStdString(planelist.at(ip)->name()) + "\n";
         onMessage(strange+"\n\n");
     }
 
@@ -695,11 +695,11 @@ void BatchPlaneDlg::onPlaneTaskStarted(int iTask)
     Task3d  *pTask = m_pExecutor->planeTasks().at(iTask);
     PlaneTask const *pPlaneTask = dynamic_cast<PlaneTask const*>(pTask);
     if(pPlaneTask)
-        strange += pPlaneTask->plane()->name() + " / "+pPlaneTask->wPolar()->name();
+        strange += QString::fromStdString(pPlaneTask->plane()->name() + " / "+pPlaneTask->wPolar()->name());
 
     LLTTask *pLLTTask = dynamic_cast<LLTTask*>(pTask);
     if(pLLTTask)
-        strange += pLLTTask->plane()->name() + " / "+pLLTTask->wPolar()->name();
+        strange += QString::fromStdString(pLLTTask->plane()->name() + " / "+pLLTTask->wPolar()->name());
 
     m_plabStatus->setText(strange);
 }
@@ -753,7 +753,7 @@ void BatchPlaneDlg::setObjectProperties(QModelIndex index)
                 {
                     props = QString::fromStdString(pPlane->description() + "\n\n");
                 }
-                props += pPlane->planeData(false);
+                props += QString::fromStdString(pPlane->planeData(false));
             }
         }
     }

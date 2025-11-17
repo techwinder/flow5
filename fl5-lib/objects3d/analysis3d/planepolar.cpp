@@ -23,7 +23,8 @@
 *****************************************************************************/
 
 
-#include <format>
+#include <QString>
+
 
 #include <api/planepolar.h>
 
@@ -794,17 +795,17 @@ std::string PlanePolar::flapCtrlsSetName() const
 }
 
 
-bool PlanePolar::checkFlaps(PlaneXfl const*pPlaneXfl, std::string &log) const
+bool PlanePolar::checkFlaps(PlaneXfl const*pPlaneXfl, std::string &logmsg) const
 {
     if(!pPlaneXfl) return false;
 
-    log.clear();
+    QString log;
 
     bool bMatch = true;
     if(nFlapCtrls() != pPlaneXfl->nWings())
     {
-        log = std::format("The number of flap controls sets is {0:d} "
-                          "and the plane's number of wings is {1:d}\n", nFlapCtrls(), pPlaneXfl->nWings());
+        log = QString::asprintf("The number of flap controls sets is %d "
+                          "and the plane's number of wings is %d\n", nFlapCtrls(), pPlaneXfl->nWings());
         return false;
     }
 
@@ -814,13 +815,15 @@ bool PlanePolar::checkFlaps(PlaneXfl const*pPlaneXfl, std::string &log) const
         {
             if(flapCtrls(ic).nValues() != pPlaneXfl->wingAt(ic)->nFlaps())
             {
-                std::string strange = std::format("The number of flap controls for wing {0:d} "
+                QString strange = QString::asprintf("The number of flap controls for wing %d "
                                               "does not match the wing's number of flaps\n", ic+1);
                 log += strange;
                 bMatch = false;
             }
         }
     }
+
+    logmsg = log.toStdString();
     return bMatch;
 }
 
@@ -916,7 +919,7 @@ void PlanePolar::resetAngleRanges(const Plane *pPlane)
         int iFlapCtrl=1;
         for(int ic=0; ic<pPlaneXfl->wingAt(iw)->nFlaps(); ic++)
         {
-            strong = pWing->name() + " " + std::format("Flap {0:d} ", iFlapCtrl);
+            strong = pWing->name() + " " + QString::asprintf("Flap %d ", iFlapCtrl).toStdString();
             m_AngleRange.back().push_back({strong, 0.0, 0.0});
             iFlapCtrl++;
             iCtrl++;
@@ -1248,7 +1251,7 @@ bool PlanePolar::serializeWPlrXFL(QDataStream &ar, bool bIsStoring)
         for (int ix=0; ix<4; ix++)
         {
             std::string strong;
-            strong = std::format("Extra drag {0:d}", ix);
+            strong = QString::asprintf("Extra drag %d", ix).toStdString();
             m_ExtraDrag[ix].setName(strong);
         }
         for (int ix=0; ix<4; ix++) {ar>>dble; m_ExtraDrag[ix].setArea(dble);}
@@ -1748,21 +1751,22 @@ bool PlanePolar::serializeFl5v750(QDataStream &ar, bool bIsStoring)
 }
 
 
-void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) const
+void PlanePolar::getProperties(std::string &props, Plane const *pPlane) const
 {
-    std::string strong, strange;
-    std::string frontspacer("   ");
+    QString PolarProps;
+    QString strong, strange;
+    QString frontspacer("   ");
 
     double lenunit   = Units::mtoUnit();
     double massunit  = Units::kgtoUnit();
     double speedunit = Units::mstoUnit();
     double areaunit  = Units::m2toUnit();
-    std::string lenlab   = Units::lengthUnitLabel();
-    std::string masslab  = Units::massUnitLabel();
-    std::string speedlab = Units::speedUnitLabel();
-    std::string arealab  = Units::areaUnitLabel();
+    QString lenlab   = QUnits::lengthUnitLabel();
+    QString masslab  = QUnits::massUnitLabel();
+    QString speedlab = QUnits::speedUnitLabel();
+    QString arealab  = QUnits::areaUnitLabel();
 
-    std::string inertiaunit = masslab+"."+lenlab+ SQUAREch;
+    QString inertiaunit = masslab+"."+lenlab+ SQUAREch;
 
     PlaneXfl const*pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
 
@@ -1779,7 +1783,7 @@ void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) con
     else if(isExternalPolar())
     {
         PolarProps = "External polar\n";
-        strong = std::format("Nbr. of data points = {0:d}",dataSize());
+        strong = QString::asprintf("Nbr. of data points = %d",dataSize());
         PolarProps += strong;
         return;
     }
@@ -1787,50 +1791,50 @@ void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) con
 
     if(isFixedSpeedPolar())
     {
-        strong  = "V" + INFch + " =" + std::format(" {0:9.2g}", velocity()*speedunit,7,'g',2);
+        strong  = "V" + INFch + " =" + QString::asprintf(" %9.2g", velocity()*speedunit);
         PolarProps += strong + speedlab+ EOLch;
     }
     else if(isFixedaoaPolar())
     {
-        strong  = ALPHAch + " =" + std::format(" {0:7.2f}", alphaSpec(),7,'f',2);
+        strong  = ALPHAch + " =" + QString::asprintf(" %7.2f", alphaSpec());
         PolarProps += strong +DEGch+ EOLch;
     }
     else if(isBetaPolar())
     {
-        strong  = ALPHAch + " =" + std::format(" {0:7.2f}", alphaSpec(),7,'f',2);
+        strong  = ALPHAch + " =" + QString::asprintf(" %7.2f", alphaSpec());
         PolarProps += strong +DEGch+ EOLch;
-        strong  = "V" + INFch + "   =" + std::format(" {0:9.2g}", velocity()*speedunit,7,'g',2);
+        strong  = "V" + INFch + "   =" + QString::asprintf(" %9.2g", velocity()*speedunit);
         PolarProps += strong + speedlab+ EOLch;
     }
 
     if(!isControlPolar() && !isBetaPolar() && fabs(betaSpec())>ANGLEPRECISION)
     {
         if(fabs(betaSpec())>AOAPRECISION)
-            PolarProps += BETAch + "  = " + std::format(" {0:7.2f}", betaSpec(),7,'g') + DEGch+ EOLch;
+            PolarProps += BETAch + "  = " + QString::asprintf(" %7.2f", betaSpec()) + DEGch+ EOLch;
 
     }
 
     if(isType12358() && fabs(m_BankAngle)>ANGLEPRECISION)
     {
         if(fabs(m_BankAngle)>AOAPRECISION)
-            PolarProps += PHIch + "  = " + std::format(" {0:7.2f}", m_BankAngle,7,'g') + DEGch + EOLch;
+            PolarProps += PHIch + "  = " + QString::asprintf(" %7.2f", m_BankAngle) + DEGch + EOLch;
     }
 
 
     if((isType12358() || isType7()) && hasActiveFlap() && pPlaneXfl)
     {
-        PolarProps += "Flap settings: " + flapCtrlsSetName() + EOLch;
+        PolarProps += "Flap settings: " + QString::fromStdString(flapCtrlsSetName()) + EOLch;
         for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
         {
             WingXfl const*pWing = pPlaneXfl->wingAt(iw);
-            PolarProps += "   " + pWing->name() +":\n";
+            PolarProps += "   " + QString::fromStdString(pWing->name()) +":\n";
 
             if(iw<nFlapCtrls())
             {
                 AngleControl const &avlc = m_FlapControls.at(iw);
                 for(int iflap=0; iflap<avlc.nValues(); iflap++)
                 {
-                    strange = std::format("      flap {0:d}: {1:7.2f}", iflap+1, avlc.value(iflap)) + DEGch + EOLch;
+                    strange = QString::asprintf("      flap %d: %7.2f", iflap+1, avlc.value(iflap)) + DEGch + EOLch;
                     PolarProps += strange;
                 }
             }
@@ -1847,34 +1851,34 @@ void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) con
         }
         else
         {
-            strange =  "   " + m_OperatingRange.at(0).name() + ": ";
+            strange =  "   " + QString::fromStdString(m_OperatingRange.at(0).name()) + ": ";
             strange.resize(17, ' ');
-            strong =  std::format("   {0:7.3f}, {1:7.3f} ", m_OperatingRange.at(0).ctrlMin()*speedunit, m_OperatingRange.at(0).ctrlMax()*speedunit);
+            strong =  QString::asprintf("   %7.3f, %7.3f ", m_OperatingRange.at(0).ctrlMin()*speedunit, m_OperatingRange.at(0).ctrlMax()*speedunit);
             PolarProps += strange + strong + speedlab + EOLch;
         }
 
         for(uint i=1; i<m_OperatingRange.size(); i++)
         {
-            strange = "   " + m_OperatingRange.at(i).name() + ": ";
+            strange = "   " + QString::fromStdString(m_OperatingRange.at(i).name()) + ": ";
             strange.resize(17, ' ');
-            strong =  std::format("  {0:7.3f}, {1:7.3f}", m_OperatingRange.at(i).ctrlMin(), m_OperatingRange.at(i).ctrlMax());
+            strong =  QString::asprintf("  %7.3f, %7.3f", m_OperatingRange.at(i).ctrlMin(), m_OperatingRange.at(i).ctrlMax());
             PolarProps += strange + strong + DEGch + EOLch;
         }
 
         //inertia
-        strange = "   " + m_InertiaRange.at(0).name() + ": ";
+        strange = "   " + QString::fromStdString(m_InertiaRange.at(0).name()) + ": ";
         strange.resize(17, ' ');
-        strong =  std::format(" {0:7.3f}, {1:7.3f} ", m_InertiaRange.at(0).ctrlMin()*massunit, m_InertiaRange.at(0).ctrlMax()*massunit);
+        strong =  QString::asprintf(" %7.3f, %7.3f ", m_InertiaRange.at(0).ctrlMin()*massunit, m_InertiaRange.at(0).ctrlMax()*massunit);
         PolarProps += strange + strong + masslab + EOLch;
 
-        strange = "   " + m_InertiaRange.at(1).name() + ": ";
+        strange = "   " + QString::fromStdString(m_InertiaRange.at(1).name()) + ": ";
         strange.resize(17, ' ');
-        strong =  std::format(" {0:7.3f}, {1:7.3f} ", m_InertiaRange.at(1).ctrlMin()*lenunit, m_InertiaRange.at(1).ctrlMax()*lenunit);
+        strong =  QString::asprintf(" %7.3f, %7.3f ", m_InertiaRange.at(1).ctrlMin()*lenunit, m_InertiaRange.at(1).ctrlMax()*lenunit);
         PolarProps += strange + strong + lenlab + EOLch;
 
-        strange = "   " + m_InertiaRange.at(2).name() + ": ";
+        strange = "   " + QString::fromStdString(m_InertiaRange.at(2).name()) + ": ";
         strange.resize(17, ' ');
-        strong =  std::format(" {0:7.3f}, {1:7.3f} ", m_InertiaRange.at(2).ctrlMin()*lenunit, m_InertiaRange.at(2).ctrlMax()*lenunit);
+        strong =  QString::asprintf(" %7.3f, %7.3f ", m_InertiaRange.at(2).ctrlMin()*lenunit, m_InertiaRange.at(2).ctrlMax()*lenunit);
         PolarProps += strange + strong + lenlab + EOLch;
 
         //Angles
@@ -1882,8 +1886,8 @@ void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) con
         {
             for(uint i=0; i<m_AngleRange.at(j).size(); i++)
             {
-                strong =  std::format(" {0:7.3f}, {1:7.3f}", m_AngleRange.at(j).at(i).ctrlMin(), m_AngleRange.at(j).at(i).ctrlMax());
-                strange = "   " + m_AngleRange.at(j).at(i).name() + ": ";
+                strong =  QString::asprintf(" %7.3f, %7.3f", m_AngleRange.at(j).at(i).ctrlMin(), m_AngleRange.at(j).at(i).ctrlMax());
+                strange = "   " + QString::fromStdString(m_AngleRange.at(j).at(i).name()) + ": ";
                 strange.resize(17, ' ');
                 PolarProps += strange + strong +DEGch + EOLch;
             }
@@ -1917,9 +1921,9 @@ void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) con
         if(m_bViscOnTheFly)
         {
             PolarProps += "Viscous drag: XFoil on the fly\n";
-            PolarProps += std::format("   NCrit  = {0:g}\n", m_NCrit);
-            PolarProps += std::format("   XTrTop = {0:g}% chord\n", m_XTrTop*100.0);
-            PolarProps += std::format("   XTrBot = {0:g}% chord\n", m_XTrBot*100.0);
+            PolarProps += QString::asprintf("   NCrit  = %g\n", m_NCrit);
+            PolarProps += QString::asprintf("   XTrTop = %g%% chord\n", m_XTrTop*100.0);
+            PolarProps += QString::asprintf("   XTrBot = %g%% chord\n", m_XTrBot*100.0);
         }
         else
         {
@@ -1938,9 +1942,9 @@ void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) con
     else if(referenceDim()==xfl::PROJECTED) PolarProps += "Ref. dimensions = Projected\n";
     else if(referenceDim()==xfl::CUSTOM)    PolarProps += "Ref. dimensions = Custom\n";
 
-    PolarProps += frontspacer + "Area  =" + std::format("{0:9.3f} ", referenceArea()       *areaunit) + arealab+ EOLch;
-    PolarProps += frontspacer + "Span  =" + std::format("{0:9.3f} ", referenceSpanLength() *lenunit)  + lenlab + EOLch;
-    PolarProps += frontspacer + "Chord =" + std::format("{0:9.3f} ", referenceChordLength()*lenunit)  + lenlab + EOLch;
+    PolarProps += frontspacer + "Area  =" + QString::asprintf("%9.3f ", referenceArea()       *areaunit) + arealab+ EOLch;
+    PolarProps += frontspacer + "Span  =" + QString::asprintf("%9.3f ", referenceSpanLength() *lenunit)  + lenlab + EOLch;
+    PolarProps += frontspacer + "Chord =" + QString::asprintf("%9.3f ", referenceChordLength()*lenunit)  + lenlab + EOLch;
 
     if(!m_bThinSurfaces)
     {
@@ -1951,29 +1955,29 @@ void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) con
 
     PolarProps += "Fluid properties:\n";
 
-    strong  = frontspacer + RHOch + " = "+std::format("{0:9.5g} ", density()*Units::densitytoUnit());
-    strong += Units::densityUnitLabel() + EOLch;
+    strong  = frontspacer + RHOch + " = "+QString::asprintf("%9.5g ", density()*Units::densitytoUnit());
+    strong += QString::fromStdString(Units::densityUnitLabel()) + EOLch;
     PolarProps += strong;
 
-    strong  = frontspacer + NUch  + " = "+std::format("{0:9.5g} ", viscosity()*Units::viscositytoUnit());
-    strong += Units::viscosityUnitLabel() + EOLch;
+    strong  = frontspacer + NUch  + " = "+QString::asprintf("%9.5g ", viscosity()*Units::viscositytoUnit());
+    strong += QString::fromStdString(Units::viscosityUnitLabel()) + EOLch;
     PolarProps += strong;
 
 
     if(bGroundEffect())
     {
-        strong = "Ground height = " + std::format(" {0:7.2f} ", m_GroundHeight*lenunit)+lenlab+ EOLch;
+        strong = "Ground height = " + QString::asprintf(" %7.2f ", m_GroundHeight*lenunit)+lenlab+ EOLch;
         PolarProps += strong;
     }
     else if(bFreeSurfaceEffect())
     {
-        strong = "Free surface height = " + std::format(" {0:7.2f} ", m_GroundHeight*lenunit)+lenlab+ EOLch;
+        strong = "Free surface height = " + QString::asprintf(" %7.2f ", m_GroundHeight*lenunit)+lenlab+ EOLch;
         PolarProps += strong;
     }
 
     //Control data
     //Mass and inertia controls
-    std::string strLen, strMass, strInertia;
+    QString strLen, strMass, strInertia;
 
     strInertia = strMass+"."+strLen+SQUAREch;
 
@@ -1984,27 +1988,27 @@ void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) con
         PolarProps += frontspacer + "Using plane inertia\n";
     }
 
-    strong  = "Mass = " + std::format(" {0:.3f} ", mass()*massunit);
+    strong  = "Mass = " + QString::asprintf(" %.3f ", mass()*massunit);
     PolarProps += frontspacer + strong + masslab + EOLch;
 
     strong = frontspacer+"CoG = (";
-    strong += std::format("{0:.3f}", CoG().x*lenunit);
-    strong += std::format(", {0:.3f}", CoG().y*lenunit);
-    strong += std::format(", {0:.3f})", CoG().z*lenunit);
+    strong += QString::asprintf("%.3f", CoG().x*lenunit);
+    strong += QString::asprintf(", %.3f", CoG().y*lenunit);
+    strong += QString::asprintf(", %.3f)", CoG().z*lenunit);
     PolarProps += strong + lenlab + EOLch;
 
     if(isStabilityPolar())
     {
-        strong  = frontspacer + "Ixx = "+std::format("{0:7.4g} ",  Ixx()*lenunit*lenunit*massunit);
+        strong  = frontspacer + "Ixx = "+QString::asprintf("%7.4g ",  Ixx()*lenunit*lenunit*massunit);
         PolarProps += strong + inertiaunit + EOLch;
 
-        strong  = frontspacer + "Iyy = "+std::format("{0:7.4g} ", Iyy()*lenunit*lenunit*massunit);
+        strong  = frontspacer + "Iyy = "+QString::asprintf("%7.4g ", Iyy()*lenunit*lenunit*massunit);
         PolarProps += strong + inertiaunit + EOLch;
 
-        strong  = frontspacer + "Izz = "+std::format("{0:7.4g} ", Izz()*lenunit*lenunit*massunit);
+        strong  = frontspacer + "Izz = "+QString::asprintf("%7.4g ", Izz()*lenunit*lenunit*massunit);
         PolarProps += strong + inertiaunit + EOLch;
 
-        strong  = frontspacer + "Ixz = "+std::format("{0:7.4g} ", Ixz()*lenunit*lenunit*massunit);
+        strong  = frontspacer + "Ixz = "+QString::asprintf("%7.4g ", Ixz()*lenunit*lenunit*massunit);
         PolarProps += strong + inertiaunit + EOLch;
     }
 
@@ -2019,13 +2023,13 @@ void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) con
             for(int ic=0; ic<nAVLCtrls(); ic++)
             {
                 AngleControl const& avlc = m_AVLControls.at(ic);
-                PolarProps += "   " + avlc.name()+ EOLch;
+                PolarProps += "   " + QString::fromStdString(avlc.name())+ EOLch;
 
                 for(int ig=0; ig<avlc.nValues(); ig++)
                 {
-                    strange = "      " +  pPlaneXfl->controlSurfaceName(ig) + ":";
+                    strange = "      " +  QString::fromStdString(pPlaneXfl->controlSurfaceName(ig)) + ":";
                     strange.resize(30, ' ');
-                    strange += std::format(" {0:7.2g}", avlc.value(ig)) + DEGch+ EOLch;
+                    strange += QString::asprintf(" %7.2g", avlc.value(ig)) + DEGch+ EOLch;
 
                     PolarProps += strange;
                 }
@@ -2055,7 +2059,7 @@ void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) con
                     PolarProps += "   drag: Prandtl-Schlichting\n";
                     break;
                 case PlanePolar::MANUALFUSECF:
-                    PolarProps += std::format("   drag: Cf=%g\n", m_FuseCf);
+                    PolarProps += QString::asprintf("   drag: Cf=%g\n", m_FuseCf);
                     break;
             }
         }
@@ -2072,10 +2076,10 @@ void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) con
         {
             if(fabs(m_ExtraDrag[ix].area())>PRECISION && fabs(m_ExtraDrag[ix].coef())>PRECISION)
             {
-                strong = "   area= " + std::format(" {0:7.2f}", m_ExtraDrag.at(ix).area()*areaunit) + " ";
+                strong = "   area= " + QString::asprintf(" %7.2f", m_ExtraDrag.at(ix).area()*areaunit) + " ";
                 strong += arealab + ",  ";
                 PolarProps += strong;
-                strong = "coeff.= " + std::format(" {0:7.2f}", m_ExtraDrag.at(ix).coef());
+                strong = "coeff.= " + QString::asprintf(" %7.2f", m_ExtraDrag.at(ix).coef());
                 PolarProps += strong+ EOLch;
             }
         }
@@ -2085,65 +2089,69 @@ void PlanePolar::getProperties(std::string &PolarProps, Plane const *pPlane) con
     {
         strong = "Flat panel wake:\n";
         PolarProps += strong;
-        strong = std::format("Nb. of wake panels = {0:d}\n",NXWakePanel4());
+        strong = QString::asprintf("Nb. of wake panels = %d\n",NXWakePanel4());
         PolarProps += frontspacer + strong;
-        strong = std::format("Length             = {0:g} x MAC\n", totalWakeLengthFactor());
+        strong = QString::asprintf("Length             = %g x MAC\n", totalWakeLengthFactor());
         PolarProps += frontspacer + strong;
-        strong = std::format("Progression factor = {0:7.2f}", wakePanelFactor()) + EOLch;
+        strong = QString::asprintf("Progression factor = %7.2f", wakePanelFactor()) + EOLch;
         PolarProps += frontspacer + strong;
     }
     else
     {
         strong = "Vorton wake:\n";
         PolarProps += strong;
-        strong = std::format("Buffer wake length = {0:g} x MAC\n", m_BufferWakeFactor);
+        strong = QString::asprintf("Buffer wake length = %g x MAC\n", m_BufferWakeFactor);
         PolarProps += frontspacer + strong;
-        strong = std::format("Streamwise step    = {0:g} x MAC\n", m_VortonL0);
+        strong = QString::asprintf("Streamwise step    = %g x MAC\n", m_VortonL0);
         PolarProps += frontspacer + strong;
-        strong = std::format("Discard distance   = {0:g} x MAC\n", m_VPWMaxLength);
+        strong = QString::asprintf("Discard distance   = %g x MAC\n", m_VPWMaxLength);
         PolarProps += frontspacer + strong;
-        strong = std::format("Vorton core size   = {0:g} x MAC = {1:g}", m_VortonCoreSize, m_VortonCoreSize*m_RefChord*Units::mtoUnit());
-        strong += Units::lengthUnitLabel() + EOLch;
+        strong = QString::asprintf("Vorton core size   = %g x MAC = %g", m_VortonCoreSize, m_VortonCoreSize*m_RefChord*Units::mtoUnit());
+        strong += lenlab + EOLch;
         PolarProps += frontspacer + strong;
-        strong = std::format("VPW iterations     = {0:d}", m_VPWIterations) + EOLch;
+        strong = QString::asprintf("VPW iterations     = %d", m_VPWIterations) + EOLch;
         PolarProps += frontspacer + strong;
     }
 
     if(dataSize()>1)
     {
         PolarProps += "\n";
-        strong = std::format("XNP = d(XCp.Cl)/dCl =  {0:7.2f}", m_XNeutralPoint * lenunit);
+        strong = QString::asprintf("XNP = d(XCp.Cl)/dCl =  %7.2f", m_XNeutralPoint * lenunit);
         PolarProps += strong + " " + lenlab + EOLch;
 
-        strong = std::format("Static margin       = {0:g}", (m_XNeutralPoint-CoG().x)/m_RefChord*100.0);
+        strong = QString::asprintf("Static margin       = %g", (m_XNeutralPoint-CoG().x)/m_RefChord*100.0);
         PolarProps += strong + EOLch;
     }
 
-    strong = std::format("Nbr. of data points = {0:d}",dataSize()) + EOLch;
+    strong = QString::asprintf("Nbr. of data points = %d",dataSize()) + EOLch;
     PolarProps += strong;
+
+    props = PolarProps.toStdString();
 }
 
 
-void PlanePolar::getWPolarData(std::string &polardata, std::string const &sep) const
+void PlanePolar::getWPolarData(std::string &data, std::string const &separator) const
 {
-    std::string strong, strange, str;
+    QString polardata;
+    QString sep  =QString::fromStdString(separator);
+    QString strong, strange, str;
 
-    strong = planeName() + EOLch;
+    strong = QString::fromStdString(planeName()) + EOLch;
     polardata += strong;
 
-    strong = m_Name+ EOLch;
+    strong = QString::fromStdString(m_Name) + EOLch;
     polardata += strong;
 
-    str = Units::speedUnitLabel() + EOLch + EOLch;
+    str = QUnits::speedUnitLabel() + EOLch + EOLch;
 
     if(isFixedSpeedPolar())
     {
-        strong = std::format("Freestream speed = {0:.3f} ", velocity()*Units::mstoUnit());
+        strong = QString::asprintf("Freestream speed = %.3f ", velocity()*Units::mstoUnit());
         strong += str+ EOLch;
     }
     else if(isFixedaoaPolar())
     {
-        strong = std::format("Alpha = {0:.3f}",alphaSpec());
+        strong = QString::asprintf("Alpha = %.3f",alphaSpec());
         strong += DEGch+ EOLch;
     }
     else strong = EOLch + EOLch;
@@ -2152,7 +2160,7 @@ void PlanePolar::getWPolarData(std::string &polardata, std::string const &sep) c
 
     for(int in=0; in<PlanePolar::variableCount(); in++)
     {
-        strange =  PlanePolar::variableName(in);
+        strange =  QString::fromStdString(PlanePolar::variableName(in));
         if(in==0) strange = " "+strange;// start with a blank space for consistency with polar data
         for(int il=int(strange.length()); il<11; il++) strange+=" ";
         polardata += strange+sep;
@@ -2164,11 +2172,12 @@ void PlanePolar::getWPolarData(std::string &polardata, std::string const &sep) c
     {
         for(int iVar=0; iVar<PlanePolar::variableCount(); iVar++)
         {
-            strange = std::format("{:11.5g}", variable(iVar, i));
+            strange = QString::asprintf("%11.5g", variable(iVar, i));
             polardata += strange+sep;
         }
         polardata += "\n";
     }
+    data = polardata.toStdString();
 }
 
 

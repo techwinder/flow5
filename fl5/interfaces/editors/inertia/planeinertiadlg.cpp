@@ -49,7 +49,7 @@
 #include <interfaces/opengl/fl5views/gl3dplanexflview.h>
 #include <options/prefsdlg.h>
 #include <core/saveoptions.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/xflcore.h>
 #include <api/constants.h>
 #include <api/pointmass.h>

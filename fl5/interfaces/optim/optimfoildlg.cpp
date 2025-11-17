@@ -23,7 +23,7 @@
 *****************************************************************************/
 
 
-#include <format>
+#
 
 
 #include <QApplication>
@@ -350,7 +350,7 @@ void OptimFoilDlg::setupLayout()
 
 
                                             QLabel *plabAngle = new QLabel("Flap angle range:");
-                                            QLabel *pLab2 = new QLabel(DEGCHAR);
+                                            QLabel *pLab2 = new QLabel(DEGch);
 
                                             pFlapDataLayout->addWidget(plabMin,           6, 2, Qt::AlignCenter);
                                             pFlapDataLayout->addWidget(plabMax,           6, 3, Qt::AlignCenter);
@@ -1039,16 +1039,16 @@ Foil *OptimFoilDlg::onStoreBestFoil()
 //    pNewFoil->initGeometry();
     pNewFoil->setFlaps();
 
-    std::string basename = "Optimized";
+    QString basename = "Optimized";
 
     int iter = 1;
-    std::string name = basename + std::format("_{0:d}", iter);
-    while(Objects2d::foilExists(name))
+    QString name = basename + QString::asprintf("_%d", iter);
+    while(Objects2d::foilExists(name.toStdString()))
     {
-        name = basename + std::format("_{0:d}", iter);
+        name = basename + QString::asprintf("_%d", iter);
         iter++;
     }
-    pNewFoil->setName(name);
+    pNewFoil->setName(name.toStdString());
 
     QStringList NameList;
     for(int k=0; k<Objects2d::nFoils(); k++)
@@ -1071,7 +1071,7 @@ Foil *OptimFoilDlg::onStoreBestFoil()
 
     QColor back = this->palette().window().color();
     pNewFoil->setLineColor(xfl::randomfl5Color(back.valueF()<0.5f));
-    outputText("Saved the current best foil with name: " + QString::fromStdString(pNewFoil->name())+EOLCHAR);
+    outputText("Saved the current best foil with name: " + QString::fromStdString(pNewFoil->name())+EOLch);
     m_bSaved = true;
 
     m_bModified = true;
@@ -1178,7 +1178,7 @@ void OptimFoilDlg::onMakeSwarm(bool bShow)
         for (int isw=0; isw<m_pPSOTaskFoil->swarmSize(); isw++)
         {
             Foil *pFoil = new Foil;
-            pFoil->setName(std::format("Particle_{:d}", isw));
+            pFoil->setName(QString::asprintf("Particle_%d", isw).toStdString());
             pFoil->setLineColor(xfl::tofl5Clr(clr));
             clr = clr.darker(113);
 
@@ -1414,7 +1414,7 @@ void OptimFoilDlg::updateVariables(PSOTaskFoil *pPSOTask2d)
             dimension = s_HHn+s_NOpt;
             pPSOTask2d->setDimension(dimension);  // two sides
             for(int i=0; i<s_HHn; i++)
-                pPSOTask2d->setVariable(i, {std::format("HH{:d}", i), -s_HHmax, s_HHmax});
+                pPSOTask2d->setVariable(i, {QString::asprintf("HH%d", i).toStdString(), -s_HHmax, s_HHmax});
 
             break;
         }
@@ -1432,7 +1432,7 @@ void OptimFoilDlg::updateVariables(PSOTaskFoil *pPSOTask2d)
     }
 
     for(int iopt=0; iopt<s_NOpt; iopt++)
-        pPSOTask2d->setVariable(dimension-s_NOpt+iopt, {std::format("FlapAngle_{:d}", iopt), s_FlapAngleMin, s_FlapAngleMax});
+        pPSOTask2d->setVariable(dimension-s_NOpt+iopt, {QString::asprintf("FlapAngle_%d", iopt).toStdString(), s_FlapAngleMin, s_FlapAngleMax});
 }
 
 void OptimFoilDlg::setFoil(Foil *pFoil)
@@ -1443,7 +1443,7 @@ void OptimFoilDlg::setFoil(Foil *pFoil)
 
     if(s_ModType==PSOTaskFoil::SCALE)
     {
-        QString strange(QString::fromStdString(m_pFoil->name())+EOLCHAR);
+        QString strange(QString::fromStdString(m_pFoil->name())+EOLch);
         strange += QString::asprintf("   Thickness =%5.2f%% at x=%5.2f%%\n",   m_pFoil->maxThickness()*100.0, m_pFoil->xThickness()*100.0);
         strange += QString::asprintf("   Camber    =%5.2f%% at x=%5.2f%%\n\n", m_pFoil->maxCamber()*100.0,    m_pFoil->xCamber()*100.0);
         m_plabFoilInfo->setText(strange);
@@ -1613,12 +1613,12 @@ void OptimFoilDlg::updateCpGraphs(Particle const &particle)
 
 
         strange = optpoint.m_Name + "\n";
-        strange += ALPHACHAR + QString::asprintf("  = %7.2g",   m_pPolar[iopt]->aoaSpec()) + DEGCHAR+"\n";
+        strange += ALPHAch + QString::asprintf("  = %7.2g",   m_pPolar[iopt]->aoaSpec()) + DEGch+"\n";
         strange += QString::asprintf("Re = %7g\n\n", m_pPolar[iopt]->Reynolds());
 
 
         strange += "              target      particle\n";
-        strange += QString::asprintf("Flap angle =               %7.3g", flapangle)  + DEGCHAR+"\n";
+        strange += QString::asprintf("Flap angle =               %7.3g", flapangle)  + DEGch+"\n";
 
         for(int iobj=0; iobj<NOBJECTIVES; iobj++)
         {
@@ -1694,9 +1694,9 @@ void OptimFoilDlg::customEvent(QEvent *pEvent)
                 double flapangle = particle.pos(particle.dimension()-s_NOpt+iopt);
 
                 strange += optpoint.m_Name + "\n";
-                strange += "   " + ALPHACHAR + QString::asprintf("          = %7.2g", m_pPolar[iopt]->aoaSpec()) + DEGCHAR+"\n";
+                strange += "   " + ALPHAch + QString::asprintf("          = %7.2g", m_pPolar[iopt]->aoaSpec()) + DEGch+"\n";
                 strange += QString::asprintf("   Re         = %7g\n", m_pPolar[iopt]->Reynolds());
-                strange += QString::asprintf("   Flap angle = %7.3g", flapangle)  + DEGCHAR+"\n";
+                strange += QString::asprintf("   Flap angle = %7.3g", flapangle)  + DEGch+"\n";
 
                 strange += "              target   particle\n";
 
@@ -1707,7 +1707,7 @@ void OptimFoilDlg::customEvent(QEvent *pEvent)
                     if(!obj.m_bActive) continue;
 
                     QString str;
-                    str += "   "+obj.m_Name;
+                    str += "   "+ QString::fromStdString(obj.m_Name);
                     str.resize(11, ' ');
                     str += "= ";
 
@@ -1740,7 +1740,7 @@ void OptimFoilDlg::customEvent(QEvent *pEvent)
     else if(pEvent->type() == MESSAGE_EVENT)
     {
         MessageEvent *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        outputStdText(pMsgEvent->msg());
+        outputText(pMsgEvent->msg());
     }
     else
         XflDialog::customEvent(pEvent);
@@ -1775,7 +1775,7 @@ void OptimFoilDlg::listParticle(Particle const &particle, QString &log, QString 
     }
 
     for(int iopt=0; iopt<s_NOpt; iopt++)
-        strange += prefix + QString::asprintf("Flap angle     = %7.3f", particle.pos(dim+iopt))+ DEGCHAR + "\n";
+        strange += prefix + QString::asprintf("Flap angle     = %7.3f", particle.pos(dim+iopt))+ DEGch + "\n";
 
     log += strange;
 }
@@ -1958,7 +1958,7 @@ void OptimFoilDlg::fillOptPoints()
     // alpha
     int row = 0;
     ind = m_pOptPointsModel->index(row, 0, QModelIndex());
-    m_pOptPointsModel->setData(ind, ALPHACHAR);
+    m_pOptPointsModel->setData(ind, ALPHAch);
     for(int iopt=0; iopt<NOPT; iopt++)
     {
         int col = iopt+1;
@@ -1966,7 +1966,7 @@ void OptimFoilDlg::fillOptPoints()
         m_pOptPointsModel->setData(ind, s_Opt[iopt].m_Alpha);
     }
     ind = m_pOptPointsModel->index(row, NOPT+1, QModelIndex());
-    m_pOptPointsModel->setData(ind, DEGCHAR);
+    m_pOptPointsModel->setData(ind, DEGch);
 
 
     // Re

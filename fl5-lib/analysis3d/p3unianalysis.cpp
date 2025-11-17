@@ -24,7 +24,8 @@
 
 #define _MATH_DEFINES_DEFINED
 
-#include <format>
+#include <QString>
+
 
 #include <api/cubicinterpolation.h>
 #include <api/geom_global.h>
@@ -127,9 +128,9 @@ void P3UniAnalysis::makeMatrixBlock(int iBlock)
             else                    bError = std::isnan(m_aijf[uint(i3*N+k3)]);
             if(bError)
             {
-                std::string strange;
-                strange = std::format("      *** numerical error when calculating the influence of panel {0:d} on panel {1:d} ***\n", k3, i3);
-                traceStdLog(strange);
+                QString strange;
+                strange = QString::asprintf("      *** numerical error when calculating the influence of panel %d on panel %d ***\n", k3, i3);
+                traceLog(strange);
                 m_bMatrixError = true;
                 return;
             }
@@ -404,9 +405,9 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
 
             if(info!=0)
             {
-                std::string strange;
-                strange = std::format("         error making doublet derivative for panel {0:d}\n", i3);
-                traceStdLog(strange);
+                QString strange;
+                strange = QString::asprintf("         error making doublet derivative for panel %d\n", i3);
+                traceLog(strange);
                 continue;
             }
 

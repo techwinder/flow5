@@ -39,9 +39,10 @@
 
 #include <api/objects3d.h>
 #include <api/planexfl.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 #include <api/planepolar.h>
+
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/analysis3ddef/ctrltablemodel.h>
@@ -353,11 +354,11 @@ void T123578PolarDlg::setupLayout()
         {
             QVBoxLayout *pAnalysisTypeLayout = new QVBoxLayout;
             {
-                m_prbType1 = new QRadioButton(QString("Type 1 (fixed V")+INFCHAR+")");
+                m_prbType1 = new QRadioButton(QString("Type 1 (fixed V")+INFch+")");
                 m_prbType2 = new QRadioButton("Type 2 (fixed lift)");
                 m_prbType3 = new QRadioButton("Type 3 (speed polar)");
-                m_prbType4 = new QRadioButton(QString("Type 4 (fixed ") + ALPHACHAR + ") - deprecated, use T8 polars instead");
-                m_prbType5 = new QRadioButton(QString("Type 5 (")+BETACHAR+"  range, fixed "+ALPHACHAR+" and V"+INFCHAR+")");
+                m_prbType4 = new QRadioButton(QString("Type 4 (fixed ") + ALPHAch + ") - deprecated, use T8 polars instead");
+                m_prbType5 = new QRadioButton(QString("Type 5 (")+BETAch+"  range, fixed "+ALPHAch+" and V"+INFch+")");
                 m_prbType7 = new QRadioButton("Type 7 (stability analysis)");
                 m_prbType8 = new QRadioButton("Type 8");
 
@@ -506,7 +507,7 @@ void T123578PolarDlg::setupLayout()
                 m_pAVLGainModel->setRowCount(0);//temporary
                 m_pAVLGainModel->setColumnCount(2);
                 m_pAVLGainModel->setHeaderData(0, Qt::Horizontal, "Control surfaces");
-                m_pAVLGainModel->setHeaderData(1, Qt::Horizontal, QString("Gain (") + DEGCHAR + ")");
+                m_pAVLGainModel->setHeaderData(1, Qt::Horizontal, QString("Gain (") + DEGch + ")");
 
                 m_pcptAVLGains->setModel(m_pAVLGainModel);
                 m_pcptAVLGains->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -589,7 +590,7 @@ void T123578PolarDlg::setReynolds()
     {
         double RRe = m_pPlane->rootChord() * s_WPolar.velocity()/s_WPolar.viscosity();
         strange =  QString::asprintf("Root Re = %.0f", RRe);
-        lab = strange.rightJustified(37, ' ') + EOLCHAR;
+        lab = strange.rightJustified(37, ' ') + EOLch;
         double SRe = m_pPlane->tipChord() * s_WPolar.velocity()/s_WPolar.viscosity();
         strange = QString::asprintf("Tip Re   = %.0f", SRe);
         lab += strange.rightJustified(37, ' ');
@@ -598,12 +599,12 @@ void T123578PolarDlg::setReynolds()
     else if(s_WPolar.isFixedLiftPolar())
     {
         double QCl = sqrt(2.* 9.81 /s_WPolar.density()* s_WPolar.mass() /s_WPolar.referenceArea());
-        strange = "V"+INFCHAR+".sqrt(Cl) = " + QString::asprintf("%.3f ", QCl) + strUnit;
-        lab = strange.rightJustified(37, ' ') + EOLCHAR;
+        strange = "V"+INFch+".sqrt(Cl) = " + QString::asprintf("%.3f ", QCl) + strUnit;
+        lab = strange.rightJustified(37, ' ') + EOLch;
 
         double RRe = m_pPlane->rootChord() * QCl/s_WPolar.viscosity();
         strange = QString::asprintf("Root Re.sqrt(Cl) = %.0f", RRe);
-        lab += strange.rightJustified(37, ' ') + EOLCHAR;
+        lab += strange.rightJustified(37, ' ') + EOLch;
 
         double SRe = m_pPlane->tipChord() * QCl/s_WPolar.viscosity();
         strange = QString::asprintf("Tip Re.sqrt(Cl) = %.0f", SRe);
@@ -767,7 +768,7 @@ void T123578PolarDlg::onAppendAVLCtrl()
     if(!pPlaneXfl) return;
 
     AngleControl avlc;
-    avlc.setName(std::format("new control_{0:d}", s_WPolar.nAVLCtrls()+1));
+    avlc.setName((QString::asprintf("new control_%d", s_WPolar.nAVLCtrls()+1)).toStdString());
     avlc.resizeValues(pPlaneXfl->nAVLGains());
     s_WPolar.addAVLControl(avlc);
     fillAVLCtrlList();

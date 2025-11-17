@@ -122,7 +122,7 @@ class FL5LIB_EXPORT Sail : public Part
         virtual void createSection(int iSection) = 0;
         virtual void deleteSection(int iSection) = 0;
 
-        virtual void properties(std::string &props, std::string const &prefix, bool bFull=false) const;
+        virtual void properties(std::string &properties, std::string const &prefix, bool bFull=false) const;
         virtual Vector3d leadingEdgeAxis() const = 0;
 
         PART::enumPartType partType() const override {return PART::Sail;}

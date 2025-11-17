@@ -87,7 +87,7 @@ gl3dQuat::gl3dQuat(QWidget *pParent) : gl3dTestGLView (pParent)
             {
                 QGridLayout *pParamsLayout = new QGridLayout;
                 {
-                    QLabel *plabSeedX = new QLabel(THETACHAR +"=");
+                    QLabel *plabSeedX = new QLabel(THETAch +"=");
                     QLabel *plabSeedY = new QLabel("x=");
                     QLabel *plabSeedZ = new QLabel("y=");
                     QLabel *plabSeedW = new QLabel("z=");
@@ -137,9 +137,9 @@ gl3dQuat::gl3dQuat(QWidget *pParent) : gl3dTestGLView (pParent)
     m_Qt[2].set(180.0, Vector3d(0.0,0.0,1.0));
 
     for(int i=0; i<3; i++)
-        m_ppto->onAppendStdText(m_Qt[i].listQuaternion()+ EOLch);
+        m_ppto->onAppendStdText(m_Qt[i].listQuaternion()+ EOLstr);
 
-    m_ppto->onAppendStdText((m_Qt[0]*m_Qt[0]).listQuaternion()+ EOLch);
+    m_ppto->onAppendStdText((m_Qt[0]*m_Qt[0]).listQuaternion()+ EOLstr);
 
 
     double phi(PI/3), theta(PI/6);
@@ -276,7 +276,7 @@ void gl3dQuat::onUpdateInput()
     s_Quat.set(angle, Vector3d(x,y,z), false);
 
 
-    m_ppto->onAppendStdText(s_Quat.listQuaternion()+ EOLch);
+    m_ppto->onAppendStdText(s_Quat.listQuaternion()+ EOLstr);
 
     m_LineStrip.clear();
     m_LineStrip.append(s_Quat.axis() * s_Quat.norm());

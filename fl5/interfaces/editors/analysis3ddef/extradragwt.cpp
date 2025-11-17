@@ -28,11 +28,11 @@
 
 #include "extradragwt.h"
 
-#include <core/qunits.h>
+#include <api/planepolar.h>
+#include <api/units.h>
 #include <interfaces/graphs/containers/splinedgraphwt.h>
 #include <interfaces/graphs/controls/graphoptions.h>
 #include <interfaces/graphs/graph/graph.h>
-#include <api/planepolar.h>
 #include <interfaces/widgets/customwts/cptableview.h>
 #include <interfaces/widgets/customwts/xfldelegate.h>
 

@@ -36,7 +36,7 @@
 
 #include "wingexportdlg.h"
 
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/wingxfl.h>
 #include <api/occ_globals.h>
 #include <interfaces/widgets/customwts/intedit.h>

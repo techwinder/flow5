@@ -22,7 +22,9 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
+#include <iostream>
 #include <cstring>
 
 #include <QDataStream>
@@ -138,10 +140,10 @@ void Vorton::vorticity(Vector3d const &pos, Vector3d &omega) const
 
 void Vorton::listVorton(std::string const &prefix) const
 {
-    std::string strange = std::format("x={:13g} y={:13g} z={:13g}  //  om.x={:13g} om.y={:13g} om.z={:13g}",
+    QString strange = QString::asprintf("x=%13g y=%13g z=%13g  //  om.x=%13g om.y=%13g om.z=%13g",
                                         m_Position.x, m_Position.y, m_Position.z,
                                         m_Omega.x, m_Omega.y, m_Omega.z);
-    qDebug("%s", (prefix+" "+strange).c_str());
+    std::cout << prefix +" "+strange.toStdString() << std::endl;
 }
 
 

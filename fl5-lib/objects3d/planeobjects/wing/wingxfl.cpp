@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+#include <QTextStream>
 
 
 #include <api/wingxfl.h>
@@ -2501,22 +2502,22 @@ int WingXfl::uniformizeXPanelNumber()
 
 void WingXfl::exportAVLWing(std::string &avlstring, int index, double y, double Thetay, double lengthunit) const
 {
-    std::string strong, str;
+    QString strong, str;
 
-    std::stringstream out;
+    QTextStream out;
 
     out << ("#========TODO: REMOVE OR MODIFY MANUALLY DUPLICATE SECTIONS IN SURFACE DEFINITION=========\n");
     out << ("SURFACE                      | (keyword)\n");
-    out << m_Name;
+    out << QString::fromStdString(m_Name);
     out << ("\n");
     out << ("#Nchord    Cspace   [ Nspan Sspace ]\n");
 
-    strong = std::format("{:d}        ={:3.1f}\n", nXPanels(0),1.0);
+    strong = QString::asprintf("%d        =%3.1f\n", nXPanels(0),1.0);
     out << (strong);
 
     out << ("\n");
     out << ("INDEX                        | (keyword)\n");
-    strong = std::format("{:4d}                         | Lsurf\n",index,4);
+    strong = QString::asprintf("%4d                         | Lsurf\n",index);
     out << (strong);
 
     if(!isFin())
@@ -2529,7 +2530,7 @@ void WingXfl::exportAVLWing(std::string &avlstring, int index, double y, double 
     {
         out << ("\n");
         out << ("YDUPLICATE\n");
-        strong = std::format("{:9.4f}\n", y);
+        strong = QString::asprintf("%9.4f\n", y);
         out << (strong);
     }
 
@@ -2543,7 +2544,7 @@ void WingXfl::exportAVLWing(std::string &avlstring, int index, double y, double 
 
     out << ("\n");
     out << ("ANGLE\n");
-    strong = std::format("{:8.3f}                         | dAinc\n", Thetay);
+    strong = QString::asprintf("%8.3f                         | dAinc\n", Thetay);
     out << (strong);
 
     out << ("\n\n");
@@ -2576,7 +2577,7 @@ void WingXfl::exportAVLWing(std::string &avlstring, int index, double y, double 
 
         out << ("#______________\nSECTION                                                     |  (keyword)\n");
 
-        strong = std::format("{:9.4f} {:9.4f} {:9.4f} {:9.4f}  {:7.3f}  {:3d}  {:3d}   | Xle Yle Zle   Chord Ainc   [ Nspan Sspace ]\n",
+        strong = QString::asprintf("%9.4f %9.4f %9.4f %9.4f  %7.3f  %3d  %3d   | Xle Yle Zle   Chord Ainc   [ Nspan Sspace ]\n",
                 aSurface.m_LA.x       *lengthunit,
                 aSurface.m_LA.y       *lengthunit,
                 aSurface.m_LA.z       *lengthunit,
@@ -2587,22 +2588,22 @@ void WingXfl::exportAVLWing(std::string &avlstring, int index, double y, double 
         out << (strong);
         out << ("\n");
         out << ("AFIL 0.0 1.0\n");
-        if(aSurface.foilA())  out << aSurface.foilA()->name() +".dat\n";
+        if(aSurface.foilA())  out << QString::fromStdString(aSurface.foilA()->name()) +".dat\n";
         out << ("\n");
         if(aSurface.hasTEFlap())
         {
             out << ("CONTROL                                                     |  (keyword)\n");
-            str = std::format("_Flap_{:d}  ", iFlap);
-            strong = m_Name;
+            str = QString::asprintf("_Flap_%d  ", iFlap);
+            strong = QString::fromStdString(m_Name);
 //            strong.replace(" ", "_");
             strong += str;
 
-            if(fabs(mean_angle)>PRECISION) str = std::format("{:5.2f}  ", 1.0/mean_angle);
+            if(fabs(mean_angle)>PRECISION) str = QString::asprintf("%5.2f  ", 1.0/mean_angle);
             else                           str = "1.0   ";
             strong += str;
 
             assert(aSurface.foilA());
-            str = std::format("{:5.3f}  {:9.4f}   {:9.4f}  {:9.4f}   -1.0  ",
+            str = QString::asprintf("%5.3f  %9.4f   %9.4f  %9.4f   -1.0  ",
                     aSurface.foilA()->TEXHinge(),
                     aSurface.hingeVector().x,
                     aSurface.hingeVector().y,
@@ -2614,7 +2615,7 @@ void WingXfl::exportAVLWing(std::string &avlstring, int index, double y, double 
         //write the end section of the surface
         out << ("\n#______________\nSECTION                                                     |  (keyword)\n");
 
-        strong = std::format("{:9.4f}  {:9.4f}  {:9.4f}  {:9.4f}  {:7.3f}   {:3d}  {:3d}   | Xle Yle Zle   Chord Ainc   [ Nspan Sspace ]\n",
+        strong = QString::asprintf("%9.4f  %9.4f  %9.4f  %9.4f  %7.3f   %3d  %3d   | Xle Yle Zle   Chord Ainc   [ Nspan Sspace ]\n",
                 aSurface.m_LB.x       *lengthunit,
                 aSurface.m_LB.y       *lengthunit,
                 aSurface.m_LB.z       *lengthunit,
@@ -2625,23 +2626,23 @@ void WingXfl::exportAVLWing(std::string &avlstring, int index, double y, double 
         out << (strong);
         out << ("\n");
         out << ("AFIL 0.0 1.0\n");
-        if(aSurface.foilB())  out << aSurface.foilB()->name() +".dat\n";
+        if(aSurface.foilB())  out << QString::fromStdString(aSurface.foilB()->name()) +".dat\n";
         out << ("\n");
 
         if(aSurface.hasTEFlap())
         {
             out << ("CONTROL                                                     |  (keyword)\n");
-            str = std::format("_Flap_{:d}  ", iFlap);
-            strong = m_Name;
+            str = QString::asprintf("_Flap_%d  ", iFlap);
+            strong = QString::fromStdString(m_Name);
 //            strong.replace(" ", "_");
             strong += str;
 
-            if(fabs(mean_angle)>PRECISION) str = std::format("{:5.2f}  ", 1.0/mean_angle);
+            if(fabs(mean_angle)>PRECISION) str = QString::asprintf("%5.2f  ", 1.0/mean_angle);
             else                           str = "1.0   ";
             strong += str;
 
             assert(aSurface.foilB());
-            str = std::format("{:5.3f}  {:9.4f}  {:9.4f}   {:9.4f}   -1.0  ",
+            str = QString::asprintf("%5.3f  %9.4f  %9.4f   %9.4f   -1.0  ",
                               aSurface.foilB()->TEXHinge(),
                               aSurface.hingeVector().x,
                               aSurface.hingeVector().y,
@@ -2658,52 +2659,55 @@ void WingXfl::exportAVLWing(std::string &avlstring, int index, double y, double 
 
     out << ("\n\n");
 
-    avlstring = out.str();
+    avlstring = out.readAll().toStdString();
 }
 
 
-void WingXfl::getProperties(std::string &props, std::string const &prefix) const
+void WingXfl::getProperties(std::string &properties, std::string const &prefx) const
 {
-    std::string strange;
+    QString props;
+    QString strange;
+    QString prefix = QString::fromStdString(prefx);
 
-    strange = std::format("{0:9.3f}", m_PlanformArea*Units::m2toUnit()) + " ";
-    props += prefix + "Wing area         ="+strange+Units::areaUnitLabel() + "\n";
+    strange = QString::asprintf("%9.3f", m_PlanformArea*Units::m2toUnit()) + " ";
+    props += prefix + "Wing area         ="+strange+QUnits::areaUnitLabel() + "\n";
 
-    strange = std::format("{0:9.3f}", m_PlanformSpan*Units::mtoUnit()) + " ";
-    props += prefix + "Wing span         ="+strange+Units::lengthUnitLabel() + "\n";
+    strange = QString::asprintf("%9.3f", m_PlanformSpan*Units::mtoUnit()) + " ";
+    props += prefix + "Wing span         ="+strange+QUnits::lengthUnitLabel() + "\n";
 
-    strange = std::format("{0:9.3f}", m_ProjectedArea*Units::m2toUnit()) + " ";
-    props += prefix + "Projected area    ="+strange+Units::areaUnitLabel() + "\n";
+    strange = QString::asprintf("%9.3f", m_ProjectedArea*Units::m2toUnit()) + " ";
+    props += prefix + "Projected area    ="+strange+QUnits::areaUnitLabel() + "\n";
 
-    strange = std::format("{0:9.3f}", m_ProjectedSpan*Units::mtoUnit()) + " ";
-    props += prefix + "Projected span    ="+strange+Units::lengthUnitLabel() + "\n";
+    strange = QString::asprintf("%9.3f", m_ProjectedSpan*Units::mtoUnit()) + " ";
+    props += prefix + "Projected span    ="+strange+QUnits::lengthUnitLabel() + "\n";
 
-    strange = std::format("{0:9.3f}", GChord()*Units::mtoUnit()) + " ";
-    props += prefix + "Mean geom. chord  ="+strange+Units::lengthUnitLabel() + "\n";
+    strange = QString::asprintf("%9.3f", GChord()*Units::mtoUnit()) + " ";
+    props += prefix + "Mean geom. chord  ="+strange+QUnits::lengthUnitLabel() + "\n";
 
-    strange = std::format("{0:9.3f}", m_MAChord*Units::mtoUnit()) + " ";
-    props += prefix + "Mean aero. chord  ="+strange+Units::lengthUnitLabel() + "\n";
+    strange = QString::asprintf("%9.3f", m_MAChord*Units::mtoUnit()) + " ";
+    props += prefix + "Mean aero. chord  ="+strange+QUnits::lengthUnitLabel() + "\n";
 
-    strange = std::format("{0:9.3f}", aspectRatio());
+    strange = QString::asprintf("%9.3f", aspectRatio());
     props += prefix + "Aspect ratio      ="+strange+ "\n";
 
-    if(tipChord()>0.0) strange = std::format("{0:9.3f}", taperRatio());
+    if(tipChord()>0.0) strange = QString::asprintf("%9.3f", taperRatio());
     else               strange = "Undefined";
     props += prefix + "Taper ratio       ="+strange+"\n";
 
-    strange = std::format("{0:9.3f}", averageSweep());
+    strange = QString::asprintf("%9.3f", averageSweep());
     props += prefix + "Sweep             =" + strange + DEGch + "\n";
 
 
-    strange = std::format("VLM panels        ={0:d}\n", quadTotal(true), 5);
+    strange = QString::asprintf("VLM panels        =%d\n", quadTotal(true));
     props += prefix + strange;
 
-    strange = std::format("Quad panels       ={0:d}\n", quadTotal(false),5);
+    strange = QString::asprintf("Quad panels       =%d\n", quadTotal(false));
     props += prefix + strange;
 
-    strange = std::format("Triangular panels ={0:d}", nTriangles(), 5);
+    strange = QString::asprintf("Triangular panels =%d", nTriangles());
     props += prefix + strange;
 
+    properties = props.toStdString();
 }
 
 

@@ -40,7 +40,7 @@
 #include <modules/xsail/xsail.h>
 #include <modules/xsail/menus/xsailmenus.h>
 
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/boatopp.h>
 #include <api/boatpolar.h>
 #include <api/objects_global.h>

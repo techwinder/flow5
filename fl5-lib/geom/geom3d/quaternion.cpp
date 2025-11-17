@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <format>
+#include <QString>
+
 
 #include <api/quaternion.h>
 #include <api/utils.h>
@@ -265,11 +266,11 @@ Quaternion Quaternion::operator *(double d)
 
 std::string Quaternion::listQuaternion() const
 {
-    std::string strange = std::format("a={:g}  q=({:g}, {:g}, {:g})\n", a, qx, qy, qz);
-    strange += std::format("Axis  = {:f}, {:g}, {:f}\n", axis().x, axis().y, axis().z);
-    strange += std::format("Angle = %.3f", angle()) + DEGch + EOLch;
-    strange += std::format("Norm = {:g}", norm()) + EOLch;
-    return strange;
+    QString strange = QString::asprintf("a=%g  q=(%g, %g, %g)\n", a, qx, qy, qz);
+    strange += QString::asprintf("Axis  = %f, %g, %f\n", axis().x, axis().y, axis().z);
+    strange += QString::asprintf("Angle = %.3f", angle()) + DEGch + EOLch;
+    strange += QString::asprintf("Norm = %g", norm()) + EOLch;
+    return strange.toStdString();
 }
 
 

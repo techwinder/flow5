@@ -34,7 +34,7 @@
 
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/xflcore.h>
 #include <globals/mainframe.h>
 #include <interfaces/graphs/containers/graphwt.h>

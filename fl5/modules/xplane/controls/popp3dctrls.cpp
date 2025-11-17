@@ -42,7 +42,7 @@
 #include <modules/xplane/glview/gl3dxplaneview.h>
 #include <modules/xplane/xplane.h>
 #include <interfaces/opengl/controls/fine3dcontrols.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 #include <api/planeopp.h>
 #include <api/planepolar.h>
@@ -121,7 +121,7 @@ void POpp3dCtrls::setupLayout()
         {
             QGridLayout *pCheckDispLayout = new QGridLayout;
             {
-                m_pchGamma          = new QCheckBox(GAMMACHAR);
+                m_pchGamma          = new QCheckBox(GAMMAch);
                 QString gammatip("<p>Displays the distribution of doublet densities or vortex strengths.<br>"
                                  "This is the main result of the potential flow calculation, and <u>all other results</u> "
                                  "are derived from this distribution. It is therefore important that it "
@@ -148,7 +148,7 @@ void POpp3dCtrls::setupLayout()
                 m_pchWakePanels->setToolTip("<p>T6 polars only</p>");
                 m_pchVortons        = new QCheckBox("Vortons");
                 m_pchVortons->setToolTip("<p>T6 polars + VPW only</p>");
-                m_pchHPlane         = new QCheckBox("Ground/Free surf.");
+                m_pchHPlane         = new QCheckBox("Ground/Free surface");
                 m_pchPickPanel      = new QCheckBox("Pick value");
                 m_pchPickPanel->setShortcut(QKeySequence(Qt::SHIFT|Qt::Key_H));
                 QString tip("<p>Activate this checkbox and move the mouse\nover the Cp or Forces color plot. (Shift+H)</p>");

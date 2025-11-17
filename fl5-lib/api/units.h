@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include <QString>
+
 #include <string>
 #include <vector>
 
@@ -128,4 +130,21 @@ namespace Units
 
 }
 
+
+namespace QUnits
+{
+    // convenience conversion to QString
+    inline QString lengthUnitLabel(int idx=-1)    {return QString::fromStdString(Units::lengthUnitLabel(idx));}
+    inline QString speedUnitLabel(int idx=-1)     {return QString::fromStdString(Units::speedUnitLabel(idx));}
+    inline QString massUnitLabel(int idx=-1)      {return QString::fromStdString(Units::massUnitLabel(idx));}
+    inline QString areaUnitLabel(int idx=-1)      {return QString::fromStdString(Units::areaUnitLabel(idx));}
+    inline QString forceUnitLabel(int idx=-1)     {return QString::fromStdString(Units::forceUnitLabel(idx));}
+    inline QString momentUnitLabel(int idx=-1)    {return QString::fromStdString(Units::momentUnitLabel(idx));}
+    inline QString pressureUnitLabel(int idx=-1)  {return QString::fromStdString(Units::pressureUnitLabel(idx));}
+    inline QString inertiaUnitLabel(int idx=-1)   {return QString::fromStdString(Units::inertiaUnitLabel(idx));}
+
+    inline QString densityUnitLabel()    {return QString::fromStdString(Units::densityUnitLabel());}
+    inline QString viscosityUnitLabel()  {return QString::fromStdString(Units::viscosityUnitLabel());}
+
+}
 

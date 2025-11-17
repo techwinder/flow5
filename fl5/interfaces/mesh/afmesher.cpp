@@ -75,7 +75,7 @@
 #include <api/pslg2d.h>
 #include <api/sail.h>
 #include <api/triangle3d.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/xflmesh.h>
 #include <api/sail.h>
 
@@ -492,7 +492,7 @@ void AFMesher::makeFaceSLG3d(const TopoDS_Face &aFace,
                         innerslg.back().push_back({nd1, nd0});
                 }
 
-                logmsg += strange;
+                logmsg += QString::fromStdString(strange);
             }
 
         }
@@ -985,7 +985,7 @@ void AFMesher::makeFacePSLG2d(const TopoDS_Face &aFace,
                         (void)nSegs;
                     }
                 }
-                logmsg += strange;
+                logmsg += QString::fromStdString(strange);
             }
 
             nEdge++;

@@ -37,7 +37,7 @@
 #include <api/utils.h>
 #include <api/xml_globals.h>
 
-#include <core/qunits.h>
+#include <api/units.h>
 #include <core/xflcore.h>
 #include <modules/xobjects.h>
 
@@ -91,10 +91,10 @@ QVariant PlanePartModel::headerData(int section, Qt::Orientation orientation, in
                 return "z ("+str+")";
 
             case 5:
-                return "Rx("+DEGCHAR + ")";
+                return "Rx("+DEGch + ")";
 
             case 6:
-                return "Ry("+DEGCHAR + ")";
+                return "Ry("+DEGch + ")";
 
             case 7:
                 return "Action";
@@ -351,7 +351,7 @@ bool PlanePartModel::setData(const QModelIndex& index, const QVariant& value, in
                 }
                 case 1:
                 {
-                    if(m_pPlane->wing(index.row())->name() != value.toString())
+                    if(m_pPlane->wing(index.row())->name() != value.toString().toStdString())
                     {
                         m_pPlane->wing(index.row())->setName(value.toString().trimmed().toStdString());
                         bWingNamesChanged = true;
@@ -424,7 +424,7 @@ bool PlanePartModel::setData(const QModelIndex& index, const QVariant& value, in
                 }
                 case 1:
                 {
-                    if(m_pPlane->fuse(ifuse)->name() != value.toString())
+                    if(m_pPlane->fuse(ifuse)->name() != value.toString().toStdString())
                     {
                         m_pPlane->fuse(ifuse)->setName(value.toString().trimmed().toStdString());
                         bChanged = true;

@@ -38,26 +38,26 @@
 
 
 
-#include <interfaces/controls/w3dprefs.h>
-#include <interfaces/opengl/fl5views/gl3dxflview.h>
-#include <modules/xplane/glview/gl3dxplaneview.h>
-#include <modules/xplane/xplane.h>
-#include <modules/xsail/view/gl3dxsailview.h>
-#include <modules/xsail/xsail.h>
-#include <interfaces/opengl/globals/gl_globals.h>
-#include <core/displayoptions.h>
-#include <core/qunits.h>
-#include <core/xflcore.h>
+#include <api/boat.h>
 #include <api/boatopp.h>
 #include <api/boatpolar.h>
 #include <api/planeopp.h>
 #include <api/planepolar.h>
 #include <api/planexfl.h>
-#include <api/boat.h>
+#include <api/units.h>
+#include <core/displayoptions.h>
+#include <core/xflcore.h>
+#include <interfaces/controls/w3dprefs.h>
+#include <interfaces/opengl/fl5views/gl3dxflview.h>
+#include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/widgets/customwts/exponentialslider.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/line/linemenu.h>
+#include <modules/xplane/glview/gl3dxplaneview.h>
+#include <modules/xplane/xplane.h>
+#include <modules/xsail/view/gl3dxsailview.h>
+#include <modules/xsail/xsail.h>
 
 XPlane *CrossFlowCtrls::s_pXPlane = nullptr;
 XSail  *CrossFlowCtrls::s_pXSail  = nullptr;

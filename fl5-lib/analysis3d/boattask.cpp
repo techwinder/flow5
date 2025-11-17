@@ -23,7 +23,8 @@
 *****************************************************************************/
 
 
-#include <format>
+#include <QString>
+
 
 
 #include <api/boattask.h>
@@ -138,7 +139,7 @@ bool BoatTask::initializeTriangleAnalysis()
 
 //    m_pP3Analysis->makeConnections();
 //    std::string strange;
-//    strange = std::format("      Time to make connections: {0:.2f} s\n", (double)t.elapsed()/1000);
+//    strange = QString::asprintf("      Time to make connections: %2f s\n", (double)t.elapsed()/1000);
 //    traceStdLog(strange);
 
     return true;
@@ -147,9 +148,9 @@ bool BoatTask::initializeTriangleAnalysis()
 
 void BoatTask::loop()
 {
-    std::string strange;
+    QString strange;
     strange = "\n   Solving the problem...\n";
-    traceStdLog(strange);
+    traceLog(strange);
 
     std::vector<Vector3d> AWS(m_pPA->nPanels());
     std::vector<Vector3d> VField(m_pPA->nPanels());
@@ -166,12 +167,12 @@ void BoatTask::loop()
         for(uint i=0; i<m_HullForce.size();    i++) m_HullForce[i].reset();
         for(uint i=0; i<m_SpanDist.size();     i++) m_SpanDist[i].initializeToZero();
 
-        traceStdLog(EOLch);
+        traceStdLog(EOLstr);
         m_bStopVPWIterations = false;
 
         m_Ctrl = m_OppList.at(m_qRHS);
-        strange = std::format("    Processing control value= {0:.3f}\n", m_Ctrl);
-        traceStdLog(strange);
+        strange = QString::asprintf("    Processing control value= %.3f\n", m_Ctrl);
+        traceLog(strange);
 
         double alpha = 0.0;
         double phi   = m_pBtPolar->phi(m_Ctrl);
@@ -254,7 +255,7 @@ void BoatTask::loop()
         if(nWakeIter>1) traceStdLog("      Starting vorton loop\n");
         for(int ivw=0; ivw<nWakeIter; ivw++)
         {
-            if(m_pPolar3d->bVortonWake()) traceStdLog(std::format("        VPW iteration {0:3d}/{1:d}\n", ivw+1, nWakeIter));
+            if(m_pPolar3d->bVortonWake()) traceLog(QString::asprintf("        VPW iteration %3d/%d\n", ivw+1, nWakeIter));
 
             if(m_pPolar3d->bVortonWake())
                 m_pPA->makeRHSVWVelocities(VField);
@@ -321,8 +322,8 @@ void BoatTask::loop()
         if (isCancelled()) return;
         traceStdLog(" done\n");
 
-        strange = std::format("      Computing boat for control parameter={0:.3f}\n", m_Ctrl);
-        traceStdLog(strange);
+        strange = QString::asprintf("      Computing boat for control parameter=%.3f\n", m_Ctrl);
+        traceLog(strange);
         BoatOpp *pBtOpp = computeBoat(0);
         m_BtOppList.push_back(pBtOpp);
 
@@ -392,7 +393,7 @@ BoatOpp* BoatTask::computeBoat(int qrhs)
     for(int is=0; is<nSails; is++)
     {
         Sail *pSail = m_pBoat->sail(is);
-        traceStdLog("         Calculating " + pSail->name()+EOLch);
+        traceStdLog("         Calculating " + pSail->name()+EOLstr);
 
         //restore the saved unit inviscid results
         pSail->m_SpanResFF = m_SpanDist[is];

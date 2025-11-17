@@ -20,7 +20,7 @@
 
 *****************************************************************************/
 
-#include <format>
+#
 #include <cstring>
 
 #include "xfoil.h"
@@ -664,12 +664,10 @@ bool XFoil::abcopy()
     }
     else if(nb>IQX-2)
     {
-        std::string str1 = std::format("Maximum number of panel nodes  : %{0:d}\n", IQX-2);
-        std::string str2 = std::format("Number of buffer airfoil points: %{0:d}\n", nb);
-        str2.append("Current airfoil cannot be set\n");
-        str2.append("Try executing PANE at top level instead");
-        str1.append(str2);
-        writeString(str1);
+        std::stringstream ss;
+        ss <<"Excessive number of airfoil points surface points: " << nb <<"\n";
+        ss <<"Current airfoil cannot be set\n";
+        writeString(ss.str());
         return false;
     }
     if(n!=nb) lblini = false;
@@ -3721,10 +3719,11 @@ void XFoil::hipnt(double chpnt, double thpnt)
     arot = atan2(yle-yte,xte-xle) / dtor;
     if(fabs(arot)>1.0)
     {
-        std::string str  = "Warning: High does not work well on rotated foils\n";
-        std::string strong = std::format("Current chordline angle: {0:5.2f}\nproceeding anyway...", arot);
-        str.append(strong);
-        writeString(str, true);
+        std::stringstream ss;
+        ss << "Warning: High does not work well on rotated foils\n";
+        ss << "Current chordline angle: "<<arot<<"\n";
+        ss << "Proceeding anyway...\n";
+        writeString(ss.str(), true);
     }
 
     //---- find leftmost point location
@@ -4006,8 +4005,9 @@ bool XFoil::iblpan()
         std::string str("iblpan :  ***  bl array overflow");
         writeString(str, true);
 
-        str = std::format("Increase IVX to at least {0:d}\n", iblmax);
-        writeString(str, true);
+        std::stringstream ss;
+        ss << "Increase IVX to at least " << iblmax << "\n";
+        writeString(ss.str(), true);
         return false;
     }
 
@@ -4459,7 +4459,6 @@ bool XFoil::mhinge()
  * ----------------------------------------------------- */
 bool XFoil::mrchdu()
 {
-    std::string str;
 
     double vtmp[5][6], vztmp[5];
     memset(vtmp, 0, 30*sizeof(double));
@@ -4663,9 +4662,11 @@ bool XFoil::mrchdu()
                 if(dmax<=deps) goto stop110;
             }
 
-
-            str = std::format("     mrchdu: convergence failed at {0:d} ,  side {1:d}, res={2:5.3f}\n", ibl, is, dmax);
-            writeString(str, true);
+            {
+                std::stringstream ss;
+                ss<< "     mrchdu: convergence failed at "<< ibl <<"  side "<< is <<" res="<< dmax<<"\n";
+                writeString(ss.str(), true);
+            }
 
             if (dmax<= 0.1) goto stop109;
             //------ the current unconverged solution might still be reasonable...
@@ -4788,8 +4789,9 @@ bool XFoil::mrchue()
     for (is=1;is<= 2;is++)
     {//2000
 
-        std::string str = std::format("    Side {0:d} ...\n", is);
-        writeString(str);
+        std::stringstream ss;
+        ss << "    Side "<<is<<" ...\n";
+        writeString(ss.str());
 
         //---- set forced transition arc length position
         xifset(is);
@@ -4941,9 +4943,11 @@ bool XFoil::mrchue()
                         if(wake) htarg = std::max(htarg , 1.01);
                         else htarg = std::max(htarg , hmax);
 
-                        std::string str;
-                        str = std::format("     mrchue: inverse mode at {0:d}    hk = {1:.3f}\n", ibl, htarg);
-                        writeString(str);
+                        {
+                            std::stringstream ss;
+                            ss<< "     mrchue: inverse mode at "<<ibl<<"    hk = "<<htarg <<"\n";
+                            writeString(ss.str());
+                        }
 
 
                         //---------- try again with prescribed hk
@@ -4989,9 +4993,11 @@ stop100:
                 int nothing=1;      (void)nothing;    //c++ doesn(t like gotos
             }//end itbl loop
 
-
-            str = std::format("     mrchue: convergence failed at {0:d},  side {1:d}, res = {2:.3f}\n",  ibl, is, dmax);
-            writeString(str, true);
+            {
+                std::stringstream ss;
+                ss<< "     mrchue: convergence failed at "<<ibl<< " side "<<is<<", res = " << dmax <<"\n";
+                writeString(ss.str());
+            }
 
             //------ the current unconverged solution might still be reasonable...
             if(dmax > 0.1)
@@ -5169,8 +5175,10 @@ bool XFoil::mrcl(double cls, double &m_cls, double &r_cls)
         //TRACE("     artificially limiting re to %f\n",reinf1*100.0);
         std::string str("mrcl: cl too low for chosen Re(Cl) dependence\n");
         writeString(str, true);
-        str = std::format("      artificially limiting Re to {0:.0f}\n", reinf1*100.0);
-        writeString(str, true);
+
+        std::stringstream ss;
+        ss<< "      artificially limiting Re to "<< reinf1*100.0<<"\n";
+        writeString(ss.str(), true);
         reinf = reinf1*100.0;
         r_cls = 0.0;
     }
@@ -7297,8 +7305,6 @@ bool XFoil::setbl()
             if(ibl==itran[is] && !tran)
             {
                 //TRACE("setbl: xtr???  n1=%d n2=%d: \n", ampl1, ampl2);
-                std::string str = std::format("setbl: xtr???  n1={0:g} n2={1:g}: \n", ampl1, ampl2);
-                writeString(str);
             }
 
             //---- assemble 10x4 linearized system for dctau, dth, dds, due, dxi
@@ -7525,16 +7531,16 @@ bool XFoil::setbl()
         std::string strOut;
         if(tforce[is])
         {
-            strOut = std::format("     Side {0:d}, forced transition at x/c = {1:.4f} {2:d}\n",  is, xoctr[is], itran[is]);
+//            strOut = QString::asprintf("     Side %d, forced transition at x/c = {:.4f} {:d}\n",  is, xoctr[is], itran[is]);
             //TRACE(strOut);
-            writeString(strOut);
+//            writeString(strOut);
 
         }
         else
         {
-            strOut = std::format("     Side {0:d}, ffree transition at x/c = {1:.4f} {2:d}\n",  is, xoctr[is], itran[is]);
+//            strOut = QString::asprintf("     Side %d, ffree transition at x/c = {:.4f} {:d}\n",  is, xoctr[is], itran[is]);
             //TRACE(strOut);
-            writeString(strOut);
+//            writeString(strOut);
         }
 
         //---- next airfoil side
@@ -9796,19 +9802,19 @@ bool XFoil::ViscousIter()
     //    ------ display changes and test for convergence
     if(rlx<1.0)
     {
-        str =std::format("     rms:{0:7g}   max:{1:7g} at {2:d} {3:d}   rlx:{4:.3f}\n", rmsbl, rmxbl, imxbl, ismxbl, rlx);
+//        str =QString::asprintf("     rms:%7g   max:%7g at {:d} {3:d}   rlx:{4:.3f}\n", rmsbl, rmxbl, imxbl, ismxbl, rlx);
     }
     else if(fabs(rlx-1.0)<0.001)
     {
-        str =std::format("     rms:{0:7g}   max:{1:7g} at {2:d} {3:d}\n", rmsbl,rmxbl,imxbl, ismxbl);
+//        str =QString::asprintf("     rms:%7g   max:%7g at {:d} {3:d}\n", rmsbl,rmxbl,imxbl, ismxbl);
     }
 
-    writeString(str);
+//    writeString(str);
 
     cdp = cd - cdf;
 
-    str = std::format("     a={0:.3f}    cl={1:.5f}\n     cm={2:.5f}  cd={3:.5f} => cdf={4:.5f} cdp={5:.5f}\n\n", alfa/dtor, cl, cm, cd, cdf, cdp);
-    writeString(str);
+//    str = QString::asprintf("     a=%.3f    cl={:.5f}\n     cm={:.5f}  cd={3:.5f} => cdf={4:.5f} cdp={5:.5f}\n\n", alfa/dtor, cl, cm, cd, cdf, cdp);
+//    writeString(str);
 
 
 /*    std::size_t pos = str.find("QN");
@@ -9964,8 +9970,8 @@ bool XFoil::xifset(int is)
 
     if(xiforc < 0.0) {
         //TRACE(" ***  stagnation point is past trip on side %d\n", is);
-        std::string str = std::format(" ***  stagnation point is past trip on side {0:d}\n", is);
-        writeString(str);
+//        std::string str = QString::asprintf(" ***  stagnation point is past trip on side %d\n", is);
+//        writeString(str);
 
         xiforc = xssi[iblte[is]][is];
     }
@@ -11234,8 +11240,8 @@ void XFoil::qccalc(int ispec,double *alfa, double *cl, double *cm,
         }
 
     }
-    std::string str = std::format("qccalc: cl convergence failed.  dalpha = {0:.3g}", dalfa);
-    writeString(str);
+//    std::string str = QString::asprintf("qccalc: cl convergence failed.  dalpha = {:.3g}", dalfa);
+//    writeString(str);
 }
 
 

@@ -110,6 +110,7 @@ class FL5LIB_EXPORT PanelAnalysis
         void computeTranslationDerivatives(double alphaeq, double u0, Vector3d const &CoG, bool bFuseMi, StabDerivatives &SD, Vector3d &Force0, Vector3d &Moment0);
         void computeAngularDerivatives(    double alphaeq, double u0, Vector3d const &CoG, bool bFuseMi, StabDerivatives &SD);
 
+        void traceLog(const QString &str) const;
         void traceStdLog(const std::string &str) const;
         inline double sourceStrength(const Vector3d &normal, Vector3d const &Velocity) const {return -1.0/4.0/PI * Velocity.dot(normal);}
         void releasePanelArrays();

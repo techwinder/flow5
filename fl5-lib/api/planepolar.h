@@ -171,9 +171,9 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
 
         void makeDataArrays();
 
-        void getProperties(std::string &PolarProps, const Plane *pPlane) const;
+        void getProperties(std::string &props, const Plane *pPlane) const;
 
-        void getWPolarData(std::string &polardata, const std::string &sep) const;
+        void getWPolarData(std::string &data, const std::string &separator) const;
 
         bool hasPOpp(PlaneOpp const *pPOpp) const;
 

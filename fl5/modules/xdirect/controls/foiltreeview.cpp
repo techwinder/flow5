@@ -1042,13 +1042,13 @@ void FoilTreeView::removePolarOpps(Polar const*pPolar)
 
     for(int ir=0; ir<m_pModel->rowCount(); ir++)
     {
-        ObjectTreeItem *pPolarItem = m_pModel->item(ir);
+        ObjectTreeItem *pFoilItem = m_pModel->item(ir);
         // find the polar's parent Plane item
-        if(pPolarItem->name().toStdString().compare(pPolar->foilName())==0)
+        if(pFoilItem->name().toStdString().compare(pPolar->foilName())==0)
         {
-            for(int jr=0; jr<pPolarItem->rowCount(); jr++)
+            for(int jr=0; jr<pFoilItem->rowCount(); jr++)
             {
-                ObjectTreeItem *pPolarItem = pPolarItem->child(jr);
+                ObjectTreeItem *pPolarItem = pFoilItem->child(jr);
                 if(pPolarItem->name().toStdString().compare(pPolar->name())==0)
                 {
                     QModelIndex polarindex = m_pModel->index(jr, 0, pPolarItem);

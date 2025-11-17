@@ -37,7 +37,7 @@
 #include <modules/xsail/view/gl3dxsailview.h>
 #include <core/xflcore.h>
 
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 
 
@@ -82,7 +82,7 @@ void Opp3dScalesCtrls::setupLayout()
         {
             QGridLayout *pCpScaleLayout = new QGridLayout;
             {
-                QLabel *plabGamma    = new QLabel(GAMMACHAR);
+                QLabel *plabGamma    = new QLabel(GAMMAch);
                 QLabel *plabCp       = new QLabel("Cp");
                 QLabel *plabPressure = new QLabel("Pressure");
                 plabGamma->setAlignment(   Qt::AlignCenter);

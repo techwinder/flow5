@@ -22,8 +22,8 @@
 
 *****************************************************************************/
 
+#include <QDebug>
 
-#include <format>
 #include <filesystem>
 
 
@@ -54,28 +54,28 @@
 void gmesh::listMainOptions(std::string &list)
 {
     list  = "gmsh main options:\n";
-    list += EOLch;
+    list += EOLstr;
     list += "   General:\n";
-    list += "      " + getStringOption("General.Version")                      + EOLch;
-    list += "      " + getStringOption("General.BuildInfo")                    + EOLch;
-    list += "      " + getNumberOption("General.Terminal")                     + EOLch;
-    list += "      " + getNumberOption("General.Verbosity")                    + EOLch;
-    list += "      " + getNumberOption("General.NumThreads")                   + EOLch; /** @todo test */
+    list += "      " + getStringOption("General.Version")                      + EOLstr;
+    list += "      " + getStringOption("General.BuildInfo")                    + EOLstr;
+    list += "      " + getNumberOption("General.Terminal")                     + EOLstr;
+    list += "      " + getNumberOption("General.Verbosity")                    + EOLstr;
+    list += "      " + getNumberOption("General.NumThreads")                   + EOLstr; /** @todo test */
 
-    list += EOLch;
+    list += EOLstr;
     list += "   Geometry:\n";
-    list += "      " + getNumberOption("Geometry.OCCBooleanGlue")              + EOLch;
-    list += "      " + getNumberOption("Geometry.OCCBooleanSimplify")          + EOLch;
-    list += "      " + getNumberOption("Geometry.OCCBoundsUseStl")             + EOLch;
-    list += "      " + getNumberOption("Geometry.OCCBrepFormatVersion")        + EOLch;
-    list += "      " + getNumberOption("Geometry.OCCFixDegenerated")           + EOLch;
-    list += "      " + getNumberOption("Geometry.OCCFixSmallEdges")            + EOLch;
-    list += "      " + getNumberOption("Geometry.OCCFixSmallFaces")            + EOLch;
-    list += "      " + getNumberOption("Geometry.OCCParallel")                 + EOLch; /** @todo test */
-    list += "      " + getNumberOption("Geometry.OCCFastUnbind")               + EOLch;
-    list += "      " + getNumberOption("Geometry.OCCSewFaces")                 + EOLch;
-    list += "      " + getNumberOption("Geometry.OCCUseGenericClosestPoint")   + EOLch; /** @todo test */
-    list += EOLch;
+    list += "      " + getNumberOption("Geometry.OCCBooleanGlue")              + EOLstr;
+    list += "      " + getNumberOption("Geometry.OCCBooleanSimplify")          + EOLstr;
+    list += "      " + getNumberOption("Geometry.OCCBoundsUseStl")             + EOLstr;
+    list += "      " + getNumberOption("Geometry.OCCBrepFormatVersion")        + EOLstr;
+    list += "      " + getNumberOption("Geometry.OCCFixDegenerated")           + EOLstr;
+    list += "      " + getNumberOption("Geometry.OCCFixSmallEdges")            + EOLstr;
+    list += "      " + getNumberOption("Geometry.OCCFixSmallFaces")            + EOLstr;
+    list += "      " + getNumberOption("Geometry.OCCParallel")                 + EOLstr; /** @todo test */
+    list += "      " + getNumberOption("Geometry.OCCFastUnbind")               + EOLstr;
+    list += "      " + getNumberOption("Geometry.OCCSewFaces")                 + EOLstr;
+    list += "      " + getNumberOption("Geometry.OCCUseGenericClosestPoint")   + EOLstr; /** @todo test */
+    list += EOLstr;
 }
 
 
@@ -85,8 +85,8 @@ std::string gmesh::getNumberOption(std::string name)
     double number(0);
     gmsh::option::getNumber(name, number);
     name.resize(nchar, ' ');
-    std::string str = name + std::format(":  {:g}", number);
-    return str;
+    QString str = QString::fromStdString(name) + QString::asprintf(":  %g", number);
+    return str.toStdString();
 }
 
 
@@ -101,7 +101,7 @@ std::string gmesh::getStringOption(std::string name)
 }
 
 
-void gmesh::listModelEntities(std::string &list)
+void gmesh::listModelEntities(QString &list)
 {
     list = "Model entities:\n";
 
@@ -113,12 +113,12 @@ void gmesh::listModelEntities(std::string &list)
     {
         std::pair<int, int> const &entity = modelenditiesdimTags.at(k);
         gmsh::model::getEntityType(entity.first, entity.second, entityType);
-        list += std::format("   entity dim={0:d}, tag={1:d}, name=",entity.first, entity.second)+entityType+EOLch;
+        list += QString::asprintf("   entity dim=%d, tag=%d, name=",entity.first, entity.second)+QString::fromStdString(entityType)+EOLch;
     }
 }
 
 
-void gmesh::listModel(std::string &list)
+void gmesh::listModel(QString &list)
 {
     std::vector<std::pair<int, int> > entities;
     gmsh::model::getEntities(entities);
@@ -129,7 +129,7 @@ void gmesh::listModel(std::string &list)
         return;
     }
 
-    std::string strange;
+    QString strange;
 
     for(uint i=0; i<entities.size(); i++)
     {
@@ -151,8 +151,8 @@ void gmesh::listModel(std::string &list)
         std::string type;
         gmsh::model::getType(dim, tag, type);
 
-        strange  = std::format("entity {0:d}: dim={1:d}, tag{2:d}, ", i, dim, tag)+ type;
-        strange += std::format(" nNodes={0:d}, nElements={1:d}", int(nodeTags.size()), numElem);
+        strange  = QString::asprintf("entity %d: dim=%d, tag%d, ", i, dim, tag)+ QString::fromStdString(type);
+        strange += QString::asprintf(" nNodes=%d, nElements=%d", int(nodeTags.size()), numElem);
         list += strange+EOLch;
 
 
@@ -164,25 +164,25 @@ void gmesh::listModel(std::string &list)
             std::vector<double> param;
             gmsh::model::mesh::getElementProperties(elemTypes[j], name, d, order,
                                                     numv, param, numpv);
-            list += "Element type:" + name;
-            list += std::format(", order {0:d} with {1:d} nodes in param coord:", order, numv);
-            for(uint k=0; k<param.size(); k++)  list += std::format("   %11g", param[k]);
+            list += "Element type:" + QString::fromStdString(name);
+            list += QString::asprintf(", order %d with %d nodes in param coord:", order, numv);
+            for(uint k=0; k<param.size(); k++)  list += QString::asprintf("   %11g", param[k]);
             list += EOLch;
         }
     }
 }
 
 
-void gmesh::convertFromGmsh(std::vector<Triangle3d> &triangles, std::string &log)
+void gmesh::convertFromGmsh(std::vector<Triangle3d> &triangles, QString &log)
 {
-    std::string strange;
+    QString strange;
     std::vector<std::size_t> elementTags;
     std::vector<std::size_t> nodeTags;
     const int ElementType = 2; // triangles
 
     gmsh::model::mesh::getElementsByType(ElementType, elementTags, nodeTags);
 
-    strange = std::format("Built {0:d} type 2 elements\n", int(elementTags.size()));
+    strange = QString::asprintf("Built %d type 2 elements\n", int(elementTags.size()));
     log += strange;
 
     if(elementTags.size()<=0)
@@ -201,7 +201,7 @@ void gmesh::convertFromGmsh(std::vector<Triangle3d> &triangles, std::string &log
                                 parametricCoord,
                                 dim, tag,
                                 false, false);
-    strange = std::format("Built {0:d} nodes and {1:d} coordinates\n", int(nodetags.size()), int(coord.size()));
+    strange = QString::asprintf("Built %d nodes and %d coordinates\n", int(nodetags.size()), int(coord.size()));
     log += strange;
     assert(coord.size() == 3*nodetags.size());
 
@@ -227,7 +227,7 @@ void gmesh::convertFromGmsh(std::vector<Triangle3d> &triangles, std::string &log
 
 
 void gmesh::convertTriangles(std::vector<std::size_t>const&elementTags,
-                             std::vector<Vector3d> const &node, std::vector<Triangle3d> &m_Triangles, std::string &log)
+                             std::vector<Vector3d> const &node, std::vector<Triangle3d> &m_Triangles, QString &log)
 {
     std::vector<std::size_t> elementnodetags;
     int elementtype = -1;
@@ -258,8 +258,8 @@ void gmesh::convertTriangles(std::vector<std::size_t>const&elementTags,
     }
     m_Triangles.insert(m_Triangles.end(), triangles.begin(), triangles.end());
 
-    log += std::format("Min. element size = {0:g}\n", minsize);
-    log += std::format("Max. element size = {0:g}\n", maxsize);
+    log += QString::asprintf("Min. element size = %g\n", minsize);
+    log += QString::asprintf("Max. element size = %g\n", maxsize);
 }
 
 
@@ -632,7 +632,7 @@ bool gmesh::translateBrep(std::string const&brep, Vector3d const &T, std::string
 
 
 // untested
-bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, std::string &log)
+bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, QString &log)
 {
     if(!pWing) return false;
 
@@ -677,7 +677,7 @@ bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, std::string &log
         }
         catch(...)
         {
-            log += std::format("Error making wing section {:d}... aborting\n", is);
+            log += QString::asprintf("Error making wing section %d... aborting\n", is);
             return false;
         }
     }
@@ -915,7 +915,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
 
     auto t1 = std::chrono::high_resolution_clock::now();
     int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    std::cout << std::format("gmesh::fragment: {:7g} ms", float(duration)/1000.0) << std::endl;
+    qDebug() << QString::asprintf("gmesh::fragment: %7g ms\n", float(duration)/1000.0);
 
     gmsh::model::occ::synchronize();
     for(uint l=0; l<outDimTags.size(); l++)
@@ -1024,7 +1024,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
 }
 
 
-void gmesh::tessellateBRep(std::string const&BRep, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log)
+void gmesh::tessellateBRep(std::string const&BRep, GmshParams const &params, std::vector<Triangle3d> &triangles, QString &log)
 {
     gmsh::clear();
     gmsh::model::add("BRep");
@@ -1050,7 +1050,7 @@ void gmesh::tessellateBRep(std::string const&BRep, GmshParams const &params, std
 }
 
 
-void gmesh::tessellateShape(TopoDS_Shape const&Shape, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log)
+void gmesh::tessellateShape(TopoDS_Shape const&Shape, GmshParams const &params, std::vector<Triangle3d> &triangles, QString &log)
 {
     gmsh::clear();
     gmsh::model::add("TopoDS_Shape");
@@ -1067,7 +1067,7 @@ void gmesh::tessellateShape(TopoDS_Shape const&Shape, GmshParams const &params, 
 
 
 /** @todo unusable: importShapesNativePointer throws an unknown exception */
-void gmesh::tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log)
+void gmesh::tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std::vector<Triangle3d> &triangles, QString &log)
 {
     gmsh::clear();
     gmsh::model::add("Face");
@@ -1097,9 +1097,9 @@ void gmesh::tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std
 /** alternative to using the in-class makeShellTriangulation method */
 void gmesh::makeSailOccTriangulation(SailOcc *pSailOcc)
 {
-    std::string strong, prefix;
+    QString strong, prefix;
 
-    std::string m_LogMsg;
+    QString logmsg;
 
     pSailOcc->clearTriangles();
 
@@ -1134,28 +1134,28 @@ void gmesh::makeSailOccTriangulation(SailOcc *pSailOcc)
     else*/
     {
         for(uint i=0; i<pSailOcc->bReps().size(); i++)
-            gmesh::tessellateBRep(pSailOcc->bReps().at(i), pSailOcc->gmshTessParams(), triangles, m_LogMsg);
+            gmesh::tessellateBRep(pSailOcc->bReps().at(i), pSailOcc->gmshTessParams(), triangles, logmsg);
     }
 
 
     pSailOcc->setTriangles(triangles);
 
-    strong = std::format("Made {0:d} triangles\n", pSailOcc->nTriangles());
-    m_LogMsg +=prefix + strong;
+    strong = QString::asprintf("Made %d triangles\n", pSailOcc->nTriangles());
+    logmsg +=prefix + strong;
     int nnodes = pSailOcc->triangulation().makeNodes();
 
-    strong = std::format("Made {0:d} nodes\n", nnodes);
-    m_LogMsg +=prefix + strong;
+    strong = QString::asprintf("Made %d nodes\n", nnodes);
+    logmsg +=prefix + strong;
     pSailOcc->makeNodeNormals(false);
 
     strong = "Made node normals\n";
-    m_LogMsg +=prefix + strong;
+    logmsg +=prefix + strong;
 }
 
 
-int gmesh::makeFuseTriangulation(Fuse *pFuse, std::string &logmsg, const std::string &prefix)
+int gmesh::makeFuseTriangulation(Fuse *pFuse, QString &logmsg, const QString &prefix)
 {
-    std::string strong;
+    QString strong;
     logmsg.clear();
 
     pFuse->clearTriangles();
@@ -1187,7 +1187,7 @@ int gmesh::makeFuseTriangulation(Fuse *pFuse, std::string &logmsg, const std::st
             }
             else
             {
-                logmsg += prefix + std::format("Error tessellating shell {0:d}\n", iShell);
+                logmsg += prefix + QString::asprintf("Error tessellating shell %d\n", iShell);
             }
         }
         iShell++;
@@ -1197,11 +1197,11 @@ int gmesh::makeFuseTriangulation(Fuse *pFuse, std::string &logmsg, const std::st
 
     if(pFuseXfl) pFuseXfl->triangulation().makeXZsymmetric();
 
-    strong = std::format("Made {0:d} triangles\n", pFuse->nTriangles());
+    strong = QString::asprintf("Made %d triangles\n", pFuse->nTriangles());
     logmsg +=prefix + strong;
     int nnodes = pFuse->makeTriangleNodes();
 
-    strong = std::format("Made {0:d} nodes\n", nnodes);
+    strong = QString::asprintf("Made %d nodes\n", nnodes);
     logmsg +=prefix + strong;
     pFuse->makeNodeNormals(false);
 

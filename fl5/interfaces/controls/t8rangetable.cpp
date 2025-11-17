@@ -34,7 +34,7 @@
 #include <interfaces/widgets/customwts/xfldelegate.h>
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
-#include <core/qunits.h>
+#include <api/units.h>
 #include <api/utils.h>
 
 
@@ -64,9 +64,9 @@ T8RangeTable::T8RangeTable(QWidget *pParent) : CPTableView(pParent)
     m_pRangeModel->setRowCount(1);//temporary
     m_pRangeModel->setColumnCount(4);
     m_pRangeModel->setHeaderData(0, Qt::Horizontal, QString());
-    m_pRangeModel->setHeaderData(1, Qt::Horizontal, ALPHACHAR);
-    m_pRangeModel->setHeaderData(2, Qt::Horizontal, BETACHAR);
-    m_pRangeModel->setHeaderData(3, Qt::Horizontal, QString("V")+INFCHAR + " ("+QUnits::speedUnitLabel()+")");
+    m_pRangeModel->setHeaderData(1, Qt::Horizontal, ALPHAch);
+    m_pRangeModel->setHeaderData(2, Qt::Horizontal, BETAch);
+    m_pRangeModel->setHeaderData(3, Qt::Horizontal, QString("V")+INFch + " ("+QUnits::speedUnitLabel()+")");
     setModel(m_pRangeModel);
 
     m_pRangeDelegate = new XflDelegate(this);
