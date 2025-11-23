@@ -176,7 +176,7 @@ void T123578PolarDlg::initPolar3dDlg(const Plane *pPlane, const PlanePolar *pWPo
 {
     PlanePolarDlg::initPolar3dDlg(pPlane, pWPolar);
 
-    if(!pWPolar || pWPolar->isType6())
+    if(pWPolar && pWPolar->isType6())
         s_WPolar.setType(xfl::T1POLAR);
 
     switch(s_WPolar.type())

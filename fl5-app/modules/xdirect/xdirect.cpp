@@ -1143,7 +1143,6 @@ void XDirect::saveSettings(QSettings &settings)
 }
 
 
-
 void XDirect::onAnalyze()
 {
     if(!s_pCurFoil || !s_pCurPolar) return;
@@ -1206,7 +1205,7 @@ void XDirect::onFinishAnalysis()
     }
 
     if(s_pCurOpp) m_pFoilTreeView->selectOpPoint(s_pCurOpp);
-    else         m_pFoilTreeView->selectPolar(s_pCurPolar);
+    else          m_pFoilTreeView->selectPolar(  s_pCurPolar);
 
     //refresh the view
     m_bResetCurves = true;

@@ -277,7 +277,7 @@ class FL5LIB_EXPORT WingXfl : public Part
         bool checkFoils(std::string &log) const;
 
         int nTriangles() const;
-        void exportAVLWing(std::string &avlstring, int index, double y, double Thetay, double lengthunit) const;
+        void exportWingToAVL(std::string &avlstring, int index, double y, double Thetay, double lengthunit) const;
 
         void resizeSpanDistribs(int nStations=-1);
 

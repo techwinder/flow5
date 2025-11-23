@@ -93,13 +93,13 @@ linux-g++ {
     #   Ensure that the paths to the binary libraries
     #   are known either by defining them at system level
     #   or by setting them explicitely in this section
-    LIBS += -L/usr/local/lib/
+    LIBS += -L/usr/local/lib/            # redundant
 
 
 
     #--------------------- GMSH ------------------------
     INCLUDEPATH += /usr/local/include/
-    LIBS += -L/usr/local/lib
+#    LIBS += -L/usr/local/lib64           # redundant
     LIBS += -lgmsh
 }
 

@@ -279,7 +279,7 @@ void gmesh::makeModelCurves(std::vector<std::vector<Vector3d>> &curves)
     {
         std::pair<int, int> const &entity = modelenditiesdimTags.at(k);
 //        gmsh::model::getEntityType(entity.first, entity.second, entityType);
-//        m_pptoF5->onAppendThisPlainText("   entity dim=%d, tag=%d, name="+std::string::fromStdString(entityType)+EOLCHAR);
+//        m_pptoF5->onAppendQText("   entity dim=%d, tag=%d, name="+std::string::fromStdString(entityType)+EOLCHAR);
         if(entity.first==DIM) // lines
         {
             gmsh::model::getValue(entity.first, entity.second, param, coord);

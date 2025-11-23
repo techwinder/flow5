@@ -901,7 +901,7 @@ void OptimPlaneDlg::customEvent(QEvent *pEvent)
     else if(pEvent->type() == MESSAGE_EVENT)
     {
 /*        MessageEvent *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
-        m_ppto->onAppendThisPlainText(pMsgEvent->msg()); */
+        m_ppto->onAppendQText(pMsgEvent->msg()); */
     }
     else if(pEvent->type() == OPTIM_ITER_EVENT)
     {

@@ -651,7 +651,7 @@ bool LLTTask::alphaLoop()
                 if(!pPOpp->isOut()) // discard failed visc interpolated opps
                     m_pPlPolar->addPlaneOpPointData(pPOpp);
 
-                if(s_bKeepOpps)
+                if(m_bKeepOpps)
                 {
                     m_PlaneOppList.push_back(pPOpp);
                 }

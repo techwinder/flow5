@@ -224,7 +224,7 @@ class MainFrame : public QMainWindow
         void onShowGraphLegend();
         void onShowLogWindow(bool bShow=true);
         void onTraceFile();
-        void onTestRun();
+        int onTestRun();
 
         //___________________________________________Variables_______________________________
     private:

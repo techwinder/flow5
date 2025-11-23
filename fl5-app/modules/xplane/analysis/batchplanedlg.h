@@ -88,7 +88,7 @@ class BatchPlaneDlg : public QDialog
         void onMessage(QString const &msg);
         void onPlaneTaskStarted(int iTask);
         void onResizeColumns();
-        void onStorePOpps();
+        void onOption();
         void reject() override;
 
     private:
@@ -108,6 +108,7 @@ class BatchPlaneDlg : public QDialog
 
         QTabWidget *m_pTabWidget;
         QCheckBox *m_pchStorePOpps;
+        QCheckBox *m_pchStabDerivatives;
 
         QPushButton *m_ppbAnalyze;
 

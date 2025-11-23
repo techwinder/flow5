@@ -146,8 +146,8 @@ class XPlane : public QObject
         Plane *setModPlane(Plane *pModPlane, bool bUsed, bool bAsNew);
         void setStabTimeYVariables(bool bLong);
         void setView(xfl::enumGraphView eView);
-        void setWPolar(const QString &WPlrName);
-        void setWPolar(PlanePolar *pWPolar=nullptr);
+        void setPolar(const QString &PlrName);
+        void setPolar(PlanePolar *pPlPolar=nullptr);
         void stopAnimate();
         void stopAnimateMode();
         void updateTreeView();

@@ -36,8 +36,6 @@
 #include <p3linanalysis.h>
 
 
-bool Task3d::s_bStdOut= false;
-bool Task3d::s_bKeepOpps = false;
 bool Task3d::s_bCancel = false;
 
 int Task3d::s_MaxNRHS = 100;
@@ -58,6 +56,9 @@ Task3d::Task3d()
 
     m_bError = m_bWarning = false;
     m_bStopVPWIterations = false;
+
+    m_bKeepOpps = false;
+    m_bStdOut   = false;
 
     m_qRHS = -1;
     m_nRHS = 0;
@@ -89,7 +90,7 @@ void Task3d::traceStdLog(std::string const &str)
     m_cv.notify_all();
 
     // output to the terminal
-    if(s_bStdOut)
+    if(m_bStdOut)
     {
         printf(str.c_str());
     }

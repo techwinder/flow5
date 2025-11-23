@@ -230,12 +230,8 @@ void PlaneAnalysisDlg::onTaskFinished()
 
     m_pLastPOpp = nullptr;
 
-    // make sure we don't lose anything
-    for(PlaneOpp *pPOpp : m_pActiveTask->planeOppList())
-    {
-        Objects3d::insertPlaneOpp(pPOpp);
-        m_pLastPOpp = pPOpp;
-    }
+    if(m_pActiveTask->planeOppList().size())
+        m_pLastPOpp = m_pActiveTask->planeOppList().back();
 
 
     QString strong="\n";
@@ -367,9 +363,9 @@ PlaneTask* PlaneAnalysisDlg::analyze(Plane *pPlane, PlanePolar *pPlPolar, std::v
 
     update();
 
-    PlaneTask::setKeepOpps(XPlane::bStoreOpps3d());
 
     m_pActiveTask = new PlaneTask;
+    m_pActiveTask->setKeepOpps(XPlane::bStoreOpps3d());
 
     m_pActiveTask->setObjects(pPlane, pPlPolar);
 
@@ -384,7 +380,6 @@ PlaneTask* PlaneAnalysisDlg::analyze(Plane *pPlane, PlanePolar *pPlPolar, std::v
     m_bHasErrors = false;
 
     // Launch the task async to keep the UI responsive
-
     QFuture<void> future = QtConcurrent::run(&PlaneAnalysisDlg::runAsync, this);
     (void)future;
 

@@ -67,7 +67,7 @@ LLTAnalysisDlg::LLTAnalysisDlg(QWidget *pParent) : QDialog(pParent)
 
     setupLayout();
 
-    m_pTheLLTTask = nullptr;
+    m_pLLTTask = nullptr;
 
     m_pIterGraph = new Graph();
     m_pIterGraph->setCurveModel(new CurveModel());
@@ -98,7 +98,7 @@ LLTAnalysisDlg::LLTAnalysisDlg(QWidget *pParent) : QDialog(pParent)
 
 LLTAnalysisDlg::~LLTAnalysisDlg()
 {
-    if(m_pTheLLTTask) delete m_pTheLLTTask;
+    if(m_pLLTTask) delete m_pLLTTask;
     if(m_pIterGraph)
     {
         delete m_pIterGraph->curveModel();
@@ -125,7 +125,7 @@ void LLTAnalysisDlg::keyPressEvent(QKeyEvent *pEvent)
 
 void LLTAnalysisDlg::onCancelAnalysis()
 {
-    if(m_pTheLLTTask) m_pTheLLTTask->setCancelled(true);
+    if(m_pLLTTask) m_pLLTTask->setCancelled(true);
     if(m_bFinished) accept();
 }
 
@@ -203,19 +203,19 @@ void LLTAnalysisDlg::initDialog(PlaneXfl *pPlane, PlanePolar *pWPolar, std::vect
     m_pIterGraph->setLegendVisible(true);
     m_pIterGraph->setLegendPosition(Qt::AlignTop | Qt::AlignHCenter);
 
-    m_pTheLLTTask = new LLTTask;
-    m_pTheLLTTask->setObjects(pPlane, pWPolar);
-    m_pTheLLTTask->setLLTRange(opplist);
-    m_pTheLLTTask->initializeGeom();
+    m_pLLTTask = new LLTTask;
+    m_pLLTTask->setObjects(pPlane, pWPolar);
+    m_pLLTTask->setLLTRange(opplist);
+    m_pLLTTask->initializeGeom();
 }
 
 
 void LLTAnalysisDlg::onTaskFinished()
 {
-    if(!m_pTheLLTTask) return;
+    if(!m_pLLTTask) return;
 
     // make sure we don't lose anything
-    for(PlaneOpp *pPOpp : m_pTheLLTTask->planeOppList())
+    for(PlaneOpp *pPOpp : m_pLLTTask->planeOppList())
     {
         Objects3d::insertPlaneOpp(pPOpp);
         m_pLastPOpp = pPOpp;
@@ -224,20 +224,20 @@ void LLTAnalysisDlg::onTaskFinished()
 
     QString strong="\n";
     outputMessage(strong);
-    if(m_pTheLLTTask->isCancelled())
+    if(m_pLLTTask->isCancelled())
     {
         strong = "Analysis cancelled\n\n";
     }
-    else if (!m_pTheLLTTask->hasErrors())
+    else if (!m_pLLTTask->hasErrors())
         strong = "LLT analysis completed successfully\n\n";
-    else if (m_pTheLLTTask->hasErrors())
+    else if (m_pLLTTask->hasErrors())
         strong = "LLT analysis completed ... Errors encountered\n\n";
     outputMessage(strong);
 
-    m_bHasErrors = m_pTheLLTTask->hasErrors();
+    m_bHasErrors = m_pLLTTask->hasErrors();
     m_ppbCancel->setText("Close");
 
-    emit analysisFinished(m_pTheLLTTask->wPolar());
+    emit analysisFinished(m_pLLTTask->wPolar());
 
     cleanUp();
 }
@@ -272,8 +272,8 @@ void LLTAnalysisDlg::cleanUp()
         pXFile.close();
     }
 
-    delete m_pTheLLTTask;
-    m_pTheLLTTask = nullptr;
+    delete m_pLLTTask;
+    m_pLLTTask = nullptr;
     m_ppbCancel->setText("Close");
     m_ppbCancel->setFocus();
 }
@@ -393,12 +393,12 @@ bool LLTAnalysisDlg::loadSettings(QSettings &settings)
 
 void LLTAnalysisDlg::analyze()
 {
-    if(!m_pTheLLTTask->plane() || !m_pTheLLTTask->wPolar()) return;
+    if(!m_pLLTTask->plane() || !m_pLLTTask->wPolar()) return;
     //all set to launch the analysis
 
-    LLTTask::setKeepOpps(XPlane::bStoreOpps3d());
+    m_pLLTTask->setKeepOpps(XPlane::bStoreOpps3d());
 
-    WingXfl *pWing = m_pTheLLTTask->plane()->mainWing();
+    WingXfl *pWing = m_pLLTTask->plane()->mainWing();
 
     if(!pWing) return;
 
@@ -411,7 +411,7 @@ void LLTAnalysisDlg::analyze()
     QString strange, log;
     strange = QString::fromStdString(pWing->name())+"\n";
     log = strange;
-    strange = QString::fromStdString(m_pTheLLTTask->wPolar()->name()+"\n");
+    strange = QString::fromStdString(m_pLLTTask->wPolar()->name()+"\n");
     log += strange;
 
     strange = "Launching analysis....\n\n";
@@ -434,17 +434,17 @@ void LLTAnalysisDlg::analyze()
 
 void LLTAnalysisDlg::runAsync()
 {
-    m_pTheLLTTask->setAnalysisStatus(xfl::RUNNING);
+    m_pLLTTask->setAnalysisStatus(xfl::RUNNING);
 
-    std::thread p(&LLTTask::run, m_pTheLLTTask);
+    std::thread p(&LLTTask::run, m_pLLTTask);
 
-    while(!m_pTheLLTTask->isFinished())
+    while(!m_pLLTTask->isFinished())
     {
         // Access the Q under the lock:
-        std::unique_lock<std::mutex> lck(m_pTheLLTTask->m_mtx);
-        m_pTheLLTTask->m_cv.wait(lck, [this]() {return !m_pTheLLTTask->m_theOppQueue.empty();} );
-        LLTOppReport xoppreport = m_pTheLLTTask->m_theOppQueue.front();
-        m_pTheLLTTask->m_theOppQueue.pop();
+        std::unique_lock<std::mutex> lck(m_pLLTTask->m_mtx);
+        m_pLLTTask->m_cv.wait(lck, [this]() {return !m_pLLTTask->m_theOppQueue.empty();} );
+        LLTOppReport xoppreport = m_pLLTTask->m_theOppQueue.front();
+        m_pLLTTask->m_theOppQueue.pop();
 
         // forward to the UI thread for user notification
         if(xoppreport.max_a().size())

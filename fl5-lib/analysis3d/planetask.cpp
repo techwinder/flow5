@@ -37,7 +37,6 @@
 #elif defined INTEL_MKL
     #include <mkl.h>
 #elif defined OPENBLAS
-    #include <cblas.h>
     #include <openblas/lapacke.h>
 //    #define lapack_int int
 #endif
@@ -48,6 +47,7 @@
 #include <geom_params.h>
 #include <mesh_globals.h>
 #include <objects2d.h>
+#include <objects3d.h>
 #include <objects_global.h>
 #include <p3linanalysis.h>
 #include <p3unianalysis.h>
@@ -966,17 +966,7 @@ bool PlaneTask::T6Loop()
         PlaneOpp *pPOpp = computePlane(m_Ctrl, m_Alpha, BetaStab, m_Phi, QInfStab, mass, CoG, true);
         traceStdLog(EOLstr);
 
-        if(pPOpp)
-        {
-            //add the data to the polar object
-            if(!pPOpp->isOut())
-            {
-                m_pPlPolar->addPlaneOpPointData(pPOpp);
-            }
-
-            if(s_bKeepOpps) m_PlaneOppList.push_back(pPOpp);
-            else            delete pPOpp;
-        }
+        storePOpp(pPOpp);
 
         if (isCancelled()) return true;
     }
@@ -1959,16 +1949,8 @@ bool PlaneTask::T7Loop()
         if (isCancelled()) return true;
 
         if(computeStability(pPOpp, true))
-        {
-            //add the data to the polar object
-            if(pPOpp)
-            {
-                if(!pPOpp->isOut())
-                    m_pPlPolar->addPlaneOpPointData(pPOpp);
-
-                if(s_bKeepOpps) m_PlaneOppList.push_back(pPOpp);
-                else            delete pPOpp;
-            }
+        {          
+            storePOpp(pPOpp);
         }
         traceStdLog("       Done operating point\n\n");
     }
@@ -2173,20 +2155,29 @@ bool PlaneTask::T123458Loop()
             traceStdLog("          Skipping derivatives and eigenthings\n");
         }
 
-        // store the results
-        if(pPOpp)
-        {
-            if(!pPOpp->isOut()) // discard failed visc interpolated opps
-                m_pPlPolar->addPlaneOpPointData(pPOpp);
-
-            if(s_bKeepOpps) m_PlaneOppList.push_back(pPOpp);
-            else            delete pPOpp;
-        }
+        storePOpp(pPOpp);
 
         traceStdLog("          Done operating point\n\n");
     }
 
     return true;
+}
+
+
+void PlaneTask::storePOpp(PlaneOpp *pPOpp)
+{
+    if(!pPOpp) return;
+
+    if(!pPOpp->isOut()) // discard failed visc interpolated opps
+        m_pPlPolar->addPlaneOpPointData(pPOpp);
+
+    if(m_bKeepOpps)
+    {
+        m_PlaneOppList.push_back(pPOpp);
+        Objects3d::insertPlaneOpp(pPOpp);
+    }
+    else            delete pPOpp;
+
 }
 
 

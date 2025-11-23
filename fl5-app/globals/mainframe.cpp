@@ -1062,13 +1062,14 @@ void MainFrame::createMenus()
 
         m_pHelpMenu->addAction(pOnlineDoc);
         m_pHelpMenu->addAction(pReleaseNotes);
+        m_pHelpMenu->addSeparator();
         m_pHelpMenu->addAction(pCreditsAct);
         m_pHelpMenu->addAction(pAboutQtAct);
         m_pHelpMenu->addSeparator();
         m_pHelpMenu->addAction(pAboutf5Act);
     }
 
-    //Create Application-Specific Menus
+    //Create module specific menus
     m_pXDirect->m_pMenus->createMenus();
     m_pBLTiles->setContextMenu(m_pXDirect->m_pMenus->m_pBLCtxMenu);
     m_pPolarTiles->setContextMenu(m_pXDirect->m_pMenus->m_pOperPolarCtxMenu);
@@ -4805,9 +4806,9 @@ int MainFrame::onTestRun()
 
     // Must call! will delete the planes, foils and children objects
     // Memory leak otherwise
-    globals::deleteObjects();
+//    globals::deleteObjects();
 
-//    onXPlane();
+    onXPlane();
 
     std::cout << "done" << std::endl;
 

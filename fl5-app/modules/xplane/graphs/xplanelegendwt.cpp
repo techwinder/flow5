@@ -292,7 +292,7 @@ void XPlaneLegendWt::onClickedWPolarBtn()
     PlanePolar *pWPolar = dynamic_cast<PlanePolar*>(m_XflObjectMap[pLegendBtn]);
 
     s_pXPlane->setPlane(QString::fromStdString(pWPolar->planeName()));
-    s_pXPlane->setWPolar(pWPolar);
+    s_pXPlane->setPolar(pWPolar);
     s_pXPlane->m_pPlaneTreeView->selectWPolar(pWPolar, false);
     s_pXPlane->updateView();
 }
@@ -338,7 +338,7 @@ void XPlaneLegendWt::onClickedPOppBtn()
     PlaneOpp *pPOpp = dynamic_cast<PlaneOpp*>(m_XflObjectMap[pLegendBtn]);
 
     s_pXPlane->setPlane(QString::fromStdString(pPOpp->planeName()));
-    s_pXPlane->setWPolar(QString::fromStdString(pPOpp->polarName()));
+    s_pXPlane->setPolar(QString::fromStdString(pPOpp->polarName()));
     s_pXPlane->setPlaneOpp(pPOpp); // will call createcurves and makelegend
     s_pXPlane->m_pPlaneTreeView->selectPlaneOpp(pPOpp);
 

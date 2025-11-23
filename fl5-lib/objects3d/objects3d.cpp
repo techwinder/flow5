@@ -41,7 +41,7 @@
 #include <surface.h>
 #include <utils.h>
 #include <planepolar.h>
-#include <wpolarext.h>
+#include <planepolarext.h>
 
 
 int Objects3d::s_Index=0;

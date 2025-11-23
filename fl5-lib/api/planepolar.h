@@ -173,7 +173,7 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
 
         void getProperties(std::string &props, const Plane *pPlane) const;
 
-        void getWPolarData(std::string &data, const std::string &separator) const;
+        std::string exportToString(const std::string &separator) const;
 
         bool hasPOpp(PlaneOpp const *pPOpp) const;
 

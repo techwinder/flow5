@@ -374,9 +374,9 @@ void gl3dAxesView::onUpdateAxes()
 
     m_AF.setOpp(s_Alpha, s_Beta, 0.0, 1.0);
 
-/*    m_ppto->onAppendThisPlainText(QString::asprintf("\n Body RH rule: %d\n",   m_CFBody.checkRHRule()));
-    m_ppto->onAppendThisPlainText(QString::asprintf(  " Wind RH rule: %d\n",   m_AF.CFWind().checkRHRule()));
-    m_ppto->onAppendThisPlainText(QString::asprintf(  " Stab RH rule: %d\n\n", m_AF.CFStab().checkRHRule()));
+/*    m_ppto->onAppendQText(QString::asprintf("\n Body RH rule: %d\n",   m_CFBody.checkRHRule()));
+    m_ppto->onAppendQText(QString::asprintf(  " Wind RH rule: %d\n",   m_AF.CFWind().checkRHRule()));
+    m_ppto->onAppendQText(QString::asprintf(  " Stab RH rule: %d\n\n", m_AF.CFStab().checkRHRule()));
 */
     update();
 }
@@ -421,9 +421,9 @@ void gl3dAxesView::onConvert()
     strange += QString::asprintf("z= %7g  %7g  %7g\n", VBody.z, VWind.z, VStab.z);
     m_ppto->onAppendQText(strange +"\n\n");
 
-/*    m_ppto->onAppendThisPlainText("GeomToWindAxes:\n");
+/*    m_ppto->onAppendQText("GeomToWindAxes:\n");
     Vector3d Vg = windToGeomAxes(s_Vec, s_Alpha, s_Beta);
     strange = QString::asprintf("   x=%7g\n   y=%7g\n   z=%7g\n\n", Vg.x, Vg.y, Vg.z);
-    m_ppto->onAppendThisPlainText(strange);*/
+    m_ppto->onAppendQText(strange);*/
 }
 

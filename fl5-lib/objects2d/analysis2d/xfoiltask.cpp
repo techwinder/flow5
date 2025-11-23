@@ -773,14 +773,14 @@ void XFoilTask::addXFoilData(OpPoint *pOpp, XFoil &xfoil, Foil const *pFoil)
     int i(0), j(0), ibl(0), is(0);
 
     pOpp->m_Alpha      = xfoil.alfa*180.0/PI;
-    pOpp->m_Cd           = xfoil.cd;
-    pOpp->m_Cdp          = xfoil.cdp;
-    pOpp->m_Cl           = xfoil.cl;
-    pOpp->m_XCP          = xfoil.xcp;
-    pOpp->m_Cm           = xfoil.cm;
+    pOpp->m_Cd         = xfoil.cd;
+    pOpp->m_Cdp        = xfoil.cdp;
+    pOpp->m_Cl         = xfoil.cl;
+    pOpp->m_XCP        = xfoil.xcp;
+    pOpp->m_Cm         = xfoil.cm;
     pOpp->m_Reynolds   = xfoil.reinf;
     pOpp->m_Mach       = xfoil.minf;
-    pOpp->m_NCrit        = xfoil.acrit;
+    pOpp->m_NCrit      = xfoil.acrit;
 
     pOpp->m_bTEFlap    = pFoil->hasTEFlap();
     pOpp->m_bLEFlap    = pFoil->hasLEFlap();

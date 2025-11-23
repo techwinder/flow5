@@ -120,6 +120,8 @@ class FL5LIB_EXPORT PlaneTask : public Task3d
 
         bool computeStability(PlaneOpp *pPOpp, bool bOutput);
 
+        void storePOpp(PlaneOpp *pPOpp);
+
     private:
 
         Plane *m_pPlane;

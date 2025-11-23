@@ -503,7 +503,7 @@ void PlaneTreeView::setObjectFromIndex(QModelIndex index)
         Plane *pPlane  = Objects3d::plane(pPlaneItem->name().toStdString());
         PlanePolar *pWPolar = Objects3d::wPolar(pPlane, pSelectedItem->name().toStdString());
         s_pXPlane->setPlane(pPlane);
-        s_pXPlane->setWPolar(pWPolar);
+        s_pXPlane->setPolar(pWPolar);
         s_pXPlane->m_pCurPOpp = nullptr;
 
         m_Selection = PlaneTreeView::WPOLAR;
@@ -522,9 +522,9 @@ void PlaneTreeView::setObjectFromIndex(QModelIndex index)
         if(pPlane!=s_pXPlane->m_pCurPlane)
         {
             s_pXPlane->setPlane(pPlane);
-            s_pXPlane->setWPolar(pWPolar);
+            s_pXPlane->setPolar(pWPolar);
         }
-        else if(pWPolar != s_pXPlane->m_pCurWPolar) s_pXPlane->setWPolar(pWPolar);
+        else if(pWPolar != s_pXPlane->m_pCurWPolar) s_pXPlane->setPolar(pWPolar);
         if(pPOpp)
         {
             s_pXPlane->setPlaneOpp(pPOpp);

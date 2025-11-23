@@ -39,7 +39,7 @@
 #include <api/boatpolar.h>
 #include <api/polar.h>
 #include <api/planepolar.h>
-#include <api/wpolarext.h>
+#include <api/planepolarext.h>
 
 #include <interfaces/widgets/customdlg/intvaluedlg.h>
 #include <interfaces/widgets/customwts/actionitemmodel.h>

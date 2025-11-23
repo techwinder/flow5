@@ -116,7 +116,7 @@ class LLTAnalysisDlg : public QDialog
 
         static XPlane *s_pXPlane;
 
-        LLTTask *m_pTheLLTTask; /**< a pointer to the one and only instance of the PlaneAnalysisTask class */
+        LLTTask *m_pLLTTask; /**< a pointer to the one and only instance of the PlaneAnalysisTask class */
 
         PlaneOpp *m_pLastPOpp;
 

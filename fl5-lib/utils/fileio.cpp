@@ -43,7 +43,7 @@
 #include <splinefoil.h>
 #include <planeopp.h>
 #include <planepolar.h>
-#include <wpolarext.h>
+#include <planepolarext.h>
 #include <objects3d.h>
 #include <planestl.h>
 #include <planexfl.h>

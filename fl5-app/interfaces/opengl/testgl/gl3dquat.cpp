@@ -292,7 +292,7 @@ void gl3dQuat::onUpdateInput()
 //        qDebug("%13g  %13g  %13g  %13g  %13g  %13g", sqrt(x*x+y*y+z*z), Q.axis().norm(), Q.norm(), pt.x, pt.y, pt.z);
     }
 
-//    m_ppto->onAppendThisPlainText(EOLCHAR);
+//    m_ppto->onAppendQText(EOLCHAR);
     m_bResetSegs = true;
 
     update();

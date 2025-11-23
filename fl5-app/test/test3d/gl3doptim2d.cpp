@@ -1253,7 +1253,7 @@ void gl3dOptim2d::moveSimplex()
     m_S[2] = m_S[0] + (m_S[2]-m_S[0])*delta;
     m_S[1].z = function(m_S[1].x, m_S[1].y);
     m_S[2].z = function(m_S[2].x, m_S[2].y);
-//    m_ppt->onAppendThisPlainText(QString::asprintf("Iter %3d: Shrink\n", m_Iter));
+//    m_ppt->onAppendQText(QString::asprintf("Iter %3d: Shrink\n", m_Iter));
     m_bglResetTriangle = true;
 }
 

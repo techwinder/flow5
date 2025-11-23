@@ -81,6 +81,7 @@ class XflExecutor : public QObject
         void runPlaneAnalyses();
 
         void setMakePOpps(bool b) {m_bMakePlaneOpps=b;}
+        void setStabDerivatives(bool b) {m_bCompStabDerivatives=b;}
 
         QList<PlanePolar*> const & wPolars() const {return m_oaWPolar;}
         QList<Plane*> const& planes() const {return m_oaPlane;}
@@ -116,6 +117,7 @@ class XflExecutor : public QObject
         bool m_bStdOutStream;
 
         bool m_bMakePlaneOpps;
+        bool m_bCompStabDerivatives;
 
         int m_nTaskStarted, m_nTaskDone;
 

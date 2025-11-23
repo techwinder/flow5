@@ -167,13 +167,13 @@ void BatchXFoilDlg::setupLayout()
                     QLabel *plabBotTrans = new QLabel("Bottom transition location (x/c)");
                     plabTopTrans->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
                     plabBotTrans->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
-                    m_pdeXTopTr = new FloatEdit(1.00);
-                    m_pdeXBotTr = new FloatEdit(1.00);
+                    m_pfeXTopTr = new FloatEdit(1.00);
+                    m_pfeXBotTr = new FloatEdit(1.00);
 
                     pTransVars->addWidget(plabTopTrans, 2, 1);
-                    pTransVars->addWidget(m_pdeXTopTr  , 2, 2);
+                    pTransVars->addWidget(m_pfeXTopTr  , 2, 2);
                     pTransVars->addWidget(plabBotTrans, 3, 1);
-                    pTransVars->addWidget(m_pdeXBotTr,   3, 2);
+                    pTransVars->addWidget(m_pfeXBotTr,   3, 2);
                 }
                 m_pgbTransVars->setLayout(pTransVars);
             }
@@ -239,14 +239,14 @@ void BatchXFoilDlg::initDialog()
     switch (s_PolarType)
     {
         default:
-        case xfl::T1POLAR:            m_prbT1->setChecked(true);   break;
-        case xfl::T2POLAR:            m_prbT2->setChecked(true);   break;
+        case xfl::T1POLAR:   m_prbT1->setChecked(true);   break;
+        case xfl::T2POLAR:   m_prbT2->setChecked(true);   break;
         case xfl::T3POLAR:   m_prbT3->setChecked(true);   break;
     }
 
 
-    m_pdeXTopTr->setValue(s_XTop);
-    m_pdeXBotTr->setValue(s_XBot);
+    m_pfeXTopTr->setValue(s_XTop);
+    m_pfeXBotTr->setValue(s_XBot);
 
     fillReModel();
 }
@@ -267,8 +267,8 @@ void BatchXFoilDlg::readParams()
     else if(m_prbT3->isChecked()) s_PolarType = xfl::T3POLAR;
     else                          s_PolarType = xfl::T1POLAR;
 
-    s_XTop   = m_pdeXTopTr->value();
-    s_XBot   = m_pdeXBotTr->value();
+    s_XTop   = m_pfeXTopTr->value();
+    s_XBot   = m_pfeXBotTr->value();
 }
 
 
@@ -722,6 +722,7 @@ void BatchXFoilDlg::onAnalyze()
     m_nTaskDone = 0;
     m_nTaskStarted = 0;
 
+    m_AnalysisPair.clear();
     for(int ifoil=0; ifoil<foils.count(); ifoil++)
     {
         Foil *pFoil = foils.at(ifoil);
@@ -760,7 +761,9 @@ void BatchXFoilDlg::onAnalyze()
             }
         }
     }
-    strong = QString::asprintf("Found %d foil/polar pairs to analyze\n", m_nAnalysis);
+
+
+    strong = QString::asprintf("\nFound %d foil/polar pairs to analyze\n", m_nAnalysis);
     m_ppto->insertPlainText(strong);
 
 

@@ -73,10 +73,11 @@ void CreditsDlg::setupLayout()
         QVBoxLayout *pOccLayout = new QVBoxLayout;
         {
 
-            QLabel *plabVersion = new QLabel("Version: " + QString(OCC_VERSION_COMPLETE));
-            QLabel *plabDescription = new QLabel("<p>Open Cascade Technology (OCCT) is an open-source software<br>"
-                                                 "development platform for 3D CAD, CAM, CAE, etc. that is developed<br>"
+            QLabel *plabVersion = new QLabel("<p><b>Version:</b> " + QString(OCC_VERSION_COMPLETE));
+            QLabel *plabDescription = new QLabel("<p>Open Cascade Technology (OCCT) is an open-source software "
+                                                 "development platform for 3D CAD, CAM, CAE, etc. that is developed "
                                                  "and supported by Open Cascade SAS.</p>");
+            plabDescription->setWordWrap(true);
             QLabel *pOccLink = new QLabel;
             pOccLink->setText("<a href=https://www.opencascade.com>https://www.opencascade.com</a>");
             pOccLink->setOpenExternalLinks(true);

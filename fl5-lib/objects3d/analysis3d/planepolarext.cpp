@@ -24,7 +24,7 @@
 
 /** @class This class defines a polar imported from an external source */
 
-#include <wpolarext.h>
+#include <planepolarext.h>
 
 PlanePolarExt::PlanePolarExt() : PlanePolar()
 {

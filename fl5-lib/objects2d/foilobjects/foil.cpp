@@ -2067,6 +2067,9 @@ bool Foil::rePanel(int nPanels, double amplitude)
     setBunchParameters(m_CubicSpline.bunchType(), m_CubicSpline.bunchAmplitude()); // save the bunch parameters
 
     setBaseNodes(m_CubicSpline.outputPts());
+
+    makeTopBotSurfaces();
+
     applyBase();
 
     return true;

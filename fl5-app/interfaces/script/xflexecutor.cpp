@@ -57,6 +57,7 @@ XflExecutor::XflExecutor(QObject *pParent) : QObject()
     m_bStdOutStream = false;
     m_nTaskStarted = m_nTaskDone = 0;
     m_bMakePlaneOpps = false;
+    m_bCompStabDerivatives = false;
 }
 
 
@@ -483,8 +484,9 @@ void XflExecutor::makePlaneTasks(QString &logmsg)
                             std::vector<double> values, sorteduniquevalues;
                             for(int ia=0; ia<m_T12Range.size(); ia++)
                             {
+                                std::vector<double> vals = m_T12Range.at(ia).values();
                                 if(m_T12Range.at(ia).isActive())
-                                    values.insert(values.end(), m_T12Range.at(ia).values().begin(), m_T12Range.at(ia).values().end());
+                                    values.insert(values.end(), vals.begin(), vals.end());
                             }
 
                             //sort and remove duplicates
@@ -516,6 +518,7 @@ void XflExecutor::makePlaneTasks(QString &logmsg)
                     {
                         PlaneTask *pPlaneTask = new PlaneTask;
                         pPlaneTask->setObjects(pPlane, pWPolar);
+                        pPlaneTask->setComputeDerivatives(m_bCompStabDerivatives);
 
                         bool bValidRange(false);
                         std::vector<double> values, sorteduniquevalues;

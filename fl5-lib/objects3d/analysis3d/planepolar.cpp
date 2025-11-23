@@ -466,7 +466,7 @@ void PlanePolar::setVariableNames()
     s_VariableNames.clear();
 
     s_VariableNames = std::vector<std::string>({
-                                    "Ctrl", "alpha (°)", "beta(°)", "phi(°)",
+                                    "Ctrl", ALPHAstr + " ("+DEGstr+")", BETAstr + " ("+DEGstr+")", PHIstr + " ("+DEGstr+")",
                                     "CL", "CD", "CD_viscous", "CD_induced", "CY", "Cm", "Cm_viscous",
                                     "Cm_pressure","Cl","Cn","Cn_viscous","Cn_pressure","CL/CD", "CL^(3/2)/CD", "1/sqrt(CL)",
                                     "Lift ("+strForce+")", "Drag ("+strForce+")",
@@ -1785,6 +1785,8 @@ void PlanePolar::getProperties(std::string &props, Plane const *pPlane) const
         PolarProps = "External polar\n";
         strong = QString::asprintf("Nbr. of data points = %d",dataSize());
         PolarProps += strong;
+
+        props = PolarProps.toStdString();
         return;
     }
     PolarProps += strong + EOLch;
@@ -2132,10 +2134,10 @@ void PlanePolar::getProperties(std::string &props, Plane const *pPlane) const
 }
 
 
-void PlanePolar::getWPolarData(std::string &data, std::string const &separator) const
+std::string PlanePolar::exportToString(const std::string &separator) const
 {
     QString polardata;
-    QString sep  =QString::fromStdString(separator);
+    QString sep = QString::fromStdString(separator);
     QString strong, strange, str;
 
     strong = QString::fromStdString(planeName()) + EOLch;
@@ -2179,7 +2181,8 @@ void PlanePolar::getWPolarData(std::string &data, std::string const &separator) 
         }
         polardata += "\n";
     }
-    data = polardata.toStdString();
+
+    return polardata.toStdString();
 }
 
 

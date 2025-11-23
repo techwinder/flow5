@@ -252,9 +252,10 @@ void PlanePolarDlg::makeCommonControls()
                     m_pchTransAtHinge = new QCheckBox("Force transition at hinge location");
                     m_pchTransAtHinge->setToolTip("<p>"
                                                   "Forces the laminar to turbulent transition at the hinge's location on both the top and bottom surfaces.<br>"
-                                                  "The transition location is set as the minimum of the hinge's location and the forced transition location.<br>"
+                                                  "The transition location is set as the most upwind position between the hinge's location "
+                                                  "and the forced transition location.<br>"
                                                   "Only used in the case of flapped surfaces.<br>"
-                                                  "This greatly increases the convergence success of XFoil calculations, and speeds up considerably the "
+                                                  "This greatly increases the convergence success rate of XFoil calculations, and speeds up considerably the "
                                                   "evaluation of the local viscous drag."
                                                   "</p>");
 

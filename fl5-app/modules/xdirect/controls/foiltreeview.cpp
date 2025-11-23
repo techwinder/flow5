@@ -708,10 +708,9 @@ void FoilTreeView::addOpps(Polar *pPolar)
                             {
                                 QString strange;
 
-                                if      (pPolar->isControlPolar())  strange = QString(format).arg(pOpp->theta(),    0, 'f', 3);
-                                else if (pPolar->isFixedaoaPolar()) strange = QString(format).arg(pOpp->Reynolds(), 0, 'f', 0);
-                                else                                strange = QString(format).arg(pOpp->aoa(),      0, 'f', 3);
-
+                                if      (pPolar->isControlPolar())  strange = QString::asprintf("%.3f", pOpp->theta()) +DEGch;
+                                else if (pPolar->isFixedaoaPolar()) strange = QString::asprintf("%.0f", pOpp->Reynolds());
+                                else                                strange = QString::asprintf("%.3f", pOpp->aoa()) + DEGch;
 
                                 LineStyle ls(pOpp->theStyle());
                                 ls.m_bIsEnabled = !s_pXDirect->isPolarView();

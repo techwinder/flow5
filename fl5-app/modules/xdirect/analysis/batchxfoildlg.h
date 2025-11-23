@@ -92,7 +92,7 @@ class BatchXFoilDlg : public BatchDlg
         QFrame *m_pfrPolars;
         QRadioButton *m_prbT1, *m_prbT2, *m_prbT3;
 
-        FloatEdit *m_pdeXTopTr, *m_pdeXBotTr;
+        FloatEdit *m_pfeXTopTr, *m_pfeXBotTr;
 
         QLabel *m_plabMaType, *m_plabReType;
 

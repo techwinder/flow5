@@ -547,7 +547,7 @@ void PanelAnalysisTest::onMakeGraph()
     m_pptOuput->setPlainText(strange);
 
     strange = QString::asprintf("4.pi.sig = %g\n", m_pOpp3d->sigma(s_PanelId)*4*PI);
-    m_pptOuput->onAppendThisPlainText(strange); */
+    m_pptOuput->onAppendQText(strange); */
 
 
     update();

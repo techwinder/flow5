@@ -200,11 +200,27 @@ void BatchPlaneDlg::setupLayout()
                         m_pTabWidget->addTab(m_pT8Table, "T8");
                     }
 
-                    m_pchStorePOpps  = new QCheckBox("Store operating points");
-                    m_pchStorePOpps->setChecked(s_bStorePOpps);
+                    QHBoxLayout *pOptionLayout = new QHBoxLayout;
+                    {
+                        m_pchStorePOpps      = new QCheckBox("Store operating points");
+                        m_pchStorePOpps->setToolTip("<p>"
+                                                    "If activated, the operating points will be stored at the end of the calculation. "
+                                                    "The results are stored in the polar in all cases."
+                                                    "</p>");
+                        m_pchStabDerivatives = new QCheckBox("Compute derivatives");
+                        m_pchStabDerivatives->setToolTip("<p>"
+                                                         "If activated, stability derivatives and eigenthings will be "
+                                                         "computed during a T12358 run.<br>"
+                                                         "Deactivate to save a little computation time."
+                                                         "</p>");
+                        pOptionLayout->addWidget(m_pchStorePOpps);
+                        pOptionLayout->addStretch();
+                        pOptionLayout->addWidget(m_pchStabDerivatives);
+                    }
+
 
                     pMidLayout->addWidget(m_pTabWidget);
-                    pMidLayout->addWidget(m_pchStorePOpps);
+                    pMidLayout->addLayout(pOptionLayout);
                     pMidLayout->setStretchFactor(m_pTabWidget,1);
                 }
                 pfrMiddle->setLayout(pMidLayout);
@@ -229,7 +245,7 @@ void BatchPlaneDlg::setupLayout()
                         {
                             QPushButton *ppbClear = new QPushButton("Clear output");
                             connect(ppbClear, SIGNAL(clicked()), m_ppto, SLOT(clear()));
-                            m_ppbAnalyze =  new QPushButton("Analyze this");
+                            m_ppbAnalyze =  new QPushButton("Compute");
                             m_ppbAnalyze->setDefault(true);
                             m_ppbAnalyze->setAutoDefault(true);
                             m_pButtonBox->addButton(ppbClear, QDialogButtonBox::ActionRole);
@@ -293,15 +309,17 @@ void BatchPlaneDlg::keyPressEvent(QKeyEvent *pEvent)
 
 void BatchPlaneDlg::connectSignals()
 {
-    connect(m_psplHMain,         SIGNAL(splitterMoved(int,int)),  SLOT(onResizeColumns()));
-    connect(m_pchStorePOpps,     SIGNAL(clicked(bool)),           SLOT(onStorePOpps()));
+    connect(m_psplHMain,           SIGNAL(splitterMoved(int,int)),  SLOT(onResizeColumns()));
+    connect(m_pchStorePOpps,       SIGNAL(clicked(bool)),           SLOT(onOption()));
+    connect(m_pchStabDerivatives,  SIGNAL(clicked(bool)),           SLOT(onOption()));
     connect(m_pStruct->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(onCurrentRowChanged(QModelIndex,QModelIndex)));
 }
 
 
-void BatchPlaneDlg::onStorePOpps()
+void BatchPlaneDlg::onOption()
 {
     s_bStorePOpps = m_pchStorePOpps->isChecked();
+    Analysis3dSettings::setStabDerivatives(m_pchStabDerivatives->isChecked());
     if(m_pExecutor) m_pExecutor->setMakePOpps(s_bStorePOpps);
 }
 
@@ -326,6 +344,8 @@ void BatchPlaneDlg::hideEvent(QHideEvent *pEvent)
 {
     QDialog::hideEvent(pEvent);
     s_bStorePOpps  = m_pchStorePOpps->isChecked();
+    Analysis3dSettings::setStabDerivatives(m_pchStabDerivatives->isChecked());
+
     s_Geometry = saveGeometry();
 
     s_HMainSplitterSizes  = m_psplHMain->saveState();
@@ -415,7 +435,6 @@ void BatchPlaneDlg::initDialog()
         Plane const *pPlane = Objects3d::planeAt(iPlane);
         if(!pPlane) continue;
 
-        LineStyle ls(pPlane->theStyle());
         ObjectTreeItem *pPlaneItem = m_pModel->appendRow(pRootItem, pPlane->name(), pPlane->theStyle(), Qt::Unchecked);
 
         for(int iPolar=0; iPolar<Objects3d::nPolars(); iPolar++)
@@ -440,6 +459,9 @@ void BatchPlaneDlg::initDialog()
     m_pT6RangeTable->fillTable();
     m_pT7RangeTable->fillTable();
     m_pT8Table->fillRangeTable();
+
+    m_pchStorePOpps->setChecked(s_bStorePOpps);
+    m_pchStabDerivatives->setChecked(Analysis3dSettings::bStabDerivatives());
 
     m_pButtonBox->setFocus();
 }
@@ -621,6 +643,7 @@ void BatchPlaneDlg::onAnalyze()
     SaveOptions::setLastLogFileName(logFileName);
     m_pExecutor->setLogFile        (logFileName, QString::fromStdString(fl5::versionName(true)));
     m_pExecutor->setMakePOpps(s_bStorePOpps);
+    m_pExecutor->setStabDerivatives(Analysis3dSettings::bStabDerivatives());
     m_pExecutor->setT12Range(AnalysisRangeTable::t12Range());
     m_pExecutor->setT3Range( AnalysisRangeTable::t3Range());
     m_pExecutor->setT5Range( AnalysisRangeTable::t5Range());
@@ -680,7 +703,7 @@ void BatchPlaneDlg::onAnalysisFinished()
     onMessage("_____Plane analyses completed_____\n\n");
 
     m_plabStatus->setText("Not running.");
-    m_ppbAnalyze->setText("Analyze this");
+    m_ppbAnalyze->setText("Compute");
     m_pButtonBox->button(QDialogButtonBox::Close)->setEnabled(true);
 }
 

@@ -2500,7 +2500,7 @@ int WingXfl::uniformizeXPanelNumber()
 }
 
 
-void WingXfl::exportAVLWing(std::string &avlstring, int index, double y, double Thetay, double lengthunit) const
+void WingXfl::exportWingToAVL(std::string &avlstring, int index, double y, double Thetay, double lengthunit) const
 {
     QString strong, str;
     QString strange;
@@ -2512,12 +2512,12 @@ void WingXfl::exportAVLWing(std::string &avlstring, int index, double y, double 
     out << ("\n");
     out << ("#Nchord    Cspace   [ Nspan Sspace ]\n");
 
-    strong = QString::asprintf("%d        =%3.1f\n", nXPanels(0),1.0);
+    strong = QString::asprintf("%d        %3.1f\n", nXPanels(0), 1.0);
     out << (strong);
 
     out << ("\n");
-    out << ("INDEX                        | (keyword)\n");
-    strong = QString::asprintf("%4d                         | Lsurf\n",index);
+    out << ("COMPONENT                        | (keyword)\n");
+    strong = QString::asprintf("%4d                         | Lcomp\n",index);
     out << (strong);
 
     if(!isFin())
@@ -2593,10 +2593,7 @@ void WingXfl::exportAVLWing(std::string &avlstring, int index, double y, double 
         if(aSurface.hasTEFlap())
         {
             out << ("CONTROL                                                     |  (keyword)\n");
-            str = QString::asprintf("_Flap_%d  ", iFlap);
-            strong = QString::fromStdString(m_Name);
-//            strong.replace(" ", "_");
-            strong += str;
+            strong = QString::asprintf("Flap_%d  ", iFlap);
 
             if(fabs(mean_angle)>PRECISION) str = QString::asprintf("%5.2f  ", 1.0/mean_angle);
             else                           str = "1.0   ";
@@ -2632,10 +2629,7 @@ void WingXfl::exportAVLWing(std::string &avlstring, int index, double y, double 
         if(aSurface.hasTEFlap())
         {
             out << ("CONTROL                                                     |  (keyword)\n");
-            str = QString::asprintf("_Flap_%d  ", iFlap);
-            strong = QString::fromStdString(m_Name);
-//            strong.replace(" ", "_");
-            strong += str;
+            strong = QString::asprintf("Flap_%d  ", iFlap);
 
             if(fabs(mean_angle)>PRECISION) str = QString::asprintf("%5.2f  ", 1.0/mean_angle);
             else                           str = "1.0   ";

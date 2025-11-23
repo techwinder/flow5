@@ -198,9 +198,9 @@ void PlaneXflDlg::connectSignals()
 
     connect(m_prbfl5Mesher,           SIGNAL(clicked(bool)),              SLOT(onSelMesher()));
     connect(m_prbGMesher,             SIGNAL(clicked(bool)),              SLOT(onSelMesher()));
-    connect(m_pMesherWt,              SIGNAL(outputMsg(QString)), m_ppto, SLOT(onAppendThisPlainText(QString)));
+    connect(m_pMesherWt,              SIGNAL(outputMsg(QString)), m_ppto, SLOT(onAppendQText(QString)));
     connect(m_pMesherWt,              SIGNAL(updateFuseView()),           SLOT(onUpdateMesh()));
-    connect(m_pGMesherWt,             SIGNAL(outputMsg(QString)), m_ppto, SLOT(onAppendThisPlainText(QString)));
+    connect(m_pGMesherWt,             SIGNAL(outputMsg(QString)), m_ppto, SLOT(onAppendQText(QString)));
     connect(m_pGMesherWt,             SIGNAL(updateFuseView()),           SLOT(onUpdateMesh()));
 
     connect(m_pRestoreFuseMesh,       SIGNAL(triggered()),    SLOT(onResetFuseMesh()));

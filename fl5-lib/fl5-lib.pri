@@ -2,6 +2,7 @@
 HEADERS += \
     $$PWD/api/fl5core.h \
     $$PWD/api/planepolar.h \
+    $$PWD/api/planepolarext.h \
     $$PWD/api/xmlplanepolarreader.h \
     $$PWD/api/xmlplanepolarwriter.h \
     $$PWD/math/testmatrix.h \
@@ -137,7 +138,6 @@ HEADERS += \
     api/wingsailsection.h \
     api/wingsection.h \
     api/wingxfl.h \
-    api/wpolarext.h \
     api/xflmesh.h \
     api/xflobject.h \
     api/xfoiltask.h \

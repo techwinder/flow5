@@ -86,8 +86,6 @@ linux-g++ {
         INCLUDEPATH += /usr/local/include/opencascade/
         LIBS += -L/usr/local/lib/
 
-
-
 }
 
 

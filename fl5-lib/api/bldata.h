@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include <QDataStream>
 
 #include <node2d.h>

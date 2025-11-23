@@ -86,8 +86,16 @@ class FL5LIB_EXPORT Task3d
 
         void stopVPWIterations() {m_bStopVPWIterations = true;}
 
+
+        void setKeepOpps(bool b) {m_bKeepOpps=b;}
+        void outputToStdIO(bool b) {m_bStdOut=b;}
+
+
         void traceVPWLog(double ctrl);
         void traceLog(const QString &str);
+
+
+
         virtual void traceStdLog(const std::string &str);
 
 
@@ -103,8 +111,6 @@ class FL5LIB_EXPORT Task3d
         static bool bLiveUpdate() {return s_bLiveUpdate;}
 
         static void setCancelled(bool bCancel) {s_bCancel=bCancel;}
-        static void setKeepOpps(bool b) {s_bKeepOpps=b;}
-        static void outputToStdIO(bool b) {s_bStdOut=b;}
 
     protected:
         virtual void makeVortonRow(int qrhs) = 0;
@@ -136,6 +142,8 @@ class FL5LIB_EXPORT Task3d
         double tmp_vortonwakelength;
         Vector3d tmp_VInf;
 
+        bool m_bKeepOpps;
+        bool m_bStdOut;
 
 
         static int s_MaxNRHS;
@@ -144,9 +152,7 @@ class FL5LIB_EXPORT Task3d
         static bool s_bVortonStretch;      /** option for vorton strength exchange */
         static bool s_bLiveUpdate;
 
-        static bool s_bKeepOpps;
         static bool s_bCancel;
-        static bool s_bStdOut;
 
     public:
         // thread related variables to share the message queue with the calling threa

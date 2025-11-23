@@ -210,14 +210,13 @@ void P4Analysis::makeInfluenceMatrix()
 
         for(int iBlock=0; iBlock<m_nBlocks; iBlock++)
         {
-//            futureSync.addFuture(QtConcurrent::run(&P4Analysis::makeMatrixBlock, this, iBlock));
             threads.push_back(std::thread(&P4Analysis::makeMatrixBlock, this, iBlock));
         }
+
         for(int iBlock=0; iBlock<m_nBlocks; iBlock++)
         {
             threads[iBlock].join();
         }
-        std::cout << "P4Analysis::makeInfluenceMatrix joined all " << m_nBlocks << " threads" <<std::endl;
     }
     else
     {

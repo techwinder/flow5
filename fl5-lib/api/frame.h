@@ -27,6 +27,7 @@
 
 #pragma once
 
+#include <vector>
 #include <QDataStream>
 
 #include <vector3d.h>

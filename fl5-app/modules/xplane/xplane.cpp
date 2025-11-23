@@ -128,7 +128,7 @@
 #include <api/planeopp.h>
 #include <api/wingopp.h>
 #include <api/planepolar.h>
-#include <api/wpolarext.h>
+#include <api/planepolarext.h>
 #include <modules/xplane/analysis/wpolarnamemaker.h>
 #include <api/objects3d.h>
 #include <api/fuseocc.h>
@@ -1920,7 +1920,7 @@ void XPlane::onDefineT6Polar()
         if(pNewControlPolar)
         {
             m_pCurPOpp = nullptr;
-            setWPolar(pNewControlPolar);
+            setPolar(pNewControlPolar);
             m_pPlaneTreeView->insertWPolar(pNewControlPolar);
             m_pPlaneTreeView->selectWPolar(pNewControlPolar, false);
         }
@@ -1979,7 +1979,7 @@ void XPlane::onDefineT123578Polar()
 
         if(pNewWPolar)
         {
-            setWPolar(pNewWPolar);
+            setPolar(pNewWPolar);
             m_pPlaneTreeView->insertWPolar(pNewWPolar);
             m_pPlaneTreeView->selectWPolar(pNewWPolar, false);
             m_pCurPOpp = nullptr;
@@ -2041,7 +2041,7 @@ void XPlane::onDefineT7Polar()
 
         if(pNewWPolar)
         {
-            setWPolar(pNewWPolar);
+            setPolar(pNewWPolar);
             m_pPlaneTreeView->insertWPolar(pNewWPolar);
             m_pPlaneTreeView->selectWPolar(pNewWPolar, false);
             m_pCurPOpp = nullptr;
@@ -2112,7 +2112,7 @@ void XPlane::onDuplicateCurAnalysis()
 
     if(pNewWPolar)
     {
-        setWPolar(pNewWPolar);
+        setPolar(pNewWPolar);
         m_pPlaneTreeView->insertWPolar(pNewWPolar);
         m_pPlaneTreeView->selectWPolar(pNewWPolar, false);
         m_pCurPOpp = nullptr;
@@ -2171,7 +2171,7 @@ void XPlane::onDuplicateAnalyses()
 
     if(pNewWPolar)
     {
-        setWPolar(pNewWPolar);
+        setPolar(pNewWPolar);
         m_pPlaneTreeView->selectWPolar(pNewWPolar, false);
         m_pCurPOpp = nullptr;
     }
@@ -2220,7 +2220,7 @@ void XPlane::onImportExternalPolar()
 
     if(pNewWPolar)
     {
-        setWPolar(pNewWPolar);
+        setPolar(pNewWPolar);
         m_pPlaneTreeView->insertWPolar(pNewWPolar);
         m_pPlaneTreeView->selectWPolar(pNewWPolar, false);
         m_pCurPOpp = nullptr;
@@ -2366,7 +2366,7 @@ void XPlane::onDeleteCurPlane()
     m_pCurPOpp = nullptr;
 
     setPlane(nextPlaneName);
-    setWPolar();
+    setPolar();
     setPlaneOpp(nullptr);
 
     m_pPlaneTreeView->selectObjects();
@@ -2484,7 +2484,7 @@ void XPlane::onDeletePlaneWPolars()
 
     Objects3d::deletePlaneResults(m_pCurPlane, true);
 
-    setWPolar(nullptr);
+    setPolar(nullptr);
     m_pPlaneTreeView->selectPlane(m_pCurPlane);
 
     emit projectModified();
@@ -2517,7 +2517,7 @@ void XPlane::onDeleteCurWPolar()
     m_pCurWPolar = nullptr;
     emit projectModified();
 
-    setWPolar(nextWPolarName);
+    setPolar(nextWPolarName);
 
     if(m_pCurWPolar) m_pPlaneTreeView->selectWPolar(m_pCurWPolar, false);
     else             m_pPlaneTreeView->selectPlane(m_pCurPlane);
@@ -2841,7 +2841,7 @@ Plane* XPlane::setModPlane(Plane *pModPlane, bool bUsed, bool bAsNew)
     m_pCurPOpp = nullptr; // all the plane's oppoints have been deleted
 
     setPlane(pModPlane);
-    setWPolar(m_pCurWPolar);
+    setPolar(m_pCurWPolar);
 
     m_pPlaneTreeView->updatePlane(m_pCurPlane);
     m_pPlaneTreeView->selectObjects();
@@ -3422,7 +3422,7 @@ void XPlane::onExportWPolarToFile()
     std::string polardata;
     std::string sep = "  ";
     if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator().toStdString()+ " ";
-    m_pCurWPolar->getWPolarData(polardata, sep);
+    polardata = m_pCurWPolar->exportToString(sep);
 
     QTextStream out(&XFile);
     out << QString::fromStdString(polardata);
@@ -3439,7 +3439,7 @@ QString XPlane::onExportWPolarToClipboard()
     std::string polardata;
     std::string sep = "  ";
     if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator().toStdString()+ " ";
-    m_pCurWPolar->getWPolarData(polardata, sep);
+    polardata = m_pCurWPolar->exportToString(sep);
     QClipboard *pClipBoard = QApplication::clipboard();
     pClipBoard->setText(QString::fromStdString(polardata));
 
@@ -3482,9 +3482,8 @@ void XPlane::onExportAllWPolars()
 
             std::string sep = "  ";
             if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator().toStdString() + " ";
-            std::string data;
-            pWPolar->getWPolarData(data, sep);
-            out << QString::fromStdString(data);
+            std::string exportstr = pWPolar->exportToString(sep);
+            out << QString::fromStdString(exportstr);
             XFile.close();
             displayMessage("Exported the polar:" + polarname + "\n", false, true);
         }
@@ -3566,16 +3565,16 @@ void XPlane::onExporttoAVL()
     out << ("\n\n\n");
 
 
-    int index = QRandomGenerator::global()->bounded(10000);
+    int index = QRandomGenerator::global()->bounded(1000);
 
     std::string avlstring;
-    pPlaneXfl->wingAt(0)->exportAVLWing(avlstring, index, 0.0, pPlaneXfl->ryAngle(0), Units::mtoUnit());
-    out << QString::fromStdString(avlstring);
+//    pPlaneXfl->wingAt(0)->exportWingToAVL(avlstring, index, 0.0, pPlaneXfl->ryAngle(0), Units::mtoUnit());
+//    out << QString::fromStdString(avlstring);
 
-    for(int iw=1; iw<pPlaneXfl->nWings(); iw++)
+    for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
     {
         if(pPlaneXfl->wingAt(iw))
-            pPlaneXfl->wingAt(iw)->exportAVLWing(avlstring, index+iw, 0.0, pPlaneXfl->ryAngle(iw), Units::mtoUnit());
+            pPlaneXfl->wingAt(iw)->exportWingToAVL(avlstring, index+iw, 0.0, pPlaneXfl->ryAngle(iw), Units::mtoUnit());
     }
     out << QString::fromStdString(avlstring);
     XFile.close();
@@ -3900,7 +3899,7 @@ void XPlane::onEditCurWPolar()
         m_pgl3dXPlaneView->resetglPOpp();
         m_pgl3dXPlaneView->s_bResetglWake = true;
 
-        setWPolar(pNewWPolar);
+        setPolar(pNewWPolar);
 
         m_pPlaneTreeView->insertWPolar(m_pCurWPolar);
         m_pPlaneTreeView->selectWPolar(m_pCurWPolar, false);
@@ -4787,15 +4786,14 @@ Plane *XPlane::setPlane(Plane* pPlane)
 }
 
 
-void XPlane::setWPolar(QString const &WPlrName)
+void XPlane::setPolar(QString const &PlrName)
 {
-    // try to find the polar by its name if we know it
-    PlanePolar *pWPolar = Objects3d::wPolar(m_pCurPlane, WPlrName.toStdString());
-    setWPolar(pWPolar); // may be null
+    PlanePolar *pWPolar = Objects3d::wPolar(m_pCurPlane, PlrName.toStdString());
+    setPolar(pWPolar); // may be null
 }
 
 
-void XPlane::setWPolar(PlanePolar *pWPolar)
+void XPlane::setPolar(PlanePolar *pPlPolar)
 {
     if(isAnalysisRunning())
     {
@@ -4809,7 +4807,7 @@ void XPlane::setWPolar(PlanePolar *pWPolar)
     m_pgl3dXPlaneView->clearTopRightOutput(); // in case there is no PlaneOpp, otherwise will be filled when setting the POpp
     m_pgl3dXPlaneView->clearBotRightOutput(); // in case there is no PlaneOpp, otherwise will be filled when setting the POpp
 
-    if(!pWPolar)
+    if(!pPlPolar)
     {
         //if we didn't find anything, find the first for this plane
         for (int iwp=0; iwp<Objects3d::nPolars(); iwp++)
@@ -4817,13 +4815,13 @@ void XPlane::setWPolar(PlanePolar *pWPolar)
             PlanePolar *pOldWPolar = Objects3d::wPolarAt(iwp);
             if (pOldWPolar->planeName().compare(m_pCurPlane->name())==0)
             {
-                pWPolar = pOldWPolar;
+                pPlPolar = pOldWPolar;
                 break;
             }
         }
     }
 
-    if(!m_pCurPlane || !pWPolar)
+    if(!m_pCurPlane || !pPlPolar)
     {
         m_pCurWPolar = nullptr;
         m_pCurPOpp = nullptr;
@@ -4840,7 +4838,7 @@ void XPlane::setWPolar(PlanePolar *pWPolar)
         return;
     }
 
-    m_pCurWPolar = pWPolar;
+    m_pCurWPolar = pPlPolar;
 
     if(m_pCurPlane && m_pCurWPolar)
     {
@@ -4943,17 +4941,17 @@ void XPlane::setWPolar(PlanePolar *pWPolar)
         }
     }
 
-    QString props = QString::fromStdString(m_pCurPlane->planeData(pWPolar->bIncludeOtherWingAreas()));
+    QString props = QString::fromStdString(m_pCurPlane->planeData(pPlPolar->bIncludeOtherWingAreas()));
     QString strange;
     if(m_pCurPlane->isXflType())
     {
         props +="\n";
-        if(pWPolar->isQuadMethod())
+        if(pPlPolar->isQuadMethod())
         {
             PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pCurPlane);
             strange = QString::asprintf("Quad panels     = %d", pPlaneXfl->quadMesh().nPanels());
         }
-        else if(pWPolar->isTriangleMethod())
+        else if(pPlPolar->isTriangleMethod())
             strange = QString::asprintf("Triangles       = %d", m_pCurPlane->triMesh().nPanels());
     }
     props += strange;
@@ -5188,7 +5186,7 @@ PlaneOpp* XPlane::setPlaneOpp(PlaneOpp *pPOpp)
         //nothing left to try
         if(m_pPanelResultTest) m_pPanelResultTest->setAnalysis(m_pCurPlane, m_pCurWPolar, m_pCurPOpp);
 
-        setWPolar(m_pCurWPolar);// to restore the flapped mesh
+        setPolar(m_pCurWPolar);// to restore the flapped mesh
         return nullptr;
     }
 
@@ -5936,7 +5934,7 @@ void XPlane::onCurveClicked(Curve*pCurve, int ipt)
                     {
                         //this is the one which has been clicked
                         setPlane(QString::fromStdString(pPOpp->planeName()));
-                        setWPolar(QString::fromStdString(pPOpp->polarName()));
+                        setPolar(QString::fromStdString(pPOpp->polarName()));
                         setPlaneOpp(pPOpp);
                         m_pPlaneTreeView->selectPlaneOpp(pPOpp);
                         m_pPlaneTreeView->setCurveParams();
@@ -5976,7 +5974,7 @@ void XPlane::onCurveClicked(Curve*pCurve, int ipt)
                     {
                         //this is the one which has been clicked
                         setPlane(QString::fromStdString(pWPolar->planeName()));
-                        setWPolar(pWPolar);
+                        setPolar(pWPolar);
 
                         if(ipt>=0)
                         {
@@ -6810,7 +6808,7 @@ void XPlane::onImportAnalysesFromXML()
 
     if(pWPolar)
     {
-        setWPolar(pWPolar);
+        setPolar(pWPolar);
         m_pPlaneTreeView->selectWPolar(pWPolar, false);
     }
 
