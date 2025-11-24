@@ -77,8 +77,8 @@ class FL5LIB_EXPORT XFoilTask
 
         std::vector<OpPoint*> const &operatingPoints() const {return m_OpPoints;}
 
-        bool processCl(double Cl, double Re, double &Cd, double &XTrTop, double &XTrBot, bool &bCv);
-        bool processClList(const std::vector<double> &ClList, const std::vector<double> &ReList, std::vector<double> &CdList, std::vector<double> &XTrTopList, std::vector<double> &XTrBotList, std::vector<bool> &CvList);
+        bool processCl(int k);
+        bool processClList();
 
         void clearRanges() {m_AnalysisRange.clear();}
         void setAnalysisRanges(std::vector<AnalysisRange> const &ranges) {m_AnalysisRange=ranges;}
@@ -117,12 +117,14 @@ class FL5LIB_EXPORT XFoilTask
         static double CdError() {return s_CdError;}
         static double setCdError(double cderr) {return s_CdError=cderr;}
 
-    protected:
+    private:
         int loop();
         bool alphaSequence(bool bAlpha);
         bool thetaSequence();
         bool ReSequence();
         void addXFoilData(OpPoint *pOpp, XFoil &xfoil, const Foil *pFoil);
+
+        bool ClRange(Polar *pPolar, const AnalysisRange &range);
 
 
     private:

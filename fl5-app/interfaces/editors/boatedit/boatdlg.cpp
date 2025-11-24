@@ -1048,9 +1048,6 @@ void BoatDlg::onImportSailFromSTL()
         return; // nothing imported
     }
 
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    QElapsedTimer t; t.start();
-
     SailStl *pStlSail = new SailStl;
     pStlSail->setName("STL sail");
     pStlSail->setTriangles(STLdlg.triangleList());

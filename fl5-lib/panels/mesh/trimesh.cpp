@@ -520,7 +520,7 @@ void TriMesh::makeConnectionsFromNodePosition(int i0, int np0, double MERGEDISTA
 
         for(int it1=i0; it1<i0+np0; it1++)
         {
-            if(it0==it1) continue; // do not connect the panel with itself
+            if(it0==it1) continue; // do not connect the panel to itself
             Panel3 &p1 = panel(it1);
 
             if(p1.neighbourCount()==3) continue;  // no further connections for this panel

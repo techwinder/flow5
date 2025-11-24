@@ -44,6 +44,8 @@ class Panel3;
 class Panel4;
 class AngleControl;
 class Polar;
+class XFoilTask;
+
 
 class FL5LIB_EXPORT PlaneTask : public Task3d
 {
@@ -100,8 +102,9 @@ class FL5LIB_EXPORT PlaneTask : public Task3d
         void computeInducedForces(double alpha, double beta, double QInf);
         void computeInducedDrag(double alpha, double beta, double QInf);
         bool computeViscousDrag(WingXfl *pWing, double alpha, double beta, double QInf, const PlanePolar *pWPolar, Vector3d const &cog, int iStation0, SpanDistribs &SpanResFF, std::string &logmsg) const;
-        bool computeViscousDragOTF(WingXfl *pWing, double alpha, double beta, double QInf, const PlanePolar *pWPolar, Vector3d const &cog, const AngleControl &TEFlapAngles, SpanDistribs &SpanResFF, std::string &logmsg);
-        bool computeSurfaceDragOTF(Surface const &surf, int iStartStation, double theta, SpanDistribs &spandist);
+        bool computeViscousDragOTF(WingXfl *pWing, double alpha, double beta, double QInf, const PlanePolar *pWPolar, Vector3d const &cog, const AngleControl &TEFlapAngles, SpanDistribs &SpanResFF, std::string &logmsg) const;
+        bool computeSurfaceDragOTF(Surface const &surf, int iStartStation, double theta, SpanDistribs &spandist) const;
+        bool computeSectionDragOTF(XFoilTask *pTask) const;
 
         PlaneOpp *createPlaneOpp(double ctrl, double alpha, double beta, double phi, double QInf, double mass, const Vector3d &CoG, const double *Cp, const double *Gamma, const double *Sigma, bool bCpOnly=false) const;
         void addTwistedVelField(double Qinf, double alpha, std::vector<Vector3d> &VField) const;

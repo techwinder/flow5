@@ -2813,16 +2813,13 @@ bool PlaneTask::computeViscousDrag(WingXfl *pWing, double alpha, double beta, do
 }
 
 
-bool PlaneTask::computeSurfaceDragOTF(Surface const &surf, int iStartStation, double theta, SpanDistribs &spandist)
+bool PlaneTask::computeSurfaceDragOTF(Surface const &surf, int iStartStation, double theta, SpanDistribs &spandist) const
 {
-    QString logg;
-    QString strange;
-
     Foil foilA, foilB;
     foilA.copy(surf.foilA(), true);
     foilB.copy(surf.foilB(), true);
 
-    int m = iStartStation;
+    const int m = iStartStation;
 
     if(surf.hasTEFlap())
     {
@@ -2837,29 +2834,20 @@ bool PlaneTask::computeSurfaceDragOTF(Surface const &surf, int iStartStation, do
         foilB.applyBase();
     }
 
-
-    std::vector<double> ClList, ReList;
-
+    // Process right side foil
+    Polar LeftSidePolar;
+    LeftSidePolar.setType(xfl::T1POLAR);
+    LeftSidePolar.setReType(1);
+    LeftSidePolar.setMaType(1);
+    LeftSidePolar.setMach(0.0);
+    LeftSidePolar.setNCrit(m_pPolar3d->NCrit());
+    LeftSidePolar.resizeData(surf.NYPanels());
     for(int k=0; k<surf.NYPanels(); k++)
     {
-        ClList.push_back(spandist.m_Cl.at(m+k));
-        ReList.push_back(spandist.m_Re.at(m+k));
+        LeftSidePolar.m_Cl[k] = spandist.m_Cl.at(m+k);
+        LeftSidePolar.m_Re[k] = spandist.m_Re.at(m+k);
     }
 
-    std::vector<double> CdAList, XTrTopAList, XTrBotAList;
-    std::vector<double> CdBList, XTrTopBList, XTrBotBList;
-    std::vector<bool> CvAList, CvBList;
-
-    XFoilTask *pTask = new XFoilTask();
-
-    Polar a2dPolar;
-    a2dPolar.setType(xfl::T1POLAR);
-    a2dPolar.setReType(1);
-    a2dPolar.setMaType(1);
-    a2dPolar.setMach(0.0);
-    a2dPolar.setNCrit(m_pPolar3d->NCrit());
-
-    // Process left side foil
     double XTrTop = m_pPolar3d->XTrTop();
     double XTrBot = m_pPolar3d->XTrBot();
     if(surf.hasTEFlap() && m_pPlPolar->bTransAtHinge())
@@ -2867,59 +2855,29 @@ bool PlaneTask::computeSurfaceDragOTF(Surface const &surf, int iStartStation, do
         XTrTop = std::min(XTrTop, foilA.TEXHinge());
         XTrBot = std::min(XTrBot, foilA.TEXHinge());
     }
-    a2dPolar.setXTripTop(XTrTop);
-    a2dPolar.setXTripBot(XTrBot);
+    LeftSidePolar.setXTripTop(XTrTop);
+    LeftSidePolar.setXTripBot(XTrBot);
 
-    // Process span stations incrementally and in sequence, assuming that
-    // 2d BL is similar from one station to the next
+    XFoilTask *pLeftTask = new XFoilTask();
+    pLeftTask->initialize(&foilA, &LeftSidePolar, false);
 
-    pTask->initialize(&foilA, &a2dPolar, false);
-    pTask->processClList(ClList, ReList, CdAList, XTrTopAList, XTrBotAList, CvAList);
-
-    int cnt = 0;
-    for(uint ic=0; ic<CvAList.size(); ic++) cnt += CvAList.at(ic);
-    strange = QString::asprintf("                  %d/%d converged left span stations\n", cnt, int(CvAList.size()));
-    logg += strange;
-
-    // fall back: re-try unconverged points with BL initialization
-    for(uint k=0; k<CvAList.size(); k++)
-    {
-        if(!CvAList.at(k))
-        {
-            strange = QString::asprintf("                    Fallback left side,  station %2d, Cl=%7.3f... ", k+1,  ClList.at(k));
-            logg += strange;
-
-            bool bResult(false);
-            pTask->processCl(ClList.at(k), ReList.at(k), CdAList[k], XTrTopAList[k], XTrBotAList[k], bResult);
-            CvAList[k] = bResult;
-
-            if(CvAList.at(k)) logg += "converged\n";
-            else              logg += "failed\n";
-        }
-
-        if(!CvAList.at(k))
-        {
-            spandist.m_bConverged[m+k] = false;
-            strange = QString::fromStdString(surf.leftFoilName());
-            strange += QString::asprintf(", Span pos. %.3f ", spandist.m_StripPos.at(m+k)*Units::mtoUnit());
-            strange += Units::lengthUnitQLabel();
-            strange += QString::asprintf(",  Cl=%.3f, Re=%.0f", ClList.at(k), ReList.at(k));
-            logg += strange + EOLch;
-
-
-            delete pTask;
-            return false; // XFoil OTF fail, operating point will be discarded
-        }
-
-        if(isCancelled())
-        {
-            delete pTask;
-            return false;
-        }
-    }
 
 
     // Process right side foil
+    Polar RightSidePolar;
+    RightSidePolar.setType(xfl::T1POLAR);
+    RightSidePolar.setReType(1);
+    RightSidePolar.setMaType(1);
+    RightSidePolar.setMach(0.0);
+    RightSidePolar.setNCrit(m_pPolar3d->NCrit());
+    RightSidePolar.resizeData(surf.NYPanels());
+    for(int k=0; k<surf.NYPanels(); k++)
+    {
+        RightSidePolar.m_Cl[k] = spandist.m_Cl.at(m+k);
+        RightSidePolar.m_Re[k] = spandist.m_Re.at(m+k);
+    }
+
+
     XTrTop = m_pPolar3d->XTrTop();
     XTrBot = m_pPolar3d->XTrBot();
     if(surf.hasTEFlap() && m_pPlPolar->bTransAtHinge())
@@ -2927,55 +2885,26 @@ bool PlaneTask::computeSurfaceDragOTF(Surface const &surf, int iStartStation, do
         XTrTop = std::min(XTrTop, foilB.TEXHinge());
         XTrBot = std::min(XTrBot, foilB.TEXHinge());
     }
-    a2dPolar.setXTripTop(XTrTop);
-    a2dPolar.setXTripBot(XTrBot);
-    pTask->initialize(&foilB, &a2dPolar, false);
-    pTask->processClList(ClList, ReList, CdBList, XTrTopBList, XTrBotBList, CvBList);
+    RightSidePolar.setXTripTop(XTrTop);
+    RightSidePolar.setXTripBot(XTrBot);
 
-    cnt = 0;
-    for(uint ic=0; ic<CvBList.size(); ic++) cnt += CvBList.at(ic);
-    strange = QString::asprintf("                  %d/%d converged right span stations\n", cnt, int(CvBList.size()));
-    logg += strange;
 
-    // fall back: re-try unconverged points with BL initialization
-    for(uint k=0; k<CvBList.size(); k++)
-    {
-        if(!CvBList.at(k))
-        {
-            strange = QString::asprintf("                    Fallback right side, station %2d, Cl=%7.3f... ", k+1,  ClList.at(k));
-            logg += strange;
+    XFoilTask *pRightTask = new XFoilTask();
+    pRightTask->initialize(&foilB, &RightSidePolar, false);
 
-            bool bResult(false);
-            pTask->processCl(ClList.at(k), ReList.at(k), CdBList[k], XTrTopBList[k], XTrBotBList[k], bResult);
-            CvBList[k] = bResult;
+/*    computeSectionDragOTF(pLeftTask);
+    computeSectionDragOTF(pRightTask);*/
 
-            if(CvBList.at(k)) logg += "converged\n";
-            else              logg += "failed\n";
-        }
+    std::thread leftthread  = std::thread(&PlaneTask::computeSectionDragOTF, this, pLeftTask);
+    std::thread rightthread = std::thread(&PlaneTask::computeSectionDragOTF, this, pRightTask);
+    leftthread.join();
+    rightthread.join();
 
-        if(!CvBList.at(k))
-        {
-            spandist.m_bConverged[m+k] = false;
-            strange = QString::fromStdString(surf.rightFoilName());
-            strange += QString::asprintf(", Span pos. %.3f ", spandist.m_StripPos.at(m+k)*Units::mtoUnit());
-            strange += Units::lengthUnitQLabel();
-            strange += QString::asprintf(",  Cl=%.3f, Re=%.0f", ClList.at(k), ReList.at(k));
-            logg += strange + EOLch;
+    delete pLeftTask;
+    delete pRightTask;
 
-            delete pTask;
-            return false; // XFoil OTF fail, operating point will be discarded
-        }
 
-        if(isCancelled())
-        {
-            delete pTask;
-            return false;
-        }
-    }
-
-    delete pTask;
-
-    m = iStartStation;
+    int iStation=iStartStation;
     for(int k=0; k<surf.NYPanels(); k++)
     {
         double tau = 0.0;
@@ -2985,26 +2914,58 @@ bool PlaneTask::computeSurfaceDragOTF(Surface const &surf, int iStartStation, do
         if (tau>1.0) tau = 1.0; // redundant
 
         /** @todo what's the use + wrong if flap*/
-        spandist.m_Alpha_0[m] = Objects2d::getZeroLiftAngle(surf.foilA(), surf.foilB(), spandist.m_Re.at(m), tau);
+        spandist.m_Alpha_0[iStation] = Objects2d::getZeroLiftAngle(surf.foilA(), surf.foilB(), spandist.m_Re.at(iStation), tau);
 
         // interpolate
-        assert(CvAList.at(k) && CvBList.at(k));
 
-        spandist.m_bConverged[m] = true;
-        spandist.m_PCd[m]    = CdAList.at(k)     * (1.0-tau) + CdBList.at(k)     * tau;
-        spandist.m_XTrTop[m] = XTrTopAList.at(k) * (1.0-tau) + XTrTopBList.at(k) * tau;
-        spandist.m_XTrBot[m] = XTrBotAList.at(k) * (1.0-tau) + XTrBotBList.at(k) * tau;
+        // repurposing control variable to contain convergence result
+        spandist.m_bConverged[iStation] = LeftSidePolar.m_Control.at(k)>0.0 && RightSidePolar.m_Control.at(k)>0.0;
+        spandist.m_PCd[iStation]    = LeftSidePolar.m_Cd.at(k)     * (1.0-tau) + RightSidePolar.m_Cd.at(k)     * tau;
+        spandist.m_XTrTop[iStation] = LeftSidePolar.m_XTrTop.at(k) * (1.0-tau) + RightSidePolar.m_XTrTop.at(k) * tau;
+        spandist.m_XTrBot[iStation] = LeftSidePolar.m_XTrBot.at(k) * (1.0-tau) + RightSidePolar.m_XTrBot.at(k) * tau;
 
-        m++; // wing station counter
+        iStation++; // wing station counter
         if(s_bCancel) break;
     }
+
     return true;
 }
 
 
+bool PlaneTask::computeSectionDragOTF(XFoilTask *pTask) const
+{
+    pTask->processClList();
+
+
+    // fall back: re-try unconverged points with BL initialization
+    Polar const *pPolar = pTask->polar();
+    for(int k=0; k<pPolar->dataSize(); k++)
+    {
+        if(pPolar->m_Control.at(k)<0.0) // repurposed
+        {
+            pTask->processCl(k);
+        }
+
+        if(pPolar->m_Control.at(k)<0.0) // repurposed
+        {
+            return false; // XFoil OTF fail, operating point will be discarded
+        }
+
+        if(isCancelled())
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+
+
 bool PlaneTask::computeViscousDragOTF(WingXfl *pWing, double alpha, double beta, double QInf,
                                       PlanePolar const *pWPolar, Vector3d const &cog, AngleControl const &TEFlapAngles, SpanDistribs &SpanResFF,
-                                      std::string &logmsg)
+                                      std::string &logmsg) const
 {
     // on the fly viscous drag calculation
     // for each surface, calulate the drag at each end foil for each lift and reynolds at each span station
@@ -3031,14 +2992,13 @@ bool PlaneTask::computeViscousDragOTF(WingXfl *pWing, double alpha, double beta,
 
     for (int jsurf=0; jsurf<pWing->nSurfaces(); jsurf++)
     {
-//        traceLog(QString::asprintf("                Processing surface %d\n", jsurf+1));
         Surface const &surf = pWing->surface(jsurf);
         if(surf.hasTEFlap()) theta = TEFlapAngles.value(iCtrl++);
         else                 theta = 0.0;
 
         threads.push_back(std::thread(&PlaneTask::computeSurfaceDragOTF, this, surf, m, theta, std::ref(SpanResFF)));
 
-//        computeSurfaceDragOTF(surf, m, theta, sd, logs[jsurf]);
+        computeSurfaceDragOTF(surf, m, theta, SpanResFF);
         m += surf.NYPanels();
     }
 

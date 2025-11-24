@@ -37,8 +37,8 @@
 #elif defined INTEL_MKL
     #include <mkl.h>
 #elif defined OPENBLAS
-    #include <cblas.h>
     #include <openblas/lapacke.h>
+    #include <openblas/cblas.h>
 #endif
 
 

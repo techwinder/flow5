@@ -65,16 +65,10 @@ linux-g++ {
         #   LIBS += -lgomp
         ##    LIBS += -lmkl_intel_thread -lmkl_sequential
     } else {
-        # ---------------- system LAPACK/LAPACKE + CBLAS/OpenBLAS-----------------------------
+        # ---------------- system OpenBLAS -----------------------------
         DEFINES += OPENBLAS
-
-        #    LIBS += -L/etc/alternatives  #distro dependent
-            LIBS += -llapack -llapacke
-
-            #link to either the cblas (slow) or openblas (fast) library
-#            LIBS += -lcblas
-            LIBS += -lopenblas
-
+        LIBS += -lopenblas
+        LIBS += -llapack -llapacke
     }
 
 

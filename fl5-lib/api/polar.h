@@ -152,6 +152,7 @@ class FL5LIB_EXPORT Polar : public XflObject
         const std::vector<double> &getVariable(int iVar) const;
         bool hasData() const {return m_Alpha.size()>0;}
         int dataSize() const {return int(m_Alpha.size());}
+        void resizeData(int n);
 
         bool isXFoil()  const {return m_BLMethod==BL::XFOIL;}
 

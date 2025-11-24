@@ -78,11 +78,7 @@ linux-g++ {
         # ---------------- system LAPACK/LAPACKE + CBLAS/OpenBLAS-----------------------------
         DEFINES += OPENBLAS
 
-        #    LIBS += -L/etc/alternatives  #distro dependent
             LIBS += -llapack -llapacke
-
-            #link to either the cblas (slow) or openblas (fast) library
-    #            LIBS += -lcblas
             LIBS += -lopenblas
 
     }

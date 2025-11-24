@@ -1333,4 +1333,26 @@ double Polar::interpolateFromCl(double Cl, Polar::enumPolarVariable PlrVar, bool
 }
 
 
+void Polar::resizeData(int n)
+{
+    m_Alpha.resize(n);
+    m_Cl.resize(n);
+    m_XCp.resize(n);
+    m_Cd.resize(n);
+    m_Cdp.resize(n);
+    m_Cm.resize(n);
+    m_XTrTop.resize(n);
+    m_XTrBot.resize(n);;
+    m_XLamSepTop.resize(n);;
+    m_XLamSepBot.resize(n);;
+    m_XTurbSepTop.resize(n);;
+    m_XTurbSepBot.resize(n);;
+    m_HMom.resize(n);;
+    m_Cpmn.resize(n);;
+    m_ClCd.resize(n);;
+    m_Cl32Cd.resize(n);;
+    m_RtCl.resize(n);;
+    m_Re.resize(n);;
+    m_Control.resize(n);;
+}
 

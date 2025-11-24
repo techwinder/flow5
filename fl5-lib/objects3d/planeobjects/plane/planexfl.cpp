@@ -25,7 +25,6 @@
 
 #include <QString>
 
-
 #include <planexfl.h>
 #include <fusenurbs.h>
 #include <fuseflatfaces.h>
@@ -1460,10 +1459,18 @@ void PlaneXfl::makeTriMesh(bool bThickSurfaces)
     m_TriMesh = m_RefTriMesh;
 }
 
+#include <QElapsedTimer>
+#include <QDebug>
 
 /** Potentially lengthy task, so on-demand only */
 bool PlaneXfl::connectTriMesh(bool bConnectTE, bool bThickSurfaces, bool )
 {
+    QElapsedTimer t; t.start();
+
+
+    m_RefTriMesh.makeConnectionsFromNodePosition(false, true);
+
+    /*
     //make internal fuse connections
     for(int ifuse=0; ifuse<fuseCount(); ifuse++)
     {
@@ -1472,6 +1479,8 @@ bool PlaneXfl::connectTriMesh(bool bConnectTE, bool bThickSurfaces, bool )
         int n1 = pFuse->nPanel3();
         m_RefTriMesh.makeConnectionsFromNodePosition(i1, n1, LENGTHPRECISION, true);
     }
+
+
 
     // make internal wing connections
     for(int iw=0; iw<nWings(); iw++)
@@ -1502,12 +1511,6 @@ bool PlaneXfl::connectTriMesh(bool bConnectTE, bool bThickSurfaces, bool )
             m_RefTriMesh.connectMeshes(i0, n0, i1, n1);
         }
 
-        // finally try to connect left and right inner surfaces in case they were not connected to the fuselage
-/*        if(!wing.hasCenterGap())
-        {
-            if(!wing.connectInnerSurfaces(m_RefTriMesh.panels(), bThickSurfaces))  return false; // something went wrong
-        }*/
-
         //connect surfaces
         bool bConnectFlaps = false;
         for(int is=0; is<wing.nSurfaces()-1; is++)
@@ -1517,6 +1520,11 @@ bool PlaneXfl::connectTriMesh(bool bConnectTE, bool bThickSurfaces, bool )
             wing.connectSurfaceToNext(is, m_RefTriMesh.panels(), bConnectFlaps, bThickSurfaces);
         }
     }
+*/
+
+    QString strange = QString::asprintf("   Time to connect: %.3f s\n\n", double(t.elapsed())/1000.0);
+    qDebug()<<strange;
+
 
     m_RefTriMesh.connectNodes();
 

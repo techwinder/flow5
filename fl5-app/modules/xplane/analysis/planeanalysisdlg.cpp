@@ -165,8 +165,6 @@ void PlaneAnalysisDlg::cleanUp()
 {
     onOutputMessage("Cleaning up\n");
 
-//    if(m_pLastLivePOpp) delete m_pLastLivePOpp; // no further use
-//    m_pLastLivePOpp = nullptr;
     QString logFileName = SaveOptions::newLogFileName();
 
     SaveOptions::setLastLogFileName(logFileName);
@@ -393,7 +391,7 @@ void PlaneAnalysisDlg::runAsync()
 
     std::thread p(&PlaneTask::run, m_pActiveTask);
 
-    while(!m_pActiveTask->isFinished())
+    while(!m_pActiveTask->isFinished() || !m_pActiveTask->m_theMsgQueue.empty())
     {
         // Access the Q under the lock:
         std::unique_lock<std::mutex> lck(m_pActiveTask->m_mtx);

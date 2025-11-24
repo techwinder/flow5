@@ -162,7 +162,7 @@ bool XFoilTask::initialize(Foil *pFoil, Polar *pPolar, bool bKeepOpps)
 
 
 /** Fallback for 3d OTF calculations at unconverged span spations */
-bool XFoilTask::processCl(double Cl, double Re, double &Cd, double &XTrTop, double &XTrBot, bool &bCv)
+bool XFoilTask::processCl(int k)
 {
     QString str;
 
@@ -174,13 +174,13 @@ bool XFoilTask::processCl(double Cl, double Re, double &Cd, double &XTrTop, doub
     m_XFoilInstance.lalfa = false;
     m_XFoilInstance.alfa = 0.0;
     m_XFoilInstance.qinf = 1.0;
-    m_XFoilInstance.clspec = Cl;
+    m_XFoilInstance.clspec = m_pPolar->m_Cl.at(k);
 
-    m_XFoilInstance.reinf1 = Re;
+    m_XFoilInstance.reinf1 = m_pPolar->m_Re.at(k);
     m_XFoilInstance.minf1  = 0.0;
 
 
-    str = QString::asprintf("   Re=%g  Cl=%g ", Re, Cl);
+    str = QString::asprintf("   Re=%g  Cl=%g ", m_pPolar->m_Re.at(k), m_pPolar->m_Cl.at(k));
     traceLog(str);
     if(!m_XFoilInstance.speccl())
     {
@@ -199,60 +199,120 @@ bool XFoilTask::processCl(double Cl, double Re, double &Cd, double &XTrTop, doub
     {
         str = QString::asprintf("   ...converged after %3d iterations / Cl=%5f  Cd=%5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
         traceLog(str);
-        bCv    = m_XFoilInstance.lvconv;
-        Cd     = m_XFoilInstance.cd;
-        XTrTop = m_XFoilInstance.xoctr[1];
-        XTrBot = m_XFoilInstance.xoctr[2];
+        // repurposing control variable to contain convergence result
+        m_pPolar->m_Control[k] = m_XFoilInstance.lvconv ? 1.0 : -1.0;
+        m_pPolar->m_Cd[k]      = m_XFoilInstance.cd;
+        m_pPolar->m_XTrTop[k]  = m_XFoilInstance.xoctr[1];
+        m_pPolar->m_XTrBot[k]  = m_XFoilInstance.xoctr[2];
     }
     else
     {
         str = QString::asprintf("   ...unconverged after %d iterations\n", iterations);
         traceLog(str);     
 
-        // fallback: interpolate
-
-        m_XFoilInstance.lblini = false;
-        m_XFoilInstance.lipan  = false;
-
-        m_AnalysisRange.clear();
+        // final fallback: build a polar to try an interpolation
+        Polar temppolar(*m_pPolar);
 
         // define a wide range
         double ClMax(0);
-        if(Cl>0) ClMax = Cl + 0.5;
-        else     ClMax = Cl -0.5;
-        m_AnalysisRange.push_back({true,0.0, ClMax, 0.05});
+        if(m_pPolar->m_Cl.at(k)>0) ClMax = m_pPolar->m_Cl.at(k) + 0.5;
+        else                       ClMax = m_pPolar->m_Cl.at(k) -0.5;
 
         // launch the sequence
-        alphaSequence(false);
+        ClRange(&temppolar, {true,0.0, ClMax, 0.05});
 
         // interpolate
         bool bOutCl = false;
-        Cd     = m_pPolar->interpolateFromCl(Cl, Polar::CD,     bOutCl);
-        XTrTop = m_pPolar->interpolateFromCl(Cl, Polar::XTRTOP, bOutCl);
-        XTrBot = m_pPolar->interpolateFromCl(Cl, Polar::XTRBOT, bOutCl);
-        bCv = !bOutCl;
+        m_pPolar->m_Cd[k]     = temppolar.interpolateFromCl(m_pPolar->m_Cl.at(k), Polar::CD,     bOutCl);
+        m_pPolar->m_XTrTop[k] = temppolar.interpolateFromCl(m_pPolar->m_Cl.at(k), Polar::XTRTOP, bOutCl);
+        m_pPolar->m_XTrBot[k] = temppolar.interpolateFromCl(m_pPolar->m_Cl.at(k), Polar::XTRBOT, bOutCl);
+        // repurposing control variable to contain convergence result
+        m_pPolar->m_Control[k] = !bOutCl ? 1.0 : -1.0;
     }
 
-    return bCv;
+    return m_pPolar->m_Control[k]>0.0;
 }
 
 
+/** specific to OTF calculations */
+bool XFoilTask::ClRange(Polar *pPolar, AnalysisRange const &range)
+{
+    initializeBL();
+
+    int iter=0;
+    double SpMin = range.m_vMin;
+    double SpMax = range.m_vMax;
+    double SpInc = fabs(range.m_vInc);
+    if(SpMax<SpMin) SpInc = -SpInc;
+
+    double Cl = SpMin;
+
+    do
+    {
+        if(s_bCancel) break;
+
+        m_XFoilInstance.lalfa = false;
+        m_XFoilInstance.alfa = 0.0;
+        m_XFoilInstance.qinf = 1.0;
+        m_XFoilInstance.clspec = Cl;
+
+        if(!m_XFoilInstance.speccl())
+        {
+            m_bErrors = true;
+            return false;
+        }
+
+        m_XFoilInstance.lwake = false;
+        m_XFoilInstance.lvconv = false;
+
+        loop();
+
+        if(m_XFoilInstance.lvconv)
+        {
+            if(m_XFoilInstance.cd<s_CdError)
+            {
+//                discarding operating point with spurious Cd;
+            }
+            else
+            {
+                OpPoint *pOpPoint = new OpPoint;
+                addXFoilData(pOpPoint, m_XFoilInstance, m_pFoil);
+                pPolar->addOpPointData(pOpPoint); // store the data on the fly; a polar is only used by one task at a time
+                delete pOpPoint;
+            }
+        }
+        else
+        {
+
+            m_XFoilInstance.lblini = false;
+            m_XFoilInstance.lipan = false;
+
+            m_bErrors = true;
+        }
+
+        Cl       += SpInc;
+
+        if(SpMin<=SpMax)
+        {
+            if(Cl>SpMax+ANGLEPRECISION) break;
+        }
+        else
+        {
+            if(Cl<SpMax-ANGLEPRECISION) break;
+        }
+
+        if(fabs(SpInc)<ANGLEPRECISION) break;
+    } while(iter++<1000); // failsafe limit
+
+    return true;
+}
+
+
+
 /** Tailored for 3d OTF calculations */
-bool XFoilTask::processClList(std::vector<double> const& ClList, std::vector<double> const& ReList,
-                              std::vector<double> &CdList, std::vector<double> &XTrTopList, std::vector<double> &XTrBotList,
-                              std::vector<bool> &CvList)
+bool XFoilTask::processClList()
 {
     QString str;
-
-    CdList.resize(ClList.size());
-    XTrTopList.resize(ClList.size());
-    XTrBotList.resize(ClList.size());
-    CvList.resize(ClList.size());
-
-    std::fill(CdList.begin(),     CdList.end(),     0);
-    std::fill(XTrTopList.begin(), XTrTopList.end(), 0);
-    std::fill(XTrBotList.begin(), XTrBotList.end(), 0);
-    std::fill(CvList.begin(),     CvList.end(),     true);
 
 
 //    if(s_bInitBL)
@@ -262,21 +322,21 @@ bool XFoilTask::processClList(std::vector<double> const& ClList, std::vector<dou
         traceLog("   Initializing BL\n");
     }
 
-    for(uint icl=0; icl<ClList.size(); icl++)
+    for(uint icl=0; icl<m_pPolar->m_Cl.size(); icl++)
     {
         if(s_bCancel) break;
 
-        double Cl = ClList.at(icl);
+        double Cl = m_pPolar->m_Cl.at(icl);
 
         m_XFoilInstance.lalfa = false;
         m_XFoilInstance.alfa = 0.0;
         m_XFoilInstance.qinf = 1.0;
         m_XFoilInstance.clspec = Cl;
 
-        m_XFoilInstance.reinf1 = ReList.at(icl);
+        m_XFoilInstance.reinf1 = m_pPolar->m_Re.at(icl);
         m_XFoilInstance.minf1  = 0.0;
 
-        str = QString::asprintf("   Re=%g  Cl=%g ", ReList.at(icl), Cl);
+        str = QString::asprintf("   Re=%g  Cl=%g ", m_pPolar->m_Re.at(icl), m_pPolar->m_Cl.at(icl));
         traceLog(str);
         if(!m_XFoilInstance.speccl())
         {
@@ -291,14 +351,17 @@ bool XFoilTask::processClList(std::vector<double> const& ClList, std::vector<dou
 
         int iterations = loop();
 
-        CvList[icl] = m_XFoilInstance.lvconv;
+
+        // repurposing control variable to contain convergence result
+        m_pPolar->m_Control[icl] = m_XFoilInstance.lvconv ? 1.0 : -1.0;
+
         if(m_XFoilInstance.lvconv)
         {
             str = QString::asprintf("   ...converged after %d iterations / Cl=%5f  Cd=%5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
             traceLog(str);
-            CdList[icl]     = m_XFoilInstance.cd;
-            XTrTopList[icl] = m_XFoilInstance.xoctr[1];
-            XTrBotList[icl] = m_XFoilInstance.xoctr[2];
+            m_pPolar->m_Cd[icl]     = m_XFoilInstance.cd;
+            m_pPolar->m_XTrTop[icl] = m_XFoilInstance.xoctr[1];
+            m_pPolar->m_XTrBot[icl] = m_XFoilInstance.xoctr[2];
         }
         else
         {
