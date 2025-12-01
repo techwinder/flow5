@@ -714,6 +714,7 @@ void FuseMesherDlg::customEvent(QEvent *pEvent)
             strange = QString::asprintf("Node count     = %d\n", int(m_pFuse->nodes().size()));
             strange += "\n_______\n\n";
             m_ppto->onAppendQText(strange);
+//            gmsh::write("/home/techwinder/temp/gmesh.msh");
         }
 
         QVector<int> high;

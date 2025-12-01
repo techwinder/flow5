@@ -73,7 +73,7 @@ class FoilExplorer : public QWidget
 
         void updateObjectView();
 
-        void insertPolar(Polar *pPolar);
+        void insertPolar(const Polar *pPolar);
         void insertFoil(Foil* pFoil);
 
         void fillModelView();
@@ -94,9 +94,11 @@ class FoilExplorer : public QWidget
         void setOverallCheckStatus();
 
         void setCurveParams();
+        void updateLineStyles();
         void updateVisibilityBoxes();
 
         void setPropertiesFont(QFont const &fnt);
+        void setTreeFont(const QFont&fnt);
 
         QByteArray const &splitterSize() const {return m_SplitterSizes;}
         void setSplitterSize(QByteArray size) {m_SplitterSizes = size;}
@@ -121,7 +123,6 @@ class FoilExplorer : public QWidget
 
         void onSwitchAll(bool bChecked);
         void onSetFilter();
-        void onDataChanged(QModelIndex idxTop,QModelIndex idxBot);
 
     protected:
         static MainFrame *s_pMainFrame;

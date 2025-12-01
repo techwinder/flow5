@@ -75,6 +75,7 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
         virtual void duplicateSpec(const Polar3d *pPolar3d) override;
         void clearWPolarData();
 
+        void setDefaults() override;
         void setDefaultSpec(const Plane *pPlane);
 
         bool bViscousLoop() const {return m_bViscLoop;}
@@ -241,8 +242,7 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
     protected:
 
         Plane const *m_pPlane;
-        std::string  m_PlaneName;          /**< the name of the parent wing or plane */
-
+        std::string m_PlaneName;          /**< the name of the parent wing or plane */
 
         double m_RefArea;          /**< The reference area for the calculation of aero coefficients */
         double m_RefChord;   /**< The reference length = the mean aero chord, for the calculation of aero coefficients */
@@ -260,9 +260,15 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
         bool m_bThinSurfaces;      /**< true if VLM, false if 3D-panels */
 
         bool m_bViscLoop;
+        bool m_bAdjustedVelocity;  /** for a control polar, this flag determins if the velocity is calculated to balance the weight */
+
+
+        double   m_AlphaSpec;          /**< the angle of attack for type 4 & 5 polars */
+        double   m_QInfSpec;           /**< the freestream velocity for type 1 & 5 polars */
+
+        double m_XNeutralPoint;       /**< Neutral point position, calculated from d(XCp.Cl)/dCl >*/
 
     public:
-        bool m_bAdjustedVelocity;  /** for a control polar, this flag determins if the velocity is calculated to balance the weight */
 
         std::vector<AngleControl> m_FlapControls;      /**< T123578 polar: list of flap angles for each wing */
         std::vector<AngleControl> m_AVLControls;
@@ -270,10 +276,6 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
         std::vector<CtrlRange> m_OperatingRange;        /**< the operating range for a control polar: Velocity, alpha, beta, phi*/
         std::vector<CtrlRange> m_InertiaRange;          /**< the range of inertia parameters for a control polar: mass, CoG.x, CoG.z */
         std::vector<std::vector<CtrlRange>> m_AngleRange;   /**< the range of angle parameters for a control polar */
-
-        double   m_AlphaSpec;          /**< the angle of attack for type 4 & 5 polars */
-        double   m_QInfSpec;           /**< the freestream velocity for type 1 & 5 polars */
-
 
         std::vector<double>  m_Alpha;      /**< the angle of attack */
         std::vector<double>  m_Ctrl;       /**< Ctrl variable */
@@ -292,10 +294,6 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
         std::vector<double>  m_MaxBending; /**< the max bending moment at the root chord */
 
         std::vector<EigenValues>  m_EV;        /**< the data structiure of eignevalues and related variables */
-
-
-        double m_XNeutralPoint;       /**< Neutral point position, calculated from d(XCp.Cl)/dCl >*/
-
 
         static std::vector<std::string> s_VariableNames;
 };

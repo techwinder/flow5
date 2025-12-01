@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-
+#include <QElapsedTimer>
 #include <QString>
 
 #include <planexfl.h>
@@ -1459,6 +1459,10 @@ void PlaneXfl::makeTriMesh(bool bThickSurfaces)
 bool PlaneXfl::connectTriMesh(bool bRefTriMesh, bool bConnectTE, bool, bool )
 {
     TriMesh *pTriMesh = bRefTriMesh ? &m_RefTriMesh : &m_TriMesh;
+
+
+    QElapsedTimer t; t.start();
+
     //make internal fuse connections
     for(int ifuse=0; ifuse<fuseCount(); ifuse++)
     {
@@ -1683,7 +1687,7 @@ int PlaneXfl::stlFuseCount() const
 }
 
 
-bool PlaneXfl::hasWPolar(PlanePolar const*pWPolar) const {return pWPolar->planeName().compare(m_Name)==0;}
+bool PlaneXfl::hasPolar(PlanePolar const*pWPolar) const {return pWPolar->planeName().compare(m_Name)==0;}
 bool PlaneXfl::hasPOpp(PlaneOpp const*pPOpp)   const {return pPOpp->planeName().compare(m_Name)==0;}
 
 

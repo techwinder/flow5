@@ -84,7 +84,6 @@ FoilExplorer::FoilExplorer(QWidget *pParent) : QWidget(pParent)
 
     m_pTreeView->setModel(m_pModel);
     connect(m_pTreeView->m_pleFilter, SIGNAL(returnPressed()), this, SLOT(onSetFilter()));
-    connect(m_pModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(onDataChanged(QModelIndex,QModelIndex)));
 
     m_pTreeView->header()->hide();
     m_pTreeView->header()->setStretchLastSection(false);
@@ -448,6 +447,8 @@ void FoilExplorer::onItemClicked(const QModelIndex &index)
             ls = pLineMenu->theStyle();
             Objects2d::setPolarStyle(pPolar, ls, pLineMenu->styleChanged(), pLineMenu->widthChanged(), pLineMenu->colorChanged(), pLineMenu->pointsChanged(), true, xfl::darkFactor());
             pItem->setTheStyle(ls);
+            // update children items
+            updateLineStyles();
         }
         else if(pFoil)
         {
@@ -458,6 +459,8 @@ void FoilExplorer::onItemClicked(const QModelIndex &index)
             ls = pLineMenu->theStyle();
             Objects2d::setFoilStyle(pFoil, ls, pLineMenu->styleChanged(), pLineMenu->widthChanged(), pLineMenu->colorChanged(), pLineMenu->pointsChanged(), true, xfl::darkFactor());
             pItem->setTheStyle(ls);
+            // update children items
+            updateLineStyles();
         }
     }
     else if (index.column()==2)
@@ -770,7 +773,7 @@ void FoilExplorer::insertFoil(Foil *pFoil)
 }
 
 
-void FoilExplorer::insertPolar(Polar *pPolar)
+void FoilExplorer::insertPolar(Polar const*pPolar)
 {
     if(!pPolar) pPolar = XDirect::curPolar();
     if(!pPolar) return;
@@ -790,7 +793,8 @@ void FoilExplorer::insertPolar(Polar *pPolar)
                 Polar const*pOldPolar = Objects2d::polar(pPolar->foilName(), pOldPolarItem->name().toStdString());
                 if(pOldPolar)
                 {
-                    if(pOldPolarItem->name().toStdString().compare(pPolar->name())==0)
+                    int res = pPolar->compareTo(pOldPolar);
+                    if(res==0)
                     {
                         QModelIndex polarindex = m_pModel->index(jr, 0, pFoilItem);
                         // remove the discarded children Opps
@@ -798,7 +802,7 @@ void FoilExplorer::insertPolar(Polar *pPolar)
 
                         pNewPolarItem = pOldPolarItem;
                     }
-                    else if(pOldPolar->Reynolds()>pPolar->Reynolds())
+                    else if(res<0)
                     {
                         //insert before
                         pNewPolarItem = m_pModel->insertRow(pFoilItem, jr, pPolar->name(), pPolar->theStyle(), polarState(pPolar));
@@ -877,19 +881,21 @@ QString FoilExplorer::removeFoil(QString const &foilName)
 {
     if(!foilName.length()) return "";
 
+    m_pTreeView->selectionModel()->blockSignals(true);
 
-    for(int ir = 0; ir<m_pModel->rowCount(); ir++)
+    for(int ir=0; ir<m_pModel->rowCount(); ir++)
     {
         ObjectTreeItem *pItem = m_pModel->item(ir);
         // scan
         if(pItem->name().compare(foilName)==0)
         {
-            // plane found
+            // foil found
             m_pModel->removeRow(ir);
             break;
         }
     }
 
+    m_pTreeView->selectionModel()->blockSignals(false);
     setOverallCheckStatus();
     return QString("");
 }
@@ -899,7 +905,7 @@ QString FoilExplorer::removePolar(Polar *pPolar)
 {
     if(!pPolar) return QString("");
 
-//    m_pTreeView->selectionModel()->blockSignals(true);
+    m_pTreeView->selectionModel()->blockSignals(true);
     for(int ir=0; ir<m_pModel->rowCount(); ir++)
     {
         ObjectTreeItem *pFoilItem = m_pModel->item(ir);
@@ -917,7 +923,7 @@ QString FoilExplorer::removePolar(Polar *pPolar)
                     {
                         m_pModel->removeRow(jr, planeindex);
 //                        pPlaneItem->removeRow(jr);
-//                        m_pTreeView->selectionModel()->blockSignals(false);
+                        m_pTreeView->selectionModel()->blockSignals(false);
 
                         // find the previous item, or the next one if this polar is the first
                         if(pFoilItem->rowCount())
@@ -933,14 +939,15 @@ QString FoilExplorer::removePolar(Polar *pPolar)
     }
 
     setOverallCheckStatus();
-//    m_pTreeView->selectionModel()->blockSignals(false);
-    return QString(); /** @todo need to do better than that */
+    m_pTreeView->selectionModel()->blockSignals(false);
+    return QString();
 }
 
 
 void FoilExplorer::removeOpPoint(OpPoint *pOpp)
 {
     if(!pOpp) return;
+    m_pTreeView->selectionModel()->blockSignals(true);
 
     for(int ir=0; ir<m_pModel->rowCount(); ir++)
     {
@@ -955,7 +962,11 @@ void FoilExplorer::removeOpPoint(OpPoint *pOpp)
                 if(pPolarItem && pPolarItem->name().toStdString().compare(pOpp->polarName())==0)
                 {
                     Polar *pPolar = Objects2d::polar(pOpp->foilName(), pOpp->polarName());
-                    if(!pPolar) return; // error, should exist
+                    if(!pPolar)
+                    {
+                        m_pTreeView->selectionModel()->blockSignals(false);
+                        return; // error, should exist
+                    }
 
                     //find the POpp item
                     for(int kr=0; kr<pPolarItem->rowCount(); kr++)
@@ -967,6 +978,7 @@ void FoilExplorer::removeOpPoint(OpPoint *pOpp)
                             if(pOppItem->name().compare(QString::fromStdString(pOpp->name()))==0)
                             {
                                 m_pModel->removeRow(kr, polarindex);
+                                m_pTreeView->selectionModel()->blockSignals(false);
                                 return;
                             }
                         }
@@ -977,12 +989,14 @@ void FoilExplorer::removeOpPoint(OpPoint *pOpp)
     }
 
     setOverallCheckStatus();
+    m_pTreeView->selectionModel()->blockSignals(false);
 }
 
 
 void FoilExplorer::removeFoilPolars(Foil *pFoil)
 {
     if(!pFoil) return;
+    m_pTreeView->selectionModel()->blockSignals(true);
 
     for(int ir = 0; ir<m_pModel->rowCount(); ir++)
     {
@@ -1007,14 +1021,16 @@ void FoilExplorer::removeFoilPolars(Foil *pFoil)
             break;
         }
     }
-
     setOverallCheckStatus();
+
+    m_pTreeView->selectionModel()->blockSignals(false);
 }
 
 
 void FoilExplorer::removePolarOpps(Polar const*pPolar)
 {
     if(!pPolar) return;
+    m_pTreeView->selectionModel()->blockSignals(true);
 
     for(int ir=0; ir<m_pModel->rowCount(); ir++)
     {
@@ -1037,6 +1053,8 @@ void FoilExplorer::removePolarOpps(Polar const*pPolar)
 
 //    m_pModel->updateData();
     setOverallCheckStatus();
+    m_pTreeView->selectionModel()->blockSignals(false);
+
 }
 
 
@@ -1058,52 +1076,6 @@ void FoilExplorer::keyPressEvent(QKeyEvent *pEvent)
     }
     if(!pEvent->isAccepted())
         s_pXDirect->keyPressEvent(pEvent);
-}
-
-
-void FoilExplorer::updateVisibilityBoxes()
-{
-    ObjectTreeItem const *pRootItem = m_pModel->rootItem();
-    for(int ir=0; ir<pRootItem->rowCount(); ir++)
-    {
-        ObjectTreeItem *pFoilItem = pRootItem->child(ir);
-        if(!pFoilItem) continue;
-        Foil *pFoil = Objects2d::foil(pFoilItem->name().toStdString());
-        if(!pFoil) continue;
-
-        QModelIndex checkindex = m_pModel->index(ir, 2);
-        m_pModel->setData(checkindex, foilState(pFoil), Qt::DisplayRole);
-
-        for(int jr=0; jr<pFoilItem->rowCount(); jr++)
-        {
-            ObjectTreeItem *pPolarItem = pFoilItem->child(jr);
-            Polar *pPolar = Objects2d::polar(pFoil, pPolarItem->name().toStdString());
-            if(!pPolar) continue;
-
-            QModelIndex checkindex = m_pModel->index(jr, 2, pFoilItem);
-            m_pModel->setData(checkindex, polarState(pPolar), Qt::DisplayRole);
-
-            for(int i2=0; i2<pPolarItem->rowCount(); i2++)
-            {
-                ObjectTreeItem *pOppItem = pPolarItem->child(i2);
-                if(pOppItem)
-                {
-                    QString strange = pOppItem->name();
-                    strange = strange.remove(DEGch);
-                    double val = strange.toDouble();
-                    OpPoint *pOpp = Objects2d::opPointAt(pFoil, pPolar, val);
-
-                    if(!pOpp) continue;
-
-                    bool bChecked = pOpp->isVisible() && (s_pXDirect->isOppView() || s_pXDirect->isBLView());
-                    Qt::CheckState state = bChecked ? Qt::Checked : Qt::Unchecked;
-
-                    QModelIndex checkindex = m_pModel->index(i2, 2, pPolarItem);
-                    m_pModel->setData(checkindex, state, Qt::DisplayRole);
-                }
-            }
-        }
-    }
 }
 
 
@@ -1165,6 +1137,13 @@ void FoilExplorer::setCurveParams()
         }
     }
 }
+
+
+void FoilExplorer::setTreeFont(QFont const &fnt)
+{
+    m_pTreeView->setFont(fnt);
+}
+
 
 
 void FoilExplorer::setPropertiesFont(QFont const &fnt)
@@ -1231,12 +1210,6 @@ void FoilExplorer::setOverallCheckStatus()
 }
 
 
-void FoilExplorer::onDataChanged(QModelIndex idxTop,QModelIndex idxBot)
-{
-    qDebug()<<"datachhanged"<<idxTop.row()<<idxBot.row();
-}
-
-
 void FoilExplorer::onSetFilter()
 {
     QString filter = m_pTreeView->filter();
@@ -1255,21 +1228,14 @@ void FoilExplorer::onSetFilter()
         {
             Polar *pPolar = Objects2d::polarAt(jp);
             bool bVisible = QString::fromStdString(pPolar->name()).contains(filter, Qt::CaseInsensitive);
-            pPolar->setVisible(bVisible);
+            Objects2d::setPolarVisible(pPolar, bVisible);
         }
 
         for(int ip=0; ip<Objects2d::nFoils(); ip++)
         {
-            Foil const *pFoil = Objects2d::foilAt(ip);
+            Foil *pFoil = Objects2d::foil(ip);
             if(QString::fromStdString(pFoil->name()).contains(filter, Qt::CaseInsensitive))
-            {
-                for(int jp=0; jp<Objects2d::nPolars(); jp++)
-                {
-                    Polar *pPolar = Objects2d::polarAt(jp);
-                    if(pPolar->foilName()==pFoil->name())
-                        pPolar->setVisible(true);
-                }
-            }
+                Objects2d::setFoilVisible(pFoil, true, false);
         }
     }
     else
@@ -1292,17 +1258,15 @@ void FoilExplorer::onSetFilter()
                     if(pPolar->foilName()==pFoil->name())
                     {
                         bool bVisible = QString::fromStdString(pPolar->name()).contains(polarfilter, Qt::CaseInsensitive);
-                        pPolar->setVisible(bVisible);
+                        Objects2d::setPolarVisible(pPolar, bVisible);
                     }
                 }
             }
         }
     }
 
+    updateVisibilityBoxes();
 
-    setCurveParams();
-
-//    m_pModel->updateData();
     setOverallCheckStatus();
 
     s_pXDirect->resetCurves();
@@ -1311,6 +1275,99 @@ void FoilExplorer::onSetFilter()
     emit s_pXDirect->projectModified();
 
 }
+
+
+void FoilExplorer::updateVisibilityBoxes()
+{
+    const int CHECKCOLUMN = 2;
+    ObjectTreeItem const *pRootItem = m_pModel->rootItem();
+    for(int ir=0; ir<pRootItem->rowCount(); ir++)
+    {
+        ObjectTreeItem *pFoilItem = pRootItem->child(ir);
+        if(!pFoilItem) continue;
+        Foil *pFoil = Objects2d::foil(pFoilItem->name().toStdString());
+        if(!pFoil) continue;
+
+        QModelIndex checkindex = m_pModel->index(ir, CHECKCOLUMN);
+        m_pModel->setData(checkindex, foilState(pFoil), Qt::DisplayRole);
+
+        for(int jr=0; jr<pFoilItem->rowCount(); jr++)
+        {
+            ObjectTreeItem *pPolarItem = pFoilItem->child(jr);
+            Polar *pPolar = Objects2d::polar(pFoil, pPolarItem->name().toStdString());
+            if(!pPolar) continue;
+
+            QModelIndex checkindex = m_pModel->index(jr, CHECKCOLUMN, pFoilItem);
+            m_pModel->setData(checkindex, polarState(pPolar), Qt::DisplayRole);
+
+            for(int i2=0; i2<pPolarItem->rowCount(); i2++)
+            {
+                ObjectTreeItem *pOppItem = pPolarItem->child(i2);
+                if(pOppItem)
+                {
+                    QString strange = pOppItem->name();
+                    strange = strange.remove(DEGch);
+                    double val = strange.toDouble();
+                    OpPoint *pOpp = Objects2d::opPointAt(pFoil, pPolar, val);
+
+                    if(!pOpp) continue;
+
+                    bool bChecked = pOpp->isVisible() && (s_pXDirect->isOppView() || s_pXDirect->isBLView());
+                    Qt::CheckState state = bChecked ? Qt::Checked : Qt::Unchecked;
+
+                    QModelIndex checkindex = m_pModel->index(i2, CHECKCOLUMN, pPolarItem);
+                    m_pModel->setData(checkindex, state, Qt::DisplayRole);
+                }
+            }
+        }
+    }
+}
+
+
+void FoilExplorer::updateLineStyles()
+{
+    const int STYLECOLUMN = 1;
+    ObjectTreeItem const *pRootItem = m_pModel->rootItem();
+    for(int ir=0; ir<pRootItem->rowCount(); ir++)
+    {
+        ObjectTreeItem *pFoilItem = pRootItem->child(ir);
+        if(!pFoilItem) continue;
+        Foil *pFoil = Objects2d::foil(pFoilItem->name().toStdString());
+        if(!pFoil) continue;
+
+        QModelIndex styleindex = m_pModel->index(ir, STYLECOLUMN);
+        m_pModel->setData(styleindex, QVariant::fromValue(pFoil->theStyle()), Qt::DisplayRole);
+
+        for(int jr=0; jr<pFoilItem->rowCount(); jr++)
+        {
+            ObjectTreeItem *pPolarItem = pFoilItem->child(jr);
+            Polar *pPolar = Objects2d::polar(pFoil, pPolarItem->name().toStdString());
+            if(!pPolar) continue;
+
+            QModelIndex plrstyleindex = m_pModel->index(jr, STYLECOLUMN, pFoilItem);
+            m_pModel->setData(plrstyleindex, QVariant::fromValue(pPolar->theStyle()), Qt::DisplayRole);
+
+            for(int i2=0; i2<pPolarItem->rowCount(); i2++)
+            {
+                ObjectTreeItem *pOppItem = pPolarItem->child(i2);
+                if(pOppItem)
+                {
+                    QString strange = pOppItem->name();
+                    strange = strange.remove(DEGch);
+                    double val = strange.toDouble();
+                    OpPoint *pOpp = Objects2d::opPointAt(pFoil, pPolar, val);
+
+                    if(!pOpp) continue;
+
+                    QModelIndex checkindex = m_pModel->index(i2, STYLECOLUMN, pPolarItem);
+                    m_pModel->setData(checkindex, QVariant::fromValue(pOpp->theStyle()), Qt::DisplayRole);
+                }
+            }
+        }
+    }
+}
+
+
 
 
 

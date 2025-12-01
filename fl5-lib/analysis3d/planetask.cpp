@@ -1212,7 +1212,8 @@ void PlaneTask::outputStateMatrices(PlaneOpp const *pPOpp)
 }
 
 
-PlaneOpp* PlaneTask::computePlane(double ctrl, double alpha, double beta, double phi, double QInf, double mass, Vector3d const &CoG, bool bInGeomAxes)
+PlaneOpp* PlaneTask::computePlane(double ctrl, double alpha, double beta, double phi, double QInf, double mass,
+                                  Vector3d const &CoG, bool bInGeomAxes)
 {
     if(QInf<PRECISION)
     {
@@ -1930,7 +1931,7 @@ bool PlaneTask::T7Loop()
     {
         if(isCancelled()) return true;
         //no zero moment alpha
-        str = QString::asprintf("      Unsuccessful attempt to trim the model for control position=%2f - skipping.\n\n\n", m_Ctrl);
+        str = QString::asprintf("      Unsuccessful attempt to trim the model for control position = %.2f - skipping.\n\n\n", m_Ctrl);
         traceLog(str);
         m_bError = true;
     }
@@ -1945,7 +1946,7 @@ bool PlaneTask::T7Loop()
 
         if (isCancelled()) return true;
 
-        str = QString::asprintf("      Calculating Plane for alpha=%2f", AlphaEq) + DEGch + EOLch;
+        str = "      Calculating Plane for "+ALPHAch + QString::asprintf("=%.2f", AlphaEq) + DEGch + EOLch;
         traceLog(str);
         PlaneOpp *pPOpp = computePlane(m_Ctrl, AlphaEq, m_Beta, m_Phi, u0, mass, CoG, false);
         if(!pPOpp)

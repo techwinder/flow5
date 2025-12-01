@@ -342,119 +342,113 @@ void BoatExplorer::onCurrentRowChanged(QModelIndex curidx, QModelIndex )
 
 void BoatExplorer::onItemClicked(const QModelIndex &index)
 {
-    Boat *m_pBoat         = s_pXSail->m_pCurBoat;
-    BoatPolar *m_pBtPolar = s_pXSail->m_pCurBtPolar;
-    BoatOpp *m_pBtOpp     = s_pXSail->m_pCurBtOpp;
+    Boat *pBoat         = s_pXSail->m_pCurBoat;
+    BoatPolar *pBtPolar = s_pXSail->m_pCurBtPolar;
+    BoatOpp *pBtOpp     = s_pXSail->m_pCurBtOpp;
 
     if(index.column()==1)
     {
         ObjectTreeItem *pItem = m_pModel->itemFromIndex(index);
 
-        if(m_pBtOpp)
+        if(pBtOpp)
         {
             if(s_pXSail->is3dView())
             {
-                LineStyle ls(m_pBtOpp->theStyle());
+                LineStyle ls(pBtOpp->theStyle());
                 LineMenu *pLineMenu = new LineMenu(nullptr);
                 pLineMenu->initMenu(ls);
                 pLineMenu->exec(QCursor::pos());
                 ls = pLineMenu->theStyle();
-                m_pBtOpp->setLineStipple(ls.m_Stipple);
-                m_pBtOpp->setLineWidth(ls.m_Width);
-                m_pBtOpp->setLineColor(ls.m_Color);
-                m_pBtOpp->setPointStyle(ls.m_Symbol);
+                pBtOpp->setLineStipple(ls.m_Stipple);
+                pBtOpp->setLineWidth(ls.m_Width);
+                pBtOpp->setLineColor(ls.m_Color);
+                pBtOpp->setPointStyle(ls.m_Symbol);
                 pItem->setTheStyle(ls);
                 s_pXSail->resetCurves();
-                emit s_pXSail->projectModified();
             }
         }
-        else if(m_pBtPolar)
+        else if(pBtPolar)
         {
-            LineStyle ls(m_pBtPolar->theStyle());
+            LineStyle ls(pBtPolar->theStyle());
             LineMenu *pLineMenu = new LineMenu(nullptr);
             pLineMenu->initMenu(ls);
             pLineMenu->exec(QCursor::pos());
             ls = pLineMenu->theStyle();
 
-            SailObjects::setBPolarStyle(m_pBtPolar, ls, pLineMenu->styleChanged(), pLineMenu->widthChanged(), pLineMenu->colorChanged(), pLineMenu->pointsChanged());
-            setCurveParams();
-
+            SailObjects::setBPolarStyle(pBtPolar, ls, pLineMenu->styleChanged(), pLineMenu->widthChanged(), pLineMenu->colorChanged(), pLineMenu->pointsChanged());
             pItem->setTheStyle(ls);
+            updateLineStyles();
+
             s_pXSail->resetCurves();
-            emit s_pXSail->projectModified();
         }
-        else if(m_pBoat)
+        else if(pBoat)
         {
-            LineStyle ls(m_pBoat->theStyle());
+            LineStyle ls(pBoat->theStyle());
             LineMenu *pLineMenu = new LineMenu(nullptr);
             pLineMenu->initMenu(ls);
             pLineMenu->exec(QCursor::pos());
             ls = pLineMenu->theStyle();
 
-            SailObjects::setBoatStyle(m_pBoat, ls, pLineMenu->styleChanged(), pLineMenu->widthChanged(), pLineMenu->colorChanged(), pLineMenu->pointsChanged());
-            setCurveParams();
+            SailObjects::setBoatStyle(pBoat, ls, pLineMenu->styleChanged(), pLineMenu->widthChanged(), pLineMenu->colorChanged(), pLineMenu->pointsChanged());
 
             pItem->setTheStyle(ls);
-            s_pXSail->resetCurves();
-            emit s_pXSail->projectModified();
+            updateLineStyles();
 
             s_pXSail->resetCurves();
         }
     }
     else if (index.column()==2)
     {
-        if(m_pBtOpp)
+        if(pBtOpp)
         {
             if(s_pXSail->is3dView())
             {
                 ObjectTreeItem *pItem = m_pModel->itemFromIndex(index);
                 if(pItem)
                 {
-                    m_pBtOpp->setVisible(!m_pBtOpp->isVisible());
+                    pBtOpp->setVisible(!pBtOpp->isVisible());
 //                    pItem->setCheckState(m_pPOpp->isVisible() ? Qt::Checked : Qt::Unchecked);
-                    setCurveParams();
+                    updateVisibilityBoxes();
                     s_pXSail->resetCurves();
-                    emit s_pXSail->projectModified();
                 }
             }
         }
-        else if(m_pBtPolar)
+        else if(pBtPolar)
         {
             ObjectTreeItem *pItem = m_pModel->itemFromIndex(index);
             if(pItem)
             {
-                Qt::CheckState state = btPolarState(m_pBtPolar);
+                Qt::CheckState state = btPolarState(pBtPolar);
 
                 if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
-                    SailObjects::setBPolarVisible(m_pBtPolar, true);
+                    SailObjects::setBPolarVisible(pBtPolar, true);
                 else
-                    SailObjects::setBPolarVisible(m_pBtPolar, false);
+                    SailObjects::setBPolarVisible(pBtPolar, false);
 
-                setCurveParams();
+                updateVisibilityBoxes();
                 s_pXSail->resetCurves();
-                emit s_pXSail->projectModified();
             }
         }
-        else if(m_pBoat)
+        else if(pBoat)
         {
             ObjectTreeItem *pItem = m_pModel->itemFromIndex(index);
             if(pItem)
             {
-                Qt::CheckState state = boatState(m_pBoat);
+                Qt::CheckState state = boatState(pBoat);
                 if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
-                    SailObjects::setBoatVisible(m_pBoat, true);
+                    SailObjects::setBoatVisible(pBoat, true);
                 else if(state==Qt::Checked)
-                    SailObjects::setBoatVisible(m_pBoat, false);
+                    SailObjects::setBoatVisible(pBoat, false);
 
-                setCurveParams();
+                updateVisibilityBoxes();
                 s_pXSail->resetCurves();
-                emit s_pXSail->projectModified();
             }
         }
         setOverallCheckStatus();
     }
 
     s_pXSail->updateView();
+    emit s_pXSail->projectModified();
 }
 
 
@@ -1057,11 +1051,13 @@ void BoatExplorer::selectObjects()
 /** update the line properties for each polar and popp item in the treeview */
 void BoatExplorer::setCurveParams()
 {
-    ObjectTreeItem *pRootItem = m_pModel->rootItem();
+    updateLineStyles();
+    updateVisibilityBoxes();
+/*    ObjectTreeItem *pRootItem = m_pModel->rootItem();
     for(int i0=0; i0<pRootItem->rowCount(); i0++)
     {
-        QModelIndex planeindex = m_pModel->index(i0,0);
-        ObjectTreeItem *pBoatItem = m_pModel->itemFromIndex(planeindex);
+        QModelIndex boatindex = m_pModel->index(i0,0);
+        ObjectTreeItem *pBoatItem = m_pModel->itemFromIndex(boatindex);
         Boat const *pBoat = nullptr;
         if(!pBoatItem) return;
         else           pBoat = SailObjects::boat(pBoatItem->name().toStdString());
@@ -1098,7 +1094,93 @@ void BoatExplorer::setCurveParams()
             }
         }
     }
-    m_pModel->updateData();
+    m_pModel->updateData();*/
+}
+
+
+void BoatExplorer::updateLineStyles()
+{
+    const int STYLECOLUMN = 1;
+
+    ObjectTreeItem const *pRootItem = m_pModel->rootItem();
+    for(int ir=0; ir<pRootItem->rowCount(); ir++)
+    {
+        ObjectTreeItem *pBoatItem = pRootItem->child(ir);
+        if(!pBoatItem) continue;
+        Boat *pBoat = SailObjects::boat(pBoatItem->name().toStdString());
+        if(!pBoat) continue;
+
+        QModelIndex boatstyleindex = m_pModel->index(ir, STYLECOLUMN);
+        m_pModel->setData(boatstyleindex, QVariant::fromValue(pBoat->theStyle()), Qt::DisplayRole);
+
+        for(int jr=0; jr<pBoatItem->rowCount(); jr++)
+        {
+            ObjectTreeItem *pPolarItem = pBoatItem->child(jr);
+            BoatPolar *pBtPolar = SailObjects::btPolar(pBoat, pPolarItem->name().toStdString());
+            if(!pBtPolar) continue;
+
+            QModelIndex polarstyleindex = m_pModel->index(jr, STYLECOLUMN, pBoatItem);
+            m_pModel->setData(polarstyleindex, QVariant::fromValue(pBtPolar->theStyle()), Qt::DisplayRole);
+
+            for(int i2=0; i2<pPolarItem->rowCount(); i2++)
+            {
+                ObjectTreeItem *pOppItem = pPolarItem->child(i2);
+                if(pOppItem)
+                {
+                    QString strange = pOppItem->name();
+//                    strange = strange.remove(DEGch);
+//                    double val = strange.toDouble();
+                    BoatOpp *pBtOpp = SailObjects::btOpp(pBoat, pBtPolar, strange.toStdString());
+
+                    if(!pBtOpp) continue;
+
+                    QModelIndex poppstyleindex = m_pModel->index(i2, STYLECOLUMN, pPolarItem);
+                    m_pModel->setData(poppstyleindex, QVariant::fromValue(pBtOpp->theStyle()), Qt::DisplayRole);
+                }
+            }
+        }
+    }
+}
+
+
+void BoatExplorer::updateVisibilityBoxes()
+{
+    const int CHECKCOLUMN = 2;
+
+    ObjectTreeItem const *pRootItem = m_pModel->rootItem();
+    for(int ir=0; ir<pRootItem->rowCount(); ir++)
+    {
+        ObjectTreeItem *pBoatItem = pRootItem->child(ir);
+        if(!pBoatItem) continue;
+        Boat *pBoat = SailObjects::boat(pBoatItem->name().toStdString());
+        if(!pBoat) continue;
+
+        QModelIndex checkindex = m_pModel->index(ir, CHECKCOLUMN);
+        m_pModel->setData(checkindex, boatState(pBoat), Qt::DisplayRole);
+
+        for(int jr=0; jr<pBoatItem->rowCount(); jr++)
+        {
+            ObjectTreeItem *pPolarItem = pBoatItem->child(jr);
+            BoatPolar *pBtPolar = SailObjects::btPolar(pBoat, pPolarItem->name().toStdString());
+            if(!pBtPolar) continue;
+
+            QModelIndex checkindex = m_pModel->index(jr, CHECKCOLUMN, pBoatItem);
+            m_pModel->setData(checkindex, btPolarState(pBtPolar), Qt::DisplayRole);
+
+            for(int i2=0; i2<pPolarItem->rowCount(); i2++)
+            {
+                ObjectTreeItem *pBtOppItem = pPolarItem->child(i2);
+                if(pBtOppItem)
+                {
+                    // no opp view in the boat module
+                    Qt::CheckState state = Qt::Unchecked;
+
+                    QModelIndex checkindex = m_pModel->index(i2, CHECKCOLUMN, pPolarItem);
+                    m_pModel->setData(checkindex, state, Qt::DisplayRole);
+                }
+            }
+        }
+    }
 }
 
 
@@ -1170,7 +1252,8 @@ void BoatExplorer::onSwitchAll(bool bChecked)
         if(bChecked) s_pXSail->onShowAllBtPolars();
         else         s_pXSail->onHideAllBtPolars();
     }
-    m_pModel->updateData();
+
+    updateVisibilityBoxes();
 }
 
 
@@ -1263,9 +1346,8 @@ void BoatExplorer::onSetFilter()
         }
     }
 
-    setCurveParams();
 
-    m_pModel->updateData();
+    updateVisibilityBoxes();
     setOverallCheckStatus();
 
     s_pXSail->resetCurves();
@@ -1274,31 +1356,6 @@ void BoatExplorer::onSetFilter()
     update();
     emit s_pXSail->projectModified();
 
-}
-
-
-void BoatExplorer::updateVisibilityBoxes()
-{
-    for(int ir=0; ir<m_pModel->rowCount(); ir++)
-    {
-        ObjectTreeItem *pBoatItem = m_pModel->item(ir);
-        Boat *pBoat = SailObjects::boat(pBoatItem->name().toStdString());
-        if(!pBoat) continue;
-
-        QModelIndex checkindex = m_pModel->index(ir, 2);
-        m_pModel->setData(checkindex, boatState(pBoat));
-
-        for(int jr=0; jr<pBoatItem->rowCount(); jr++)
-        {
-            ObjectTreeItem *pWPolarItem = pBoatItem->child(jr);
-            BoatPolar *pBtPolar = SailObjects::btPolar(pBoat, pWPolarItem->name().toStdString());
-            if(!pBtPolar) continue;
-
-            QModelIndex checkindex = m_pModel->index(jr, 2, pBoatItem);
-
-            m_pModel->setData(checkindex, btPolarState(pBtPolar));
-        }
-    }
 }
 
 

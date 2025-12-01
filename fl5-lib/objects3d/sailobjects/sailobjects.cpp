@@ -622,3 +622,24 @@ std::vector<std::string> SailObjects::polarNames(Boat const*pBoat)
     }
     return names;
 }
+
+
+BoatOpp *SailObjects::btOpp(Boat const *pBoat, BoatPolar const*pPolar, std::string const &oppname)
+{
+    if(!pBoat || !pPolar) return nullptr;
+    std::string btname = pBoat->name();
+    std::string polarname = pPolar->name();
+
+    for (BoatOpp *pBtOpp : s_oaBtOpp)
+    {
+        std::string poppbtname = pBtOpp->boatName();
+        std::string popppolarname = pBtOpp->polarName();
+        std::string poppname = pBtOpp->name();
+
+        if (poppbtname==btname && popppolarname==polarname && poppname==oppname)
+        {
+            return pBtOpp;
+        }
+    }
+    return nullptr;
+}

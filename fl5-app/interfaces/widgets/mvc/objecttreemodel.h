@@ -63,12 +63,6 @@ class ObjectTreeModel : public QAbstractItemModel
         ObjectTreeItem* appendRow(ObjectTreeItem*pParentItem, QString const &name, LineStyle const &ls, Qt::CheckState state);
         ObjectTreeItem* appendRow(ObjectTreeItem*pParentItem, std::string const &name, LineStyle const &ls, Qt::CheckState state);
 
-
-        void updateData();
-        void updateDataFromRoot();
-        void updateData(QModelIndex const &idxTL, QModelIndex const &idxBR);
-        void updateData(ObjectTreeItem *pItem);
-
     private:
         ObjectTreeItem *m_pRootItem;
 };

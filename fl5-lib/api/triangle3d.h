@@ -76,6 +76,7 @@ class FL5LIB_EXPORT Triangle3d
         CartesianFrame const & frame() const {return m_CF;}
 
         void setVertex(int ivtx, Node const &V) {m_S[ivtx%3].x=V.x; m_S[ivtx%3].y=V.y; m_S[ivtx%3].z=V.z;}
+//        void setVertex(int ivtx, Node const &V) {m_S[ivtx] = V;}
         void setVertex(int ivtx, double x, double y, double z) {m_S[ivtx%3].x=x; m_S[ivtx%3].y=y; m_S[ivtx%3].z=z;}
         Node &vertex(int i) {return m_S[i%3];}
         Node const &vertexAt(int i) const {return m_S[i%3];}
@@ -84,7 +85,7 @@ class FL5LIB_EXPORT Triangle3d
 
         void setVertexIndex(int iv, int index) {if(iv>=0&& iv<3) m_S[iv].setIndex(index);}
         void setVertexIndexes(int n0, int n1, int n2)	{m_S[0].setIndex(n0); m_S[1].setIndex(n1);	m_S[2].setIndex(n2);}
-        int nodeIndex(int iv) const {return m_S[iv].index();}
+        int nodeIndex(int iv) const {return m_S[iv%3].index();}
 
         inline void makeXZsymmetric();
 
@@ -204,7 +205,7 @@ class FL5LIB_EXPORT Triangle3d
 
         Vector3d m_Sl[3];                 /**< The three triangle vertices, in local coordinates */
 
-        int m_Neighbour[3];               /**< the indexes of the three neighbour triangle sharing one of the edge, or -1 if none */
+        int m_Neighbour[3];               /**< the indexes of the three neighbour triangles sharing one of the edge, or -1 if none */
         double m_SignedArea;              /**< The panel's signed area; */
         bool m_bNullTriangle;
                                           /** @todo remove & replace with m_S[].index() */

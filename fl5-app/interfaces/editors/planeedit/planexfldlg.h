@@ -126,7 +126,6 @@ class PlaneXflDlg : public PlaneDlg
 
         bool endPanelMods();
 
-        void makeIntersection_0();
         bool makeFragments();
 
         QVector<WingXfl*> thinWingList() const;

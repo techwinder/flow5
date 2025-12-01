@@ -594,17 +594,35 @@ std::string PlaneOpp::name() const
 {
     QString strange;
 
-    if(isType8())
+    switch(m_PolarType)
     {
-        strange  = QString::asprintf("%.2f", alpha()) + DEGch + " ";
-        strange += QString::asprintf("%.2f", beta()) + DEGch + " ";
-        strange += QString::asprintf("%.2f", QInf()*Units::mstoUnit()) + " " + Units::speedUnitQLabel();
+        case xfl::T8POLAR:
+            strange  = QString::asprintf("%.2f", alpha()) + DEGch + " ";
+            strange += QString::asprintf("%.2f", beta()) + DEGch + " ";
+            strange += QString::asprintf("%.2f", QInf()*Units::mstoUnit()) + " " + Units::speedUnitQLabel();
+            break;
+        case xfl::T7POLAR:
+            strange = QString::asprintf("%.3f", alpha())  + DEGch;
+            break;
+        case xfl::T6POLAR:
+            strange = QString::asprintf("%.3f", ctrl());
+            break;
+        case xfl::T5POLAR:
+            strange = QString::asprintf("%.3f", beta())  + DEGch;
+            break;
+        case xfl::T4POLAR:
+            strange = QString::asprintf("%.3f", QInf()*Units::mstoUnit()) + " " + Units::speedUnitQLabel();
+            break;
+        case xfl::T1POLAR:
+        case xfl::T2POLAR:
+        case xfl::T3POLAR:
+            strange = QString::asprintf("%.3f", alpha()) + DEGch;
+            break;
+        default:
+            strange.clear();
+            break;
+
     }
-    else if(isType7()) strange = QString::asprintf("%.3f", ctrl());
-    else if(isType6()) strange = QString::asprintf("%.3f", ctrl());
-    else if(isType5()) strange = QString::asprintf("%.3f", beta())  + DEGch;
-    else if(isType4()) strange = QString::asprintf("%.3f", QInf()*Units::mstoUnit()) + " " + Units::speedUnitQLabel();
-    else               strange = QString::asprintf("%.3f", alpha()) + DEGch;
 
     return strange.toStdString();
 }

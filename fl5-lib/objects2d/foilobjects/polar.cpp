@@ -1356,3 +1356,68 @@ void Polar::resizeData(int n)
     m_Control.resize(n);;
 }
 
+
+/** returns -1 if pPolar0 < pPolar1
+ *           0 if pPolar0 = pPolar1
+ *          +1 if pPolar0 > pPolar1 */
+int Polar::compareTo(Polar const*pPolar) const
+{
+    // first index is polar type
+    if     (type()<pPolar->type())  return -1;
+    else if(type()==pPolar->type())
+    {
+        // second index depends on type
+        switch(type())
+        {
+            default:
+            case xfl::T1POLAR:
+            case xfl::T2POLAR:
+            case xfl::T3POLAR:
+            {
+                // sort by Reynolds number
+                if          (Reynolds()<pPolar->Reynolds()-REYNOLDSPRECISION) return -1;
+                else if(fabs(Reynolds()-pPolar->Reynolds())<REYNOLDSPRECISION)
+                {
+                    // sort by theta
+                    if      (TEFlapAngle()<pPolar->TEFlapAngle()-FLAPANGLEPRECISION) return -1;
+                    else if (fabs(TEFlapAngle()-pPolar->TEFlapAngle())<FLAPANGLEPRECISION) return 0;
+                    else return 1;
+                }
+                else return 1;
+                break;
+            }
+            case xfl::T4POLAR:
+            {
+                // sort by aoa
+                if(aoaSpec() < pPolar->aoaSpec()-AOAPRECISION) return -1;
+                else if(fabs(aoaSpec()-pPolar->aoaSpec())<AOAPRECISION)
+                {
+                    // sort by theta
+                    if      (TEFlapAngle()<pPolar->TEFlapAngle()-FLAPANGLEPRECISION) return -1;
+                    else if (fabs(TEFlapAngle()-pPolar->TEFlapAngle())<FLAPANGLEPRECISION) return 0;
+                    else return 1;
+                }
+                else return 1;
+                break;
+            }
+            case xfl::T6POLAR:
+            {
+                // sort by aoa
+                if(aoaSpec() < pPolar->aoaSpec()-AOAPRECISION) return -1;
+                else if(fabs(aoaSpec()-pPolar->aoaSpec())<AOAPRECISION)
+                {
+                    // sort by Reynolds
+                    if          (Reynolds()<pPolar->Reynolds()-REYNOLDSPRECISION) return -1;
+                    else if(fabs(Reynolds()-pPolar->Reynolds())<REYNOLDSPRECISION) return 0;
+                    else return 1;
+                }
+                else return 1;
+                break;
+            }
+        }
+    }
+    else return 1;
+
+    return 1;
+}
+

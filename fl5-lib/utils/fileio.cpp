@@ -196,7 +196,7 @@ bool FileIO::serializeProjectFl5(QDataStream &ar, bool bIsStoring)
                 outputMessage(strange);
             }*/
 
-            Objects3d::updateWPolarstoV750();
+            Objects3d::updatePlPolarstoV750();
         }
 
     }
@@ -515,7 +515,7 @@ bool FileIO::serializeProjectXfl(QDataStream &ar, bool bIsStoring, PlanePolar *p
                 if(!pPlane || !pPlane->isXflType()) continue;
                 pPlaneXfl = dynamic_cast<PlaneXfl *>(pPlane);
                 double refarea=0;
-                Objects3d::appendPPolar(pWPolar);
+                Objects3d::appendPlPolar(pWPolar);
                 if(pWPolar->referenceDim()==xfl::PLANFORM)
                 {
                     refarea = pPlaneXfl->planformArea(pWPolar->bIncludeOtherWingAreas());
@@ -936,7 +936,7 @@ bool FileIO::serialize3dObjectsFl5(QDataStream &ar, bool bIsStoring, int Archive
         int nWPlrExt = 0;
         for(int iplr=0; iplr<Objects3d::nPolars(); iplr++)
         {
-            PlanePolar const *pWPolar = Objects3d::wPolarAt(iplr);
+            PlanePolar const *pWPolar = Objects3d::plPolarAt(iplr);
             if(pWPolar)
             {
                 if(pWPolar->isExternalPolar()) nWPlrExt++;
@@ -948,7 +948,7 @@ bool FileIO::serialize3dObjectsFl5(QDataStream &ar, bool bIsStoring, int Archive
         outputMessage(QString::asprintf("      Saving %d plane polars\n", nWPlr));
         for (int i=0; i<Objects3d::nPolars();i++)
         {
-            pWPolar = Objects3d::wPolarAt(i);
+            pWPolar = Objects3d::plPolarAt(i);
             if(pWPolar && !pWPolar->isExternalPolar()) pWPolar->serializeFl5v750(ar, bIsStoring);
         }
         // save next the xfl type polars
@@ -956,7 +956,7 @@ bool FileIO::serialize3dObjectsFl5(QDataStream &ar, bool bIsStoring, int Archive
         outputMessage(QString::asprintf("      Saving %d external plane polars\n", nWPlrExt));
         for (int i=0; i<Objects3d::nPolars();i++)
         {
-            pWPolar = Objects3d::wPolarAt(i);
+            pWPolar = Objects3d::plPolarAt(i);
             if(pWPolar && pWPolar->isExternalPolar()) pWPolar->serializeFl5v750(ar, bIsStoring);
         }
 
@@ -1057,7 +1057,7 @@ bool FileIO::serialize3dObjectsFl5(QDataStream &ar, bool bIsStoring, int Archive
                 pPlane = Objects3d::plane(pWPolar->planeName());
                 if(pPlane)
                 {
-                    Objects3d::insertPPolar(pWPolar);
+                    Objects3d::insertPlPolar(pWPolar);
                     if(pWPolar->referenceDim()==xfl::CUSTOM)
                     {
                     }
@@ -1106,7 +1106,7 @@ bool FileIO::serialize3dObjectsFl5(QDataStream &ar, bool bIsStoring, int Archive
                     pPlane = Objects3d::plane(pWPolarExt->planeName());
                     if(pPlane)
                     {
-                        Objects3d::insertPPolar(pWPolarExt);
+                        Objects3d::insertPlPolar(pWPolarExt);
                     }
                     else delete pWPolarExt;
                 }
@@ -1341,7 +1341,7 @@ bool FileIO::storePlaneFl5(Plane *pPlane, QDataStream &ar)
     int nWPlrExt = 0;
     for(int iplr=0; iplr<Objects3d::nPolars(); iplr++)
     {
-        PlanePolar const *pWPolar = Objects3d::wPolarAt(iplr);
+        PlanePolar const *pWPolar = Objects3d::plPolarAt(iplr);
         if(pWPolar && pWPolar->planeName()==pPlane->name())
         {
             if(pWPolar->isExternalPolar()) nWPlrExt++;
@@ -1354,7 +1354,7 @@ bool FileIO::storePlaneFl5(Plane *pPlane, QDataStream &ar)
     int nWPlr2=0;
     for (int i=0; i<Objects3d::nPolars();i++)
     {
-        PlanePolar *pWPolar = Objects3d::wPolarAt(i);
+        PlanePolar *pWPolar = Objects3d::plPolarAt(i);
         if(pWPolar && pWPolar->planeName()==pPlane->name() && !pWPolar->isExternalPolar())
         {
             pWPolar->serializeFl5v750(ar, bIsStoring);
@@ -1368,7 +1368,7 @@ bool FileIO::storePlaneFl5(Plane *pPlane, QDataStream &ar)
     ar <<nWPlrExt;
     for (int i=0; i<Objects3d::nPolars();i++)
     {
-        PlanePolar *pWPolar = Objects3d::wPolarAt(i);
+        PlanePolar *pWPolar = Objects3d::plPolarAt(i);
         if(pWPolar && pWPolar->planeName()==pPlane->name() && pWPolar->isExternalPolar())
         {
             pWPolar->serializeFl5v750(ar, bIsStoring);

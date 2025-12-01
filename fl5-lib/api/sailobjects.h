@@ -69,6 +69,9 @@ namespace SailObjects
     FL5LIB_EXPORT inline Boat *boat(int idx)         {if(idx>=0 && idx<nBoats())    return s_oaBoat.at(idx);    else return nullptr;}
     FL5LIB_EXPORT inline BoatPolar *btPolar(int idx) {if(idx>=0 && idx<nBtPolars()) return s_oaBtPolar.at(idx); else return nullptr;}
     FL5LIB_EXPORT inline BoatOpp *btOpp(int idx)     {if(idx>=0 && idx<nBtOpps())   return s_oaBtOpp.at(idx);   else return nullptr;}
+
+    FL5LIB_EXPORT BoatOpp *btOpp(Boat const *pBoat, BoatPolar const*pPolar, std::string const &oppname);
+
     FL5LIB_EXPORT inline void setLastBtOpp(BoatOpp *pBtOpp) {s_pLastBtOpp=pBtOpp;}
     FL5LIB_EXPORT inline BoatOpp *lastBtOpp()   {return s_pLastBtOpp;}
     FL5LIB_EXPORT BoatOpp* getBoatOppObject(Boat*pBoat, BoatPolar *pBtPolar, double ctrl);

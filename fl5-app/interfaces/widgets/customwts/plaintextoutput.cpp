@@ -22,6 +22,9 @@
 
 *****************************************************************************/
 
+#include <QMenu>
+#include <QStyle>
+
 #include "plaintextoutput.h"
 
 #include <core/displayoptions.h>
@@ -112,10 +115,38 @@ void PlainTextOutput::keyPressEvent(QKeyEvent *pEvent)
 }
 
 
+void PlainTextOutput::contextMenuEvent(QContextMenuEvent *pEvent)
+{
+    QMenu *pContextMenu = new QMenu("PlainTextOutput");
+    {
+        QAction *pSelectAll = new QAction("Select all", this);
+        connect(pSelectAll, SIGNAL(triggered(bool)), SLOT(selectAll()));
+
+        QAction *pClear = new QAction("Clear", this);
+        connect(pClear, SIGNAL(triggered(bool)), SLOT(clear()));
+
+        QAction *pCopy = new QAction("Copy selection", this);
+        connect(pCopy, SIGNAL(triggered(bool)), SLOT(copy()));
+
+        QAction *pCopyAll = new QAction("Copy all", this);
+        connect(pCopyAll, SIGNAL(triggered(bool)), SLOT(onCopyAll()));
+
+        pContextMenu->addAction(pSelectAll);
+        pContextMenu->addSeparator();
+        pContextMenu->addAction(pCopy);
+        pContextMenu->addAction(pCopyAll);
+        pContextMenu->addSeparator();
+        pContextMenu->addAction(pClear);
+    }
+    pContextMenu->exec(QCursor::pos());
+    update();
+    pEvent->accept();
+}
+
+
 void PlainTextOutput::showEvent(QShowEvent *pEvent)
 {
     QPlainTextEdit::showEvent(pEvent);
-//    updateColors(true);
     setFont(DisplayOptions::tableFontStruct().font());
 }
 
@@ -130,6 +161,13 @@ void PlainTextOutput::setCharDimensions(int nHChar, int nVChar)
 QSize PlainTextOutput::sizeHint() const
 {
     return QSize(DisplayOptions::tableFontStruct().averageCharWidth()*m_nHChar, DisplayOptions::tableFontStruct().height()*m_nVChar);
+}
+
+
+void PlainTextOutput::onCopyAll()
+{
+    selectAll();
+    copy();
 }
 
 

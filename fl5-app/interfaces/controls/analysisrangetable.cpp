@@ -166,28 +166,32 @@ void AnalysisRangeTable::contextMenuEvent(QContextMenuEvent *pEvent)
     pPasteAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_V));
     pPasteAction->setEnabled(m_bIsEditable);
 
-    QAction *pActivate     = new QAction("Activate/de-activate", this);
+    QAction *pActivate      = new QAction("Activate/de-activate", this);
     pActivate->setShortcut(Qt::Key_Space);
-    QAction *pMoveUp       = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowUp),   "Move up", this);
-    QAction *pMoveDown     = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowDown), "Move down", this);
-    QAction *pDuplicate    = new QAction("Duplicate", this);
-    QAction *pDelete       = new QAction("Delete", this);
-    QAction *pInsertBefore = new QAction("Insert before", this);
-    QAction *pInsertAfter  = new QAction("Insert after", this);
+    QAction *pDeActivateAll = new QAction("De-activate all", this);
+    QAction *pMoveUp        = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowUp),   "Move up", this);
+    QAction *pMoveDown      = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowDown), "Move down", this);
+    QAction *pDuplicate     = new QAction("Duplicate", this);
+    QAction *pDelete        = new QAction("Delete", this);
+    QAction *pInsertBefore  = new QAction("Insert before", this);
+    QAction *pInsertAfter   = new QAction("Insert after", this);
 
-    connect(pActivate,     SIGNAL(triggered(bool)), SLOT(onActivate()));
-    connect(pMoveUp,       SIGNAL(triggered(bool)), SLOT(onMoveUp()));
-    connect(pMoveDown,     SIGNAL(triggered(bool)), SLOT(onMoveDown()));
-    connect(pDuplicate,    SIGNAL(triggered(bool)), SLOT(onDuplicateRow()));
-    connect(pDelete,       SIGNAL(triggered(bool)), SLOT(onDeleteRow()));
-    connect(pInsertBefore, SIGNAL(triggered(bool)), SLOT(onInsertBefore()));
-    connect(pInsertAfter,  SIGNAL(triggered(bool)), SLOT(onInsertAfter()));
-    connect(pCopyAction,   SIGNAL(triggered(bool)), SLOT(onCopySelection()));
-    connect(pPasteAction,  SIGNAL(triggered(bool)), SLOT(onPaste()));
+    connect(pActivate,      SIGNAL(triggered(bool)), SLOT(onActivate()));
+    connect(pDeActivateAll, SIGNAL(triggered(bool)), SLOT(onDeActivateAll()));
+    connect(pMoveUp,        SIGNAL(triggered(bool)), SLOT(onMoveUp()));
+    connect(pMoveDown,      SIGNAL(triggered(bool)), SLOT(onMoveDown()));
+    connect(pDuplicate,     SIGNAL(triggered(bool)), SLOT(onDuplicateRow()));
+    connect(pDelete,        SIGNAL(triggered(bool)), SLOT(onDeleteRow()));
+    connect(pInsertBefore,  SIGNAL(triggered(bool)), SLOT(onInsertBefore()));
+    connect(pInsertAfter,   SIGNAL(triggered(bool)), SLOT(onInsertAfter()));
+    connect(pCopyAction,    SIGNAL(triggered(bool)), SLOT(onCopySelection()));
+    connect(pPasteAction,   SIGNAL(triggered(bool)), SLOT(onPaste()));
 
     QMenu *pRangeTableMenu = new QMenu("context menu", this);
     {
         pRangeTableMenu->addAction(pActivate);
+        pRangeTableMenu->addSeparator();
+        pRangeTableMenu->addAction(pDeActivateAll);
         pRangeTableMenu->addSeparator();
         pRangeTableMenu->addAction(pMoveUp);
         pRangeTableMenu->addAction(pMoveDown);
@@ -495,6 +499,18 @@ void AnalysisRangeTable::onActivate()
         emit pressed(QModelIndex());
     }
 
+    fillTable();
+}
+
+
+void AnalysisRangeTable::onDeActivateAll()
+{
+    QVector<AnalysisRange> *pRange = activeRange();
+    for(int i=0; i<pRange->size(); i++)
+    {
+        AnalysisRange &range = (*pRange)[i];
+        range.setActive(false);
+    }
     fillTable();
 }
 

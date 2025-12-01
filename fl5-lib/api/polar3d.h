@@ -56,6 +56,9 @@ class FL5LIB_EXPORT Polar3d : public XflObject
         virtual void setReferenceChordLength(double length) = 0;
         virtual double referenceChordLength() const = 0;
 
+        virtual void setDefaults();
+
+
         int polarFormat() const {return m_PolarFormat;}
 
         void lock()   {m_bLocked=true;}

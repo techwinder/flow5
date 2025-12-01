@@ -385,24 +385,23 @@ void GMesherWt::convertFromGmsh()
     // option 1: make a map (tag, position); slow?
     // option 2: make an array with index=tag;
     size_t maxtag = *std::max_element(nodetags.begin(), nodetags.end());
-    QVector<Vector3d> node(maxtag+1);
+
+    m_Nodes.resize(maxtag+1);
     for(uint j=0; j<nodetags.size(); j++)
     {
         int inode = int(nodetags.at(j));
-        node[inode].set(&coord.at(3*j+0));
+        m_Nodes[inode].set(&coord.at(3*j+0));
+        m_Nodes[inode].setIndex(inode);
+        m_Nodes[inode].clearNeighbourNodes();
+        m_Nodes[inode].clearTriangles();
     }
 
-    convertTriangles(elementTags, node);
-//    makeModelCurves();
-}
+//    convertTriangles(elementTags, node);
 
-
-void GMesherWt::convertTriangles(std::vector<std::size_t>const&elementTags, QVector<Vector3d> const &node)
-{
     std::vector<std::size_t> elementnodetags;
     int elementtype = -1;
-    std::vector<Triangle3d> triangles(elementTags.size());
-    int dim(0), tag(0);
+
+    m_Triangles.resize(elementTags.size());
 
     double minsize(LARGEVALUE), maxsize(0);
     for(uint i=0; i<elementTags.size(); i++)
@@ -416,18 +415,38 @@ void GMesherWt::convertTriangles(std::vector<std::size_t>const&elementTags, QVec
         Q_ASSERT(elementtype==2); // Triangle
         Q_ASSERT(dim==2); // Surface type element
 
-        Triangle3d &t3d = triangles[i];
+        Triangle3d &t3d = m_Triangles[i];
         for(uint j=0; j<elementnodetags.size(); j++)
         {
             int nodetag = int(elementnodetags.at(j));
-            t3d.setVertex(j, node.at(nodetag));
+            m_Nodes[nodetag].addTriangleIndex(i);
+            t3d.setVertex(j, m_Nodes.at(nodetag));
+            t3d.setVertexIndex(j, nodetag);
         }
         t3d.setTriangle();
         minsize = std::min(minsize, t3d.minEdgeLength());
         maxsize = std::max(maxsize, t3d.maxEdgeLength());
     }
 
-    m_Triangles = triangles;
+    // make the connections using the node information
+    for(Triangle3d &t3d : m_Triangles)
+    {
+        t3d.clearConnections();
+        for(int iedge=0; iedge<3; iedge++)
+        {
+            Node const &nd0 = m_Nodes.at(t3d.nodeIndex(iedge));
+            Node const &nd1 = m_Nodes.at(t3d.nodeIndex(iedge+1));
+            for(int nd0t=0; nd0t<nd0.triangleCount(); nd0t++)
+            {
+                int t3dindex = nd0.triangleIndex(nd0t);
+                if(nd1.hasTriangleIndex(t3dindex))
+                {
+                    t3d.setNeighbour(t3dindex, iedge);
+                    break;
+                }
+            }
+        }
+    }
 
     emit outputMsg(QString::asprintf("Min. element size = %g\n", minsize));
     emit outputMsg(QString::asprintf("Max. element size = %g\n", maxsize));
@@ -694,68 +713,6 @@ void GMesherWt::meshOccSail()
     emit outputMsg("Starting G-mesher in separate thread...\n");
 
     emit meshCurrent();
-}
-
-
-// experimental
-void GMesherWt::embedPoints()
-{
-
-    /*
-        try
-        {
-            std::vector<int> linetags;
-            for(std::vector<Node> nodes : m_Nodes)
-            {
-                if(nodes.empty()) continue;
-
-                std::vector<int> nodetags;
-                for(Node nd : nodes)
-                {
-                    nodetags.push_back(gmsh::model::occ::addPoint(nd.x, nd.y, nd.z, 0.01));
-                }
-
-                for(uint i=0; i<nodetags.size()-1; i++)
-                {
-                    linetags.push_back(gmsh::model::occ::addLine(nodetags.at(i), nodetags.at(i+1)));
-                }
-            }
-
-
-            gmsh::vectorpair modeldim2;
-            gmsh::model::getEntities(modeldim2, 2);
-
-            gmsh::vectorpair modeldim3;
-            gmsh::model::getEntities(modeldim3, 3);
-
-            gmsh::model::occ::synchronize();
-
-            if(modeldim2.size()>0 && linetags.size()>0)
-            {
-                int isurf = modeldim2.front().second;
-                gmsh::model::mesh::embed(1, linetags, 2, isurf);
-            }
-            gmsh::model::occ::synchronize();
-        }
-        catch(std::runtime_error &err)
-        {
-            QApplication::restoreOverrideCursor();
-            QString strange = "Error adding embedding lines:" + QString::fromStdString(err.what()) + EOLch;
-            emit outputMsg(strange);
-            return;
-        }
-        catch (std::exception &err)
-        {
-            QString strange = "Error adding embedding lines:" + QString::fromStdString(err.what()) + EOLch;
-            emit outputMsg(strange);
-            return;
-        }
-        catch(...)
-        {
-            QApplication::restoreOverrideCursor();
-            emit outputMsg("Unknown error adding embedding lines\n");
-            return;
-        }*/
 }
 
 

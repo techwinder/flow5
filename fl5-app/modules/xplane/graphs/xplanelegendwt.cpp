@@ -87,7 +87,7 @@ void XPlaneLegendWt::makeWPolarLegendBtns(XPlane::enumViews eXPlaneView, bool bH
         Plane const*pPlane = Objects3d::planeAt(j);
         for (int i=0; i<Objects3d::nPolars(); i++)
         {
-            PlanePolar const*pWPolar = Objects3d::wPolarAt(i);
+            PlanePolar const*pWPolar = Objects3d::plPolarAt(i);
             if(pWPolar->planeName().compare(pPlane->name())==0 && pWPolar->hasPoints() && pWPolar->isVisible())
             {
                 if(eXPlaneView==XPlane::STABPOLARVIEW)
@@ -135,7 +135,7 @@ void XPlaneLegendWt::makeWPolarLegendBtns(XPlane::enumViews eXPlaneView, bool bH
         for (int i=0; i<Objects3d::nPolars(); i++)
         {
             bool bShow = false;
-            PlanePolar *pWPolar = Objects3d::wPolarAt(i);
+            PlanePolar *pWPolar = Objects3d::plPolarAt(i);
             if (pWPolar->planeName()==pPlane->name() && pWPolar->hasPoints() && pWPolar->isVisible())
             {
                 if(eXPlaneView==XPlane::STABPOLARVIEW)
@@ -230,7 +230,7 @@ void XPlaneLegendWt::makePOppLegendBtns(bool bHighlight)
 
         for(int ipl=0; ipl<Objects3d::nPolars(); ipl++)
         {
-            PlanePolar const *pWPolar = Objects3d::wPolarAt(ipl);
+            PlanePolar const *pWPolar = Objects3d::plPolarAt(ipl);
             if(pWPolar->planeName()==pPlane->name())
             {
                 // display the label only if the wpolar has children popps

@@ -33,6 +33,8 @@ class ObjectTreeDelegate : public QStyledItemDelegate
         ObjectTreeDelegate(QObject *pParent);
         void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
+        QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+
         void showStyle(bool bShow) {m_bShowStyle=bShow;}
 
         bool m_bShowStyle;

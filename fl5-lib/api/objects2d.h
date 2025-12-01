@@ -42,9 +42,9 @@ class OpPoint;
 
 namespace Objects2d
 {
-    extern std::vector <Foil*> s_oaFoil;
-    extern std::vector <Polar *> s_oaPolar;  /**< The array of void pointers to the Polar objects. */
-    extern std::vector <OpPoint *> s_oaOpp;    /**< The array of void pointers to the OpPoint objects. */
+    extern std::vector <Foil*>    s_oaFoil;
+    extern std::vector <Polar*>   s_oaPolar;  /**< The array of void pointers to the Polar objects. */
+    extern std::vector <OpPoint*> s_oaOpp;    /**< The array of void pointers to the OpPoint objects. */
 
 
     FL5LIB_EXPORT  inline std::vector<Foil*>    const & foils()           {return s_oaFoil;}
@@ -116,7 +116,6 @@ namespace Objects2d
     FL5LIB_EXPORT void setPolarVisible(Polar *pPolar, bool bVisible);
 
     FL5LIB_EXPORT void cancelTEFlapAngles();
-
 
     FL5LIB_EXPORT bool makeNacaFoil(Foil *pNacaFoil, int digits, int nPanels=100);
     bool makeNaca4(Foil *pFoil, int digits);

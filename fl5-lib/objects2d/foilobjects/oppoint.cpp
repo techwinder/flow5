@@ -209,7 +209,7 @@ std::string OpPoint::name() const
 
     if      (isType6())
     {
-        strange = QString::asprintf("%.2f", m_Theta) +DEGch;
+        strange = QString::asprintf("%.3f", m_Theta) +DEGch;
         strange = strange.rightJustified(9);
     }
     else if (isType4())
@@ -219,7 +219,7 @@ std::string OpPoint::name() const
     }
     else
     {
-        strange = QString::asprintf("%.2f", m_Alpha) + DEGch;
+        strange = QString::asprintf("%.3f", m_Alpha) + DEGch;
         strange = strange.rightJustified(9);
     }
     return strange.toStdString();

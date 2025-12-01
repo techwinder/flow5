@@ -247,7 +247,6 @@ void Objects2d::deletePolar(Polar *pPolar)
         }
     }
 
-
     for (int iPolar=0; iPolar<nPolars(); iPolar++)
     {
         Polar* pOldPolar = s_oaPolar.at(iPolar);
@@ -1229,6 +1228,7 @@ double Objects2d::getCm0(const Foil *pFoil0, const Foil *pFoil1, double Re, doub
     if(IsOutRe) bOutRe = true;
     if(IsError) bError = true;
 
+
     double Res = Cm0 + (Cm1-Cm0)*(0.0-Cl0)/(Cl1-Cl0);
 
     return Res;
@@ -1383,7 +1383,7 @@ void Objects2d::setPolarVisible(Polar *pPolar, bool bVisible)
 {
     if(!pPolar) return;
     pPolar->setVisible(bVisible);
-    Foil *pFoil = foil(pPolar->foilName());
+    Foil const*pFoil = foil(pPolar->foilName());
     if(!pFoil) return;
 
     for(int ipp=0; ipp<nOpPoints(); ipp++)
@@ -1400,7 +1400,7 @@ void Objects2d::setPolarVisible(Polar *pPolar, bool bVisible)
 
 std::vector<Foil*> Objects2d::sortedFoils()
 {
-    std::vector<Foil *> foils;
+    std::vector<Foil*> foils;
     for(int i=0; i<nFoils(); i++)
     {
         Foil *pFoil = foil(i);
@@ -1722,9 +1722,6 @@ void Objects2d::makeNacaThickness(Foil *pFoil, double t)
 
     pFoil->setThickness(th);
 }
-
-
-
 
 
 

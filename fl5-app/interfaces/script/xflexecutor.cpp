@@ -255,7 +255,7 @@ void XflExecutor::makeWPolarArray(bool bRunAllPlaneAnalyses, QStringList &WPolar
                 }
 
                 m_oaWPolar.append(pWPolar);
-                Objects3d::addPPolar(pWPolar);
+                Objects3d::addPlPolar(pWPolar);
                 logmsg += "   the analysis " + QString::fromStdString(pWPolar->name())+
                           " has been added for " + QString::fromStdString(pWPolar->planeName())+"\n";
             }
@@ -295,7 +295,7 @@ void XflExecutor::makeWPolarArray(bool bRunAllPlaneAnalyses, QStringList &WPolar
                     }
 
                     m_oaWPolar.append(pNewWPolar);
-                    Objects3d::addPPolar(pNewWPolar);
+                    Objects3d::addPlPolar(pNewWPolar);
                     logmsg += "   the analysis "+QString::fromStdString(pNewWPolar->name())+
                               " has been added for "+ QString::fromStdString(pPlane->name())+"\n";
                 }
@@ -363,7 +363,7 @@ void XflExecutor::makeWPolars(QMap<QString, bool> const&Analyses, QString const 
             {
                 // this WPolar has been defined for a specific plane
                 m_oaWPolar.append(pWPolar);
-                Objects3d::addPPolar(pWPolar);
+                Objects3d::addPlPolar(pWPolar);
                 logmsg += "   the analysis " + QString::fromStdString(pWPolar->name())+
                           " has been added for "+ QString::fromStdString(pWPolar->planeName())+"\n";
                 Plane const*pPlane = Objects3d::planeAt(pWPolar->planeName());
@@ -434,7 +434,7 @@ void XflExecutor::makeWPolars(QMap<QString, bool> const&Analyses, QString const 
                     }
 
                     m_oaWPolar.append(pNewWPolar);
-                    Objects3d::addPPolar(pNewWPolar);
+                    Objects3d::addPlPolar(pNewWPolar);
                     logmsg += "   the analysis "+QString::fromStdString(pNewWPolar->name())+
                               " has been added for "+ QString::fromStdString(pPlane->name())+"\n";
                 }

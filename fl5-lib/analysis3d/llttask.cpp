@@ -120,7 +120,7 @@ void LLTTask::initializeVelocity(double alpha, double &QInf)
     {
         case xfl::T1POLAR:
         {
-            QInf = m_pPlPolar->m_QInfSpec;
+            QInf = m_pPlPolar->velocity();
             break;
         }
         case xfl::T2POLAR:
@@ -142,7 +142,7 @@ void LLTTask::initializeVelocity(double alpha, double &QInf)
         default:
         {
             traceStdLog("******* LLT is only compatible with T1 and T2 polars ******\n\n");
-            QInf = m_pPlPolar->m_QInfSpec;
+            QInf = m_pPlPolar->velocity();
             break;
         }
     }
@@ -608,7 +608,9 @@ bool LLTTask::alphaLoop()
 
         if(s_bInitCalc)
         {
-            initializeVelocity(alpha, m_pPlPolar->m_QInfSpec);
+            double V;
+            initializeVelocity(alpha, V);
+            m_pPlPolar->setVelocity(V);
             setLinearSolution(alpha);
         }
         //initialize first iteration
@@ -623,7 +625,9 @@ bool LLTTask::alphaLoop()
         strange = "Calculating " + ALPHAch + QString::asprintf(" = %5.2f", alpha) + DEGch + "...";
         traceLog(strange);
 
-        int iter = iterate(m_pPlPolar->m_QInfSpec, alpha);
+        double vel;
+        int iter = iterate(vel, alpha);
+        m_pPlPolar->setVelocity(vel);
 
         if (iter==-1 && !isCancelled())
         {
@@ -639,10 +643,10 @@ bool LLTTask::alphaLoop()
             traceOpp(alpha, m_Max_a, strange.toStdString());
 
             std::string str;
-            computeWing(m_pPlPolar->m_QInfSpec, alpha, str);// generates wing results,
+            computeWing(m_pPlPolar->velocity(), alpha, str);// generates wing results,
             traceStdLog(str);
             if (m_bWingOut) m_bWarning = true;
-            PlaneOpp *pPOpp = createPlaneOpp(m_pPlPolar->m_QInfSpec, alpha, m_bWingOut);// Adds WOpp point and adds result to polar
+            PlaneOpp *pPOpp = createPlaneOpp(m_pPlPolar->velocity(), alpha, m_bWingOut);// Adds WOpp point and adds result to polar
 
 
             // store the results

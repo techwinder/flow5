@@ -45,12 +45,14 @@ class PlainTextOutput : public QPlainTextEdit
     public slots:
         void onAppendStdText(std::string const &sometext) {onAppendQText(QString::fromStdString(sometext));}
         void onAppendQText(QString const &sometext);
+        void onCopyAll();
 
     protected:
         QSize sizeHint() const override;
         QSize minimumSizeHint() const override {return QSize(100,50);}
         void showEvent(QShowEvent *pEvent) override;
         void keyPressEvent(QKeyEvent *pEvent) override;
+        void contextMenuEvent(QContextMenuEvent *pEvent) override;
 
     private:
         int m_nHChar;

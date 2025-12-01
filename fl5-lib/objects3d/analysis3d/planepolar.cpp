@@ -45,21 +45,63 @@ std::vector<std::string> PlanePolar::s_VariableNames;
 
 PlanePolar::PlanePolar() : Polar3d()
 {
+      m_pPlane = nullptr;
+
+      setDefaultSpec(m_pPlane);
+}
+
+
+void PlanePolar::setDefaults()
+{
+    Polar3d::setDefaults();
+
     m_pPlane = nullptr;
+    m_PlaneName = std::string("");
+
+    m_bAVLDrag          = false;
+    m_bAdjustedVelocity = false;
+    m_bAutoInertia      = true;
+    m_bFuseDrag         = false;
+    m_bFuseMi           = false;
+    m_bGround           = false;
+    m_bOtherWingsArea   = false;
+    m_bThinSurfaces     = true;
+    m_bTrefftz          = true;
+    m_bViscLoop         = false;
+    m_bViscous          = true;
+    m_bVortonWake       = false;
+    m_bWingTipMi        = false;
+
+    m_Type = xfl::T1POLAR;
+
 
     m_AlphaSpec = 0.0;
+    m_AnalysisMethod = xfl::TRIUNIFORM;
+    m_BC = xfl::DIRICHLET;
+
+    m_Viscosity = 1.5e-5;
+    m_Density = 1.225;
+
+    m_FuseCf = 0.0;
+    m_FuseDragMethod = PlanePolar::KARMANSCHOENHERR;
+    m_FuseDragMethod = PlanePolar::MANUALFUSECF;
+
+    m_GroundHeight = 0.0;
     m_QInfSpec  = 10.0;
 
-    m_bViscLoop = false;
-
+    m_ReferenceDim   = xfl::PROJECTED;
     m_RefArea  = 0.0;
     m_RefChord = 0.0;
     m_RefSpan  = 0.0;
-    m_bOtherWingsArea = false;
 
+    m_BufferWakeFactor   = 0.3;  // x MAC
+    m_TotalWakeLengthFactor = 30.0;
+    m_VPWMaxLength       = 30.0;
+    m_VortonL0           = 1.0;  // x MAC
+    m_WakePanelFactor = 1.1;
     m_XNeutralPoint = 0.0;
+    m_nXWakePanel4 = 5;
 
-    m_bAVLDrag = false;
     m_AVLSpline.clearControlPoints();
     m_AVLSpline.appendControlPoint(0.035, -0.5);
     m_AVLSpline.appendControlPoint(0.015, -0.3);
@@ -67,48 +109,35 @@ PlanePolar::PlanePolar() : Polar3d()
     m_AVLSpline.appendControlPoint(0.015, 0.7);
     m_AVLSpline.appendControlPoint(0.035, 1.3);
 
-    setDefaultSpec(nullptr);
+    m_FlapControls.clear();
+    m_AVLControls.clear();
+
+    m_OperatingRange.clear();
+    m_InertiaRange.clear();
+    m_AngleRange.clear();
+    m_Alpha.clear();
+    m_Ctrl.clear();
+    m_Beta.clear();
+    m_Phi.clear();
+    m_QInfinite.clear();
+    m_AF.clear();
+
+    m_XNP.clear();
+    m_Mass_var.clear();
+
+    m_CoG_x.clear();
+    m_CoG_z.clear();
+    m_MaxBending.clear();
+
+    m_EV.clear();
 }
 
 
 void PlanePolar::setDefaultSpec(Plane const*pPlane)
 {
+    setDefaults();
+
     m_pPlane = pPlane;
-    m_Type = xfl::T1POLAR;
-    m_QInfSpec = 10;
-    m_bThinSurfaces = true;
-
-    m_bTrefftz  = true ;
-    m_AnalysisMethod = xfl::TRIUNIFORM;
-    m_BC = xfl::DIRICHLET;
-    m_bViscous = true;
-    m_NCrit = 9;
-    m_XTrTop = m_XTrBot = 1.0;
-    m_bAutoInertia = true;
-
-    m_ReferenceDim   = xfl::PROJECTED;
-
-    m_Density = 1.225;
-    m_Viscosity = 1.5e-5;
-    m_bGround = false;
-    m_GroundHeight = 0.0;
-
-    m_bWingTipMi = true;
-
-    m_bFuseMi = m_bFuseDrag = false;
-    m_FuseDragMethod = PlanePolar::KARMANSCHOENHERR;
-    m_FuseCf = 0;
-
-    m_nXWakePanel4 = 5;
-    m_TotalWakeLengthFactor = 30.0;
-    m_WakePanelFactor = 1.1;
-
-    m_bVortonWake        = false;
-    m_BufferWakeFactor   = 0.3;  // x MAC
-    m_VortonL0           = 1.0;  // x MAC
-    m_VPWMaxLength       = 30.0;
-
-    m_bAdjustedVelocity = false;
 
     m_ExtraDrag.clear();
 

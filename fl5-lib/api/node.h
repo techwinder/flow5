@@ -26,6 +26,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include <geom_enums.h>
 #include <vector3d.h>
@@ -109,6 +110,9 @@ class FL5LIB_EXPORT Node : public Vector3d
 
         }
 
+        void setIndex(int index) {m_Index=index;}
+        int index() const {return m_Index;}
+
         bool isWingNode() const {return m_Position==xfl::TOPSURFACE || m_Position==xfl::BOTSURFACE || m_Position==xfl::MIDSURFACE || m_Position==xfl::SIDESURFACE;}
         bool isFuseNode() const {return m_Position==xfl::FUSESURFACE;}
 
@@ -120,33 +124,31 @@ class FL5LIB_EXPORT Node : public Vector3d
 
         void flipNormal() {m_Normal.reverse();}
 
-        void clearTriangles() {m_TriangleIndex.clear();}
-        void addTriangleIndex(int index);
 
-        void clearNeighbourNodes() {m_NeighbourIndex.clear();}
-        void addNeighbourIndex(int index);
-
+        // neighbour nodes
         void setTrailing(bool bTrailing) {m_bTrailing=bTrailing;}
         bool isTrailing() const {return m_bTrailing;}
-
+        void clearNeighbourNodes() {m_NeighbourIndex.clear();}
+        void addNeighbourIndex(int index);
         void resizeNodeNeighbours(int nd) {m_NeighbourIndex.resize(nd);}
         int neighbourNodeCount() const {return int(m_NeighbourIndex.size());}
         int neigbourNodeIndex(int in) const {return m_NeighbourIndex.at(in);}
-
         int nodeNeighbourIndex(int in) const {return m_NeighbourIndex.at(in);}
         void setNodeNeighbourIndex(int in, int idx){m_NeighbourIndex[in]=idx;}
         std::vector<int>const &nodeNeighbourIndexes() const {return m_NeighbourIndex;}
         void setNeighbourNodeIndexes(std::vector<int> const&indexes) {m_NeighbourIndex=indexes;}
 
+        // neighbour triangles
+        void clearTriangles() {m_TriangleIndex.clear();}
+        void addTriangleIndex(int index);
         void resizeTriangles(int nt) {m_TriangleIndex.resize(nt);}
         int triangleCount() const {return int(m_TriangleIndex.size());}
         int triangleIndex(int it) const {return m_TriangleIndex.at(it);}
         void setTriangleIndex(int it, int idx) {m_TriangleIndex[it]=idx;}
         std::vector<int>const &triangleIndexes() const {return m_TriangleIndex;}
         void setTriangleIndexes(std::vector<int> const&indexes) {m_TriangleIndex=indexes;}
+        bool hasTriangleIndex(int idx) const {return std::find(m_TriangleIndex.begin(), m_TriangleIndex.end(), idx) != m_TriangleIndex.end();}
 
-        void setIndex(int index) {m_Index=index;}
-        int index() const {return m_Index;}
 
         inline void rotate(Vector3d const &R, double Angle) override;
         inline void rotate(const Vector3d &O, Vector3d const &R, double Angle) override;

@@ -268,7 +268,8 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
     hideDockWindows();
 
     m_pXDirect->m_pFoilTable->setTableFontStruct(DisplayOptions::tableFontStruct());
-    m_pXPlane->m_pPlaneExplorer->setTreeFontStruct(DisplayOptions::treeFontStruct());
+    m_pXDirect->m_pFoilExplorer->setTreeFont(DisplayOptions::treeFontStruct().font());
+    m_pXPlane->m_pPlaneExplorer->setTreeFont(DisplayOptions::treeFontStruct().font());
     m_pXSail->m_pBoatExplorer->setTreeFontStruct(DisplayOptions::treeFontStruct());
 
     setCentralWidget(m_pswCentralWidget);
@@ -3712,7 +3713,7 @@ bool MainFrame::exportAllWPolars(QString const &pathname, bool bCSV)
 
             for(int l=0; l<Objects3d::nPolars(); l++)
             {
-                PlanePolar const *pWPolar = Objects3d::wPolarAt(l);
+                PlanePolar const *pWPolar = Objects3d::plPolarAt(l);
                 if(!pWPolar) continue;
                 if(pWPolar->planeName().compare(pPlaneXfl->name())!=0) continue;
 
@@ -3911,7 +3912,7 @@ bool MainFrame::exportAllPOpps(const QString &pathname, bool bCSV, bool bPanelDa
 
             for(int l=0; l<Objects3d::nPolars(); l++)
             {
-                PlanePolar const *pWPolar = Objects3d::wPolarAt(l);
+                PlanePolar const *pWPolar = Objects3d::plPolarAt(l);
                 if(!pWPolar) continue;
                 if(pWPolar->planeName().compare(pPlaneXfl->name())!=0) continue;
                 QString PolarName = QString::fromStdString(pWPolar->name());
@@ -4693,7 +4694,7 @@ int MainFrame::onTestRun()
         // This should be done after the polar has been given a name
         // since objects are referenced by their name and are stored
         // in alphabetical order
-        Objects3d::insertPPolar(pPlPolar);
+        Objects3d::insertPlPolar(pPlPolar);
 
         pPlPolar->setTheStyle({true, Line::SOLID, 2, {239, 51, 153}, Line::NOSYMBOL});
 

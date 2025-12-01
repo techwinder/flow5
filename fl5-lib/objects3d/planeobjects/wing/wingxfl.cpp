@@ -1768,8 +1768,8 @@ void WingXfl::panel3ComputeStrips(std::vector<Panel3> const &panel3list, PlanePo
     Vector3d ForcePt, PanelForce;
 
     // Define the wind axes
-    Vector3d WindDirection = objects::windDirection(alpha, beta);
-    Vector3d WindNormal    = objects::windNormal(alpha, beta);
+//    Vector3d WindDirection = objects::windDirection(alpha, beta);
+//    Vector3d WindNormal    = objects::windNormal(alpha, beta);
     Vector3d WindSide      = objects::windSide(alpha, beta);
 
     // Calculate the Reynolds number on each strip

@@ -89,6 +89,7 @@ class AnalysisRangeTable : public CPTableView
         void onRangeModelChanged();
         void onRangeTableClicked(QModelIndex index);
         void onActivate();
+        void onDeActivateAll();
         void onMoveUp();
         void onMoveDown();
         void onDeleteRow();

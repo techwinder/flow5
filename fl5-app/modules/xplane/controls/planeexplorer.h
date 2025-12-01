@@ -25,11 +25,10 @@
 
 #pragma once
 
-
+#include <QSettings>
 #include <QSplitter>
 #include <QModelIndex>
 
-#include <core/fontstruct.h>
 #include <core/enums_core.h>
 
 class Plane;
@@ -79,6 +78,7 @@ class PlaneExplorer : public QWidget
 
         void selectObjects();
         void setCurveParams();
+        void updateLineStyles();
         void updateVisibilityBoxes();
 
         void updatePlane(Plane const *pPlane);
@@ -89,7 +89,7 @@ class PlaneExplorer : public QWidget
         void setObjectProperties();
 //        void updateObjectView();
         void setPropertiesFont(QFont const &fnt);
-        void setTreeFontStruct(const FontStruct &fntstruct);
+        void setTreeFont(const QFont &fnt);
 
         enumSelectionType selectedType() const {return m_Selection;}
         bool isPlaneSelected()  const {return m_Selection==PLANE;}

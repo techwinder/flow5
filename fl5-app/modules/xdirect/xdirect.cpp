@@ -1032,6 +1032,7 @@ void XDirect::loadSettings(QSettings &settings)
     settings.endGroup();
 
     m_pFoilExplorer->setPropertiesFont(DisplayOptions::tableFont());
+    m_pFoilExplorer->setTreeFont(DisplayOptions::treeFont());
 
     EditPlrDlg::loadSettings(settings);
     OpPointWt::loadSettings(settings);
@@ -1472,9 +1473,11 @@ void XDirect::onDeleteCurPolar()
     if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, "Question", str,
                                                   QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel)) return;
 
+    Polar *pPolarToRemove = s_pCurPolar;
+
     QString nextPolarName = m_pFoilExplorer->removePolar(s_pCurPolar);
 
-    Objects2d::deletePolar(s_pCurPolar);
+    Objects2d::deletePolar(pPolarToRemove);
     XDirect::setCurPolar(nullptr);
     XDirect::setCurOpp(nullptr);
 
@@ -2058,8 +2061,7 @@ void XDirect::onHideAllOpps()
     }
     emit projectModified();
     m_bResetCurves = true;
-    m_pFoilExplorer->setCurveParams();
-    m_pFoilExplorer->update();
+    m_pFoilExplorer->updateVisibilityBoxes();
     updateView();
 }
 
@@ -2073,8 +2075,7 @@ void XDirect::onHideAllPolars()
     }
     emit projectModified();
     m_bResetCurves = true;
-    m_pFoilExplorer->setCurveParams();
-    m_pFoilExplorer->update();
+    m_pFoilExplorer->updateVisibilityBoxes();
     updateView();
 }
 
@@ -2093,7 +2094,7 @@ void XDirect::onHideFoilPolars()
     }
     emit projectModified();
     m_bResetCurves = true;
-    m_pFoilExplorer->setCurveParams();
+    m_pFoilExplorer->updateVisibilityBoxes();
     updateView();
 }
 
@@ -2110,7 +2111,7 @@ void XDirect::onHideFoilOpps()
     }
     emit projectModified();
     m_bResetCurves = true;
-    m_pFoilExplorer->setCurveParams();
+    m_pFoilExplorer->updateVisibilityBoxes();
     updateView();
 }
 
@@ -2128,7 +2129,7 @@ void XDirect::onHidePolarOpps()
     }
     emit projectModified();
     m_bResetCurves = true;
-    m_pFoilExplorer->setCurveParams();
+    m_pFoilExplorer->updateVisibilityBoxes();
     updateView();
 }
 
@@ -3266,7 +3267,7 @@ void XDirect::onShowAllOpps()
     }
     emit projectModified();
     m_bResetCurves = true;
-    m_pFoilExplorer->setCurveParams();
+    m_pFoilExplorer->updateVisibilityBoxes();
     updateView();
 }
 
@@ -3281,7 +3282,7 @@ void XDirect::onShowAllPolars()
     }
     emit projectModified();
     m_bResetCurves = true;
-    m_pFoilExplorer->setCurveParams();
+    m_pFoilExplorer->updateVisibilityBoxes();
     updateView();
 }
 
@@ -3298,7 +3299,7 @@ void XDirect::onShowFoilPolarsOnly()
     }
     emit projectModified();
     m_bResetCurves = true;
-    m_pFoilExplorer->setCurveParams();
+    m_pFoilExplorer->updateVisibilityBoxes();
     updateView();
 }
 
@@ -3317,7 +3318,7 @@ void XDirect::onShowFoilPolars()
     }
     emit projectModified();
     m_bResetCurves = true;
-    m_pFoilExplorer->setCurveParams();
+    m_pFoilExplorer->updateVisibilityBoxes();
 
     updateView();
 }
@@ -3339,7 +3340,7 @@ void XDirect::onShowFoilOpps()
     }
     emit projectModified();
     if(isOppView()) m_bResetCurves = true;
-    m_pFoilExplorer->setCurveParams();
+    m_pFoilExplorer->updateVisibilityBoxes();
 
     updateView();
 }
@@ -3359,7 +3360,7 @@ void XDirect::onShowPolarOpps()
     }
     emit projectModified();
     if(isOppView()) m_bResetCurves = true;
-    m_pFoilExplorer->setCurveParams();
+    m_pFoilExplorer->updateVisibilityBoxes();
 
     updateView();
 }
@@ -4052,6 +4053,7 @@ void XDirect::resetPrefs()
 {
     m_bResetCurves = true;
     m_pFoilExplorer->setPropertiesFont(DisplayOptions::tableFont());
+    m_pFoilExplorer->setTreeFont(DisplayOptions::treeFont());
     m_pFoilTable->setTableFontStruct(DisplayOptions::tableFontStruct());
     updateView();
 }
@@ -4160,7 +4162,7 @@ void XDirect::onShowActivePolarOnly()
     }
 
     m_bResetCurves = true;
-    m_pFoilExplorer->updateObjectView();
+    m_pFoilExplorer->updateVisibilityBoxes();
     m_pFoilTable->updateTable();
     updateView();
     emit projectModified();
@@ -4175,7 +4177,7 @@ void XDirect::onShowAllFoils()
         pFoil->setVisible(true);
     }
     m_pDFoilWt->updateView();
-    m_pFoilExplorer->updateObjectView();
+    m_pFoilExplorer->updateVisibilityBoxes();
     m_pFoilTable->updateTable();
     m_pFoilTable->viewport()->update();
     emit projectModified();
@@ -4191,7 +4193,7 @@ void XDirect::onHideAllFoils()
     }
 
     m_pDFoilWt->updateView();
-    m_pFoilExplorer->updateObjectView();
+    m_pFoilExplorer->updateVisibilityBoxes();
     m_pFoilTable->updateTable();
     m_pFoilTable->viewport()->update();
     emit projectModified();

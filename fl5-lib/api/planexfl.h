@@ -220,7 +220,7 @@ class FL5LIB_EXPORT PlaneXfl : public Plane
 
         void makeUniqueIndexList();
 
-        bool hasWPolar(const PlanePolar *pWPolar) const;
+        bool hasPolar(const PlanePolar *pWPolar) const;
         bool hasPOpp(const PlaneOpp *pPOpp) const;
 
 

@@ -62,7 +62,7 @@ namespace Objects3d
 
     Plane * setModifiedPlane(Plane *pModPlane);
     PlanePolar* insertNewPolar(PlanePolar *pNewWPolar, Plane const*pCurPlane);
-    void renameWPolar(PlanePolar *pWPolar, Plane const *pPlane);
+    void renamePlPolar(PlanePolar *pWPolar, Plane const *pPlane);
     void renamePlane(QString const &PlaneName);
 
 

@@ -53,7 +53,7 @@ Plane::Plane()
 }
 
 
-bool Plane::hasWPolar(PlanePolar const*pWPolar) const {return pWPolar->planeName().compare(m_Name)==0;}
+bool Plane::hasPolar(PlanePolar const*pWPolar) const {return pWPolar->planeName().compare(m_Name)==0;}
 bool Plane::hasPOpp(PlaneOpp const*pPOpp)   const {return pPOpp->planeName().compare(m_Name)==0;}
 
 

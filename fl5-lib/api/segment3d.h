@@ -61,7 +61,7 @@ class FL5LIB_EXPORT Segment3d
 
         double angle(int iv, Vector3d const &V) const;
 
-        bool isSame(Segment3d newEdge, double precision) const;
+        inline bool isSame(Segment3d newEdge, double precision) const;
         bool isOnSegment(Vector3d const &pt, double precision) const;
         bool isOnSegment(double x, double y, double z, double precision) const;
         bool isEncroachedBy(Vector3d const &pt) const;
@@ -92,8 +92,12 @@ class FL5LIB_EXPORT Segment3d
 
 
 
-
-
+inline bool Segment3d::isSame(Segment3d newEdge, double precision) const
+{
+    if(newEdge.m_S[0].isSame(m_S[0], precision) && newEdge.m_S[1].isSame(m_S[1], precision)) return true;
+    if(newEdge.m_S[0].isSame(m_S[1], precision) && newEdge.m_S[1].isSame(m_S[0], precision)) return true;
+    return false;
+}
 
 
 

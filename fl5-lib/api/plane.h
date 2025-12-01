@@ -129,7 +129,7 @@ class FL5LIB_EXPORT Plane : public fl5Object
         bool isInitialized() const {return m_bIsInitialized;}
         void setInitialized(bool b) {m_bIsInitialized=b;}
 
-        bool hasWPolar(const PlanePolar *pWPolar) const;
+        bool hasPolar(const PlanePolar *pWPolar) const;
         bool hasPOpp(const PlaneOpp *pPOpp) const;
 
         void setActive(bool b) const {m_bIsActive=b;}

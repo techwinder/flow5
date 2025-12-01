@@ -439,7 +439,7 @@ void BatchPlaneDlg::initDialog()
 
         for(int iPolar=0; iPolar<Objects3d::nPolars(); iPolar++)
         {
-            PlanePolar *pWPolar = Objects3d::wPolarAt(iPolar);
+            PlanePolar *pWPolar = Objects3d::plPolarAt(iPolar);
             if(!pWPolar) continue;
             if(pWPolar && pWPolar->planeName().compare(pPlane->name())==0)
             {

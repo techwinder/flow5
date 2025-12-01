@@ -549,9 +549,9 @@ void Polar3dDlg::connectBaseSignals()
 
 void Polar3dDlg::onButton(QAbstractButton *pButton)
 {
-    if      (m_pButtonBox->button(QDialogButtonBox::Save)    == pButton)  onOK();
-    else if (m_pButtonBox->button(QDialogButtonBox::Discard) == pButton)  reject();
-    else if (m_pButtonBox->button(QDialogButtonBox::Reset)   == pButton)  onReset();
+    if      (m_pButtonBox->button(QDialogButtonBox::Save)            == pButton)  onOK();
+    else if (m_pButtonBox->button(QDialogButtonBox::Discard)         == pButton)  reject();
+    else if (m_pButtonBox->button(QDialogButtonBox::RestoreDefaults) == pButton)  onReset();
 }
 
 

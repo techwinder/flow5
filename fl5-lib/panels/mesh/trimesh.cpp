@@ -1414,7 +1414,7 @@ void TriMesh::makeMeshFromTriangles(std::vector<Triangle3d> const &triangulation
         Node &S0 = t3.vertex(0);
         Node &S1 = t3.vertex(1);
         Node &S2 = t3.vertex(2);
-        // force nodes in the xz symmetry plane to ensure that left and right panels are connectd
+        // force nodes in the xz symmetry plane to ensure that left and right panels are connected
         if(fabs(S0.y)<SYMMETRYPRECISION)
         {
             S0.y=0.0;

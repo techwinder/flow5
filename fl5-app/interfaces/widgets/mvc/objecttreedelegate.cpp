@@ -41,6 +41,13 @@ ObjectTreeDelegate::ObjectTreeDelegate(QObject *pParent)  : QStyledItemDelegate(
 }
 
 
+QSize ObjectTreeDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &) const
+{
+    QFontMetrics fm(option.font);
+    return QSize(0, int(float(fm.height())*1.5f));
+}
+
+
 void ObjectTreeDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     int col = index.column();

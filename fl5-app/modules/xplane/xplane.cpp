@@ -873,7 +873,7 @@ void XPlane::createWPolarCurves()
 
     for (int k=0; k<Objects3d::nPolars(); k++)
     {
-        PlanePolar *pWPolar = Objects3d::wPolarAt(k);
+        PlanePolar *pWPolar = Objects3d::plPolarAt(k);
         pWPolar->clearCurves();
 
         if (pWPolar->isVisible() && pWPolar->dataSize()>0)
@@ -970,7 +970,7 @@ void XPlane::createStabilityCurves()
 
         for (int k=0; k<Objects3d::nPolars(); k++)
         {
-            PlanePolar *pWPolar = Objects3d::wPolarAt(k);
+            PlanePolar *pWPolar = Objects3d::plPolarAt(k);
             pWPolar->clearCurves();
 
             if (!pWPolar->isVisible() || pWPolar->dataSize()<=0) continue;
@@ -1646,7 +1646,7 @@ bool XPlane::loadSettings(QSettings &settings)
     m_pStabTimeControls->loadSettings(settings);
     m_pPOpp3dCtrls->loadSettings(settings);
 
-    m_pPlaneExplorer->setTreeFontStruct(DisplayOptions::treeFontStruct());
+    m_pPlaneExplorer->setTreeFont(DisplayOptions::treeFontStruct().font());
     m_pPlaneExplorer->setPropertiesFont(DisplayOptions::tableFont());
 
 
@@ -1822,7 +1822,7 @@ void XPlane::resetPrefs()
     s_pMainFrame->m_pCpViewWt->CpGraph()->setYInverted(0, true);
     m_pPlaneExplorer->setPropertiesFont(DisplayOptions::tableFont());
     m_pPlaneExplorer->setFont(DisplayOptions::treeFont());
-    m_pPlaneExplorer->setTreeFontStruct(DisplayOptions::treeFontStruct());
+    m_pPlaneExplorer->setTreeFont(DisplayOptions::treeFontStruct().font());
 
     if(!W3dPrefs::isClipPlaneEnabled())
     {
@@ -1909,11 +1909,11 @@ void XPlane::onDefineT6Polar()
         pNewControlPolar->setLineWidth(m_pCurPlane->theStyle().m_Width);
         pNewControlPolar->setLineStipple(m_pCurPlane->theStyle().m_Stipple);
         pNewControlPolar->setPointStyle(Line::NOSYMBOL);
-        Objects3d::setWPolarColor(m_pCurPlane, pNewControlPolar, xfl::darkFactor());
+        Objects3d::setPlPolarColor(m_pCurPlane, pNewControlPolar, xfl::darkFactor());
         pNewControlPolar->setVisible(true);
 
         pNewControlPolar->setGroundEffect(false);
-        pNewControlPolar->m_AlphaSpec       = 0.0;
+        pNewControlPolar->setAlphaSpec(0.0);
         pNewControlPolar->setGroundHeight(0.0);
 
         pNewControlPolar = Objects3d::insertNewPolar(pNewControlPolar, m_pCurPlane);
@@ -1956,7 +1956,7 @@ void XPlane::onDefineT123578Polar()
         pNewWPolar->setLineWidth(m_pCurPlane->theStyle().m_Width);
         pNewWPolar->setLineStipple(m_pCurPlane->theStyle().m_Stipple);
         pNewWPolar->setPointStyle(m_pCurPlane->theStyle().m_Symbol);
-        Objects3d::setWPolarColor(m_pCurPlane, pNewWPolar, xfl::darkFactor());
+        Objects3d::setPlPolarColor(m_pCurPlane, pNewWPolar, xfl::darkFactor());
         pNewWPolar->setPlaneName(m_pCurPlane->name());
         pNewWPolar->setName(wpDlg.staticWPolar().name());
 
@@ -2018,7 +2018,7 @@ void XPlane::onDefineT7Polar()
         pNewWPolar->setLineWidth(m_pCurPlane->theStyle().m_Width);
         pNewWPolar->setLineStipple(m_pCurPlane->theStyle().m_Stipple);
         pNewWPolar->setPointStyle(m_pCurPlane->theStyle().m_Symbol);
-        Objects3d::setWPolarColor(m_pCurPlane, pNewWPolar, xfl::darkFactor());
+        Objects3d::setPlPolarColor(m_pCurPlane, pNewWPolar, xfl::darkFactor());
         pNewWPolar->setPlaneName(m_pCurPlane->name());
         pNewWPolar->setName(wpDlg.staticWPolar().name());
 
@@ -2200,7 +2200,7 @@ void XPlane::onImportExternalPolar()
     pNewWPolar->setVisible(true);
     pNewWPolar->setLineWidth(Curve::defaultLineWidth());
     pNewWPolar->setPointStyle(m_pCurPlane->theStyle().m_Symbol);
-    Objects3d::setWPolarColor(m_pCurPlane, pNewWPolar, xfl::darkFactor());
+    Objects3d::setPlPolarColor(m_pCurPlane, pNewWPolar, xfl::darkFactor());
     pNewWPolar->setPlaneName(m_pCurPlane->name());
     pNewWPolar->setName(std::string("Imported polar"));
 
@@ -2441,7 +2441,7 @@ void XPlane::onDeletePlanePOpps()
 
     for(int iw=0; iw<Objects3d::nPolars(); iw++)
     {
-        PlanePolar const *pWPolar = Objects3d::wPolarAt(iw);
+        PlanePolar const *pWPolar = Objects3d::plPolarAt(iw);
         if(pWPolar->planeName()==m_pCurPlane->name())
             m_pPlaneExplorer->removeWPolarPOpps(pWPolar);
     }
@@ -3446,7 +3446,7 @@ void XPlane::onExportAllWPolars()
 
     for(int l=0; l<Objects3d::nPolars(); l++)
     {
-        PlanePolar *pWPolar = Objects3d::wPolarAt(l);
+        PlanePolar *pWPolar = Objects3d::plPolarAt(l);
         polarname = QString::fromStdString(pWPolar->planeName() + "_" + pWPolar->name());
         polarname.replace("/", "_");
         polarname.replace(".", "_");
@@ -3570,7 +3570,7 @@ void XPlane::onShowAllWPolars()
     {
         for (int i=0; i<Objects3d::nPolars(); i++)
         {
-            PlanePolar *pWPolar = Objects3d::wPolarAt(i);
+            PlanePolar *pWPolar = Objects3d::plPolarAt(i);
             pWPolar->setVisible(true);
         }
         emit projectModified();
@@ -3589,7 +3589,7 @@ void XPlane::onHideAllWPolars()
     {
         for (int i=0; i<Objects3d::nPolars(); i++)
         {
-            PlanePolar *pWPolar = Objects3d::wPolarAt(i);
+            PlanePolar *pWPolar = Objects3d::plPolarAt(i);
             pWPolar->setVisible(false);
         }
         emit projectModified();
@@ -3672,7 +3672,7 @@ void XPlane::onHidePlaneWPolars()
     PlanePolar *pWPolar;
     for (int i=0; i<Objects3d::nPolars(); i++)
     {
-        pWPolar = Objects3d::wPolarAt(i);
+        pWPolar = Objects3d::plPolarAt(i);
         if (pWPolar->planeName() == PlaneName.toStdString())
         {
             pWPolar->setVisible(false);
@@ -3902,7 +3902,7 @@ void XPlane::onRenameCurWPolar()
     if(!m_pCurPlPolar) return;
     if(!m_pCurPlane) return;
 
-    Objects3d::renameWPolar(m_pCurPlPolar, m_pCurPlane);
+    Objects3d::renamePlPolar(m_pCurPlPolar, m_pCurPlane);
 
     updateTreeView();
     m_pPlaneExplorer->selectWPolar(m_pCurPlPolar, false);
@@ -3981,7 +3981,7 @@ void XPlane::onShowPlaneWPolarsOnly()
 
     for (int i=0; i<Objects3d::nPolars(); i++)
     {
-        PlanePolar *pWPolar = Objects3d::wPolarAt(i);
+        PlanePolar *pWPolar = Objects3d::plPolarAt(i);
         pWPolar->setVisible(pWPolar->planeName() == m_pCurPlane->name());
     }
 
@@ -3998,7 +3998,7 @@ void XPlane::onShowOnlyCurWPolar()
 
     for (int i=0; i<Objects3d::nPolars(); i++)
     {
-        PlanePolar *pWPolar = Objects3d::wPolarAt(i);
+        PlanePolar *pWPolar = Objects3d::plPolarAt(i);
         pWPolar->setVisible(pWPolar==m_pCurPlPolar);
     }
 
@@ -4021,7 +4021,7 @@ void XPlane::onShowPlaneWPolars()
     PlanePolar *pWPolar;
     for (i=0; i<Objects3d::nPolars(); i++)
     {
-        pWPolar = Objects3d::wPolarAt(i);
+        pWPolar = Objects3d::plPolarAt(i);
         if (pWPolar->planeName()==PlaneName.toStdString()) pWPolar->setVisible(true);
     }
 
@@ -4382,7 +4382,7 @@ void XPlane::onPlaneOppView()
 
     s_pMainFrame->setActiveCentralWidget();
 
-    m_pPlaneExplorer->setCurveParams();
+    m_pPlaneExplorer->updateVisibilityBoxes();
     setControls();
 
     m_bResetCurves = true;
@@ -4405,6 +4405,7 @@ void XPlane::onPolarView()
 
     s_pMainFrame->setActiveCentralWidget();
 
+    m_pPlaneExplorer->updateVisibilityBoxes();
     setControls();
 
     m_bResetCurves = true;
@@ -4787,7 +4788,7 @@ void XPlane::setPolar(PlanePolar *pPlPolar)
         //if we didn't find anything, find the first for this plane
         for (int iwp=0; iwp<Objects3d::nPolars(); iwp++)
         {
-            PlanePolar *pOldWPolar = Objects3d::wPolarAt(iwp);
+            PlanePolar *pOldWPolar = Objects3d::plPolarAt(iwp);
             if (pOldWPolar->planeName().compare(m_pCurPlane->name())==0)
             {
                 pPlPolar = pOldWPolar;
@@ -5944,7 +5945,7 @@ void XPlane::onCurveClicked(Curve*pCurve, int ipt)
 
             for(int iwp=0; iwp<Objects3d::nPolars(); iwp++)
             {
-                PlanePolar *pWPolar=Objects3d::wPolarAt(iwp);
+                PlanePolar *pWPolar=Objects3d::plPolarAt(iwp);
                 for(int ic=0; ic<pWPolar->curveCount(); ic++)
                 {
                     if(pWPolar->curve(ic)==pCurve)
@@ -6060,7 +6061,7 @@ void XPlane::onCurveDoubleClicked(Curve*pCurve)
     {
         for(int iwp=0; iwp<Objects3d::nPolars(); iwp++)
         {
-            PlanePolar *pWPolar=Objects3d::wPolarAt(iwp);
+            PlanePolar *pWPolar=Objects3d::plPolarAt(iwp);
             for(int ic=0; ic<pWPolar->curveCount(); ic++)
             {
                 if(pWPolar->curve(ic)==pCurve)

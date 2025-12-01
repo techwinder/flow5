@@ -61,7 +61,6 @@ class GMesherWt : public QFrame
 
         void setAlgo(int iAlgo) {s_idxAlgo=iAlgo;}
 
-        void setExtraNodes(std::vector<std::vector<Node>> const &nodes) {m_Nodes=nodes;}
         void setWings(QVector<WingXfl*> const &wings) {m_Wings=wings;}
         void clearWings() {m_Wings.clear();}
 
@@ -88,9 +87,6 @@ class GMesherWt : public QFrame
         int  meshAlgo();
         bool readMeshSize();
         void convertFromGmsh();
-        void convertTriangles(const std::vector<std::size_t> &elementTags, const QVector<Vector3d> &node);
-
-        void embedPoints();
 
     signals:
         void meshCurrent();
@@ -115,7 +111,7 @@ class GMesherWt : public QFrame
 
 
         std::vector<Triangle3d> m_Triangles; /**< the resulting triangles */
-        std::vector<std::vector<Node>> m_Nodes;
+        std::vector<Node> m_Nodes;
 
         QVector<QVector<Vector3d>> m_Curves;
 

@@ -246,11 +246,6 @@ void FuseOccDlg::setupLayout()
                     pBodyMenu->addSeparator();
                     pBodyMenu->addAction(m_pTessSettings);
                     pBodyMenu->addAction(m_pFlipTessNormals);
-
-                    QAction *pClearOutput = new QAction("Clear output", this);
-                    connect(pClearOutput, SIGNAL(triggered()), m_ppto, SLOT(clear()));
-                    pBodyMenu->addSeparator();
-                    pBodyMenu->addAction(pClearOutput);
                 }
                 pMenuButton->setMenu(pBodyMenu);
             }

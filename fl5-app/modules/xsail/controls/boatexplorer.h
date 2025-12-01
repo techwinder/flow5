@@ -79,6 +79,8 @@ class BoatExplorer : public QWidget
         void fillBtPolars(ObjectTreeItem *pBoatItem, const Boat *pBoat);
         void selectObjects();
         void setCurveParams();
+        void updateLineStyles();
+        void updateVisibilityBoxes();
 
         QByteArray const &splitterSize() {return s_SplitterSizes;}
         void setSplitterSize(QByteArray size) {s_SplitterSizes = size;}
@@ -117,7 +119,6 @@ class BoatExplorer : public QWidget
     private:
         void setupLayout();
         void setOverallCheckStatus();
-        void updateVisibilityBoxes();
 
     private:
         ExpandableTreeView *m_pStruct;

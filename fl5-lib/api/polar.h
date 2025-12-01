@@ -132,6 +132,9 @@ class FL5LIB_EXPORT Polar : public XflObject
 
         bool hasOpp(const OpPoint *pOpp) const;
 
+        int compareTo(Polar const*pPolar) const;
+
+
         bool isType1()     const {return m_Type==xfl::T1POLAR;}
         bool isType2()     const {return m_Type==xfl::T2POLAR;}
         bool isType3()     const {return m_Type==xfl::T3POLAR;}

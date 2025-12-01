@@ -246,81 +246,9 @@ ObjectTreeItem* ObjectTreeModel::appendRow(ObjectTreeItem*pParentItem, std::stri
 }
 
 
-void ObjectTreeModel::updateData()
-{
-    int nRows = rowCount();
-    int nCols = columnCount();
-    QModelIndex idxTL = index(0,0, QModelIndex());
-    QModelIndex idxB1R1 = index(nRows-1, 0);
-//    qDebug()<<"vallls"<<idxBR.isValid()<<idxB1R.isValid()<<idxBR1.isValid()<<idxB1R1.isValid();
-
-//    ObjectTreeItem *pTLItem = itemFromIndex(idxTL);
-//    ObjectTreeItem *pBRItem = itemFromIndex(idxBR);
-
-   updateData(idxTL, idxB1R1);
-
-//    emit dataChanged(idxTL, idxBR);
-}
 
 
-void ObjectTreeModel::updateData(QModelIndex const &idxTL, QModelIndex const &idxBR)
-{
-    Q_ASSERT(idxBR.parent()==idxTL.parent());
-
- //    qDebug()<<"update data"<<nRows<<nCols<<idxTL.isValid() << idxBR.isValid()<<"sameparents="<<(idxBR.parent()==idxTL.parent());
-    if(idxTL.isValid() && idxBR.isValid())
-    {
-        emit dataChanged(idxTL, idxBR);
-
-        ObjectTreeItem *pTLItem = itemFromIndex(idxTL);
-        ObjectTreeItem *pBRItem = itemFromIndex(idxBR);
-    }
-    else
-        qDebug()<<"invalid indexes";
-}
 
 
-void ObjectTreeModel::updateData(ObjectTreeItem *pItem)
-{
-    int nRows = pItem->rowCount();
-//    int nCols = pItem->columnCount();
 
-    for(int row=0; row<nRows; row++)
-    {
-        ObjectTreeItem *pChildItem = pItem->child(row);
-        if(!pChildItem) continue; // failsafe
-        QModelIndex idx = index(pItem, pChildItem);
-        if(idx.isValid())
-            emit dataChanged(idx, idx);
-
-        updateData(pChildItem);
-    }
-}
-
-
-void ObjectTreeModel::updateDataFromRoot()
-{
-    ObjectTreeItem *pRootItem = rootItem();
-
-    updateData(pRootItem);
-/*
-    int nLevel0Objects = pRootItem->rowCount();
-
-    QModelIndex idx0 = index(0,0,pRootItem); // the index of the first plane object
-
-    if(nLevel0Objects>0)
-    {
-        QModelIndex idx1st  = idx0;
-        QModelIndex idxlast = idx0.siblingAtRow(nLevel0Objects-1);
-//qDebug() <<"updateDataFromRoot"       << idx1st.isValid()<<idxlast.isValid();
-        emit dataChanged(idx1st, idxlast);
-    }
-
-    for(int row=0; row<nLevel0Objects; row++)
-    {
-        ObjectTreeItem *pChildItem = pRootItem->child(row);
-        updateData(pChildItem);
-
-    }*/
-}
 

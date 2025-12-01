@@ -33,6 +33,12 @@
 
 Polar3d::Polar3d()
 {
+    setDefaults();
+}
+
+
+void Polar3d::setDefaults()
+{
     m_PolarFormat = 200015;
 
     m_bLocked = false;
@@ -60,7 +66,6 @@ Polar3d::Polar3d()
     m_VortonCoreSize     = 1.0;   // x MAC
     m_VPWMaxLength       = 30.0;  // x MAC
     m_VPWIterations      = 35;
-
     m_nXWakePanel4    = 5;
     m_TotalWakeLengthFactor = 30.0;
     m_WakePanelFactor = 1.1;

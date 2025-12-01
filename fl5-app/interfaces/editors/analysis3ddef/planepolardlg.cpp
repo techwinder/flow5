@@ -86,12 +86,13 @@ void PlanePolarDlg::makeCommonControls()
                 m_pfeIyy  = new FloatEdit;
                 m_pfeIzz  = new FloatEdit;
                 m_pfeIxz  = new FloatEdit;
-                pInertiaDataLayout->addWidget(m_pfePlaneMass,1,2);
-                pInertiaDataLayout->addWidget(m_pfeXCoG,     2,2);
-                pInertiaDataLayout->addWidget(m_pfeZCoG,     3,2);
-                pInertiaDataLayout->addWidget(m_pfeIxx,      4,2);
-                pInertiaDataLayout->addWidget(m_pfeIyy,      5,2);
-                pInertiaDataLayout->addWidget(m_pfeIzz,      6,2); pInertiaDataLayout->addWidget(m_pfeIxz,      7,2);
+                pInertiaDataLayout->addWidget(m_pfePlaneMass, 1,2);
+                pInertiaDataLayout->addWidget(m_pfeXCoG,      2,2);
+                pInertiaDataLayout->addWidget(m_pfeZCoG,      3,2);
+                pInertiaDataLayout->addWidget(m_pfeIxx,       4,2);
+                pInertiaDataLayout->addWidget(m_pfeIyy,       5,2);
+                pInertiaDataLayout->addWidget(m_pfeIzz,       6,2);
+                pInertiaDataLayout->addWidget(m_pfeIxz,       7,2);
 
                 pInertiaDataLayout->addWidget(new QLabel(Units::massUnitQLabel()),    1,3);
                 pInertiaDataLayout->addWidget(new QLabel(Units::lengthUnitQLabel()),  2,3);
@@ -111,16 +112,18 @@ void PlanePolarDlg::makeCommonControls()
         }
     }
 
-    m_pfrGround =  new QFrame;
+    m_pfrGround = new QFrame;
     {
-        QVBoxLayout * pGroundLayout = new QVBoxLayout;
+        QVBoxLayout *pGroundLayout = new QVBoxLayout;
         {
             QHBoxLayout *pGroupLayout = new QHBoxLayout;
             {
                 m_pchGround   = new QCheckBox("Ground effect");
-                m_pchGround->setToolTip("Activate this option to simulate an above ground airplane.<br>Height should be positive.");
+                m_pchGround->setToolTip("<p>Activate this option to simulate an above ground airplane.<br>"
+                                        "Height should be positive.</p>");
                 m_pchFreeSurf = new QCheckBox("Free surface");
-                m_pchFreeSurf->setToolTip("Activate this option to simulate an underwater hydrofoil.<br>Height should be negative.");
+                m_pchFreeSurf->setToolTip("<p>Activate this option to simulate an underwater hydrofoil.<br>"
+                                          "Height should be negative.</p>");
                 pGroupLayout->addWidget(m_pchGround);
                 pGroupLayout->addWidget(m_pchFreeSurf);
                 pGroupLayout->addStretch();
@@ -130,15 +133,16 @@ void PlanePolarDlg::makeCommonControls()
                 QLabel *pLabHeight = new QLabel("Height =");
                 m_pfeHeight = new FloatEdit(0.0f);
                 QLabel *plabLengthUnit2 = new QLabel(Units::lengthUnitQLabel());
-                pGroundHeightLayout->addStretch();
                 pGroundHeightLayout->addWidget(pLabHeight);
                 pGroundHeightLayout->addWidget(m_pfeHeight);
                 pGroundHeightLayout->addWidget(plabLengthUnit2);
                 pGroundHeightLayout->addStretch();
             }
 
-            QLabel *plabWarning = new QLabel("Height should be positive in the case of a ground effect<br>"
-                                       "and negative in the case of a free surface effect");
+            QLabel *plabWarning = new QLabel("<p>Height should be positive in the case of a ground effect<br>"
+                                             "and negative in the case of a free surface effect.</p>");
+            plabWarning->setWordWrap(true);
+
             QLabel *pFlow5Link = new QLabel;
             pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Analysis/GE.html>https://flow5.tech/docs/flow5_doc/Analysis/GE.html</a>");
             pFlow5Link->setOpenExternalLinks(true);
@@ -1237,6 +1241,8 @@ void PlanePolarDlg::onFlapControls()
         QModelIndex wingindex = m_pFlapModel->index(iw,0);
 
         WingXfl const *pWing = pPlaneXfl->wingAt(iw);
+
+        if(iw>= s_WPolar.nFlapCtrls()) continue; //error
 
         AngleControl &avlc = s_WPolar.flapCtrls(iw);
         avlc.setName(setname.toStdString()); // optional meta-information

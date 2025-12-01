@@ -197,14 +197,6 @@ std::string Segment3d::properties(bool bLong, std::string pref) const
 }
 
 
-bool Segment3d::isSame(Segment3d newEdge, double precision) const
-{
-    if(newEdge.m_S[0].isSame(m_S[0], precision) && newEdge.m_S[1].isSame(m_S[1], precision)) return true;
-    if(newEdge.m_S[0].isSame(m_S[1], precision) && newEdge.m_S[1].isSame(m_S[0], precision)) return true;
-    return false;
-}
-
-
 /** Returns the angle in the range [pi, 2 pi] made by the vector [iv, (iv+1)%2]
  * with another 3d vector V.
  * Positive orientation is given by the normal vector N at node iv.
