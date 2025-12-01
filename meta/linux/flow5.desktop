@@ -1,0 +1,14 @@
+[Desktop Entry]
+Comment=An analysis tool for foils and planes operating at low Reynolds numbers
+Exec=/usr/local/bin/flow5
+Icon=/usr/local/share/flow5/flow5.png
+Name=flow5
+NoDisplay=false
+Path[$e]=
+StartupNotify=true
+Terminal=0
+TerminalOptions=
+Type=Application
+X-KDE-SubstituteUID=false
+X-KDE-Username=
+Categories=Science
