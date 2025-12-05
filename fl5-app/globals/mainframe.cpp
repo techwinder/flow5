@@ -1519,7 +1519,7 @@ void MainFrame::handleIOResults(bool bError)
     if(iApp==xfl::XDIRECT)
     {
         m_pXDirect->setFoil();
-        m_pXDirect->setPolar();
+//        m_pXDirect->setPolar();
 
         setSavedState(false);
 

@@ -560,7 +560,7 @@ void GraphWt::mouseReleaseEvent(QMouseEvent *pEvent)
     if(GraphOptions::bSpinAnimation() && pEvent->button()==Qt::LeftButton)
     {
         int movetime = m_MoveTime.elapsed();
-        if(movetime<300 && !m_LastPressedPt.isNull())
+        if(movetime<DisplayOptions::moveTimeThreshold() && !m_LastPressedPt.isNull())
         {
             m_Trans = pEvent->pos() - m_LastPressedPt;
             startDynamicTimer();

@@ -367,7 +367,7 @@ void PlaneExplorer::onItemDoubleClicked(const QModelIndex &index)
         }
         else if(m_Selection==PlaneExplorer::WPOLAR)
         {
-            s_pXPlane->onEditCurWPolar();
+            s_pXPlane->onEditCurPlPolar();
         }
     }
 }
@@ -903,7 +903,7 @@ void PlaneExplorer::keyPressEvent(QKeyEvent *pEvent)
             if(m_Selection==PlaneExplorer::PLANEOPP && pPOpp)
                 s_pXPlane->onDeleteCurPOpp();
             else if(m_Selection==PlaneExplorer::WPOLAR && pWPolar)
-                s_pXPlane->onDeleteCurWPolar();
+                s_pXPlane->onDeleteCurPlPolar();
             else if(m_Selection==PlaneExplorer::PLANE && pPlane)
                 s_pXPlane->onDeleteCurPlane();
 
@@ -1284,13 +1284,13 @@ void PlaneExplorer::onSwitchAll(bool bChecked)
     }
     else if(s_pXPlane->isPolarView())
     {
-        if(bChecked) s_pXPlane->onShowAllWPolars();
-        else         s_pXPlane->onHideAllWPolars();
+        if(bChecked) s_pXPlane->onShowAllPlPolars();
+        else         s_pXPlane->onHideAllPlPolars();
     }
     else if(s_pXPlane->isStabPolarView())
     {
-        if(bChecked) s_pXPlane->onShowAllWPolars();
-        else         s_pXPlane->onHideAllWPolars();
+        if(bChecked) s_pXPlane->onShowAllPlPolars();
+        else         s_pXPlane->onHideAllPlPolars();
     }
 
     updateVisibilityBoxes();

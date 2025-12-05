@@ -525,8 +525,8 @@ void PlanePolarDlg::initPolar3dDlg(const Plane *pPlane, PlanePolar const *pWPola
 
     if(pWPolar)
     {
-        m_bAutoName = false;
-        m_pchAutoName->setChecked(false);
+//        m_bAutoName = false;
+       m_pchAutoName->setChecked(true);
         m_plePolarName->setText(QString::fromStdString(pWPolar->name()));
         s_WPolar.duplicateSpec(pWPolar);
         s_WPolar.setName(pWPolar->name());

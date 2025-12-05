@@ -43,7 +43,7 @@ DisplayOptions::enumThemeType DisplayOptions::g_Theme = DisplayOptions::LIGHTTHE
 
 bool DisplayOptions::g_bStyleSheet = false;
 
-
+int DisplayOptions::g_MoveTimeThreshold = 300;
 double DisplayOptions::g_ScaleFactor = 0.07;
 double DisplayOptions::g_IconSize = 32;
 
@@ -186,8 +186,9 @@ void DisplayOptions::loadSettings(QSettings &settings)
         if(iTheme==0) g_Theme = DisplayOptions::LIGHTTHEME;
         else          g_Theme = DisplayOptions::DARKTHEME;
 
-        g_ScaleFactor = settings.value("ScaleFactor", g_ScaleFactor).toDouble();
-        g_IconSize    = settings.value("IconSize",    g_IconSize).toInt();
+        g_MoveTimeThreshold = settings.value("MoveTimeThreshold", g_MoveTimeThreshold).toInt();
+        g_ScaleFactor       = settings.value("ScaleFactor",       g_ScaleFactor).toDouble();
+        g_IconSize          = settings.value("IconSize",          g_IconSize).toInt();
     }
     settings.endGroup();
 }
@@ -209,8 +210,9 @@ void DisplayOptions::saveSettings(QSettings &settings)
         if(isLightTheme()) settings.setValue("Theme",0);
         else               settings.setValue("Theme",1);
 
-        settings.setValue("ScaleFactor", g_ScaleFactor);
-        settings.setValue("IconSize",    g_IconSize);
+        settings.setValue("MoveTimeThreshold", g_MoveTimeThreshold);
+        settings.setValue("ScaleFactor",       g_ScaleFactor);
+        settings.setValue("IconSize",          g_IconSize);
     }
     settings.endGroup();
 }

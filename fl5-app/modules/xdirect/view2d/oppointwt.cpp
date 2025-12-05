@@ -264,6 +264,9 @@ void OpPointWt::mousePressEvent(QMouseEvent *pEvent)
         }
     }
     pEvent->accept();
+
+    m_MoveTime.restart();
+
 }
 
 
@@ -274,7 +277,7 @@ void OpPointWt::mouseReleaseEvent(QMouseEvent *pEvent)
     m_bTransFoil  = false;
 
     int movetime = m_MoveTime.elapsed();
-    if(movetime<300 && !m_LastPressedPt.isNull())
+    if(movetime<DisplayOptions::moveTimeThreshold() && !m_LastPressedPt.isNull())
     {
 //        if(m_rGraphRect.contains(pEvent->pos()) && GraphWt::bSpinAnimation() && pEvent->button()==Qt::LeftButton)
         {

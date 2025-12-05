@@ -635,31 +635,15 @@ void FoilExplorer::selectOpPoint(OpPoint *pOpp)
                         //browse the opps
                         for(int kr=0; kr<pPolarItem->rowCount(); kr++)
                         {
-                            Foil *m_pFoil = Objects2d::foil(pFoilItem->name().toStdString());
-                            Polar *m_pPolar = Objects2d::polar(m_pFoil, pPolarItem->name().toStdString());
-
+//                            Foil *pFoil = Objects2d::foil(pFoilItem->name().toStdString());
+//                            Polar *pPolar = Objects2d::polar(pFoil, pPolarItem->name().toStdString());
 
                             ObjectTreeItem *pOppItem = pPolarItem->child(kr);
                             if(pOppItem)
                             {
                                 const QModelIndex &oppChild = m_pModel->index(pPolarItem, pOppItem);
-                                double val = pOppItem->name().toDouble();
-                                // is it the correct aoa?
-                                bool bCorrect = false;
-                                Q_ASSERT(m_pPolar!=nullptr);
-                                if(m_pPolar->isControlPolar())
-                                {
-                                    bCorrect =(fabs(val-pOpp->theta())<FLAPANGLEPRECISION);
-                                }
-                                else if(m_pPolar->isFixedaoaPolar())
-                                {
-                                    bCorrect =(fabs(val-pOpp->Reynolds())<REYNOLDSPRECISION);
-                                }
-                                else
-                                {
-                                    bCorrect =(fabs(val-pOpp->aoa())<AOAPRECISION);
-                                }
-                                if(bCorrect)
+
+                                if(pOppItem->name().toStdString()==pOpp->name())
                                 {
                                     // select the opp row
                                     m_pTreeView->setCurrentIndex(oppChild);
@@ -686,7 +670,7 @@ void FoilExplorer::selectOpPoint(OpPoint *pOpp)
 void FoilExplorer::addOpps(Polar *pPolar)
 {
     if(!pPolar) return;
-//    QString format = xfl::isLocalized() ? "%L1" : "%1";
+
     for(int ir=0; ir<m_pModel->rowCount(); ir++)
     {
         ObjectTreeItem *pFoilItem = m_pModel->item(ir);

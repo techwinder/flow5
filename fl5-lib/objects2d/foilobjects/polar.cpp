@@ -77,12 +77,6 @@ Polar::Polar(double Re, double NCrit, double xTrTop, double xTrBot, BL::enumBLMe
 }
 
 
-Polar::Polar(const Polar &polar)
-{
-    copy(polar);
-}
-
-
 void Polar::exportToString(std::string &outstring, bool bDataOnly, bool bCSV) const
 {
     QString strong, Header;
@@ -372,13 +366,6 @@ void Polar::insertOppDataAt(int i, OpPoint const *pOpp)
 }
 
 
-/**
- * Adds the parameter data to the data arrays
- * The index used to insert the data is the aoa for type 1, 2 and 3 polars, and the freestream velocity for type 4 polars.
- * If a point with identical index exists, the data is replaced.
- * If not, the data is inserted for this index.
- *
- */
 void Polar::addPoint(double Alpha, double Cd,   double Cdp,      double Cl,     double Cm,
                      double HMom,  double Cpmn, double Reynolds, double XCp,    double Ctrl,
                      double Xtr1,  double Xtr2, double XLSTop,   double XLSBot, double XTSTop, double XTSBot)
@@ -407,11 +394,7 @@ void Polar::addPoint(double Alpha, double Cd,   double Cdp,      double Cl,     
 }
 
 
-/**
- * Copies the polar's data from an existing polar
- * @param pPolar a pointer to the instance of the reference Polar object from which the data should be copied
- */
-void Polar::copy(Polar *pPolar)
+void Polar::copy(Polar const *pPolar)
 {
     copySpecification(pPolar);
 
@@ -435,33 +418,6 @@ void Polar::copy(Polar *pPolar)
     m_XLamSepBot  = pPolar->m_XLamSepBot;
     m_XTurbSepTop = pPolar->m_XTurbSepTop;
     m_XTurbSepBot = pPolar->m_XTurbSepBot;
-}
-
-
-void Polar::copy(Polar const &polar)
-{
-    copySpecification(polar);
-
-    m_Alpha   =  polar.m_Alpha;
-    m_Control =  polar.m_Control;
-    m_Cd      =  polar.m_Cd;
-    m_Cdp     =  polar.m_Cdp;
-    m_Cl      =  polar.m_Cl;
-    m_Cm      =  polar.m_Cm;
-    m_HMom    =  polar.m_HMom;
-    m_Cpmn    =  polar.m_Cpmn;
-    m_ClCd    =  polar.m_ClCd;
-    m_RtCl    =  polar.m_RtCl;
-    m_Cl32Cd  =  polar.m_Cl32Cd;
-    m_Re      =  polar.m_Re;
-    m_XCp     =  polar.m_XCp;
-
-    m_XTrTop      = polar.m_XTrTop;
-    m_XTrBot      = polar.m_XTrBot;
-    m_XLamSepTop  = polar.m_XLamSepTop;
-    m_XLamSepBot  = polar.m_XLamSepBot;
-    m_XTurbSepTop = polar.m_XTurbSepTop;
-    m_XTurbSepBot = polar.m_XTurbSepBot;
 }
 
 
@@ -758,7 +714,6 @@ std::string Polar::properties()
     QString strong;
     polarprops.clear();
 
-
     switch(m_BLMethod)
     {
         case BL::XFOIL:         polarprops += "BL Solver: XFoil\n";         break;
@@ -768,6 +723,7 @@ std::string Polar::properties()
     strong = QString::asprintf("Type = %d", m_Type+1);
     if     (m_Type==xfl::T1POLAR) strong += " (Fixed speed)\n";
     else if(m_Type==xfl::T2POLAR) strong += " (Fixed lift)\n";
+    else if(m_Type==xfl::T3POLAR) strong += " (Rubber chord)\n";
     else if(m_Type==xfl::T4POLAR) strong += " (Fixed angle of attack)\n";
     else if(m_Type==xfl::T6POLAR) strong += " (Control polar)\n";
     polarprops += strong;
@@ -777,7 +733,6 @@ std::string Polar::properties()
         strong = "T.E. flap angle: " + THETAch + QString::asprintf(" = %g", m_TEFlapAngle) + DEGch + EOLch;
         polarprops += strong;
     }
-
 
     if(m_Type==xfl::T1POLAR)
     {
@@ -817,7 +772,6 @@ std::string Polar::properties()
         strong = QString::asprintf("Mach        = %5.2f\n", m_Mach);
         polarprops += strong;
     }
-
 
     strong = QString::asprintf("NCrit       = %5.2f\n", m_ACrit);
     polarprops += strong;
@@ -989,13 +943,15 @@ bool Polar::serializePolarFl5(QDataStream &ar, bool bIsStoring)
 
         m_theStyle.serializeFl5(ar, bIsStoring);
 
-
-        if     (isFixedSpeedPolar())  ar<<1;
-        else if(isFixedLiftPolar())   ar<<2;
-        else if(isRubberChordPolar()) ar<<3;
-        else if(isFixedaoaPolar())    ar<<4;
-        else if(isControlPolar())     ar<<5;
-        else                          ar<<1;
+        switch(m_Type)
+        {
+            default:
+            case xfl::T1POLAR:  ar<<1;  break;
+            case xfl::T2POLAR:  ar<<2;  break;
+            case xfl::T3POLAR:  ar<<3;  break;
+            case xfl::T4POLAR:  ar<<4;  break;
+            case xfl::T6POLAR:  ar<<6;  break;
+        }
 
         switch(m_BLMethod)
         {
@@ -1054,7 +1010,7 @@ bool Polar::serializePolarFl5(QDataStream &ar, bool bIsStoring)
         float XTr1(0), XTr2(0), XLSTop(0), XLSBot(0), XTSTop(0), XTSBot(0);
 
         ar >> ArchiveFormat;
-        if (ArchiveFormat < 500000 || ArchiveFormat>501000) return false;
+        if (ArchiveFormat<500000 || ArchiveFormat>501000) return false;
 
         ar >> strange;    m_FoilName = strange.toStdString();
         ar >> strange;    m_Name = strange.toStdString();
@@ -1062,12 +1018,16 @@ bool Polar::serializePolarFl5(QDataStream &ar, bool bIsStoring)
         m_theStyle.serializeFl5(ar, bIsStoring);
 
         ar >> n;
-        if     (n==1) m_Type=xfl::T1POLAR;
-        else if(n==2) m_Type=xfl::T2POLAR;
-        else if(n==3) m_Type=xfl::T3POLAR;
-        else if(n==4) m_Type=xfl::T4POLAR;
-        else if(n==5) m_Type=xfl::T6POLAR;
-
+        switch (n)
+        {
+            default:
+            case 1: m_Type=xfl::T1POLAR;    break;
+            case 2: m_Type=xfl::T2POLAR;    break;
+            case 3: m_Type=xfl::T3POLAR;    break;
+            case 4: m_Type=xfl::T4POLAR;    break;
+            case 5:
+            case 6: m_Type=xfl::T6POLAR;    break;
+        }
         ar >>n;
         switch(n)
         {
@@ -1080,7 +1040,7 @@ bool Polar::serializePolarFl5(QDataStream &ar, bool bIsStoring)
         if(ArchiveFormat<500750)
         {
             double qinf(0), rho(0), nu(0), chord(0);
-            ar >> rho >> nu; //m_Density >> m_nu;
+            ar >> rho >> nu;
             ar >> qinf; // m_QInf;
             ar >> chord; // m_Chord;
             m_Reynolds = qinf*chord/nu;
@@ -1117,6 +1077,9 @@ bool Polar::serializePolarFl5(QDataStream &ar, bool bIsStoring)
         ar >> nDbleSpares;
         if(nDbleSpares>0)
             ar >> m_TEFlapAngle;
+
+        // correct past errors
+        if(isType6()) m_TEFlapAngle = 0.0;
     }
     return true;
 }
@@ -1379,10 +1342,10 @@ int Polar::compareTo(Polar const*pPolar) const
                 else if(fabs(Reynolds()-pPolar->Reynolds())<REYNOLDSPRECISION)
                 {
                     // sort by theta
-                    if      (TEFlapAngle()<pPolar->TEFlapAngle()-FLAPANGLEPRECISION) return -1;
-                    else if (fabs(TEFlapAngle()-pPolar->TEFlapAngle())<FLAPANGLEPRECISION) return 0;
-                    else return 1;
-                }
+                    if      (TEFlapAngle()<pPolar->TEFlapAngle()-FLAPANGLEPRECISION)       return -1;
+                    else if (fabs(TEFlapAngle()-pPolar->TEFlapAngle())<FLAPANGLEPRECISION) return name().compare(pPolar->name());
+                    else                                                                   return 1;
+                 }
                 else return 1;
                 break;
             }
@@ -1393,10 +1356,10 @@ int Polar::compareTo(Polar const*pPolar) const
                 else if(fabs(aoaSpec()-pPolar->aoaSpec())<AOAPRECISION)
                 {
                     // sort by theta
-                    if      (TEFlapAngle()<pPolar->TEFlapAngle()-FLAPANGLEPRECISION) return -1;
-                    else if (fabs(TEFlapAngle()-pPolar->TEFlapAngle())<FLAPANGLEPRECISION) return 0;
-                    else return 1;
-                }
+                    if      (TEFlapAngle()<pPolar->TEFlapAngle()-FLAPANGLEPRECISION)       return -1;
+                    else if (fabs(TEFlapAngle()-pPolar->TEFlapAngle())<FLAPANGLEPRECISION) return name().compare(pPolar->name());
+                    else                                                                   return 1;
+                 }
                 else return 1;
                 break;
             }
@@ -1407,11 +1370,12 @@ int Polar::compareTo(Polar const*pPolar) const
                 else if(fabs(aoaSpec()-pPolar->aoaSpec())<AOAPRECISION)
                 {
                     // sort by Reynolds
-                    if          (Reynolds()<pPolar->Reynolds()-REYNOLDSPRECISION) return -1;
-                    else if(fabs(Reynolds()-pPolar->Reynolds())<REYNOLDSPRECISION) return 0;
-                    else return 1;
+                    if          (Reynolds()<pPolar->Reynolds()-REYNOLDSPRECISION)  return -1;
+                    else if(fabs(Reynolds()-pPolar->Reynolds())<REYNOLDSPRECISION) return name().compare(pPolar->name());
+                    else                                                           return 1;
                 }
                 else return 1;
+
                 break;
             }
         }

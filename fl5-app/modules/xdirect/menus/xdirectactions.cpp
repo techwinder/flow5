@@ -140,12 +140,12 @@ void XDirectActions::makeActions()
     m_pDefinePolarAct->setToolTip("<p>Define a single analysis/polar</p>");
     connect(m_pDefinePolarAct, SIGNAL(triggered()), m_pXDirect, SLOT(onDefineAnalysis()));
 
-    m_pBatchXFoilAct = new QAction("Batch Analysis (legacy)", this);
+    m_pBatchXFoilAct = new QAction("Batch analysis (legacy)", this);
     m_pBatchXFoilAct->setShortcut(QKeySequence(Qt::ALT | Qt::Key_F7));
     m_pBatchXFoilAct->setToolTip("<p>Launches a batch of analyses using all available computer CPU cores</p>");
     connect(m_pBatchXFoilAct, SIGNAL(triggered()), m_pXDirect, SLOT(onBatchAnalysis()));
 
-    m_pBatchAltAct = new QAction("Batch Analysis (new)", this);
+    m_pBatchAltAct = new QAction("Batch analysis (new)", this);
     m_pBatchAltAct->setShortcut(QKeySequence(Qt::Key_F7));
     m_pBatchAltAct->setToolTip("<p>Launches a batch of selected analyses</p>");
     connect(m_pBatchAltAct, SIGNAL(triggered()), m_pXDirect, SLOT(onBatchAltAnalysis()));
@@ -183,7 +183,6 @@ void XDirectActions::makeActions()
     m_pResetFoilScale->setToolTip("<p>Resets the foil's scale to original size</p>");
 
     m_pRenamePolarAct = new QAction("Rename", this);
-//    m_pRenamePolarAct->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_F2));
     connect(m_pRenamePolarAct, SIGNAL(triggered()), m_pXDirect, SLOT(onRenameCurPolar()));
 
     m_pShowInviscidCurve = new QAction("Show inviscid curve", this);

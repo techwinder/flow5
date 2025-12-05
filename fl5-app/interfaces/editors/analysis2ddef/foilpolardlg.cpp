@@ -451,6 +451,7 @@ void FoilPolarDlg::onButton(QAbstractButton *pButton)
     {
         readData();
         s_Polar.setName(m_pleAnalysisName->text().toStdString());
+        if(s_Polar.isType6()) s_Polar.setTEFlapAngle(0.0);
     }
     XflDialog::onButton(pButton);
 }

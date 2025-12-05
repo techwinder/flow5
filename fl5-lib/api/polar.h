@@ -22,12 +22,6 @@
 
 *****************************************************************************/
 
-/** 
- * @file
- * This file implements the Polar class FL5LIB_EXPORT for the 2D analysis of Foil objects
- *
- */
-
 
 #pragma once
 
@@ -60,7 +54,6 @@ class FL5LIB_EXPORT Polar : public XflObject
     public:
         Polar();
         Polar(double Re, double NCrit, double xTrTop, double xTrBot, BL::enumBLMethod blmethod);
-        Polar(const Polar &polar);
 
         double interpolateFromAlpha(double alpha, Polar::enumPolarVariable PlrVar, bool &bOutAlpha) const;
         double interpolateFromCl(double Cl, Polar::enumPolarVariable PlrVar, bool &bOutCl) const;
@@ -77,8 +70,7 @@ class FL5LIB_EXPORT Polar : public XflObject
         void copySpecification(const Polar *pPolar);
         void copySpecification(Polar const &polar);
 
-        void copy(Polar *pPolar);
-        void copy(Polar const &polar);
+        void copy(const Polar *pPolar);
 
         void replaceOppDataAt(int pos, OpPoint const *pOpp);
         void insertOppDataAt( int pos, OpPoint const *pOpp);

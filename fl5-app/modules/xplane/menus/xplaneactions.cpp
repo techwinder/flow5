@@ -314,7 +314,7 @@ void XPlaneActions::makeActions()
 
     m_pExportAllWPolars = new QAction("Export", m_pXPlane);
     m_pExportAllWPolars->setStatusTip("Export all available polars to text files");
-    connect(m_pExportAllWPolars, SIGNAL(triggered()), m_pXPlane, SLOT(onExportAllWPolars()));
+    connect(m_pExportAllWPolars, SIGNAL(triggered()), m_pXPlane, SLOT(onExportAllPlPolars()));
 
     m_pPlaneInertia = new QAction("Inertia\tF12", m_pXPlane);
     m_pPlaneInertia->setStatusTip("Define the inertia for the active plane");
@@ -386,7 +386,7 @@ void XPlaneActions::makeActions()
     m_pEditWPolarDef = new QAction("Edit", m_pXPlane);
     m_pEditWPolarDef->setStatusTip("Modify the analysis parameters of this polar");
     m_pEditWPolarDef->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_E));
-    connect(m_pEditWPolarDef, SIGNAL(triggered()), m_pXPlane, SLOT(onEditCurWPolar()));
+    connect(m_pEditWPolarDef, SIGNAL(triggered()), m_pXPlane, SLOT(onEditCurPlPolar()));
 
     m_pEditExtraDrag = new QAction("Edit extra drag", m_pXPlane);
     m_pEditWPolarDef->setStatusTip("Modify the extra drag parameters and the AVL-type parabolic drag without recalculating the polar.");
@@ -394,7 +394,7 @@ void XPlaneActions::makeActions()
 
     m_pEditWPolarPts = new QAction("Edit data points", m_pXPlane);
     m_pEditWPolarPts->setStatusTip("Modify the data points of this polar");
-    connect(m_pEditWPolarPts, SIGNAL(triggered()), m_pXPlane, SLOT(onEditCurWPolarPts()));
+    connect(m_pEditWPolarPts, SIGNAL(triggered()), m_pXPlane, SLOT(onEditCurPlPolarPts()));
 
     m_pImportXmlAnalyses = new QAction("Import analyses from xml", m_pXPlane);
     m_pImportXmlAnalyses->setStatusTip("Import one or more analyses defined by xml files.");
@@ -426,11 +426,11 @@ void XPlaneActions::makeActions()
 
     m_pHideAllWPlrs = new QAction("Hide", m_pXPlane);
     m_pHideAllWPlrs->setStatusTip("Hide all the polar curves of all wings and planes");
-    connect(m_pHideAllWPlrs, SIGNAL(triggered()), m_pXPlane, SLOT(onHideAllWPolars()));
+    connect(m_pHideAllWPlrs, SIGNAL(triggered()), m_pXPlane, SLOT(onHideAllPlPolars()));
 
     m_pShowAllWPlrs = new QAction("Show", m_pXPlane);
     m_pShowAllWPlrs->setStatusTip("Show all the polar curves of all wings and planes");
-    connect(m_pShowAllWPlrs, SIGNAL(triggered()), m_pXPlane, SLOT(onShowAllWPolars()));
+    connect(m_pShowAllWPlrs, SIGNAL(triggered()), m_pXPlane, SLOT(onShowAllPlPolars()));
 
     m_pHidePlaneWOpps = new QAction("Hide", m_pXPlane);
     m_pHidePlaneWOpps->setStatusTip("Hide all the operating point curves of the active wing or plane");
@@ -471,19 +471,19 @@ void XPlaneActions::makeActions()
 
     m_pCopyCurWPolarData = new QAction("to clipboard", m_pXPlane);
     m_pCopyCurWPolarData->setShortcut(QKeySequence(Qt::ALT|Qt::Key_X));
-    connect(m_pCopyCurWPolarData, SIGNAL(triggered()), m_pXPlane, SLOT(onExportWPolarToClipboard()));
+    connect(m_pCopyCurWPolarData, SIGNAL(triggered()), m_pXPlane, SLOT(onExportPlPolarToClipboard()));
 
     m_pResetCurWPolar = new QAction("Reset", m_pXPlane);
     m_pResetCurWPolar->setStatusTip("Delete all the points of the active polar, but keep the analysis settings");
-    connect(m_pResetCurWPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onResetCurWPolar()));
+    connect(m_pResetCurWPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onResetCurPlPolar()));
 
     m_pShowOnlyCurPolar = new QAction("Show only active polar", m_pXPlane);
     m_pShowOnlyCurPolar->setShortcut(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_U));
-    connect(m_pShowOnlyCurPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onShowOnlyCurWPolar()));
+    connect(m_pShowOnlyCurPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onShowOnlyCurPlPolar()));
 
     m_pDeleteCurWPolar = new QAction("Delete", m_pXPlane);
     m_pDeleteCurWPolar->setStatusTip("Delete the active polar");
-    connect(m_pDeleteCurWPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onDeleteCurWPolar()));
+    connect(m_pDeleteCurWPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onDeleteCurPlPolar()));
 
     m_pDeleteCurWOpp = new QAction("Delete", m_pXPlane);
     m_pDeleteCurWOpp->setStatusTip("Delete the active operating point");

@@ -930,7 +930,7 @@ void gl3dView::mouseReleaseEvent(QMouseEvent * pEvent)
     if(W3dPrefs::bSpinAnimation())
     {
         int movetime = m_MoveTime.elapsed();
-        if(movetime<300 && !m_PressedPoint.isNull())
+        if(movetime<DisplayOptions::moveTimeThreshold() && !m_PressedPoint.isNull())
         {
             bool bCtrl = false;
             if (pEvent->modifiers() & Qt::ControlModifier) bCtrl =true;

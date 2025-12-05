@@ -160,7 +160,7 @@ void FuseMesherDlg::setupLayout()
                                 {
                                     QButtonGroup *pGroup = new QButtonGroup;
                                     {
-                                        m_prbfl5Mesher = new QRadioButton("flow5 mesher");
+                                        m_prbfl5Mesher = new QRadioButton("flow5 mesher (deprecated)");
                                         m_prbGMesher   = new QRadioButton("Gmsh");
                                         m_prbfl5Mesher->setChecked(s_bfl5Mesher);
                                         m_prbGMesher->setChecked(!s_bfl5Mesher);

@@ -44,6 +44,7 @@ namespace DisplayOptions
     extern QColor g_BackgroundColor2d;
     extern QColor g_TextColor;
 
+    extern int g_MoveTimeThreshold;
     extern double g_ScaleFactor;
     extern double g_IconSize;
 
@@ -80,6 +81,9 @@ namespace DisplayOptions
     inline bool isDarkTheme()    {return g_Theme==DisplayOptions::DARKTHEME;}
 
     bool isDarkMode();
+
+    inline int moveTimeThreshold() {return g_MoveTimeThreshold;}
+    inline void setMoveTimeThreshold(int t) {g_MoveTimeThreshold=t;}
 
     inline void setScaleFactor(double f) {g_ScaleFactor=f;}
     inline double scaleFactor() {return g_ScaleFactor;}

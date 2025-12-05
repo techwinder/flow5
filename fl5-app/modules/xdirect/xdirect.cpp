@@ -827,7 +827,7 @@ void XDirect::fillOppCurves(OpPoint *pOpp, Curve*pViscCurve, Curve*pInviscidCurv
     if(pViscCurve)
     {
         pViscCurve->setTheStyle(pOpp->theStyle());
-        pViscCurve->setName(QString::fromStdString(pOpp->name()));
+        pViscCurve->setName(QString::fromStdString(pOpp->fullName()));
         pOpp->appendCurve(pViscCurve);
     }
 
@@ -859,8 +859,6 @@ void XDirect::fillOppCurves(OpPoint *pOpp, Curve*pViscCurve, Curve*pInviscidCurv
     {
         case 0:  // Cp
         {
-            if(pViscCurve)     pViscCurve->setName(pViscCurve->name()+"_Cp");
-            if(pInviscidCurve) pInviscidCurve->setName(pInviscidCurve->name()+"_Cp");
             for (int j=0; j<int(tmpfoil.nNodes()); j++)
             {
                 if(pViscCurve && pOpp->bViscResults()) pViscCurve->appendPoint(tmpfoil.node(j).x, pOpp->m_Cpv.at(j));
@@ -870,8 +868,6 @@ void XDirect::fillOppCurves(OpPoint *pOpp, Curve*pViscCurve, Curve*pInviscidCurv
         }
         case 1:  // Q
         {
-            if(pViscCurve)     pViscCurve->setName(pViscCurve->name()+"_Q");
-            if(pInviscidCurve) pInviscidCurve->setName(pInviscidCurve->name()+"_Q");
             for (int j=0; j<int(tmpfoil.nNodes()); j++)
             {
                 if(pViscCurve && pOpp->bViscResults()) pViscCurve->appendPoint(tmpfoil.node(j).x, pOpp->m_Qv.at(j));
@@ -1200,8 +1196,10 @@ void XDirect::onFinishAnalysis()
         }
     }
 
-    if(s_pCurOpp) m_pFoilExplorer->selectOpPoint(s_pCurOpp);
-    else          m_pFoilExplorer->selectPolar(  s_pCurPolar);
+    if(s_pCurOpp)
+        m_pFoilExplorer->selectOpPoint(s_pCurOpp);
+    else
+        m_pFoilExplorer->selectPolar(  s_pCurPolar);
 
     //refresh the view
     m_bResetCurves = true;
@@ -1367,7 +1365,11 @@ void XDirect::onEditCurPolar()
 
         pModPolar = insertNewPolar(pModPolar);
         setPolar(pModPolar);
-        if(pModPolar) m_pFoilExplorer->insertPolar(pModPolar);
+        if(pModPolar)
+        {
+            m_pFoilExplorer->insertPolar(pModPolar);
+            m_pFoilExplorer->selectPolar(pModPolar);
+        }
 
         updateView();
         emit projectModified();
@@ -3364,6 +3366,8 @@ Foil* XDirect::setFoil(Foil* pFoil)
 {
     if(pFoil && pFoil==s_pCurFoil)
     {
+        s_pCurFoil->setTEFlapAngle(0.0);
+        s_pCurFoil->setFlaps();
         m_pAnalysisControls->onSetControls();
         return pFoil;
     }
@@ -3375,7 +3379,7 @@ Foil* XDirect::setFoil(Foil* pFoil)
 
     if(!s_pCurFoil)
     {
-        //take the first in the array, if any
+        //use the first in the array, if any
         if(Objects2d::nFoils()>0)
         {
             setCurFoil(Objects2d::foils().front());
@@ -3397,8 +3401,6 @@ Foil* XDirect::setFoil(Foil* pFoil)
 
 Polar *XDirect::setPolar(Polar *pPolar)
 {
-//    if(pPolar && pPolar==s_pCurPolar) return pPolar;
-
     stopAnimate();
 
     if(!s_pCurFoil|| !s_pCurFoil->name().length())
@@ -3429,7 +3431,9 @@ Polar *XDirect::setPolar(Polar *pPolar)
 
     if(pPolar)
     {
-        double theta = pPolar->TEFlapAngle();
+        double theta = 0.0;
+        if(pPolar->type()<xfl::T6POLAR) theta = pPolar->TEFlapAngle();
+
         if(pCurFoil->hasTEFlap() && fabs(theta)>FLAPANGLEPRECISION)
         {
            pCurFoil->setTEFlapAngle(theta);

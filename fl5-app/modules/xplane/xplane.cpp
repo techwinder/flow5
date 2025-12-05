@@ -83,6 +83,7 @@
 #include <interfaces/graphs/controls/graphtilevariableset.h>
 #include <interfaces/graphs/graph/curve.h>
 #include <interfaces/graphs/graph/graph.h>
+#include <interfaces/mesh/gmesh_globals.h>
 #include <interfaces/mesh/panelcheckdlg.h>
 #include <interfaces/opengl/controls/fine3dcontrols.h>
 #include <interfaces/opengl/controls/gllightdlg.h>
@@ -94,6 +95,7 @@
 #include <interfaces/widgets/customdlg/objectpropsdlg.h>
 #include <interfaces/widgets/customdlg/textdlg.h>
 #include <interfaces/widgets/line/linemenu.h>
+#include <modules/xobjects.h>
 #include <modules/xplane/analysis/analysis3dsettings.h>
 #include <modules/xplane/analysis/batchplanedlg.h>
 #include <modules/xplane/analysis/batchxmldlg.h>
@@ -115,7 +117,6 @@
 #include <modules/xplane/graphs/xplanelegendwt.h>
 #include <modules/xplane/menus/xplaneactions.h>
 #include <modules/xplane/menus/xplanemenus.h>
-#include <modules/xobjects.h>
 #include <test/tests/panelanalysistest.h>
 #include <test/tests/vortontestdlg.h>
 
@@ -153,7 +154,6 @@
 #include <api/panel4.h>
 #include <api/units.h>
 #include <api/utils.h>
-#include <interfaces/mesh/gmesh_globals.h>
 
 QVector<OptObjective> XPlane::s_Objectives;
 bool XPlane::s_bStoreOpps3d(false);
@@ -2193,36 +2193,36 @@ void XPlane::onImportExternalPolar()
 
     stopAnimate();
 
-    PlanePolarExt* pNewWPolar  = new PlanePolarExt;
-    pNewWPolar->setType(xfl::EXTERNALPOLAR);
-    pNewWPolar->setAnalysisMethod(xfl::NOMETHOD);
-    pNewWPolar->setReferenceArea(0.0);
-    pNewWPolar->setVisible(true);
-    pNewWPolar->setLineWidth(Curve::defaultLineWidth());
-    pNewWPolar->setPointStyle(m_pCurPlane->theStyle().m_Symbol);
-    Objects3d::setPlPolarColor(m_pCurPlane, pNewWPolar, xfl::darkFactor());
-    pNewWPolar->setPlaneName(m_pCurPlane->name());
-    pNewWPolar->setName(std::string("Imported polar"));
+    PlanePolarExt* pNewPlPolar  = new PlanePolarExt;
+    pNewPlPolar->setType(xfl::EXTERNALPOLAR);
+    pNewPlPolar->setAnalysisMethod(xfl::NOMETHOD);
+    pNewPlPolar->setReferenceArea(0.0);
+    pNewPlPolar->setVisible(true);
+    pNewPlPolar->setLineWidth(Curve::defaultLineWidth());
+    pNewPlPolar->setPointStyle(m_pCurPlane->theStyle().m_Symbol);
+    Objects3d::setPlPolarColor(m_pCurPlane, pNewPlPolar, xfl::darkFactor());
+    pNewPlPolar->setPlaneName(m_pCurPlane->name());
+    pNewPlPolar->setName(std::string("Imported polar"));
 
     EditPlrDlg wpDlg(s_pMainFrame);
-    wpDlg.initDialog(nullptr, pNewWPolar, nullptr);
+    wpDlg.initDialog(nullptr, pNewPlPolar, nullptr);
     connect(&wpDlg, SIGNAL(dataChanged()), this, SLOT(onResetWPolarCurves()));
 
     if (wpDlg.exec() != QDialog::Accepted)
     {
-        delete pNewWPolar;
+        delete pNewPlPolar;
         return;
     }
     // Add the WPolar to the array
     emit projectModified();
 
-    Objects3d::insertNewPolar(pNewWPolar, m_pCurPlane);
+    Objects3d::insertNewPolar(pNewPlPolar, m_pCurPlane);
 
-    if(pNewWPolar)
+    if(pNewPlPolar)
     {
-        setPolar(pNewWPolar);
-        m_pPlaneExplorer->insertWPolar(pNewWPolar);
-        m_pPlaneExplorer->selectWPolar(pNewWPolar, false);
+        setPolar(pNewPlPolar);
+        m_pPlaneExplorer->insertWPolar(pNewPlPolar);
+        m_pPlaneExplorer->selectWPolar(pNewPlPolar, false);
         m_pCurPOpp = nullptr;
     }
 
@@ -2236,10 +2236,7 @@ void XPlane::onImportExternalPolar()
 }
 
 
-/**
- * The user wants to remove some result points of the currently selected polar.
- */
-void XPlane::onEditCurWPolarPts()
+void XPlane::onEditCurPlPolarPts()
 {
     stopAnimate();
 
@@ -2493,7 +2490,7 @@ void XPlane::onDeletePlaneWPolars()
 }
 
 
-void XPlane::onDeleteCurWPolar()
+void XPlane::onDeleteCurPlPolar()
 {
     if(!m_pCurPlPolar) return;
     if(m_pCurPlPolar->isLocked())
@@ -2502,7 +2499,7 @@ void XPlane::onDeleteCurWPolar()
         return;
     }
 
-    QString strong = "Are you sure you want to delete the polar :\n" +  QString::fromStdString(m_pCurPlPolar->name()) +"?\n";
+    QString strong = "Are you sure you want to delete the polar:\n" +  QString::fromStdString(m_pCurPlPolar->name()) +"?\n";
     if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, "Question", strong,
                                                   QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel)) return;
 
@@ -3413,7 +3410,7 @@ void XPlane::onExportWPolarToFile()
 }
 
 
-QString XPlane::onExportWPolarToClipboard()
+QString XPlane::onExportPlPolarToClipboard()
 {
     if(!m_pCurPlPolar) return QString();
     std::string polardata;
@@ -3435,7 +3432,7 @@ void XPlane::onAutoWPolarNameOptions()
 }
 
 
-void XPlane::onExportAllWPolars()
+void XPlane::onExportAllPlPolars()
 {
     QString filename, DirName, polarname;
     QFile XFile;
@@ -3564,7 +3561,7 @@ void XPlane::onExporttoAVL()
 }
 
 
-void XPlane::onShowAllWPolars()
+void XPlane::onShowAllPlPolars()
 {
     if(isPolarView() || isStabPolarView())
     {
@@ -3583,7 +3580,7 @@ void XPlane::onShowAllWPolars()
 }
 
 
-void XPlane::onHideAllWPolars()
+void XPlane::onHideAllPlPolars()
 {
     if(isPolarView() || isStabPolarView())
     {
@@ -3815,7 +3812,7 @@ void XPlane::onEditExtraDrag()
 }
 
 
-void XPlane::onEditCurWPolar()
+void XPlane::onEditCurPlPolar()
 {
     stopAnimate();
 
@@ -3932,11 +3929,7 @@ void XPlane::onRenameCurPlane()
 }
 
 
-/**
- * The user has requested that the results of the current WPolar object be deleted.
- * Deletes it and all its child operating points, and updates the graphs
- */
-void XPlane::onResetCurWPolar()
+void XPlane::onResetCurPlPolar()
 {
     if (!m_pCurPlane || !m_pCurPlPolar) return;
     QString strong = "Are you sure you want to reset the content of the polar :\n"+ QString::fromStdString(m_pCurPlPolar->name()) +"?\n";
@@ -3992,7 +3985,7 @@ void XPlane::onShowPlaneWPolarsOnly()
 }
 
 
-void XPlane::onShowOnlyCurWPolar()
+void XPlane::onShowOnlyCurPlPolar()
 {
     if(!m_pCurPlane || !m_pCurPlPolar) return;
 

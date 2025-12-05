@@ -198,7 +198,7 @@ class XPlane : public QObject
 
 
     public slots:
-        QString onExportWPolarToClipboard();
+        QString onExportPlPolarToClipboard();
 
         void on3dView();
         void onAddCpSectionCurve();
@@ -225,7 +225,7 @@ class XPlane : public QObject
         void onDeleteWPlrPOpps();
         void onDeleteCurPOpp();
         void onDeleteCurPlane();
-        void onDeleteCurWPolar();
+        void onDeleteCurPlPolar();
         void onDeletePlanePOpps();
         void onDeletePlaneWPolars();
         void onDuplicateCurPlane();
@@ -234,11 +234,11 @@ class XPlane : public QObject
         void onEditCurFuse();
         void onEditCurPlane();
         void onEditCurPlaneDescription();
-        void onEditCurWPolar();
-        void onEditCurWPolarPts();
+        void onEditCurPlPolar();
+        void onEditCurPlPolarPts();
         void onEditCurWing();
         void onEditExtraDrag();
-        void onExportAllWPolars();
+        void onExportAllPlPolars();
         void onExportAnalysisToXML();
         void onExportCurPOpp();
         void onExportFuseMeshToSTL();
@@ -261,7 +261,7 @@ class XPlane : public QObject
         void onGraphChanged(int);
         void onHideAllPOpps();
         void onHideAllWPlrOpps();
-        void onHideAllWPolars();
+        void onHideAllPlPolars();
         void onHidePlaneOpps();
         void onHidePlaneWPolars();
         void onImportAnalysesFromXML();
@@ -282,7 +282,7 @@ class XPlane : public QObject
         void onPlaneOppView();
         void onRenameCurPlane();
         void onRenameCurWPolar();
-        void onResetCurWPolar();
+        void onResetCurPlPolar();
         void onResetFuseMesh();
         void onResetWPolarCurves();
         void onRootLocusView();
@@ -291,9 +291,9 @@ class XPlane : public QObject
         void onScaleWing();
         void onShowAllPOpps();
         void onShowWPlrPOpps();
-        void onShowAllWPolars();
+        void onShowAllPlPolars();
         void onShowNodeNormals();
-        void onShowOnlyCurWPolar();
+        void onShowOnlyCurPlPolar();
         void onShowPanelNormals();
         void onShowPlaneOpps();
         void onShowPlaneWPolars();

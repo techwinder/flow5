@@ -335,7 +335,7 @@ void gl2dView::mouseReleaseEvent(QMouseEvent *pEvent)
     if(W3dPrefs::bSpinAnimation())
     {
         int movetime = m_MoveTime.elapsed();
-        if(movetime<300 && !m_PressedPoint.isNull())
+        if(movetime<DisplayOptions::moveTimeThreshold() && !m_PressedPoint.isNull())
         {
             if(pEvent->button()==Qt::LeftButton)
             {

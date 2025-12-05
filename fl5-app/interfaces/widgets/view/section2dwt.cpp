@@ -609,7 +609,7 @@ void Section2dWt::mouseReleaseEvent(QMouseEvent *pEvent)
     else if(s_bAnimateTransitions && pEvent->button()==Qt::LeftButton)
     {
         int movetime = m_MoveTime.elapsed();
-        if(movetime<300 && !m_PointDown.isNull())
+        if(movetime<DisplayOptions::moveTimeThreshold() && !m_PointDown.isNull())
         {
             m_Trans = pEvent->pos() - m_PointDown;
             startDynamicTimer();
