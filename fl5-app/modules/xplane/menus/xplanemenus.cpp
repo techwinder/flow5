@@ -155,6 +155,11 @@ void XPlaneMenus::createPOppCtxMenus()
             m_pCurrentPlaneCtxMenu->addAction(pActions->m_pEditPlaneAct);
             m_pCurrentPlaneCtxMenu->addAction(pActions->m_pEditPlaneDescriptionAct);
             m_pCurrentPlaneCtxMenu->addSeparator();
+            m_pCurrentPlaneCtxMenu->addAction(pActions->m_pRenameCurPlaneAct);
+            m_pCurrentPlaneCtxMenu->addAction(pActions->m_pDuplicateCurPlane);
+            m_pCurrentPlaneCtxMenu->addAction(pActions->m_pDeleteCurPlane);
+            m_pCurrentPlaneCtxMenu->addAction(pActions->m_pSavePlaneAsProjectAct);
+            m_pCurrentPlaneCtxMenu->addSeparator();
             m_pCurrentPlaneCtxMenu->addAction(pActions->m_pOptimizeAct);
             m_pCurrentPlaneCtxMenu->addSeparator();
             m_pCurrentPlaneCtxMenu->addAction(pActions->m_pTranslatePlaneAct);
@@ -167,11 +172,6 @@ void XPlaneMenus::createPOppCtxMenus()
 
             m_pCurrentPlaneCtxMenu->addSeparator();
             m_pCurrentPlaneCtxMenu->addAction(pActions->m_pPlaneInertia);
-            m_pCurrentPlaneCtxMenu->addSeparator();
-            m_pCurrentPlaneCtxMenu->addAction(pActions->m_pRenameCurPlaneAct);
-            m_pCurrentPlaneCtxMenu->addAction(pActions->m_pDuplicateCurPlane);
-            m_pCurrentPlaneCtxMenu->addAction(pActions->m_pDeleteCurPlane);
-            m_pCurrentPlaneCtxMenu->addAction(pActions->m_pSavePlaneAsProjectAct);
             m_pCurrentPlaneCtxMenu->addSeparator();
             QMenu *pExportMenu = m_pCurrentPlaneCtxMenu->addMenu("Export");
             {
@@ -475,6 +475,11 @@ void XPlaneMenus::createMainBarMenus()
             m_pCurrentPlaneMenu->addAction(pActions->m_pEditPlaneAct);
             m_pCurrentPlaneMenu->addAction(pActions->m_pEditPlaneDescriptionAct);
             m_pCurrentPlaneMenu->addSeparator();
+            m_pCurrentPlaneMenu->addAction(pActions->m_pRenameCurPlaneAct);
+            m_pCurrentPlaneMenu->addAction(pActions->m_pDuplicateCurPlane);
+            m_pCurrentPlaneMenu->addAction(pActions->m_pDeleteCurPlane);
+            m_pCurrentPlaneMenu->addAction(pActions->m_pSavePlaneAsProjectAct);
+            m_pCurrentPlaneMenu->addSeparator();
             m_pCurrentPlaneMenu->addAction(pActions->m_pOptimizeAct);
             m_pCurrentPlaneMenu->addSeparator();
             m_pCurrentPlaneMenu->addAction(pActions->m_pTranslatePlaneAct);
@@ -486,11 +491,6 @@ void XPlaneMenus::createMainBarMenus()
             m_pCurrentPlaneMenu->addMenu(m_pSubFuseMenu);
             m_pCurrentPlaneMenu->addSeparator();
             m_pCurrentPlaneMenu->addAction(pActions->m_pPlaneInertia);
-            m_pCurrentPlaneMenu->addSeparator();
-            m_pCurrentPlaneMenu->addAction(pActions->m_pRenameCurPlaneAct);
-            m_pCurrentPlaneMenu->addAction(pActions->m_pDuplicateCurPlane);
-            m_pCurrentPlaneMenu->addAction(pActions->m_pDeleteCurPlane);
-            m_pCurrentPlaneMenu->addAction(pActions->m_pSavePlaneAsProjectAct);
             m_pCurrentPlaneMenu->addSeparator();
             QMenu *pExportMenu = m_pCurrentPlaneMenu->addMenu("Export");
             {

@@ -1222,8 +1222,8 @@ void XflScriptExec::makeBoatAnalysisList()
                 {
                     if(m_pScriptReader->m_T6Range.size())
                     {
-                        vMin = m_pScriptReader->m_T6Range.front().m_vMin;
-                        vMax = m_pScriptReader->m_T6Range.front().m_vMax;
+                        vMin = m_pScriptReader->m_T6Range.front().m_vStart;
+                        vMax = m_pScriptReader->m_T6Range.front().m_vEnd;
                         vInc = m_pScriptReader->m_T6Range.front().m_vInc;
                     }
 

@@ -104,7 +104,7 @@ void PlaneXfl::makeDefaultPlane()
 
     m_Wing[2].m_LE.x = 1.350;
     m_Wing[2].m_LE.y = 0.000;
-    m_Wing[2].m_LE.z = 0.040;
+    m_Wing[2].m_LE.z = 0.050;
     m_Wing[2].m_rx = m_Wing[2].isFin() ? -90 : 0.0;
 
     m_Inertia.reset();

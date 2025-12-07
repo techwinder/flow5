@@ -198,11 +198,15 @@ void Polar3dDlg::makeBaseCommonControls()
             {
                 QVBoxLayout *pWingSurfLayout = new QVBoxLayout;
                 {
-                    m_prbThinSurfaces  = new QRadioButton("Thin surfaces \t(not recommended if a fuselage is present)");
-                    m_prbThinSurfaces->setToolTip("<p>Since the mesh connections between fuselage and wings are not managed "
-                                                  "the calculation will be prone to numerical instabilities which will likely result "
-                                                  "in locally or globally inaccurate results.</p>");
+                    m_prbThinSurfaces  = new QRadioButton("Thin surfaces");
+                    m_prbThinSurfaces->setToolTip("<p>When assembling the plane, "
+                                                  "ensure that the fuselage's mesh conforms to the wings' "
+                                                  "mid-camber line at their root chords.</p>");
                     m_prbThickSurfaces = new QRadioButton("Thick surfaces");
+                    m_prbThickSurfaces->setToolTip("<p>When assembling the plane, "
+                                                  "ensure that the fuselage's mesh conforms to the wings' "
+                                                  "top and bottom surfaces at their root chords .</p>");
+
                     pWingSurfLayout->addWidget(m_prbThinSurfaces);
                     pWingSurfLayout->addWidget(m_prbThickSurfaces);
                 }

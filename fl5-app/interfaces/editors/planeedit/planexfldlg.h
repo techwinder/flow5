@@ -117,7 +117,7 @@ class PlaneXflDlg : public PlaneDlg
         Fuse *activeFuse(); // depends on the active tab
         int selectedPart();
         void makePartTable();
-        void editPart(int row, bool bAdvanced);
+
 
         void takePicture();
         void setPicture();

@@ -2828,9 +2828,11 @@ bool PlaneTask::computeSurfaceDragOTF(Surface const &surf, int iStartStation, do
     foilA.copy(surf.foilA(), true);
     foilB.copy(surf.foilB(), true);
 
+    if(isCancelled()) return false;
+
     const int m = iStartStation;
 
-    if(surf.hasTEFlap())
+    if(surf.hasTEFlap() && fabs(theta)>FLAPANGLEPRECISION)
     {
         foilA.setTEFlapAngle(theta);
         foilA.setFlaps();
@@ -2899,8 +2901,8 @@ bool PlaneTask::computeSurfaceDragOTF(Surface const &surf, int iStartStation, do
     XFoilTask *pRightTask = new XFoilTask();
     pRightTask->initialize(foilB, &RightSidePolar, false);
 
-/*    computeSectionDragOTF(pLeftTask);
-    computeSectionDragOTF(pRightTask);*/
+//    computeSectionDragOTF(pLeftTask);
+//    computeSectionDragOTF(pRightTask);
 
     std::thread leftthread  = std::thread(&PlaneTask::computeSectionDragOTF, this, pLeftTask);
     std::thread rightthread = std::thread(&PlaneTask::computeSectionDragOTF, this, pRightTask);
@@ -3030,14 +3032,12 @@ bool PlaneTask::computeViscousDragOTF(WingXfl *pWing, double alpha, double beta,
         else                 theta = 0.0;
 
         threads.push_back(std::thread(&PlaneTask::computeSurfaceDragOTF, this, surf, m, theta, std::ref(SpanResFF)));
-
+        //computeSurfaceDragOTF(surf, m, theta, std::ref(SpanResFF));
         m += surf.NYPanels();
     }
 
-    for(int isurf=0; isurf<pWing->nSurfaces(); isurf++)
-    {
-        threads[isurf].join();
-    }
+    for(int isurf=0; isurf<pWing->nSurfaces(); isurf++)        threads[isurf].join();
+
 
     SpanDistribs &sd = SpanResFF;
     bool bCv = true;

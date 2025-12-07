@@ -659,7 +659,20 @@ void FuseOccDlg::onCenterViewOnPanel()
 
 void FuseOccDlg::onScale()
 {
-    FuseDlg::onScale();
+    DoubleValueDlg dlg(this, {1.0}, {"Scale factor="}, {""});
+    if(dlg.exec()!=QDialog::Accepted) return;
+
+    FuseOcc *pFuseOcc = dynamic_cast<FuseOcc*>(m_pFuse);
+
+    pFuseOcc->scale(dlg.value(0), dlg.value(0), dlg.value(0));
+
+    m_pglFuseView->resetFuse();
+    m_pglFuseView->setReferenceLength(m_pFuse->length());
+    updateView();
+    updateProperties();
+
+    m_bChanged = true;
+
     m_pMesherWt->initWt(m_pFuseOcc->shells(), m_pFuseOcc->maxElementSize(), false, false);
 }
 

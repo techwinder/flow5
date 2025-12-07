@@ -1130,7 +1130,7 @@ void BatchXmlDlg::onAnalyze()
         if(range.isActive())
         {
             t12opps.insert(t12opps.end(), range.values().begin(), range.values().end());
-            strange = QString::asprintf("   min=%11.3g   max=%11.3g   inc=%11.3g\n", range.m_vMin, range.m_vMax, range.m_vInc);
+            strange = QString::asprintf("   min=%11.3g   max=%11.3g   inc=%11.3g\n", range.m_vStart, range.m_vEnd, range.m_vInc);
             log += strange;
         }
     }
@@ -1141,7 +1141,7 @@ void BatchXmlDlg::onAnalyze()
         if(range.isActive())
         {
             t3opps.insert(t3opps.end(), range.values().begin(), range.values().end());
-            strange = QString::asprintf("   min=%11.3g   max=%11.3g   inc=%11.3g\n", range.m_vMin, range.m_vMax, range.m_vInc);
+            strange = QString::asprintf("   min=%11.3g   max=%11.3g   inc=%11.3g\n", range.m_vStart, range.m_vEnd, range.m_vInc);
             log += strange;
         }
     }
@@ -1152,7 +1152,7 @@ void BatchXmlDlg::onAnalyze()
         if(range.isActive())
         {
             t6opps.insert(t6opps.end(), range.values().begin(), range.values().end());
-            strange = QString::asprintf("   min=%11.3g   max=%11.3g   inc=%11.3g\n", range.m_vMin, range.m_vMax, range.m_vInc);
+            strange = QString::asprintf("   min=%11.3g   max=%11.3g   inc=%11.3g\n", range.m_vStart, range.m_vEnd, range.m_vInc);
             log += strange;
         }
     }
@@ -1163,7 +1163,7 @@ void BatchXmlDlg::onAnalyze()
         if(range.isActive())
         {
             t7opps.insert(t7opps.end(), range.values().begin(), range.values().end());
-            strange = QString::asprintf("   min=%11.3g   max=%11.3g   inc=%11.3g\n", range.m_vMin, range.m_vMax, range.m_vInc);
+            strange = QString::asprintf("   min=%11.3g   max=%11.3g   inc=%11.3g\n", range.m_vStart, range.m_vEnd, range.m_vInc);
             log += strange;
         }
     }

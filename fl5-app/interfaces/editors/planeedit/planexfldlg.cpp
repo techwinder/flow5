@@ -2554,8 +2554,8 @@ void PlaneXflDlg::cutFuseShapes(Fuse *pFuse, Vector3d const &fusepos, TopoDS_Lis
         theKnife.SetArguments(faces);
         theKnife.SetTools(tools);
         theKnife.SetRunParallel(true);
-//        theKnife.SetFuzzyValue(1.e-4);
-        strange = QString::asprintf("   Using fuzzy value %g", theKnife.FuzzyValue()*Units::mtoUnit());
+        theKnife.SetFuzzyValue(1.0e-4);
+        strange = QString::asprintf("   Using fuzzy value %g ", theKnife.FuzzyValue()*Units::mtoUnit());
         strange += Units::lengthUnitQLabel() + "\n";
         updateOutput(strange);
 
@@ -2904,7 +2904,17 @@ void PlaneXflDlg::onEditPart()
 //    else if(pSenderAction == m_pEditPartObject) bAdvanced = true;
 
     int row = selectedPart();
-    editPart(row, bAdvanced);
+
+    if(row<m_pPlaneXfl->nWings())
+    {
+        WingXfl *pWing = m_pPlaneXfl->wing(row);
+        editWing(pWing, bAdvanced);
+    }
+    else if(row>=m_pPlaneXfl->nWings())
+    {
+        int iFuse = row-m_pPlaneXfl->nWings();
+        editFuse(iFuse, bAdvanced);
+    }
 }
 
 
@@ -2947,28 +2957,16 @@ void PlaneXflDlg::onResetFuse()
     m_pPlaneXfl->makeTriMesh(s_bThickSurfAssy);
     gl3dPlaneXflView*pglPlaneXflView = dynamic_cast<gl3dPlaneXflView*>(m_pglPlaneView);
     pglPlaneXflView->resetgl3dFuse();
-
+    QString str;
+    gmesh::makeFuseTriangulation(pFuse, str, "   ");
+    pFuse->saveBaseTriangulation();
 
     strange = "The fuse " + pFuse->name() + " has been reset.\n";
     updateStdOutput(strange+"\n");
 
+    m_bChanged = true;
     m_pglPlaneView->update();
     QApplication::restoreOverrideCursor();
-}
-
-
-void PlaneXflDlg::editPart(int row, bool bAdvanced)
-{
-    if(row<m_pPlaneXfl->nWings())
-    {
-        WingXfl *pWing = m_pPlaneXfl->wing(row);
-        editWing(pWing, bAdvanced);
-    }
-    else if(row>=m_pPlaneXfl->nWings())
-    {
-        int iFuse = row-m_pPlaneXfl->nWings();
-        editFuse(iFuse, bAdvanced);
-    }
 }
 
 

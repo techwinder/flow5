@@ -30,6 +30,7 @@
 #define SYMMETRYPRECISION 1.e-4 /**< if |y| is less than than this value, then the point is considered to be in the xz plane of symmetry and y will be set to zero */
 
 #define AOAPRECISION        1.e-3   /**< PRECISION used to compare the value of two angles in degrees - used for aoa, sideslip, and panel integrals*/
+#define CLPRECISION         1.e-4   /**< PRECISION used to compare the value of two Lift coefficients*/
 #define CTRLPRECISION       1.e-3   /**< PRECISION used to compare the value of two control parameters*/
 #define FLAPANGLEPRECISION  0.001   /**< PRECISION used to compare the value of two flap angles in degrees. Two angles with difference less than this value are considered equal */
 #define REYNOLDSPRECISION   0.1     /**< PRECISION used to compare the value of two Reynolds numbers */

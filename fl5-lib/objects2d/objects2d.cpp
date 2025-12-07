@@ -103,12 +103,10 @@ void Objects2d::insertThisFoil(Foil *pFoil)
 {
     if(!pFoil) return;
 
-
     for(Foil *pOldFoil : s_oaFoil)
     {
         if(pOldFoil==pFoil) return; // nothing to do, already stored;
     }
-
 
     std::string oldFoilName = pFoil->name();
 

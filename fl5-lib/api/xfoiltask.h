@@ -123,7 +123,7 @@ class FL5LIB_EXPORT XFoilTask
         bool ReSequence();
         void addXFoilData(OpPoint *pOpp, XFoil &xfoil, const Foil *pFoil);
 
-        bool ClRange(Polar *pPolar, const AnalysisRange &range);
+        bool processClRange(Polar *pPolar, const AnalysisRange &range);
 
 
     private:

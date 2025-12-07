@@ -354,8 +354,8 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
 
     if(m_pPOpp3dControls->m_bWakePanels)
     {
-//        if(pWPolar && pWPolar->isT6Polar())
-        if(pWPolar)
+        if(pWPolar && pWPolar->isType6())
+//        if(pWPolar)
         {
             // wake panels should be aligned with the x-axis for other polar types
             if(pWPolar->isQuadMethod())

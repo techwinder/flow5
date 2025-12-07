@@ -7821,8 +7821,8 @@ bool XFoil::specal()
     clcalc(xcmref,ycmref);
     //---- iterate on clm
     bool bConv = false;
-    for (itcl=1; itcl<= 20;itcl++){
-
+    for (itcl=1; itcl<= 20;itcl++)
+    {
         msq_clm = 2.0*minf*minf_clm;
         dclm = (cl - clm)/(1.0 - cl_msq*msq_clm);
 
@@ -7923,8 +7923,8 @@ bool XFoil::speccl()
 
     //---- newton loop for alpha to get specified inviscid cl
     bool bConv = false;
-    for(ital=1;ital<= 20; ital++){
-
+    for(ital=1; ital<= 20; ital++)
+    {
         dalfa = (clspec - cl) / cl_alf;
         rlx = 1.0;
 

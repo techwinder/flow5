@@ -57,7 +57,7 @@ WingXfl::WingXfl(xfl::enumType type) : Part()
 
     m_WingType    = type;
     m_NStation = 0;
-    m_nTipStrips = 3;
+    m_nTipStrips = 1;
     m_bTwoSided       = true;
     m_bSymmetric       = true;
     m_bCloseInnerSide = false;
@@ -89,7 +89,7 @@ void WingXfl::makeDefaultWing()
     m_Section.clear();
     appendWingSection(.300, 0.0, 0.0, 0.0, 0.000, 13, 19, xfl::TANH, xfl::INV_EXP, "", "");
     appendWingSection(.190, 0.0, 1.5, 0.0, 0.085, 13, 19, xfl::TANH, xfl::INV_EXP, "", "");
-    m_nTipStrips = 3;
+    m_nTipStrips = 1;
 }
 
 
@@ -100,7 +100,7 @@ void WingXfl::makeDefaultStab()
     m_Section.clear();
     appendWingSection(0.200, 0.0, 0.00, 0.0, 0.00, 5, 5, xfl::TANH, xfl::INV_EXP, "", "");
     appendWingSection(0.110, 0.0, 0.32, 0.0, 0.05, 5, 5, xfl::TANH, xfl::INV_EXP, "", "");
-    m_nTipStrips = 3;
+    m_nTipStrips = 1;
 }
 
 
@@ -112,15 +112,10 @@ void WingXfl::makeDefaultFin()
     m_Section.clear();
     appendWingSection(0.200, 0.0, 0.00, 0.0, 0.00, 5, 5, xfl::TANH, xfl::TANH, "", "");
     appendWingSection(0.120, 0.0, 0.29, 0.0, 0.08, 5, 5, xfl::TANH, xfl::TANH, "", "");
-    m_nTipStrips = 3;
+    m_nTipStrips = 1;
 }
 
 
-/**
- * Calculates the properties of the wing based on the input data.
- * Stores the results in the member variables.
- * Enables the user to see the properties of the wing in real time as the geometry is modified.
- */
 void WingXfl::computeGeometry()
 {
     Foil const*pFoilA=nullptr, *pFoilB=nullptr;

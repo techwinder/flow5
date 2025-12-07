@@ -260,10 +260,10 @@ void AnalysisRangeTable::fillTable()
             m_pRangeModel->setData(ind, range.m_bActive, Qt::UserRole);
 
             ind = m_pRangeModel->index(row, 1, QModelIndex());
-            m_pRangeModel->setData(ind, range.m_vMin);
+            m_pRangeModel->setData(ind, range.m_vStart);
 
             ind = m_pRangeModel->index(row, 2, QModelIndex());
-            m_pRangeModel->setData(ind, range.m_vMax);
+            m_pRangeModel->setData(ind, range.m_vEnd);
 
             ind = m_pRangeModel->index(row, 3, QModelIndex());
             m_pRangeModel->setData(ind, range.m_vInc);
@@ -632,8 +632,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             for(int i=0; i<nRange; i++)
             {
                 s_AlphaRange[i].setActive(settings.value(QString::asprintf("RangeAlpha_%d_bActive", i), true).toBool());
-                s_AlphaRange[i].m_vMin = settings.value(QString::asprintf("RangeAlpha_%d_min", i), s_AlphaRange.at(i).m_vMin).toDouble();
-                s_AlphaRange[i].m_vMax = settings.value(QString::asprintf("RangeAlpha_%d_max", i), s_AlphaRange.at(i).m_vMax).toDouble();
+                s_AlphaRange[i].m_vStart = settings.value(QString::asprintf("RangeAlpha_%d_min", i), s_AlphaRange.at(i).m_vStart).toDouble();
+                s_AlphaRange[i].m_vEnd = settings.value(QString::asprintf("RangeAlpha_%d_max", i), s_AlphaRange.at(i).m_vEnd).toDouble();
                 s_AlphaRange[i].m_vInc = settings.value(QString::asprintf("RangeAlpha_%d_inc", i), s_AlphaRange.at(i).m_vInc).toDouble();
             }
         }
@@ -651,8 +651,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             for(int i=0; i<nRange; i++)
             {
                 s_ClRange[i].setActive(settings.value(QString::asprintf("RangeCl_%d_bActive", i), true).toBool());
-                s_ClRange[i].m_vMin = settings.value(QString::asprintf("RangeCl_%d_min", i), s_ClRange.at(i).m_vMin).toDouble();
-                s_ClRange[i].m_vMax = settings.value(QString::asprintf("RangeCl_%d_max", i), s_ClRange.at(i).m_vMax).toDouble();
+                s_ClRange[i].m_vStart = settings.value(QString::asprintf("RangeCl_%d_min", i), s_ClRange.at(i).m_vStart).toDouble();
+                s_ClRange[i].m_vEnd = settings.value(QString::asprintf("RangeCl_%d_max", i), s_ClRange.at(i).m_vEnd).toDouble();
                 s_ClRange[i].m_vInc = settings.value(QString::asprintf("RangeCl_%d_inc", i), s_ClRange.at(i).m_vInc).toDouble();
             }
         }
@@ -670,8 +670,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             for(int i=0; i<nRange; i++)
             {
                 s_ReRange[i].setActive(settings.value(QString::asprintf("RangeReynolds_%d_bActive", i), true).toBool());
-                s_ReRange[i].m_vMin = settings.value(QString::asprintf("RangeReynolds_%d_min", i), s_ReRange.at(i).m_vMin).toDouble();
-                s_ReRange[i].m_vMax = settings.value(QString::asprintf("RangeReynolds_%d_max", i), s_ReRange.at(i).m_vMax).toDouble();
+                s_ReRange[i].m_vStart = settings.value(QString::asprintf("RangeReynolds_%d_min", i), s_ReRange.at(i).m_vStart).toDouble();
+                s_ReRange[i].m_vEnd = settings.value(QString::asprintf("RangeReynolds_%d_max", i), s_ReRange.at(i).m_vEnd).toDouble();
                 s_ReRange[i].m_vInc = settings.value(QString::asprintf("RangeReynolds_%d_inc", i), s_ReRange.at(i).m_vInc).toDouble();
             }
         }
@@ -689,8 +689,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             for(int i=0; i<nRange; i++)
             {
                 s_ThetaRange[i].setActive(settings.value(QString::asprintf("RangeTheta_%d_bActive", i), true).toBool());
-                s_ThetaRange[i].m_vMin = settings.value(QString::asprintf("RangeTheta_%d_min", i), s_ThetaRange.at(i).m_vMin).toDouble();
-                s_ThetaRange[i].m_vMax = settings.value(QString::asprintf("RangeTheta_%d_max", i), s_ThetaRange.at(i).m_vMax).toDouble();
+                s_ThetaRange[i].m_vStart = settings.value(QString::asprintf("RangeTheta_%d_min", i), s_ThetaRange.at(i).m_vStart).toDouble();
+                s_ThetaRange[i].m_vEnd = settings.value(QString::asprintf("RangeTheta_%d_max", i), s_ThetaRange.at(i).m_vEnd).toDouble();
                 s_ThetaRange[i].m_vInc = settings.value(QString::asprintf("RangeTheta_%d_inc", i), s_ThetaRange.at(i).m_vInc).toDouble();
             }
         }
@@ -709,8 +709,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             for(int i=0; i<nRange; i++)
             {
                 s_T12Range[i].setActive(settings.value(QString::asprintf("RangeT12_%d_bActive", i), true).toBool());
-                s_T12Range[i].m_vMin = settings.value(QString::asprintf("RangeT12_%d_min", i), s_T12Range.at(i).m_vMin).toDouble();
-                s_T12Range[i].m_vMax = settings.value(QString::asprintf("RangeT12_%d_max", i), s_T12Range.at(i).m_vMax).toDouble();
+                s_T12Range[i].m_vStart = settings.value(QString::asprintf("RangeT12_%d_min", i), s_T12Range.at(i).m_vStart).toDouble();
+                s_T12Range[i].m_vEnd = settings.value(QString::asprintf("RangeT12_%d_max", i), s_T12Range.at(i).m_vEnd).toDouble();
                 s_T12Range[i].m_vInc = settings.value(QString::asprintf("RangeT12_%d_inc", i), s_T12Range.at(i).m_vInc).toDouble();
             }
         }
@@ -728,8 +728,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             for(int i=0; i<nRange; i++)
             {
                 s_T3Range[i].setActive(settings.value(QString::asprintf("RangeT3_%d_bActive", i), true).toBool());
-                s_T3Range[i].m_vMin = settings.value(QString::asprintf("RangeT3_%d_min", i), s_T3Range.at(i).m_vMin).toDouble();
-                s_T3Range[i].m_vMax = settings.value(QString::asprintf("RangeT3_%d_max", i), s_T3Range.at(i).m_vMax).toDouble();
+                s_T3Range[i].m_vStart = settings.value(QString::asprintf("RangeT3_%d_min", i), s_T3Range.at(i).m_vStart).toDouble();
+                s_T3Range[i].m_vEnd = settings.value(QString::asprintf("RangeT3_%d_max", i), s_T3Range.at(i).m_vEnd).toDouble();
                 s_T3Range[i].m_vInc = settings.value(QString::asprintf("RangeT3_%d_inc", i), s_T3Range.at(i).m_vInc).toDouble();
             }
         }
@@ -747,8 +747,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             for(int i=0; i<nRange; i++)
             {
                 s_T4Range[i].setActive(settings.value(QString::asprintf("RangeT4_%d_bActive", i), true).toBool());
-                s_T4Range[i].m_vMin = settings.value(QString::asprintf("RangeT4_%d_min", i), s_T4Range.at(i).m_vMin).toDouble();
-                s_T4Range[i].m_vMax = settings.value(QString::asprintf("RangeT4_%d_max", i), s_T4Range.at(i).m_vMax).toDouble();
+                s_T4Range[i].m_vStart = settings.value(QString::asprintf("RangeT4_%d_min", i), s_T4Range.at(i).m_vStart).toDouble();
+                s_T4Range[i].m_vEnd = settings.value(QString::asprintf("RangeT4_%d_max", i), s_T4Range.at(i).m_vEnd).toDouble();
                 s_T4Range[i].m_vInc = settings.value(QString::asprintf("RangeT4_%d_inc", i), s_T4Range.at(i).m_vInc).toDouble();
             }
         }
@@ -766,8 +766,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             for(int i=0; i<nRange; i++)
             {
                 s_T5Range[i].setActive(settings.value(QString::asprintf("RangeT5_%d_bActive", i), true).toBool());
-                s_T5Range[i].m_vMin = settings.value(QString::asprintf("RangeT5_%d_min", i), s_T5Range.at(i).m_vMin).toDouble();
-                s_T5Range[i].m_vMax = settings.value(QString::asprintf("RangeT5_%d_max", i), s_T5Range.at(i).m_vMax).toDouble();
+                s_T5Range[i].m_vStart = settings.value(QString::asprintf("RangeT5_%d_min", i), s_T5Range.at(i).m_vStart).toDouble();
+                s_T5Range[i].m_vEnd = settings.value(QString::asprintf("RangeT5_%d_max", i), s_T5Range.at(i).m_vEnd).toDouble();
                 s_T5Range[i].m_vInc = settings.value(QString::asprintf("RangeT5_%d_inc", i), s_T5Range.at(i).m_vInc).toDouble();
             }
         }
@@ -785,8 +785,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             for(int i=0; i<nRange; i++)
             {
                 s_T6Range[i].setActive(settings.value(QString::asprintf("RangeT6_%d_bActive", i), true).toBool());
-                s_T6Range[i].m_vMin = settings.value(QString::asprintf("RangeT6_%d_min", i), s_T6Range.at(i).m_vMin).toDouble();
-                s_T6Range[i].m_vMax = settings.value(QString::asprintf("RangeT6_%d_max", i), s_T6Range.at(i).m_vMax).toDouble();
+                s_T6Range[i].m_vStart = settings.value(QString::asprintf("RangeT6_%d_min", i), s_T6Range.at(i).m_vStart).toDouble();
+                s_T6Range[i].m_vEnd = settings.value(QString::asprintf("RangeT6_%d_max", i), s_T6Range.at(i).m_vEnd).toDouble();
                 s_T6Range[i].m_vInc = settings.value(QString::asprintf("RangeT6_%d_inc", i), s_T6Range.at(i).m_vInc).toDouble();
             }
         }
@@ -823,8 +823,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             for(int i=0; i<nRange; i++)
             {
                 s_BtRange[i].setActive(settings.value(QString::asprintf("RangeBt_%d_bActive", i), true).toBool());
-                s_BtRange[i].m_vMin = settings.value(QString::asprintf("RangeBt_%d_min", i), s_BtRange.at(i).m_vMin).toDouble();
-                s_BtRange[i].m_vMax = settings.value(QString::asprintf("RangeBt_%d_max", i), s_BtRange.at(i).m_vMax).toDouble();
+                s_BtRange[i].m_vStart = settings.value(QString::asprintf("RangeBt_%d_min", i), s_BtRange.at(i).m_vStart).toDouble();
+                s_BtRange[i].m_vEnd = settings.value(QString::asprintf("RangeBt_%d_max", i), s_BtRange.at(i).m_vEnd).toDouble();
                 s_BtRange[i].m_vInc = settings.value(QString::asprintf("RangeBt_%d_inc", i), s_BtRange.at(i).m_vInc).toDouble();
             }
         }
@@ -848,8 +848,8 @@ void AnalysisRangeTable::saveSettings(QSettings &settings)
         for(int i=0; i<s_AlphaRange.size(); i++)
         {
             settings.setValue(QString::asprintf("RangeAlpha_%d_bActive", i), s_AlphaRange.at(i).isActive());
-            settings.setValue(QString::asprintf("RangeAlpha_%d_min", i),     s_AlphaRange.at(i).m_vMin);
-            settings.setValue(QString::asprintf("RangeAlpha_%d_max", i),     s_AlphaRange.at(i).m_vMax);
+            settings.setValue(QString::asprintf("RangeAlpha_%d_min", i),     s_AlphaRange.at(i).m_vStart);
+            settings.setValue(QString::asprintf("RangeAlpha_%d_max", i),     s_AlphaRange.at(i).m_vEnd);
             settings.setValue(QString::asprintf("RangeAlpha_%d_inc", i),     s_AlphaRange.at(i).m_vInc);
         }
 
@@ -857,8 +857,8 @@ void AnalysisRangeTable::saveSettings(QSettings &settings)
         for(int i=0; i<s_ClRange.size(); i++)
         {
             settings.setValue(QString::asprintf("RangeCl_%d_bActive", i), s_ClRange.at(i).isActive());
-            settings.setValue(QString::asprintf("RangeCl_%d_min", i),     s_ClRange.at(i).m_vMin);
-            settings.setValue(QString::asprintf("RangeCl_%d_max", i),     s_ClRange.at(i).m_vMax);
+            settings.setValue(QString::asprintf("RangeCl_%d_min", i),     s_ClRange.at(i).m_vStart);
+            settings.setValue(QString::asprintf("RangeCl_%d_max", i),     s_ClRange.at(i).m_vEnd);
             settings.setValue(QString::asprintf("RangeCl_%d_inc", i),     s_ClRange.at(i).m_vInc);
         }
 
@@ -866,8 +866,8 @@ void AnalysisRangeTable::saveSettings(QSettings &settings)
         for(int i=0; i<s_ReRange.size(); i++)
         {
             settings.setValue(QString::asprintf("RangeReynolds_%d_bActive", i), s_ReRange.at(i).isActive());
-            settings.setValue(QString::asprintf("RangeReynolds_%d_min", i),     s_ReRange.at(i).m_vMin);
-            settings.setValue(QString::asprintf("RangeReynolds_%d_max", i),     s_ReRange.at(i).m_vMax);
+            settings.setValue(QString::asprintf("RangeReynolds_%d_min", i),     s_ReRange.at(i).m_vStart);
+            settings.setValue(QString::asprintf("RangeReynolds_%d_max", i),     s_ReRange.at(i).m_vEnd);
             settings.setValue(QString::asprintf("RangeReynolds_%d_inc", i),     s_ReRange.at(i).m_vInc);
         }
 
@@ -875,8 +875,8 @@ void AnalysisRangeTable::saveSettings(QSettings &settings)
         for(int i=0; i<s_ThetaRange.size(); i++)
         {
             settings.setValue(QString::asprintf("RangeTheta_%d_bActive", i), s_ThetaRange.at(i).isActive());
-            settings.setValue(QString::asprintf("RangeTheta_%d_min", i),     s_ThetaRange.at(i).m_vMin);
-            settings.setValue(QString::asprintf("RangeTheta_%d_max", i),     s_ThetaRange.at(i).m_vMax);
+            settings.setValue(QString::asprintf("RangeTheta_%d_min", i),     s_ThetaRange.at(i).m_vStart);
+            settings.setValue(QString::asprintf("RangeTheta_%d_max", i),     s_ThetaRange.at(i).m_vEnd);
             settings.setValue(QString::asprintf("RangeTheta_%d_inc", i),     s_ThetaRange.at(i).m_vInc);
         }
 
@@ -884,8 +884,8 @@ void AnalysisRangeTable::saveSettings(QSettings &settings)
         for(int i=0; i<s_T12Range.size(); i++)
         {
             settings.setValue(QString::asprintf("RangeT12_%d_bActive", i), s_T12Range.at(i).isActive());
-            settings.setValue(QString::asprintf("RangeT12_%d_min", i), s_T12Range.at(i).m_vMin);
-            settings.setValue(QString::asprintf("RangeT12_%d_max", i), s_T12Range.at(i).m_vMax);
+            settings.setValue(QString::asprintf("RangeT12_%d_min", i), s_T12Range.at(i).m_vStart);
+            settings.setValue(QString::asprintf("RangeT12_%d_max", i), s_T12Range.at(i).m_vEnd);
             settings.setValue(QString::asprintf("RangeT12_%d_inc", i), s_T12Range.at(i).m_vInc);
         }
 
@@ -893,8 +893,8 @@ void AnalysisRangeTable::saveSettings(QSettings &settings)
         for(int i=0; i<s_T3Range.size(); i++)
         {
             settings.setValue(QString::asprintf("RangeT3_%d_bActive", i), s_T3Range.at(i).isActive());
-            settings.setValue(QString::asprintf("RangeT3_%d_min", i), s_T3Range.at(i).m_vMin);
-            settings.setValue(QString::asprintf("RangeT3_%d_max", i), s_T3Range.at(i).m_vMax);
+            settings.setValue(QString::asprintf("RangeT3_%d_min", i), s_T3Range.at(i).m_vStart);
+            settings.setValue(QString::asprintf("RangeT3_%d_max", i), s_T3Range.at(i).m_vEnd);
             settings.setValue(QString::asprintf("RangeT3_%d_inc", i), s_T3Range.at(i).m_vInc);
         }
 
@@ -902,8 +902,8 @@ void AnalysisRangeTable::saveSettings(QSettings &settings)
         for(int i=0; i<s_T4Range.size(); i++)
         {
             settings.setValue(QString::asprintf("RangeT4_%d_bActive", i), s_T4Range.at(i).isActive());
-            settings.setValue(QString::asprintf("RangeT4_%d_min", i), s_T4Range.at(i).m_vMin);
-            settings.setValue(QString::asprintf("RangeT4_%d_max", i), s_T4Range.at(i).m_vMax);
+            settings.setValue(QString::asprintf("RangeT4_%d_min", i), s_T4Range.at(i).m_vStart);
+            settings.setValue(QString::asprintf("RangeT4_%d_max", i), s_T4Range.at(i).m_vEnd);
             settings.setValue(QString::asprintf("RangeT4_%d_inc", i), s_T4Range.at(i).m_vInc);
         }
 
@@ -911,8 +911,8 @@ void AnalysisRangeTable::saveSettings(QSettings &settings)
         for(int i=0; i<s_T5Range.size(); i++)
         {
             settings.setValue(QString::asprintf("RangeT5_%d_bActive", i), s_T5Range.at(i).isActive());
-            settings.setValue(QString::asprintf("RangeT5_%d_min", i), s_T5Range.at(i).m_vMin);
-            settings.setValue(QString::asprintf("RangeT5_%d_max", i), s_T5Range.at(i).m_vMax);
+            settings.setValue(QString::asprintf("RangeT5_%d_min", i), s_T5Range.at(i).m_vStart);
+            settings.setValue(QString::asprintf("RangeT5_%d_max", i), s_T5Range.at(i).m_vEnd);
             settings.setValue(QString::asprintf("RangeT5_%d_inc", i), s_T5Range.at(i).m_vInc);
         }
 
@@ -920,8 +920,8 @@ void AnalysisRangeTable::saveSettings(QSettings &settings)
         for(int i=0; i<s_T6Range.size(); i++)
         {
             settings.setValue(QString::asprintf("RangeT6_%d_bActive", i), s_T6Range.at(i).isActive());
-            settings.setValue(QString::asprintf("RangeT6_%d_min", i), s_T6Range.at(i).m_vMin);
-            settings.setValue(QString::asprintf("RangeT6_%d_max", i), s_T6Range.at(i).m_vMax);
+            settings.setValue(QString::asprintf("RangeT6_%d_min", i), s_T6Range.at(i).m_vStart);
+            settings.setValue(QString::asprintf("RangeT6_%d_max", i), s_T6Range.at(i).m_vEnd);
             settings.setValue(QString::asprintf("RangeT6_%d_inc", i), s_T6Range.at(i).m_vInc);
         }
 
@@ -929,8 +929,8 @@ void AnalysisRangeTable::saveSettings(QSettings &settings)
         for(int i=0; i<s_T7Range.size(); i++)
         {
             settings.setValue(QString::asprintf("RangeT7_%d_bActive", i), s_T7Range.at(i).isActive());
-            settings.setValue(QString::asprintf("RangeT7_%d_min", i), s_T7Range.at(i).m_vMin);
-            settings.setValue(QString::asprintf("RangeT7_%d_max", i), s_T7Range.at(i).m_vMax);
+            settings.setValue(QString::asprintf("RangeT7_%d_min", i), s_T7Range.at(i).m_vStart);
+            settings.setValue(QString::asprintf("RangeT7_%d_max", i), s_T7Range.at(i).m_vEnd);
             settings.setValue(QString::asprintf("RangeT7_%d_inc", i), s_T7Range.at(i).m_vInc);
         }
 
@@ -938,8 +938,8 @@ void AnalysisRangeTable::saveSettings(QSettings &settings)
         for(int i=0; i<s_BtRange.size(); i++)
         {
             settings.setValue(QString::asprintf("RangeBt_%d_bActive", i), s_BtRange.at(i).isActive());
-            settings.setValue(QString::asprintf("RangeBt_%d_min", i), s_BtRange.at(i).m_vMin);
-            settings.setValue(QString::asprintf("RangeBt_%d_max", i), s_BtRange.at(i).m_vMax);
+            settings.setValue(QString::asprintf("RangeBt_%d_min", i), s_BtRange.at(i).m_vStart);
+            settings.setValue(QString::asprintf("RangeBt_%d_max", i), s_BtRange.at(i).m_vEnd);
             settings.setValue(QString::asprintf("RangeBt_%d_inc", i), s_BtRange.at(i).m_vInc);
         }
     }

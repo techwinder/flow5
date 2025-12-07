@@ -429,11 +429,11 @@ void XPlaneActions::makeActions()
     connect(m_pHideAllWPlrs, SIGNAL(triggered()), m_pXPlane, SLOT(onHideAllPlPolars()));
 
     m_pShowAllWPlrs = new QAction("Show", m_pXPlane);
-    m_pShowAllWPlrs->setStatusTip("Show all the polar curves of all wings and planes");
+    m_pShowAllWPlrs->setStatusTip("<p>Show all the polar curves of all wings and planes</p>");
     connect(m_pShowAllWPlrs, SIGNAL(triggered()), m_pXPlane, SLOT(onShowAllPlPolars()));
 
     m_pHidePlaneWOpps = new QAction("Hide", m_pXPlane);
-    m_pHidePlaneWOpps->setStatusTip("Hide all the operating point curves of the active wing or plane");
+    m_pHidePlaneWOpps->setStatusTip("<p>Hide all the operating point curves of the active wing or plane</p>");
     connect(m_pHidePlaneWOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onHidePlaneOpps()));
 
     m_pShowPlaneWOpps = new QAction("Show", m_pXPlane);
@@ -441,11 +441,12 @@ void XPlaneActions::makeActions()
     connect(m_pShowPlaneWOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onShowPlaneOpps()));
 
     m_pDeletePlaneWOpps = new QAction("Delete", m_pXPlane);
-    m_pDeletePlaneWOpps->setStatusTip("Delete all the operating points of the active wing or plane");
+    m_pDeletePlaneWOpps->setStatusTip("<p>Delete all the operating points of the active wing or plane</p>");
     connect(m_pDeletePlaneWOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onDeletePlanePOpps()));
 
-    m_pDeleteCurPlane = new QAction("Delete\tDEL", m_pXPlane);
-    m_pDeleteCurPlane->setStatusTip("Delete the active wing or plane");
+    m_pDeleteCurPlane = new QAction("Delete", m_pXPlane);
+    m_pDeleteCurPlane->setShortcut(Qt::Key_Delete);
+    m_pDeleteCurPlane->setStatusTip("<p>Delete the active wing or plane</p>");
     connect(m_pDeleteCurPlane, SIGNAL(triggered()), m_pXPlane, SLOT(onDeleteCurPlane()));
 
     m_pDuplicateCurPlane = new QAction("Duplicate", m_pXPlane);

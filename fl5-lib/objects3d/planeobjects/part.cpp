@@ -40,7 +40,7 @@ Part::Part()
 
     m_theStyle.m_bIsVisible  = true;
 
-    m_theStyle.m_Color.setRgb(167, 171, 119);
+    m_theStyle.m_Color.setRgb(111, 131, 157);
 
     m_theStyle.m_Stipple = Line::SOLID;
     m_theStyle.m_Width = 1;
@@ -58,6 +58,9 @@ Part::Part()
 
     m_bAutoInertia = true;
 
+    m_GmshTessParams.m_MinSize    = 0.01; // fine for tessellation
+    m_GmshTessParams.m_MaxSize    = 1.00;
+    m_GmshTessParams.m_nCurvature = 30;
 }
 
 

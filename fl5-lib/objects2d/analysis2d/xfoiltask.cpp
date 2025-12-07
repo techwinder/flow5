@@ -65,8 +65,8 @@ void XFoilTask::setAlphaRange(double vMin, double vMax, double vDelta)
     m_AnalysisRange.resize(1);
     AnalysisRange &range = m_AnalysisRange.front();
     range.setActive(true);
-    range.m_vMin = vMin;
-    range.m_vMax = vMax;
+    range.m_vStart = vMin;
+    range.m_vEnd = vMax;
     range.m_vInc = vDelta;
 }
 
@@ -77,8 +77,8 @@ void XFoilTask::setClRange(double vMin, double vMax, double vDelta)
     m_AnalysisRange.resize(1);
     AnalysisRange &range = m_AnalysisRange.front();
     range.setActive(true);
-    range.m_vMin = vMin;
-    range.m_vMax = vMax;
+    range.m_vStart = vMin;
+    range.m_vEnd = vMax;
     range.m_vInc = vDelta;
 }
 
@@ -154,6 +154,14 @@ bool XFoilTask::initialize(Foil &foil, Polar *pPolar, bool bKeepOpps)
         ny[i] = m_pFoil->normal(i).y;
     }
 
+    if(!m_XFoilInstance.initXFoilGeometry(m_pFoil->nNodes(), x.data(), y.data(), nx.data(), ny.data()))
+        return false;
+
+    bool bViscous = true;
+    if(!m_XFoilInstance.initXFoilAnalysis(m_pPolar->Reynolds(), m_pPolar->aoaSpec(), m_pPolar->Mach(),
+                                          m_pPolar->NCrit(), m_pPolar->XTripTop(), m_pPolar->XTripBot(),
+                                          m_pPolar->ReType(), m_pPolar->MaType(), bViscous))
+        return false;
     return true;
 }
 
@@ -209,15 +217,31 @@ bool XFoilTask::processCl(int k)
 //        traceLog(str);
 
         // final fallback: build a polar to try an interpolation
-/*        Polar temppolar(*m_pPolar);
+        Polar temppolar(*m_pPolar);
 
         // define a wide range
-        double ClMax(0);
-        if(m_pPolar->m_Cl.at(k)>0) ClMax = m_pPolar->m_Cl.at(k) +0.1;
-        else                       ClMax = m_pPolar->m_Cl.at(k) -0.1;
+        AnalysisRange range;
+        range.m_bActive = true;
+        range.m_vInc = 0.05;
+
+        double ClMin(0), ClMax(0);
+        if(m_pPolar->m_Cl.at(k)>0)
+        {
+            ClMin = -0.1;
+            ClMax = m_pPolar->m_Cl.at(k) +0.1;
+            range.m_vStart = ClMin;
+            range.m_vEnd = ClMax;
+        }
+        else
+        {
+            ClMin = m_pPolar->m_Cl.at(k) -0.1;
+            ClMax = 0.1;
+            range.m_vStart = ClMax;
+            range.m_vEnd = ClMin;
+        }
 
         // launch the sequence
-        ClRange(&temppolar, {true,0.0, ClMax, 0.05});
+        processClRange(&temppolar, range);
 
         // interpolate
         bool bOutCl = false;
@@ -225,9 +249,7 @@ bool XFoilTask::processCl(int k)
         m_pPolar->m_XTrTop[k] = temppolar.interpolateFromCl(m_pPolar->m_Cl.at(k), Polar::XTRTOP, bOutCl);
         m_pPolar->m_XTrBot[k] = temppolar.interpolateFromCl(m_pPolar->m_Cl.at(k), Polar::XTRBOT, bOutCl);
         // repurposing control variable to contain convergence result
-        m_pPolar->m_Control[k] = !bOutCl ? 1.0 : -1.0;*/
-
-        m_pPolar->m_Control[k] = -1.0;
+        m_pPolar->m_Control[k] = !bOutCl ? 1.0 : -1.0;
     }
 
     return m_pPolar->m_Control[k]>0.0;
@@ -235,13 +257,13 @@ bool XFoilTask::processCl(int k)
 
 
 /** specific to OTF calculations */
-bool XFoilTask::ClRange(Polar *pPolar, AnalysisRange const &range)
+bool XFoilTask::processClRange(Polar *pPolar, AnalysisRange const &range)
 {
     initializeBL();
 
     int iter=0;
-    double SpMin = range.m_vMin;
-    double SpMax = range.m_vMax;
+    double SpMin = range.m_vStart;
+    double SpMax = range.m_vEnd;
     double SpInc = fabs(range.m_vInc);
     if(SpMax<SpMin) SpInc = -SpInc;
 
@@ -289,10 +311,7 @@ bool XFoilTask::ClRange(Polar *pPolar, AnalysisRange const &range)
         }
         else
         {
-
-            m_XFoilInstance.lblini = false;
-            m_XFoilInstance.lipan = false;
-
+            initializeBL();
             m_bErrors = true;
         }
 
@@ -300,14 +319,14 @@ bool XFoilTask::ClRange(Polar *pPolar, AnalysisRange const &range)
 
         if(SpMin<=SpMax)
         {
-            if(Cl>SpMax+ANGLEPRECISION) break;
+            if(Cl>SpMax+CLPRECISION) break;
         }
         else
         {
-            if(Cl<SpMax-ANGLEPRECISION) break;
+            if(Cl<SpMax-CLPRECISION) break;
         }
 
-        if(fabs(SpInc)<ANGLEPRECISION) break;
+        if(fabs(SpInc)<CLPRECISION) break;
     } while(iter++<1000); // failsafe limit
 
     return true;
@@ -320,13 +339,8 @@ bool XFoilTask::processClList()
 {
     QString str;
 
-
-//    if(s_bInitBL)
-    {
-        m_XFoilInstance.lblini = false;
-        m_XFoilInstance.lipan = false;
-        traceLog("   Initializing BL\n");
-    }
+    traceLog("   Initializing BL\n");
+    initializeBL();
 
     for(uint icl=0; icl<m_pPolar->m_Cl.size(); icl++)
     {
@@ -427,19 +441,19 @@ bool XFoilTask::alphaSequence(bool bAlpha)
         AnalysisRange const &range = m_AnalysisRange.at(iSeries);
         if(range.isActive())
         {
-            traceLog(QString::asprintf("\nProcessing active range [%7.3f  %7.3f  %7.3f]\n", range.m_vMin, range.m_vMax, range.m_vInc));
+            traceLog(QString::asprintf("\nProcessing active range [%7.3f  %7.3f  %7.3f]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
         }
         else
         {
-            traceLog(QString::asprintf("\nSkipping inactive range [%7.3f  %7.3f  %7.3f]\n", range.m_vMin, range.m_vMax, range.m_vInc));
+            traceLog(QString::asprintf("\nSkipping inactive range [%7.3f  %7.3f  %7.3f]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
             continue;
         }
 
         initializeBL();
 
         int iter=0;
-        SpMin = range.m_vMin;
-        SpMax = range.m_vMax;
+        SpMin = range.m_vStart;
+        SpMax = range.m_vEnd;
         SpInc = fabs(range.m_vInc);
         if(SpMax<SpMin) SpInc = -SpInc;
 
@@ -479,8 +493,6 @@ bool XFoilTask::alphaSequence(bool bAlpha)
                 traceLog(str);
                 if(!m_XFoilInstance.speccl())
                 {
-                    str = "Invalid Analysis Settings\nCpCalc: local speed too large\n Compressibility corrections invalid";
-                    traceLog(str);
                     m_bErrors = true;
                     return false;
                 }
@@ -539,22 +551,29 @@ bool XFoilTask::alphaSequence(bool bAlpha)
             {
                 if(bAlpha)
                 {
-                    if(alphadeg>SpMax+ANGLEPRECISION) break;
+                    if(alphadeg>SpMax+AOAPRECISION) break;
+                    if(fabs(SpInc)<AOAPRECISION) break;
                 }
                 else
-                    if(Cl>SpMax+ANGLEPRECISION) break;
+                {
+                    if(Cl>SpMax+CLPRECISION) break;
+                    if(fabs(SpInc)<CLPRECISION) break;
+                }
             }
             else
             {
                 if(bAlpha)
                 {
-                    if(alphadeg<SpMax-ANGLEPRECISION) break;
+                    if(alphadeg<SpMax-AOAPRECISION) break;
+                    if(fabs(SpInc)<AOAPRECISION) break;
                 }
                 else
-                    if(Cl<SpMax-ANGLEPRECISION) break;
+                {
+                    if(Cl<SpMax-CLPRECISION) break;
+                    if(fabs(SpInc)<CLPRECISION) break;
+                }
             }
 
-            if(fabs(SpInc)<ANGLEPRECISION) break;
         } while(iter++<1000); // failsafe limit
     }
 
@@ -595,18 +614,18 @@ bool XFoilTask::thetaSequence()
         AnalysisRange const &range = m_AnalysisRange.at(iSeries);
         if(range.isActive())
         {
-            traceLog(QString::asprintf("\nProcessing active range [%7.3f  %7.3f  %7.3f]\n", range.m_vMin, range.m_vMax, range.m_vInc));
+            traceLog(QString::asprintf("\nProcessing active range [%7.3f  %7.3f  %7.3f]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
         }
         else
         {
-            traceLog(QString::asprintf("\nSkipping inactive range [%7.3f  %7.3f  %7.3f]\n", range.m_vMin, range.m_vMax, range.m_vInc));
+            traceLog(QString::asprintf("\nSkipping inactive range [%7.3f  %7.3f  %7.3f]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
             continue;
         }
 
         initializeBL();
 
-        SpMin = range.m_vMin;
-        SpMax = range.m_vMax;
+        SpMin = range.m_vStart;
+        SpMax = range.m_vEnd;
         SpInc = fabs(range.m_vInc);
         if(SpMax<SpMin) SpInc = -SpInc;
 
@@ -749,19 +768,19 @@ bool XFoilTask::ReSequence()
         AnalysisRange const &range = m_AnalysisRange.at(iSeries);
         if(range.isActive())
         {
-            traceLog(QString::asprintf("\nProcessing active range [%g  %g  %g]\n", range.m_vMin, range.m_vMax, range.m_vInc));
+            traceLog(QString::asprintf("\nProcessing active range [%g  %g  %g]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
         }
         else
         {
-            traceLog(QString::asprintf("\nSkipping inactive range [%g  %g  %g]\n", range.m_vMin, range.m_vMax, range.m_vInc));
+            traceLog(QString::asprintf("\nSkipping inactive range [%g  %g  %g]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
             continue;
         }
 
         initializeBL();
 
         int iter=0;
-        double SpMin = range.m_vMin;
-        double SpMax = range.m_vMax;
+        double SpMin = range.m_vStart;
+        double SpMax = range.m_vEnd;
         double SpInc = fabs(range.m_vInc);
         if(SpMax<SpMin) SpInc = -SpInc;
 
