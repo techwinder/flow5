@@ -29,7 +29,7 @@
 #include <interfaces/opengl/controls/gllightdlg.h>
 #include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/controls/w3dprefs.h>
-#include <core/trace.h>
+#include <api/trace.h>
 #include <core/displayoptions.h>
 #include <api/geom_global.h>
 #include <interfaces/widgets/customwts/exponentialslider.h>

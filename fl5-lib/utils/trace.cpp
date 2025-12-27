@@ -25,15 +25,10 @@
 #include <iostream>
 
 #include <QDebug>
-#include <QApplication>
-#include <QThread>
-#include <QFile>
-#include <QOperatingSystemVersion>
 #include <QTextStream>
-#include <QSurfaceFormat>
-#include <QDir>
 
-#include <core/trace.h>
+
+#include <api/trace.h>
 
 bool g_bTrace = false;
 QFile *g_pTraceFile = nullptr;
@@ -53,6 +48,8 @@ void trace(int n)
         QTextStream ts(g_pTraceFile);
         ts << "Int value=" << n << "\n";
     }
+
+    std::cout<<"Int value=" << n << "\n";
 }
 
 
@@ -68,6 +65,8 @@ void trace(const QString &msg, bool b)
         QTextStream ts(g_pTraceFile);
         ts << str <<"\n";
     }
+
+    std::cout<<str.toStdString()<<std::endl;
 }
 
 
@@ -84,12 +83,15 @@ void trace(const QString &msg)
 #endif
     if(!g_bTrace) return;
 
+
     if(g_pTraceFile && g_pTraceFile->isOpen())
     {
         QTextStream ts(g_pTraceFile);
         ts<<msg;
         ts.flush();
     }
+
+    std::cout<<msg.toStdString();
 }
 
 
@@ -113,6 +115,8 @@ void trace(QString const &msg, int n)
         QTextStream ts(g_pTraceFile);
         ts << strong;
     }
+
+    std::cout<<strong.toStdString();
 }
 
 
@@ -136,10 +140,12 @@ void trace(const QString &msg, double f)
         QTextStream ts(g_pTraceFile);
         ts << strong;
     }
+
+    std::cout<<strong.toStdString();
 }
 
 
-void trace(const QString &msg, QString txt)
+void trace(const QString &msg, QString const &txt)
 {
     if(!g_bTrace) return;
 
@@ -148,57 +154,7 @@ void trace(const QString &msg, QString txt)
         QTextStream ts(g_pTraceFile);
         ts << msg + " " + txt;
     }
+
+    std::cout<<(msg + " " + txt).toStdString();
 }
-
-
-void startTrace(QString const &filename)
-{
-    if(!g_bTrace) return;
-
-    g_pTraceFile = new QFile(filename);
-
-    if (!g_pTraceFile->open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text)) g_bTrace = false;
-    g_pTraceFile->reset();
-    std::cout<< "Trace file enabled: " << filename.toStdString().c_str() << std::endl;
-    QString strange;
-    QOperatingSystemVersion const &sys = QOperatingSystemVersion::current();
-    strange = sys.name();
-    trace(strange+"\n");
-
-    QSysInfo sysInfo;
-
-    strange  = "SysInfo:\n";
-    strange += "   build ABI:       "  + sysInfo.buildAbi() +"\n";
-    strange += "   build CPU:       "  + sysInfo.buildCpuArchitecture() +"\n";
-    strange += "   current CPU:     "  + sysInfo.currentCpuArchitecture() +"\n";
-    strange += "   kernel type:     "  + sysInfo.kernelType() +"\n";
-    strange += "   kernel version:  "  + sysInfo.kernelVersion() +"\n";
-    strange += "   product name:    "  + sysInfo.prettyProductName() +"\n";
-    strange += "   product type:    "  + sysInfo.productType() +"\n";
-    strange += "   product version: "  + sysInfo.productVersion() +"\n\n";
-    trace(strange);
-
-    const char *qt_version = qVersion();
-    strange = QString::asprintf("Qt version: %s\n\n", qt_version);
-    trace(strange);
-
-    strange = QString::asprintf("Ideal thread count: %d\n\n", QThread::idealThreadCount());
-    trace(strange);
-
-    strange = "OpenGL support:\n";
-    strange += QString::asprintf("    Desktop OpenGL: %d\n", qApp->testAttribute(Qt::AA_UseDesktopOpenGL));
-    strange += QString::asprintf("    OpenGL ES       %d\n", qApp->testAttribute(Qt::AA_UseOpenGLES));
-    strange += QString::asprintf("    Software OpenGL %d\n", qApp->testAttribute(Qt::AA_UseSoftwareOpenGL));
-    trace(strange + "\n");
-
-
-    QString language = QLocale::languageToString(QLocale::system().language());
-    strange  = "System default regional settings:\n";
-    strange += "   language:          "+language+"\n";
-    strange += "   decimal separator: "+QString(QLocale::system().decimalPoint()) + "\n";
-    strange += "   group separator:   "+QString(QLocale::system().groupSeparator()) + "\n";
-    trace(strange + "\n");
-//qDebug("%s",strange.toStdString().c_str());
-}
-
 

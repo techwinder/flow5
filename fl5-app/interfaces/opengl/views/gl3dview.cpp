@@ -38,7 +38,7 @@
 #include <interfaces/controls/w3dprefs.h>
 #include <core/displayoptions.h>
 #include <core/saveoptions.h>
-#include <core/trace.h>
+#include <api/trace.h>
 #include <api/units.h>
 #include <core/xflcore.h>
 #include <interfaces/opengl/controls/gllightdlg.h>

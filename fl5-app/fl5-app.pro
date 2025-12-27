@@ -97,6 +97,10 @@ linux-g++ {
     INCLUDEPATH += /usr/local/include/
 #    LIBS += -L/usr/local/lib64           # redundant
     LIBS += -lgmsh
+
+
+    #-----XFoil----
+    LIBS += -L../XFoil-lib -lXFoil
 }
 
 
@@ -107,6 +111,10 @@ win32-msvc {
     CONFIG -= debug_and_release debug_and_release_target
 
     RC_ICONS = ../meta/win64/flow5.ico
+
+
+#-----XFoil----
+    LIBS += -L../XFoil-lib -lXFoil1
 
 #----------------------- MKL  ---------------------
     DEFINES += INTEL_MKL   #only option in Windows
@@ -207,10 +215,6 @@ RESOURCES += \
     resources/icons.qrc \
     resources/images.qrc \
     resources/sailimages.qrc
-
-
-#-----XFoil----
-LIBS += -L../XFoil-lib -lXFoil
 
 
 LIBS += -L../fl5-lib -lfl5-lib

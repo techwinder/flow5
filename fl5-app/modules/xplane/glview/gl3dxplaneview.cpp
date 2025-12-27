@@ -61,7 +61,7 @@
 
 #include <core/displayoptions.h>
 #include <api/units.h>
-#include <core/trace.h>
+#include <api/trace.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/poppctrls/crossflowctrls.h>
 #include <interfaces/controls/poppctrls/flowctrls.h>
@@ -262,9 +262,9 @@ void gl3dXPlaneView::setPlane(Plane const *pPlane)
 
 void gl3dXPlaneView::glRenderPanelBasedBuffers()
 {
-    Plane    const *pPlane    = s_pXPlane->curPlane();
-    PlanePolar   const *pPlPolar   = s_pXPlane->curPlPolar();
-    PlaneOpp const *pPOpp     = s_pXPlane->curPOpp();
+    Plane      const *pPlane    = s_pXPlane->curPlane();
+    PlanePolar const *pPlPolar  = s_pXPlane->curPlPolar();
+    PlaneOpp   const *pPOpp     = s_pXPlane->curPOpp();
 
     bool bBackGround = !m_bSurfaces;
     if(m_pPOpp3dControls->m_b3dCp  && pPOpp) bBackGround = false;

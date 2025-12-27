@@ -24,7 +24,7 @@
 #include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/controls/w3dprefs.h>
 #include <core/displayoptions.h>
-#include <core/trace.h>
+#include <api/trace.h>
 #include <core/xflcore.h>
 #include <api/constants.h>
 

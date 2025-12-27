@@ -149,7 +149,7 @@ double damp(double r, Vortex::enumVortex vortexmodel, double core)
         default:
         case Vortex::POTENTIAL:
         {
-            if(fabs(r)<DISTANCEPRECISION) return 0.0;
+//            if(fabs(r)<DISTANCEPRECISION) return 0.0;
             return 1.0;
         }
         case Vortex::CUT_OFF:

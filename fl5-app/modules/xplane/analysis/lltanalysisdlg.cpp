@@ -42,6 +42,7 @@
 #include <api/planeopp.h>
 #include <api/planetask.h>
 #include <api/planexfl.h>
+#include <api/trace.h>
 #include <api/utils.h>
 #include <api/wingxfl.h>
 #include <api/planepolar.h>
@@ -434,6 +435,8 @@ void LLTAnalysisDlg::analyze()
 
 void LLTAnalysisDlg::runAsync()
 {
+    trace("running LLT ASync\n");
+
     m_pLLTTask->setAnalysisStatus(xfl::RUNNING);
 
     std::thread p(&LLTTask::run, m_pLLTTask);
@@ -461,6 +464,8 @@ void LLTAnalysisDlg::runAsync()
 
 
     p.join();
+
+    trace("LLT thread joined\n");
 
     qApp->postEvent(this, new QEvent(TASK3D_END_EVENT)); // done and clean
 }

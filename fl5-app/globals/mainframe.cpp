@@ -48,7 +48,7 @@
 
 #include <core/displayoptions.h>
 #include <core/saveoptions.h>
-#include <core/trace.h>
+#include <api/trace.h>
 #include <core/xflcore.h>
 #include <globals/aboutf5.h>
 #include <globals/creditsdlg.h>

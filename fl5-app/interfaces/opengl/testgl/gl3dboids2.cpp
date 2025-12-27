@@ -37,7 +37,7 @@
 
 #include "gl3dboids2.h"
 #include <core/displayoptions.h>
-#include <core/trace.h>
+#include <api/trace.h>
 #include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/widgets/customwts/floatedit.h>

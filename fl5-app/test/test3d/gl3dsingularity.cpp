@@ -29,7 +29,7 @@
 
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/globals/gl_globals.h>
-#include <core/trace.h>
+#include <api/trace.h>
 #include <core/displayoptions.h>
 #include <api/utils.h>
 #include <api/vortex.h>

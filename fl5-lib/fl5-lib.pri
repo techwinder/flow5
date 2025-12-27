@@ -124,6 +124,7 @@ HEADERS += \
     api/t8opp.h \
     api/task3d.h \
     api/testpanels.h \
+    api/trace.h \
     api/triangle2d.h \
     api/triangle3d.h \
     api/triangulation.h \
@@ -279,6 +280,7 @@ SOURCES += \
     utils/apilog.cpp \
     utils/fileio.cpp \
     utils/fl5color.cpp \
+    utils/trace.cpp \
     utils/units.cpp \
     utils/utils.cpp \
     xml/foil/xmlpolarreader.cpp \

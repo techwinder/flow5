@@ -38,7 +38,7 @@
 #include <api/triangle3d.h>
 #include <api/utils.h>
 #include <core/displayoptions.h>
-#include <core/trace.h>
+#include <api/trace.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/controls/gllightdlg.h>

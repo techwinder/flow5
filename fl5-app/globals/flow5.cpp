@@ -27,6 +27,7 @@
 
 #include <qglobal.h>
 
+#include <QOperatingSystemVersion>
 
 #ifdef Q_OS_LINUX
     #  include <unistd.h>
@@ -55,7 +56,7 @@
 
 #include <core/displayoptions.h>
 #include <core/saveoptions.h>
-#include <core/trace.h>
+#include <api/trace.h>
 #include <core/xflcore.h>
 #include <core/xflcore.h>
 #include <globals/mainframe.h>
@@ -175,7 +176,6 @@ Flow5App::Flow5App(int &argc, char** argv) : QApplication(argc, argv)
     {
         QString strange = "Trace enabled in "+ tracefilename +"\n\n";
         m_pMainFrame->displayMessage(strange, false);
-        std::cout << strange.toStdString().c_str()<<std::endl;
     }
 
     gl3dView::setDebugContext(g_bTrace);
@@ -370,6 +370,58 @@ void Flow5App::parseCmdLine(Flow5App &fl5app,
     {
         OGLVersion = -1;
     }
+}
+
+
+
+void Flow5App::startTrace(QString const &filename)
+{
+    if(!g_bTrace) return;
+
+    g_pTraceFile = new QFile(filename);
+
+    if (!g_pTraceFile->open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text)) g_bTrace = false;
+    g_pTraceFile->reset();
+    std::cout<< "Trace file enabled: " << filename.toStdString().c_str() << std::endl;
+    QString strange;
+    QOperatingSystemVersion const &sys = QOperatingSystemVersion::current();
+    strange = sys.name();
+    trace(strange+"\n");
+
+    QSysInfo sysInfo;
+
+    strange  = "SysInfo:\n";
+    strange += "   build ABI:       "  + sysInfo.buildAbi() +"\n";
+    strange += "   build CPU:       "  + sysInfo.buildCpuArchitecture() +"\n";
+    strange += "   current CPU:     "  + sysInfo.currentCpuArchitecture() +"\n";
+    strange += "   kernel type:     "  + sysInfo.kernelType() +"\n";
+    strange += "   kernel version:  "  + sysInfo.kernelVersion() +"\n";
+    strange += "   product name:    "  + sysInfo.prettyProductName() +"\n";
+    strange += "   product type:    "  + sysInfo.productType() +"\n";
+    strange += "   product version: "  + sysInfo.productVersion() +"\n\n";
+    trace(strange);
+
+    const char *qt_version = qVersion();
+    strange = QString::asprintf("Qt version: %s\n\n", qt_version);
+    trace(strange);
+
+    strange = QString::asprintf("Ideal thread count: %d\n\n", QThread::idealThreadCount());
+    trace(strange);
+
+    strange = "OpenGL support:\n";
+    strange += QString::asprintf("    Desktop OpenGL: %d\n", qApp->testAttribute(Qt::AA_UseDesktopOpenGL));
+    strange += QString::asprintf("    OpenGL ES       %d\n", qApp->testAttribute(Qt::AA_UseOpenGLES));
+    strange += QString::asprintf("    Software OpenGL %d\n", qApp->testAttribute(Qt::AA_UseSoftwareOpenGL));
+    trace(strange + "\n");
+
+
+    QString language = QLocale::languageToString(QLocale::system().language());
+    strange  = "System default regional settings:\n";
+    strange += "   language:          "+language+"\n";
+    strange += "   decimal separator: "+QString(QLocale::system().decimalPoint()) + "\n";
+    strange += "   group separator:   "+QString(QLocale::system().groupSeparator()) + "\n";
+    trace(strange + "\n");
+//qDebug("%s",strange.toStdString().c_str());
 }
 
 

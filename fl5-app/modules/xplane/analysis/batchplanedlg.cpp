@@ -245,7 +245,7 @@ void BatchPlaneDlg::setupLayout()
                         {
                             QPushButton *ppbClear = new QPushButton("Clear output");
                             connect(ppbClear, SIGNAL(clicked()), m_ppto, SLOT(clear()));
-                            m_ppbAnalyze =  new QPushButton("Compute");
+                            m_ppbAnalyze =  new QPushButton("Calculate");
                             m_ppbAnalyze->setDefault(true);
                             m_ppbAnalyze->setAutoDefault(true);
                             m_pButtonBox->addButton(ppbClear, QDialogButtonBox::ActionRole);
@@ -704,7 +704,7 @@ void BatchPlaneDlg::onAnalysisFinished()
     onMessage("_____Plane analyses completed_____\n\n");
 
     m_plabStatus->setText("Not running.");
-    m_ppbAnalyze->setText("Compute");
+    m_ppbAnalyze->setText("Calculate");
     m_pButtonBox->button(QDialogButtonBox::Close)->setEnabled(true);
 }
 

@@ -44,6 +44,10 @@ linux-g++ {
     # MAKE INSTALL
     INSTALLS += target inc
 
+
+#-----XFoil-----
+    LIBS += -L../XFoil-lib -lXFoil
+
     #comment out to use OpenBLAS
 #    CONFIG += INTEL_MKL
 
@@ -92,6 +96,10 @@ win32-msvc {
     CONFIG -= debug_and_release debug_and_release_target
 
 
+
+#-----XFoil-----
+
+    LIBS += -L../XFoil-lib -lXFoil1
 
 #----------------------- MKL  ---------------------
     DEFINES += INTEL_MKL
@@ -150,9 +158,6 @@ include (fl5-lib.pri)
 
 
 
-#-----XFoil-----
-
-LIBS += -L../XFoil-lib -lXFoil
 
 #----- OCC -----
 LIBS += \

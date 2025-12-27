@@ -31,7 +31,7 @@
 
 #include <api/utils.h>
 #include <core/displayoptions.h>
-#include <core/trace.h>
+#include <api/trace.h>
 #include <core/xflcore.h>
 #include <interfaces/opengl/views/gl3dview.h> // for the static variables
 #include <interfaces/widgets/customwts/intedit.h>

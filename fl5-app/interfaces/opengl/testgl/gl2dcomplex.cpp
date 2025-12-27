@@ -32,7 +32,7 @@
 
 #include <core/xflcore.h>
 #include <core/displayoptions.h>
-#include <core/trace.h>
+#include <api/trace.h>
 #include <interfaces/opengl/views/gl3dview.h> // for the static variables
 #include <api/mathelem.h>
 #include <interfaces/widgets/customwts/intedit.h>

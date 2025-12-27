@@ -33,17 +33,18 @@
                         <ul>
                             <li>all meshing interfaces modified to use the Gmsh library in addition to the built-in custom mesher</li>
                             <li>added an option to build fuse meshes conforming to the wings mid-camber line</li>
-                            <li>removed panel connections at the edges of flaps</li>
+                            <li>removed panel connections at the edges of flaps; slight impact on pitching moment</li>
+                            <li>removed panel connections between fuselage anbd wings; slight impact on pitching moment</li>
                             <li>removed IGES import and export options due to changes of symbol names in the OCC library</li>
-                            <li>changed the evaluation of inertia properties in the case of an xfl-type fuselage to use OCC instead of the built-in custom evaluator; minor impact on evaluations</li>
+                            <li>changed the evaluation of inertia properties in the case of an xfl-type fuselage to use OCC instead of the built-in custom evaluator; slight impact on evaluations</li>
                             <li>minor improvements to the export of wings to AVL</li>
-                            <li>added an option to force transitions at hinge location in 2d batch and 3d OTF calculations</li>
                         </ul>
                     </li>
                     <li>Analysis
                         <ul>
                             <li>fixed issues with the velocity parameter in LLT calculations</li>
                             <li>removed the option to tilt the wings from AVL controls in linear polars; controls will need to be rebuilt</li>
+                            <li>added an option to force transitions at hinge location in 2d batch and 3d OTF calculations</li>
                         </ul>
                     </li>
                     <li>Post-processing
@@ -53,12 +54,13 @@
                     </li>
                     <li>UI
                         <ul>
+                            <li>bunch of minor improvements and bug fixes</li>
                         </ul>
                     </li>
                     <li>Other
                         <ul>
                             <li>removed number format localization in the fl5-lib module</li>
-                            <li>code cleaning</li>
+                            <li>deep code cleaning</li>
                         </ul>
                     </li>
                 </ul>

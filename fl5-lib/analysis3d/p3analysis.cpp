@@ -800,7 +800,7 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
     double const *mu3    = m_Mu.data();
     double const *sigma3 = m_Sigma.data();
 
-    clearDebugPts();
+//    clearDebugPts();
 
     // Note: parallelization fails, incompatibility with std::vectors of SpanDistribs
     int m=0;
@@ -831,8 +831,8 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
             Wg_m *= 0.5;
 //            Wg_r *= 0.5;
 
-s_DebugPts.push_back(mid);
-s_DebugVecs.push_back(Wg_m);
+//s_DebugPts.push_back(mid);
+//s_DebugVecs.push_back(Wg_m);
 
 
             if(p3.isMidPanel())

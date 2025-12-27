@@ -25,15 +25,16 @@
 #include <QFile>
 #include <QString>
 
-extern bool g_bTrace;
-extern QFile *g_pTraceFile;
+#include <fl5lib_global.h>
 
-void trace(int n);
-void trace(QString const &msg);
-void trace(QString const &msg, bool b);
-void trace(QString const &msg, int n);
-void trace(QString const &msg, double f);
-void trace(QString const &msg, QString txt);
+extern bool FL5LIB_EXPORT g_bTrace;
+extern QFile FL5LIB_EXPORT *g_pTraceFile;
+
+void FL5LIB_EXPORT trace(int n);
+void FL5LIB_EXPORT trace(QString const &msg);
+void FL5LIB_EXPORT trace(QString const &msg, bool b);
+void FL5LIB_EXPORT trace(QString const &msg, int n);
+void FL5LIB_EXPORT trace(QString const &msg, double f);
+void FL5LIB_EXPORT trace(QString const &msg, const QString &txt);
 
 
-void startTrace(const QString &filename);

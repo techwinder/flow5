@@ -58,7 +58,7 @@
 
 #include <core/displayoptions.h>
 #include <api/units.h>
-#include <core/trace.h>
+#include <api/trace.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/poppctrls/crossflowctrls.h>
 #include <interfaces/controls/poppctrls/flowctrls.h>

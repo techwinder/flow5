@@ -36,10 +36,13 @@ class Flow5App : public QApplication
         bool done() const {return m_bDone;}
 
     protected:
-        bool event(QEvent *pEvent);
+        bool event(QEvent *pEvent) override;
 
     private:
         void parseCmdLine(Flow5App &app, QString &scriptFileName, QString &tracefilename, bool &bScript, bool &bShowProgress, int &OGLVersion) const;
+
+
+        void startTrace(const QString &filename);
 
     private:
         MainFrame *m_pMainFrame;

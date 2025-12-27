@@ -24,20 +24,24 @@
 
 #define _MATH_DEFINES_DEFINED
 
+
+// Visual studio bug override
+//https://developercommunity.visualstudio.com/t/Visual-Studio-17100-Update-leads-to-Pr/10669759?sort=newest
+#define _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR
+
 #include <QString>
 
 
 #include <llttask.h>
 
-
-#include <llttask.h>
-#include <units.h>
 #include <objects2d.h>
 #include <planeopp.h>
 #include <planepolar.h>
-#include <polar.h>
-#include <wingxfl.h>
 #include <planexfl.h>
+#include <polar.h>
+#include <trace.h>
+#include <units.h>
+#include <wingxfl.h>
 
 int LLTTask::s_IterLim = 100;
 int LLTTask::s_NLLTStations = 20;
@@ -391,6 +395,8 @@ void LLTTask::setBending(double QInf)
  */
 bool LLTTask::setLinearSolution(double Alpha)
 {
+    trace("LLTTask::setLinearSolution\n");
+
     std::vector<double> aij(s_NLLTStations*s_NLLTStations, 0);
     std::vector<double> rhs(s_NLLTStations+1, 0);
 
@@ -453,6 +459,8 @@ bool LLTTask::setLinearSolution(double Alpha)
         m_Cl[i] *= slope*cs/m_pWing->getChord(yob);
         m_Ai[i]  = -(Alpha-a0+m_pWing->getTwist(yob)) + m_Cl[i]/slope*180.0/PI;
     }
+    trace("LLTTask::setLinearSolution - done\n");
+
     return true;
 }
 
@@ -592,6 +600,9 @@ bool LLTTask::alphaLoop()
 
     bool s_bInitCalc = true;
 
+    trace("LLTTask::alphaloop\n");
+
+
     for (int i=0; i<int(m_AoAList.size()); i++)
     {
         m_iter.clear();
@@ -621,6 +632,8 @@ bool LLTTask::alphaLoop()
         }
 
 
+        trace("LLTTask::alphaloop - 1\n");
+
         strange = "Calculating " + ALPHAch + QString::asprintf(" = %5.2f", alpha) + DEGch + "...";
         traceLog(strange);
 
@@ -646,6 +659,8 @@ bool LLTTask::alphaLoop()
             if (m_bWingOut) m_bWarning = true;
             PlaneOpp *pPOpp = createPlaneOpp(QInf, alpha, m_bWingOut);// Adds WOpp point and adds result to polar
 
+
+            trace("LLTTask::alphaloop -2 \n");
 
             // store the results
             if(pPOpp)
@@ -675,6 +690,8 @@ bool LLTTask::alphaLoop()
         }
 
         strange = ALPHAch + QString::asprintf("=%g", alpha) + DEGch;
+
+        trace("LLTTask::alphaloop - 3\n");
 
     }
 

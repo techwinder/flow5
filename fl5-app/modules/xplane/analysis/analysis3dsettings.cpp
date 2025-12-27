@@ -352,17 +352,15 @@ void Analysis3dSettings::setupLayout()
                         pVortexCoreLayout->setRowStretch(3,1);
                     }
 
-                    QString tip("<p>The core radius is a critical distance from the center of the cylinder "
-                                "around the trailing vortices and the wake panel edges.<br>"
-                                "It is used to calculate a damping factor to apply to the tangential potential velocity. "
+                    QString tip("<p>The core radius is a critical distance from the vortices center and the wake panel edges.<br>"
+                                "It is used to calculate a damping factor to apply to the hoop potential velocity. "
                                 "This is to prevent the velocity from going to infinity when calculating "
                                 "the induced drag in the far-field plane, or when computing the streamlines.<br>"
-                                "This value should be as high as possible, but at least one order of magnitude "
-                                "less than the smallest panel's width.<br>"
+                                "This value should be as high as possible, but at least 1/50 less than the smallest panel's width.<br>"
                                 "<b>Recommendations:<b>"
                                 "<ul>"
                                 "<li>core radius = ~0.001 mm</li>"
-                                "<li>Lamb-Oseen model.</li"
+                                "<li><b>Not the Potential model</b>.</li"
                                 "</ul>"
                                 "</p>");
                     QLabel *pLabComment = new QLabel(tip);
@@ -378,6 +376,7 @@ void Analysis3dSettings::setupLayout()
                     m_pVortexGraphWt->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
                     m_pVortexGraphWt->enableContextMenu(true);
                     m_pVortexGraphWt->enableCurveStylePage(true);
+                    m_pVortexGraphWt->setMouseTracking(false);
                     Graph *pGraph = new Graph;
                     m_pVortexGraphWt->setGraph(pGraph);
                     GraphOptions::resetGraphSettings(*pGraph);
@@ -741,14 +740,14 @@ void Analysis3dSettings::onMakeVortexGraph()
     {
         double x = xmin + double(i) *(xmax-xmin)/100.0;
         pt.set(x, 0, 0);
-        if(x<-DISTANCEPRECISION)
+        if(x<-corerad/2.0)
         {
-            V = vortexInducedVelocity(A, B, pt, corerad, Vortex::POTENTIAL);
+            V = vortexInducedVelocity(A, B, pt, 0.0, Vortex::POTENTIAL);
             if(fabs(V.y)<2.0*Vyref) pCurve[0]->appendPoint(x*Units::mtoUnit(), V.y);
         }
-        else if(x>DISTANCEPRECISION)
+        else if(x>corerad/2.0)
         {
-            V = vortexInducedVelocity(A, B, pt, corerad, Vortex::POTENTIAL);
+            V = vortexInducedVelocity(A, B, pt, 0.0, Vortex::POTENTIAL);
             if(fabs(V.y)<2.0*Vyref) pCurve[1]->appendPoint(x*Units::mtoUnit(), V.y);
         }
         V = vortexInducedVelocity(A, B, pt, corerad, Vortex::CUT_OFF);
