@@ -34,11 +34,7 @@
 
 #include <Standard_Version.hxx>
 
-#ifdef NO_GMSH
-#define GMSH_API_VERSION "Disabled"
-#else
 #include <gmsh.h>
-#endif
 
 CreditsDlg::CreditsDlg(QWidget *pParent) : QDialog(pParent)
 {

@@ -44,24 +44,30 @@ INCLUDEPATH += $$PWD/../fl5-lib/api
 
 
 linux-g++ {
-    CONFIG += occt
+
     CONFIG += thread
 
     # VARIABLES
     isEmpty(PREFIX):PREFIX = /usr/local
     BINDIR = $$PREFIX/bin
-    DATADIR = $$PREFIX/share/flow5
+    SHAREDIR = $$PREFIX/share/flow5
 
     desktop.path = $$(HOME)/.local/share/applications
     desktop.files += ../meta/linux/$${TARGET}.desktop
 
-    icon128.path = $$DATADIR
+    icon128.path = $$SHAREDIR
     icon128.files += ../meta/res/$${TARGET}.png
 
     target.path = $$BINDIR
 
+    translations.path = $$SHAREDIR/translations
+    translations.files = ../meta/translations/*.qm
+
+    target.path = $$BINDIR
+
     # MAKE INSTALL
-    INSTALLS += target desktop icon128
+    INSTALLS += target desktop icon128 translations
+
 
 #    CONFIG += INTEL_MKL
 
@@ -112,45 +118,9 @@ linux-g++ {
 }
 
 
-win32-g++ {
-
-    CONFIG += console
-    CONFIG -= debug_and_release debug_and_release_target
-
-    RC_ICONS = ../meta/win64/flow5.ico
-
-    #-----XFoil----
-    LIBS += -L../XFoil-lib -lXFoil1
-
-    #------------ OPEN CASCADE / OCCT (MinGW) --------------------------
-    OCCT_DIR = D:/flow5/OCCT/build-mingw-dll
-    isEmpty(OCCT_DIR): OCCT_DIR = $$getenv(OCCT_DIR)
-    isEmpty(OCCT_INC): OCCT_INC = $$getenv(OCCT_INC)
-    isEmpty(OCCT_LIB): OCCT_LIB = $$getenv(OCCT_LIB)
-
-    isEmpty(OCCT_INC): !isEmpty(OCCT_DIR): OCCT_INC = $$OCCT_DIR/inc
-    isEmpty(OCCT_LIB): !isEmpty(OCCT_DIR): OCCT_LIB = $$OCCT_DIR/win64/gcc/lib
-
-    !isEmpty(OCCT_INC) {
-        INCLUDEPATH += $$OCCT_INC
-        CONFIG += occt
-    } else {
-        message("OCCT_INC/OCCT_DIR not set: OCCT headers are required.")
-    }
-
-    !isEmpty(OCCT_LIB) {
-        LIBS += -L$$OCCT_LIB
-    }
-
-    #---------------- OTHER WIN LIBS -------------------
-    LIBS += -lopengl32
-}
-
-
 
 win32-msvc {
 
-    CONFIG += occt
 
     CONFIG += console
     CONFIG -= debug_and_release debug_and_release_target
@@ -200,7 +170,7 @@ win32-msvc {
 
 
 macx {
-    CONFIG += occt
+
     QMAKE_MAC_SDK = macosx
     QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
 
@@ -262,34 +232,31 @@ RESOURCES += \
     resources/images.qrc \
     resources/sailimages.qrc
 
-TRANSLATIONS += \
-    translations/flow5_zh_CN.ts
 
 
 LIBS += -L../fl5-lib -lfl5-lib
 
-occt {
-    LIBS += \
-        -lTKBRep \
-        -lTKBO \
-        -lTKG3d \
-        -lTKGeomAlgo \
-        -lTKGeomBase \
-        -lTKLCAF \
-        -lTKMath \
-        -lTKMesh \
-        -lTKOffset \
-        -lTKPrim \
-        -lTKDESTEP \
-        -lTKShHealing \
-        -lTKTopAlgo \
-        -lTKXSBase \
-        -lTKernel \
-        -lTKBool \
-        -lTKG2d \
-        -lTKCDF \
-        -lTKFillet \
-}
+LIBS += \
+    -lTKBRep \
+    -lTKBO \
+    -lTKG3d \
+    -lTKGeomAlgo \
+    -lTKGeomBase \
+    -lTKLCAF \
+    -lTKMath \
+    -lTKMesh \
+    -lTKOffset \
+    -lTKPrim \
+    -lTKDESTEP \
+    -lTKShHealing \
+    -lTKTopAlgo \
+    -lTKXSBase \
+    -lTKernel \
+    -lTKBool \
+    -lTKG2d \
+    -lTKCDF \
+    -lTKFillet \
+
 
 DISTFILES += \
     ../meta/doc/images/flow5.png \
@@ -298,8 +265,3 @@ DISTFILES += \
     ../meta/win64/flow5.ico \
     ../meta/win64/flow5_doc.ico
 
-win32-g++ {
-    DEFINES += NO_GMSH
-    # SOURCES -= interfaces/mesh/gmesh_globals.cpp
-    # SOURCES += interfaces/mesh/gmesh_globals_stub.cpp
-}

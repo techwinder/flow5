@@ -154,10 +154,10 @@ void WingDefDlg::setupLayout()
             {
                 QHBoxLayout *pSectionLayout = new QHBoxLayout;
                 {
-                    m_pchTwoSided   = new QCheckBox("Two-sided");
-                    m_pchsymmetric  = new QCheckBox("Symmetric");
-                    m_prbRightSide  = new QRadioButton("Right side");
-                    m_prbLeftSide   = new QRadioButton("Left side");
+                    m_pchTwoSided   = new QCheckBox(tr("Two-sided"));
+                    m_pchsymmetric  = new QCheckBox(tr("Symmetric"));
+                    m_prbRightSide  = new QRadioButton(tr("Right side"));
+                    m_prbLeftSide   = new QRadioButton(tr("Left side"));
 
                     m_pchCloseInnerSide = new QCheckBox(tr("Close inner side"));
 
@@ -209,9 +209,9 @@ void WingDefDlg::setupLayout()
             QHBoxLayout *pTipStripLayout = new QHBoxLayout;
             {
                 m_pieTipStrips = new IntEdit();
-                m_pieTipStrips->setToolTip("<p>Number of horizontal panel strips at the wing tips.<br>"
-                                           "Recommendation: 1</p>");
-                pTipStripLayout->addWidget(new QLabel("Tip strips"));
+                m_pieTipStrips->setToolTip(tr("<p>Number of horizontal panel strips at the wing tips.<br>"
+                                           "Recommendation: 1</p>"));
+                pTipStripLayout->addWidget(new QLabel(tr("Tip strips")));
                 pTipStripLayout->addWidget(m_pieTipStrips);
                 pTipStripLayout->addStretch();
             }

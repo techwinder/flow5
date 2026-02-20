@@ -94,7 +94,7 @@ void FoilRepanelDlg::setupLayout()
                 plabNPanels->setPalette(m_Palette);
                 plabNPanels->setAttribute(Qt::WA_NoSystemBackground);
                 m_pieNPanels = new IntEdit;
-                QString tip= QString("<p>CAUTION: XFoil does not accept number of panels &gt;%1.</p>"
+                QString tip= tr("<p>CAUTION: XFoil does not accept number of panels &gt;%1.</p>"
                              "<p>Adjust the number of panels and the bunching parameters to "
                              "achieve the desired point distribution.</p>"
                             "<p>Recommendation: ~150 panels</p>").arg(IQX-2);
@@ -165,7 +165,7 @@ void FoilRepanelDlg::onBufferStyle(LineStyle ls)
 void FoilRepanelDlg::onNPanels(int npanels)
 {
     if(npanels>IQX-2)
-        m_plabWarning->setText(QString("<p><font color=red>")+QString("XFoil requires NPanels&le;%1").arg(IQX-2) + QString("</font></p>"));
+        m_plabWarning->setText(tr("<p><font color=red>")+QString("XFoil requires NPanels&le;%1").arg(IQX-2) + QString("</font></p>"));
     else
         m_plabWarning->clear();
     onApply();

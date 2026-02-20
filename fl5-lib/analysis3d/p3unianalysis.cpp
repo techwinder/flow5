@@ -44,7 +44,6 @@
     #include <openblas/lapacke.h>
 #endif
 
-#include <lapack_fortran.h>
 
 
 #include <p3unianalysis.h>

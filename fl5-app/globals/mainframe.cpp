@@ -43,11 +43,7 @@
 #include <QDesktopServices>
 #include <QFileDialog>
 
-#ifdef NO_GMSH
-#define GMSH_API_VERSION "Disabled"
-#else
 #include <gmsh.h>
-#endif
 
 
 #include <core/displayoptions.h>
@@ -341,11 +337,10 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
 
     connectSignals();
 
-#ifndef NO_GMSH
     gmsh::initialize();
     gmsh::option::setNumber("General.Terminal", 0);  
     gmsh::option::setNumber("Geometry.OCCParallel", 1.0);
-#endif
+
 }
 
 
@@ -424,10 +419,7 @@ void MainFrame::connectSignals()
 
 MainFrame::~MainFrame()
 {
-#ifndef NO_GMSH
     gmsh::finalize();
-#endif
-
 
     if(xfl::g_pTraceFile) xfl::g_pTraceFile->close();
 

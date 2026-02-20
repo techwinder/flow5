@@ -46,7 +46,7 @@
     #include <openblas/lapacke.h>
 #endif
 
-#include <lapack_fortran.h>
+
 
 P3LinAnalysis::P3LinAnalysis() : P3Analysis()
 {

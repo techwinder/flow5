@@ -298,11 +298,7 @@ void PrefsDlg::setupLayout()
                     QLabel *plabLang = new QLabel("Language:");
                     m_pcbLanguage = new QComboBox;
                     m_pcbLanguage->addItem("System");
-                    m_pcbLanguage->addItem("English");
                     m_pcbLanguage->addItem("Chinese");
-                    m_pcbLanguage->addItem("French");
-                    m_pcbLanguage->addItem("German");
-
                     m_pchLocale = new QCheckBox("Use locale settings for number formatting");
                     m_plabLocalOutput = new QLabel("1.23456\n10,000");
                     
@@ -939,6 +935,7 @@ void PrefsDlg::onLocalization()
     }
     m_plabLocalOutput->setText(dblestrange);
 }
+
 
 void PrefsDlg::onLanguageChanged(int index)
 {

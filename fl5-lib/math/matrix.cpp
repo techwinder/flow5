@@ -41,7 +41,6 @@
     #include <openblas/cblas.h>
 #endif
 
-#include <lapack_fortran.h>
 
 
 #include <matrix.h>

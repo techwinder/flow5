@@ -272,11 +272,11 @@ void Flow5App::loadTranslations()
     QString lang = PrefsDlg::language();
     QLocale locale = QLocale::system();
 
-    if (lang == "English") 
+    if (lang == "English")
     {
-        return; 
+        return;
     }
-    else if (lang == "Chinese") 
+    else if (lang == "Chinese")
     {
         locale = QLocale(QLocale::Chinese, QLocale::China);
     }
@@ -290,12 +290,24 @@ void Flow5App::loadTranslations()
     }
 
     const QString qtTrDir = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
+
     if(m_qtTranslator.load(locale, QStringLiteral("qt"), QStringLiteral("_"), qtTrDir))
     {
         installTranslator(&m_qtTranslator);
     }
 
-    const QString appTrDir = QCoreApplication::applicationDirPath() + QDir::separator() + QStringLiteral("translations");
+    QString appTrDir;
+
+#ifdef Q_OS_MAC
+    appTrDir = qApp->applicationDirPath()+"/translations/";
+#endif
+#ifdef Q_OS_WIN
+    appTrDir = qApp->applicationDirPath()+"/translations/";
+#endif
+#ifdef Q_OS_LINUX
+    appTrDir  = "/usr/local/share/flow5/translations/";
+#endif
+
     if(m_appTranslator.load(locale, QStringLiteral("flow5"), QStringLiteral("_"), appTrDir))
     {
         installTranslator(&m_appTranslator);
