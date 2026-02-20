@@ -117,18 +117,18 @@ void PlainTextOutput::keyPressEvent(QKeyEvent *pEvent)
 
 void PlainTextOutput::contextMenuEvent(QContextMenuEvent *pEvent)
 {
-    QMenu *pContextMenu = new QMenu("PlainTextOutput");
+    QMenu *pContextMenu = new QMenu(tr("PlainTextOutput"));
     {
-        QAction *pSelectAll = new QAction("Select all", this);
+        QAction *pSelectAll = new QAction(tr("Select all"), this);
         connect(pSelectAll, SIGNAL(triggered(bool)), SLOT(selectAll()));
 
-        QAction *pClear = new QAction("Clear", this);
+        QAction *pClear = new QAction(tr("Clear"), this);
         connect(pClear, SIGNAL(triggered(bool)), SLOT(clear()));
 
-        QAction *pCopy = new QAction("Copy selection", this);
+        QAction *pCopy = new QAction(tr("Copy selection"), this);
         connect(pCopy, SIGNAL(triggered(bool)), SLOT(copy()));
 
-        QAction *pCopyAll = new QAction("Copy all", this);
+        QAction *pCopyAll = new QAction(tr("Copy all"), this);
         connect(pCopyAll, SIGNAL(triggered(bool)), SLOT(onCopyAll()));
 
         pContextMenu->addAction(pSelectAll);

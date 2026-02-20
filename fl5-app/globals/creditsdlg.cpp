@@ -34,7 +34,11 @@
 
 #include <Standard_Version.hxx>
 
+#ifdef NO_GMSH
+#define GMSH_API_VERSION "Disabled"
+#else
 #include <gmsh.h>
+#endif
 
 CreditsDlg::CreditsDlg(QWidget *pParent) : QDialog(pParent)
 {
@@ -44,19 +48,19 @@ CreditsDlg::CreditsDlg(QWidget *pParent) : QDialog(pParent)
 
 void CreditsDlg::setupLayout()
 {
-    QLabel *plab6  = new QLabel("This application uses the following licensed libraries and technology\n");
+    QLabel *plab6  = new QLabel(tr("This application uses the following licensed libraries and technology\n"));
     plab6->setStyleSheet("font-weight: bold");
 
     QGroupBox *pXFoilBox = new QGroupBox("XFoil");
     {
         QVBoxLayout *pXFoilLayout = new QVBoxLayout;
         {
-            QLabel *plabVersion = new QLabel("<p><b>Version: </b>6.94 ported to C language</p>" );
-            QLabel *plabXFoil  = new QLabel("<p>XFOIL is an interactive program for the design and analysis of subsonic isolated airfoils.</p>");
+            QLabel *plabVersion = new QLabel(tr("<p><b>Version: </b>6.94 ported to C language</p>") );
+            QLabel *plabXFoil  = new QLabel(tr("<p>XFOIL is an interactive program for the design and analysis of subsonic isolated airfoils.</p>"));
             plabXFoil->setWordWrap(true);
-            QLabel *plabAuthor = new QLabel("<p><b>Author: </b>Mark Drela (also Harold Youngren)</p>");
+            QLabel *plabAuthor = new QLabel(tr("<p><b>Author: </b>Mark Drela (also Harold Youngren)</p>"));
 
-            QLabel *plabXFoilLink = new QLabel("<a href=https://web.mit.edu/drela/Public/web/xfoil>XFoil web page</a>");
+            QLabel *plabXFoilLink = new QLabel(tr("<a href=https://web.mit.edu/drela/Public/web/xfoil>XFoil web page</a>"));
             plabXFoilLink->setOpenExternalLinks(true);
             plabXFoilLink->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
 
@@ -73,10 +77,10 @@ void CreditsDlg::setupLayout()
         QVBoxLayout *pOccLayout = new QVBoxLayout;
         {
 
-            QLabel *plabVersion = new QLabel("<p><b>Version:</b> " + QString(OCC_VERSION_COMPLETE));
-            QLabel *plabDescription = new QLabel("<p>Open Cascade Technology (OCCT) is an open-source software "
+            QLabel *plabVersion = new QLabel(tr("<p><b>Version:</b> ") + QString(OCC_VERSION_COMPLETE));
+            QLabel *plabDescription = new QLabel(tr("<p>Open Cascade Technology (OCCT) is an open-source software "
                                                  "development platform for 3D CAD, CAM, CAE, etc. that is developed "
-                                                 "and supported by Open Cascade SAS.</p>");
+                                                 "and supported by Open Cascade SAS.</p>"));
             plabDescription->setWordWrap(true);
             QLabel *pOccLink = new QLabel;
             pOccLink->setText("<a href=https://www.opencascade.com>https://www.opencascade.com</a>");
@@ -94,7 +98,7 @@ void CreditsDlg::setupLayout()
     {
         QVBoxLayout *pGmshLayout = new QVBoxLayout;
         {
-            QLabel *plabVersion = new QLabel("<p><b>Version: </b>" + QString(GMSH_API_VERSION) + "</p>");
+            QLabel *plabVersion = new QLabel(tr("<p><b>Version: </b>") + QString(GMSH_API_VERSION) + "</p>");
             QLabel *plabGmshLink = new QLabel;
             plabGmshLink->setText("<a href=https://gmsh.info/doc/preprints/gmsh_paper_preprint.pdf>C. Geuzaine and J.-F. Remacle.<br>"
                                   "Gmsh: a three-dimensional finite element mesh generator with built-in pre- and post-processing facilities.<br>"
@@ -118,8 +122,8 @@ void CreditsDlg::setupLayout()
             mkl_get_version(&Version);
 
             QString strange;
-            strange += QString::asprintf("<p><b>Version: </b>%d.%d.%d<br>", Version.MajorVersion, Version.MinorVersion, Version.UpdateVersion);
-            strange += QString::asprintf("<b>Processor optimization: </b> %s", Version.Processor) + "</p>";
+            strange += QString::asprintf("<p><b>%s</b>%d.%d.%d<br>", tr("Version: ").toLatin1().data(), Version.MajorVersion, Version.MinorVersion, Version.UpdateVersion);
+            strange += QString::asprintf("<b>%s</b> %s", tr("Processor optimization: ").toLatin1().data(), Version.Processor) + "</p>";
 
             QLabel *plabVersion = new QLabel(strange);
 

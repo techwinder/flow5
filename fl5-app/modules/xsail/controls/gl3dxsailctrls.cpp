@@ -26,6 +26,9 @@
 
 
 #include "gl3dxsailctrls.h"
+
+#include <QCoreApplication>
+
 #include <interfaces/controls/poppctrls/opp3dscalesctrls.h>
 #include <interfaces/controls/poppctrls/streamlinesctrls.h>
 #include <interfaces/controls/poppctrls/flowctrls.h>
@@ -60,11 +63,11 @@ void gl3dXSailCtrls::setupLayout()
     m_pFlowCtrls         = new FlowCtrls;
     m_pCrossFlowCtrls    = new CrossFlowCtrls;
 
-    addTab(m_pXSailDisplayCtrls, "Display");
-    addTab(m_pOpp3dScalesCtrls,  "Scales");
-    addTab(m_pStreamLinesCtrls,  "Streamlines");
-    addTab(m_pFlowCtrls,         "Flow");
-    addTab(m_pCrossFlowCtrls,    "Wake");
+    addTab(m_pXSailDisplayCtrls, QCoreApplication::translate("gl3dXSailCtrls", "Display"));
+    addTab(m_pOpp3dScalesCtrls,  QCoreApplication::translate("gl3dXSailCtrls", "Scales"));
+    addTab(m_pStreamLinesCtrls,  QCoreApplication::translate("gl3dXSailCtrls", "Streamlines"));
+    addTab(m_pFlowCtrls,         QCoreApplication::translate("gl3dXSailCtrls", "Flow"));
+    addTab(m_pCrossFlowCtrls,    QCoreApplication::translate("gl3dXSailCtrls", "Wake"));
 }
 
 

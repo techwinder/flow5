@@ -38,11 +38,11 @@ class BoatOpp;
 
 namespace SailObjects
 {
-    extern std::vector<Boat*> s_oaBoat;
-    extern std::vector<BoatPolar*> s_oaBtPolar;
-    extern std::vector<BoatOpp*> s_oaBtOpp;
-    extern BoatOpp *s_pLastBtOpp;
-    extern int s_SailDarkFactor;
+    extern FL5LIB_EXPORT std::vector<Boat*> s_oaBoat;
+    extern FL5LIB_EXPORT std::vector<BoatPolar*> s_oaBtPolar;
+    extern FL5LIB_EXPORT std::vector<BoatOpp*> s_oaBtOpp;
+    extern FL5LIB_EXPORT BoatOpp *s_pLastBtOpp;
+    extern FL5LIB_EXPORT int s_SailDarkFactor;
 
 
     FL5LIB_EXPORT inline int nBoats()    {return int(s_oaBoat.size());}

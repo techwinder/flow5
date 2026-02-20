@@ -227,11 +227,11 @@ void OptimPlaneDlg::setupLayout()
                         }
                         pOptimizerFrame->setLayout(pOptimizerLayout);
                     }
-                    m_ptwControls->addTab(m_plwPlanes,       "Plane");
-                    m_ptwControls->addTab(m_pAnalysisFrame,  "Analysis");
-                    m_ptwControls->addTab(m_pVarFrame,       "Variables");
-                    m_ptwControls->addTab(m_pPSOFrame,       "PSO");
-                    m_ptwControls->addTab(pOptimizerFrame,   "Optimizer");
+                    m_ptwControls->addTab(m_plwPlanes,       tr("Plane"));
+                    m_ptwControls->addTab(m_pAnalysisFrame,  tr("Analysis"));
+                    m_ptwControls->addTab(m_pVarFrame,       tr("Variables"));
+                    m_ptwControls->addTab(m_pPSOFrame,       tr("PSO"));
+                    m_ptwControls->addTab(pOptimizerFrame,   tr("Optimizer"));
                 }
 
                 QFrame *pCtrlFrame = new QFrame;
@@ -290,9 +290,9 @@ void OptimPlaneDlg::setupLayout()
                     m_VariableGraph.setScaleType(GRAPH::EXPANDING);
                     GraphOptions::resetGraphSettings(m_VariableGraph);
 
-                    m_ptwPareto->addTab(m_pVariableGraphWt, "Variables");
-                    m_ptwPareto->addTab(m_pParetoGraphWt, "Pareto graph");
-                    m_ptwPareto->addTab(m_pcptResults, "Frontier particles");
+                    m_ptwPareto->addTab(m_pVariableGraphWt, tr("Variables"));
+                    m_ptwPareto->addTab(m_pParetoGraphWt, tr("Pareto graph"));
+                    m_ptwPareto->addTab(m_pcptResults, tr("Frontier particles"));
                 }
                 m_pRightVSplitter->addWidget(pObjGraphFrame);
                 m_pRightVSplitter->addWidget(m_ptwPareto);
@@ -702,7 +702,7 @@ void OptimPlaneDlg::onClose()
 
     if(!m_bSaved)
     {
-        int resp = QMessageBox::question(this, "Question", "Discard results?",  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        int resp = QMessageBox::question(this, tr("Question"), tr("Discard results?"),  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
         if(resp != QMessageBox::Yes) return;
     }
 
@@ -922,7 +922,7 @@ void OptimPlaneDlg::customEvent(QEvent *pEvent)
         strange = QString::asprintf("Optimization time: %.2f s\n", double(m_Clock.elapsed())/1000.0);
         m_ppto->onAppendQText(strange+"\n");
 
-        m_ppbSwarm->setText("Swarm");
+        m_ppbSwarm->setText(tr("Swarm"));
         m_ppbSwarm->setEnabled(true);
         m_bSaved = false;
         enableControls(true);
@@ -1078,7 +1078,7 @@ void OptimPlaneDlg::onSwarm()
     connect(pThread,   SIGNAL(finished()),     pThread,    SLOT(deleteLater())); // deletes the thread but not the object
     pThread->start();
     pThread->setPriority(xfl::threadPriority());
-    m_ppbSwarm->setText("Interrupt task");
+    m_ppbSwarm->setText(tr("Interrupt task"));
 }
 
 

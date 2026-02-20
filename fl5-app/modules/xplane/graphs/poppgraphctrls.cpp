@@ -187,7 +187,7 @@ void POppGraphCtrls::setupLayout()
 {
     QGridLayout *pMainLayout = new QGridLayout;
     {
-        m_pchWOppAnimate       = new QCheckBox("Animate");
+        m_pchWOppAnimate       = new QCheckBox(tr("Animate"));
 
         m_pslAnimateWOppSpeed  = new QSlider(Qt::Horizontal);
         m_pslAnimateWOppSpeed->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -197,7 +197,7 @@ void POppGraphCtrls::setupLayout()
         m_pslAnimateWOppSpeed->setTickInterval(50);
         m_pslAnimateWOppSpeed->setTickPosition(QSlider::TicksBelow);
 
-        m_pchShowActiveOppOnly = new QCheckBox("Active operating point only");
+        m_pchShowActiveOppOnly = new QCheckBox(tr("Active operating point only"));
 
         pMainLayout->addWidget(m_pcptVariableSet,       1,1,1,2);
         pMainLayout->addWidget(m_prbGraph[0],           2,1);

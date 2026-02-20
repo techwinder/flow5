@@ -225,14 +225,14 @@ void ExternalSailDlg::setControls()
     if(!m_pSail->isThinSurface())
     {
         m_ppbTETop->setEnabled(true);
-        m_ppbTEBotMid->setText("Bottom panels");
+        m_ppbTEBotMid->setText(tr("Bottom panels"));
         m_pchGuessOpposite->setEnabled(true);
         m_pfeTEAngle->setEnabled(true);
     }
     else
     {
         m_ppbTETop->setEnabled(false);
-        m_ppbTEBotMid->setText("Mid. panels");
+        m_ppbTEBotMid->setText(tr("Mid. panels"));
         m_pchGuessOpposite->setEnabled(false);
         m_pfeTEAngle->setEnabled(false);
     }

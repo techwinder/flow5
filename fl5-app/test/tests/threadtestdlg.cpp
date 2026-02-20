@@ -247,11 +247,7 @@ void ThreadTestDlg::consumer()
 void ThreadTestDlg::testComm()
 {
     //running this function in a separate thread to keep the UI responsive
-#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
-        QFuture<void> future = QtConcurrent::run(&ThreadTestDlg::runComm, this);
-#else
-        QtConcurrent::run(this, &ThreadTestDlg::onRunComm, this);
-#endif
+    QtConcurrent::run([this](){ this->runComm(); });
 
 
 }

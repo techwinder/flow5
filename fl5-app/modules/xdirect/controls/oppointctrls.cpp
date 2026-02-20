@@ -64,8 +64,8 @@ void OpPointCtrls::setupLayout()
     {
         QHBoxLayout *pGraphBoxLayout = new QHBoxLayout;
         {
-            m_prbCpCurve = new QRadioButton("Cp");
-            m_prbQCurve  = new QRadioButton("Edge velocity");
+            m_prbCpCurve = new QRadioButton(tr("Cp"));
+            m_prbQCurve  = new QRadioButton(tr("Edge velocity"));
             pGraphBoxLayout->addStretch();
             pGraphBoxLayout->addWidget(m_prbCpCurve);
             pGraphBoxLayout->addStretch();
@@ -75,16 +75,16 @@ void OpPointCtrls::setupLayout()
 
         QGridLayout *pOppDisplayLayout = new QGridLayout;
         {
-            m_pchFillFoil      = new QCheckBox("Fill foil");
-            m_pchNeutralLine   = new QCheckBox("Neutral line");
-            m_pchShowBL        = new QCheckBox("BL (d*)");
-            m_pchShowBL->setToolTip("<p>Displacement thickness</p>");
-            m_pchShowPressure  = new QCheckBox("Pressure");
+            m_pchFillFoil      = new QCheckBox(tr("Fill foil"));
+            m_pchNeutralLine   = new QCheckBox(tr("Neutral line"));
+            m_pchShowBL        = new QCheckBox(tr("BL (d*)"));
+            m_pchShowBL->setToolTip(tr("<p>Displacement thickness</p>"));
+            m_pchShowPressure  = new QCheckBox(tr("Pressure"));
             m_plbNeutralStyle  = new LineBtn;
             m_plbBLStyle       = new LineBtn;
             m_plbPressureStyle = new LineBtn;
-            m_pchShowInviscid  = new QCheckBox("Show inviscid");
-            m_pchAnimate       = new QCheckBox("Animate");
+            m_pchShowInviscid  = new QCheckBox(tr("Show inviscid"));
+            m_pchAnimate       = new QCheckBox(tr("Animate"));
             m_pslAnimateSpeed  = new QSlider(Qt::Horizontal);
             m_pslAnimateSpeed->setMinimum(0);
             m_pslAnimateSpeed->setMaximum(1000);
@@ -92,7 +92,7 @@ void OpPointCtrls::setupLayout()
             m_pslAnimateSpeed->setTickInterval(50);
             m_pslAnimateSpeed->setTickPosition(QSlider::TicksBelow);
 
-            m_pchShowActiveOppOnly = new QCheckBox("Active operating point only");
+            m_pchShowActiveOppOnly = new QCheckBox(tr("Active operating point only"));
 
             pOppDisplayLayout->addWidget(m_pchFillFoil,          1,1);
             pOppDisplayLayout->addWidget(m_pchNeutralLine,       2,1);

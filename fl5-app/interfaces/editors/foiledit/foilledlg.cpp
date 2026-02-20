@@ -40,7 +40,7 @@ double FoilLEDlg::s_LERadius=0.025;
 
 FoilLEDlg::FoilLEDlg(QWidget *pParent) : FoilDlg(pParent)
 {
-    setWindowTitle("Leading edge");
+    setWindowTitle(tr("Leading edge"));
 
     s_LErfac      = 1.0;
     s_BlendLength = 0.1;

@@ -63,7 +63,7 @@ void XPlaneMenus::create3dCtxMenus()
 {
     XPlaneActions *pActions = m_pXPlane->m_pActions;
     //W3D View Context Menu
-    m_p3dCtxMenu = new QMenu("Context Menu", m_pMainFrame);
+    m_p3dCtxMenu = new QMenu(tr("Context Menu"), m_pMainFrame);
     {
         m_p3dCtxMenu->addMenu(m_pCurrentPlaneMenu);
         m_p3dCtxMenu->addSeparator();
@@ -71,7 +71,7 @@ void XPlaneMenus::create3dCtxMenus()
         m_p3dCtxMenu->addSeparator();
         m_p3dCtxMenu->addMenu(m_pCurPOppMenu);
         m_p3dCtxMenu->addSeparator();
-        QMenu *pMeshMenu = m_p3dCtxMenu->addMenu("Mesh");
+        QMenu *pMeshMenu = m_p3dCtxMenu->addMenu(tr("Mesh"));
         {
             pMeshMenu->addAction(pActions->m_pMeshInfo);
             pMeshMenu->addAction(pActions->m_pConnectPanels);
@@ -93,7 +93,7 @@ void XPlaneMenus::create3dCtxMenus()
         m_p3dCtxMenu->addSeparator();
         m_p3dCtxMenu->addAction(m_pMainFrame->m_pViewLogFile);
         m_p3dCtxMenu->addSeparator();
-        QMenu *pImageMenu = m_p3dCtxMenu->addMenu("Background Image");
+        QMenu *pImageMenu = m_p3dCtxMenu->addMenu(tr("Background Image"));
         {
             pImageMenu->addAction(pActions->m_pBackImageLoad);
             pImageMenu->addAction(pActions->m_pBackImageClear);
@@ -109,25 +109,25 @@ void XPlaneMenus::createWPolarCtxMenus()
 {
     XPlaneActions *pActions = m_pXPlane->m_pActions;
     //Polar View Context Menu
-    m_pWPlrCtxMenu = new QMenu("Context Menu", m_pMainFrame);
+    m_pWPlrCtxMenu = new QMenu(tr("Context Menu"), m_pMainFrame);
     {
         m_pWPlrCtxMenu->addMenu(m_pCurrentPlaneMenu);
         m_pWPlrCtxMenu->addSeparator();
         m_pWPlrCtxMenu->addMenu(m_pCurWPlrMenu);
         m_pWPlrCtxMenu->addSeparator();
-        QMenu *pAllPolars = m_pWPlrCtxMenu->addMenu("All polars");
+        QMenu *pAllPolars = m_pWPlrCtxMenu->addMenu(tr("All polars"));
         {
             pAllPolars->addAction(pActions->m_pHideAllWPlrs);
             pAllPolars->addAction(pActions->m_pShowAllWPlrs);
             pAllPolars->addAction(pActions->m_pExportAllWPolars);
         }
-        QMenu *pCurGraphCtxMenu = m_pWPlrCtxMenu->addMenu("Graph");
+        QMenu *pCurGraphCtxMenu = m_pWPlrCtxMenu->addMenu(tr("Graph"));
         {
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pResetGraphSplitter);
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pResetCurGraphScales);
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pCurGraphDlgAct);
             pCurGraphCtxMenu->addSeparator();
-            QMenu *pExportMenu = pCurGraphCtxMenu->addMenu("Export");
+            QMenu *pExportMenu = pCurGraphCtxMenu->addMenu(tr("Export"));
             {
                 pExportMenu->addAction(m_pMainFrame->m_pExportCurGraphDataToFile);
                 pExportMenu->addAction(m_pMainFrame->m_pCopyCurGraphDataAct);
@@ -148,9 +148,9 @@ void XPlaneMenus::createPOppCtxMenus()
 {
     XPlaneActions *pActions = m_pXPlane->m_pActions;
     //WOpp View Context Menu
-    m_pWOppCtxMenu = new QMenu("Context Menu", m_pMainFrame);
+    m_pWOppCtxMenu = new QMenu(tr("Context Menu"), m_pMainFrame);
     {
-        m_pCurrentPlaneCtxMenu = m_pWOppCtxMenu->addMenu("Active plane");
+        m_pCurrentPlaneCtxMenu = m_pWOppCtxMenu->addMenu(tr("Active plane"));
         {
             m_pCurrentPlaneCtxMenu->addAction(pActions->m_pEditPlaneAct);
             m_pCurrentPlaneCtxMenu->addAction(pActions->m_pEditPlaneDescriptionAct);
@@ -173,7 +173,7 @@ void XPlaneMenus::createPOppCtxMenus()
             m_pCurrentPlaneCtxMenu->addSeparator();
             m_pCurrentPlaneCtxMenu->addAction(pActions->m_pPlaneInertia);
             m_pCurrentPlaneCtxMenu->addSeparator();
-            QMenu *pExportMenu = m_pCurrentPlaneCtxMenu->addMenu("Export");
+            QMenu *pExportMenu = m_pCurrentPlaneCtxMenu->addMenu(tr("Export"));
             {
                 pExportMenu->addAction(pActions->m_pExporttoAVL);
                 pExportMenu->addAction(pActions->m_pExportPlaneToXML);
@@ -182,7 +182,7 @@ void XPlaneMenus::createPOppCtxMenus()
                 pExportMenu->addAction(pActions->m_pExportMeshtoSTL);
             }
             m_pCurrentPlaneCtxMenu->addSeparator();
-            QMenu *pAnalysisMenu = m_pCurrentPlaneCtxMenu->addMenu("Analyses");
+            QMenu *pAnalysisMenu = m_pCurrentPlaneCtxMenu->addMenu(tr("Analyses"));
             {
                 pAnalysisMenu->addAction(pActions->m_pDefineT123578Polar);
                 pAnalysisMenu->addAction(pActions->m_pDefineT6Polar);
@@ -197,7 +197,7 @@ void XPlaneMenus::createPOppCtxMenus()
             m_pCurrentPlaneCtxMenu->addSeparator();
             m_pCurrentPlaneCtxMenu->addAction(pActions->m_pImportPolarData);
             m_pCurrentPlaneCtxMenu->addSeparator();
-            QMenu *pPolarMenu = m_pCurrentPlaneCtxMenu->addMenu("Associated polars");
+            QMenu *pPolarMenu = m_pCurrentPlaneCtxMenu->addMenu(tr("Associated polars"));
             {
                 pPolarMenu->addAction(pActions->m_pShowPlaneWPlrs);
                 pPolarMenu->addAction(pActions->m_pHidePlaneWPlrs);
@@ -207,7 +207,7 @@ void XPlaneMenus::createPOppCtxMenus()
             }
 
             m_pCurrentPlaneCtxMenu->addSeparator();
-            QMenu *pPOppMenu = m_pCurrentPlaneCtxMenu->addMenu("Associated operating points");
+            QMenu *pPOppMenu = m_pCurrentPlaneCtxMenu->addMenu(tr("Associated operating points"));
             {
                 pPOppMenu->addAction(pActions->m_pShowPlaneWOpps);
                 pPOppMenu->addAction(pActions->m_pHidePlaneWOpps);
@@ -216,9 +216,9 @@ void XPlaneMenus::createPOppCtxMenus()
         }
         //m_pWOppCtxMenu->addMenu(m_pCurrentPlaneMenu);
         m_pWOppCtxMenu->addSeparator();
-        m_pCurWPlrCtxMenu = m_pWOppCtxMenu->addMenu("Active Polar");
+        m_pCurWPlrCtxMenu = m_pWOppCtxMenu->addMenu(tr("Active Polar"));
 //        m_pCurWPlrCtxMenu->setWindowFlags(Qt::Tool);
-        m_pCurWPlrCtxMenu->setWindowTitle("Active Polar");
+        m_pCurWPlrCtxMenu->setWindowTitle(tr("Active Polar"));
         {
             m_pCurWPlrCtxMenu->addAction(pActions->m_pEditWPolarDef);
             m_pCurWPlrCtxMenu->addAction(pActions->m_pEditExtraDrag);
@@ -230,7 +230,7 @@ void XPlaneMenus::createPOppCtxMenus()
             m_pCurWPlrCtxMenu->addAction(pActions->m_pResetCurWPolar);
             m_pCurWPlrCtxMenu->addAction(pActions->m_pShowOnlyCurPolar);
             m_pCurWPlrCtxMenu->addSeparator();
-            QMenu *pPOppMenu = m_pCurWPlrCtxMenu->addMenu("Associated operating points");
+            QMenu *pPOppMenu = m_pCurWPlrCtxMenu->addMenu(tr("Associated operating points"));
             {
                 pPOppMenu->addAction(pActions->m_pShowWPlrPOpps);
                 pPOppMenu->addAction(pActions->m_pHideAllWPlrOpps);
@@ -239,7 +239,7 @@ void XPlaneMenus::createPOppCtxMenus()
                 pPOppMenu->addAction(pActions->m_pShowWPlrOppsOnly);
             }
             m_pCurWPlrCtxMenu->addSeparator();
-            QMenu *pExportMenu = m_pCurWPlrCtxMenu->addMenu("Export data");
+            QMenu *pExportMenu = m_pCurWPlrCtxMenu->addMenu(tr("Export data"));
             {
                 pExportMenu->addAction(pActions->m_pExportCurWPolar);
                 pExportMenu->addAction(pActions->m_pCopyCurWPolarData);
@@ -251,10 +251,10 @@ void XPlaneMenus::createPOppCtxMenus()
 
         //m_pWOppCtxMenu->addMenu(m_pCurWPlrMenu);
         m_pWOppCtxMenu->addSeparator();
-        m_pCurPOppCtxMenu = m_pWOppCtxMenu->addMenu("Active operating point");
+        m_pCurPOppCtxMenu = m_pWOppCtxMenu->addMenu(tr("Active operating point"));
         {
             m_pCurPOppCtxMenu->addAction(pActions->m_pShowWOppProps);
-            QMenu *pExportMenu = m_pCurPOppCtxMenu->addMenu("Export data");
+            QMenu *pExportMenu = m_pCurPOppCtxMenu->addMenu(tr("Export data"));
             {
                 pExportMenu->addAction(pActions->m_pExportCurPOpp);
                 pExportMenu->addAction(pActions->m_pCopyCurPOppData);
@@ -264,7 +264,7 @@ void XPlaneMenus::createPOppCtxMenus()
         }
         //m_pWOppCtxMenu->addMenu(m_pCurWOppMenu);
         m_pWOppCtxMenu->addSeparator();
-        QMenu *pOpMenu = m_pWOppCtxMenu->addMenu("Operating points");
+        QMenu *pOpMenu = m_pWOppCtxMenu->addMenu(tr("Operating points"));
         {
             pOpMenu->addAction(pActions->m_pShowCurWOppOnly);
             pOpMenu->addAction(pActions->m_pShowAllWOpps);
@@ -273,7 +273,7 @@ void XPlaneMenus::createPOppCtxMenus()
         }
 
         m_pWOppCtxMenu->addSeparator();
-        QMenu *pCurGraphCtxMenu = m_pWOppCtxMenu->addMenu("Graph");
+        QMenu *pCurGraphCtxMenu = m_pWOppCtxMenu->addMenu(tr("Graph"));
         {
             pCurGraphCtxMenu->addAction(pActions->m_pWingSelection);
             pCurGraphCtxMenu->addAction(pActions->m_pShowTargetCurve);
@@ -283,7 +283,7 @@ void XPlaneMenus::createPOppCtxMenus()
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pResetCurGraphScales);
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pCurGraphDlgAct);
             pCurGraphCtxMenu->addSeparator();
-            QMenu *pExportMenu = pCurGraphCtxMenu->addMenu("Export");
+            QMenu *pExportMenu = pCurGraphCtxMenu->addMenu(tr("Export"));
             {
                 pExportMenu->addAction(m_pMainFrame->m_pExportCurGraphDataToFile);
                 pExportMenu->addAction(m_pMainFrame->m_pCopyCurGraphDataAct);
@@ -299,7 +299,7 @@ void XPlaneMenus::createPOppCtxMenus()
     }
 
     //WOpp View Context Menu
-    m_pWCpCtxMenu = new QMenu("Context Menu", m_pMainFrame);
+    m_pWCpCtxMenu = new QMenu(tr("Context Menu"), m_pMainFrame);
     {
         m_pWCpCtxMenu->addMenu(m_pCurrentPlaneMenu);
         m_pWCpCtxMenu->addSeparator();
@@ -308,13 +308,13 @@ void XPlaneMenus::createPOppCtxMenus()
         m_pWCpCtxMenu->addMenu(m_pCurPOppMenu);
 
         m_pWCpCtxMenu->addSeparator();
-        QMenu *pCurGraphCtxMenu = m_pWCpCtxMenu->addMenu("Graph");
+        QMenu *pCurGraphCtxMenu = m_pWCpCtxMenu->addMenu(tr("Graph"));
         {
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pResetGraphSplitter);
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pResetCurGraphScales);
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pCurGraphDlgAct);
             pCurGraphCtxMenu->addSeparator();
-            QMenu *pExportMenu = pCurGraphCtxMenu->addMenu("Export");
+            QMenu *pExportMenu = pCurGraphCtxMenu->addMenu(tr("Export"));
             {
                 pExportMenu->addAction(m_pMainFrame->m_pExportCurGraphDataToFile);
                 pExportMenu->addAction(m_pMainFrame->m_pCopyCurGraphDataAct);
@@ -330,7 +330,7 @@ void XPlaneMenus::createPOppCtxMenus()
     }
 
     //WTime View Context Menu
-    m_pWTimeCtxMenu = new QMenu("Context Menu", m_pMainFrame);
+    m_pWTimeCtxMenu = new QMenu(tr("Context Menu"), m_pMainFrame);
     {
         m_pWTimeCtxMenu->addMenu(m_pCurrentPlaneMenu);
         m_pWTimeCtxMenu->addSeparator();
@@ -338,13 +338,13 @@ void XPlaneMenus::createPOppCtxMenus()
         m_pWTimeCtxMenu->addSeparator();
         m_pWTimeCtxMenu->addMenu(m_pCurPOppMenu);
         m_pWTimeCtxMenu->addSeparator();
-        QMenu *pCurGraphCtxMenu = m_pWTimeCtxMenu->addMenu("Graph");
+        QMenu *pCurGraphCtxMenu = m_pWTimeCtxMenu->addMenu(tr("Graph"));
         {
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pResetGraphSplitter);
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pResetCurGraphScales);
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pCurGraphDlgAct);
             pCurGraphCtxMenu->addSeparator();
-            QMenu *pExportMenu = pCurGraphCtxMenu->addMenu("Export");
+            QMenu *pExportMenu = pCurGraphCtxMenu->addMenu(tr("Export"));
             {
                 pExportMenu->addAction(m_pMainFrame->m_pExportCurGraphDataToFile);
                 pExportMenu->addAction(m_pMainFrame->m_pCopyCurGraphDataAct);
@@ -365,7 +365,7 @@ void XPlaneMenus::createPOppCtxMenus()
 void XPlaneMenus::createPlaneSubMenus()
 {
     XPlaneActions *pActions = m_pXPlane->m_pActions;
-    m_pSubWingMenu = new QMenu("Wing");
+    m_pSubWingMenu = new QMenu(tr("Wing"));
     {
         m_pSubWingMenu->addAction(pActions->m_pEditWingDef);
 //        m_pSubWingMenu->addAction(pActions->m_pEditWingObject);
@@ -373,7 +373,7 @@ void XPlaneMenus::createPlaneSubMenus()
         m_pSubWingMenu->addAction(pActions->m_pTranslateWing);
         m_pSubWingMenu->addAction(pActions->m_pInertiaWing);
         m_pSubWingMenu->addSeparator();
-        QMenu *pWingExportMenu = m_pSubWingMenu->addMenu("Export");
+        QMenu *pWingExportMenu = m_pSubWingMenu->addMenu(tr("Export"));
         {
             pWingExportMenu->addAction(pActions->m_pExportWingXml);
             pWingExportMenu->addAction(pActions->m_pExportWingCAD);
@@ -384,7 +384,7 @@ void XPlaneMenus::createPlaneSubMenus()
         m_pSubWingMenu->addSeparator();
         m_pSubWingMenu->addAction(pActions->m_pPropsWing);
     }
-    m_pSubStabMenu = new QMenu("Elevator");
+    m_pSubStabMenu = new QMenu(tr("Elevator"));
     {
         m_pSubStabMenu->addAction(pActions->m_pEditStabDef);
 //        m_pSubStabMenu->addAction(pActions->m_pEditStabObject);
@@ -392,7 +392,7 @@ void XPlaneMenus::createPlaneSubMenus()
         m_pSubStabMenu->addAction(pActions->m_pTranslateStab);
         m_pSubStabMenu->addAction(pActions->m_pInertiaStab);
         m_pSubStabMenu->addSeparator();
-        QMenu *pStabExportMenu = m_pSubStabMenu->addMenu("Export");
+        QMenu *pStabExportMenu = m_pSubStabMenu->addMenu(tr("Export"));
         {
             pStabExportMenu->addAction(pActions->m_pExportStabXml);
             pStabExportMenu->addAction(pActions->m_pExportStabCAD);
@@ -403,7 +403,7 @@ void XPlaneMenus::createPlaneSubMenus()
         m_pSubStabMenu->addSeparator();
         m_pSubStabMenu->addAction(pActions->m_pPropsStab);
     }
-    m_pSubFinMenu = new QMenu("Fin");
+    m_pSubFinMenu = new QMenu(tr("Fin"));
     {
         m_pSubFinMenu->addAction(pActions->m_pEditFinDef);
 //        m_pSubFinMenu->addAction(pActions->m_pEditFinObject);
@@ -411,7 +411,7 @@ void XPlaneMenus::createPlaneSubMenus()
         m_pSubFinMenu->addAction(pActions->m_pTranslateFin);
         m_pSubFinMenu->addAction(pActions->m_pInertiaFin);
         m_pSubFinMenu->addSeparator();
-        QMenu *pFinExportMenu = m_pSubFinMenu->addMenu("Export");
+        QMenu *pFinExportMenu = m_pSubFinMenu->addMenu(tr("Export"));
         {
             pFinExportMenu->addAction(pActions->m_pExportFinXml);
             pFinExportMenu->addAction(pActions->m_pExportFinCAD);
@@ -422,7 +422,7 @@ void XPlaneMenus::createPlaneSubMenus()
         m_pSubFinMenu->addSeparator();
         m_pSubFinMenu->addAction(pActions->m_pPropsFin);
     }
-    m_pSubFuseMenu = new QMenu("Fuselage");
+    m_pSubFuseMenu = new QMenu(tr("Fuselage"));
     {
         m_pSubFuseMenu->addAction(pActions->m_pEditFuse);
         m_pSubFuseMenu->addAction(pActions->m_pEditFuseObject);
@@ -430,7 +430,7 @@ void XPlaneMenus::createPlaneSubMenus()
         m_pSubFuseMenu->addAction(pActions->m_pTranslateFuse);
         m_pSubFuseMenu->addAction(pActions->m_pInertiaFuse);
         m_pSubFuseMenu->addSeparator();
-        QMenu *pFuseExportMenu = m_pSubFuseMenu->addMenu("Export");
+        QMenu *pFuseExportMenu = m_pSubFuseMenu->addMenu(tr("Export"));
         {
             pFuseExportMenu->addAction(pActions->m_pExportFuseXml);
             pFuseExportMenu->addAction(pActions->m_pExportFuseCAD);
@@ -451,7 +451,7 @@ void XPlaneMenus::createMainBarMenus()
 {
     XPlaneActions *pActions = m_pXPlane->m_pActions;
 
-    m_pXPlaneViewMenu = m_pMainFrame->menuBar()->addMenu("&View");
+    m_pXPlaneViewMenu = m_pMainFrame->menuBar()->addMenu(tr("&View"));
     {
         m_pXPlaneViewMenu->addAction(pActions->m_pWOppAct);
         m_pXPlaneViewMenu->addAction(pActions->m_pWPolarAct);
@@ -467,10 +467,10 @@ void XPlaneMenus::createMainBarMenus()
         m_pXPlaneViewMenu->addAction(m_pMainFrame->m_pSaveViewToImageFileAct);
     }
 
-    m_pPlaneMenu = m_pMainFrame->menuBar()->addMenu("&Plane");
+    m_pPlaneMenu = m_pMainFrame->menuBar()->addMenu(tr("&Plane"));
     {
         m_pPlaneMenu->addAction(pActions->m_pDefinePlaneAct);
-        m_pCurrentPlaneMenu = m_pPlaneMenu->addMenu("Active plane");
+        m_pCurrentPlaneMenu = m_pPlaneMenu->addMenu(tr("Active plane"));
         {
             m_pCurrentPlaneMenu->addAction(pActions->m_pEditPlaneAct);
             m_pCurrentPlaneMenu->addAction(pActions->m_pEditPlaneDescriptionAct);
@@ -492,7 +492,7 @@ void XPlaneMenus::createMainBarMenus()
             m_pCurrentPlaneMenu->addSeparator();
             m_pCurrentPlaneMenu->addAction(pActions->m_pPlaneInertia);
             m_pCurrentPlaneMenu->addSeparator();
-            QMenu *pExportMenu = m_pCurrentPlaneMenu->addMenu("Export");
+            QMenu *pExportMenu = m_pCurrentPlaneMenu->addMenu(tr("Export"));
             {
                 pExportMenu->addAction(pActions->m_pExporttoAVL);
                 pExportMenu->addAction(pActions->m_pExportPlaneToXML);
@@ -501,7 +501,7 @@ void XPlaneMenus::createMainBarMenus()
                 pExportMenu->addAction(pActions->m_pExportMeshtoSTL);
             }
             m_pCurrentPlaneMenu->addSeparator();
-            QMenu *pAnalysisMenu = m_pCurrentPlaneMenu->addMenu("Analyses");
+            QMenu *pAnalysisMenu = m_pCurrentPlaneMenu->addMenu(tr("Analyses"));
             {
                 pAnalysisMenu->addAction(pActions->m_pDefineT123578Polar);
                 pAnalysisMenu->addAction(pActions->m_pDefineT6Polar);
@@ -516,7 +516,7 @@ void XPlaneMenus::createMainBarMenus()
             m_pCurrentPlaneMenu->addSeparator();
             m_pCurrentPlaneMenu->addAction(pActions->m_pImportPolarData);
             m_pCurrentPlaneMenu->addSeparator();
-            QMenu *pPolarMenu = m_pCurrentPlaneMenu->addMenu("Associated polars");
+            QMenu *pPolarMenu = m_pCurrentPlaneMenu->addMenu(tr("Associated polars"));
             {
                 pPolarMenu->addAction(pActions->m_pShowPlaneWPlrs);
                 pPolarMenu->addAction(pActions->m_pHidePlaneWPlrs);
@@ -525,7 +525,7 @@ void XPlaneMenus::createMainBarMenus()
                 pPolarMenu->addAction(pActions->m_pShowPlaneWPlrsOnly);
             }
             m_pCurrentPlaneMenu->addSeparator();
-            QMenu *pPOppMenu = m_pCurrentPlaneMenu->addMenu(("Associated operating points"));
+            QMenu *pPOppMenu = m_pCurrentPlaneMenu->addMenu(tr("Associated operating points"));
             {
                 pPOppMenu->addAction(pActions->m_pShowPlaneWOpps);
                 pPOppMenu->addAction(pActions->m_pHidePlaneWOpps);
@@ -533,16 +533,16 @@ void XPlaneMenus::createMainBarMenus()
             }
         }
         m_pPlaneMenu->addSeparator();
-        QMenu *pImportMenu = m_pPlaneMenu->addMenu("Import");
+        QMenu *pImportMenu = m_pPlaneMenu->addMenu(tr("Import"));
         {
             pImportMenu->addAction(pActions->m_pImportPlaneFromXml);
             pImportMenu->addAction(pActions->m_pSTLPlaneAct);
         }
     }
 
-    m_pXPlaneWPlrMenu = m_pMainFrame->menuBar()->addMenu("&Polars");
+    m_pXPlaneWPlrMenu = m_pMainFrame->menuBar()->addMenu(tr("&Polars"));
     {
-        m_pCurWPlrMenu = m_pXPlaneWPlrMenu->addMenu("Active polar");
+        m_pCurWPlrMenu = m_pXPlaneWPlrMenu->addMenu(tr("Active polar"));
         {
             m_pCurWPlrMenu->addAction(pActions->m_pEditWPolarDef);
             m_pCurWPlrMenu->addAction(pActions->m_pEditExtraDrag);
@@ -554,7 +554,7 @@ void XPlaneMenus::createMainBarMenus()
             m_pCurWPlrMenu->addAction(pActions->m_pResetCurWPolar);
             m_pCurWPlrMenu->addAction(pActions->m_pShowOnlyCurPolar);
             m_pCurWPlrMenu->addSeparator();
-            QMenu *pPOppMenu = m_pCurWPlrMenu->addMenu("Associated operating points");
+            QMenu *pPOppMenu = m_pCurWPlrMenu->addMenu(tr("Associated operating points"));
             {
                 pPOppMenu->addAction(pActions->m_pShowWPlrPOpps);
                 pPOppMenu->addAction(pActions->m_pHideAllWPlrOpps);
@@ -563,7 +563,7 @@ void XPlaneMenus::createMainBarMenus()
                 pPOppMenu->addAction(pActions->m_pShowWPlrOppsOnly);
             }
             m_pCurWPlrMenu->addSeparator();
-            QMenu *pExportMenu = m_pCurWPlrMenu->addMenu("Export data");
+            QMenu *pExportMenu = m_pCurWPlrMenu->addMenu(tr("Export data"));
             {
                 pExportMenu->addAction(pActions->m_pExportCurWPolar);
                 pExportMenu->addAction(pActions->m_pCopyCurWPolarData);
@@ -574,7 +574,7 @@ void XPlaneMenus::createMainBarMenus()
             m_pCurWPlrMenu->addAction(pActions->m_pShowPolarProps);
         }
 
-        QMenu *pAllPolars = m_pXPlaneWPlrMenu->addMenu("All polars");
+        QMenu *pAllPolars = m_pXPlaneWPlrMenu->addMenu(tr("All polars"));
         {
             pAllPolars->addAction(pActions->m_pHideAllWPlrs);
             pAllPolars->addAction(pActions->m_pShowAllWPlrs);
@@ -585,12 +585,12 @@ void XPlaneMenus::createMainBarMenus()
         m_pXPlaneWPlrMenu->addAction(pActions->m_pImportPolarData);
     }
 
-    m_pXPlaneWOppMenu = m_pMainFrame->menuBar()->addMenu("&Operating point");
+    m_pXPlaneWOppMenu = m_pMainFrame->menuBar()->addMenu(tr("&Operating point"));
     {
-        m_pCurPOppMenu = m_pXPlaneWOppMenu->addMenu("Active operating point");
+        m_pCurPOppMenu = m_pXPlaneWOppMenu->addMenu(tr("Active operating point"));
         {
             m_pCurPOppMenu->addAction(pActions->m_pShowWOppProps);
-            QMenu *pExportMenu = m_pCurPOppMenu->addMenu("Export data");
+            QMenu *pExportMenu = m_pCurPOppMenu->addMenu(tr("Export data"));
             {
                 pExportMenu->addAction(pActions->m_pExportCurPOpp);
                 pExportMenu->addAction(pActions->m_pCopyCurPOppData);
@@ -598,7 +598,7 @@ void XPlaneMenus::createMainBarMenus()
             m_pCurPOppMenu->addAction(pActions->m_pDeleteCurWOpp);
         }
         m_pXPlaneWOppMenu->addSeparator();
-        QMenu *pOpMenu = m_pXPlaneWOppMenu->addMenu("Operating points");
+        QMenu *pOpMenu = m_pXPlaneWOppMenu->addMenu(tr("Operating points"));
         {
             pOpMenu->addAction(pActions->m_pShowCurWOppOnly);
             pOpMenu->addAction(pActions->m_pShowAllWOpps);
@@ -611,7 +611,7 @@ void XPlaneMenus::createMainBarMenus()
     }
 
     //XPlane Analysis Menu
-    m_pXPlaneAnalysisMenu  = m_pMainFrame->menuBar()->addMenu("&Analysis");
+    m_pXPlaneAnalysisMenu  = m_pMainFrame->menuBar()->addMenu(tr("&Analysis"));
     {
         m_pXPlaneAnalysisMenu->addAction(pActions->m_pDefineT123578Polar);
         m_pXPlaneAnalysisMenu->addAction(pActions->m_pDefineT6Polar);
@@ -629,7 +629,7 @@ void XPlaneMenus::createMainBarMenus()
         m_pXPlaneAnalysisMenu->addAction(pActions->m_pShowAnalysisWindow);
         m_pXPlaneAnalysisMenu->addAction(m_pMainFrame->m_pViewLogFile);
         m_pXPlaneAnalysisMenu->addSeparator();
-        QMenu *pMeshMenu = m_pXPlaneAnalysisMenu->addMenu("Mesh");
+        QMenu *pMeshMenu = m_pXPlaneAnalysisMenu->addMenu(tr("Mesh"));
         {
             pMeshMenu->addAction(pActions->m_pMeshInfo);
             pMeshMenu->addAction(pActions->m_pConnectPanels);

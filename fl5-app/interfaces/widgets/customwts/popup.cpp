@@ -55,7 +55,7 @@ void PopUp::setupLayout()
         QPalette palette;
         m_plabMessage->setAutoFillBackground(true);
         m_plabMessage->setContentsMargins(5,5,5,5);
-        m_plabMessage->setText("A toast popup\n with useful information");
+        m_plabMessage->setText(tr("A toast popup\n with useful information"));
     }
     pMainLayout->addWidget(m_plabMessage);
     setLayout(pMainLayout);

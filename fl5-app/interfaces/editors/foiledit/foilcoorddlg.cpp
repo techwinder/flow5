@@ -42,7 +42,7 @@ QByteArray FoilCoordDlg::s_HSplitterSizes;
 
 FoilCoordDlg::FoilCoordDlg(QWidget *pParent) : FoilDlg(pParent)
 {
-    setWindowTitle("Foil coordinates");
+    setWindowTitle(tr("Foil coordinates"));
     setupLayout();
 }
 

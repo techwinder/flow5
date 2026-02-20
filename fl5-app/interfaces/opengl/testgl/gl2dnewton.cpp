@@ -118,7 +118,7 @@ gl2dNewton::gl2dNewton(QWidget *pParent) : gl2dView(pParent)
             {
                 QLabel *plabImgWidth = new QLabel("Image size=");
                 QLabel *plabTimes = new QLabel(TIMESch);
-                QLabel *plabPixel = new QLabel("pixels");
+                QLabel *plabPixel = new QLabel(tr("pixels"));
                 pWidthLayout->addWidget(plabImgWidth);
                 pWidthLayout->addWidget(m_pieWidth);
                 pWidthLayout->addWidget(plabTimes);
@@ -128,7 +128,7 @@ gl2dNewton::gl2dNewton(QWidget *pParent) : gl2dView(pParent)
             }
 
             QLabel *pRefLink = new QLabel;
-            pRefLink->setText("Inspired by <a href=https://youtu.be/-RdOwhmqP5s>3Blue1Brown's YouTube video</a>");
+            pRefLink->setText(tr("Inspired by <a href=https://youtu.be/-RdOwhmqP5s>3Blue1Brown's YouTube video</a>"));
             pRefLink->setOpenExternalLinks(true);
             pRefLink->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
             pRefLink->setAlignment(Qt::AlignVCenter| Qt::AlignLeft);

@@ -64,7 +64,7 @@ XPlane *LLTAnalysisDlg::s_pXPlane = nullptr;
 
 LLTAnalysisDlg::LLTAnalysisDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("LLT Analysis");
+    setWindowTitle(tr("LLT Analysis"));
 
     setupLayout();
 
@@ -153,13 +153,13 @@ void LLTAnalysisDlg::setupLayout()
                 m_ppto = new PlainTextOutput;
                 QHBoxLayout *pctrlLayout = new QHBoxLayout;
                 {
-                    m_ppbClearCurves = new QPushButton("Clear curves");
+                    m_ppbClearCurves = new QPushButton(tr("Clear curves"));
                     connect(m_ppbClearCurves, SIGNAL(clicked()), SLOT(onClearCurves()));
 
-                    m_ppbCancel = new QPushButton("Close");
+                    m_ppbCancel = new QPushButton(tr("Close"));
                     connect(m_ppbCancel, SIGNAL(clicked()), SLOT(onCancelAnalysis()));
 
-                    m_pchKeepOpenOnErrors = new QCheckBox("Keep this window opened on errors");
+                    m_pchKeepOpenOnErrors = new QCheckBox(tr("Keep this window opened on errors"));
                     pctrlLayout->addWidget(m_pchKeepOpenOnErrors);
                     pctrlLayout->addStretch();
                     pctrlLayout->addWidget(m_ppbClearCurves);
@@ -227,16 +227,16 @@ void LLTAnalysisDlg::onTaskFinished()
     outputMessage(strong);
     if(m_pLLTTask->isCancelled())
     {
-        strong = "Analysis cancelled\n\n";
+        strong = tr("Analysis cancelled\n\n");
     }
     else if (!m_pLLTTask->hasErrors())
-        strong = "LLT analysis completed successfully\n\n";
+        strong = tr("LLT analysis completed successfully\n\n");
     else if (m_pLLTTask->hasErrors())
-        strong = "LLT analysis completed ... Errors encountered\n\n";
+        strong = tr("LLT analysis completed ... Errors encountered\n\n");
     outputMessage(strong);
 
     m_bHasErrors = m_pLLTTask->hasErrors();
-    m_ppbCancel->setText("Close");
+    m_ppbCancel->setText(tr("Close"));
 
     emit analysisFinished(m_pLLTTask->wPolar());
 
@@ -249,7 +249,7 @@ void LLTAnalysisDlg::cleanUp()
     QString strange;
 
     m_bFinished = true;
-    strange = "\n_________\nAnalysis completed";
+    strange = "\n_________\n" + tr("Analysis completed");
 
     strange+= "\n";
 
@@ -275,7 +275,7 @@ void LLTAnalysisDlg::cleanUp()
 
     delete m_pLLTTask;
     m_pLLTTask = nullptr;
-    m_ppbCancel->setText("Close");
+    m_ppbCancel->setText(tr("Close"));
     m_ppbCancel->setFocus();
 }
 
@@ -403,7 +403,7 @@ void LLTAnalysisDlg::analyze()
 
     if(!pWing) return;
 
-    m_ppbCancel->setText("Cancel");
+    m_ppbCancel->setText(tr("Cancel"));
     m_bFinished = false;
     m_pLastPOpp = nullptr;
 

@@ -43,7 +43,11 @@
 #include <QDesktopServices>
 #include <QFileDialog>
 
+#ifdef NO_GMSH
+#define GMSH_API_VERSION "Disabled"
+#else
 #include <gmsh.h>
+#endif
 
 
 #include <core/displayoptions.h>
@@ -249,12 +253,11 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
 
     if(oglversion<2)
     {
-        QString strong = "flow5 requires OpenGL 3.3 or greater.\n";
-        QString strange;
-        strange = QString::asprintf("Your system provides by default OpenGL %d.%d",
-                                    QSurfaceFormat::defaultFormat().majorVersion(),
-                                    QSurfaceFormat::defaultFormat().minorVersion());
-        QMessageBox::warning(this, "Warning", strong+strange);
+        QString strong = tr("flow5 requires OpenGL 3.3 or greater.\n");
+        QString strange = tr("Your system provides by default OpenGL %1.%2")
+                                    .arg(QSurfaceFormat::defaultFormat().majorVersion())
+                                    .arg(QSurfaceFormat::defaultFormat().minorVersion());
+        QMessageBox::warning(this, tr("Warning"), strong+strange);
     }
 
     setDefaultStaticFonts();
@@ -305,16 +308,16 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
 
     displayMessage(strange + EOLch, false);
 
-    strange = "Directories:\n";
-    strange += "   Last used :       " + SaveOptions::lastDirName() + EOLch;
-    strange += "   Foil .dat files:  " + SaveOptions::datFoilDirName() + EOLch;
-    strange += "   Polar .plr files: " + SaveOptions::plrPolarDirName() + EOLch;
-    strange += "   Plane .xml files: " + SaveOptions::xmlPlaneDirName() + EOLch;
-    strange += "   Polar .xml files: " + SaveOptions::xmlWPolarDirName() + EOLch;
-    strange += "   CAD files:        " + SaveOptions::CADDirName() + EOLch;
-    strange += "   STL files:        " + SaveOptions::STLDirName() + EOLch;
-    strange += "   Temporary files:  " + SaveOptions::tempDirName() + EOLch;
-    strange += "   File exports:     " + SaveOptions::lastExportDirName() + EOLch;
+    strange = tr("Directories:") + "\n";
+    strange += tr("   Last used :       ") + SaveOptions::lastDirName() + EOLch;
+    strange += tr("   Foil .dat files:  ") + SaveOptions::datFoilDirName() + EOLch;
+    strange += tr("   Polar .plr files: ") + SaveOptions::plrPolarDirName() + EOLch;
+    strange += tr("   Plane .xml files: ") + SaveOptions::xmlPlaneDirName() + EOLch;
+    strange += tr("   Polar .xml files: ") + SaveOptions::xmlWPolarDirName() + EOLch;
+    strange += tr("   CAD files:        ") + SaveOptions::CADDirName() + EOLch;
+    strange += tr("   STL files:        ") + SaveOptions::STLDirName() + EOLch;
+    strange += tr("   Temporary files:  ") + SaveOptions::tempDirName() + EOLch;
+    strange += tr("   File exports:     ") + SaveOptions::lastExportDirName() + EOLch;
 
     displayMessage(strange + EOLch, false);
 
@@ -338,9 +341,11 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
 
     connectSignals();
 
+#ifndef NO_GMSH
     gmsh::initialize();
     gmsh::option::setNumber("General.Terminal", 0);  
     gmsh::option::setNumber("Geometry.OCCParallel", 1.0);
+#endif
 }
 
 
@@ -419,7 +424,10 @@ void MainFrame::connectSignals()
 
 MainFrame::~MainFrame()
 {
+#ifndef NO_GMSH
     gmsh::finalize();
+#endif
+
 
     if(xfl::g_pTraceFile) xfl::g_pTraceFile->close();
 
@@ -515,14 +523,14 @@ void MainFrame::closeEvent(QCloseEvent *pEvent)
 {
     if(m_pXPlane->isAnalysisRunning())
     {
-        QMessageBox::warning(this, "Exit", "Please wait for the analysis to finish before closing");
+        QMessageBox::warning(this, tr("Exit"), tr("Please wait for the analysis to finish before closing"));
         pEvent->ignore();
         return;
     }
 
     if(!s_bSaved)
     {
-        int resp = QMessageBox::question(this, "Exit", "Save the project before closing?",
+        int resp = QMessageBox::question(this, tr("Exit"), tr("Save the project before closing?"),
                                          QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                                          QMessageBox::Yes);
         if(resp == QMessageBox::Yes)
@@ -599,89 +607,89 @@ void MainFrame::closeEvent(QCloseEvent *pEvent)
 
 void MainFrame::createMainFrameActions()
 {
-    m_pNewProjectAct = new QAction(QIcon(":/icons/new.png"), "New project", this);
+    m_pNewProjectAct = new QAction(QIcon(":/icons/new.png"), tr("New project"), this);
     m_pNewProjectAct->setShortcut(QKeySequence::New);
-    m_pNewProjectAct->setStatusTip("Save and close the current project, create a new project");
+    m_pNewProjectAct->setStatusTip(tr("Save and close the current project, create a new project"));
     connect(m_pNewProjectAct, SIGNAL(triggered()), SLOT(onNewProject()));
 
-    m_pCloseProjectAct = new QAction(QIcon(":/icons/new.png"), "Close the project", this);
-    m_pCloseProjectAct->setStatusTip("Save and close the current project");
+    m_pCloseProjectAct = new QAction(QIcon(":/icons/new.png"), tr("Close the project"), this);
+    m_pCloseProjectAct->setStatusTip(tr("Save and close the current project"));
     connect(m_pCloseProjectAct, SIGNAL(triggered()), SLOT(onCloseProject()));
 
-    m_pOpenAct = new QAction(QIcon(":/icons/open.png"), "Open a project", this);
+    m_pOpenAct = new QAction(QIcon(":/icons/open.png"), tr("Open a project"), this);
     m_pOpenAct->setShortcut(QKeySequence::Open);
-    m_pOpenAct->setStatusTip("Open an existing project file");
+    m_pOpenAct->setStatusTip(tr("Open an existing project file"));
     connect(m_pOpenAct, SIGNAL(triggered()), SLOT(onLoadProjectFile()));
 
-    m_pSaveAct = new QAction(QIcon(":/icons/save.png"), "Save", this);
+    m_pSaveAct = new QAction(QIcon(":/icons/save.png"), tr("Save"), this);
     m_pSaveAct->setShortcut(QKeySequence::Save);
-    m_pSaveAct->setStatusTip("Save the project to disk");
+    m_pSaveAct->setStatusTip(tr("Save the project to disk"));
     connect(m_pSaveAct, SIGNAL(triggered()), SLOT(onSaveProject()));
 
-    m_pLoadFoil = new QAction(QIcon(":/icons/OnLoadFoils.png"), "Load foil(s)", this);
+    m_pLoadFoil = new QAction(QIcon(":/icons/OnLoadFoils.png"), tr("Load foil(s)"), this);
     m_pLoadFoil->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_F));
-    m_pLoadFoil->setStatusTip("Load foil(s) from .dat file");
+    m_pLoadFoil->setStatusTip(tr("Load foil(s) from .dat file"));
     connect(m_pLoadFoil, SIGNAL(triggered()), SLOT(onLoadFoilFile()));
 
-    m_pLoadPlrFile = new QAction("Load polar file(s)", this);
-    m_pLoadPlrFile->setStatusTip("Load a .plr file");
+    m_pLoadPlrFile = new QAction(tr("Load polar file(s)"), this);
+    m_pLoadPlrFile->setStatusTip(tr("Load a .plr file"));
     connect(m_pLoadPlrFile, SIGNAL(triggered()), SLOT(onLoadPlrFile()));
 
-    m_pInsertAct = new QAction("Insert project", this);
-    m_pInsertAct->setStatusTip("<p>Insert an existing project in the current project</p>");
+    m_pInsertAct = new QAction(tr("Insert project"), this);
+    m_pInsertAct->setStatusTip(tr("<p>Insert an existing project in the current project</p>"));
     m_pInsertAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_I));
     connect(m_pInsertAct, SIGNAL(triggered()), SLOT(onInsertProject()));
 
-    m_pNoAppAct = new QAction("Close all", this);
+    m_pNoAppAct = new QAction(tr("Close all"), this);
     m_pNoAppAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_9));
-    m_pNoAppAct->setStatusTip("<p>Close all modules, but do not unload the active project</p>");
+    m_pNoAppAct->setStatusTip(tr("<p>Close all modules, but do not unload the active project</p>"));
     connect(m_pNoAppAct, SIGNAL(triggered()), SLOT(onSetNoApp()));
 
-    m_pXDirectAct = new QAction("Foil design", this);
+    m_pXDirectAct = new QAction(tr("Foil design"), this);
     m_pXDirectAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_5));
-    m_pXDirectAct->setStatusTip("<p>Open the Foil direct analysis module</p>");
+    m_pXDirectAct->setStatusTip(tr("<p>Open the Foil direct analysis module</p>"));
     connect(m_pXDirectAct, SIGNAL(triggered()), SLOT(onXDirect()));
 
-    m_pXPlaneAct = new QAction("Plane design", this);
+    m_pXPlaneAct = new QAction(tr("Plane design"), this);
     m_pXPlaneAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_6));
-    m_pXPlaneAct->setStatusTip("<p>Open the Wing/plane design and analysis module</p>");
+    m_pXPlaneAct->setStatusTip(tr("<p>Open the Wing/plane design and analysis module</p>"));
     connect(m_pXPlaneAct, SIGNAL(triggered()), SLOT(onXPlane()));
 
-    m_pXSailAct = new QAction("Sail design", this);
+    m_pXSailAct = new QAction(tr("Sail design"), this);
     m_pXSailAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_7));
-    m_pXSailAct->setStatusTip("Open the sail design and analysis module");
+    m_pXSailAct->setStatusTip(tr("Open the sail design and analysis module"));
     connect(m_pXSailAct, SIGNAL(triggered()), SLOT(onXSail()));
 
-    m_pLoadLastProjectAct = new QAction("Load last project", this);
+    m_pLoadLastProjectAct = new QAction(tr("Load last project"), this);
     m_pLoadLastProjectAct->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_O));
-    m_pLoadLastProjectAct->setStatusTip("Loads the last saved project");
+    m_pLoadLastProjectAct->setStatusTip(tr("Loads the last saved project"));
     connect(m_pLoadLastProjectAct, SIGNAL(triggered()), SLOT(onLoadLastProject()));
 
-    m_pSaveProjectAsAct = new QAction("Save project as", this);
+    m_pSaveProjectAsAct = new QAction(tr("Save project as"), this);
     m_pSaveProjectAsAct->setShortcut(QKeySequence::SaveAs);
-    m_pSaveProjectAsAct->setStatusTip("Save the current project under a new name");
+    m_pSaveProjectAsAct->setStatusTip(tr("Save the current project under a new name"));
     connect(m_pSaveProjectAsAct, SIGNAL(triggered()), SLOT(onSaveProjectAs()));
 
-    m_pPreferencesAct = new QAction("Preferences", this);
-    m_pPreferencesAct->setStatusTip("Set default preferences for this application");
+    m_pPreferencesAct = new QAction(tr("Preferences"), this);
+    m_pPreferencesAct->setStatusTip(tr("Set default preferences for this application"));
     connect(m_pPreferencesAct, SIGNAL(triggered(bool)), SLOT(onPreferences()));
 
-    m_pRestoreToolbarsAct     = new QAction("Restore toolbars", this);
-    m_pRestoreToolbarsAct->setStatusTip("Restores the toolbars to their original state");
+    m_pRestoreToolbarsAct     = new QAction(tr("Restore toolbars"), this);
+    m_pRestoreToolbarsAct->setStatusTip(tr("Restores the toolbars to their original state"));
     connect(m_pRestoreToolbarsAct, SIGNAL(triggered()), SLOT(onRestoreToolbars()));
 
-    m_pSaveViewToImageFileAct = new QAction("Save view to image file", this);
+    m_pSaveViewToImageFileAct = new QAction(tr("Save view to image file"), this);
     m_pSaveViewToImageFileAct->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_I));
-    m_pSaveViewToImageFileAct->setStatusTip("Saves the current view to a file on disk");
+    m_pSaveViewToImageFileAct->setStatusTip(tr("Saves the current view to a file on disk"));
     connect(m_pSaveViewToImageFileAct, SIGNAL(triggered()), SLOT(onSaveViewToImageFile()));
 
-    m_pExecScript     = new QAction("Execute script", this);
+    m_pExecScript     = new QAction(tr("Execute script"), this);
     m_pExecScript->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_X));
-    m_pExecScript->setStatusTip("Executes a set of foil and plane analysis defined in an xml file");
+    m_pExecScript->setStatusTip(tr("Executes a set of foil and plane analysis defined in an xml file"));
     connect(m_pExecScript, SIGNAL(triggered()), SLOT(onExecuteScript()));
 
-    m_pResetSettingsAct = new QAction("Restore default settings", this);
-    m_pResetSettingsAct->setStatusTip("will revert to default settings at the next session");
+    m_pResetSettingsAct = new QAction(tr("Restore default settings"), this);
+    m_pResetSettingsAct->setStatusTip(tr("will revert to default settings at the next session"));
     connect(m_pResetSettingsAct, SIGNAL(triggered()), SLOT(onResetSettings()));
 
 
@@ -692,60 +700,60 @@ void MainFrame::createMainFrameActions()
         connect(m_pRecentFileActs[i], SIGNAL(triggered()), SLOT(onLoadRecentFile()));
     }
 
-    m_pExportCurGraphDataToFile = new QAction("to file", this);
-    m_pExportCurGraphDataToFile->setStatusTip("Export the current graph data to a text file");
+    m_pExportCurGraphDataToFile = new QAction(tr("to file"), this);
+    m_pExportCurGraphDataToFile->setStatusTip(tr("Export the current graph data to a text file"));
     connect(m_pExportCurGraphDataToFile, SIGNAL(triggered()), SLOT(onExportCurGraphDataToFile()));
 
-    m_pExportGraphToSvgFile = new QAction("to SVG file", this);
+    m_pExportGraphToSvgFile = new QAction(tr("to SVG file"), this);
     connect(m_pExportGraphToSvgFile, SIGNAL(triggered()), SLOT(onExportCurGraphToSVG()));
 
-    m_pCopyCurGraphDataAct = new QAction("to clipboard", this);
-    m_pCopyCurGraphDataAct->setStatusTip("Copies the curve data to the clipboard, for pasting in an external editor or a spreadsheet");
+    m_pCopyCurGraphDataAct = new QAction(tr("to clipboard"), this);
+    m_pCopyCurGraphDataAct->setStatusTip(tr("Copies the curve data to the clipboard, for pasting in an external editor or a spreadsheet"));
     connect(m_pCopyCurGraphDataAct, SIGNAL(triggered()), SLOT(onCopyCurGraphData()));
 
-    m_pResetCurGraphScales = new QAction(QIcon(":/icons/OnResetGraphScale.png"), "Reset scales \tR", this);
-    m_pResetCurGraphScales->setStatusTip("Restores the graph's x and y scales");
+    m_pResetCurGraphScales = new QAction(QIcon(":/icons/OnResetGraphScale.png"), tr("Reset scales \tR"), this);
+    m_pResetCurGraphScales->setStatusTip(tr("Restores the graph's x and y scales"));
     connect(m_pResetCurGraphScales, SIGNAL(triggered()), SLOT(onResetCurGraphScales()));
 
-    m_pResetGraphSplitter = new QAction("Reset splitter sizes", this);
-    m_pResetGraphSplitter->setStatusTip("Resets the split splizes to their default values");
+    m_pResetGraphSplitter = new QAction(tr("Reset splitter sizes"), this);
+    m_pResetGraphSplitter->setStatusTip(tr("Resets the split splizes to their default values"));
     m_pResetGraphSplitter->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_R));
     connect(m_pResetGraphSplitter, SIGNAL(triggered()), SLOT(onResetGraphSplitter()));
 
-    m_pShowGraphLegend = new QAction("Show legend", this);
+    m_pShowGraphLegend = new QAction(tr("Show legend"), this);
     m_pShowGraphLegend->setCheckable(true);
-    m_pShowGraphLegend->setStatusTip("Toggle the in-graph legend display");
+    m_pShowGraphLegend->setStatusTip(tr("Toggle the in-graph legend display"));
     connect(m_pShowGraphLegend, SIGNAL(triggered()), SLOT(onShowGraphLegend()));
 
-    m_pCurGraphDlgAct = new QAction("Settings\tG", this);
+    m_pCurGraphDlgAct = new QAction(tr("Settings\tG"), this);
     connect(m_pCurGraphDlgAct, SIGNAL(triggered()), SLOT(onCurGraphSettings()));
 
-    m_pOpenGraphInNewWindow = new QAction("Open in new window", this);
+    m_pOpenGraphInNewWindow = new QAction(tr("Open in new window"), this);
     m_pOpenGraphInNewWindow->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_W));
     connect(m_pOpenGraphInNewWindow, SIGNAL(triggered()), SLOT(onOpenGraphInNewWindow()));
 
-    m_pFastGraphAct = new QAction("Fast graph", this);
+    m_pFastGraphAct = new QAction(tr("Fast graph"), this);
     m_pFastGraphAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_G));
     connect(m_pFastGraphAct, SIGNAL(triggered()), SLOT(onFastGraph()));
 
-    m_pShowLogWindow = new QAction("Show log window", this);
+    m_pShowLogWindow = new QAction(tr("Show log window"), this);
     m_pShowLogWindow->setShortcut(QKeySequence(Qt::CTRL | Qt::ALT | Qt::Key_M));
     connect(m_pShowLogWindow, SIGNAL(triggered()), SLOT(onShowLogWindow()));
 
-    m_pExitAct = new QAction("Exit", this);
+    m_pExitAct = new QAction(tr("Exit"), this);
     m_pExitAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_Q));
-    m_pExitAct->setStatusTip("Exit the application");
+    m_pExitAct->setStatusTip(tr("Exit the application"));
     connect(m_pExitAct, SIGNAL(triggered()), SLOT(close()));
 
-    m_pOpenGLAct = new QAction("OpenGL settings", this);
+    m_pOpenGLAct = new QAction(tr("OpenGL settings"), this);
     m_pOpenGLAct->setShortcut(QKeySequence(Qt::CTRL |  Qt::ALT | Qt::Key_O));
     connect(m_pOpenGLAct, SIGNAL(triggered()), SLOT(onOpenGLInfo()));
 
-    m_pViewLogFile = new QAction("View last log file", this);
+    m_pViewLogFile = new QAction(tr("View last log file"), this);
     m_pViewLogFile->setShortcut(Qt::Key_L);
     connect(m_pViewLogFile, SIGNAL(triggered()), SLOT(onLogFile()));
 
-    m_pViewTraceFile = new QAction("View trace file", this);
+    m_pViewTraceFile = new QAction(tr("View trace file"), this);
     m_pViewTraceFile->setShortcut(QKeySequence(Qt::ALT | Qt::Key_T));
     connect(m_pViewTraceFile, SIGNAL(triggered()), SLOT(onTraceFile()));
 }
@@ -762,7 +770,7 @@ void MainFrame::createDockWindows()
 
     m_pCpViewWt    = new CpViewWt(this);
     m_pCpGraphCtrl = new CpGraphCtrls(this, m_pXPlane, m_pXSail);
-    m_pdwCp3d = new QDockWidget("3d Cp graph", this);
+    m_pdwCp3d = new QDockWidget(tr("3d Cp graph"), this);
     m_pdwCp3d->setWidget(m_pCpGraphCtrl);
     m_pdwCp3d->setObjectName(m_pdwCp3d->windowTitle());
     addDockWidget(Qt::RightDockWidgetArea, m_pdwCp3d);
@@ -810,17 +818,17 @@ void MainFrame::createXSailDockWindows()
     m_pXSailTiles->saveActiveSet();
 
 
-    m_pdwXSail = new QDockWidget("Boat analysis", this);
+    m_pdwXSail = new QDockWidget(tr("Boat analysis"), this);
     m_pdwXSail->setObjectName(m_pdwXSail->windowTitle());
     addDockWidget(Qt::RightDockWidgetArea, m_pdwXSail);
     m_pdwXSail->setWidget(m_pXSail->m_pAnalysisCtrls);
 
-    m_pdwXSail3dCtrls = new QDockWidget("Sail 3d controls", this);
+    m_pdwXSail3dCtrls = new QDockWidget(tr("Sail 3d controls"), this);
     m_pdwXSail3dCtrls->setObjectName(m_pdwXSail3dCtrls->windowTitle());
     addDockWidget(Qt::RightDockWidgetArea, m_pdwXSail3dCtrls);
     m_pdwXSail3dCtrls->setWidget(m_pXSail->m_pgl3dControls);
 
-    m_pdwBoatTree = new QDockWidget("Boat object explorer", this);
+    m_pdwBoatTree = new QDockWidget(tr("Boat object explorer"), this);
     m_pdwBoatTree->setObjectName(m_pdwBoatTree->windowTitle());
     addDockWidget(Qt::LeftDockWidgetArea, m_pdwBoatTree);
     m_pdwBoatTree->setWidget(m_pXSail->m_pBoatExplorer);
@@ -860,7 +868,7 @@ void MainFrame::createXDirectDockWindows()
     m_pDFoilWt->setXDirect(m_pXDirect);
     m_pXDirect->m_pDFoilWt = m_pDFoilWt;
 
-    m_pdwXDirect = new QDockWidget("Analysis 2d", this);
+    m_pdwXDirect = new QDockWidget(tr("Analysis 2d"), this);
     m_pdwXDirect->setObjectName(m_pdwXDirect->windowTitle());
     m_pdwXDirect->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::RightDockWidgetArea, m_pdwXDirect);
@@ -869,7 +877,7 @@ void MainFrame::createXDirectDockWindows()
     m_pdwXDirect->setFloating(false);
     m_pdwXDirect->move(960,60);
 
-    m_pdwOpPoint = new QDockWidget("Operating point", this);
+    m_pdwOpPoint = new QDockWidget(tr("Operating point"), this);
     m_pdwOpPoint->setObjectName(m_pdwOpPoint->windowTitle());
     m_pdwOpPoint->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::RightDockWidgetArea, m_pdwOpPoint);
@@ -878,7 +886,7 @@ void MainFrame::createXDirectDockWindows()
     m_pdwOpPoint->setFloating(false);
     m_pdwOpPoint->move(960,60);
 
-    m_pdwFoilTree = new QDockWidget("Foil object explorer", this);
+    m_pdwFoilTree = new QDockWidget(tr("Foil object explorer"), this);
     m_pdwFoilTree->setObjectName(m_pdwFoilTree->windowTitle());
     m_pdwFoilTree->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, m_pdwFoilTree);
@@ -888,7 +896,7 @@ void MainFrame::createXDirectDockWindows()
     m_pdwFoilTree->move(60,60);
     m_pdwFoilTree->setWidget(m_pXDirect->m_pFoilExplorer);
 
-    m_pdwFoilTable = new QDockWidget("Foil object table", this);
+    m_pdwFoilTable = new QDockWidget(tr("Foil object table"), this);
     m_pdwFoilTable->setObjectName(m_pdwFoilTable->windowTitle());
     m_pdwFoilTable->setAllowedAreas(Qt::BottomDockWidgetArea);
     addDockWidget(Qt::BottomDockWidgetArea, m_pdwFoilTable);
@@ -957,26 +965,26 @@ void MainFrame::createXPlaneDockWindows()
     m_pStabPolarTiles->setGraphList(m_pXPlane->m_StabPlrGraph);
     m_pStabPolarTiles->saveActiveSet();
 
-    m_pdwAnalysis3d = new QDockWidget("Analysis 3d", this);
+    m_pdwAnalysis3d = new QDockWidget(tr("Analysis 3d"), this);
     m_pdwAnalysis3d->setObjectName(m_pdwAnalysis3d->windowTitle());
     addDockWidget(Qt::RightDockWidgetArea, m_pdwAnalysis3d);
     m_pdwAnalysis3d->setWidget(m_pXPlane->m_pAnalysisControls);
 
-    m_pdwPlaneTree = new QDockWidget("Plane Explorer", this);
+    m_pdwPlaneTree = new QDockWidget(tr("Plane Explorer"), this);
     m_pdwPlaneTree->setWidget(m_pXPlane->m_pPlaneExplorer);
     m_pdwPlaneTree->setObjectName(m_pdwPlaneTree->windowTitle());
     addDockWidget(Qt::LeftDockWidgetArea, m_pdwPlaneTree);
 
-    m_pdwXPlaneResults3d = new QDockWidget("Plane 3d view", this);
+    m_pdwXPlaneResults3d = new QDockWidget(tr("Plane 3d view"), this);
     m_pdwXPlaneResults3d->setObjectName(m_pdwXPlaneResults3d->windowTitle());
     addDockWidget(Qt::RightDockWidgetArea, m_pdwXPlaneResults3d);
     m_pdwXPlaneResults3d->setWidget(m_pXPlane->m_pPOpp3dCtrls);
 
-    m_pdwGraphControls = new QDockWidget("Graphs", this);
+    m_pdwGraphControls = new QDockWidget(tr("Graphs"), this);
     m_pdwGraphControls->setObjectName(m_pdwGraphControls->windowTitle());
     addDockWidget(Qt::RightDockWidgetArea, m_pdwGraphControls);
 
-    m_pdwStabTime = new QDockWidget("Stability time controls", this);
+    m_pdwStabTime = new QDockWidget(tr("Stability time controls"), this);
     m_pdwStabTime->setWidget(m_pXPlane->m_pStabTimeControls);
     m_pdwStabTime->setObjectName(m_pdwStabTime->windowTitle());
     addDockWidget(Qt::RightDockWidgetArea, m_pdwStabTime);
@@ -987,7 +995,7 @@ void MainFrame::createXPlaneDockWindows()
 
 void MainFrame::createMenus()
 {
-    m_pFileMenu = menuBar()->addMenu("&File");
+    m_pFileMenu = menuBar()->addMenu(tr("&File"));
     {
         m_pFileMenu->addAction(m_pNewProjectAct);
         m_pFileMenu->addAction(m_pOpenAct);
@@ -1016,7 +1024,7 @@ void MainFrame::createMenus()
         updateRecentFileActions();
     }
 
-    m_pModuleMenu = menuBar()->addMenu("&Module");
+    m_pModuleMenu = menuBar()->addMenu(tr("&Module"));
     {
         m_pModuleMenu->addAction(m_pNoAppAct);
         m_pModuleMenu->addSeparator();
@@ -1029,7 +1037,7 @@ void MainFrame::createMenus()
         m_pModuleMenu->addAction(m_pFastGraphAct);
     }
 
-    m_pOptionsMenu = menuBar()->addMenu("&Options");
+    m_pOptionsMenu = menuBar()->addMenu(tr("&Options"));
     {
         m_pOptionsMenu->addSeparator();
         m_pOptionsMenu->addAction(m_pPreferencesAct);
@@ -1041,22 +1049,22 @@ void MainFrame::createMenus()
         m_pOptionsMenu->addSeparator();
     }
 
-    m_pHelpMenu = menuBar()->addMenu("&?");
+    m_pHelpMenu = menuBar()->addMenu(tr("&?"));
     {
-        QAction *pAboutf5Act = new QAction("About flow5", this);
-        pAboutf5Act->setStatusTip("More information about flow5");
+        QAction *pAboutf5Act = new QAction(tr("About flow5"), this);
+        pAboutf5Act->setStatusTip(tr("More information about flow5"));
         connect(pAboutf5Act, SIGNAL(triggered()), SLOT(aboutFlow5()));
 
-        QAction *pAboutQtAct = new QAction("About Qt", this);
+        QAction *pAboutQtAct = new QAction(tr("About Qt"), this);
         connect(pAboutQtAct, SIGNAL(triggered()), SLOT(aboutQt()));
 
-        QAction *pCreditsAct = new QAction("Credits", this);
+        QAction *pCreditsAct = new QAction(tr("Credits"), this);
         connect(pCreditsAct, SIGNAL(triggered(bool)), SLOT(onCredits()));
 
-        QAction *pOnlineDoc = new QAction("Online doc.", this);
+        QAction *pOnlineDoc = new QAction(tr("Online doc."), this);
         connect(pOnlineDoc, SIGNAL(triggered()), SLOT(onOnlineDoc()));
 
-        QAction *pReleaseNotes = new QAction("Release notes", this);
+        QAction *pReleaseNotes = new QAction(tr("Release notes"), this);
         connect(pReleaseNotes, SIGNAL(triggered()), SLOT(onReleaseNotes()));
 
         m_pHelpMenu->addAction(pOnlineDoc);
@@ -1086,7 +1094,7 @@ void MainFrame::createMenus()
 
 void MainFrame::createStatusBar()
 {
-    statusBar()->showMessage("Ready");
+    statusBar()->showMessage(tr("Ready"));
     QFont fnt;
     QFontMetrics fm(fnt);
     m_plabProjectName = new QLabel(QString());
@@ -1097,9 +1105,9 @@ void MainFrame::createStatusBar()
 
 void MainFrame::createToolbars()
 {
-    m_ptbMain = addToolBar("MainToolBar");
+    m_ptbMain = addToolBar(tr("MainToolBar"));
     {
-        m_ptbMain->setObjectName(m_ptbMain->windowTitle());
+        m_ptbMain->setObjectName("MainToolBar");
         m_ptbMain->addAction(m_pNewProjectAct);
         m_ptbMain->addAction(m_pOpenAct);
         m_ptbMain->addAction(m_pSaveAct);
@@ -1120,9 +1128,9 @@ void MainFrame::createToolbars()
 
 void MainFrame::createXSailToolbars()
 {
-    m_ptbXSail = addToolBar("XSailToolBar");
+    m_ptbXSail = addToolBar(tr("XSailToolBar"));
     {
-        m_ptbXSail->setObjectName(m_ptbXSail->windowTitle());
+        m_ptbXSail->setObjectName("XSailToolBar");
         m_ptbXSail->addAction(m_pXSail->m_pActions->m_p3dView);
         m_ptbXSail->addAction(m_pXSail->m_pActions->m_pPolarView);
     }
@@ -1131,9 +1139,9 @@ void MainFrame::createXSailToolbars()
 
 void MainFrame::createXDirectToolbars()
 {
-    m_ptbXDirect = addToolBar("XDirect");
+    m_ptbXDirect = addToolBar(tr("XDirect"));
     {
-        m_ptbXDirect->setObjectName(m_ptbXDirect->windowTitle());
+        m_ptbXDirect->setObjectName("XDirect");
         m_ptbXDirect->addAction(m_pLoadFoil);
         m_ptbXDirect->addSeparator();
         m_ptbXDirect->addAction(m_pXDirect->m_pActions->m_pDesignAct);
@@ -1142,9 +1150,9 @@ void MainFrame::createXDirectToolbars()
         m_ptbXDirect->addAction(m_pXDirect->m_pActions->m_pPolarsAct);
     }
 
-    m_ptbDFoil = addToolBar("Foil");
+    m_ptbDFoil = addToolBar(tr("Foil"));
     {
-        m_ptbDFoil->setObjectName(m_ptbDFoil->windowTitle());
+        m_ptbDFoil->setObjectName("Foil");
         m_ptbDFoil->addAction(m_pDFoilWt->m_pZoomInAct);
         m_ptbDFoil->addAction(m_pDFoilWt->m_pZoomLessAct);
         m_ptbDFoil->addAction(m_pDFoilWt->m_pResetXYScaleAct);
@@ -1164,9 +1172,9 @@ void MainFrame::createXDirectToolbars()
 void MainFrame::createXPlaneToolbar()
 {
     XPlaneActions *pActions = m_pXPlane->m_pActions;
-    m_ptbXPlane = addToolBar("PlaneToolBar");
+    m_ptbXPlane = addToolBar(tr("PlaneToolBar"));
     {
-        m_ptbXPlane->setObjectName(m_ptbXPlane->windowTitle());
+        m_ptbXPlane->setObjectName("PlaneToolBar");
         m_ptbXPlane->addAction(pActions->m_pWOppAct);
         m_ptbXPlane->addAction(pActions->m_pWPolarAct);
         m_ptbXPlane->addAction(pActions->m_pW3dAct);
@@ -1179,12 +1187,12 @@ void MainFrame::createXPlaneToolbar()
 
 void MainFrame::deleteProject()
 {
-    displayMessage("Deleting current project\n", false);
+    displayMessage(tr("Deleting current project\n"), false);
 
     // clear everything
     // make sure that the pointers are set to null before deleting the objects
     // to avoid incorrect memory reads
-    displayMessage("   Deleting 2d objects\n", false);
+    displayMessage(tr("   Deleting 2d objects\n"), false);
     XDirect::setCurFoil(nullptr);
     XDirect::setCurPolar(nullptr);
     XDirect::setCurOpp(nullptr);
@@ -1834,7 +1842,7 @@ bool MainFrame::onCloseProject()
 {
     if(!s_bSaved)
     {
-        int resp = QMessageBox::question(this, "Question", "Save the current project?",
+        int resp = QMessageBox::question(this, tr("Question"), tr("Save the current project?"),
                                          QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel);
 
         if (QMessageBox::Cancel == resp)
@@ -1846,7 +1854,7 @@ bool MainFrame::onCloseProject()
             if(saveProject(m_FilePath))
             {
                 deleteProject();
-                displayMessage("The project " + m_ProjectName + " has been saved\n\n", false);
+                displayMessage(tr("The project ") + m_ProjectName + tr(" has been saved\n\n"), false);
             }
             else return false; //save failed, don't close
         }
@@ -1892,11 +1900,11 @@ void MainFrame::onOpenGLInfo()
 
 void MainFrame::onResetSettings()
 {
-    int resp = QMessageBox::question(this, "Default Settings", "Are you sure you want to reset the default settings?",
+    int resp = QMessageBox::question(this, tr("Default Settings"), tr("Are you sure you want to reset the default settings?"),
                                      QMessageBox::Yes|QMessageBox::No, QMessageBox::Yes);
     if(resp == QMessageBox::Yes)
     {
-        QMessageBox::warning(this, "Default Settings", "The settings will be reset at the next session");
+        QMessageBox::warning(this, tr("Default Settings"), tr("The settings will be reset at the next session"));
 #if defined Q_OS_MAC
         QSettings settings(QSettings::IniFormat,QSettings::UserScope,"flow5", "flow5");
 #elif defined Q_OS_LINUX

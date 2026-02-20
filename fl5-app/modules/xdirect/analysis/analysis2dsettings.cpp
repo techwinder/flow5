@@ -44,7 +44,7 @@ QByteArray Analysis2dSettings::s_WindowGeometry;
 
 Analysis2dSettings::Analysis2dSettings(QWidget *parent) : QDialog(parent)
 {
-    setWindowTitle("XFoil settings");
+    setWindowTitle(tr("XFoil settings"));
     setupLayout();
 }
 

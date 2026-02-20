@@ -41,7 +41,7 @@
 
 InterpolateFoilsDlg::InterpolateFoilsDlg(QWidget *pParent) : FoilDlg(pParent)
 {
-    setWindowTitle("Interpolate foils");
+    setWindowTitle(tr("Interpolate foils"));
 
     m_pFoil1 = new Foil;
     m_pFoil2 = new Foil;
@@ -84,7 +84,7 @@ void InterpolateFoilsDlg::setupLayout()
                 QVBoxLayout *pFoil1Layout = new QVBoxLayout;
                 {
                     m_pcbFoil1 = new QComboBox;
-                    m_plabProps1 = new QLabel("properties");
+                    m_plabProps1 = new QLabel(tr("properties"));
                     m_plabProps1->setFont(DisplayOptions::tableFontStruct().font());
                     pFoil1Layout->addWidget(m_pcbFoil1);
                     pFoil1Layout->addWidget(m_plabProps1);
@@ -93,7 +93,7 @@ void InterpolateFoilsDlg::setupLayout()
                 QVBoxLayout *pFoil2Layout = new QVBoxLayout;
                 {
                     m_pcbFoil2 = new QComboBox;
-                    m_plabProps2 = new QLabel("properties");
+                    m_plabProps2 = new QLabel(tr("properties"));
                     m_plabProps2->setFont(DisplayOptions::tableFontStruct().font());
                     pFoil2Layout->addWidget(m_pcbFoil2);
                     pFoil2Layout->addWidget(m_plabProps2);
@@ -101,9 +101,9 @@ void InterpolateFoilsDlg::setupLayout()
 
                 QVBoxLayout *pFoil3Layout = new QVBoxLayout;
                 {
-                    QLabel *pInterLab = new QLabel("Buffer foil");
+                    QLabel *pInterLab = new QLabel(tr("Buffer foil"));
 
-                    m_plabProps3 = new QLabel("properties");
+                    m_plabProps3 = new QLabel(tr("properties"));
                     m_plabProps3->setFont(DisplayOptions::tableFontStruct().font());
 
                     pFoil3Layout->addWidget(pInterLab);

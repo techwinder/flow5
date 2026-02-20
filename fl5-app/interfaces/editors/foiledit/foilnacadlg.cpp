@@ -41,7 +41,7 @@ int NacaFoilDlg::s_nPanels = 100;
 
 NacaFoilDlg::NacaFoilDlg(QWidget *pParent) : FoilDlg(pParent)
 {
-    setWindowTitle("NACA foils");
+    setWindowTitle(tr("NACA foils"));
 
     setupLayout();
 
@@ -63,11 +63,11 @@ void NacaFoilDlg::setupLayout()
         m_pOverlayFrame->setAutoFillBackground(false);
         QGridLayout *pFormLayout = new QGridLayout;
         {
-            QLabel *pDigitsLab = new QLabel("4 or 5 digits:");
+            QLabel *pDigitsLab = new QLabel(tr("4 or 5 digits:"));
             pDigitsLab->setPalette(m_Palette);
             m_pleNumber = new QLineEdit(this);
 
-            QLabel *pNPanelsLab = new QLabel("Number of Panels:");
+            QLabel *pNPanelsLab = new QLabel(tr("Number of Panels:"));
             pNPanelsLab->setPalette(m_Palette);
             m_piePanels = new IntEdit(100, this);
             m_piePanels->setMax(10000);

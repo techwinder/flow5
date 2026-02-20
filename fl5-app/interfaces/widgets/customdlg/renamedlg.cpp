@@ -33,7 +33,7 @@ QByteArray RenameDlg::s_WindowGeometry;
 RenameDlg::RenameDlg(QWidget *pParent) : QDialog(pParent)
 {
 //    setWindowIcon(QIcon(":/icons/f5.png"));
-    setWindowTitle("Rename");
+    setWindowTitle(tr("Rename"));
     m_strNames.clear();
     setupLayout();
 }
@@ -99,7 +99,7 @@ void RenameDlg::initDialog(const QString &startname, QStringList const &existing
 {
     m_strNames = existingnames;
     if(question.length()) m_plabMessage->setText(question);
-    else                  m_plabMessage->setText("Enter a name");
+    else                  m_plabMessage->setText(tr("Enter a name"));
 
     m_pleName->setText(startname);
     m_pleName->setFocus();
@@ -169,7 +169,7 @@ void RenameDlg::onOK()
     QString strName = m_pleName->text();
     if (!strName.length())
     {
-        QMessageBox::warning(this, "Warning", "Must enter a name");
+        QMessageBox::warning(this, tr("Warning"), tr("Must enter a name"));
         m_pleName->setFocus();
         return;
     }
@@ -182,8 +182,8 @@ void RenameDlg::onOK()
         strong = m_strNames.at(l);
         if(strong == strName)
         {
-            QString str = "<p>This operation cannot be undone.<br>Overwrite " + strName + "?</p>";
-            if (QMessageBox::Yes == QMessageBox::question(window(), "Question", str,
+            QString str = tr("<p>This operation cannot be undone.<br>Overwrite ") + strName + tr("?</p>");
+            if (QMessageBox::Yes == QMessageBox::question(window(), tr("Question"), str,
                                                           QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel))
             {
                 done(10);

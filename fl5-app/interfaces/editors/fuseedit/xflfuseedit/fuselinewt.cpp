@@ -400,7 +400,7 @@ void FuseLineWt::createContextMenu()
         m_pSection2dContextMenu->addSeparator();
         m_pSection2dContextMenu->addAction(m_pExportToSVG);
         m_pSection2dContextMenu->addSeparator();
-        QMenu *pImageMenu = m_pSection2dContextMenu->addMenu("Background image");
+        QMenu *pImageMenu = m_pSection2dContextMenu->addMenu(tr("Background image"));
         {
             pImageMenu->addAction(m_pLoadImage);
             pImageMenu->addAction(m_pClearImage);

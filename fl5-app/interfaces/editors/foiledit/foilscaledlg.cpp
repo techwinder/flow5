@@ -38,7 +38,7 @@
 
 FoilScaleDlg::FoilScaleDlg(QWidget *pParent) : FoilDlg(pParent)
 {
-    setWindowTitle("Foil Geometry");
+    setWindowTitle(tr("Foil Geometry"));
 
     setupLayout();
 

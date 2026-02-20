@@ -45,10 +45,10 @@ void RotateDlg::setupLayout()
     {
         QGridLayout *pAxisLayout = new QGridLayout;
         {
-            QLabel *plabTitle = new QLabel("Rotation axis:");
-            m_prbX = new QRadioButton("X");
-            m_prbY = new QRadioButton("Y");
-            m_prbZ = new QRadioButton("Z");
+            QLabel *plabTitle = new QLabel(tr("Rotation axis:"));
+            m_prbX = new QRadioButton(tr("X"));
+            m_prbY = new QRadioButton(tr("Y"));
+            m_prbZ = new QRadioButton(tr("Z"));
             m_prbX->setChecked(s_iAxis==0);
             m_prbY->setChecked(s_iAxis==1);
             m_prbZ->setChecked(s_iAxis==2);
@@ -61,7 +61,7 @@ void RotateDlg::setupLayout()
 
         QHBoxLayout *pPosLayout = new QHBoxLayout;
         {
-            QLabel *plabAngle = new QLabel("Angle:");
+            QLabel *plabAngle = new QLabel(tr("Angle:"));
             m_pfeAngle = new FloatEdit(s_Angle);
             QLabel *plabDegree = new QLabel("<p>&deg;</p>");
 

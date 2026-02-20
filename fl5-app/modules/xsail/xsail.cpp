@@ -1394,8 +1394,8 @@ void XSail::onDeleteCurBtPolar()
 {
     if(!m_pCurBtPolar) return;
 
-    QString strong = "Are you sure you want to delete the polar :\n" + QString::fromStdString(m_pCurBtPolar->name()) +"?\n";
-    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, "Question", strong,
+    QString strong = tr("Are you sure you want to delete the polar :\n") + QString::fromStdString(m_pCurBtPolar->name()) +tr("?\n");
+    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, tr("Question"), strong,
                                                   QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel)) return;
 
     QString nextWPolarName = m_pBoatExplorer->removeBtPolar(m_pCurBtPolar);
@@ -1621,8 +1621,8 @@ void XSail::onDeleteBtPolars()
 
     BoatName = QString::fromStdString(m_pCurBoat->name());
 
-    strong = "Are you sure you want to delete the polars associated to :\n" +  BoatName +"?\n";
-    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, "Question", strong, QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel))
+    strong = tr("Are you sure you want to delete the polars associated to :\n") +  BoatName +tr("?\n");
+    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, tr("Question"), strong, QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel))
         return;
 
     if(m_pCurBoat)
@@ -2316,8 +2316,8 @@ void XSail::onHideAllBtPolars()
 void XSail::onResetBtPolar()
 {
     if (!m_pCurBtPolar) return;
-    QString strong = "Are you sure you want to reset the content of the polar :\n" + QString::fromStdString(m_pCurBtPolar->name()) +"?\n";
-    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, "Question", strong,
+    QString strong = tr("Are you sure you want to reset the content of the polar :\n") + QString::fromStdString(m_pCurBtPolar->name()) +tr("?\n");
+    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, tr("Question"), strong,
                                                   QMessageBox::Yes|QMessageBox::No,
                                                   QMessageBox::Yes)) return;
 //    m_bResetTextLegend = true;
@@ -2404,8 +2404,8 @@ void XSail::onDeleteCurBoat()
     if(!m_pCurBoat) return;
 
     QString strong;
-    if(m_pCurBoat) strong = "Are you sure you want to delete the Boat :\n" + QString::fromStdString(m_pCurBoat->name()) +"?\n";
-    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, "Question", strong, QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel)) return;
+    if(m_pCurBoat) strong = tr("Are you sure you want to delete the Boat :\n") + QString::fromStdString(m_pCurBoat->name()) +tr("?\n");
+    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, tr("Question"), strong, QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel)) return;
     QString nextBoatName = m_pBoatExplorer->removeBoat(m_pCurBoat);
     SailObjects::deleteBoat(m_pCurBoat, true);
 
@@ -3177,9 +3177,9 @@ void XSail::onCheckPanels()
                                            PanelCheckDlg::qualityFactor(), PanelCheckDlg::minAngle(), PanelCheckDlg::minArea(), PanelCheckDlg::minSize());
         QVector<int> qVec;
         if(dlg.checkSkinny())    qVec = QVector<int>(skinnylist.begin(), skinnylist.end());
-        if(dlg.checkMinAngles()) qVec = QVector<int>(anglelist.begin(),  anglelist.end());
-        if(dlg.checkMinArea())   qVec = QVector<int>(arealist.begin(),   arealist.end());
-        if(dlg.checkMinSize())   qVec = QVector<int>(sizelist.begin(),   sizelist.end());
+        if(dlg.checkMinAngles()) qVec = QVector<int>(anglelist.begin(), anglelist.end());
+        if(dlg.checkMinArea())   qVec = QVector<int>(arealist.begin(), arealist.end());
+        if(dlg.checkMinSize())   qVec = QVector<int>(sizelist.begin(), sizelist.end());
         m_pgl3dXSailView->appendHighlightList(qVec);
     }
 

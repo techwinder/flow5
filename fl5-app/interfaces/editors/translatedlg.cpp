@@ -43,13 +43,13 @@ void TranslateDlg::setupLayout()
 {
     QGridLayout *pPosLayout = new QGridLayout;
     {
-        QLabel *plabTitle = new QLabel("Enter the translation vector:");
+        QLabel *plabTitle = new QLabel(tr("Enter the translation vector:"));
         m_pdeX = new FloatEdit;
         m_pdeY = new FloatEdit;
         m_pdeZ = new FloatEdit;
-        QLabel *plabX = new QLabel("x=");
-        QLabel *plabY = new QLabel("y=");
-        QLabel *plabZ = new QLabel("z=");
+        QLabel *plabX = new QLabel(tr("x="));
+        QLabel *plabY = new QLabel(tr("y="));
+        QLabel *plabZ = new QLabel(tr("z="));
         plabX->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         plabY->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         plabZ->setAlignment(Qt::AlignRight | Qt::AlignVCenter);

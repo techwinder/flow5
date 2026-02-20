@@ -328,7 +328,7 @@ void SplineFoilCtrls::readData()
     else
     {
         // too few control points, adjust the degree
-        QMessageBox::warning(this, "Warning", "The spline degree must be less than the number of control points");
+        QMessageBox::warning(this, tr("Warning"), tr("The spline degree must be less than the number of control points"));
         m_pSF->extrados().setDegree(std::max(2,m_pSF->extrados().ctrlPointCount()-1));
         m_pcbDegExtrados->setCurrentIndex(m_pSF->extrados().degree()-2);
     }
@@ -342,7 +342,7 @@ void SplineFoilCtrls::readData()
     else
     {
         // too few control points, adjust the degree
-        QMessageBox::warning(this, "Warning", "The spline degree must be less than the number of control points");
+        QMessageBox::warning(this, tr("Warning"), tr("The spline degree must be less than the number of control points"));
 
         m_pSF->intrados().setDegree(std::max(2,m_pSF->intrados().ctrlPointCount()-1));
         m_pcbDegIntrados->setCurrentIndex(m_pSF->intrados().degree()-2);

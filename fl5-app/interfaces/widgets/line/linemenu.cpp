@@ -35,7 +35,7 @@
 
 LineMenu::LineMenu(QWidget *pParent, bool bShowPointStyleMenu) : QMenu(pParent)
 {
-    setTitle("Style");
+    setTitle(tr("Style"));
     m_pParentMenu = nullptr;
     m_pPointStyleMenu = m_pLineStyleMenu = m_pLineWidthMenu = m_pLineColorMenu = nullptr;
     m_bEnableLineStyle = m_bEnablePointStyle = true;
@@ -142,7 +142,7 @@ void LineMenu::fillMenu(bool bShowPointStyleMenu)
 {
     if(bShowPointStyleMenu)
     {
-        m_pPointStyleMenu = addMenu("Symbols");
+        m_pPointStyleMenu = addMenu(tr("Symbols"));
         for(int i=0; i<NPOINTSTYLES; i++)
         {
             m_SymbolAction[i].setCheckable(true);
@@ -152,7 +152,7 @@ void LineMenu::fillMenu(bool bShowPointStyleMenu)
         }
     }
 
-    m_pLineStyleMenu = addMenu("Style");
+    m_pLineStyleMenu = addMenu(tr("Style"));
     for(int i=0; i<NLINESTYLES; i++)
     {
         m_LineStyleAction[i].setCheckable(true);
@@ -161,7 +161,7 @@ void LineMenu::fillMenu(bool bShowPointStyleMenu)
         m_pLineStyleMenu->addAction(m_LineStyleAction+i);
     }
 
-    m_pLineWidthMenu = addMenu("Thickness");
+    m_pLineWidthMenu = addMenu(tr("Thickness"));
     for(int i=0; i<NLINEWIDTHS; i++)
     {
         m_LineWidthAction[i].setCheckable(true);
@@ -170,7 +170,7 @@ void LineMenu::fillMenu(bool bShowPointStyleMenu)
         m_pLineWidthMenu->addAction(m_LineWidthAction+i);
     }
 
-    m_pLineColorMenu = addMenu("Colour");
+    m_pLineColorMenu = addMenu(tr("Colour"));
     connect(m_pck, SIGNAL(colorChanged(QColor)), this, SLOT(onColorChanged(QColor)));
     QWidgetAction *pColorAction = new QWidgetAction(this);
     pColorAction->setDefaultWidget(m_pck);

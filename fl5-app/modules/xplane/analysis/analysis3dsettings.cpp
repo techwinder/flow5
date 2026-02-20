@@ -71,7 +71,7 @@ QByteArray Analysis3dSettings::s_WindowGeometry;
 
 Analysis3dSettings::Analysis3dSettings(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("3d analysis advanced settings");
+    setWindowTitle(tr("3d analysis advanced settings"));
     setupLayout();
 }
 

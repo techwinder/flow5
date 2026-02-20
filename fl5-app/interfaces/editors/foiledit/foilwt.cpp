@@ -84,18 +84,18 @@ void FoilWt::createContextMenu()
 
     m_pBufferLineMenu = new LineMenu(m_pSection2dContextMenu);
     m_pBufferLineMenu->setParentMenu(m_pSection2dContextMenu);
-    m_pBufferLineMenu->setTitle("Style");
+    m_pBufferLineMenu->setTitle(tr("Style"));
 
-    m_pOverlayFoil = new QAction("Overlay foil", this);
-    m_pShowCamberLines = new QAction("Show camber lines", this);
+    m_pOverlayFoil = new QAction(tr("Overlay foil"), this);
+    m_pShowCamberLines = new QAction(tr("Show camber lines"), this);
     m_pShowCamberLines->setCheckable(true);
     m_pShowCamberLines->setChecked(s_bCamberLines);
 
-    m_pBufferMenu = m_pSection2dContextMenu->addMenu("Buffer foil");
+    m_pBufferMenu = m_pSection2dContextMenu->addMenu(tr("Buffer foil"));
     {
-        m_pShowBufferFoil = new QAction("Show", this);
+        m_pShowBufferFoil = new QAction(tr("Show"), this);
         m_pShowBufferFoil->setCheckable(true);
-        m_pFillBufferFoil = new QAction("Fill", this);
+        m_pFillBufferFoil = new QAction(tr("Fill"), this);
         m_pFillBufferFoil->setCheckable(true);
         m_pBufferMenu->addAction(m_pShowBufferFoil);
         m_pBufferMenu->addAction(m_pFillBufferFoil);
@@ -115,7 +115,7 @@ void FoilWt::createContextMenu()
         m_pSection2dContextMenu->addAction(m_ActionList.at(iAc));
 
     m_pSection2dContextMenu->addSeparator();
-    QMenu *pImageMenu = m_pSection2dContextMenu->addMenu("Background image");
+    QMenu *pImageMenu = m_pSection2dContextMenu->addMenu(tr("Background image"));
     {
         pImageMenu->addAction(m_pLoadImage);
         pImageMenu->addAction(m_pClearImage);

@@ -36,7 +36,7 @@
 
 AboutFlow5::AboutFlow5(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("About flow5");
+    setWindowTitle(tr("About flow5"));
     setupLayout();
 }
 

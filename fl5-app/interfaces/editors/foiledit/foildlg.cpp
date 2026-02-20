@@ -54,7 +54,7 @@ FoilDlg::FoilDlg(QWidget *pParent) : XflDialog(pParent)
 
     m_pRefFoil = nullptr;
     m_pBufferFoil = new Foil; // geometry will be set and modified by derived classes
-    m_pBufferFoil->setName(std::string("Buffer foil"));
+    m_pBufferFoil->setName(tr("Buffer foil").toStdString());
 
     m_bModified = false;
 
@@ -108,9 +108,9 @@ void FoilDlg::makeCommonWidgets()
     m_pFoilWt = new FoilWt(this);
     m_pFoilWt->setGrid(s_Grid);
 
-    m_ppbMenuBtn = new QPushButton("Display");
+    m_ppbMenuBtn = new QPushButton(tr("Display"));
     {
-        QMenu *pMenuAction = new QMenu("Menu");
+        QMenu *pMenuAction = new QMenu(tr("Menu"));
         {
             pMenuAction->addAction(m_pFoilWt->m_pShowCamberLines);
             pMenuAction->addAction(m_pFoilWt->m_pOverlayFoil);
@@ -200,8 +200,8 @@ void FoilDlg::reject()
 {
     if(m_bModified && xfl::bConfirmDiscard())
     {
-        QString strong = "Discard the changes?";
-        int Ans = QMessageBox::question(this, "Question", strong,
+        QString strong = tr("Discard the changes?");
+        int Ans = QMessageBox::question(this, tr("Question"), strong,
                                         QMessageBox::Yes | QMessageBox::No);
         if (QMessageBox::Yes == Ans)
         {

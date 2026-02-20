@@ -352,7 +352,7 @@ void SplineCtrl::readData()
         else
         {
             // too few control points, adjust the degree
-            QMessageBox::warning(this,"Warning", "The spline degree must be less than the number of control points");
+            QMessageBox::warning(this, tr("Warning"), tr("The spline degree must be less than the number of control points"));
             m_pSpline->setDegree(std::max(2,int(m_pSpline->ctrlPointCount())-1));
             m_pcbSplineDegree->setCurrentIndex(m_pSpline->degree()-2);
         }

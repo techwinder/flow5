@@ -13,8 +13,8 @@ VERSION = 7.54
 
 QT += opengl widgets xml
 
-greaterThan(QT_VERSION, 6)  {
-   QT += openglwidgets
+greaterThan(QT_MAJOR_VERSION, 5) {
+    QT += openglwidgets
 }
 
 OBJECTS_DIR = ./objects
@@ -27,7 +27,11 @@ CONFIG(release, debug|release) {
     CONFIG += optimize_full
 }
 
-CONFIG += c++17
+greaterThan(QT_MAJOR_VERSION, 5) {
+    CONFIG += c++20
+} else {
+    CONFIG += c++17
+}
 
 # The path to the libraries' header files required by the code at compile time
 INCLUDEPATH += $$PWD/../XFoil-lib/
@@ -40,6 +44,7 @@ INCLUDEPATH += $$PWD/../fl5-lib/api
 
 
 linux-g++ {
+    CONFIG += occt
     CONFIG += thread
 
     # VARIABLES
@@ -107,8 +112,45 @@ linux-g++ {
 }
 
 
+win32-g++ {
+
+    CONFIG += console
+    CONFIG -= debug_and_release debug_and_release_target
+
+    RC_ICONS = ../meta/win64/flow5.ico
+
+    #-----XFoil----
+    LIBS += -L../XFoil-lib -lXFoil1
+
+    #------------ OPEN CASCADE / OCCT (MinGW) --------------------------
+    OCCT_DIR = D:/flow5/OCCT/build-mingw-dll
+    isEmpty(OCCT_DIR): OCCT_DIR = $$getenv(OCCT_DIR)
+    isEmpty(OCCT_INC): OCCT_INC = $$getenv(OCCT_INC)
+    isEmpty(OCCT_LIB): OCCT_LIB = $$getenv(OCCT_LIB)
+
+    isEmpty(OCCT_INC): !isEmpty(OCCT_DIR): OCCT_INC = $$OCCT_DIR/inc
+    isEmpty(OCCT_LIB): !isEmpty(OCCT_DIR): OCCT_LIB = $$OCCT_DIR/win64/gcc/lib
+
+    !isEmpty(OCCT_INC) {
+        INCLUDEPATH += $$OCCT_INC
+        CONFIG += occt
+    } else {
+        message("OCCT_INC/OCCT_DIR not set: OCCT headers are required.")
+    }
+
+    !isEmpty(OCCT_LIB) {
+        LIBS += -L$$OCCT_LIB
+    }
+
+    #---------------- OTHER WIN LIBS -------------------
+    LIBS += -lopengl32
+}
+
+
 
 win32-msvc {
+
+    CONFIG += occt
 
     CONFIG += console
     CONFIG -= debug_and_release debug_and_release_target
@@ -158,6 +200,7 @@ win32-msvc {
 
 
 macx {
+    CONFIG += occt
     QMAKE_MAC_SDK = macosx
     QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
 
@@ -219,29 +262,34 @@ RESOURCES += \
     resources/images.qrc \
     resources/sailimages.qrc
 
+TRANSLATIONS += \
+    translations/flow5_zh_CN.ts
+
 
 LIBS += -L../fl5-lib -lfl5-lib
 
-LIBS += \
-    -lTKBRep \
-    -lTKBO \
-    -lTKG3d \
-    -lTKGeomAlgo \
-    -lTKGeomBase \
-    -lTKLCAF \
-    -lTKMath \
-    -lTKMesh \
-    -lTKOffset \
-    -lTKPrim \
-    -lTKDESTEP \
-    -lTKShHealing \
-    -lTKTopAlgo \
-    -lTKXSBase \
-    -lTKernel \
-    -lTKBool \
-    -lTKG2d \
-    -lTKCDF \
-    -lTKFillet \
+occt {
+    LIBS += \
+        -lTKBRep \
+        -lTKBO \
+        -lTKG3d \
+        -lTKGeomAlgo \
+        -lTKGeomBase \
+        -lTKLCAF \
+        -lTKMath \
+        -lTKMesh \
+        -lTKOffset \
+        -lTKPrim \
+        -lTKDESTEP \
+        -lTKShHealing \
+        -lTKTopAlgo \
+        -lTKXSBase \
+        -lTKernel \
+        -lTKBool \
+        -lTKG2d \
+        -lTKCDF \
+        -lTKFillet \
+}
 
 DISTFILES += \
     ../meta/doc/images/flow5.png \
@@ -249,3 +297,9 @@ DISTFILES += \
     ../meta/doc/style.css \
     ../meta/win64/flow5.ico \
     ../meta/win64/flow5_doc.ico
+
+win32-g++ {
+    DEFINES += NO_GMSH
+    # SOURCES -= interfaces/mesh/gmesh_globals.cpp
+    # SOURCES += interfaces/mesh/gmesh_globals_stub.cpp
+}

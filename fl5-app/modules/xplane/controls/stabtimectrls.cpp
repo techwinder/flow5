@@ -66,7 +66,7 @@ XPlane *StabTimeCtrls::s_pXPlane=nullptr;
 
 StabTimeCtrls::StabTimeCtrls(QWidget *pParent) : QFrame(pParent)
 {
-    setWindowTitle("Stability time controls");
+    setWindowTitle(tr("Stability time controls"));
 
     m_InputGraph.setName("StabTime graph");
     m_InputGraph.setCurveModel(new CurveModel);
@@ -80,8 +80,8 @@ StabTimeCtrls::StabTimeCtrls(QWidget *pParent) : QFrame(pParent)
     m_TotalTime = 1;//s
     m_Deltat    = 0.001;//s
 
-    m_pRenameAct = new QAction("Rename", this);
-    m_pDeleteAct = new QAction("Delete", this);
+    m_pRenameAct = new QAction(tr("Rename"), this);
+    m_pDeleteAct = new QAction(tr("Delete"), this);
 
     makeTable();
     setupLayout();
@@ -259,7 +259,7 @@ void StabTimeCtrls::onCurveTableClicked(QModelIndex index)
         {
             QRect itemrect = m_pcpCurveTable->visualRect(index);
             QPoint menupos = m_pcpCurveTable->mapToGlobal(itemrect.topLeft());
-            QMenu *pCurveTableRowMenu = new QMenu("Section",this);
+            QMenu *pCurveTableRowMenu = new QMenu(tr("Section"),this);
             pCurveTableRowMenu->addAction(m_pRenameAct);
             pCurveTableRowMenu->addAction(m_pDeleteAct);
             pCurveTableRowMenu->exec(menupos, m_pRenameAct);
@@ -366,14 +366,14 @@ void StabTimeCtrls::makeTable()
 void StabTimeCtrls::setupLayout()
 {
 
-    QGroupBox *pgbDirection = new QGroupBox("Direction");
+    QGroupBox *pgbDirection = new QGroupBox(tr("Direction"));
     {
         QHBoxLayout *pDirLayout = new QHBoxLayout;
         {
             QButtonGroup *pGroup = new QButtonGroup;
             {
-                m_prbLongitudinal = new QRadioButton("Longitudinal");
-                m_prbLateral = new QRadioButton("Lateral");
+                m_prbLongitudinal = new QRadioButton(tr("Longitudinal"));
+                m_prbLateral = new QRadioButton(tr("Lateral"));
                 pGroup->addButton(m_prbLongitudinal);
                 pGroup->addButton(m_prbLateral);
             }
@@ -386,17 +386,17 @@ void StabTimeCtrls::setupLayout()
         pgbDirection->setLayout(pDirLayout);
     }
 
-    QGroupBox *pgbCurveType = new QGroupBox("Response type");
+    QGroupBox *pgbCurveType = new QGroupBox(tr("Response type"));
     {
         QHBoxLayout *pResponseTypeLayout = new QHBoxLayout;
         {
-            m_prbModalResponse = new QRadioButton("Modal");
-            m_prbModalResponse->setToolTip("<p>Display the time response on a specific mode with normalized amplitude and random initial phase</p>");
-            m_prbInitCondResponse = new QRadioButton("Initial conditions");
-            m_prbInitCondResponse->setToolTip("<p>Display the time response for specified initial conditions</p>");
-            m_prbForcedResponse = new QRadioButton("Forced");
-            m_prbForcedResponse->setToolTip("<p>Display the time response for a given control actuation in the form "
-                                            "of a user-specified function of time</p>");
+            m_prbModalResponse = new QRadioButton(tr("Modal"));
+            m_prbModalResponse->setToolTip(tr("<p>Display the time response on a specific mode with normalized amplitude and random initial phase</p>"));
+            m_prbInitCondResponse = new QRadioButton(tr("Initial conditions"));
+            m_prbInitCondResponse->setToolTip(tr("<p>Display the time response for specified initial conditions</p>"));
+            m_prbForcedResponse = new QRadioButton(tr("Forced"));
+            m_prbForcedResponse->setToolTip(tr("<p>Display the time response for a given control actuation in the form "
+                                            "of a user-specified function of time</p>"));
             pResponseTypeLayout->addStretch();
             pResponseTypeLayout->addWidget(m_prbModalResponse);
             pResponseTypeLayout->addWidget(m_prbInitCondResponse);
@@ -408,7 +408,7 @@ void StabTimeCtrls::setupLayout()
 
     m_pswInitialConditions = new QStackedWidget;
     {
-        QGroupBox *pgbInitCondResponse = new QGroupBox("Initial conditions response");
+        QGroupBox *pgbInitCondResponse = new QGroupBox(tr("Initial conditions response"));
         {
             QGridLayout *pVarParamsLayout = new QGridLayout;
             {
@@ -442,12 +442,12 @@ void StabTimeCtrls::setupLayout()
             pgbInitCondResponse->setLayout(pVarParamsLayout);
         }
 
-        QGroupBox *pgbForcedResponse = new QGroupBox("Forced response");
+        QGroupBox *pgbForcedResponse = new QGroupBox(tr("Forced response"));
         {
             QVBoxLayout *pForcedResponseLayout = new QVBoxLayout;
             {
                 m_pcbAVLControls = new QComboBox(this);
-                QLabel *pForcedText = new QLabel("Control function");
+                QLabel *pForcedText = new QLabel(tr("Control function"));
 
                 m_pSplGraphWt = new SplinedGraphWt;
                 {
@@ -464,14 +464,14 @@ void StabTimeCtrls::setupLayout()
             pgbForcedResponse->setLayout(pForcedResponseLayout);
         }
 
-        QGroupBox *pgbModalTime = new QGroupBox("Modal response");
+        QGroupBox *pgbModalTime = new QGroupBox(tr("Modal response"));
         {
             pgbModalTime->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
             QVBoxLayout *pModalTimeLayout = new QVBoxLayout;
             {
                 for(int imode=0; imode<4; imode++)
                 {
-                    m_prbTimeMode[imode] = new QRadioButton(QString::asprintf("Mode %d", imode+1));
+                    m_prbTimeMode[imode] = new QRadioButton(tr("Mode %1").arg(imode+1));
                     pModalTimeLayout->addWidget(m_prbTimeMode[imode]);
                 }
                 pModalTimeLayout->addStretch(1);
@@ -487,14 +487,14 @@ void StabTimeCtrls::setupLayout()
 
     QGridLayout *pDtLayout  = new QGridLayout;
     {
-        QLabel *pDtLabel        = new QLabel("dt=");
-        QLabel *pTotalTimeLabel = new QLabel("Total Time =");
-        QLabel *pTimeLab1       = new QLabel("s");
-        QLabel *pTimeLab2       = new QLabel("s");
+        QLabel *pDtLabel        = new QLabel(tr("dt="));
+        QLabel *pTotalTimeLabel = new QLabel(tr("Total Time ="));
+        QLabel *pTimeLab1       = new QLabel(tr("s"));
+        QLabel *pTimeLab2       = new QLabel(tr("s"));
         m_pdeTotalTime = new FloatEdit(5.0f);
-        m_pdeTotalTime->setToolTip("<p>Define the total time range for the graphs</p>");
+        m_pdeTotalTime->setToolTip(tr("<p>Define the total time range for the graphs</p>"));
         m_pdeDeltat    = new FloatEdit(.01f);
-        m_pdeDeltat->setToolTip("<p>Define the time step for the resolution of the differential equations</p>");
+        m_pdeDeltat->setToolTip(tr("<p>Define the time step for the resolution of the differential equations</p>"));
         pDtLayout->addWidget(pDtLabel,         1,1, Qt::AlignRight);
         pDtLayout->addWidget(m_pdeDeltat,      1,2);
         pDtLayout->addWidget(pTimeLab1,        1,3);
@@ -503,13 +503,13 @@ void StabTimeCtrls::setupLayout()
         pDtLayout->addWidget(pTimeLab2,        2,3);
     }
 
-    QGroupBox *pgbCurveSettings = new QGroupBox("Curve settings");
+    QGroupBox *pgbCurveSettings = new QGroupBox(tr("Curve settings"));
     {
         QVBoxLayout *pTimeLayout = new QVBoxLayout;
         {
-            m_ppbAddCurve  = new QPushButton("Add");
+            m_ppbAddCurve  = new QPushButton(tr("Add"));
             m_ppbAddCurve->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
-            m_ppbAddCurve->setToolTip("<p>Add a new curve to the graphs, using the current user-specified input</p>");
+            m_ppbAddCurve->setToolTip(tr("<p>Add a new curve to the graphs, using the current user-specified input</p>"));
 
             pTimeLayout->addLayout(pDtLayout);
             pTimeLayout->addWidget(m_ppbAddCurve);
@@ -694,18 +694,18 @@ void StabTimeCtrls::addCurve()
     {
         case INITIALCONDITIONS:
         {
-            if(bLongitudinal) strong = QString::asprintf("u0=%5.2f w0=%5.2f q0=%5.2f", val1, val2, val3);
-            else              strong = QString::asprintf("v0=%5.2f p0=%5.2f r0=%5.2f", val1, val2, val3);
+            if(bLongitudinal) strong = tr("u0=%1 w0=%2 q0=%3").arg(val1, 5, 'f', 2).arg(val2, 5, 'f', 2).arg(val3, 5, 'f', 2);
+            else              strong = tr("v0=%1 p0=%2 r0=%3").arg(val1, 5, 'f', 2).arg(val2, 5, 'f', 2).arg(val3, 5, 'f', 2);
             break;
         }
         case FORCEDRESPONSE:
         {
-            strong = "Forced response";
+            strong = tr("Forced response");
             break;
         }
         case MODALRESPONSE:
         {
-            strong = QString::asprintf("Mode %1d", m_iCurrentMode+1);
+            strong = tr("Mode %1").arg(m_iCurrentMode+1);
             break;
         }
     }

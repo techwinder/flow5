@@ -39,7 +39,7 @@
 
 BodyScaleDlg::BodyScaleDlg(QWidget *pParent ): QDialog(pParent)
 {
-    setWindowTitle("Object scale");
+    setWindowTitle(tr("Object scale"));
     m_XFactor = 1.0;
     m_YFactor = 1.0;
     m_ZFactor = 1.0;
@@ -83,8 +83,8 @@ void BodyScaleDlg::setupLayout()
 {
     QGridLayout *pTopLayout = new QGridLayout;
     {
-        m_prbBody  = new QRadioButton("Whole object");
-        m_prbFrame = new QRadioButton("Frame only");
+        m_prbBody  = new QRadioButton(tr("Whole object"));
+        m_prbFrame = new QRadioButton(tr("Frame only"));
         m_pieFrameID = new IntEdit(10);
 
         pTopLayout->addWidget(m_prbBody,1,1);

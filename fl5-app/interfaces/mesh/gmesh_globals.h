@@ -30,7 +30,79 @@
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Face.hxx>
 
+#ifndef NO_GMSH
 #include <gmsh.h>
+#else
+#include <vector>
+#include <string>
+#include <utility>
+
+namespace gmsh {
+    typedef std::vector<std::pair<int, int>> vectorpair;
+
+    inline void clear() {}
+    inline void write(const std::string&) {}
+    inline void merge(const std::string&) {}
+
+    namespace option {
+        inline void getNumber(const std::string&, double&) {}
+        inline void setNumber(const std::string&, double) {}
+        inline void getString(const std::string&, std::string&) {}
+        inline void setString(const std::string&, const std::string&) {}
+    }
+    namespace logger {
+        inline void get(std::vector<std::string>&) {}
+        inline void start() {}
+        inline void stop() {}
+        inline void getLastError(std::string&) {}
+    }
+    namespace model {
+        inline void add(const std::string&) {}
+        inline void getEntities(vectorpair&, int /*dim*/ = -1) {}
+        inline void getEntityType(int, int, std::string&) {}
+        inline void getType(int, int, std::string&) {}
+        inline void getParametrizationBounds(int, int, std::vector<double>&, std::vector<double>&) {}
+        inline void getValue(int, int, const std::vector<double>&, std::vector<double>&) {}
+
+        namespace occ {
+            inline void synchronize() {}
+            inline void getBoundingBox(int, int, double&, double&, double&, double&, double&, double&) {}
+            inline void rotate(const vectorpair&, double, double, double, double, double, double, double) {}
+            inline void dilate(const vectorpair&, double, double, double, double, double, double) {}
+            inline void translate(const vectorpair&, double, double, double) {}
+            inline int addPoint(double, double, double, double =0, int = -1) { return 0; }
+            inline int addLine(int, int, int = -1) { return 0; }
+            inline int addCurveLoop(const std::vector<int>&, int = -1) { return 0; }
+            inline int addPlaneSurface(const std::vector<int>&, int = -1) { return 0; }
+            inline void addThruSections(const std::vector<int>&, vectorpair&, int = -1, bool = true, bool = false) {}
+            inline void remove(const vectorpair&, bool = false) {}
+            inline int addBSplineSurface(const std::vector<int>&, int = -1, int = -1) { return 0; }
+            inline void copy(const vectorpair&, vectorpair&) {}
+            inline void mirror(const vectorpair&, double, double, double, double) {}
+            inline void fragment(const vectorpair&, const vectorpair&, vectorpair&, std::vector<vectorpair>&, int = -1, bool = true, bool = true) {}
+            inline void cut(const vectorpair&, const vectorpair&, vectorpair&, std::vector<vectorpair>&, int = -1, bool = true, bool = true) {}
+            inline void getEntities(vectorpair&, int = -1) {}
+            inline void getMass(int, int, double&) {}
+            inline int addSurfaceFilling(int, int = -1, const std::vector<int>& = std::vector<int>()) { return 0; }
+            inline void addSurfaceLoop(const std::vector<int>&, int = -1) {}
+            inline void importShapesNativePointer(const void*, vectorpair&, bool = true) {}
+            inline int addSpline(const std::vector<int>&, int = -1) { return 0; }
+            inline void healShapes(vectorpair&, double = 1e-8, bool = false, bool = false, bool = false, bool = false, bool = false) {}
+            inline void removeAllDuplicates() {}
+            inline int addWire(const std::vector<int>&, int = -1, bool = false) { return 0; }
+        }
+        namespace mesh {
+            inline void generate(int) {}
+            inline void clear() {}
+            inline void getNodes(std::vector<std::size_t>&, std::vector<double>&, std::vector<double>&, int /*dim*/=-1, int /*tag*/=-1, bool=false, bool=true) {}
+            inline void getElements(std::vector<int>&, std::vector<std::vector<std::size_t>>&, std::vector<std::vector<std::size_t>>&, int /*dim*/=-1, int /*tag*/=-1) {}
+            inline void getElementProperties(int, std::string&, int&, int&, int&, std::vector<double>&, int&) {}
+            inline void getElementsByType(int, std::vector<std::size_t>&, std::vector<std::size_t>&, int /*tag*/=-1) {}
+            inline void getElement(std::size_t, int&, std::vector<std::size_t>&, int&, int&) {}
+        }
+    }
+}
+#endif
 
 #include <api/fl5lib_global.h>
 

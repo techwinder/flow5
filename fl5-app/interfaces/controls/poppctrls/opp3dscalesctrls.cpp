@@ -78,7 +78,7 @@ void Opp3dScalesCtrls::setupLayout()
 {
     QVBoxLayout *pMainLayout = new QVBoxLayout;
     {
-        QGroupBox *pgbCpScales = new QGroupBox("Colour scales");
+        QGroupBox *pgbCpScales = new QGroupBox(tr("Colour scales"));
         {
             QGridLayout *pCpScaleLayout = new QGridLayout;
             {
@@ -125,7 +125,7 @@ void Opp3dScalesCtrls::setupLayout()
             pgbCpScales->setLayout(pCpScaleLayout);
         }
 
-        QGroupBox *pScaleBox = new QGroupBox("Display length scales");
+        QGroupBox *pScaleBox = new QGroupBox(tr("Display length scales"));
         {
             //        m_pScaleBox->setPalette(palette);
             pScaleBox->setAutoFillBackground(true);

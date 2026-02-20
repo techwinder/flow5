@@ -64,7 +64,7 @@ gl3dLorenz2::gl3dLorenz2(QWidget *pParent) : gl3dTestGLView(pParent)
     m_locRadius = -1;
     m_locPosition = m_locFillColor = -1;
 
-    m_stackInterval.resize(50, 0);
+    m_stackInterval.resize(50);
 
     connect(&m_Timer, SIGNAL(timeout()), SLOT(update()));
 

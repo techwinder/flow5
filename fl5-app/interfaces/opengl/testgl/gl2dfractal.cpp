@@ -138,7 +138,7 @@ gl2dFractal::gl2dFractal(QWidget *pParent) : gl2dView(pParent)
             }
 
             QLabel *pRefLink = new QLabel;
-            pRefLink->setText("Inspired by <a href=https://youtu.be/LqbZpur38nw>3Blue1Brown's YouTube video</a>");
+            pRefLink->setText(tr("Inspired by <a href=https://youtu.be/LqbZpur38nw>3Blue1Brown's YouTube video</a>"));
             pRefLink->setOpenExternalLinks(true);
             pRefLink->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
             pRefLink->setAlignment(Qt::AlignVCenter| Qt::AlignLeft);
@@ -387,7 +387,7 @@ void gl2dFractal::glRenderView()
         paintPoints(m_vboRoots, 1.0, 0, false, Qt::white, 4);
     }
 
-    m_plabScale->setText(QString::asprintf("Scale = %g", m_fScale));
+    m_plabScale->setText(tr("Scale = %1").arg(m_fScale));
 
     if (!m_bInitialized)
     {

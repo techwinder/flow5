@@ -40,7 +40,7 @@
 
 WPolarAutoNameDlg::WPolarAutoNameDlg() : QDialog()
 {
-    setWindowTitle("Polar name options");
+    setWindowTitle(tr("Polar name options"));
 
     //make a dummy plane
     m_pPlane = new PlaneXfl;
@@ -103,14 +103,14 @@ void WPolarAutoNameDlg::setupLayout()
         m_plePolarName = new QLineEdit;
         m_plePolarName->setReadOnly(true);
 
-        QGroupBox *pTypeBox = new QGroupBox("Polar type");
+        QGroupBox *pTypeBox = new QGroupBox(tr("Polar type"));
         {
             QHBoxLayout *pTypeLayout = new QHBoxLayout;
             {
-                m_prbType1 = new QRadioButton("Type 1 (fixed speed)");
-                m_prbType2 = new QRadioButton("Type 2 (fixed lift)");
-                m_prbType6 = new QRadioButton("Type 6 (control polar)");
-                m_prbType7 = new QRadioButton("Type 7 (stability polar)");
+                m_prbType1 = new QRadioButton(tr("Type 1 (fixed speed)"));
+                m_prbType2 = new QRadioButton(tr("Type 2 (fixed lift)"));
+                m_prbType6 = new QRadioButton(tr("Type 6 (control polar)"));
+                m_prbType7 = new QRadioButton(tr("Type 7 (stability polar)"));
                 pTypeLayout->addWidget(m_prbType1);
                 pTypeLayout->addWidget(m_prbType2);
                 pTypeLayout->addWidget(m_prbType6);
@@ -122,15 +122,15 @@ void WPolarAutoNameDlg::setupLayout()
 
         QGridLayout *pOptionsLayout = new QGridLayout;
         {
-            m_pchType        = new QCheckBox("Type");
-            m_pchMethod      = new QCheckBox("Method");
-            m_pchSurfaces    = new QCheckBox("Thin wing surfaces");
-            m_pchControls    = new QCheckBox("Control data");
-            m_pchViscosity   = new QCheckBox("Viscosity");
-            m_pchInertia     = new QCheckBox("Inertia");
-            m_pchExtraDrag   = new QCheckBox("Extra drag");
-            m_pchFuseDrag    = new QCheckBox("Fuse drag");
-            m_pchGround      = new QCheckBox("Ground/free surface");
+            m_pchType        = new QCheckBox(tr("Type"));
+            m_pchMethod      = new QCheckBox(tr("Method"));
+            m_pchSurfaces    = new QCheckBox(tr("Thin wing surfaces"));
+            m_pchControls    = new QCheckBox(tr("Control data"));
+            m_pchViscosity   = new QCheckBox(tr("Viscosity"));
+            m_pchInertia     = new QCheckBox(tr("Inertia"));
+            m_pchExtraDrag   = new QCheckBox(tr("Extra drag"));
+            m_pchFuseDrag    = new QCheckBox(tr("Fuse drag"));
+            m_pchGround      = new QCheckBox(tr("Ground/free surface"));
             pOptionsLayout->addWidget(m_pchType,      1, 1);
             pOptionsLayout->addWidget(m_pchViscosity, 1, 2);
             pOptionsLayout->addWidget(m_pchMethod,    2, 1);

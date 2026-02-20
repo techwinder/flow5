@@ -62,7 +62,7 @@ void ExtraDragWt::setupLayout()
     {
         QHBoxLayout *pDragsLayout = new QHBoxLayout;
         {
-            QGroupBox *pExtraBox = new QGroupBox("Constant coef. drag");
+            QGroupBox *pExtraBox = new QGroupBox(tr("Constant coef. drag"));
             {
                 QVBoxLayout *pExtraLayout = new QVBoxLayout;
                 {
@@ -70,13 +70,13 @@ void ExtraDragWt::setupLayout()
                     m_pcptExtraDragTable->setEditable(true);
                     m_pcptExtraDragTable->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
 
-                    m_pcptExtraDragTable->setWindowTitle("Extra drag");
+                    m_pcptExtraDragTable->setWindowTitle(tr("Extra drag"));
 
                     m_pExtraDragModel = new QStandardItemModel(this);
                     m_pExtraDragModel->setColumnCount(3);
-                    m_pExtraDragModel->setHeaderData(0, Qt::Horizontal, "Name");
-                    m_pExtraDragModel->setHeaderData(1, Qt::Horizontal, "Area ("+Units::areaUnitQLabel()+")");
-                    m_pExtraDragModel->setHeaderData(2, Qt::Horizontal, "Drag coef.");
+                    m_pExtraDragModel->setHeaderData(0, Qt::Horizontal, tr("Name"));
+                    m_pExtraDragModel->setHeaderData(1, Qt::Horizontal, tr("Area")+" ("+Units::areaUnitQLabel()+")");
+                    m_pExtraDragModel->setHeaderData(2, Qt::Horizontal, tr("Drag coef."));
                     m_pcptExtraDragTable->setModel(m_pExtraDragModel);
                     m_pcptExtraDragTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
                     m_pcptExtraDragTable->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
@@ -95,7 +95,7 @@ void ExtraDragWt::setupLayout()
             }
             QVBoxLayout *pAVLDragLayout = new QVBoxLayout;
             {
-                m_pchAVLDrag = new QCheckBox("AVL type parabolic drag");
+                m_pchAVLDrag = new QCheckBox(tr("AVL type parabolic drag"));
 
                 m_pParabolicGraphWt = new SplinedGraphWt;
                 {
@@ -168,7 +168,7 @@ void ExtraDragWt::initWt(PlanePolar const *pWPolar)
 
     m_bAVLDrag = pWPolar->bAVLDrag();
     m_AVLSpline = pWPolar->AVLSpline();
-    m_pParabolicGraphWt->graph()->addCurve("Parabolic drag");
+    m_pParabolicGraphWt->graph()->addCurve(tr("Parabolic drag"));
     m_pParabolicGraphWt->setAutoConvert(true);
     fillExtraDrag();
 }

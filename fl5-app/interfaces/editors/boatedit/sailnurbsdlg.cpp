@@ -401,7 +401,7 @@ void SailNurbsDlg::initDialog(Sail *pSail)
     }
 
     m_ppbTETop->setEnabled(false);
-    m_ppbTEBotMid->setText("Mid. panels");
+    m_ppbTEBotMid->setText(tr("Mid. panels"));
     m_pchGuessOpposite->setEnabled(false);
     m_pfeTEAngle->setEnabled(false);
 }

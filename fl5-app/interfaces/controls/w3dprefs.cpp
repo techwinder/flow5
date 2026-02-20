@@ -108,7 +108,7 @@ bool W3dPrefs::s_bMultiSample = true;
 
 W3dPrefs::W3dPrefs(QWidget *pParent) : QWidget(pParent)
 {
-    setWindowTitle("3d Styles");
+    setWindowTitle(tr("3d Styles"));
     setupLayout();
     connectSignals();
 }
@@ -260,39 +260,39 @@ void W3dPrefs::initWidgets()
 
 void W3dPrefs::setupLayout()
 {
-    m_pGroupBox.push_back(new QGroupBox("Colour settings"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Colour settings")));
     {
         QVBoxLayout *pColorPrefs = new QVBoxLayout;
         {
             QGridLayout *pColorGridLayout = new QGridLayout;
             {
-                QLabel *pLabGeom        = new QLabel("Geometry");
-                QLabel *pLabMesh        = new QLabel("Mesh");
-                QLabel *pLabVortons     = new QLabel("Vortons");
+                QLabel *pLabGeom        = new QLabel(tr("Geometry"));
+                QLabel *pLabMesh        = new QLabel(tr("Mesh"));
+                QLabel *pLabVortons     = new QLabel(tr("Vortons"));
                 pLabGeom->setStyleSheet("font: bold");
                 pLabMesh->setStyleSheet("font: bold");
                 pLabVortons->setStyleSheet("font: bold");
 
-                QLabel *pLabResults     = new QLabel("Results");
-                QLabel *pLabSel         = new QLabel("Selected");
-                QLabel *pLabHigh        = new QLabel("Highlighted");
-                QLabel *pLabAxis        = new QLabel("Axes");
-                QLabel *pLabWind        = new QLabel("Wind");
-                QLabel *pLabOutline     = new QLabel("Geometry outline");
-                QLabel *pLabTopTr       = new QLabel("Transitions");
-                QLabel *pLabLift        = new QLabel("Lift and forces");
-                QLabel *pLabMoments     = new QLabel("Moments");
-                QLabel *pLabInducedDrag = new QLabel("Induced drag");
-                QLabel *pLabViscousDrag = new QLabel("Viscous drag");
-                QLabel *pLabVelocity    = new QLabel("Velocity vectors");
-                QLabel *pLabStream      = new QLabel("Streamlines");
-                QLabel *pLabFlow        = new QLabel("Flow lines");
-                QLabel *pLabMasses      = new QLabel("Masses");
-                QLabel *pLabVLM         = new QLabel("Panel outline");
-                QLabel *pLabFuse        = new QLabel("Fuse panels:");
-                QLabel *pLabWing        = new QLabel("Wing panels:");
-                QLabel *pLabFlap        = new QLabel("Flap panels:");
-                QLabel *pLabWake        = new QLabel("Wake panels:");
+                QLabel *pLabResults     = new QLabel(tr("Results"));
+                QLabel *pLabSel         = new QLabel(tr("Selected"));
+                QLabel *pLabHigh        = new QLabel(tr("Highlighted"));
+                QLabel *pLabAxis        = new QLabel(tr("Axes"));
+                QLabel *pLabWind        = new QLabel(tr("Wind"));
+                QLabel *pLabOutline     = new QLabel(tr("Geometry outline"));
+                QLabel *pLabTopTr       = new QLabel(tr("Transitions"));
+                QLabel *pLabLift        = new QLabel(tr("Lift and forces"));
+                QLabel *pLabMoments     = new QLabel(tr("Moments"));
+                QLabel *pLabInducedDrag = new QLabel(tr("Induced drag"));
+                QLabel *pLabViscousDrag = new QLabel(tr("Viscous drag"));
+                QLabel *pLabVelocity    = new QLabel(tr("Velocity vectors"));
+                QLabel *pLabStream      = new QLabel(tr("Streamlines"));
+                QLabel *pLabFlow        = new QLabel(tr("Flow lines"));
+                QLabel *pLabMasses      = new QLabel(tr("Masses"));
+                QLabel *pLabVLM         = new QLabel(tr("Panel outline"));
+                QLabel *pLabFuse        = new QLabel(tr("Fuse panels:"));
+                QLabel *pLabWing        = new QLabel(tr("Wing panels:"));
+                QLabel *pLabFlap        = new QLabel(tr("Flap panels:"));
+                QLabel *pLabWake        = new QLabel(tr("Wake panels:"));
 
                 m_plbHighlight    = new LineBtn(this);
                 m_plbSelect       = new LineBtn(this);
@@ -309,11 +309,11 @@ void W3dPrefs::setupLayout()
                 m_plbFlowLines    = new LineBtn(this);
                 m_plbStreamLines  = new LineBtn(this);
 
-                m_pchUseWingColour = new QCheckBox("Use wing colour");
+                m_pchUseWingColour = new QCheckBox(tr("Use wing colour"));
 
                 m_pcbMassColor    = new ColorBtn;
 
-                m_pchBackPanelClr  = new QCheckBox("Use background color for mesh panels");
+                m_pchBackPanelClr  = new QCheckBox(tr("Use background color for mesh panels"));
                 m_plbMeshOutline   = new LineBtn(this);
                 m_pcbFusePanelClr = new ColorBtn;
                 m_pcbWingPanelClr = new ColorBtn;

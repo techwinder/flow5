@@ -101,7 +101,7 @@ Quaternion BoatDlg::s_ab_quat(-0.212012, 0.148453, -0.554032, -0.79124);
 
 BoatDlg::BoatDlg(QWidget *pParent) : XflDialog(pParent)
 {
-    setWindowTitle("Boat editor");
+    setWindowTitle(tr("Boat editor"));
     setWindowFlag(Qt::WindowMinMaxButtonsHint);
 
     m_pBoat = nullptr;
@@ -139,9 +139,9 @@ void BoatDlg::setupLayout()
                 m_pleBtName = new QLineEdit;
                 m_pleBtName->setClearButtonEnabled(true);
 
-                m_pleBtName->setToolTip("Enter the boat's name");
+                m_pleBtName->setToolTip(tr("Enter the boat's name"));
                 m_pteBtDescription = new QTextEdit;
-                m_pteBtDescription->setToolTip("Use this field to enter a short text to describe the boat");
+                m_pteBtDescription->setToolTip(tr("Use this field to enter a short text to describe the boat"));
                 QFont fnt;
                 QFontMetrics fm(fnt);
                 m_pteBtDescription->setMaximumHeight(fm.height()*3);
@@ -159,30 +159,30 @@ void BoatDlg::setupLayout()
                         QVBoxLayout *pSailPageLayout = new QVBoxLayout;
                         {
                             m_pcptSails = new CPTableView;
-                            m_pcptSails->setWindowTitle("Sail definition");
+                            m_pcptSails->setWindowTitle(tr("Sail definition"));
                             m_pcptSails->setSelectionBehavior(QAbstractItemView::SelectRows);
                             m_pcptSails->setEditable(true);
 
-                            m_ppbAddSail    = new QPushButton("Add sail");
+                            m_ppbAddSail    = new QPushButton(tr("Add sail"));
 
-                            QMenu *pSailSelMenu = new QMenu("Actions...",this);
+                            QMenu *pSailSelMenu = new QMenu(tr("Actions..."),this);
                             {
-                                QAction *pNURBSSail    = new QAction("NURBS type sail", this);
+                                QAction *pNURBSSail    = new QAction(tr("NURBS type sail"), this);
                                 pNURBSSail->setData(QVariant(0));
-                                QAction *pBSplineSail   = new QAction("BSpline", this);
+                                QAction *pBSplineSail   = new QAction(tr("BSpline"), this);
                                 pBSplineSail->setData(QVariant(1));
-                                QAction *pBezierSail   = new QAction("Bezier", this);
+                                QAction *pBezierSail   = new QAction(tr("Bezier"), this);
                                 pBezierSail->setData(QVariant(2));
-                                QAction *pPointSail    = new QAction("points", this);
+                                QAction *pPointSail    = new QAction(tr("points"), this);
                                 pPointSail->setData(QVariant(3));
-                                QAction *pCubicSail    = new QAction("cubic", this);
+                                QAction *pCubicSail    = new QAction(tr("cubic"), this);
                                 pCubicSail->setData(QVariant(4));
-                                QAction *pWingSail    = new QAction("Thick wing type sail", this);
+                                QAction *pWingSail    = new QAction(tr("Thick wing type sail"), this);
                                 pWingSail->setData(QVariant(5));
-                                QAction *pImportSail    = new QAction("from other boat", this);
-                                QAction *pImportXMLSail = new QAction("from XML file", this);
-                                QAction *pImportSTLSail = new QAction("from STL file", this);
-                                QAction *pImportCADSail = new QAction("from CAD file", this);
+                                QAction *pImportSail    = new QAction(tr("from other boat"), this);
+                                QAction *pImportXMLSail = new QAction(tr("from XML file"), this);
+                                QAction *pImportSTLSail = new QAction(tr("from STL file"), this);
+                                QAction *pImportCADSail = new QAction(tr("from CAD file"), this);
                                 pImportCADSail->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_O));
 
                                 connect(pNURBSSail,     SIGNAL(triggered()), SLOT(onAddSail()));
@@ -196,7 +196,7 @@ void BoatDlg::setupLayout()
                                 connect(pImportSTLSail, SIGNAL(triggered()), SLOT(onImportSailFromSTL()));
                                 connect(pImportCADSail, SIGNAL(triggered()), SLOT(onImportSailFromCAD()));
                                 pSailSelMenu->addAction(pNURBSSail);
-                                QMenu *pSplineMenu = pSailSelMenu->addMenu("Spline type sail");
+                                QMenu *pSplineMenu = pSailSelMenu->addMenu(tr("Spline type sail"));
                                 pSplineMenu->addAction(pBSplineSail);
                                 pSplineMenu->addAction(pBezierSail);
                                 pSplineMenu->addAction(pPointSail);
@@ -222,30 +222,25 @@ void BoatDlg::setupLayout()
                         QVBoxLayout *pHullPageLayout = new QVBoxLayout;
                         {
                             m_pcptHulls = new CPTableView;
-                            m_pcptHulls->setWindowTitle("Hull definition");
+                            m_pcptHulls->setWindowTitle(tr("Hull definition"));
                             m_pcptHulls->setSelectionMode(QAbstractItemView::SingleSelection);
                             m_pcptHulls->setSelectionBehavior(QAbstractItemView::SelectRows);
                             m_pcptHulls->setEditable(true);
 
-                            m_ppbAddHull  = new QPushButton("Add hull");
-                            QMenu *pHullSelMenu = new QMenu("Actions...",this);
+                            m_ppbAddHull  = new QPushButton(tr("Add hull"));
+                            QMenu *pHullSelMenu = new QMenu(tr("Actions..."),this);
                             {
                                 int n=0;
-                                QAction *pFlatPanelsHull   = new QAction("flat quads type", this);
+                                QAction *pFlatPanelsHull   = new QAction(tr("flat quads type"), this);
                                 pFlatPanelsHull->setData(n);
-                                QAction *pNURBSHull   = new QAction("NURBS type", this);
+                                QAction *pNURBSHull   = new QAction(tr("NURBS type"), this);
                                 n=1;
                                 pNURBSHull->setData(n);
-                                QAction *pGetHull        = new QAction("from other boat", this);
-                                pGetHull->setToolTip("Select an existing hull from another boat");
-                                QAction *pImportHullXML  = new QAction("from XML file", this);
-                                QAction *pImportHullCAD  = new QAction("from CAD file", this);
-                                QAction *pImportHullSTL  = new QAction("from STL file", this);
-
-                                connect(pFlatPanelsHull, SIGNAL(triggered(bool)), SLOT(onAddHull()));
-                                connect(pNURBSHull,      SIGNAL(triggered(bool)), SLOT(onAddHull()));
-                                connect(pGetHull,        SIGNAL(triggered(bool)), SLOT(onGetHull()));
-                                connect(pImportHullXML,  SIGNAL(triggered(bool)), SLOT(onImportHullXML()));
+                                QAction *pGetHull        = new QAction(tr("from other boat"), this);
+                                pGetHull->setToolTip(tr("Select an existing hull from another boat"));
+                                QAction *pImportHullXML  = new QAction(tr("from XML file"), this);
+                                QAction *pImportHullCAD  = new QAction(tr("from CAD file"), this);
+                                QAction *pImportHullSTL  = new QAction(tr("from STL file"), this);
                                 connect(pImportHullCAD,  SIGNAL(triggered(bool)), SLOT(onImportHullCAD()));
                                 connect(pImportHullSTL,  SIGNAL(triggered(bool)), SLOT(onImportHullSTL()));
 
@@ -261,9 +256,9 @@ void BoatDlg::setupLayout()
                                 m_ppbAddHull->setMenu(pHullSelMenu);
                             }
 
-                            QLabel *pLabHullWarning = new QLabel("<p>WARNING:<br>"
+                            QLabel *pLabHullWarning = new QLabel(tr("<p>WARNING:<br>"
                                                                  "Hulls should only be included if fully emerged as in the case of the AC75.<br>"
-                                                                 "Hull/water and hull/sail intersections are IGNORED.</p>");
+                                                                 "Hull/water and hull/sail intersections are IGNORED.</p>"));
                             pHullPageLayout->addWidget(m_pcptHulls);
                             pHullPageLayout->addWidget(pLabHullWarning);
                             pHullPageLayout->addWidget(m_ppbAddHull);
@@ -272,8 +267,8 @@ void BoatDlg::setupLayout()
                         pHullBox->setLayout(pHullPageLayout);
                     }
 
-                    m_pPartTabWt->addTab(pSailBox, "Sails");
-                    m_pPartTabWt->addTab(pHullBox, "Hulls");
+                    m_pPartTabWt->addTab(pSailBox, tr("Sails"));
+                    m_pPartTabWt->addTab(pHullBox, tr("Hulls"));
                 }
 
                 m_ppto = new PlainTextOutput;
@@ -584,7 +579,7 @@ void BoatDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         connect(m_pBackImageSettings, SIGNAL(triggered()), m_pglBoatView, SLOT(onBackImageSettings()));
 
         pContextMenu->addSeparator();
-        QMenu *pBackImageMenu = pContextMenu->addMenu("Background image");
+        QMenu *pBackImageMenu = pContextMenu->addMenu(tr("Background image"));
         {
             pBackImageMenu->addAction(m_pBackImageLoad);
             pBackImageMenu->addAction(m_pBackImageClear);
@@ -592,7 +587,7 @@ void BoatDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         }
 
         /** @todo issue with dialog modality */
-        QAction *p3dLightAct = new  QAction(QIcon(":/icons/light.png"), "3d light options", this);
+        QAction *p3dLightAct = new  QAction(QIcon(":/icons/light.png"), tr("3d light options"), this);
         connect(p3dLightAct, SIGNAL(triggered()), m_pglBoatView, SLOT(onSetupLight()));
         pContextMenu->addAction(p3dLightAct);
     }

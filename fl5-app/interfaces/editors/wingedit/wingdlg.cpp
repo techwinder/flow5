@@ -83,7 +83,7 @@ Quaternion WingDlg::s_ab_quat(-0.212012, 0.148453, -0.554032, -0.79124);
 
 WingDlg::WingDlg(QWidget *pParent) : XflDialog(pParent)
 {
-    setWindowTitle("Wing editor");
+    setWindowTitle(tr("Wing editor"));
     setWindowFlag(Qt::WindowMinMaxButtonsHint);
     m_pWing = nullptr;
 
@@ -93,33 +93,33 @@ WingDlg::WingDlg(QWidget *pParent) : XflDialog(pParent)
     m_bDescriptionChanged      = false;
 
 
-    m_pInsertBefore     = new QAction("Insert before",                   this);
+    m_pInsertBefore     = new QAction(tr("Insert before"),                   this);
     m_pInsertBefore->setData(1);
-    m_pInsertAfter      = new QAction("Insert after",                    this);
+    m_pInsertAfter      = new QAction(tr("Insert after"),                    this);
     m_pInsertAfter->setData(1);
-    m_pInsertNBefore    = new QAction("Insert multiple sections before", this);
+    m_pInsertNBefore    = new QAction(tr("Insert multiple sections before"), this);
     m_pInsertNBefore->setData(-1);
-    m_pInsertNAfter     = new QAction("Insert multiple sections after",  this);
+    m_pInsertNAfter     = new QAction(tr("Insert multiple sections after"),  this);
     m_pInsertNAfter->setData(-1);
-    m_pDuplicateSection = new QAction("Duplicate section",               this);
-    m_pDeleteSection    = new QAction("Delete section",                  this);
-    m_pResetSection     = new QAction("Reset section",                   this);
-    m_pCopyAction       = new QAction("Copy",                            this);
+    m_pDuplicateSection = new QAction(tr("Duplicate section"),               this);
+    m_pDeleteSection    = new QAction(tr("Delete section"),                  this);
+    m_pResetSection     = new QAction(tr("Reset section"),                   this);
+    m_pCopyAction       = new QAction(tr("Copy"),                            this);
     m_pCopyAction->setShortcut(Qt::Key_Copy);
-    m_pPasteAction      = new QAction("Paste", this);
+    m_pPasteAction      = new QAction(tr("Paste"), this);
     m_pPasteAction->setShortcut(Qt::Key_Paste);
 
-    m_pBackImageLoad     = new QAction("Load",  this);
-    m_pBackImageClear    = new QAction("Clear", this);
-    m_pBackImageSettings = new QAction("Settings",  this);
+    m_pBackImageLoad     = new QAction(tr("Load"),  this);
+    m_pBackImageClear    = new QAction(tr("Clear"), this);
+    m_pBackImageSettings = new QAction(tr("Settings"),  this);
 
-    m_pResetMesh            = new QAction("Reset mesh",  this);
-    m_pTranslateWing        = new QAction("Translate",   this);
-    m_pScaleWing            = new QAction("Scale",       this);
-    m_pInertia              = new QAction("Inertia",     this);
-    m_pExportToXml          = new QAction("to XML file", this);
-    m_pExportToCADFile      = new QAction("to CAD file", this);
-    m_pExportToStl          = new QAction("to STL file", this);
+    m_pResetMesh            = new QAction(tr("Reset mesh"),  this);
+    m_pTranslateWing        = new QAction(tr("Translate"),   this);
+    m_pScaleWing            = new QAction(tr("Scale"),       this);
+    m_pInertia              = new QAction(tr("Inertia"),     this);
+    m_pExportToXml          = new QAction(tr("to XML file"), this);
+    m_pExportToCADFile      = new QAction(tr("to CAD file"), this);
+    m_pExportToStl          = new QAction(tr("to STL file"), this);
 
     makeCommonWts();
 }
@@ -135,23 +135,23 @@ void WingDlg::makeCommonWts()
     m_plabPlaneName    = new QLabel;
     m_plabPlaneName->setStyleSheet("font: bold");
 
-    m_pleWingName      = new QLineEdit("WingName");
+    m_pleWingName      = new QLineEdit(tr("WingName"));
     m_pcbColor         = new ColorBtn;
 
     m_ppteDescription = new QPlainTextEdit;
-    m_ppteDescription->setToolTip("Enter here a short description for the wing");
+    m_ppteDescription->setToolTip(tr("Enter here a short description for the wing"));
     QFont font;
     QFontMetrics fm(font);
     m_ppteDescription->setMaximumHeight(fm.height()*5);
 
     m_pButtonBox->setStandardButtons(QDialogButtonBox::Save | QDialogButtonBox::Discard);
     {
-        m_ppbActionMenuButton = new QPushButton("Actions");
+        m_ppbActionMenuButton = new QPushButton(tr("Actions"));
         {
-            QMenu *pWingMenu = new QMenu("Actions", this);
+            QMenu *pWingMenu = new QMenu(tr("Actions"), this);
             pWingMenu->addAction(m_pResetMesh);
             pWingMenu->addSeparator();
-            QMenu *pExportMenu = pWingMenu->addMenu("Export");
+            QMenu *pExportMenu = pWingMenu->addMenu(tr("Export"));
             pExportMenu->addAction(m_pExportToCADFile);
             pExportMenu->addAction(m_pExportToStl);
             pExportMenu->addAction(m_pExportToXml);
@@ -161,7 +161,7 @@ void WingDlg::makeCommonWts()
             pWingMenu->addAction(m_pScaleWing);
             m_ppbActionMenuButton->setMenu(pWingMenu);
         }
-        m_ppbSaveAsNew = new QPushButton("Save as");
+        m_ppbSaveAsNew = new QPushButton(tr("Save as"));
         m_pButtonBox->addButton(m_ppbActionMenuButton, QDialogButtonBox::ActionRole);
         m_pButtonBox->addButton(m_ppbSaveAsNew,        QDialogButtonBox::ActionRole);
     }
@@ -170,7 +170,7 @@ void WingDlg::makeCommonWts()
 
 void WingDlg::onSurfaceColor()
 {
-    QColor clr = QColorDialog::getColor(xfl::fromfl5Clr(m_pWing->color()), this, "Surface colour", QColorDialog::ShowAlphaChannel);
+    QColor clr = QColorDialog::getColor(xfl::fromfl5Clr(m_pWing->color()), this, tr("Surface colour"), QColorDialog::ShowAlphaChannel);
 
     if(clr.isValid())
     {
@@ -214,8 +214,8 @@ void WingDlg::contextMenuEvent(QContextMenuEvent *pEvent)
     QPoint pt = pEvent->pos();
     if(r.contains(pt))
     {
-        QMenu *pContextMenu = new QMenu("GraphMenu");
-        QMenu *pSectionMenu = pContextMenu->addMenu("Selected section");
+        QMenu *pContextMenu = new QMenu(tr("GraphMenu"));
+        QMenu *pSectionMenu = pContextMenu->addMenu(tr("Selected section"));
         {
             pSectionMenu->addAction(m_pInsertBefore);
             pSectionMenu->addAction(m_pInsertAfter);
@@ -225,7 +225,7 @@ void WingDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         }
         pSectionMenu->setEnabled(m_iSection>=0);
         pContextMenu->addSeparator();
-        QMenu *pWingMenu = pContextMenu->addMenu("Wing");
+        QMenu *pWingMenu = pContextMenu->addMenu(tr("Wing"));
         {
             pWingMenu->addAction(m_pScaleWing);
             pWingMenu->addAction(m_pInertia);
@@ -235,7 +235,7 @@ void WingDlg::contextMenuEvent(QContextMenuEvent *pEvent)
             pWingMenu->addAction(m_pExportToStl);
         }
         pContextMenu->addSeparator();
-        QMenu *pBackImageMenu = pContextMenu->addMenu("Background image");
+        QMenu *pBackImageMenu = pContextMenu->addMenu(tr("Background image"));
         {
             pBackImageMenu->addAction(m_pBackImageLoad);
             pBackImageMenu->addAction(m_pBackImageClear);

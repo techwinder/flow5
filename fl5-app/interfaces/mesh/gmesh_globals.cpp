@@ -34,7 +34,8 @@
 #include <TopTools_ListIteratorOfListOfShape.hxx>
 
 
-#include <gmsh.h>
+
+
 
 #include <interfaces/mesh/gmesh_globals.h>
 

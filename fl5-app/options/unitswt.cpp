@@ -33,7 +33,7 @@
 
 UnitsWt::UnitsWt(QWidget *parent): QWidget(parent)
 {
-    setWindowTitle("Units");
+    setWindowTitle(tr("Units"));
     setupLayout();
 }
 
@@ -44,18 +44,18 @@ void UnitsWt::setupLayout()
 
     QVBoxLayout *pMainLayout = new QVBoxLayout;
     {
-        QGroupBox *pgbConversion = new QGroupBox("Conversion factors");
+        QGroupBox *pgbConversion = new QGroupBox(tr("Conversion factors"));
         {
             QGridLayout *pConversionLayout = new QGridLayout;
             {
-                QLabel *pLab1 = new QLabel("Length:");
-                QLabel *pLab2 = new QLabel("Area:");
-                QLabel *pLab3 = new QLabel("Velocity:");
-                QLabel *pLab4 = new QLabel("Mass:");
-                QLabel *pLab5 = new QLabel("Force:");
-                QLabel *pLab6 = new QLabel("Moment:");
-                QLabel *pLab7 = new QLabel("Pressure:");
-                QLabel *pLab8 = new QLabel("Inertia:");
+                QLabel *pLab1 = new QLabel(tr("Length:"));
+                QLabel *pLab2 = new QLabel(tr("Area:"));
+                QLabel *pLab3 = new QLabel(tr("Velocity:"));
+                QLabel *pLab4 = new QLabel(tr("Mass:"));
+                QLabel *pLab5 = new QLabel(tr("Force:"));
+                QLabel *pLab6 = new QLabel(tr("Moment:"));
+                QLabel *pLab7 = new QLabel(tr("Pressure:"));
+                QLabel *pLab8 = new QLabel(tr("Inertia:"));
                 pLab1->setAlignment(Qt::AlignRight | Qt::AlignCenter);
                 pLab2->setAlignment(Qt::AlignRight | Qt::AlignCenter);
                 pLab3->setAlignment(Qt::AlignRight | Qt::AlignCenter);
@@ -312,8 +312,8 @@ void UnitsWt::onFluidUnit()
     if(m_prbUnit1->isChecked()) Units::setFluidUnitType(0);
     else                        Units::setFluidUnitType(1);
     Units::setUnitConversionFactors();
-    m_plabFluidUnit->setText("Density:             " + Units::densityUnitQLabel()   +"\n" +
-                             "Kinematic viscosity: " + Units::viscosityUnitQLabel() +"\n");
+    m_plabFluidUnit->setText(tr("Density:             ") + Units::densityUnitQLabel()   +"\n" +
+                             tr("Kinematic viscosity: ") + Units::viscosityUnitQLabel() +"\n");
 
     emit unitsChanged();
 }

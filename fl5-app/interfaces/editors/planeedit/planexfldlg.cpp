@@ -119,7 +119,7 @@ QByteArray PlaneXflDlg::s_XflGeometry;
 
 PlaneXflDlg::PlaneXflDlg(QWidget *pParent) : PlaneDlg(pParent)
 {
-    setWindowTitle("Xfl plane editor");
+    setWindowTitle(tr("Xfl plane editor"));
 
     m_pPlane = nullptr;
 
@@ -212,7 +212,7 @@ void PlaneXflDlg::connectSignals()
 
 void PlaneXflDlg::setupLayout()
 {
-    m_pScalePlane  = new QAction("Scale plane");
+    m_pScalePlane  = new QAction(tr("Scale plane"));
     QMenu *pCheckMeshMenu = m_ppbActions->menu();
     pCheckMeshMenu->addSeparator();
     pCheckMeshMenu->addAction(m_pScalePlane);
@@ -248,10 +248,10 @@ void PlaneXflDlg::setupLayout()
                                 makePartTable();
                                 QHBoxLayout *pEditCmdLayout = new QHBoxLayout;
                                 {
-                                    QPushButton *ppbInsertBtn = new QPushButton("Insert");
+                                    QPushButton *ppbInsertBtn = new QPushButton(tr("Insert"));
                                     QMenu *pInsertMenu = new QMenu(this);
                                     {
-                                        QMenu *pInsertWingMenu = pInsertMenu->addMenu("Wing");
+                                        QMenu *pInsertWingMenu = pInsertMenu->addMenu(tr("Wing"));
                                         {
                                             pInsertWingMenu->addAction(m_pInsertWing);
                                             pInsertWingMenu->addAction(m_pInsertWingOther);
@@ -263,9 +263,9 @@ void PlaneXflDlg::setupLayout()
                                         pInsertMenu->addAction(m_pInsertFin);
                                         pInsertMenu->addSeparator();
 
-                                        QMenu*pFuseMenu = pInsertMenu->addMenu("Fuselage");
+                                        QMenu*pFuseMenu = pInsertMenu->addMenu(tr("Fuselage"));
                                         {
-                                            QMenu *pFuseXflMenu = pFuseMenu->addMenu("xfl-type fuselage");
+                                            QMenu *pFuseXflMenu = pFuseMenu->addMenu(tr("xfl-type fuselage"));
                                             {
                                                 pFuseXflMenu->addAction(m_pInsertFuseXflSpline);
                                                 pFuseXflMenu->addAction(m_pInsertFuseXflFlat);
@@ -277,11 +277,11 @@ void PlaneXflDlg::setupLayout()
                                             pFuseMenu->addAction(m_pInsertFuseStl);
                                         }
                                         pInsertMenu->addSeparator();
-                                        QMenu *pTestMenu = pInsertMenu->addMenu("Testing");
+                                        QMenu *pTestMenu = pInsertMenu->addMenu(tr("Testing"));
                                         {
                                             pTestMenu->addAction(m_pInsertEllWing);
                                             pTestMenu->addSeparator();
-                                            QMenu *pFuseMenu = pTestMenu->addMenu("Fuselage");
+                                            QMenu *pFuseMenu = pTestMenu->addMenu(tr("Fuselage"));
                                             {
                                                 pFuseMenu->addAction(m_pInsertSTLSphere);
                                                 pFuseMenu->addAction(m_pInsertSTLCylinder);
@@ -295,7 +295,7 @@ void PlaneXflDlg::setupLayout()
                                         ppbInsertBtn->setMenu(pInsertMenu);
                                     }
 
-                                    m_pchHighlightSel = new QCheckBox("Highlight selected part");
+                                    m_pchHighlightSel = new QCheckBox(tr("Highlight selected part"));
 
                                     pEditCmdLayout->addWidget(ppbInsertBtn);
                                     pEditCmdLayout->addStretch();
@@ -314,17 +314,17 @@ void PlaneXflDlg::setupLayout()
 
                                 QHBoxLayout *pSelLayout = new QHBoxLayout;
                                 {
-                                    QLabel *plabAssyType = new QLabel("Target assembly:");
+                                    QLabel *plabAssyType = new QLabel(tr("Target assembly:"));
                                     QButtonGroup *pGroup = new QButtonGroup;
                                     {
-                                        m_prbThin  = new QRadioButton("Thin  surfaces");
-                                        m_prbThick = new QRadioButton("Thick surfaces");
-                                        m_prbThin->setToolTip("<p>Assemble the fuselage and wings for THIN surface calculations;<br>"
+                                        m_prbThin  = new QRadioButton(tr("Thin  surfaces"));
+                                        m_prbThick = new QRadioButton(tr("Thick surfaces"));
+                                        m_prbThin->setToolTip(tr("<p>Assemble the fuselage and wings for THIN surface calculations;<br>"
                                                               "The fuselage mesh will conform to the mid-camber line of the selected wings."
-                                                              "</p>");
-                                        m_prbThick->setToolTip("<p>Assemble the fuselage and wings for THICK surface calculations;<br>"
+                                                              "</p>"));
+                                        m_prbThick->setToolTip(tr("<p>Assemble the fuselage and wings for THICK surface calculations;<br>"
                                                               "The fuselage mesh will conform to the top and bottom surfaces of the selected wings."
-                                                              "</p>");
+                                                              "</p>"));
 
                                         pGroup->addButton(m_prbThin);
                                         pGroup->addButton(m_prbThick);
@@ -335,7 +335,7 @@ void PlaneXflDlg::setupLayout()
                                     pSelLayout->addStretch();
                                 }
 
-                                QLabel *plabConnectedWings = new QLabel("Select the wings connected to the fuselage:");
+                                QLabel *plabConnectedWings = new QLabel(tr("Select the wings connected to the fuselage:"));
                                 m_plwWings = new QListWidget;
                                 m_plwWings->setSelectionMode(QAbstractItemView::MultiSelection);
 
@@ -369,33 +369,33 @@ void PlaneXflDlg::setupLayout()
 
                         m_pMeshCorrectionsFrame = new QFrame;
                         {
-                            QLabel *plabInfo = new QLabel("Use the actions below to modify the fuselage's mesh<br>"
-                                                          "and to connect it to the wing's mesh.");
+                            QLabel *plabInfo = new QLabel(tr("Use the actions below to modify the fuselage's mesh<br>"
+                                                          "and to connect it to the wing's mesh."));
                             QVBoxLayout *pCorrectLayout = new QVBoxLayout;
                             {
                                 QGridLayout *pModLayout = new QGridLayout;
                                 {
-                                    QLabel *plabTrans = new QLabel("Node translation:");
-                                    m_ppbMoveNode = new QPushButton("Move node");
-                                    QString tip = "<p>Use this option to move a fuselage node and to merge it with another. "
-                                                     "Select first the source node to move, then the destination node.</p<";
+                                    QLabel *plabTrans = new QLabel(tr("Node translation:"));
+                                    m_ppbMoveNode = new QPushButton(tr("Move node"));
+                                    QString tip = tr("<p>Use this option to move a fuselage node and to merge it with another. "
+                                                     "Select first the source node to move, then the destination node.</p<");
                                     m_ppbMoveNode->setToolTip(tip);
                                     m_ppbMoveNode->setCheckable(true);
 
 
-                                    QLabel *plabDelete = new QLabel("Panel deletion:");
-                                    m_ppbSelectPanels = new QPushButton("Select");
+                                    QLabel *plabDelete = new QLabel(tr("Panel deletion:"));
+                                    m_ppbSelectPanels = new QPushButton(tr("Select"));
                                     m_ppbSelectPanels->setCheckable(true);
-                                    m_ppbDeletePanel = new QPushButton("Delete");
+                                    m_ppbDeletePanel = new QPushButton(tr("Delete"));
 
-                                    QLabel *plabMake = new QLabel("Panel creation:");
-                                    m_ppbMakeP3 = new QPushButton("Single");
+                                    QLabel *plabMake = new QLabel(tr("Panel creation:"));
+                                    m_ppbMakeP3 = new QPushButton(tr("Single"));
                                     m_ppbMakeP3->setCheckable(true);
 
-                                    m_ppbMakeP3Strip = new QPushButton("Strip");
+                                    m_ppbMakeP3Strip = new QPushButton(tr("Strip"));
                                     m_ppbMakeP3Strip->setCheckable(true);
 
-                                    m_pchMakeP3Opposite = new QCheckBox("Make opposite");
+                                    m_pchMakeP3Opposite = new QCheckBox(tr("Make opposite"));
 
                                     pModLayout->addWidget(plabInfo,            0, 1, 1 ,3);
                                     pModLayout->addWidget(plabTrans,           1, 1);
@@ -411,9 +411,9 @@ void PlaneXflDlg::setupLayout()
 
                                 QHBoxLayout *pUndoRedoLayout = new QHBoxLayout;
                                 {
-                                    m_ppbUndo = new QPushButton(QIcon(":/icons/OnUndo.png"), "Undo");
+                                    m_ppbUndo = new QPushButton(QIcon(":/icons/OnUndo.png"), tr("Undo"));
                                     m_ppbUndo->setShortcut(Qt::Key_Undo);
-                                    m_ppbRedo = new QPushButton(QIcon(":/icons/OnRedo.png"), "Redo");
+                                    m_ppbRedo = new QPushButton(QIcon(":/icons/OnRedo.png"), tr("Redo"));
                                     m_ppbUndo->setShortcut(Qt::Key_Redo);
 
                                     m_plabStackInfo = new QLabel("stackpos: 0/0");
@@ -424,12 +424,12 @@ void PlaneXflDlg::setupLayout()
                                     pUndoRedoLayout->addStretch();
                                 }
 
-                                m_ppbCheckMenuBtn = new QPushButton("Mesh actions");
+                                m_ppbCheckMenuBtn = new QPushButton(tr("Mesh actions"));
                                 {
-                                    QMenu *pCheckMeshMenu = new QMenu("Mesh actions");
+                                    QMenu *pCheckMeshMenu = new QMenu(tr("Mesh actions"));
                                     {
-                                        m_pRestoreFuseMesh  = new QAction("Restore default mesh",this);
-                                        m_pFuseMesher    = new QAction("Fuselage mesher");
+                                        m_pRestoreFuseMesh  = new QAction(tr("Restore default mesh"),this);
+                                        m_pFuseMesher    = new QAction(tr("Fuselage mesher"));
                                         pCheckMeshMenu->addAction(m_pCheckMesh);
                                         pCheckMeshMenu->addAction(m_pConnectPanels);
                                         pCheckMeshMenu->addAction(m_pCheckFreeEdges);
@@ -459,11 +459,11 @@ void PlaneXflDlg::setupLayout()
                             m_pMeshCorrectionsFrame->setLayout(pCorrectLayout);
                         }
 
-                        m_pLeftTabWidget->addTab(pMetaFrame,               "Meta");
-                        m_pLeftTabWidget->addTab(pfrParts,                 "Parts");
-                        m_pLeftTabWidget->addTab(pfrThinThick,             "Assembly");
-                        m_pLeftTabWidget->addTab(pfrGmesher,               "Fuselage mesh");
-                        m_pLeftTabWidget->addTab(m_pMeshCorrectionsFrame , "Mesh connections");
+                        m_pLeftTabWidget->addTab(pMetaFrame,               tr("Meta"));
+                        m_pLeftTabWidget->addTab(pfrParts,                 tr("Parts"));
+                        m_pLeftTabWidget->addTab(pfrThinThick,             tr("Assembly"));
+                        m_pLeftTabWidget->addTab(pfrGmesher,               tr("Fuselage mesh"));
+                        m_pLeftTabWidget->addTab(m_pMeshCorrectionsFrame , tr("Mesh connections"));
 
                         m_pLeftTabWidget->setTabToolTip(0, "Ctrl+1");
                         m_pLeftTabWidget->setTabToolTip(1, "Ctrl+2");
@@ -549,16 +549,16 @@ void PlaneXflDlg::customEvent(QEvent *pEvent)
 
 void PlaneXflDlg::contextMenuEvent(QContextMenuEvent *pEvent)
 {
-    QMenu *pPlaneCtxMenu = new QMenu("context menu", this);
+    QMenu *pPlaneCtxMenu = new QMenu(tr("context menu"), this);
     {
         pPlaneCtxMenu->addAction(m_pPlaneInertia);
         pPlaneCtxMenu->addSeparator();
         pPlaneCtxMenu->addAction(m_pScalePlane);
         pPlaneCtxMenu->addSeparator();
-        QMenu *pCheckMeshMenu = pPlaneCtxMenu->addMenu("Mesh");
+        QMenu *pCheckMeshMenu = pPlaneCtxMenu->addMenu(tr("Mesh"));
         {
-            m_pRestoreFuseMesh  = new QAction("Restore default mesh",this);
-            m_pFuseMesher       = new QAction("Fuselage mesher");
+            m_pRestoreFuseMesh  = new QAction(tr("Restore default mesh"),this);
+            m_pFuseMesher       = new QAction(tr("Fuselage mesher"));
             pCheckMeshMenu->addAction(m_pCheckMesh);
             pCheckMeshMenu->addAction(m_pConnectPanels);
             pCheckMeshMenu->addAction(m_pCheckFreeEdges);
@@ -574,17 +574,17 @@ void PlaneXflDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         }
         pPlaneCtxMenu->addSeparator();
 
-        QAction *m_pBackImageLoad = new QAction("Load", this);
+        QAction *m_pBackImageLoad = new QAction(tr("Load"), this);
         connect(m_pBackImageLoad, SIGNAL(triggered()), m_pglPlaneView, SLOT(onLoadBackImage()));
 
-        QAction *m_pBackImageClear = new QAction("Clear", this);
+        QAction *m_pBackImageClear = new QAction(tr("Clear"), this);
         connect(m_pBackImageClear, SIGNAL(triggered()), m_pglPlaneView, SLOT(onClearBackImage()));
 
-        QAction *m_pBackImageSettings = new QAction("Settings", this);
+        QAction *m_pBackImageSettings = new QAction(tr("Settings"), this);
         connect(m_pBackImageSettings, SIGNAL(triggered()), m_pglPlaneView, SLOT(onBackImageSettings()));
 
         pPlaneCtxMenu->addSeparator();
-        QMenu *pBackImageMenu = pPlaneCtxMenu->addMenu("Background image");
+        QMenu *pBackImageMenu = pPlaneCtxMenu->addMenu(tr("Background image"));
         {
             pBackImageMenu->addAction(m_pBackImageLoad);
             pBackImageMenu->addAction(m_pBackImageClear);
@@ -647,42 +647,42 @@ void PlaneXflDlg::setControls()
 
 void PlaneXflDlg::makeActions()
 {
-    m_pEditPartDef           = new QAction("Edit",                       this);
-//    m_pEditPartObject        = new QAction("Edit (advanced)",            this);
-    m_pInsertWing            = new QAction("new",                        this);
-    m_pInsertWingOther       = new QAction("from other plane",           this);
-    m_pInsertWingXml         = new QAction("from XML file",              this);
-    m_pInsertWingVSP         = new QAction("from VSP export",            this);
-    m_pInsertElev            = new QAction("Elevator",                   this);
-    m_pInsertFin             = new QAction("Fin",                        this);
-    m_pInsertFuseXflSpline   = new QAction("NURBS type",                 this);
-    m_pInsertFuseXflFlat     = new QAction("Quad faces",                 this);
-    m_pInsertFuseXflSections = new QAction("Interpolated (in progress)", this);
+    m_pEditPartDef           = new QAction(tr("Edit"),                       this);
+//    m_pEditPartObject        = new QAction(tr("Edit (advanced)"),            this);
+    m_pInsertWing            = new QAction(tr("new"),                        this);
+    m_pInsertWingOther       = new QAction(tr("from other plane"),           this);
+    m_pInsertWingXml         = new QAction(tr("from XML file"),              this);
+    m_pInsertWingVSP         = new QAction(tr("from VSP export"),            this);
+    m_pInsertElev            = new QAction(tr("Elevator"),                   this);
+    m_pInsertFin             = new QAction(tr("Fin"),                        this);
+    m_pInsertFuseXflSpline   = new QAction(tr("NURBS type"),                 this);
+    m_pInsertFuseXflFlat     = new QAction(tr("Quad faces"),                 this);
+    m_pInsertFuseXflSections = new QAction(tr("Interpolated (in progress)"), this);
 
-    m_pInsertFuseXml         = new QAction("from XML file",                   this);
-    m_pInsertFuseOther       = new QAction("from other plane",                this);
-    m_pInsertFuseOcc         = new QAction("from CAD file",                   this);
-    m_pInsertFuseStl         = new QAction("from STL file",                   this);
-    m_pInsertEllWing         = new QAction("Insert elliptical wing",          this);
-    m_pInsertSTLSphere       = new QAction("Insert STL sphere fuselage",      this);
-    m_pInsertSTLCylinder     = new QAction("Insert STL cylinder fuselage",    this);
-    m_pInsertCADSphere       = new QAction("Insert CAD sphere fuselage",      this);
-    m_pInsertCADCylinder     = new QAction("Insert CAD cylinder fuselage",    this);
-    m_pInsertCADBox          = new QAction("Insert CAD box fuselage",         this);
-    m_pRemovePart            = new QAction("Remove",                          this);
-    m_pDuplicatePart         = new QAction("Duplicate",                       this);
+    m_pInsertFuseXml         = new QAction(tr("from XML file"),                   this);
+    m_pInsertFuseOther       = new QAction(tr("from other plane"),                this);
+    m_pInsertFuseOcc         = new QAction(tr("from CAD file"),                   this);
+    m_pInsertFuseStl         = new QAction(tr("from STL file"),                   this);
+    m_pInsertEllWing         = new QAction(tr("Insert elliptical wing"),          this);
+    m_pInsertSTLSphere       = new QAction(tr("Insert STL sphere fuselage"),      this);
+    m_pInsertSTLCylinder     = new QAction(tr("Insert STL cylinder fuselage"),    this);
+    m_pInsertCADSphere       = new QAction(tr("Insert CAD sphere fuselage"),      this);
+    m_pInsertCADCylinder     = new QAction(tr("Insert CAD cylinder fuselage"),    this);
+    m_pInsertCADBox          = new QAction(tr("Insert CAD box fuselage"),         this);
+    m_pRemovePart            = new QAction(tr("Remove"),                          this);
+    m_pDuplicatePart         = new QAction(tr("Duplicate"),                       this);
 
-    m_pResetFuse             = new QAction("Restore geometry and mesh",  this);
-    m_pTessellation          = new QAction("Fuse tessellation",          this);
+    m_pResetFuse             = new QAction(tr("Restore geometry and mesh"),  this);
+    m_pTessellation          = new QAction(tr("Fuse tessellation"),          this);
 
-    m_pPartInertia   = new QAction("Inertia", this);
-    m_pPartScale     = new QAction("Scale", this);
-    m_pMoveUp        = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowUp),  "Move Up", this);
-    m_pMoveDown      = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowDown),  "Move Down", this);
+    m_pPartInertia   = new QAction(tr("Inertia"), this);
+    m_pPartScale     = new QAction(tr("Scale"), this);
+    m_pMoveUp        = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowUp),  tr("Move Up"), this);
+    m_pMoveDown      = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowDown),  tr("Move Down"), this);
 
-    m_pExportMeshSTL = new QAction("Export mesh to STL", this);
+    m_pExportMeshSTL = new QAction(tr("Export mesh to STL"), this);
 
-    m_pPartMenu = new QMenu("Selected Part", this);
+    m_pPartMenu = new QMenu(tr("Selected Part"), this);
     {
         m_pPartMenu->addAction(m_pEditPartDef);
 //        m_pPartMenu->addAction(m_pEditPartObject);
@@ -2836,7 +2836,7 @@ void PlaneXflDlg::onRemovePart()
         m_pPlaneXfl->removeFuse(iFuse);
     }
 
-    m_pPartMenu->setTitle("Selected part");
+    m_pPartMenu->setTitle(tr("Selected part"));
 
     setControls();
     onUpdatePlane();
@@ -3085,7 +3085,7 @@ void PlaneXflDlg::makePartTable()
 {
     m_pcptParts = new CPTableView(this);
     m_pcptParts->setEditable(true);
-    m_pcptParts->setWindowTitle("Object List");
+    m_pcptParts->setWindowTitle(tr("Object List"));
     m_pcptParts->setWordWrap(false);
     m_pcptParts->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
@@ -3454,7 +3454,7 @@ void PlaneXflDlg::enableStackBtns()
 {
     m_ppbUndo->setEnabled(m_StackPos>0);
     m_ppbRedo->setEnabled(m_StackPos<m_UndoStack.size()-1);
-    m_plabStackInfo->setText(QString::asprintf("stack: %d/%d", m_StackPos+1, int(m_UndoStack.size())));
+    m_plabStackInfo->setText(tr("stack: %1/%2").arg(m_StackPos+1).arg(int(m_UndoStack.size())));
 }
 
 

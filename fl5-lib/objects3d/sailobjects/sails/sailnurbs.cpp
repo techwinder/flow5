@@ -28,6 +28,9 @@
 #include <Geom_BSplineSurface.hxx>
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Shell.hxx>
+#include <TColgp_Array2OfPnt.hxx>
+#include <TColStd_Array1OfReal.hxx>
+#include <TColStd_Array1OfInteger.hxx>
 #include <BRepBuilderAPI_MakeShell.hxx>
 
 #define _MATH_DEFINES_DEFINED

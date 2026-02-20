@@ -581,13 +581,13 @@ void gl3dHydrogen::onCollapse()
 {
     if(m_bIsObserving)
     {
-        m_ppbMake->setText("Start observations");
+        m_ppbMake->setText(tr("Start observations"));
         m_bCancel = true;
         m_bIsObserving = false;
         update();
         return;
     }
-    m_ppbMake->setText("Stop observations");
+    m_ppbMake->setText(tr("Stop observations"));
 
     m_StateMax = 0;
     m_Pts.clear();
@@ -700,14 +700,14 @@ void gl3dHydrogen::customEvent(QEvent *pEvent)
             m_State.resize(s_NObservations);
 
             m_bIsObserving = false;
-            m_ppbMake->setText("Start observations");
+            m_ppbMake->setText(tr("Start observations"));
         }
 
         for(int i=0; i<pHEvent->newStates().size(); i++)
             m_StateMax = std::max(m_StateMax, pHEvent->newStates().at(i));
 
 
-        m_plabNObs->setText(QString::asprintf("%5d/%5d", int(m_Pts.size()), s_NObservations));
+        m_plabNObs->setText(tr("%1/%2").arg(int(m_Pts.size()), 5).arg(s_NObservations, 5));
 
         m_bResetPositions = true;
 

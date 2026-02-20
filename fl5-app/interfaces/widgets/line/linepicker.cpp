@@ -67,7 +67,7 @@ void LinePicker::setupLayout()
     }
 
     m_pColorButton = new TextClrBtn();
-    m_pColorButton->setText("Other");
+    m_pColorButton->setText(tr("Other"));
     m_pColorButton->setBackgroundColor(DisplayOptions::backgroundColor());
     m_pColorButton->setTextColor(DisplayOptions::textColor());
     m_pColorButton->setContour(false);

@@ -59,7 +59,7 @@ QByteArray FuseXflObjectDlg::m_HSplitterSizes;
 
 FuseXflObjectDlg::FuseXflObjectDlg(QWidget *pParent) : FuseXflDlg(pParent)
 {
-    setWindowTitle("Body object explorer");
+    setWindowTitle(tr("Body object explorer"));
 
     m_pStruct = nullptr;
     m_pDelegate = nullptr;
@@ -68,11 +68,11 @@ FuseXflObjectDlg::FuseXflObjectDlg(QWidget *pParent) : FuseXflDlg(pParent)
     m_bIsInertiaSelected = false;
     m_iActivePointMass = -1;
 
-    m_pInsertBefore  = new QAction("Insert before", this);
-    m_pInsertAfter   = new QAction("Insert after", this);
-    m_pDeleteItem    = new QAction("Delete", this);
+    m_pInsertBefore  = new QAction(tr("Insert before"), this);
+    m_pInsertAfter   = new QAction(tr("Insert after"), this);
+    m_pDeleteItem    = new QAction(tr("Delete"), this);
 
-    m_pContextMenu = new QMenu("Section",this);
+    m_pContextMenu = new QMenu(tr("Section"),this);
     m_pContextMenu->addAction(m_pInsertBefore);
     m_pContextMenu->addAction(m_pInsertAfter);
     m_pContextMenu->addAction(m_pDeleteItem);
@@ -139,9 +139,9 @@ void FuseXflObjectDlg::contextMenuEvent(QContextMenuEvent *pEvent)
 
     if(m_bIsInertiaSelected)
     {
-        m_pInsertBefore->setText("Insert point mass before");
-        m_pInsertAfter->setText("Insert point mass after");
-        m_pDeleteItem->setText("Delete point mass");
+        m_pInsertBefore->setText(tr("Insert point mass before"));
+        m_pInsertAfter->setText(tr("Insert point mass after"));
+        m_pDeleteItem->setText(tr("Delete point mass"));
         m_pInsertAfter->setEnabled(true);
         m_pInsertBefore->setEnabled(false);
         m_pDeleteItem->setEnabled(false);
@@ -158,22 +158,22 @@ void FuseXflObjectDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         {
             if(Frame::selectedIndex()>=0)
             {
-                m_pInsertBefore->setText("Insert point before");
-                m_pInsertAfter->setText("Insert point after");
-                m_pDeleteItem->setText("Delete point");
+                m_pInsertBefore->setText(tr("Insert point before"));
+                m_pInsertAfter->setText(tr("Insert point after"));
+                m_pDeleteItem->setText(tr("Delete point"));
             }
             else
             {
-                m_pInsertBefore->setText("Insert frame before");
-                m_pInsertAfter->setText("Insert frame after");
-                m_pDeleteItem->setText("Delete frame");
+                m_pInsertBefore->setText(tr("Insert frame before"));
+                m_pInsertAfter->setText(tr("Insert frame after"));
+                m_pDeleteItem->setText(tr("Delete frame"));
             }
         }
         else if(m_iActivePointMass>=0)
         {
-            m_pInsertBefore->setText("Insert point mass before");
-            m_pInsertAfter->setText("Insert point mass after");
-            m_pDeleteItem->setText("Delete point mass");
+            m_pInsertBefore->setText(tr("Insert point mass before"));
+            m_pInsertAfter->setText(tr("Insert point mass after"));
+            m_pDeleteItem->setText(tr("Delete point mass"));
         }
     }
 
@@ -184,7 +184,7 @@ void FuseXflObjectDlg::contextMenuEvent(QContextMenuEvent *pEvent)
 void FuseXflObjectDlg::setupLayout()
 {
     QStringList labels;
-    labels << "Object" << "Field"<<"Value"<<"Unit";
+    labels << tr("Object") << tr("Field")<<tr("Value")<<tr("Unit");
 
     m_pStruct = new ObjectTreeView(this);
 
@@ -199,7 +199,7 @@ void FuseXflObjectDlg::setupLayout()
     m_pStruct->setEditTriggers(QAbstractItemView::AllEditTriggers);
     m_pStruct->setSelectionBehavior (QAbstractItemView::SelectRows);
     //    m_pStruct->setIndentation(31);
-    m_pStruct->setWindowTitle("Objects");
+    m_pStruct->setWindowTitle(tr("Objects"));
 
     m_pModel = new QStandardItemModel(this);
     m_pModel->setColumnCount(4);

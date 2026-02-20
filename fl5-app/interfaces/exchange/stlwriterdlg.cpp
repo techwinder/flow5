@@ -318,7 +318,7 @@ void STLWriterDlg::onExporttoSTL()
 
     if (!XFile.open(QIODevice::WriteOnly))
     {
-        QMessageBox::warning(window(), "Warning", "Could not open the file for writing");
+        QMessageBox::warning(window(), tr("Warning"), tr("Could not open the file for writing"));
         return;
     }
 

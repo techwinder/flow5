@@ -36,6 +36,8 @@ class POpp3dCtrls;
 
 class XPlaneWt : public QWidget
 {
+    Q_OBJECT
+
     public:
         XPlaneWt(XPlane *pXPlane, gl3dXPlaneView *pgl3dXPlaneView);
 

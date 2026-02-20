@@ -89,27 +89,27 @@ void Analysis3dCtrls::setupLayout()
 
         QHBoxLayout *pOptionLayout = new QHBoxLayout;
         {
-            m_pchStorePOpps      = new QCheckBox("Store operating points");
-            m_pchStorePOpps->setToolTip("<p>"
+            m_pchStorePOpps      = new QCheckBox(tr("Store operating points"));
+            m_pchStorePOpps->setToolTip(tr("<p>"
                                         "If activated, the operating points will be stored at the end of the calculation. "
                                         "The results are stored in the polar in all cases."
-                                        "</p>");
-            m_pchStabDerivatives = new QCheckBox("Compute derivatives");
-            m_pchStabDerivatives->setToolTip("<p>"
+                                        "</p>"));
+            m_pchStabDerivatives = new QCheckBox(tr("Compute derivatives"));
+            m_pchStabDerivatives->setToolTip(tr("<p>"
                                              "If activated, stability derivatives and eigenthings will be "
                                              "computed during a T12358 run.<br>"
                                              "Deactivate to save a little computation time."
-                                             "</p>");
+                                             "</p>"));
             pOptionLayout->addWidget(m_pchStorePOpps);
             pOptionLayout->addStretch();
             pOptionLayout->addWidget(m_pchStabDerivatives);
         }
 
-        m_ppbAnalyze = new QPushButton("Calculate");
+        m_ppbAnalyze = new QPushButton(tr("Calculate"));
         m_ppbAnalyze->setAutoDefault(true);
         m_ppbAnalyze->setDefault(true);
         m_ppbAnalyze->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_A));
-        m_ppbAnalyze->setToolTip("Start the analysis\t(Ctrl+A)");
+        m_ppbAnalyze->setToolTip(tr("Start the analysis\t(Ctrl+A)"));
 
         pAnalysisLayout->addWidget(m_plabParamName);
         pAnalysisLayout->addWidget(m_pswTables);
@@ -150,13 +150,13 @@ void Analysis3dCtrls::setParameterLabels()
             case xfl::T4POLAR:
             {
 //                QString str = Units::speedUnitLabel();
-                m_plabParamName->setText("V"+INFch);
+                m_plabParamName->setText(tr("V")+INFch);
                 break;
             }
             case xfl::T6POLAR:
             case xfl::T7POLAR:
             {
-                m_plabParamName->setText("Control parameter");
+                m_plabParamName->setText(tr("Control parameter"));
                 break;
             }
             case xfl::T5POLAR:

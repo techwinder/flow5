@@ -119,11 +119,11 @@ void Section2dWt::createBaseActions()
 {
     m_ActionList.clear();
 
-    QAction *pInsertPt = new QAction("Insert control point\tShift+Click", this);
+    QAction *pInsertPt = new QAction(tr("Insert control point\tShift+Click"), this);
     connect(pInsertPt, SIGNAL(triggered()), this, SLOT(onInsertPt()));
     m_ActionList.append(pInsertPt);
 
-    QAction *pRemovePt = new QAction("Remove control point\tCtrl+Click", this);
+    QAction *pRemovePt = new QAction(tr("Remove control point\tCtrl+Click"), this);
     connect(pRemovePt, SIGNAL(triggered()), this, SLOT(onRemovePt()));
     m_ActionList.append(pRemovePt);
 
@@ -135,46 +135,46 @@ void Section2dWt::createBaseActions()
     pSeparator1->setSeparator(true);
     m_ActionList.append(pSeparator1);
 
-    m_pGridAct= new QAction(QIcon(":/icons/OnGrid.png"), "Grid settings", this);
-    m_pGridAct->setStatusTip("Define the grid settings for the view");
+    m_pGridAct= new QAction(QIcon(":/icons/OnGrid.png"), tr("Grid settings"), this);
+    m_pGridAct->setStatusTip(tr("Define the grid settings for the view"));
     m_ActionList.append(m_pGridAct);
     connect(m_pGridAct, SIGNAL(triggered()), this, SLOT(onGridSettings()));
 
-    m_pResetXScaleAct= new QAction(QIcon(":/icons/OnResetXScale.png"), "Reset X-scale", this);
-    m_pResetXScaleAct->setStatusTip("Resets the scale to fit the current screen width");
+    m_pResetXScaleAct= new QAction(QIcon(":/icons/OnResetXScale.png"), tr("Reset X-scale"), this);
+    m_pResetXScaleAct->setStatusTip(tr("Resets the scale to fit the current screen width"));
     connect(m_pResetXScaleAct, SIGNAL(triggered()), this, SLOT(onResetXScale()));
 
-    m_pResetXYScaleAct= new QAction(QIcon(":/icons/OnResetXYScale.png"), "Reset scales\tR", this);
-    m_pResetXYScaleAct->setStatusTip("Resets the x and y scales to screen size");
+    m_pResetXYScaleAct= new QAction(QIcon(":/icons/OnResetXYScale.png"), tr("Reset scales\tR"), this);
+    m_pResetXYScaleAct->setStatusTip(tr("Resets the x and y scales to screen size"));
     m_ActionList.append(m_pResetXYScaleAct);
     connect(m_pResetXYScaleAct, SIGNAL(triggered()), this, SLOT(onResetScales()));
 
-    m_pLoadImage = new QAction("Load", this);
+    m_pLoadImage = new QAction(tr("Load"), this);
     connect(m_pLoadImage, SIGNAL(triggered()), this, SLOT(onLoadBackImage()));
 
-    m_pClearImage = new QAction("Clear", this);
+    m_pClearImage = new QAction(tr("Clear"), this);
     connect(m_pClearImage, SIGNAL(triggered()), this, SLOT(onClearBackImage()));
 
-    m_pImageSettings = new QAction("Settings", this);
+    m_pImageSettings = new QAction(tr("Settings"), this);
     connect(m_pImageSettings, SIGNAL(triggered()), this, SLOT(onBackImageSettings()));
 
-    m_pExportToSVG = new QAction("to SVG", this);
+    m_pExportToSVG = new QAction(tr("to SVG"), this);
     connect(m_pExportToSVG, SIGNAL(triggered()), this, SLOT(onSaveToSvg()));
 
-    m_pResetYScaleAct= new QAction("Reset Y-scale", this);
+    m_pResetYScaleAct= new QAction(tr("Reset Y-scale"), this);
     connect(m_pResetYScaleAct, SIGNAL(triggered()), this, SLOT(onResetYScale()));
 
-    m_pZoomInAct= new QAction(QIcon(":/icons/OnZoomIn.png"), "Zoom in", this);
-    m_pZoomInAct->setStatusTip("Zoom the view by drawing a rectangle in the client area");
+    m_pZoomInAct= new QAction(QIcon(":/icons/OnZoomIn.png"), tr("Zoom in"), this);
+    m_pZoomInAct->setStatusTip(tr("Zoom the view by drawing a rectangle in the client area"));
     m_pZoomInAct->setCheckable(true);
     connect(m_pZoomInAct, SIGNAL(triggered()), this, SLOT(onZoomIn()));
 
-    m_pZoomLessAct= new QAction(QIcon(":/icons/OnZoomOut.png"), "Zoom out", this);
-    m_pZoomLessAct->setStatusTip("Zoom Less");
+    m_pZoomLessAct= new QAction(QIcon(":/icons/OnZoomOut.png"), tr("Zoom out"), this);
+    m_pZoomLessAct->setStatusTip(tr("Zoom Less"));
     connect(m_pZoomLessAct, SIGNAL(triggered()), this, SLOT(onZoomLess()));
 
-    m_pZoomYAct= new QAction(QIcon(":/icons/OnZoomYScale.png"), "Zoom Y-scale only (Y+mouse wheel)", this);
-    m_pZoomYAct->setStatusTip("Zoom Y scale Only");
+    m_pZoomYAct= new QAction(QIcon(":/icons/OnZoomYScale.png"), tr("Zoom Y-scale only (Y+mouse wheel)"), this);
+    m_pZoomYAct->setStatusTip(tr("Zoom Y scale Only"));
     m_pZoomYAct->setCheckable(true);
     connect(m_pZoomYAct, SIGNAL(triggered()), this, SLOT(onZoomYOnly()));
 }

@@ -50,7 +50,7 @@ ObjectTreeView::ObjectTreeView(QWidget *pParent) : QTreeView (pParent)
     setEditTriggers(QAbstractItemView::AllEditTriggers);
     setSelectionBehavior (QAbstractItemView::SelectRows);
 
-    setWindowTitle("Objects");
+    setWindowTitle(tr("Objects"));
 }
 
 

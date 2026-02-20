@@ -194,7 +194,9 @@ void gl3dOptimXflView::glMake3dObjects()
             default:
             case 0:
                 val = m_pPOpp->Cp();
-                m_ColourLegend.setTitle("Cp");
+                m_ColourLegend.setTitle("Cp"); // keeping scientific term as is, but could be tr("Cp") if desired. 
+                // Wait, I should stick to tr() everywhere.
+                m_ColourLegend.setTitle(tr("Cp"));
                 if(Opp3dScalesCtrls::isAutoCpScale())
                 {
                     Opp3dScalesCtrls::setCpRange(lmin,lmax);
@@ -207,11 +209,11 @@ void gl3dOptimXflView::glMake3dObjects()
                 break;
             case 1:
                 for(uint i=0; i<m_pPOpp->gamma().size(); i++) val[i] = m_pPOpp->gamma(i)*1000.0;
-                m_ColourLegend.setTitle("gamma*1000");
+                m_ColourLegend.setTitle(tr("gamma*1000"));
                 break;
             case 2:
                 for(uint i=0; i<m_pPOpp->sigma().size(); i++) val[3*i] = val[3*i+1] =val[3*i+2] = m_pPOpp->sigma(i)*1000.0;
-                m_ColourLegend.setTitle("sigma*1000");
+                m_ColourLegend.setTitle(tr("sigma*1000"));
                 break;
         }
 

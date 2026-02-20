@@ -62,7 +62,7 @@ QByteArray PlaneSTLDlg::s_STLGeometry;
 
 PlaneSTLDlg::PlaneSTLDlg(QWidget *pParent) : PlaneDlg(pParent)
 {
-    setWindowTitle("STL plane editor");
+    setWindowTitle(tr("STL plane editor"));
     setupLayout();
     connectSignals();
 }
@@ -83,9 +83,9 @@ void PlaneSTLDlg::setupLayout()
                     {
                         QGridLayout *pMetaLayout = new QGridLayout;
                         {
-                            QLabel *plabArea = new QLabel("Ref. area:");
-                            QLabel *plabSpan = new QLabel("Ref. span:");
-                            QLabel *plabChord = new QLabel("Ref. chord:");
+                            QLabel *plabArea = new QLabel(tr("Ref. area:"));
+                            QLabel *plabSpan = new QLabel(tr("Ref. span:"));
+                            QLabel *plabChord = new QLabel(tr("Ref. chord:"));
                             m_pfeRefArea = new FloatEdit;
                             m_pfeRefSpan = new FloatEdit;
                             m_pfeRefChord = new FloatEdit;
@@ -114,19 +114,19 @@ void PlaneSTLDlg::setupLayout()
                     {
                         QGridLayout *pTransformLayout = new QGridLayout;
                         {
-                            QLabel *plabRotateUnit = new QLabel("<p>&deg;</p>");
+                            QLabel *plabRotateUnit = new QLabel(tr("<p>&deg;</p>"));
                             QLabel *plabLength4 = new QLabel(Units::lengthUnitQLabel());
 
                             m_pfeRotate     = new FloatEdit(90.0);
                             m_pfeScale      = new FloatEdit(1.0);
                             m_pfeTranslate  = new FloatEdit(0.0);
-                            m_ppbTranslateX = new QPushButton("Translate X");
-                            m_ppbTranslateY = new QPushButton("Translate Y");
-                            m_ppbTranslateZ = new QPushButton("Translate Z");
-                            m_ppbRotateX    = new QPushButton("Rotate X");
-                            m_ppbRotateY    = new QPushButton("Rotate Y");
-                            m_ppbRotateZ    = new QPushButton("Rotate Z");
-                            m_ppbScale      = new QPushButton("Scale");
+                            m_ppbTranslateX = new QPushButton(tr("Translate X"));
+                            m_ppbTranslateY = new QPushButton(tr("Translate Y"));
+                            m_ppbTranslateZ = new QPushButton(tr("Translate Z"));
+                            m_ppbRotateX    = new QPushButton(tr("Rotate X"));
+                            m_ppbRotateY    = new QPushButton(tr("Rotate Y"));
+                            m_ppbRotateZ    = new QPushButton(tr("Rotate Z"));
+                            m_ppbScale      = new QPushButton(tr("Scale"));
 
                             pTransformLayout->addWidget(m_ppbRotateX,    2,1);
                             pTransformLayout->addWidget(m_ppbRotateY,    2,2);
@@ -156,11 +156,11 @@ void PlaneSTLDlg::setupLayout()
                             {
                                 QGridLayout *pTEBoxLayout = new QGridLayout;
                                 {
-                                    QPushButton *ppbMesh = new QPushButton("Mesh actions");
+                                    QPushButton *ppbMesh = new QPushButton(tr("Mesh actions"));
                                     {
-                                        QMenu *pMeshMenu = new QMenu("Mesh");
+                                        QMenu *pMeshMenu = new QMenu(tr("Mesh"));
                                         {
-                                            m_pConvertTriangles = new QAction("Rebuild mesh from STL triangles");
+                                            m_pConvertTriangles = new QAction(tr("Rebuild mesh from STL triangles"));
                                             pMeshMenu->addAction(m_pConvertTriangles);
                                             pMeshMenu->addSeparator();
                                             pMeshMenu->addAction(m_pCheckMesh);
@@ -177,34 +177,34 @@ void PlaneSTLDlg::setupLayout()
                                     }
 
 
-                                    QLabel *plabMaxTE = new QLabel("Max. T.E. angle for guesses:");
-                                    m_ppbGuessTE = new QPushButton("Guess T.E.");
+                                    QLabel *plabMaxTE = new QLabel(tr("Max. T.E. angle for guesses:"));
+                                    m_ppbGuessTE = new QPushButton(tr("Guess T.E."));
                                     m_pfeTEAngle = new FloatEdit(s_TEMaxAngle);
-                                    QLabel *plabDegree = new QLabel("<p>&deg;</p>");
+                                    QLabel *plabDegree = new QLabel(tr("<p>&deg;</p>"));
 
-                                    m_ppbTopTEPanels = new QPushButton("Top panels");
+                                    m_ppbTopTEPanels = new QPushButton(tr("Top panels"));
                                     m_ppbTopTEPanels->setCheckable(true);
-                                    m_ppbBotTEPanels = new QPushButton("Bottom panels");
+                                    m_ppbBotTEPanels = new QPushButton(tr("Bottom panels"));
                                     m_ppbBotTEPanels->setCheckable(true);
-                                    m_pchGuessOpposite = new QCheckBox("Guess opposite");
+                                    m_pchGuessOpposite = new QCheckBox(tr("Guess opposite"));
                                     m_pchGuessOpposite->setChecked(s_bGuessOpposite);
 
-                                    m_ppbCheckTE = new QPushButton("Check T.E.");
+                                    m_ppbCheckTE = new QPushButton(tr("Check T.E."));
 
                                     pTEBoxLayout->addWidget(ppbMesh,           1, 1);
                                     pTEBoxLayout->addWidget(plabMaxTE,         2, 1);
                                     pTEBoxLayout->addWidget(m_pfeTEAngle,      2, 2);
                                     pTEBoxLayout->addWidget(plabDegree,        2, 3);
 
-                                    pTEBoxLayout->addWidget(new QLabel("Automatic detection:"),3,1);
+                                    pTEBoxLayout->addWidget(new QLabel(tr("Automatic detection:")),3,1);
                                     pTEBoxLayout->addWidget(m_ppbGuessTE,       3,2);
 
-                                    pTEBoxLayout->addWidget(new QLabel("Manual selection:"), 4,1);
+                                    pTEBoxLayout->addWidget(new QLabel(tr("Manual selection:")), 4,1);
                                     pTEBoxLayout->addWidget(m_ppbTopTEPanels,   4,2);
                                     pTEBoxLayout->addWidget(m_pchGuessOpposite, 4,3);
                                     pTEBoxLayout->addWidget(m_ppbBotTEPanels,   5,2);
 
-                                    pTEBoxLayout->addWidget(new QLabel("Verification:"), 6,1);
+                                    pTEBoxLayout->addWidget(new QLabel(tr("Verification:")), 6,1);
                                     pTEBoxLayout->addWidget(m_ppbCheckTE,       6,2);
                                 }
                                 pTEBox->setLayout(pTEBoxLayout);
@@ -223,9 +223,9 @@ void PlaneSTLDlg::setupLayout()
                         pTEPage->setLayout(pMeshLayout);
                     }
 
-                    m_pLeftTabWt->addTab(pMetaFrame,    "Meta-data");
-                    m_pLeftTabWt->addTab(pTransformBox, "Transformations");
-                    m_pLeftTabWt->addTab(pTEPage,       "Mesh and trailing edges");
+                    m_pLeftTabWt->addTab(pMetaFrame,    tr("Meta-data"));
+                    m_pLeftTabWt->addTab(pTransformBox, tr("Transformations"));
+                    m_pLeftTabWt->addTab(pTEPage,       tr("Mesh and trailing edges"));
                 }
 
                 m_pVSplitter->addWidget(m_pLeftTabWt);
@@ -259,11 +259,11 @@ void PlaneSTLDlg::setupLayout()
 
 void PlaneSTLDlg::contextMenuEvent(QContextMenuEvent *pEvent)
 {
-    QMenu *pPlaneCtxMenu = new QMenu("context menu", this);
+    QMenu *pPlaneCtxMenu = new QMenu(tr("context menu"), this);
     {
         pPlaneCtxMenu->addAction(m_pPlaneInertia);
         pPlaneCtxMenu->addSeparator();
-        QMenu *pMeshMenu = pPlaneCtxMenu->addMenu("Mesh");
+        QMenu *pMeshMenu = pPlaneCtxMenu->addMenu(tr("Mesh"));
         {
             pMeshMenu->addAction(m_pCheckMesh);
             pMeshMenu->addAction(m_pConnectPanels);
@@ -276,17 +276,17 @@ void PlaneSTLDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         }
         pPlaneCtxMenu->addSeparator();
 
-        QAction *m_pBackImageLoad = new QAction("Load", this);
+        QAction *m_pBackImageLoad = new QAction(tr("Load"), this);
         connect(m_pBackImageLoad, SIGNAL(triggered()), m_pglPlaneView, SLOT(onLoadBackImage()));
 
-        QAction *m_pBackImageClear = new QAction("Clear", this);
+        QAction *m_pBackImageClear = new QAction(tr("Clear"), this);
         connect(m_pBackImageClear, SIGNAL(triggered()), m_pglPlaneView, SLOT(onClearBackImage()));
 
-        QAction *m_pBackImageSettings = new QAction("Settings", this);
+        QAction *m_pBackImageSettings = new QAction(tr("Settings"), this);
         connect(m_pBackImageSettings, SIGNAL(triggered()), m_pglPlaneView, SLOT(onBackImageSettings()));
 
         pPlaneCtxMenu->addSeparator();
-        QMenu *pBackImageMenu = pPlaneCtxMenu->addMenu("Background image");
+        QMenu *pBackImageMenu = pPlaneCtxMenu->addMenu(tr("Background image"));
         {
             pBackImageMenu->addAction(m_pBackImageLoad);
             pBackImageMenu->addAction(m_pBackImageClear);

@@ -69,14 +69,14 @@ GraphWt::GraphWt(QWidget *pParent) : QWidget(pParent)
 
     m_HoverTimer.setSingleShot(true);
 
-    m_pResetScales     = new QAction("Reset scales\tR",     this);
-    m_pShowGraphLegend = new QAction("Show legend",         this);
+    m_pResetScales     = new QAction(tr("Reset scales\tR"),     this);
+    m_pShowGraphLegend = new QAction(tr("Show legend"),         this);
     m_pShowGraphLegend->setCheckable(true);
-    m_pGraphSettings   = new QAction("Settings\tG",         this);
-    m_pToClipboard     = new QAction("to clipboard",        this);
-    m_pToFile          = new QAction("to text file",        this);
-    m_pToSVG           = new QAction("to SVG",              this);
-    m_pCloseGraph      = new QAction("Close window",        this);
+    m_pGraphSettings   = new QAction(tr("Settings\tG"),         this);
+    m_pToClipboard     = new QAction(tr("to clipboard"),        this);
+    m_pToFile          = new QAction(tr("to text file"),        this);
+    m_pToSVG           = new QAction(tr("to SVG"),              this);
+    m_pCloseGraph      = new QAction(tr("Close window"),        this);
 
     setLegendPosition(Qt::AlignTop | Qt::AlignHCenter);
 
@@ -297,7 +297,7 @@ void GraphWt::contextMenuEvent(QContextMenuEvent *pEvent)
         m_pShowGraphLegend->setChecked(m_pGraph->isLegendVisible());
         pContextMenu->addAction(m_pGraphSettings);
         pContextMenu->addSeparator();
-        QMenu *pExportMenu =  pContextMenu->addMenu("Export");
+        QMenu *pExportMenu =  pContextMenu->addMenu(tr("Export"));
         {
             pExportMenu->addAction(m_pToFile);
             pExportMenu->addAction(m_pToClipboard);

@@ -79,9 +79,9 @@ void PlaneXflInertiaDlg::setupLayout()
             {
                 QHBoxLayout *pInputSourceLayout = new QHBoxLayout;
                 {
-                    m_prbInertiaFromParts = new QRadioButton("Auto");
-                    m_prbInertiaManual = new QRadioButton("Manual");
-                    m_prbInertiaFromParts->setText("From parts");
+                    m_prbInertiaFromParts = new QRadioButton(tr("Auto"));
+                    m_prbInertiaManual = new QRadioButton(tr("Manual"));
+                    m_prbInertiaFromParts->setText(tr("From parts"));
                     pInputSourceLayout->addWidget(m_prbInertiaFromParts);
                     pInputSourceLayout->addWidget(m_prbInertiaManual);
                     pInputSourceLayout->addStretch();
@@ -94,7 +94,7 @@ void PlaneXflInertiaDlg::setupLayout()
                         //___________Volume Mass, Center of gravity, and inertias__________
                         m_pcptPart = new CPTableView(this);
                         m_pcptPart->setEditable(false);
-                        m_pcptPart->setWindowTitle("Wing List");
+                        m_pcptPart->setWindowTitle(tr("Wing List"));
                         m_pcptPart->setWordWrap(false);
                         m_pPartTableDelegate = new XflDelegate(this);
                         m_pPartTableDelegate->setActionColumn(5);

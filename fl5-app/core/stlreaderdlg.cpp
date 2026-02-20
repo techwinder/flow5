@@ -45,7 +45,7 @@ QByteArray StlReaderDlg::s_Geometry;
 
 StlReaderDlg::StlReaderDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("STL Reader");
+    setWindowTitle(tr("STL Reader"));
     m_bCancel = false;
     m_bIsRunning = false;
     setupLayout();
@@ -56,7 +56,7 @@ void StlReaderDlg::setupLayout()
 {
     QHBoxLayout *pUnitLayout = new QHBoxLayout;
     {
-        QLabel *plabUnit = new QLabel("Length unit with which to read the file");
+        QLabel *plabUnit = new QLabel(tr("Length unit with which to read the file"));
         plabUnit->setAlignment(Qt::AlignRight | Qt::AlignCenter);
         m_pcbLengthUnitSel = new QComboBox;
         QStringList list;
@@ -64,16 +64,16 @@ void StlReaderDlg::setupLayout()
         m_pcbLengthUnitSel->clear();
         m_pcbLengthUnitSel->addItems(list);
         m_pcbLengthUnitSel->setCurrentIndex(s_LengthUnitIndex);
-        m_pcbLengthUnitSel->setToolTip("Select the length unit to read the STL file");
+        m_pcbLengthUnitSel->setToolTip(tr("Select the length unit to read the STL file"));
 
-        QLabel *pLabTol = new QLabel("Tolerance on node position:");
+        QLabel *pLabTol = new QLabel(tr("Tolerance on node position:"));
         pLabTol->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
 
         pUnitLayout->addWidget(plabUnit);
         pUnitLayout->addWidget(m_pcbLengthUnitSel);
     }
 
-    m_ppbImport = new QPushButton("Import file");
+    m_ppbImport = new QPushButton(tr("Import file"));
     connect(m_ppbImport, SIGNAL(clicked(bool)), SLOT(onImportFromStlFile()));
 
     m_ppto = new PlainTextOutput;
@@ -190,13 +190,13 @@ void StlReaderDlg::onImportFromStlFile()
 
     if(!FileName.length()) return;
 
-    m_ppbImport->setText("Cancel");
+    m_ppbImport->setText(tr("Cancel"));
     m_bIsRunning = true;
 
     std::vector<Triangle3d> triangles;
     m_bCancel = false;
 
-    m_ppto->onAppendQText("Starting import process\n");
+    m_ppto->onAppendQText(tr("Starting import process\n"));
     
 
 
@@ -260,12 +260,12 @@ bool StlReaderDlg::importTrianglesFromStlFile(QString const &FileName, double un
     bool bSuccess = false;
     if(bText)
     {
-        postMessageEvent("\nImporting from a text file\n\n");
+        postMessageEvent(tr("\nImporting from a text file\n\n"));
         bSuccess = importStlTextFile(textstream, unitfactor, triangles, solidname);
     }
     else
     {
-        postMessageEvent("\nImporting from a binary file\n\n");
+        postMessageEvent(tr("\nImporting from a binary file\n\n"));
         //Try the binary format
         QDataStream inStream(&stlfile);
         inStream.setByteOrder(QDataStream::LittleEndian);
@@ -280,17 +280,17 @@ bool StlReaderDlg::importTrianglesFromStlFile(QString const &FileName, double un
 
     if(!bSuccess || m_bCancel)
     {
-        if(m_bCancel) m_ppto->insertPlainText("   Operation cancelled... cleaning up\n\n");
-        else          m_ppto->insertPlainText("   Error importing... cleaning up\n\n");
+        if(m_bCancel) m_ppto->insertPlainText(tr("   Operation cancelled... cleaning up\n\n"));
+        else          m_ppto->insertPlainText(tr("   Error importing... cleaning up\n\n"));
         m_Triangle.clear();
         m_bIsRunning = false;
-        m_ppbImport->setText("Import file");
+        m_ppbImport->setText(tr("Import file"));
         return bSuccess;
     }
 
     m_Triangle = triangles;
 
-    m_ppbImport->setText("Import file");
+    m_ppbImport->setText(tr("Import file"));
     m_bIsRunning = false;
     m_bCancel = false;
 

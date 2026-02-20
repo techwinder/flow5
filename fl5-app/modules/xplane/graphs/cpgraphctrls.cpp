@@ -47,7 +47,7 @@
 
 CpGraphCtrls::CpGraphCtrls(MainFrame *pMainFrame, XPlane *pXPlane, XSail *pXSail) : QWidget(pMainFrame)
 {
-    setWindowTitle("Cp Graph Controls");
+    setWindowTitle(tr("Cp Graph Controls"));
     setWindowFlags(Qt::Tool);
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
 
@@ -85,7 +85,7 @@ void CpGraphCtrls::setupLayout()
 
         QGridLayout *pPositionLayout = new QGridLayout;
         {
-            QLabel *plabPos = new QLabel("Strip:");
+            QLabel *plabPos = new QLabel(tr("Strip:"));
             m_pslCpSectionSlider = new QSlider(Qt::Horizontal);
             m_pslCpSectionSlider->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
             m_pslCpSectionSlider->setMinimum(-100);
@@ -94,7 +94,7 @@ void CpGraphCtrls::setupLayout()
             m_pslCpSectionSlider->setTickInterval(10);
             m_pslCpSectionSlider->setTickPosition(QSlider::TicksBelow);
 
-            QLabel *plabScale = new QLabel("3d scale:");
+            QLabel *plabScale = new QLabel(tr("3d scale:"));
             m_peslScale = new ExponentialSlider(Qt::Horizontal);
             m_peslScale->setRange(0, 100);
             m_peslScale->setExpValue(30);
@@ -106,9 +106,9 @@ void CpGraphCtrls::setupLayout()
             pPositionLayout->addWidget(m_peslScale,          2, 2);
         }
 
-        m_ppbKeepCpCurve  = new QPushButton("Keep");
+        m_ppbKeepCpCurve  = new QPushButton(tr("Keep"));
 
-        m_ppbClearCpCurves = new QPushButton("Delete All");
+        m_ppbClearCpCurves = new QPushButton(tr("Delete All"));
 
         QLabel *pFlow5Link = new QLabel;
         pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Post-processing/Cp3d.html>https://flow5.tech/.../Cp3d.html</a>");

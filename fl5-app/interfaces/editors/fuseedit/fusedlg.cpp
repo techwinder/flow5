@@ -80,17 +80,17 @@ FuseDlg::FuseDlg(QWidget *pParent) : XflDialog(pParent)
 
 void FuseDlg::createBaseActions()
 {
-    m_pExportMeshToSTL      = new QAction("Export mesh to an STL File", this);
-    m_pExportTrianglesToSTL = new QAction("Export triangulation to an STL File", this);
-    m_pExportToCADFile      = new QAction("Export body geometry to a CAD file", this);
-    m_pFuseInertia          = new QAction("Inertia", this);
+    m_pExportMeshToSTL      = new QAction(tr("Export mesh to an STL File"), this);
+    m_pExportTrianglesToSTL = new QAction(tr("Export triangulation to an STL File"), this);
+    m_pExportToCADFile      = new QAction(tr("Export body geometry to a CAD file"), this);
+    m_pFuseInertia          = new QAction(tr("Inertia"), this);
     m_pFuseInertia->setShortcut(Qt::Key_F12);
-    m_pTessSettings         = new QAction("Tessellation", this);
+    m_pTessSettings         = new QAction(tr("Tessellation"), this);
     m_pTessSettings->setShortcut(QKeySequence(Qt::ALT | Qt::Key_T));
 
-    m_pBackImageLoad     = new QAction("Load",     this);
-    m_pBackImageClear    = new QAction("Clear",    this);
-    m_pBackImageSettings = new QAction("Settings", this);
+    m_pBackImageLoad     = new QAction(tr("Load"),     this);
+    m_pBackImageClear    = new QAction(tr("Clear"),    this);
+    m_pBackImageSettings = new QAction(tr("Settings"), this);
 }
 
 
@@ -198,13 +198,13 @@ void FuseDlg::onButton(QAbstractButton *pButton)
 
 void FuseDlg::makeWidgets()
 {        
-    m_pScale     = new QAction("Scale",     this);
-    m_pTranslate = new QAction("Translate", this);
-    m_pRotate    = new QAction("Rotate",    this);
+    m_pScale     = new QAction(tr("Scale"),     this);
+    m_pTranslate = new QAction(tr("Translate"), this);
+    m_pRotate    = new QAction(tr("Rotate"),    this);
 
     m_pButtonBox->setStandardButtons(QDialogButtonBox::Save | QDialogButtonBox::Discard);
     {
-        m_ppbSaveAsNew = new QPushButton("Save as");
+        m_ppbSaveAsNew = new QPushButton(tr("Save as"));
         m_pButtonBox->addButton(m_ppbSaveAsNew, QDialogButtonBox::ActionRole);
     }
 
@@ -222,7 +222,7 @@ void FuseDlg::makeWidgets()
             m_pleName->setClearButtonEnabled(true);
 
             m_pteDescription = new QTextEdit;
-            m_pteDescription->setToolTip("Enter here a short description for the fuselage");
+            m_pteDescription->setToolTip(tr("Enter here a short description for the fuselage"));
 
             pMetaLayout->addWidget(m_pleName,        2,1,1,3);
             pMetaLayout->addWidget(m_pcbColor,  2,4);
@@ -279,7 +279,7 @@ void FuseDlg::onMetaDataChanged()
 
 void FuseDlg::onFuseColor()
 {
-    QColor clr = QColorDialog::getColor(xfl::fromfl5Clr(m_pFuse->color()), this, "Fuse colour", QColorDialog::ShowAlphaChannel);
+    QColor clr = QColorDialog::getColor(xfl::fromfl5Clr(m_pFuse->color()), this, tr("Fuse colour"), QColorDialog::ShowAlphaChannel);
     if(clr.isValid())
     {
         m_pFuse->setColor(xfl::tofl5Clr(clr));
@@ -375,7 +375,7 @@ void FuseDlg::onExportMeshToSTLFile()
 {
     if(!m_pFuse) return;
 
-    QString filter ="STL File (*.stl)";
+    QString filter = tr("STL File (*.stl)");
     QString FileName;
 
     FileName = QString::fromStdString(m_pFuse->name()).trimmed();
@@ -383,9 +383,9 @@ void FuseDlg::onExportMeshToSTLFile()
     FileName.replace(' ', '_');
 
     QFileDialog Fdlg(this);
-    FileName = Fdlg.getSaveFileName(this, "Export to STL File",
+    FileName = Fdlg.getSaveFileName(this, tr("Export to STL File"),
                                     SaveOptions::CADDirName() + "/"+FileName+".stl",
-                                    "STL File (*.stl)",
+                                    tr("STL File (*.stl)"),
                                     &filter);
 
     if(!FileName.length()) return;

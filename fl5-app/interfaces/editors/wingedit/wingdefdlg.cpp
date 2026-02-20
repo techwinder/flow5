@@ -72,7 +72,7 @@ WingDefDlg::WingDefDlg(QWidget *pParent) : WingDlg(pParent)
     setupLayout();
     connectSignals();
 
-    m_pTableContextMenu = new QMenu("Section",this);
+    m_pTableContextMenu = new QMenu(tr("Section"),this);
     {
         m_pTableContextMenu->addAction(m_pInsertBefore);
         m_pTableContextMenu->addAction(m_pInsertAfter);
@@ -119,7 +119,7 @@ void WingDefDlg::makeWingTable()
 {
     m_pcptSections = new CPTableView(this);
     m_pcptSections->setEditable(true);
-    m_pcptSections->setWindowTitle("Wing definition");
+    m_pcptSections->setWindowTitle(tr("Wing definition"));
     m_pcptSections->setWordWrap(false);
 
     m_pcptSections->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -159,7 +159,7 @@ void WingDefDlg::setupLayout()
                     m_prbRightSide  = new QRadioButton("Right side");
                     m_prbLeftSide   = new QRadioButton("Left side");
 
-                    m_pchCloseInnerSide = new QCheckBox("Close inner side");
+                    m_pchCloseInnerSide = new QCheckBox(tr("Close inner side"));
 
                     pSectionLayout->addWidget(m_pchTwoSided);
                     pSectionLayout->addWidget(m_pchsymmetric);
@@ -196,7 +196,7 @@ void WingDefDlg::setupLayout()
                 pfrMeta->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
                 QVBoxLayout *pMetaLayout = new QVBoxLayout;
                 {
-                    QLabel *plabWingDescription = new QLabel("Description:");
+                    QLabel *plabWingDescription = new QLabel(tr("Description:"));
 
                     pMetaLayout->addWidget(m_plabPlaneName);
                     pMetaLayout->addWidget(m_pleWingName);

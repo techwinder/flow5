@@ -36,6 +36,7 @@ class PointMass;
 
 class ObjectTreeView : public QTreeView
 {
+    Q_OBJECT
     public:
         ObjectTreeView(QWidget *pParent);
         void fillWingTreeView(WingXfl const *pWing);

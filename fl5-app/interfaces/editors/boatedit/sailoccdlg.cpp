@@ -152,17 +152,17 @@ void SailOccDlg::setupLayout()
                 m_pLeftSplitter->addWidget(m_pTabWidget);
                 m_pLeftSplitter->addWidget(m_ppto);
             }
-            QPushButton *ppbSailActions = new QPushButton("Sail actions");
+            QPushButton *ppbSailActions = new QPushButton(tr("Sail actions"));
             {
-                QMenu *ppbSailMenu = new QMenu("Sail actions");
+                QMenu *ppbSailMenu = new QMenu(tr("Sail actions"));
                 {
                     ppbSailMenu->addAction(m_pDefinitions);
                     ppbSailMenu->addSeparator();
-                    QMenu *pTessMenu = ppbSailMenu->addMenu("Tessellation");
+                    QMenu *pTessMenu = ppbSailMenu->addMenu(tr("Tessellation"));
                     {
-                        m_pTessSettings         = new QAction("Settings",     this);
+                        m_pTessSettings         = new QAction(tr("Settings"),     this);
                         m_pTessSettings->setShortcut(QKeySequence(Qt::ALT | Qt::Key_T));
-                        m_pFlipTessNormals      = new QAction("Flip normals", this);
+                        m_pFlipTessNormals      = new QAction(tr("Flip normals"), this);
                         pTessMenu->addAction(m_pTessSettings);
                         pTessMenu->addAction(m_pFlipTessNormals);
                     }

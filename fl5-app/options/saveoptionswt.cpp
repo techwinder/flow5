@@ -680,7 +680,7 @@ bool SaveOptionsWt::onCheckTempDir()
 
     if(!tmpdirinfo.isDir() || !tmpdirinfo.isWritable())
     {
-        QMessageBox::warning(this, "Warning", "Please select an existing directory with write permission for the temp files.");
+        QMessageBox::warning(this, tr("Warning"), tr("Please select an existing directory with write permission for the temp files."));
         m_pleTempDir->setText(strange);
         m_pleTempDir->selectAll();
         m_pleTempDir->setFocus();

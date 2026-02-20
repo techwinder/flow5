@@ -42,7 +42,7 @@ SplineFoil Foil2SplineDlg::s_SF;
 
 Foil2SplineDlg::Foil2SplineDlg(QWidget *pParent) : FoilDlg(pParent)
 {
-    setWindowTitle("Foil from 2 splines");
+    setWindowTitle(tr("Foil from 2 splines"));
     setupLayout();
     connectSignals();
 }

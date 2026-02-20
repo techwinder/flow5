@@ -75,6 +75,13 @@
 #include <gp_Lin.hxx>
 #include <gp_Trsf.hxx>
 
+#include <TColgp_Array1OfPnt.hxx>
+#include <TColgp_Array2OfPnt.hxx>
+#include <TColStd_Array1OfReal.hxx>
+#include <TColStd_Array1OfInteger.hxx>
+#include <BRepCheck_ListOfStatus.hxx>
+#include <TColStd_SequenceOfAsciiString.hxx>
+
 #include <occ_globals.h>
 #include <constants.h>
 #include <wingxfl.h>

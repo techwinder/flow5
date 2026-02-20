@@ -41,7 +41,7 @@
 
 WingScaleDlg::WingScaleDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("Scale wing");
+    setWindowTitle(tr("Scale wing"));
     m_bSweep = m_bSpan = m_bChord = m_bTwist = m_bArea = m_bAR = m_bTR = false;
 
     m_NewSweep = m_NewChord = m_NewTwist = m_NewSpan = 1.0;
@@ -58,13 +58,13 @@ void WingScaleDlg::setupLayout()
 {
     QGridLayout *pScaleLayout = new QGridLayout;
     {
-        m_pchSpan  = new QCheckBox("Span");
-        m_pchChord = new QCheckBox("Chord");
-        m_pchSweep = new QCheckBox("Sweep");
-        m_pchTwist = new QCheckBox("Twist");
-        m_pchScaleArea = new QCheckBox("Area");
-        m_pchScaleAR   = new QCheckBox("Aspect ratio");
-        m_pchScaleTR   = new QCheckBox("Taper ratio");
+        m_pchSpan  = new QCheckBox(tr("Span"));
+        m_pchChord = new QCheckBox(tr("Chord"));
+        m_pchSweep = new QCheckBox(tr("Sweep"));
+        m_pchTwist = new QCheckBox(tr("Twist"));
+        m_pchScaleArea = new QCheckBox(tr("Area"));
+        m_pchScaleAR   = new QCheckBox(tr("Aspect ratio"));
+        m_pchScaleTR   = new QCheckBox(tr("Taper ratio"));
 
         m_pdeNewSpan  = new FloatEdit(0,3);
         m_pdeNewChord = new FloatEdit(0,3);

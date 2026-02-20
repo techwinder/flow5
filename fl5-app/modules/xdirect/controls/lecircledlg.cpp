@@ -35,7 +35,7 @@
 
 LECircleDlg::LECircleDlg(MainFrame *pMainFrame): XflDialog(pMainFrame)
 {
-    setWindowTitle("L.E. Circle");
+    setWindowTitle(tr("L.E. Circle"));
     setupLayout();
     s_pMainFrame = pMainFrame;
 }

@@ -42,7 +42,7 @@
 
 BodyTransDlg::BodyTransDlg(QWidget *pParent): QDialog(pParent)
 {
-    setWindowTitle("Translation");
+    setWindowTitle(tr("Translation"));
     m_XTrans = m_YTrans = m_ZTrans = 0.0;
     m_bFrameOnly = false;
     m_FrameID = 1;
@@ -147,7 +147,7 @@ void BodyTransDlg::setupLayout()
 {
     QHBoxLayout *pFrameIDLayout = new QHBoxLayout;
     {
-        m_pchFrameOnly = new QCheckBox("Frame only");
+        m_pchFrameOnly = new QCheckBox(tr("Frame only"));
         m_pieFrameID = new IntEdit(0);
         pFrameIDLayout->addStretch();
         pFrameIDLayout->addWidget(m_pchFrameOnly);
@@ -156,9 +156,9 @@ void BodyTransDlg::setupLayout()
 
     QGridLayout *pTransLayout = new QGridLayout;
     {
-        QLabel * XTrans = new QLabel("dX=");
-        QLabel * YTrans = new QLabel("dY=");
-        QLabel * ZTrans = new QLabel("dZ=");
+        QLabel * XTrans = new QLabel(tr("dX="));
+        QLabel * YTrans = new QLabel(tr("dY="));
+        QLabel * ZTrans = new QLabel(tr("dZ="));
         m_pdeXTransFactor = new FloatEdit(0.0,3);
         m_pdeYTransFactor = new FloatEdit(0.0,3);
         m_pdeZTransFactor = new FloatEdit(0.0,3);

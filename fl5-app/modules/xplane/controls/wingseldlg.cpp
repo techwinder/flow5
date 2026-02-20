@@ -61,10 +61,10 @@ void WingSelDlg::setupLayout()
     QVBoxLayout *pWingLayout = new QVBoxLayout;
     {
         m_pchWing.resize(4);
-        m_pchWing[0] = new QCheckBox("Main wing");
-        m_pchWing[1] = new QCheckBox("Elevator");
-        m_pchWing[2] = new QCheckBox("Fin");
-        m_pchWing[3] = new QCheckBox("Other wings");
+        m_pchWing[0] = new QCheckBox(tr("Main wing"));
+        m_pchWing[1] = new QCheckBox(tr("Elevator"));
+        m_pchWing[2] = new QCheckBox(tr("Fin"));
+        m_pchWing[3] = new QCheckBox(tr("Other wings"));
 
         for(int iw=0; iw<4; iw++) pWingLayout->addWidget(m_pchWing[iw]);
 

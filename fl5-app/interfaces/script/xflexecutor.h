@@ -25,6 +25,7 @@
 #pragma once
 
 #include <QObject>
+#include <QVector>
 #include <QFile>
 #include <QTextStream>
 

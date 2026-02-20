@@ -31,7 +31,7 @@
 #include <api/sail.h>
 #include <api/sailnurbs.h>
 
-#include <gmsh.h>
+#include <interfaces/mesh/gmesh_globals.h>
 
 
 GMesher::GMesher(QObject *parent) : QObject{parent}

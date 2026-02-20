@@ -68,7 +68,7 @@ QByteArray FuseOccDlg::s_HSplitterSizes;
 
 FuseOccDlg::FuseOccDlg(QWidget *pParent) : FuseDlg(pParent)
 {
-    setWindowTitle("Occ fuse editor");
+    setWindowTitle(tr("Occ fuse editor"));
 
     m_pFuseOcc = nullptr;
 
@@ -521,7 +521,7 @@ void FuseOccDlg::onCheckFreeEdges()
 {
     std::vector<Segment3d> freeedges;
     m_pFuseOcc->triMesh().getFreeEdges(freeedges);
-    QVector<Segment3d> qVec = QVector<Segment3d>(freeedges.begin(), freeedges.end());
+    QVector<Segment3d> qVec(freeedges.begin(), freeedges.end());
 
     m_pglFuseView->setSegments(qVec);
 
@@ -625,8 +625,8 @@ void FuseOccDlg::onCheckMesh()
     QVector<int> qVec;
     if(dlg.checkSkinny())    qVec = QVector<int>(skinnylist.begin(), skinnylist.end());
     if(dlg.checkMinAngles()) qVec = QVector<int>(anglelist.begin(), anglelist.end());
-    if(dlg.checkMinArea())   qVec = QVector<int>(arealist.begin(),  arealist.end());
-    if(dlg.checkMinSize())   qVec = QVector<int>(sizelist.begin(),  sizelist.end());
+    if(dlg.checkMinArea())   qVec = QVector<int>(arealist.begin(), arealist.end());
+    if(dlg.checkMinSize())   qVec = QVector<int>(sizelist.begin(), sizelist.end());
     m_pglFuseView->appendHighlightList(qVec);
     updateStdOutput(log + "\n");
 

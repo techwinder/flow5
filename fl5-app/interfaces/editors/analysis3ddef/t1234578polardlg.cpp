@@ -57,7 +57,7 @@
 
 T1234578PolarDlg::T1234578PolarDlg(QWidget *pParent) : PlanePolarDlg(pParent)
 {
-    setWindowTitle("Analysis definition");
+    setWindowTitle(tr("Analysis definition"));
 
     m_pPlane = nullptr;
 
@@ -283,7 +283,7 @@ void T1234578PolarDlg::onOK()
     {
         if(fabs(s_WPolar.mass())<PRECISION && s_WPolar.isFixedLiftPolar())
         {
-            QMessageBox::warning(this, "Warning", "Mass must be non-zero for type 2 polars");
+            QMessageBox::warning(this, tr("Warning"), tr("Mass must be non-zero for type 2 polars"));
             m_pfePlaneMass->setFocus();
             return;
         }
@@ -361,13 +361,13 @@ void T1234578PolarDlg::setupLayout()
         {
             QVBoxLayout *pAnalysisTypeLayout = new QVBoxLayout;
             {
-                m_prbType1 = new QRadioButton(QString("Type 1 (fixed V")+INFch+")");
-                m_prbType2 = new QRadioButton("Type 2 (fixed lift)");
-                m_prbType3 = new QRadioButton("Type 3 (speed polar)");
-                m_prbType4 = new QRadioButton(QString("Type 4 (fixed ") + ALPHAch + ")");
-                m_prbType5 = new QRadioButton(QString("Type 5 (")+BETAch+"  range, fixed "+ALPHAch+" and V"+INFch+")");
-                m_prbType7 = new QRadioButton("Type 7 (stability analysis)");
-                m_prbType8 = new QRadioButton("Type 8");
+                m_prbType1 = new QRadioButton(tr("Type 1 (fixed V") + INFch + tr(")"));
+                m_prbType2 = new QRadioButton(tr("Type 2 (fixed lift)"));
+                m_prbType3 = new QRadioButton(tr("Type 3 (speed polar)"));
+                m_prbType4 = new QRadioButton(tr("Type 4 (fixed ") + ALPHAch + tr(")"));
+                m_prbType5 = new QRadioButton(tr("Type 5 (") + BETAch + tr("  range, fixed ") + ALPHAch + tr(" and V") + INFch + tr(")"));
+                m_prbType7 = new QRadioButton(tr("Type 7 (stability analysis)"));
+                m_prbType8 = new QRadioButton(tr("Type 8"));
 
                 QLabel *pFlow5Link = new QLabel;
                 pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Analysis/T8_polars.html>https://flow5.tech/docs/flow5_doc/Analysis/T8_polars.html</a>");
@@ -425,10 +425,10 @@ void T1234578PolarDlg::setupLayout()
                 {
                     QHBoxLayout *pPhiLayout = new QHBoxLayout;
                     {
-                        QLabel *pLabPhi = new QLabel("<p>&phi; =</p>");
+                        QLabel *pLabPhi = new QLabel(tr("<p>&phi; =</p>"));
                         m_pfePhiSpec = new FloatEdit;
-                        m_pfePhiSpec->setToolTip("<p>The bank angle</p>");
-                        QLabel *pLabDeg = new QLabel("<p>&deg;</p>");
+                        m_pfePhiSpec->setToolTip(tr("<p>The bank angle</p>"));
+                        QLabel *pLabDeg = new QLabel(tr("<p>&deg;</p>"));
 
                         pPhiLayout->addWidget(pLabPhi, 0, Qt::AlignRight);
                         pPhiLayout->addWidget(m_pfePhiSpec);
@@ -442,7 +442,7 @@ void T1234578PolarDlg::setupLayout()
                 {
                     QHBoxLayout *pQinfLayout = new QHBoxLayout;
                     {
-                        QLabel *plabinf = new QLabel("<p>V<sub>&infin;</sub>=");
+                        QLabel *plabinf = new QLabel(tr("<p>V<sub>&infin;</sub>="));
 
                         m_pfeQInf = new FloatEdit;
                         m_pfeQInf->setMin(0.0);
@@ -459,8 +459,8 @@ void T1234578PolarDlg::setupLayout()
                 {
                     QVBoxLayout *pFlightLayout = new QVBoxLayout;
                     {
-                        m_plabWingLoad  = new QLabel("Wing loading = 0.033 kg/dm2");
-                        m_plabReInfo    = new QLabel("Re info");
+                        m_plabWingLoad  = new QLabel(tr("Wing loading = 0.033 kg/dm2"));
+                        m_plabReInfo    = new QLabel(tr("Re info"));
 
                         m_plabWingLoad->setFont(fixedfnt);
                         m_plabReInfo->setFont(fixedfnt);
@@ -496,25 +496,25 @@ void T1234578PolarDlg::setupLayout()
             {
                 m_pcptAVLCtrls = new CPTableView(this);
                 m_pcptAVLCtrls->setEditable(true);
-                m_pcptAVLCtrls->setWindowTitle("Controls");
+                m_pcptAVLCtrls->setWindowTitle(tr("Controls"));
                 m_pcptAVLCtrls->setContextMenuPolicy(Qt::CustomContextMenu);
                 m_pAVLCtrlModel = new QStandardItemModel(this);
                 m_pAVLCtrlModel->setRowCount(0);//temporary
                 m_pAVLCtrlModel->setColumnCount(1);
-                m_pAVLCtrlModel->setHeaderData(0, Qt::Horizontal, "Control name");
+                m_pAVLCtrlModel->setHeaderData(0, Qt::Horizontal, tr("Control name"));
 
                 m_pcptAVLCtrls->setModel(m_pAVLCtrlModel);
                 m_pcptAVLCtrls->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 
                 m_pcptAVLGains = new CPTableView(this);
                 m_pcptAVLGains->setEditable(true);
-                m_pcptAVLGains->setWindowTitle("Controls");
+                m_pcptAVLGains->setWindowTitle(tr("Controls"));
 
                 m_pAVLGainModel = new CtrlTableModel(this);
                 m_pAVLGainModel->setRowCount(0);//temporary
                 m_pAVLGainModel->setColumnCount(2);
-                m_pAVLGainModel->setHeaderData(0, Qt::Horizontal, "Control surfaces");
-                m_pAVLGainModel->setHeaderData(1, Qt::Horizontal, QString("Gain (") + DEGch + ")/ ctrl unit");
+                m_pAVLGainModel->setHeaderData(0, Qt::Horizontal, tr("Control surfaces"));
+                m_pAVLGainModel->setHeaderData(1, Qt::Horizontal, tr("Gain (") + DEGch + tr(")/ ctrl unit"));
 
                 m_pcptAVLGains->setModel(m_pAVLGainModel);
 //                m_pcptAVLGains->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -529,8 +529,8 @@ void T1234578PolarDlg::setupLayout()
                 pAVLCtrlsLayout->addWidget(m_pcptAVLGains);
             }
 
-            QLabel *plabNote = new QLabel("<p>Each set of controls is used to calculate a control derivative."
-                                          "</p>");
+            QLabel *plabNote = new QLabel(tr("<p>Each set of controls is used to calculate a control derivative."
+                                          "</p>"));
             pAVLPageLayout->addLayout(pAVLCtrlsLayout);
             pAVLPageLayout->addWidget(plabNote);
         }
@@ -538,18 +538,18 @@ void T1234578PolarDlg::setupLayout()
     }
 
 
-    pTabWt->addTab(pfrPolarType,   "Polar type");
-    pTabWt->addTab(m_pfrMethod,    "Method");
-    pTabWt->addTab(m_pfrRefDims,   "Ref. dimensions");
-    pTabWt->addTab(m_pfrFluid,     "Fluid");
-    pTabWt->addTab(m_pfrInertia,   "Inertia");
-    pTabWt->addTab(m_pfrViscosity, "Viscosity");
-    pTabWt->addTab(m_pfrFlaps,     "Flaps");
-    pTabWt->addTab(pfrAVLCtrls,    "AVL-type ctrls");
-    pTabWt->addTab(m_pfrGround,    "Ground");
-    pTabWt->addTab(m_pfrFuseDrag,  "Fuselage");
-    pTabWt->addTab(m_pExtraDragWt, "Extra drag");
-    pTabWt->addTab(m_pfrWake,      "Wake");
+    pTabWt->addTab(pfrPolarType,   tr("Polar type"));
+    pTabWt->addTab(m_pfrMethod,    tr("Method"));
+    pTabWt->addTab(m_pfrRefDims,   tr("Ref. dimensions"));
+    pTabWt->addTab(m_pfrFluid,     tr("Fluid"));
+    pTabWt->addTab(m_pfrInertia,   tr("Inertia"));
+    pTabWt->addTab(m_pfrViscosity, tr("Viscosity"));
+    pTabWt->addTab(m_pfrFlaps,     tr("Flaps"));
+    pTabWt->addTab(pfrAVLCtrls,    tr("AVL-type ctrls"));
+    pTabWt->addTab(m_pfrGround,    tr("Ground"));
+    pTabWt->addTab(m_pfrFuseDrag,  tr("Fuselage"));
+    pTabWt->addTab(m_pExtraDragWt, tr("Extra drag"));
+    pTabWt->addTab(m_pfrWake,      tr("Wake"));
 
     pTabWt->setCurrentIndex(0);
 
@@ -578,7 +578,7 @@ void T1234578PolarDlg::setWingLoad()
     {
         double WingLoad = s_WPolar.mass()/s_WPolar.referenceArea();//kg/dm2
 
-        str = QString::asprintf("Wing loading = %.3f ", WingLoad * Units::kgtoUnit() / Units::m2toUnit());
+        str = tr("Wing loading = ") + QString::asprintf("%.3f ", WingLoad * Units::kgtoUnit() / Units::m2toUnit());
 
         str1 = Units::massUnitQLabel();
         str2 = Units::areaUnitQLabel();
@@ -602,25 +602,25 @@ void T1234578PolarDlg::setReynolds()
     if(s_WPolar.isFixedSpeedPolar())
     {
         double RRe = m_pPlane->rootChord() * s_WPolar.velocity()/s_WPolar.viscosity();
-        strange =  QString::asprintf("Root Re = %.0f", RRe);
+        strange =  tr("Root Re = %1").arg(RRe, 0, 'f', 0);
         lab = strange.rightJustified(37, ' ') + EOLch;
         double SRe = m_pPlane->tipChord() * s_WPolar.velocity()/s_WPolar.viscosity();
-        strange = QString::asprintf("Tip Re   = %.0f", SRe);
+        strange = tr("Tip Re   = %1").arg(SRe, 0, 'f', 0);
         lab += strange.rightJustified(37, ' ');
         m_plabReInfo->setText(lab);
     }
     else if(s_WPolar.isFixedLiftPolar())
     {
         double QCl = sqrt(2.* 9.81 /s_WPolar.density()* s_WPolar.mass() /s_WPolar.referenceArea());
-        strange = "V"+INFch+".sqrt(Cl) = " + QString::asprintf("%.3f ", QCl) + strUnit;
+        strange = tr("V") + INFch + tr(".sqrt(Cl) = %1").arg(QCl, 0, 'f', 3) + strUnit;
         lab = strange.rightJustified(37, ' ') + EOLch;
 
         double RRe = m_pPlane->rootChord() * QCl/s_WPolar.viscosity();
-        strange = QString::asprintf("Root Re.sqrt(Cl) = %.0f", RRe);
+        strange = tr("Root Re.sqrt(Cl) = %1").arg(RRe, 0, 'f', 0);
         lab += strange.rightJustified(37, ' ') + EOLch;
 
         double SRe = m_pPlane->tipChord() * QCl/s_WPolar.viscosity();
-        strange = QString::asprintf("Tip Re.sqrt(Cl) = %.0f", SRe);
+        strange = tr("Tip Re.sqrt(Cl) = %1").arg(SRe, 0, 'f', 0);
         lab += strange.rightJustified(37, ' ');
 
         m_plabReInfo->setText(lab);
@@ -740,11 +740,11 @@ void T1234578PolarDlg::onAVLContextMenu(QPoint)
 
     QMenu *pAVLActionsMenu = new QMenu;
     {
-        QAction *pAppendRow = new QAction("Append new control set", this);
-        QAction *pDeleteRow = new QAction("Delete selected",        this);
-        QAction *pDuplicate = new QAction("Duplicate",              this);
-        QAction *pMoveUp    = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowUp),   "Move up",   this);
-        QAction *pMoveDown  = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowDown), "Move down", this);
+        QAction *pAppendRow = new QAction(tr("Append new control set"), this);
+        QAction *pDeleteRow = new QAction(tr("Delete selected"),        this);
+        QAction *pDuplicate = new QAction(tr("Duplicate"),              this);
+        QAction *pMoveUp    = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowUp),   tr("Move up"),   this);
+        QAction *pMoveDown  = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowDown), tr("Move down"), this);
         pMoveUp->setData(0);
         pMoveDown->setData(1);
         pAVLActionsMenu->addAction(pAppendRow);
@@ -756,8 +756,8 @@ void T1234578PolarDlg::onAVLContextMenu(QPoint)
 
         if(ind.isValid())
         {
-            pDuplicate->setText("Duplicate "+ctrlname);
-            pDeleteRow->setText("Delete "+ctrlname);
+            pDuplicate->setText(tr("Duplicate %1").arg(ctrlname));
+            pDeleteRow->setText(tr("Delete %1").arg(ctrlname));
         }
         pDuplicate->setEnabled(ind.isValid());
         pDeleteRow->setEnabled(ind.isValid());
@@ -781,7 +781,7 @@ void T1234578PolarDlg::onAppendAVLCtrl()
     if(!pPlaneXfl) return;
 
     AngleControl avlc;
-    avlc.setName((QString::asprintf("new control_%d", s_WPolar.nAVLCtrls()+1)).toStdString());
+    avlc.setName((tr("new control_%1").arg(s_WPolar.nAVLCtrls()+1)).toStdString());
     avlc.resizeValues(pPlaneXfl->nAVLGains());
     s_WPolar.addAVLControl(avlc);
     fillAVLCtrlList();

@@ -97,7 +97,7 @@ Quaternion FuseMesherDlg::s_ab_quat_shape(-0.212012, 0.148453, -0.554032, -0.791
 FuseMesherDlg::FuseMesherDlg(QWidget *pParent) : QDialog(pParent)
 {
     setAttribute(Qt::WA_DeleteOnClose);
-    setWindowTitle("Fuse mesh tester");
+    setWindowTitle(tr("Fuse mesh tester"));
     setWindowFlag(Qt::WindowMinMaxButtonsHint);
 
     m_pFuse= nullptr;
@@ -534,9 +534,9 @@ void FuseMesherDlg::onCheckMesh()
 
     QVector<int> qVec;
     if(dlg.checkSkinny())    qVec = QVector<int>(skinnylist.begin(), skinnylist.end());
-    if(dlg.checkMinAngles()) qVec = QVector<int>(anglelist.begin(),  anglelist.end());
-    if(dlg.checkMinArea())   qVec = QVector<int>(arealist.begin(),   arealist.end());
-    if(dlg.checkMinSize())   qVec = QVector<int>(sizelist.begin(),   sizelist.end());
+    if(dlg.checkMinAngles()) qVec = QVector<int>(anglelist.begin(), anglelist.end());
+    if(dlg.checkMinArea())   qVec = QVector<int>(arealist.begin(), arealist.end());
+    if(dlg.checkMinSize())   qVec = QVector<int>(sizelist.begin(), sizelist.end());
     m_pglFuseView->appendHighlightList(qVec);
 
     m_ppto->onAppendStdText(log + "\n");
@@ -754,7 +754,7 @@ void FuseMesherDlg::onCheckFreeEdges()
 {
     std::vector<Segment3d> freeedges;
     m_pFuse->triMesh().getFreeEdges(freeedges);
-    QVector<Segment3d> qVec = QVector<Segment3d>(freeedges.begin(), freeedges.end());
+    QVector<Segment3d> qVec(freeedges.begin(), freeedges.end());
     m_pglFuseView->setSegments(qVec);
     m_pglFuseView->resetPanels();
     m_pglFuseView->update();

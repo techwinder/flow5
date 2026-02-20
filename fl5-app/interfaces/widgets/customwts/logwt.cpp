@@ -78,9 +78,9 @@ void LogWt::onCancelClose()
     }
     else
     {
-        m_ppbButton->setText("Cancelling...");
+        m_ppbButton->setText(tr("Cancelling..."));
         m_ppbButton->setEnabled(false);
-        onOutputMessage("\n_____________Cancel request emitted_____________\n\n");
+        onOutputMessage(tr("\n_____________Cancel request emitted_____________\n\n"));
         
     }
 }
@@ -117,8 +117,8 @@ void LogWt::hideEvent(QHideEvent *pEvent)
 
 void LogWt::setCancelButton(bool bCancel)
 {
-    if(bCancel) m_ppbButton->setText("Cancel");
-    else        m_ppbButton->setText("Close");
+    if(bCancel) m_ppbButton->setText(tr("Cancel"));
+    else        m_ppbButton->setText(tr("Close"));
 }
 
 
@@ -139,7 +139,7 @@ void LogWt::setFinished(bool bFinished)
     m_bFinished = bFinished;
     if(bFinished)
     {
-        m_ppbButton->setText("Close");
+        m_ppbButton->setText(tr("Close"));
         m_ppbButton->setEnabled(true);
         m_ppbButton->setFocus();
     }

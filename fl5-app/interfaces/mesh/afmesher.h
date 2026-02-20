@@ -25,6 +25,7 @@
 #pragma once
 
 #include <QObject>
+#include <QVector>
 
 
 #include <api/triangle3d.h>
@@ -33,6 +34,7 @@
 #include <interfaces/mesh/slg3d.h>
 
 #include <TopoDS_Face.hxx>
+#include <TopoDS_ListOfShape.hxx>
 #include <TopoDS_Shell.hxx>
 #include <TopoDS_Edge.hxx>
 

@@ -1,7 +1,7 @@
 /****************************************************************************
 
     flow5 application
-    Copyright (C) 2025 André Deperrois 
+    Copyright (C) 2025  André Deperrois 
     
     This file is part of flow5.
 

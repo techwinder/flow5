@@ -46,10 +46,10 @@ class PlaneOpp;
 namespace Objects3d
 {
     // object variable lists
-    extern int s_Index;
-    extern std::vector<Plane*> s_oaPlane;   /**< The array of void pointers to the Plane objects. */
-    extern std::vector<PlanePolar*> s_oaPlanePolar;  /**< The array of void pointers to the WPolar objects. */
-    extern std::vector<PlaneOpp*> s_oaPlaneOpp;    /**< The array of void pointers to the PlaneOpp objects. */
+    extern FL5LIB_EXPORT int s_Index;
+    extern FL5LIB_EXPORT std::vector<Plane*> s_oaPlane;   /**< The array of void pointers to the Plane objects. */
+    extern FL5LIB_EXPORT std::vector<PlanePolar*> s_oaPlanePolar;  /**< The array of void pointers to the WPolar objects. */
+    extern FL5LIB_EXPORT std::vector<PlaneOpp*> s_oaPlaneOpp;    /**< The array of void pointers to the PlaneOpp objects. */
 
     FL5LIB_EXPORT  inline std::vector<Plane*>      const &planes()      {return s_oaPlane;}
     FL5LIB_EXPORT  inline std::vector<PlanePolar*> const &planePolars() {return s_oaPlanePolar;}

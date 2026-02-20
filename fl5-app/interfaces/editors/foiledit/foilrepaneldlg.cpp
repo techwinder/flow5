@@ -78,7 +78,7 @@ void FoilRepanelDlg::resizeEvent(QResizeEvent *pEvent)
 
 void FoilRepanelDlg::setupLayout()
 {
-    setWindowTitle("Foil panel refinement");
+    setWindowTitle(tr("Foil panel refinement"));
 
     m_pfrBunch = new QFrame(m_pFoilWt);
     {
@@ -90,7 +90,7 @@ void FoilRepanelDlg::setupLayout()
         {
             QHBoxLayout *pNbLayout = new QHBoxLayout;
             {
-                QLabel *plabNPanels = new QLabel("Number of panels");
+                QLabel *plabNPanels = new QLabel(tr("Number of panels"));
                 plabNPanels->setPalette(m_Palette);
                 plabNPanels->setAttribute(Qt::WA_NoSystemBackground);
                 m_pieNPanels = new IntEdit;
@@ -112,11 +112,11 @@ void FoilRepanelDlg::setupLayout()
 
             QGridLayout *pBunchLayout = new QGridLayout;
             {
-                QLabel *plabNoAmp = new QLabel("Uniform");
+                QLabel *plabNoAmp = new QLabel(tr("Uniform"));
                 plabNoAmp->setPalette(m_Palette);
                 plabNoAmp->setAttribute(Qt::WA_NoSystemBackground);
                 plabNoAmp->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
-                QLabel *plabAmp = new QLabel("Bunched");
+                QLabel *plabAmp = new QLabel(tr("Bunched"));
                 plabAmp->setPalette(m_Palette);
                 plabAmp->setAttribute(Qt::WA_NoSystemBackground);
                 plabAmp->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);

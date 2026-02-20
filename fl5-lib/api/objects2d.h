@@ -42,9 +42,9 @@ class OpPoint;
 
 namespace Objects2d
 {
-    extern std::vector <Foil*>    s_oaFoil;
-    extern std::vector <Polar*>   s_oaPolar;  /**< The array of void pointers to the Polar objects. */
-    extern std::vector <OpPoint*> s_oaOpp;    /**< The array of void pointers to the OpPoint objects. */
+    extern FL5LIB_EXPORT std::vector <Foil*>    s_oaFoil;
+    extern FL5LIB_EXPORT std::vector <Polar*>   s_oaPolar;  /**< The array of void pointers to the Polar objects. */
+    extern FL5LIB_EXPORT std::vector <OpPoint*> s_oaOpp;    /**< The array of void pointers to the OpPoint objects. */
 
 
     FL5LIB_EXPORT  inline std::vector<Foil*>    const & foils()           {return s_oaFoil;}

@@ -43,7 +43,7 @@ QByteArray XPlaneWt::s_HSplitterSizes;
 
 XPlaneWt::XPlaneWt(XPlane *pXPlane, gl3dXPlaneView *pgl3dXPlaneView) : QWidget()
 {
-    setWindowTitle("3d floating view");
+    setWindowTitle(tr("3d floating view"));
     setAttribute(Qt::WA_DeleteOnClose);
     setWindowFlags(Qt::WindowStaysOnTopHint);
 

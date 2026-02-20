@@ -69,16 +69,16 @@ void PlanePolarDlg::makeCommonControls()
     {
         QVBoxLayout *pInertiaPageLayout = new QVBoxLayout;
         {
-            m_pchAutoInertia = new QCheckBox("Auto inertia");
+            m_pchAutoInertia = new QCheckBox(tr("Auto inertia"));
             QGridLayout *pInertiaDataLayout = new QGridLayout;
             {
-                pInertiaDataLayout->addWidget(new QLabel("Plane mass ="), 1,1, Qt::AlignVCenter | Qt::AlignRight);
-                pInertiaDataLayout->addWidget(new QLabel("X_CoG ="),      2,1, Qt::AlignVCenter | Qt::AlignRight);
-                pInertiaDataLayout->addWidget(new QLabel("Z_CoG ="),      3,1, Qt::AlignVCenter | Qt::AlignRight);
-                pInertiaDataLayout->addWidget(new QLabel("Ixx   ="),      4,1, Qt::AlignVCenter | Qt::AlignRight);
-                pInertiaDataLayout->addWidget(new QLabel("Iyy   ="),      5,1, Qt::AlignVCenter | Qt::AlignRight);
-                pInertiaDataLayout->addWidget(new QLabel("Izz   ="),      6,1, Qt::AlignVCenter | Qt::AlignRight);
-                pInertiaDataLayout->addWidget(new QLabel("Ixz   ="),      7,1, Qt::AlignVCenter | Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("Plane mass =")), 1,1, Qt::AlignVCenter | Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("X_CoG =")),      2,1, Qt::AlignVCenter | Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("Z_CoG =")),      3,1, Qt::AlignVCenter | Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("Ixx   =")),      4,1, Qt::AlignVCenter | Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("Iyy   =")),      5,1, Qt::AlignVCenter | Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("Izz   =")),      6,1, Qt::AlignVCenter | Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("Ixz   =")),      7,1, Qt::AlignVCenter | Qt::AlignRight);
                 m_pfePlaneMass  = new FloatEdit;
                 m_pfeXCoG = new FloatEdit;
                 m_pfeZCoG = new FloatEdit;
@@ -118,19 +118,19 @@ void PlanePolarDlg::makeCommonControls()
         {
             QHBoxLayout *pGroupLayout = new QHBoxLayout;
             {
-                m_pchGround   = new QCheckBox("Ground effect");
-                m_pchGround->setToolTip("<p>Activate this option to simulate an above ground airplane.<br>"
-                                        "Height should be positive.</p>");
-                m_pchFreeSurf = new QCheckBox("Free surface");
-                m_pchFreeSurf->setToolTip("<p>Activate this option to simulate an underwater hydrofoil.<br>"
-                                          "Height should be negative.</p>");
+                m_pchGround   = new QCheckBox(tr("Ground effect"));
+                m_pchGround->setToolTip(tr("<p>Activate this option to simulate an above ground airplane.<br>"
+                                        "Height should be positive.</p>"));
+                m_pchFreeSurf = new QCheckBox(tr("Free surface"));
+                m_pchFreeSurf->setToolTip(tr("<p>Activate this option to simulate an underwater hydrofoil.<br>"
+                                          "Height should be negative.</p>"));
                 pGroupLayout->addWidget(m_pchGround);
                 pGroupLayout->addWidget(m_pchFreeSurf);
                 pGroupLayout->addStretch();
             }
             QHBoxLayout *pGroundHeightLayout = new QHBoxLayout;
             {
-                QLabel *pLabHeight = new QLabel("Height =");
+                QLabel *pLabHeight = new QLabel(tr("Height ="));
                 m_pfeHeight = new FloatEdit(0.0f);
                 QLabel *plabLengthUnit2 = new QLabel(Units::lengthUnitQLabel());
                 pGroundHeightLayout->addWidget(pLabHeight);
@@ -139,8 +139,8 @@ void PlanePolarDlg::makeCommonControls()
                 pGroundHeightLayout->addStretch();
             }
 
-            QLabel *plabWarning = new QLabel("<p>Height should be positive in the case of a ground effect<br>"
-                                             "and negative in the case of a free surface effect.</p>");
+            QLabel *plabWarning = new QLabel(tr("<p>Height should be positive in the case of a ground effect<br>"
+                                             "and negative in the case of a free surface effect.</p>"));
             plabWarning->setWordWrap(true);
 
             QLabel *pFlow5Link = new QLabel;
@@ -161,14 +161,14 @@ void PlanePolarDlg::makeCommonControls()
     {
         QVBoxLayout *pViscousPageLayout = new QVBoxLayout;
         {
-            m_pchViscAnalysis = new QCheckBox("Viscous analysis");
-            m_pchViscAnalysis->setToolTip("<p>Activate this checkbox to include the viscous drag in the results</p>");
+            m_pchViscAnalysis = new QCheckBox(tr("Viscous analysis"));
+            m_pchViscAnalysis->setToolTip(tr("<p>Activate this checkbox to include the viscous drag in the results</p>"));
 
             QHBoxLayout *pMethodLayout = new QHBoxLayout;
             {
                 QButtonGroup *pbgMethod = new QButtonGroup(this);
                 {
-                    QString tip("<p>"
+                    QString tip(tr("<p>"
                                 "The viscous drag can be evaluated using the legacy xflr5 method by interpolation "
                                 "on the 2d polar mesh, or by on-the-fly XFoil calculations at wing sections. "
                                 "Both methods give similar results.<br>"
@@ -180,10 +180,10 @@ void PlanePolarDlg::makeCommonControls()
                                 "On the fly calculations are strongly recommended if a set of flap deflections is active, "
                                 "otherwise the calculation will default to interpolation of the viscous drag on the non-flapped airfoil configuration "
                                 "with incorrect results."
-                                "</p>");
-                    m_prbViscOnTheFly = new QRadioButton("XFoil on the fly");
+                                "</p>"));
+                    m_prbViscOnTheFly = new QRadioButton(tr("XFoil on the fly"));
                     m_prbViscOnTheFly->setToolTip(tip);
-                    m_prbViscInterpolated = new QRadioButton("Interpolated (xflr5 method) (LLT method)");
+                    m_prbViscInterpolated = new QRadioButton(tr("Interpolated (xflr5 method) (LLT method)"));
                     m_prbViscInterpolated->setToolTip(tip);
                     pbgMethod->addButton(m_prbViscOnTheFly);
                     pbgMethod->addButton(m_prbViscInterpolated);
@@ -199,22 +199,22 @@ void PlanePolarDlg::makeCommonControls()
                 {
                     QButtonGroup *pbgType = new QButtonGroup(this);
                     {
-                        m_prbViscFromCl    = new QRadioButton("from Cl - xflr5 method (recommended)");
-                        QString tipCl("<p>Activate this option to interpolate the viscous data from the local lift coefficient, "
-                                      "i.e. identical to the method implemented in xflr5</p>");
+                        m_prbViscFromCl    = new QRadioButton(tr("from Cl - xflr5 method (recommended)"));
+                        QString tipCl(tr("<p>Activate this option to interpolate the viscous data from the local lift coefficient, "
+                                      "i.e. identical to the method implemented in xflr5</p>"));
                         m_prbViscFromCl->setToolTip(tipCl);
 
-                        m_prbViscFromAlpha = new QRadioButton("from "+ ALPHAch + " - viscous loop method");
-                        QString tipAlpha("<p>Activate this option to interpolate the viscous data from the local apparent aoa, "
-                                         "i.e. identical to the method used for the viscous loop in control polars</p>");
+                        m_prbViscFromAlpha = new QRadioButton(tr("from ") + ALPHAch + tr(" - viscous loop method"));
+                        QString tipAlpha(tr("<p>Activate this option to interpolate the viscous data from the local apparent aoa, "
+                                         "i.e. identical to the method used for the viscous loop in control polars</p>"));
                         m_prbViscFromAlpha->setToolTip(tipAlpha);
 
                         pbgType->addButton(m_prbViscFromCl);
                         pbgType->addButton(m_prbViscFromAlpha);
                     }
 
-                    m_pchViscousLoop = new  QCheckBox("Viscous loop");
-                    QString tip = "<p>Activate this checkbox to enable iterations until a lift distribution is found which satisfies"
+                    m_pchViscousLoop = new  QCheckBox(tr("Viscous loop"));
+                    QString tip = tr("<p>Activate this checkbox to enable iterations until a lift distribution is found which satisfies"
                                   "both the panel method's BC and airfoil viscous lift data."
                                   "</p>"
                                   "<p>"
@@ -229,7 +229,7 @@ void PlanePolarDlg::makeCommonControls()
                                   "<p>"
                                   "An additional variable dubbed \'virtual twist\' is added at each span spation to adjust the local lift."
                                   "</p>"
-                                  "<p>Available for control polars (T6) only.</p>";
+                                  "<p>Available for control polars (T6) only.</p>");
                     m_pchViscousLoop->setToolTip(tip);
 
                     pInterpolateLayout->addWidget(m_prbViscFromCl);
@@ -245,25 +245,25 @@ void PlanePolarDlg::makeCommonControls()
             {
                 QGridLayout *pOnTheFyLayout = new QGridLayout;
                 {
-                    QLabel *plabNCrit       = new QLabel("NCrit=");
-                    QLabel *plabTopTrip     = new QLabel("Trip location (top)=");
-                    QLabel *plabBotTrip     = new QLabel("Trip location (bot)=");
+                    QLabel *plabNCrit       = new QLabel(tr("NCrit="));
+                    QLabel *plabTopTrip     = new QLabel(tr("Trip location (top)="));
+                    QLabel *plabBotTrip     = new QLabel(tr("Trip location (bot)="));
 
                     m_pfeNCrit  = new FloatEdit;
                     m_pfeXTopTr = new FloatEdit;
                     m_pfeXBotTr = new FloatEdit;
 
-                    m_pchTransAtHinge = new QCheckBox("Force transition at hinge location");
-                    m_pchTransAtHinge->setToolTip("<p>"
+                    m_pchTransAtHinge = new QCheckBox(tr("Force transition at hinge location"));
+                    m_pchTransAtHinge->setToolTip(tr("<p>"
                                                   "Forces the laminar to turbulent transition at the hinge's location on both the top and bottom surfaces.<br>"
                                                   "The transition location is set as the most upwind position between the hinge's location "
                                                   "and the forced transition location.<br>"
                                                   "Only used in the case of flapped surfaces.<br>"
                                                   "This greatly increases the convergence success rate and the speed of XFoil calculations."
-                                                  "</p>");
+                                                  "</p>"));
 
-                    QLabel *plabpctop = new QLabel("% chord");
-                    QLabel *plabpcbot = new QLabel("% chord");
+                    QLabel *plabpctop = new QLabel(tr("% chord"));
+                    QLabel *plabpcbot = new QLabel(tr("% chord"));
 
                     pOnTheFyLayout->addWidget(plabNCrit,         1, 1);
                     pOnTheFyLayout->addWidget(m_pfeNCrit,        1, 2);
@@ -295,7 +295,7 @@ void PlanePolarDlg::makeCommonControls()
     {
         QGridLayout* pFuseDragLayout = new QGridLayout;
         {
-            m_pchFuseDrag = new QCheckBox("Include skin friction drag");
+            m_pchFuseDrag = new QCheckBox(tr("Include skin friction drag"));
 
             QPixmap pixmap;
 
@@ -307,11 +307,11 @@ void PlanePolarDlg::makeCommonControls()
             m_plabFuseDragFormula->setPixmap(pixmap);
             m_plabFuseDragFormula->setAlignment(Qt::AlignLeft);
 
-            m_plabFuseWettedArea = new QLabel("Wetted Area (WA) = 0");
+            m_plabFuseWettedArea = new QLabel(tr("Wetted Area (WA) = 0"));
             m_plabFuseWettedArea->setAlignment(Qt::AlignLeft);
             m_plabFuseWettedArea->setFont(fixedfnt);
 
-            m_plabFuseFormFactor = new QLabel("Form Factor (FF) = 1");
+            m_plabFuseFormFactor = new QLabel(tr("Form Factor (FF) = 1"));
             m_plabFuseFormFactor->setAlignment(Qt::AlignLeft);
             m_plabFuseFormFactor->setFont(fixedfnt);
 
@@ -321,7 +321,7 @@ void PlanePolarDlg::makeCommonControls()
             else
                 pixmap.load(":/images/Fuse_FF.png");
             plabFF->setPixmap(pixmap);
-            m_prbKSDrag = new QRadioButton("Karman-Schoenherr implicit method");
+            m_prbKSDrag = new QRadioButton(tr("Karman-Schoenherr implicit method"));
 
             QLabel *plabKS = new QLabel();
             if(DisplayOptions::isDarkMode())
@@ -329,10 +329,10 @@ void PlanePolarDlg::makeCommonControls()
             else
                 pixmap.load(":/images/Fuse_KS.png");
             plabKS->setPixmap(pixmap);
-            m_prbPSDrag = new QRadioButton("Prandtl-Schlichting method");
+            m_prbPSDrag = new QRadioButton(tr("Prandtl-Schlichting method"));
 
-            m_prbCustomFuseDrag = new QRadioButton("Manual input");
-            QLabel *plabCus = new QLabel("Cf=");
+            m_prbCustomFuseDrag = new QRadioButton(tr("Manual input"));
+            QLabel *plabCus = new QLabel(tr("Cf="));
             m_pfeCustomFF = new FloatEdit;
 
             QLabel *plabPS = new QLabel();
@@ -368,9 +368,9 @@ void PlanePolarDlg::makeCommonControls()
         {
             QHBoxLayout *pFlapSetNameLayout = new QHBoxLayout;
             {
-                QLabel *plabFlapSetName = new QLabel("Flap set name:");
+                QLabel *plabFlapSetName = new QLabel(tr("Flap set name:"));
                 m_pleFlapSetName = new QLineEdit;
-                m_pleFlapSetName->setToolTip("<p>Optional meta-information used to set the polar name</p>");
+                m_pleFlapSetName->setToolTip(tr("<p>Optional meta-information used to set the polar name</p>"));
                 pFlapSetNameLayout->addWidget(plabFlapSetName);
                 pFlapSetNameLayout->addWidget(m_pleFlapSetName);
             }
@@ -384,7 +384,7 @@ void PlanePolarDlg::makeCommonControls()
             m_pFlapModel->setColumnCount(2);
 
             QStringList labels;
-            labels << "Wing flap"<<"Angle (" +DEGch +")" ;
+            labels << tr("Wing flap") << tr("Angle (") + DEGch + tr(")");
             m_pFlapModel->setHorizontalHeaderLabels(labels);
             m_pFlapModel->setHeaderData(0, Qt::Horizontal, Qt::AlignCenter, Qt::TextAlignmentRole);
             m_pFlapModel->setHeaderData(1, Qt::Horizontal, Qt::AlignCenter, Qt::TextAlignmentRole);
@@ -398,11 +398,11 @@ void PlanePolarDlg::makeCommonControls()
             m_pFlapDelegate->setPrecision({-1,3});
             m_pFlapTreeView->setItemDelegate(m_pFlapDelegate);
 
-            QLabel* plabNotes = new QLabel("Notes:\n"
+            QLabel* plabNotes = new QLabel(tr("Notes:\n"
                                            "\t(1) + sign means trailing edge down\n"
                                            "\t(2) Flaps are numbered from left tip to right tip\n"
                                            "\t(3) Use in conjunction with THIN surfaces\n"
-                                           "\t(4) Use in conjunction with XFoil on the fly calculations");
+                                           "\t(4) Use in conjunction with XFoil on the fly calculations"));
 
             QLabel *pFlow5Link = new QLabel;
             pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Analysis/Flaps.html>https://flow5.tech/docs/flow5_doc/Analysis/Flaps.html</a>");
@@ -437,7 +437,7 @@ void PlanePolarDlg::fillFlapControls()
     m_pleFlapSetName->selectAll();
 
     QStandardItem *pRootItem = m_pFlapModel->invisibleRootItem();
-    pRootItem->setText("Wings");
+    pRootItem->setText(tr("Wings"));
 
     QModelIndex index;
     for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
@@ -669,9 +669,9 @@ void PlanePolarDlg::initPolar3dDlg(const Plane *pPlane, PlanePolar const *pWPola
             double wa = pPlaneXfl->fuseAt(0)->wettedArea();
             QString strong;
             strong = QString::asprintf("%.2g", wa*Units::m2toUnit());
-            m_plabFuseWettedArea->setText("Wetted Area (WA) = "+strong+" "+Units::areaUnitQLabel());
+            m_plabFuseWettedArea->setText(tr("Wetted Area (WA) = %1 %2").arg(strong).arg(Units::areaUnitQLabel()));
             strong = QString::asprintf("%.2g", pPlaneXfl->fuseAt(0)->formFactor());
-            m_plabFuseFormFactor->setText("Form Factor (FF) = "+strong);
+            m_plabFuseFormFactor->setText(tr("Form Factor (FF) = %1").arg(strong));
         }
     }
     else

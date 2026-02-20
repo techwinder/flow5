@@ -181,7 +181,7 @@ bool AFMesher::triangulateShell(TopoDS_Shell const &shell, std::vector<Triangle3
             if(s_TraceFaceIdx<0 || iFace==s_TraceFaceIdx)
             {
                 TopoDS_Face const &aFace = TopoDS::Face(ShellExplorer.Current());
-                futureSync.addFuture(QtConcurrent::run(this, &AFMesher::triangulateFace,
+                futureSync.addFuture(QtConcurrent::run(&AFMesher::triangulateFace, this,
                                                        aFace, iFace));
             }
             iFace++;

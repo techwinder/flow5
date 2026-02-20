@@ -49,7 +49,7 @@ Polar FoilPolarDlg::s_Polar;
 
 FoilPolarDlg::FoilPolarDlg(QWidget *pParent) : XflDialog(pParent)
 {
-    setWindowTitle("Foil analysis definition");
+    setWindowTitle(tr("Foil analysis definition"));
     m_bAutoName = true;
     m_pFoil = nullptr;
     setupLayout();
@@ -59,7 +59,7 @@ FoilPolarDlg::FoilPolarDlg(QWidget *pParent) : XflDialog(pParent)
 
 void FoilPolarDlg::setupLayout()
 {
-    QGroupBox *pgbName = new QGroupBox("Analysis name");
+    QGroupBox *pgbName = new QGroupBox(tr("Analysis name"));
     {
         QVBoxLayout *pNameLayout = new QVBoxLayout;
         {
@@ -67,8 +67,8 @@ void FoilPolarDlg::setupLayout()
             QHBoxLayout *pAnalysisLayout = new QHBoxLayout;
             {
                 m_pleAnalysisName = new QLineEdit;
-                m_pchAutoName = new QCheckBox("Default name");
-                QPushButton *pctrlOptions = new QPushButton("Options");
+                m_pchAutoName = new QCheckBox(tr("Default name"));
+                QPushButton *pctrlOptions = new QPushButton(tr("Options"));
                 pAnalysisLayout->addWidget(m_pchAutoName);
                 pAnalysisLayout->addWidget(m_pleAnalysisName);
                 pAnalysisLayout->addWidget(pctrlOptions);
@@ -80,15 +80,15 @@ void FoilPolarDlg::setupLayout()
         pgbName->setLayout(pNameLayout);
     }
 
-    QGroupBox *pgbTransition = new QGroupBox("Transitions");
+    QGroupBox *pgbTransition = new QGroupBox(tr("Transitions"));
     {
         QGridLayout *pTransitionsLayout = new QGridLayout;
         {
-            QLabel *plabFreeTrans    = new QLabel("<p>Free transitions (e<sup>n</sup>) method</p>");
-            QLabel *plabForcedTrans  = new QLabel("Forced transitions:");
-            QLabel *plabNCrit        = new QLabel("NCrit=");
-            QLabel *plabTopTrip      = new QLabel("Trip location (top)");
-            QLabel *plabBotTrip      = new QLabel("Trip location (bottom)");
+            QLabel *plabFreeTrans    = new QLabel(tr("<p>Free transitions (e<sup>n</sup>) method</p>"));
+            QLabel *plabForcedTrans  = new QLabel(tr("Forced transitions:"));
+            QLabel *plabNCrit        = new QLabel(tr("NCrit="));
+            QLabel *plabTopTrip      = new QLabel(tr("Trip location (top)"));
+            QLabel *plabBotTrip      = new QLabel(tr("Trip location (bottom)"));
             m_pfeNCrit    = new FloatEdit();
             m_pfeTopTrans = new FloatEdit();
             m_pfeBotTrans = new FloatEdit();
@@ -106,20 +106,20 @@ void FoilPolarDlg::setupLayout()
         }
     }
 
-    QGroupBox *pgbType = new QGroupBox("Analysis type");
+    QGroupBox *pgbType = new QGroupBox(tr("Analysis type"));
     {
         QHBoxLayout *pAnalysisTypeLayout = new QHBoxLayout;
         {
-            m_prbType1 = new QRadioButton("Type 1");
-            m_prbType2 = new QRadioButton("Type 2");
-            m_prbType3 = new QRadioButton("Type 3");
-            m_prbType4 = new QRadioButton("Type 4");
-            m_prbType6 = new QRadioButton("Type 6");
-            m_prbType1->setToolTip("<p>Fixed Reynolds number polar</p>");
-            m_prbType2->setToolTip("<p>Fixed Lift polar</p>");
-            m_prbType3->setToolTip("<p>Rubber-chord polar</p>");
-            m_prbType4->setToolTip("<p>Fixed angle of attack polar</p>");
-            m_prbType6->setToolTip("<p>Control polar.<br> The control parameter is the T.E. flap angle &theta; (&deg;).</p>");
+            m_prbType1 = new QRadioButton(tr("Type 1"));
+            m_prbType2 = new QRadioButton(tr("Type 2"));
+            m_prbType3 = new QRadioButton(tr("Type 3"));
+            m_prbType4 = new QRadioButton(tr("Type 4"));
+            m_prbType6 = new QRadioButton(tr("Type 6"));
+            m_prbType1->setToolTip(tr("<p>Fixed Reynolds number polar</p>"));
+            m_prbType2->setToolTip(tr("<p>Fixed Lift polar</p>"));
+            m_prbType3->setToolTip(tr("<p>Rubber-chord polar</p>"));
+            m_prbType4->setToolTip(tr("<p>Fixed angle of attack polar</p>"));
+            m_prbType6->setToolTip(tr("<p>Control polar.<br> The control parameter is the T.E. flap angle &theta; (&deg;).</p>"));
 
             pAnalysisTypeLayout->addStretch();
             pAnalysisTypeLayout->addWidget(m_prbType1);
@@ -132,16 +132,16 @@ void FoilPolarDlg::setupLayout()
         }
     }
 
-    QGroupBox *pgbFlightSpec = new QGroupBox("Operating point");
+    QGroupBox *pgbFlightSpec = new QGroupBox(tr("Operating point"));
     {
         QVBoxLayout *pFlightSpecLayout = new QVBoxLayout;
         {
             QGridLayout *pFlightDataLayout = new QGridLayout;
             {
-                QLabel *plabAlpha = new QLabel("<p>&alpha;=</p>");
-                QLabel *plabDeg   = new QLabel("<p>&deg;</p>");
-                m_plabRe          = new QLabel("Re =");
-                m_plabMach        = new QLabel("Mach =");
+                QLabel *plabAlpha = new QLabel(tr("<p>&alpha;=</p>"));
+                QLabel *plabDeg   = new QLabel(tr("<p>&deg;</p>"));
+                m_plabRe          = new QLabel(tr("Re ="));
+                m_plabMach        = new QLabel(tr("Mach ="));
 
                 m_pfeAlpha        = new FloatEdit;
                 m_pfeReynolds     = new FloatEdit;
@@ -159,18 +159,18 @@ void FoilPolarDlg::setupLayout()
         pgbFlightSpec->setLayout(pFlightSpecLayout);
     }
 
-    QGroupBox *pgbTEFLap = new QGroupBox("T.E. flap");
+    QGroupBox *pgbTEFLap = new QGroupBox(tr("T.E. flap"));
     {
         QVBoxLayout *pTELayout = new QVBoxLayout;
         {
             m_plabHinge = new QLabel;
             QHBoxLayout *pTEAngleLayout = new QHBoxLayout;
             {
-                QLabel *plabTEFlapAngle = new QLabel(THETAch + "=");
+                QLabel *plabTEFlapAngle = new QLabel(THETAch + tr("="));
                 m_pfeTheta = new FloatEdit;
-                m_pfeTheta->setToolTip("<p>The trailing edge flap angle.<br>"
-                                       "The flap angle is fixed in T1234 polars and is the analysis variable in T6 polars.</p>");
-                QLabel *plabDegree = new QLabel("<p>&deg;</p>");
+                m_pfeTheta->setToolTip(tr("<p>The trailing edge flap angle.<br>"
+                                       "The flap angle is fixed in T1234 polars and is the analysis variable in T6 polars.</p>"));
+                QLabel *plabDegree = new QLabel(tr("<p>&deg;</p>"));
                 pTEAngleLayout->addStretch();
                 pTEAngleLayout->addWidget(plabTEFlapAngle);
                 pTEAngleLayout->addWidget(m_pfeTheta);
@@ -282,9 +282,11 @@ void FoilPolarDlg::initDialog(Foil const *pFoil, Polar *pPolar)
 
     QString strange;
     if(m_pFoil->hasTEFlap())
-        strange = QString::asprintf("T.E. flap hinge position = (%g%%, %g%%)\n", pFoil->TEXHinge()*100.0, pFoil->TEYHinge()*100.0);
+        strange = tr("T.E. flap hinge position = (%1%, %2%)\n")
+                      .arg(pFoil->TEXHinge()*100.0)
+                      .arg(pFoil->TEYHinge()*100.0);
     else
-        strange = "No T.E. flap";
+        strange = tr("No T.E. flap");
     m_plabHinge->setText(strange);
 
     if(pFoil->hasTEFlap())
@@ -306,30 +308,30 @@ void FoilPolarDlg::onPolarType()
 {
     if(m_prbType1->isChecked())
     {
-        m_plabRe->setText("Reynolds =");
-        m_plabMach->setText("Mach =");
+        m_plabRe->setText(tr("Reynolds ="));
+        m_plabMach->setText(tr("Mach ="));
         s_Polar.setType(xfl::T1POLAR);
     }
     else if(m_prbType2->isChecked())
     {
-        m_plabRe->setText("Re.sqrt(Cl) =");
-        m_plabMach->setText("Ma.sqrt(Cl) =");
+        m_plabRe->setText(tr("Re.sqrt(Cl) ="));
+        m_plabMach->setText(tr("Ma.sqrt(Cl) ="));
         s_Polar.setType(xfl::T2POLAR);
     }
     else if(m_prbType3->isChecked())
     {
-        m_plabRe->setText("Re.Cl =");
-        m_plabMach->setText("Mach =");
+        m_plabRe->setText(tr("Re.Cl ="));
+        m_plabMach->setText(tr("Mach ="));
         s_Polar.setType(xfl::T3POLAR);
     }
     else if(m_prbType4->isChecked())
     {
-        m_plabMach->setText("Mach =");
+        m_plabMach->setText(tr("Mach ="));
         s_Polar.setType(xfl::T4POLAR);
     }
     else if(m_prbType6->isChecked())
     {
-        m_plabMach->setText("Mach =");
+        m_plabMach->setText(tr("Mach ="));
         s_Polar.setType(xfl::T6POLAR);
     }
 

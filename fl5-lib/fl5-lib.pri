@@ -5,7 +5,6 @@ HEADERS += \
     $$PWD/api/planepolarext.h \
     $$PWD/api/xmlplanepolarreader.h \
     $$PWD/api/xmlplanepolarwriter.h \
-    $$PWD/math/testmatrix.h \
     api/aeroforces.h \
     api/analysisrange.h \
     api/anglecontrol.h \
@@ -164,7 +163,6 @@ HEADERS += \
     api/xmlxsailwriter.h \
 
 SOURCES += \
-    $$PWD/math/testmatrix.cpp \
     $$PWD/objects3d/analysis3d/planepolar.cpp \
     $$PWD/objects3d/analysis3d/planepolarext.cpp \
     $$PWD/utils/fl5core.cpp \
@@ -303,6 +301,13 @@ SOURCES += \
     xml/xsail/xmlsailwriter.cpp \
     xml/xsail/xmlxsailreader.cpp \
     xml/xsail/xmlxsailwriter.cpp \
+
+
+# LAPACK/BLAS test code is optional and requires a configured backend.
+contains(DEFINES, INTEL_MKL)|contains(DEFINES, OPENBLAS)|contains(DEFINES, ACCELERATE) {
+    HEADERS += $$PWD/math/testmatrix.h
+    SOURCES += $$PWD/math/testmatrix.cpp
+}
 
 
 

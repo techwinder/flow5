@@ -25,6 +25,7 @@
 #define _MATH_DEFINES_DEFINED
 
 #include <QApplication>
+#include <QMessageBox>
 #include <QColorDialog>
 #include <QFontDialog>
 #include <QHeaderView>
@@ -60,6 +61,7 @@
 int PrefsDlg::s_CurrentIndex = 0;
 
 QString PrefsDlg::s_StyleName = "Fusion";
+QString PrefsDlg::s_Language = "System";
 
 
 int PrefsDlg::s_ExitRow = 0;
@@ -90,6 +92,7 @@ void PrefsDlg::connectSignals()
     connect(m_ppbTreeFont,           SIGNAL(clicked()),                    SLOT(onTreeFont()));
     connect(m_ppbToolTipFont,        SIGNAL(clicked()),                    SLOT(onToolTipFont()));
     connect(m_pchLocale,             SIGNAL(clicked()),                    SLOT(onLocalization()));
+    connect(m_pcbLanguage,           SIGNAL(currentIndexChanged(int)),     SLOT(onLanguageChanged(int)));
     connect(m_pcbStyles,             SIGNAL(currentTextChanged(QString)),  SLOT(onStyleChanged(QString)));
     connect(m_pchStyleSheetOverride, SIGNAL(clicked(bool)),                SLOT(onStyleSheet(bool)));
     connect(m_pUnitsWt,              SIGNAL(unitsChanged()), m_p3dPrefsWt, SLOT(onUpdateUnits()));
@@ -292,8 +295,20 @@ void PrefsDlg::setupLayout()
             {
                 QHBoxLayout *pLocaleLayout = new QHBoxLayout;
                 {
+                    QLabel *plabLang = new QLabel("Language:");
+                    m_pcbLanguage = new QComboBox;
+                    m_pcbLanguage->addItem("System");
+                    m_pcbLanguage->addItem("English");
+                    m_pcbLanguage->addItem("Chinese");
+                    m_pcbLanguage->addItem("French");
+                    m_pcbLanguage->addItem("German");
+
                     m_pchLocale = new QCheckBox("Use locale settings for number formatting");
                     m_plabLocalOutput = new QLabel("1.23456\n10,000");
+                    
+                    pLocaleLayout->addWidget(plabLang);
+                    pLocaleLayout->addWidget(m_pcbLanguage);
+                    pLocaleLayout->addSpacing(20);
                     pLocaleLayout->addWidget(m_pchLocale);
                     pLocaleLayout->addStretch();
                     pLocaleLayout->addWidget(m_plabLocalOutput);
@@ -443,6 +458,10 @@ void PrefsDlg::initWidgets()
     m_pchLocale->setChecked(xfl::isLocalized());
     onLocalization();
 
+    int langIndex = m_pcbLanguage->findText(s_Language);
+    if(langIndex < 0) langIndex = 0;
+    m_pcbLanguage->setCurrentIndex(langIndex);
+
     m_pchDontUseNativeMacDlg->setChecked(xfl::dontUseNativeMacDlg());
     m_pdeScaleFactor->setValue(DisplayOptions::scaleFactor()*100.0);
     m_pieIconSize->setValue(DisplayOptions::iconSize());
@@ -475,7 +494,7 @@ void PrefsDlg::setButtonFonts()
 
     m_ppbTextFont->setText(DisplayOptions::textFont().family() + QString::asprintf(" %d",DisplayOptions::textFont().pointSize()));
     m_ppbTextFont->setFont(DisplayOptions::textFont());
-    m_ptcbTextClr->setText("Text colour");
+    m_ptcbTextClr->setText(tr("Text colour"));
     QString stylestring = QString::asprintf("color: %s; font-family: %s; font-size: %dpt",
                                            DisplayOptions::textColor().name(QColor::HexRgb).toStdString().c_str(),
                                            DisplayOptions::textFont().family().toStdString().c_str(),
@@ -541,6 +560,7 @@ void PrefsDlg::loadSettings(QSettings &settings)
     {
         s_WindowGeometry    = settings.value("Geometry",  s_WindowGeometry).toByteArray();
         s_HSplitterSizes    = settings.value("HSplitter", s_HSplitterSizes).toByteArray();
+        s_Language          = settings.value("Language",  "System").toString();
     }
     settings.endGroup();
 }
@@ -552,6 +572,7 @@ void PrefsDlg::saveSettings(QSettings &settings)
     {
         settings.setValue("Geometry",               s_WindowGeometry);
         settings.setValue("HSplitter",              s_HSplitterSizes);
+        settings.setValue("Language",               s_Language);
     }
     settings.endGroup();
 }
@@ -917,6 +938,12 @@ void PrefsDlg::onLocalization()
         dblestrange = QString::asprintf("%.3f", dble);
     }
     m_plabLocalOutput->setText(dblestrange);
+}
+
+void PrefsDlg::onLanguageChanged(int index)
+{
+    s_Language = m_pcbLanguage->itemText(index);
+    QMessageBox::information(this, tr("Language"), tr("The change will take effect after restarting the application."));
 }
 
 

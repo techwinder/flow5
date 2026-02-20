@@ -70,17 +70,17 @@ void Section2dOptions::onResetDefaults()
 
 void Section2dOptions::setupLayout()
 {
-    m_pGroupBox.push_back(new QGroupBox("General"));
+    m_pGroupBox.push_back(new QGroupBox(tr("General")));
     {
         QVBoxLayout *pGeneralLayout = new QVBoxLayout;
         {
             QHBoxLayout *pDynamicLayout = new QHBoxLayout;
             {
-                m_pchSpinAnimation = new QCheckBox("Enable mouse animations");
+                m_pchSpinAnimation = new QCheckBox(tr("Enable mouse animations"));
                 m_pfeSpinDamping = new FloatEdit;
-                m_pfeSpinDamping->setToolTip("Defines the damping of the animation at each frame update.<br>"
-                                             "Set to 0 for perpetual movement.");
-                QLabel *plabpcDamping = new QLabel("% damping");
+                m_pfeSpinDamping->setToolTip(tr("Defines the damping of the animation at each frame update.<br>"
+                                             "Set to 0 for perpetual movement."));
+                QLabel *plabpcDamping = new QLabel(tr("% damping"));
                 pDynamicLayout->addWidget(m_pchSpinAnimation);
                 pDynamicLayout->addWidget(m_pfeSpinDamping);
                 pDynamicLayout->addWidget(plabpcDamping);
@@ -89,18 +89,18 @@ void Section2dOptions::setupLayout()
 
             QGridLayout*pSelectionLayout = new QGridLayout;
             {
-                QLabel *pSelectionLabel = new QLabel("Point selection precision:");
-                QLabel *pSelectionUnit= new QLabel("pixels");
+                QLabel *pSelectionLabel = new QLabel(tr("Point selection precision:"));
+                QLabel *pSelectionUnit= new QLabel(tr("pixels"));
 
                 m_pieSelectionPixels = new IntEdit;
-                QString tip("<p>Defines the tolerance in pixels within which points are "
-                               "selected or highlighted when moving the mouse in 2d views</p>");
+                QString tip(tr("<p>Defines the tolerance in pixels within which points are "
+                               "selected or highlighted when moving the mouse in 2d views</p>"));
                 m_pieSelectionPixels->setToolTip(tip);
 
-                QLabel *plabSym = new QLabel("Symbol size:");
+                QLabel *plabSym = new QLabel(tr("Symbol size:"));
                 m_pieSymbolSize = new IntEdit;
-                m_pieSymbolSize->setToolTip("This value defines the half-size of symbols in the graphs and other 2d views.");
-                QLabel *plabPixels = new QLabel("x2 pixels");
+                m_pieSymbolSize->setToolTip(tr("This value defines the half-size of symbols in the graphs and other 2d views."));
+                QLabel *plabPixels = new QLabel(tr("x2 pixels"));
 
                 pSelectionLayout->addWidget(pSelectionLabel,      1, 1);
                 pSelectionLayout->addWidget(m_pieSelectionPixels, 1, 2);
@@ -111,13 +111,13 @@ void Section2dOptions::setupLayout()
                 pSelectionLayout->setColumnStretch(4,1);
             }
 
-            m_pchAntiAliasing = new QCheckBox("Enable anti-aliasing");
-            m_pchAntiAliasing->setToolTip("Indicates that the paint engine should antialias edges of primitives if possible.");
+            m_pchAntiAliasing = new QCheckBox(tr("Enable anti-aliasing"));
+            m_pchAntiAliasing->setToolTip(tr("Indicates that the paint engine should antialias edges of primitives if possible."));
             QHBoxLayout *pColorLayout = new QHBoxLayout;
             {
-                QLabel *plabHigh = new QLabel("Highlight style");
+                QLabel *plabHigh = new QLabel(tr("Highlight style"));
                 m_plbHigh = new LineBtn;
-                QLabel *plabSel = new QLabel("Selection style");
+                QLabel *plabSel = new QLabel(tr("Selection style"));
                 m_plbSelect = new LineBtn;
 
                 pColorLayout->addWidget(plabHigh);
@@ -137,7 +137,7 @@ void Section2dOptions::setupLayout()
         m_pGroupBox.back()->setLayout(pGeneralLayout);
     }
 
-    m_pGroupBox.push_back(new QGroupBox("Axes and grids"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Axes and grids")));
     {
         QVBoxLayout *pGridDataLayout = new QVBoxLayout;
         {

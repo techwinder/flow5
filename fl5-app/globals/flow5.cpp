@@ -47,6 +47,8 @@
 #include <QMessageBox>
 #include <QCommandLineOption>
 #include <QCommandLineParser>
+#include <QLibraryInfo>
+#include <QTranslator>
 
 #include "flow5.h"
 
@@ -79,6 +81,8 @@ Flow5App::Flow5App(int &argc, char** argv) : QApplication(argc, argv)
     //    Version = QString::asprintf("v%d.%02d", MAJOR_VERSION, MINOR_VERSION);
     Flow5App::setApplicationVersion(QString::fromStdString(fl5::versionName(true)));
     setWindowIcon(QIcon(":/icons/f5.png"));
+
+    loadTranslations();
     /** usage
      * flow5 -h (--help)                   : help
      * flow5 -v (--version)                : version
@@ -250,6 +254,52 @@ Flow5App::Flow5App(int &argc, char** argv) : QApplication(argc, argv)
 
     m_pMainFrame->setFocus();
 
+}
+
+
+void Flow5App::loadTranslations()
+{
+#if defined Q_OS_MAC
+    QSettings settings(QSettings::IniFormat,QSettings::UserScope,"flow5", "flow5");
+#elif defined Q_OS_LINUX
+    QSettings settings(QSettings::NativeFormat,QSettings::UserScope,"flow5", "flow5");
+#else
+    QSettings settings(QSettings::IniFormat,QSettings::UserScope,"flow5");
+#endif
+
+    PrefsDlg::loadSettings(settings);
+
+    QString lang = PrefsDlg::language();
+    QLocale locale = QLocale::system();
+
+    if (lang == "English") 
+    {
+        return; 
+    }
+    else if (lang == "Chinese") 
+    {
+        locale = QLocale(QLocale::Chinese, QLocale::China);
+    }
+    else if (lang == "French")
+    {
+        locale = QLocale(QLocale::French, QLocale::France);
+    }
+    else if (lang == "German")
+    {
+        locale = QLocale(QLocale::German, QLocale::Germany);
+    }
+
+    const QString qtTrDir = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
+    if(m_qtTranslator.load(locale, QStringLiteral("qt"), QStringLiteral("_"), qtTrDir))
+    {
+        installTranslator(&m_qtTranslator);
+    }
+
+    const QString appTrDir = QCoreApplication::applicationDirPath() + QDir::separator() + QStringLiteral("translations");
+    if(m_appTranslator.load(locale, QStringLiteral("flow5"), QStringLiteral("_"), appTrDir))
+    {
+        installTranslator(&m_appTranslator);
+    }
 }
 
 

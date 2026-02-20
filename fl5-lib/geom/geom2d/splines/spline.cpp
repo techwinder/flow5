@@ -196,12 +196,7 @@ void Spline::setCtrlPoints(std::vector<Node2d> const & ptList, double w)
 {
     m_CtrlPt = ptList;
 
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-    m_Weight.resize(ptList.size());
-    m_Weight.fill(w);
-#else
-    m_Weight.resize(ptList.size(), w);
-#endif
+    m_Weight.assign(ptList.size(), w);
 
     setModified(true);
 }

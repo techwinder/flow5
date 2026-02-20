@@ -41,6 +41,8 @@
     #include <openblas/cblas.h>
 #endif
 
+#include <lapack_fortran.h>
+
 
 #include <matrix.h>
 
@@ -962,8 +964,12 @@ void matrix::matVecMultLapack(float const *A, float const *X, float* Y, int n, i
 #ifdef MAC_OS
     cblas_sgemv(CblasColMajor, CblasTrans, n, m, alpha, A, lda, X, incx, beta, Y, incy);
 #elif defined WIN_OS
+#if defined(OPENBLAS)
+    cblas_sgemv(CblasColMajor, CblasTrans, n, m, alpha, A, lda, X, incx, beta, Y, incy);
+#else
     char trans = 'T';
     sgemv(&trans, &n, &m, &alpha, A, &lda, X, &incx, &beta, Y, &incy);
+#endif
 #elif defined LINUX_OS
 //    char trans = 'T';
 //    sgemv(&trans, &n, &m, &alpha, A, &lda, X, &incx, &beta, Y, &incy);

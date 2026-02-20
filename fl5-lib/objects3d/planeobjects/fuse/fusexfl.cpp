@@ -48,6 +48,9 @@
 #include <Standard_Version.hxx>
 #include <StdFail_NotDone.hxx>
 #include <TopExp_Explorer.hxx>
+#include <TColgp_Array2OfPnt.hxx>
+#include <TColStd_Array1OfReal.hxx>
+#include <TColStd_Array1OfInteger.hxx>
 #include <TopoDS.hxx>
 #include <TopoDS_Shell.hxx>
 #include <TopoDS_Wire.hxx>

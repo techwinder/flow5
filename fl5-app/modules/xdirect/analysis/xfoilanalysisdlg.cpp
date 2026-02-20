@@ -55,7 +55,7 @@ QByteArray XFoilAnalysisDlg::s_WindowGeometry;
 
 XFoilAnalysisDlg::XFoilAnalysisDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("XFoil Analysis");
+    setWindowTitle(tr("XFoil Analysis"));
 
     m_pXFoilTask = nullptr;
 
@@ -83,11 +83,11 @@ void XFoilAnalysisDlg::setupLayout()
 
     QHBoxLayout *pButtonsLayout = new QHBoxLayout;
     {
-        m_ppbCancel = new QPushButton("Cancel");
+        m_ppbCancel = new QPushButton(tr("Cancel"));
 
         connect(m_ppbCancel, SIGNAL(clicked()), SLOT(onCancelClose()));
 
-        m_pchKeepOpen = new QCheckBox("Keep this window opened on errors");
+        m_pchKeepOpen = new QCheckBox(tr("Keep this window opened on errors"));
         connect(m_pchKeepOpen, SIGNAL(toggled(bool)), SLOT(onKeepOpen(bool)));
 
         pButtonsLayout->addWidget(m_pchKeepOpen);
@@ -256,7 +256,7 @@ void XFoilAnalysisDlg::onTaskFinished()
     m_pXFoilTask->clearOpps(); // you never know
 
 
-    m_ppbCancel->setText("Close");
+    m_ppbCancel->setText(tr("Close"));
 
     m_bErrors = m_pXFoilTask->hasErrors();
 
@@ -292,7 +292,7 @@ void XFoilAnalysisDlg::customEvent(QEvent * pEvent)
 
 void XFoilAnalysisDlg::start()
 {
-    m_ppbCancel->setText("Cancel");
+    m_ppbCancel->setText(tr("Cancel"));
 
     // Launch the task async to keep the UI responsive
     QFuture<void> future = QtConcurrent::run(&XFoilAnalysisDlg::runAsync, this);

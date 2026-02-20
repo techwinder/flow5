@@ -83,7 +83,7 @@ bool BatchPlaneDlg::s_bStorePOpps = false;
 
 BatchPlaneDlg::BatchPlaneDlg(QWidget *parent) : QDialog(parent)
 {
-    setWindowTitle("Batch mode");
+    setWindowTitle(tr("Batch mode"));
 
     setupLayout();
     connectSignals();
@@ -202,17 +202,17 @@ void BatchPlaneDlg::setupLayout()
 
                     QHBoxLayout *pOptionLayout = new QHBoxLayout;
                     {
-                        m_pchStorePOpps      = new QCheckBox("Store operating points");
-                        m_pchStorePOpps->setToolTip("<p>"
+                        m_pchStorePOpps      = new QCheckBox(tr("Store operating points"));
+                        m_pchStorePOpps->setToolTip(tr("<p>"
                                                     "If activated, the operating points will be stored at the end of the calculation. "
                                                     "The results are stored in the polar in all cases."
-                                                    "</p>");
-                        m_pchStabDerivatives = new QCheckBox("Compute derivatives");
-                        m_pchStabDerivatives->setToolTip("<p>"
+                                                    "</p>"));
+                        m_pchStabDerivatives = new QCheckBox(tr("Compute derivatives"));
+                        m_pchStabDerivatives->setToolTip(tr("<p>"
                                                          "If activated, stability derivatives and eigenthings will be "
                                                          "computed during a T12358 run.<br>"
                                                          "Deactivate to save a little computation time."
-                                                         "</p>");
+                                                         "</p>"));
                         pOptionLayout->addWidget(m_pchStorePOpps);
                         pOptionLayout->addStretch();
                         pOptionLayout->addWidget(m_pchStabDerivatives);

@@ -30,6 +30,7 @@ class FloatEdit;
 
 class ScaleDlg : public XflDialog
 {
+    Q_OBJECT
     public:
         ScaleDlg(QWidget *pParent);
         double XFactor() const;

@@ -33,7 +33,8 @@
 #include <TopTools_ListIteratorOfListOfShape.hxx>
 #include <TopExp_Explorer.hxx>
 #include <BRepTools.hxx>
-#include <gmsh.h>
+
+#include <interfaces/mesh/gmesh_globals.h>
 
 
 #include "gmesherwt.h"
@@ -234,7 +235,7 @@ bool GMesherWt::readMeshSize()
     if(size<MINSIZE)
     {
         QString str = QString::asprintf("%g", MINSIZE*Units::mtoUnit()) + Units::lengthUnitQLabel();
-        QMessageBox::warning(this, "Warning", "The min. element size must be at least " + str);
+        QMessageBox::warning(this, tr("Warning"), tr("The min. element size must be at least ") + str);
         m_pfeMinSize->setValue(MINSIZE*Units::mtoUnit());
         m_pfeMinSize->selectAll();
         m_pfeMinSize->setFocus();

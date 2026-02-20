@@ -108,7 +108,7 @@ void SailStlDlg::setupLayout()
                 m_pTabWidget->addTab(m_pfrMesh,  "Mesh");
                 m_pTabWidget->addTab(m_pfrTE,    "Trailing edge");
 
-                m_pTabWidget->setTabVisible(1, false);
+                m_pTabWidget->removeTab(1);
             }
             pLeftLayout->addWidget(m_pTabWidget);
             pLeftLayout->addWidget(m_ppto);

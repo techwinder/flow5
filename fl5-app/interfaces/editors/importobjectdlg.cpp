@@ -59,8 +59,8 @@ void ImportObjectDlg::setupLayout(bool bWings)
 {
     QVBoxLayout *pMainLayout = new QVBoxLayout;
     {
-        QLabel *pLabPlanes  = new QLabel("Planes:");
-        QLabel *pLabObjects = new QLabel(bWings ? "Wings:" : "Fuselages:");
+        QLabel *pLabPlanes  = new QLabel(tr("Planes:"));
+        QLabel *pLabObjects = new QLabel(bWings ? tr("Wings:") : tr("Fuselages:"));
 
         m_plvPlanes  = new QListWidget;
         m_plvObjects = new QListWidget;

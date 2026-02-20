@@ -291,14 +291,14 @@ void gl3dTexture::updateBtns(bool bStart)
 {
     if(bStart)
     {
-        m_ppbStart->setText("Start/continue");
+        m_ppbStart->setText(tr("Start/continue"));
 
         m_ppbClear->setEnabled(true);
         m_ppbSaveImg->setEnabled(true);
     }
     else
     {
-        m_ppbStart->setText("Stop");
+        m_ppbStart->setText(tr("Stop"));
         m_ppbClear->setEnabled(false);
         m_ppbSaveImg->setEnabled(false);
     }
@@ -366,7 +366,7 @@ void gl3dTexture::onResizeImage()
 {
     s_ImgSize.setWidth(m_pieWidth->value());
     s_ImgSize.setHeight(m_pieHeight->value());
-    m_ppbSaveImg->setText(QString::asprintf("Save 2d image %dx%d", s_ImgSize.width(), s_ImgSize.height()));
+    m_ppbSaveImg->setText(tr("Save 2d image %1x%2").arg(s_ImgSize.width()).arg(s_ImgSize.height()));
 
     if(m_pImg) delete m_pImg;
     m_pImg = new QImage(s_ImgSize, QImage::Format_ARGB32);
@@ -386,7 +386,7 @@ void gl3dTexture::onSaveImg()
     if(!loc.isEmpty()) s_LastFileName = loc.front()+QDir::separator();
     s_LastFileName += QString::asprintf("texture2d_a%g_b%g_c%g_d%g.png", s_a, s_b, s_c, s_d);
     m_pImg->save(s_LastFileName, "PNG");
-    m_plabInfo ->setText("image saved to:<br>"+s_LastFileName);
+    m_plabInfo ->setText(tr("image saved to:<br>%1").arg(s_LastFileName));
     m_plabInfo->adjustSize();
     setFocus();
 }

@@ -123,31 +123,31 @@ void XSailDisplayCtrls::setupLayout(Qt::Orientation , bool )
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
     QGridLayout *pCheckDispLayout = new QGridLayout;
     {
-        m_pchPanelForce = new QCheckBox("F/s=q.Cp");
-        m_pchPanelForce->setToolTip("Display the force 1/2.rho.V2.S.Cp acting on the panel");
-        m_pchPartForces     = new QCheckBox("Part forces");
-        m_pchMoment         = new QCheckBox("Moments");
-        m_pchCp             = new QCheckBox("Cp");
+        m_pchPanelForce = new QCheckBox(tr("F/s=q.Cp"));
+        m_pchPanelForce->setToolTip(tr("Display the force 1/2.rho.V2.S.Cp acting on the panel"));
+        m_pchPartForces     = new QCheckBox(tr("Part forces"));
+        m_pchMoment         = new QCheckBox(tr("Moments"));
+        m_pchCp             = new QCheckBox(tr("Cp"));
         m_pchGamma          = new QCheckBox(GAMMAch);
-        QString gammatip("<p>Displays the distribution of doublet densities or vortex strengths.<br>"
+        QString gammatip(tr("<p>Displays the distribution of doublet densities or vortex strengths.<br>"
                          "This is the main result of the potential flow calculation, and <u>all other results</u> "
                          "are derived from this distribution. It is therefore important that it "
                          "does not exhibit numerical issues which would show up as singularities i.e. areas with peak values."
-                         "</p>");
+                         "</p>"));
         m_pchGamma->setToolTip(gammatip);
-        m_pchStream         = new QCheckBox("Streamlines");
-        m_pchFlow           = new QCheckBox("Flow");
-        m_pchFlow->setToolTip("<p>Launches an animation of the flow around the model.<br>"
-                              "The parameters are set in the last tab of the scales widget.</p>");
-        m_pchWakePanels     = new QCheckBox("Wake panels");
-        m_pchVortons        = new QCheckBox("Vortons");
-        m_pchWind           = new QCheckBox("Wind");
-        m_pchWater          = new QCheckBox("Water");
-        m_pchPickPanel      = new QCheckBox("Pick value");
+        m_pchStream         = new QCheckBox(tr("Streamlines"));
+        m_pchFlow           = new QCheckBox(tr("Flow"));
+        m_pchFlow->setToolTip(tr("<p>Launches an animation of the flow around the model.<br>"
+                              "The parameters are set in the last tab of the scales widget.</p>"));
+        m_pchWakePanels     = new QCheckBox(tr("Wake panels"));
+        m_pchVortons        = new QCheckBox(tr("Vortons"));
+        m_pchWind           = new QCheckBox(tr("Wind"));
+        m_pchWater          = new QCheckBox(tr("Water"));
+        m_pchPickPanel      = new QCheckBox(tr("Pick value"));
         m_pchPickPanel->setShortcut(QKeySequence(Qt::SHIFT|Qt::Key_H));
-        m_pchPickPanel->setToolTip("<p>Activate this checkbox and move the mouse\nover the Cp or Forces color plot. (Shift+H)</p>");
+        m_pchPickPanel->setToolTip(tr("<p>Activate this checkbox and move the mouse\nover the Cp or Forces color plot. (Shift+H)</p>"));
 
-        m_pchWOppAnimate    = new QCheckBox("Animate");
+        m_pchWOppAnimate    = new QCheckBox(tr("Animate"));
 
         m_pslAnimateWOppSpeed  = new QSlider(Qt::Horizontal);
         m_pslAnimateWOppSpeed->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -179,10 +179,10 @@ void XSailDisplayCtrls::setupLayout(Qt::Orientation , bool )
 
     QGridLayout *pThreeDParamsLayout = new QGridLayout;
     {
-        m_pchAxes     = new QCheckBox("Axes",     this);
-        m_pchSurfaces = new QCheckBox("Surfaces", this);
-        m_pchOutline  = new QCheckBox("Outline",  this);
-        m_pchPanels   = new QCheckBox("Panels",   this);
+        m_pchAxes     = new QCheckBox(tr("Axes"),     this);
+        m_pchSurfaces = new QCheckBox(tr("Surfaces"), this);
+        m_pchOutline  = new QCheckBox(tr("Outline"),  this);
+        m_pchPanels   = new QCheckBox(tr("Panels"),   this);
         m_pchSurfaces->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
         m_pchOutline->setSizePolicy( QSizePolicy::Maximum, QSizePolicy::Maximum);
         m_pchPanels->setSizePolicy(  QSizePolicy::Maximum, QSizePolicy::Maximum);
@@ -360,7 +360,7 @@ void XSailDisplayCtrls::on3dCp()
         m_pchPanelForce->setChecked(false);
     }
 
-    m_pgl3dXSailView->m_LegendOverlay.setTitle("Cp");
+    m_pgl3dXSailView->m_LegendOverlay.setTitle(tr("Cp"));
     m_pgl3dXSailView->m_LegendOverlay.setVisible(s_b3dCp);
     m_pgl3dXSailView->m_LegendOverlay.makeLegend();
     m_pgl3dXSailView->update();
@@ -388,7 +388,7 @@ void XSailDisplayCtrls::onGamma()
         m_pchCp->setChecked(false);
     }
 
-    m_pgl3dXSailView->m_LegendOverlay.setTitle("Gamma");
+    m_pgl3dXSailView->m_LegendOverlay.setTitle(tr("Gamma"));
     m_pgl3dXSailView->m_LegendOverlay.setVisible(s_bGamma);
     m_pgl3dXSailView->m_LegendOverlay.makeLegend();
     m_pgl3dXSailView->update();

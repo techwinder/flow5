@@ -64,7 +64,7 @@ void TargetCurveDlg::setupLayout()
             QHBoxLayout *pEllLayout = new QHBoxLayout;
             {
                 QLabel *pEllipticLabel = new QLabel(QString::fromUtf8("y=sqrt(1-(2x/b)²)"));
-                m_pchShowEllipticCurve = new QCheckBox("Show elliptic curve");
+                m_pchShowEllipticCurve = new QCheckBox(tr("Show elliptic curve"));
                 pEllLayout->addWidget(m_pchShowEllipticCurve);
                 pEllLayout->addWidget(pEllipticLabel);
             }
@@ -76,11 +76,11 @@ void TargetCurveDlg::setupLayout()
             QGridLayout *pBellLayout = new QGridLayout;
             {
                 QLabel *pBellLabel = new QLabel(QString::fromUtf8("y=(1-(2x/b)²)^p"));
-                m_pchShowBellCurve = new QCheckBox("Show bell curve");
+                m_pchShowBellCurve = new QCheckBox(tr("Show bell curve"));
                 pBellLayout->addWidget(m_pchShowBellCurve,1,1);
                 pBellLayout->addWidget(pBellLabel,1,2);
 
-                QLabel *pExpLabel = new QLabel("Bell curve exponent:");
+                QLabel *pExpLabel = new QLabel(tr("Bell curve exponent:"));
                 pExpLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
                 m_pdeExptEdit = new FloatEdit(1, 2);
                 pBellLayout->addWidget(pExpLabel,2,1);
@@ -89,12 +89,12 @@ void TargetCurveDlg::setupLayout()
             pBellBox->setLayout(pBellLayout);
         }
 
-        QGroupBox *pctrlCLBox = new QGroupBox("Cl adjustment");
+        QGroupBox *pctrlCLBox = new QGroupBox(tr("Cl adjustment"));
         {
             QHBoxLayout *pCLLayout = new QHBoxLayout;
             {
-                m_prbRadio1 = new QRadioButton("Max local Cl");
-                m_prbRadio2 = new QRadioButton("Wing CL");
+                m_prbRadio1 = new QRadioButton(tr("Max local Cl"));
+                m_prbRadio2 = new QRadioButton(tr("Wing CL"));
                 pCLLayout->addWidget(m_prbRadio1);
                 pCLLayout->addWidget(m_prbRadio2);
             }
@@ -105,7 +105,7 @@ void TargetCurveDlg::setupLayout()
         {
             QHBoxLayout *pStyleLayout = new QHBoxLayout;
             {
-                QLabel*pCurveStyleLab = new QLabel("Style");
+                QLabel*pCurveStyleLab = new QLabel(tr("Style"));
                 m_plbCurveStyle = new LineBtn;
                 pStyleLayout->addWidget(pCurveStyleLab);
                 pStyleLayout->addWidget(m_plbCurveStyle);

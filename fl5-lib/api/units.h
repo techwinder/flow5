@@ -34,40 +34,40 @@
 
 namespace Units
 {
-    extern int g_LengthUnitIndex;    /**< The index of the custom unit in the array of length units. @todo use an enumeration instead. */
-    extern int g_AreaUnitIndex;      /**< The index of the custom unit in the array of area units. */
-    extern int g_MassUnitIndex;    /**< The index of the custom unit in the array of mass units. */
-    extern int g_MomentUnitIndex;    /**< The index of the custom unit in the array of moment units. */
-    extern int g_SpeedUnitIndex;     /**< The index of the custom unit in the array of speed units. */
-    extern int g_ForceUnitIndex;     /**< The index of the custom unit in the array of force units. */
-    extern int g_PressureUnitIndex;  /**< The index of the custom unit in the array of pressure units. */
-    extern int g_InertiaUnitIndex;   /**< The index of the custom unit in the array of inertai units. */
+    extern FL5LIB_EXPORT int g_LengthUnitIndex;    /**< The index of the custom unit in the array of length units. @todo use an enumeration instead. */
+    extern FL5LIB_EXPORT int g_AreaUnitIndex;      /**< The index of the custom unit in the array of area units. */
+    extern FL5LIB_EXPORT int g_MassUnitIndex;    /**< The index of the custom unit in the array of mass units. */
+    extern FL5LIB_EXPORT int g_MomentUnitIndex;    /**< The index of the custom unit in the array of moment units. */
+    extern FL5LIB_EXPORT int g_SpeedUnitIndex;     /**< The index of the custom unit in the array of speed units. */
+    extern FL5LIB_EXPORT int g_ForceUnitIndex;     /**< The index of the custom unit in the array of force units. */
+    extern FL5LIB_EXPORT int g_PressureUnitIndex;  /**< The index of the custom unit in the array of pressure units. */
+    extern FL5LIB_EXPORT int g_InertiaUnitIndex;   /**< The index of the custom unit in the array of inertai units. */
 
-    extern double g_mtoUnit;    /**< Conversion factor from meters to the custom length unit. */
-    extern double g_mstoUnit;   /**< Conversion factor from m/s to the custom speed unit. */
-    extern double g_m2toUnit;   /**< Conversion factor from square meters to the custom area unit. */
-    extern double g_kgtoUnit;   /**< Conversion factor from kg to the custom mass unit. */
-    extern double g_NtoUnit;    /**< Conversion factor from Newtons to the custom force unit. */
-    extern double g_NmtoUnit;   /**< Conversion factor from N.m to the custom unit for moments. */
-    extern double g_PatoUnit;   /**< Conversion factor from Pascal to the custom unit for pressures. */
-    extern double g_kgm2toUnit; /**< Conversion factor from kg.m² to custom unit for inertias */
+    extern FL5LIB_EXPORT double g_mtoUnit;    /**< Conversion factor from meters to the custom length unit. */
+    extern FL5LIB_EXPORT double g_mstoUnit;   /**< Conversion factor from m/s to the custom speed unit. */
+    extern FL5LIB_EXPORT double g_m2toUnit;   /**< Conversion factor from square meters to the custom area unit. */
+    extern FL5LIB_EXPORT double g_kgtoUnit;   /**< Conversion factor from kg to the custom mass unit. */
+    extern FL5LIB_EXPORT double g_NtoUnit;    /**< Conversion factor from Newtons to the custom force unit. */
+    extern FL5LIB_EXPORT double g_NmtoUnit;   /**< Conversion factor from N.m to the custom unit for moments. */
+    extern FL5LIB_EXPORT double g_PatoUnit;   /**< Conversion factor from Pascal to the custom unit for pressures. */
+    extern FL5LIB_EXPORT double g_kgm2toUnit; /**< Conversion factor from kg.m² to custom unit for inertias */
 
-    extern double g_kgm3toUnit; /**< Conversion factor from kg.m³ to imperial unit for densities */
-    extern double g_m2stoUnit;  /**< Conversion factor from m²/s to imperial unit for kinematic viscosities */
+    extern FL5LIB_EXPORT double g_kgm3toUnit; /**< Conversion factor from kg.m³ to imperial unit for densities */
+    extern FL5LIB_EXPORT double g_m2stoUnit;  /**< Conversion factor from m²/s to imperial unit for kinematic viscosities */
 
-    extern std::vector<std::string> g_LengthUnitLabels;
-    extern std::vector<std::string> g_MassUnitLabels;
-    extern std::vector<std::string> g_AreaUnitLabels;
-    extern std::vector<std::string> g_ForceUnitLabels;
+    extern FL5LIB_EXPORT std::vector<std::string> g_LengthUnitLabels;
+    extern FL5LIB_EXPORT std::vector<std::string> g_MassUnitLabels;
+    extern FL5LIB_EXPORT std::vector<std::string> g_AreaUnitLabels;
+    extern FL5LIB_EXPORT std::vector<std::string> g_ForceUnitLabels;
 
-    extern std::vector<std::string> g_SpeedUnitLabels;
-    extern std::vector<std::string> g_MomentUnitLabels;
-    extern std::vector<std::string> g_PressureUnitLabels;
-    extern std::vector<std::string> g_InertiaUnitLabels;
+    extern FL5LIB_EXPORT std::vector<std::string> g_SpeedUnitLabels;
+    extern FL5LIB_EXPORT std::vector<std::string> g_MomentUnitLabels;
+    extern FL5LIB_EXPORT std::vector<std::string> g_PressureUnitLabels;
+    extern FL5LIB_EXPORT std::vector<std::string> g_InertiaUnitLabels;
 
-    extern int g_FluidUnitType;//0= International, 1= Imperial
-    extern std::vector<std::string> g_DensityUnitLabels;
-    extern std::vector<std::string> g_ViscosityUnitLabels;
+    extern FL5LIB_EXPORT int g_FluidUnitType;//0= International, 1= Imperial
+    extern FL5LIB_EXPORT std::vector<std::string> g_DensityUnitLabels;
+    extern FL5LIB_EXPORT std::vector<std::string> g_ViscosityUnitLabels;
 
     FL5LIB_EXPORT std::string lengthUnitLabel(int idx=-1);
     FL5LIB_EXPORT std::string speedUnitLabel(int idx=-1);

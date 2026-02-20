@@ -60,21 +60,21 @@ void PolarAutoNameDlg::setupLayout()
     {
         QVBoxLayout *pDemoNameLayout = new QVBoxLayout;
         {
-            QLabel *plabDemoNameExplain = new QLabel("Demo name:");
+            QLabel *plabDemoNameExplain = new QLabel(tr("Demo name:"));
             m_plePolarName = new QLineEdit;
             m_plePolarName->setReadOnly(true);
             pDemoNameLayout->addWidget(plabDemoNameExplain);
             pDemoNameLayout->addWidget(m_plePolarName);
         }
 
-        QGroupBox *pTypeBox = new QGroupBox("Polar type");
+        QGroupBox *pTypeBox = new QGroupBox(tr("Polar type"));
         {
             QHBoxLayout *pTypeLayout = new QHBoxLayout;
             {
-                m_prbType1 = new QRadioButton("Type 1 (fixed speed)");
-                m_prbType2 = new QRadioButton("Type 2 (fixed lift)");
-                m_prbType3 = new QRadioButton("Type 3 (rubber chord)");
-                m_prbType4 = new QRadioButton("Type 4 (fixed aoa)");
+                m_prbType1 = new QRadioButton(tr("Type 1 (fixed speed)"));
+                m_prbType2 = new QRadioButton(tr("Type 2 (fixed lift)"));
+                m_prbType3 = new QRadioButton(tr("Type 3 (rubber chord)"));
+                m_prbType4 = new QRadioButton(tr("Type 4 (fixed aoa)"));
                 pTypeLayout->addWidget(m_prbType1);
                 pTypeLayout->addWidget(m_prbType2);
                 pTypeLayout->addWidget(m_prbType3);
@@ -86,14 +86,14 @@ void PolarAutoNameDlg::setupLayout()
 
         QGridLayout *pOptionsLayout = new QGridLayout;
         {
-            QLabel *plabExplanation = new QLabel("Include in the automatic polar name:");
-            m_pchType        = new QCheckBox("Type");
-            m_pchBLMethod    = new QCheckBox("BL Method");
-            m_pchReynolds    = new QCheckBox("Reynolds/Aoa");
-            m_pchMach        = new QCheckBox("Mach");
-            m_pchNCrit       = new QCheckBox("NCrit");
-            m_pchXTrTop      = new QCheckBox("Top transition");
-            m_pchXTrBot      = new QCheckBox("Bot transition");
+            QLabel *plabExplanation = new QLabel(tr("Include in the automatic polar name:"));
+            m_pchType        = new QCheckBox(tr("Type"));
+            m_pchBLMethod    = new QCheckBox(tr("BL Method"));
+            m_pchReynolds    = new QCheckBox(tr("Reynolds/Aoa"));
+            m_pchMach        = new QCheckBox(tr("Mach"));
+            m_pchNCrit       = new QCheckBox(tr("NCrit"));
+            m_pchXTrTop      = new QCheckBox(tr("Top transition"));
+            m_pchXTrBot      = new QCheckBox(tr("Bot transition"));
             pOptionsLayout->addWidget(plabExplanation,    1,1);
             pOptionsLayout->addWidget(m_pchType,     2,1);
             pOptionsLayout->addWidget(m_pchBLMethod, 2,2);

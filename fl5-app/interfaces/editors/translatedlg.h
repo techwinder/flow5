@@ -32,6 +32,7 @@ class FloatEdit;
 
 class TranslateDlg : public XflDialog
 {
+    Q_OBJECT
     public:
         TranslateDlg(QWidget *pParent=nullptr);
 

@@ -29,6 +29,7 @@
 #include <string>
 
 #include <TopoDS_Shape.hxx>
+#include <TopoDS_ListOfShape.hxx>
 #include <TopoDS_Solid.hxx>
 #include <TopoDS_Face.hxx>
 #include <TopoDS_Wire.hxx>

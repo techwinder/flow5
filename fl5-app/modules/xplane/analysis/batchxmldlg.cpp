@@ -25,6 +25,7 @@
 #define _MATH_DEFINES_DEFINED
 
 
+#include <QDateTime>
 #include <QHeaderView>
 #include <QCompleter>
 #include <QVBoxLayout>
@@ -84,7 +85,7 @@ int BatchXmlDlg::s_LastTabIndex=0;
 
 BatchXmlDlg::BatchXmlDlg(QWidget *parent) : QDialog(parent)
 {
-    setWindowTitle("Batch analysis");
+    setWindowTitle(tr("Batch analysis"));
 
     setupLayout();
     connectSignals();
@@ -118,7 +119,7 @@ void BatchXmlDlg::makeTables()
     m_pPlaneModel->setRowCount(0);//temporary
     m_pPlaneModel->setColumnCount(2);
     m_pPlaneModel->setHeaderData(0, Qt::Horizontal, QString());
-    m_pPlaneModel->setHeaderData(1, Qt::Horizontal, "Plane name");
+    m_pPlaneModel->setHeaderData(1, Qt::Horizontal, tr("Plane name"));
     m_pPlaneModel->setHeaderData(2, Qt::Horizontal, QString());
     m_pcpPlaneTable->setModel(m_pPlaneModel);
 
@@ -131,9 +132,9 @@ void BatchXmlDlg::makeTables()
     m_pcpPlaneTable->setItemDelegate(m_pPlaneDelegate);
 
     m_pcpAnalysisTable = new CPTableView;
-    m_pcpAnalysisTable->setToolTip("Define and activate the generic analyses to associate to the planes.\n"
-                                   "Note that if the plane name is defined, the analysis will only be created\n"
-                                   "for that specific plane. Leave the plane name blank otherwise.");
+    m_pcpAnalysisTable->setToolTip(tr("Define and activate the generic analyses to associate to the planes.\n") +
+                                   tr("Note that if the plane name is defined, the analysis will only be created\n") +
+                                   tr("for that specific plane. Leave the plane name blank otherwise."));
     m_pcpAnalysisTable->setCharSize(3,5);
     m_pcpAnalysisTable->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
     m_pcpAnalysisTable->setEditable(false);
@@ -148,7 +149,7 @@ void BatchXmlDlg::makeTables()
     m_pAnalysisModel->setRowCount(0);//temporary
     m_pAnalysisModel->setColumnCount(3);
     m_pAnalysisModel->setHeaderData(0, Qt::Horizontal, QString());
-    m_pAnalysisModel->setHeaderData(1, Qt::Horizontal, "File name");
+    m_pAnalysisModel->setHeaderData(1, Qt::Horizontal, tr("File name"));
     m_pAnalysisModel->setHeaderData(2, Qt::Horizontal, QString());
     m_pAnalysisModel->setActionColumn(2);
     m_pcpAnalysisTable->setModel(m_pAnalysisModel);
@@ -178,17 +179,17 @@ void BatchXmlDlg::setupLayout()
                 {
                     QHBoxLayout *pActionsLayout = new QHBoxLayout;
                     {
-                        QPushButton *pPlaneMenuBtn = new QPushButton("Actions");
+                        QPushButton *pPlaneMenuBtn = new QPushButton(tr("Actions"));
                         {
                             pPlaneMenuBtn->setAutoDefault(false);
                             pPlaneMenuBtn->setDefault(false);
                             QMenu *m_pPlaneMenu = new QMenu(this);
                             {
-                                QAction *pPlaneSel = new QAction("Select all", this);
+                                QAction *pPlaneSel = new QAction(tr("Select all"), this);
                                 pPlaneSel->setData(true);
                                 connect(pPlaneSel, SIGNAL(triggered()), SLOT(onToggleAllPlaneSel()));
 
-                                QAction *pPlaneDesel = new QAction("De-select all", this);
+                                QAction *pPlaneDesel = new QAction(tr("De-select all"), this);
                                 pPlaneDesel->setData(false);
                                 connect(pPlaneDesel, SIGNAL(triggered()), SLOT(onToggleAllPlaneSel()));
 
@@ -229,7 +230,7 @@ void BatchXmlDlg::setupLayout()
                         m_pCompleter->setModel(m_pDirModel);
                         m_pleWPolarDir->setCompleter(m_pCompleter);
 
-                        QPushButton *pWPolarMenuBtn = new QPushButton("Actions");
+                        QPushButton *pWPolarMenuBtn = new QPushButton(tr("Actions"));
                         {
                             pWPolarMenuBtn->setDefault(false);
                             pWPolarMenuBtn->setAutoDefault(false);
@@ -237,33 +238,33 @@ void BatchXmlDlg::setupLayout()
                             {
                                 int senddata = -1;
 
-                                QAction *pSelDirectory = new QAction("Change directory", this);
+                                QAction *pSelDirectory = new QAction(tr("Change directory"), this);
                                 connect(pSelDirectory, SIGNAL(triggered()), this, SLOT(onWPolarXmlDir()));
 
-                                QAction *pRefreshDirectory = new QAction("Refresh list", this);
+                                QAction *pRefreshDirectory = new QAction(tr("Refresh list"), this);
                                 connect(pRefreshDirectory, SIGNAL(triggered()), this, SLOT(onListDirAnalyses()));
 
-                                QAction *pAnalysisSel = new QAction("Select all", this);
+                                QAction *pAnalysisSel = new QAction(tr("Select all"), this);
                                 pAnalysisSel->setData(true);
                                 connect(pAnalysisSel, SIGNAL(triggered()), SLOT(onToggleAllAnalysisSel()));
 
-                                QAction *pAnalysisDesel = new QAction("De-select all", this);
+                                QAction *pAnalysisDesel = new QAction(tr("De-select all"), this);
                                 pAnalysisDesel->setData(false);
                                 connect(pAnalysisDesel, SIGNAL(triggered()), SLOT(onToggleAllAnalysisSel()));
 
-                                QAction *pDefineWPolar = new QAction("Add a T123 analysis", this);
+                                QAction *pDefineWPolar = new QAction(tr("Add a T123 analysis"), this);
                                 senddata = 0;
                                 pDefineWPolar->setData(senddata);
                                 pDefineWPolar->setShortcut(Qt::Key_F6);
                                 connect(pDefineWPolar,          SIGNAL(triggered()), this, SLOT(onDefineWPolar()));
 
-                                QAction *pDefineControlPolar = new QAction("Add a T6 analysis", this);
+                                QAction *pDefineControlPolar = new QAction(tr("Add a T6 analysis"), this);
                                 senddata = 1;
                                 pDefineControlPolar->setData(senddata);
                                 pDefineControlPolar->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_F6));;
                                 connect(pDefineControlPolar,    SIGNAL(triggered()), this, SLOT(onDefineWPolar()));
 
-                                QAction *pDefineStabPolar = new QAction("Add a T7 analysis", this);
+                                QAction *pDefineStabPolar = new QAction(tr("Add a T7 analysis"), this);
                                 senddata = 2;
                                 pDefineStabPolar->setData(senddata);
                                 pDefineStabPolar->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_F6));
@@ -335,7 +336,7 @@ void BatchXmlDlg::setupLayout()
                             m_pTabWidget->setCurrentIndex(s_LastTabIndex);
                         }
 
-                        m_pchStorePOpps  = new QCheckBox("Store operating points");
+                        m_pchStorePOpps  = new QCheckBox(tr("Store operating points"));
                         m_pchStorePOpps->setChecked(s_bStorePOpps);
 
 
@@ -347,13 +348,13 @@ void BatchXmlDlg::setupLayout()
                     m_pptoAnalysisOutput = new PlainTextOutput;
                     QVBoxLayout *pStatusBtnLayout = new QVBoxLayout;
                     {
-                        m_plabStatus = new QLabel("Not running.");
+                        m_plabStatus = new QLabel(tr("Not running."));
                         m_plabStatus->setFont(DisplayOptions::tableFont());
                         m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
                         {
-                            QPushButton *ppbClear = new QPushButton("Clear output");
+                            QPushButton *ppbClear = new QPushButton(tr("Clear output"));
                             connect(ppbClear, SIGNAL(clicked()), m_pptoAnalysisOutput, SLOT(clear()));
-                            m_ppbAnalyze =  new QPushButton("Calculate");
+                            m_ppbAnalyze =  new QPushButton(tr("Calculate"));
                             m_ppbAnalyze->setDefault(true);
                             m_ppbAnalyze->setAutoDefault(true);
                             m_pButtonBox->addButton(ppbClear, QDialogButtonBox::ActionRole);
@@ -478,7 +479,7 @@ void BatchXmlDlg::saveSettings(QSettings &settings)
 
 void BatchXmlDlg::onWPolarXmlDir()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, "Select directory",
+    QString dirName = QFileDialog::getExistingDirectory(this, tr("Select directory"),
                                                         SaveOptions::xmlWPolarDirName(),
                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
     if(dirName.length())
@@ -580,27 +581,27 @@ void BatchXmlDlg::onAnalysisClicked(QModelIndex const &index)
     {
         QRect itemrect = m_pcpAnalysisTable->visualRect(index);
         QPoint menupos = m_pcpAnalysisTable->mapToGlobal(itemrect.topLeft());
-        QMenu *pRowMenu = new QMenu("Analysis",this);
+        QMenu *pRowMenu = new QMenu(tr("Analysis"),this);
         {
-            QAction *pEditAnalysis = new QAction("Edit analysis", this);
+            QAction *pEditAnalysis = new QAction(tr("Edit analysis"), this);
             connect(pEditAnalysis, SIGNAL(triggered(bool)), SLOT(onEditAnalysis()));
 
-            QAction *pClearPlaneName = new QAction("Clear plane name", this);
+            QAction *pClearPlaneName = new QAction(tr("Clear plane name"), this);
             connect(pClearPlaneName, SIGNAL(triggered(bool)), SLOT(onClearPlaneName()));
 
-            QAction *pRenameFile = new QAction("Rename", this);
+            QAction *pRenameFile = new QAction(tr("Rename"), this);
             connect(pRenameFile, SIGNAL(triggered(bool)), SLOT(onRenameFile()));
 
-            QAction *pDuplicateFile = new QAction("Duplicate", this);
+            QAction *pDuplicateFile = new QAction(tr("Duplicate"), this);
             connect(pDuplicateFile, SIGNAL(triggered(bool)), SLOT(onDuplicateFile()));
 
-            QAction *pDeleteFile = new QAction("Delete", this);
+            QAction *pDeleteFile = new QAction(tr("Delete"), this);
             connect(pDeleteFile, SIGNAL(triggered(bool)), SLOT(onDeleteFile()));
 
             pRowMenu->addAction(pClearPlaneName);
             pRowMenu->addAction(pEditAnalysis);
             pRowMenu->addSeparator();
-            QMenu *pFileMenu = pRowMenu->addMenu("File");
+            QMenu *pFileMenu = pRowMenu->addMenu(tr("File"));
             {
                 pFileMenu->addAction(pRenameFile);
                 pFileMenu->addAction(pDuplicateFile);
@@ -673,7 +674,7 @@ void BatchXmlDlg::onRenameFile()
     QFileInfo finew(newfilename);
     if(finew.exists())
     {
-        int resp = QMessageBox::question(this, "Exit", "Replace the existing file?",
+        int resp = QMessageBox::question(this, tr("Exit"), tr("Replace the existing file?"),
                                          QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                                          QMessageBox::Yes);
         if(resp!=QMessageBox::Yes) return;
@@ -701,8 +702,8 @@ void BatchXmlDlg::onDuplicateFile()
 
     QString newfilename = filename;
 
-    QString filter = "XML file (*.xml)";
-    newfilename = QFileDialog::getSaveFileName(this, "Export analysis definition to xml file",
+    QString filter = tr("XML file (*.xml)");
+    newfilename = QFileDialog::getSaveFileName(this, tr("Export analysis definition to xml file"),
                                                newfilename,
                                                filter,
                                                &filter);
@@ -711,14 +712,14 @@ void BatchXmlDlg::onDuplicateFile()
     PlanePolar *pWPolar = readXmlWPolarFile(filename);
     if (!pWPolar)
     {
-        QMessageBox::warning(this, "Write error", "Failed to read the file" + filename);
+        QMessageBox::warning(this, tr("Write error"), tr("Failed to read the file") + filename);
         return;
     }
 
     QFile XFile(newfilename);
     if (!XFile.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        QMessageBox::warning(this, "Write error", "Failed to save the new file");
+        QMessageBox::warning(this, tr("Write error"), tr("Failed to save the new file"));
         return;
     }
 
@@ -742,7 +743,7 @@ void BatchXmlDlg::onDeleteFile()
 
     QModelIndex sibling = indexList.front().sibling(indexList.front().row(), 1);
     QString name = m_pAnalysisModel->data(sibling).toString();
-    int resp = QMessageBox::question(this, "Exit", "Really delete this file?",
+    int resp = QMessageBox::question(this, tr("Exit"), tr("Really delete this file?"),
                                      QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                                      QMessageBox::Yes);
     if(resp!=QMessageBox::Yes) return;
@@ -1045,7 +1046,7 @@ void BatchXmlDlg::onDefineWPolar()
 
     //export the polar to the xml format in  the target directory
 
-    QString filter = "XML file (*.xml)";
+    QString filter = tr("XML file (*.xml)");
     QString FileName, strong;
 
 //    strong = m_pCurPlane->planeName()+"_"+m_pCurWPolar->polarName();
@@ -1057,7 +1058,7 @@ void BatchXmlDlg::onDefineWPolar()
 
     do
     {
-        FileName = QFileDialog::getSaveFileName(this, "Export analysis definition to xml file",
+        FileName = QFileDialog::getSaveFileName(this, tr("Export analysis definition to xml file"),
                                                 pathname,
                                                 filter,
                                                 &filter);
@@ -1081,7 +1082,7 @@ void BatchXmlDlg::onDefineWPolar()
         }
         else
         {
-            int resp = QMessageBox::question(this, "Exit", "Discard the analysis "+QString::fromStdString(pNewWPolar->name())+" ?",
+            int resp = QMessageBox::question(this, tr("Exit"), tr("Discard the analysis ")+QString::fromStdString(pNewWPolar->name())+" ?",
                                              QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                                              QMessageBox::No);
             if(resp == QMessageBox::Yes)
@@ -1242,7 +1243,7 @@ void BatchXmlDlg::onAnalyze()
     onMessage(strange);
 
     m_pButtonBox->button(QDialogButtonBox::Close)->setEnabled(false);
-    m_ppbAnalyze->setText("Cancel");
+    m_ppbAnalyze->setText(tr("Cancel"));
 
     Task3d::setCancelled(false);
     TriMesh::setCancelled(false);

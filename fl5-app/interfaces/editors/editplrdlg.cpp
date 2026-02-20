@@ -56,7 +56,7 @@ QVector<bool> EditPlrDlg::s_BtPolarVariables = {true, true, true, true};
 
 EditPlrDlg::EditPlrDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("Polar data points");
+    setWindowTitle(tr("Polar data points"));
 
     m_pPolar   = nullptr;
     m_pWPolar  = nullptr;
@@ -91,7 +91,7 @@ void EditPlrDlg::setupLayout()
 
                 m_pcptPoint->horizontalHeader()->setStretchLastSection(true);
                 m_pcptPoint->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-                m_pcptPoint->setToolTip("Use Ctrl+C to copy selection to the clipboard");
+                m_pcptPoint->setToolTip(tr("Use Ctrl+C to copy selection to the clipboard"));
 
                 m_pPointModel = new ActionItemModel(this);
                 m_pPointModel->setRowCount(10);//temporary
@@ -118,7 +118,7 @@ void EditPlrDlg::setupLayout()
                 }
                 m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
                 {
-                    m_ppbResizeDataBtn = new QPushButton("Resize data");
+                    m_ppbResizeDataBtn = new QPushButton(tr("Resize data"));
                     m_pButtonBox->addButton(m_ppbResizeDataBtn, QDialogButtonBox::ActionRole);
                 }
 
@@ -180,7 +180,7 @@ void EditPlrDlg::initDialog(Polar *pPolar, PlanePolar*pWPolar, BoatPolar *pBtPol
         {
             m_pPointModel->setHeaderData(i, Qt::Horizontal, QString::fromStdString(Polar::variableName(i)));
         }
-        m_pPointModel->setHeaderData(nCols-1, Qt::Horizontal, "Actions");
+        m_pPointModel->setHeaderData(nCols-1, Qt::Horizontal, tr("Actions"));
         m_pPointModel->setActionColumn(nCols-1);
         m_plabPlaneName->setText(QString::fromStdString(m_pPolar->foilName()));
         m_plabPolarName->setText(QString::fromStdString(m_pPolar->name()));
@@ -196,7 +196,7 @@ void EditPlrDlg::initDialog(Polar *pPolar, PlanePolar*pWPolar, BoatPolar *pBtPol
             m_pPointModel->setHeaderData(i, Qt::Horizontal, QString::fromStdString(PlanePolar::variableName(i)));
         }
 
-        m_pPointModel->setHeaderData(nCols-1, Qt::Horizontal, "Actions");
+        m_pPointModel->setHeaderData(nCols-1, Qt::Horizontal, tr("Actions"));
         m_pPointModel->setActionColumn(nCols-1);
         m_plabPlaneName->setText(QString::fromStdString(m_pWPolar->planeName()));
         m_plabPolarName->setText(QString::fromStdString(m_pWPolar->name()));
@@ -212,7 +212,7 @@ void EditPlrDlg::initDialog(Polar *pPolar, PlanePolar*pWPolar, BoatPolar *pBtPol
             m_pPointModel->setHeaderData(i, Qt::Horizontal, QString::fromStdString(BoatPolar::variableName(i)));
         }
 
-        m_pPointModel->setHeaderData(nCols-1, Qt::Horizontal, "Actions");
+        m_pPointModel->setHeaderData(nCols-1, Qt::Horizontal, tr("Actions"));
         m_pPointModel->setActionColumn(nCols-1);
         m_plabPlaneName->setText(QString::fromStdString(m_pBtPolar->boatName()));
         m_plabPolarName->setText(QString::fromStdString(m_pBtPolar->name()));
@@ -722,10 +722,10 @@ void EditPlrDlg::onTableClicked(QModelIndex index)
     {
         QRect itemrect = m_pcptPoint->visualRect(index);
         QPoint menupos = m_pcptPoint->mapToGlobal(itemrect.topLeft());
-        QMenu *pRowMenu = new QMenu("Section",this);
-        QAction *pInsertRowBefore = new QAction("Insert before", this);
-        QAction *pInsertRowAfter  = new QAction("Insert after", this);
-        QAction *pDeleteRow = new QAction("Delete row",    this);
+        QMenu *pRowMenu = new QMenu(tr("Section"),this);
+        QAction *pInsertRowBefore = new QAction(tr("Insert before"), this);
+        QAction *pInsertRowAfter  = new QAction(tr("Insert after"), this);
+        QAction *pDeleteRow = new QAction(tr("Delete row"),    this);
         connect(pInsertRowBefore, SIGNAL(triggered(bool)), SLOT(onInsertRowBefore()));
         connect(pInsertRowAfter,  SIGNAL(triggered(bool)), SLOT(onInsertRowAfter()));
         connect(pDeleteRow,       SIGNAL(triggered(bool)), SLOT(onDeleteRow()));
@@ -749,7 +749,7 @@ void EditPlrDlg::onResizeData()
     {
         IntValueDlg dlg(this);
         dlg.setValue(m_pWPolar->dataSize());
-        dlg.setLeftLabel("Nb. of data points:");
+        dlg.setLeftLabel(tr("Nb. of data points:"));
         if(dlg.exec()==QDialog::Accepted)
         {
             m_pWPolar->resizeData(dlg.value());

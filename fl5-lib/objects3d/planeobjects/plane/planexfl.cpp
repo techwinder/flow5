@@ -25,6 +25,7 @@
 #include <QElapsedTimer>
 #include <QString>
 #include <QDebug>
+#include <QCoreApplication>
 
 #include <planexfl.h>
 #include <fusenurbs.h>
@@ -1566,84 +1567,84 @@ std::string PlaneXfl::planeData(bool bOtherWings) const
     QString Result;
     QString str1;
     QString strange;
-    QString lengthlab, arealab, masslab;
-    lengthlab = Units::lengthUnitQLabel();
-    arealab = Units::areaUnitQLabel();
-    masslab = Units::massUnitQLabel();
+
+    QString lengthlab = Units::lengthUnitQLabel();
+    QString arealab = Units::areaUnitQLabel();
+    QString masslab = Units::massUnitQLabel();
 
     WingXfl const *pMainWing = mainWing();
 
+    constexpr int labelWidth = 15;
+    auto label = [=](const char *sourceText) {
+        return QCoreApplication::translate("PlaneXfl", sourceText).leftJustified(labelWidth, ' ');
+    };
 
-    str1 = QString::asprintf("Wing span       = %9.3f ", planformSpan()*Units::mtoUnit());
-    str1 += lengthlab;
-    strange += str1 +"\n";
+    str1 = QString("%1 = %2 ").arg(label("Wing span")).arg(planformSpan()*Units::mtoUnit(), 9, 'f', 3);
+    strange += str1 + lengthlab + "\n";
 
-    str1 = QString::asprintf("xyProj. span    = %9.3f ", projectedSpan()*Units::mtoUnit());
-    str1 += lengthlab;
-    strange += str1 +"\n";
+    str1 = QString("%1 = %2 ").arg(label("xyProj. span")).arg(projectedSpan()*Units::mtoUnit(), 9, 'f', 3);
+    strange += str1 + lengthlab + "\n";
 
-    str1 = QString::asprintf("Wing area       = %9.3f ", planformArea(bOtherWings) * Units::m2toUnit());
-    str1 += arealab;
-    strange += str1 +"\n";
+    str1 = QString("%1 = %2 ").arg(label("Wing area")).arg(planformArea(bOtherWings) * Units::m2toUnit(), 9, 'f', 3);
+    strange += str1 + arealab + "\n";
 
-    str1   = QString::asprintf("Projected area  = %9.3f ", projectedArea(bOtherWings) * Units::m2toUnit());
-    str1 += arealab;
-    strange += str1 +"\n";
+    str1 = QString("%1 = %2 ").arg(label("Projected area")).arg(projectedArea(bOtherWings) * Units::m2toUnit(), 9, 'f', 3);
+    strange += str1 + arealab + "\n";
 
-    Result = QString::asprintf("Mass            = %9.3f ", totalMass()*Units::kgtoUnit());
-    Result += masslab;
-    strange += Result +"\n";
+    Result = QString("%1 = %2 ").arg(label("Mass")).arg(totalMass()*Units::kgtoUnit(), 9, 'f', 3);
+    strange += Result + masslab + "\n";
 
-    Result = QString::asprintf("CoG = (%.3f, %.3f, %.3f) ", m_Inertia.CoG_t().x*Units::mtoUnit(), m_Inertia.CoG_t().y*Units::mtoUnit(), m_Inertia.CoG_t().z*Units::mtoUnit());
-    Result += lengthlab;
-    strange += Result +"\n";
+    Result = QString("%1 = (%2, %3, %4) ")
+                 .arg(QCoreApplication::translate("PlaneXfl", "CoG"))
+                 .arg(m_Inertia.CoG_t().x*Units::mtoUnit(), 0, 'f', 3)
+                 .arg(m_Inertia.CoG_t().y*Units::mtoUnit(), 0, 'f', 3)
+                 .arg(m_Inertia.CoG_t().z*Units::mtoUnit(), 0, 'f', 3);
+    strange += Result + lengthlab + "\n";
 
     if(pMainWing)
     {
-        Result = QString::asprintf("Wing load       = %9.3f", totalMass()*Units::kgtoUnit()/projectedArea(bOtherWings)/Units::m2toUnit());
-        Result += " "+ masslab + "/" + arealab;
-        strange += Result +"\n";
+        Result = QString("%1 = %2")
+                     .arg(label("Wing load"))
+                     .arg(totalMass()*Units::kgtoUnit()/projectedArea(bOtherWings)/Units::m2toUnit(), 9, 'f', 3);
+        strange += Result + " " + masslab + "/" + arealab + "\n";
     }
 
     if(hasStab())
     {
-        str1 = QString::asprintf("Tail volume (H) = %9.3f", tailVolumeHorizontal());
-        strange += str1 +"\n";
+        str1 = QString("%1 = %2").arg(label("Tail volume (H)")).arg(tailVolumeHorizontal(), 9, 'f', 3);
+        strange += str1 + "\n";
     }
-
 
     if(hasFin())
     {
-        str1 = QString::asprintf("Tail volume (V) = %9.3f", tailVolumeVertical());
-        strange += str1 +"\n";
+        str1 = QString("%1 = %2").arg(label("Tail volume (V)")).arg(tailVolumeVertical(), 9, 'f', 3);
+        strange += str1 + "\n";
     }
 
     if(pMainWing)
     {
-        str1 = QString::asprintf("Root chord      = %9.3f ", pMainWing->rootChord()*Units::mtoUnit());
-        Result = str1+ lengthlab;
-        strange += Result +"\n";
+        str1 = QString("%1 = %2 ").arg(label("Root chord")).arg(pMainWing->rootChord()*Units::mtoUnit(), 9, 'f', 3);
+        strange += str1 + lengthlab + "\n";
     }
 
-    str1 = QString::asprintf("MAC             = %9.3f ", mac()*Units::mtoUnit());
-    Result = str1+ lengthlab;
-    strange += Result +"\n";
+    str1 = QString("%1 = %2 ").arg(label("MAC")).arg(mac()*Units::mtoUnit(), 9, 'f', 3);
+    strange += str1 + lengthlab + "\n";
 
     if(pMainWing)
     {
-        str1 = QString::asprintf("Tip twist       = %9.3f", pMainWing->tipTwist()) + DEGch;
-        strange += str1 +"\n";
+        str1 = QString("%1 = %2").arg(label("Tip twist")).arg(pMainWing->tipTwist(), 9, 'f', 3) + DEGch;
+        strange += str1 + "\n";
     }
 
-    str1 = QString::asprintf("Aspect Ratio    = %9.3f", aspectRatio());
-    strange += str1 +"\n";
+    str1 = QString("%1 = %2").arg(label("Aspect Ratio")).arg(aspectRatio(), 9, 'f', 3);
+    strange += str1 + "\n";
 
-    str1 = QString::asprintf("Taper Ratio     = %9.3f", taperRatio());
-    strange += str1 +"\n";
+    str1 = QString("%1 = %2").arg(label("Taper Ratio")).arg(taperRatio(), 9, 'f', 3);
+    strange += str1 + "\n";
 
     if(pMainWing)
     {
-        str1 = QString::asprintf("Root-Tip Sweep  = %9.3f",pMainWing->averageSweep()) + DEGch;
+        str1 = QString("%1 = %2").arg(label("Root-Tip Sweep")).arg(pMainWing->averageSweep(), 9, 'f', 3) + DEGch;
         strange += str1;
     }
 

@@ -40,7 +40,7 @@
 
 FoilNormalizeDlg::FoilNormalizeDlg(QWidget *pParent) : FoilDlg(pParent)
 {
-    setWindowTitle("Foil normalization");
+    setWindowTitle(tr("Foil normalization"));
     setupLayout();
     connectSignals();
 }

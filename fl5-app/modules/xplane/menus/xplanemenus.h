@@ -25,12 +25,15 @@
 #pragma once
 
 #include <QMenu>
+#include <QCoreApplication>
 
 class XPlane;
 class MainFrame;
 
 class XPlaneMenus
 {
+    Q_DECLARE_TR_FUNCTIONS(XPlaneMenus)
+
     friend class XPlane;
     friend class MainFrame;
     friend class PlaneExplorer;

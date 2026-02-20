@@ -65,16 +65,16 @@ void Analysis2dCtrls::setupLayout()
 
     QVBoxLayout *pAnalysisGroupLayout = new QVBoxLayout;
     {
-        m_pchStoreOpp = new QCheckBox("Store operating points");
-        m_ppbAnalyze  = new QPushButton("Calculate");
+        m_pchStoreOpp = new QCheckBox(tr("Store operating points"));
+        m_ppbAnalyze  = new QPushButton(tr("Calculate"));
 
-        m_ppbAnalyze->setToolTip("Start the analysis\t(Ctrl+A)");
+        m_ppbAnalyze->setToolTip(tr("Start the analysis\t(Ctrl+A)"));
 
         QHBoxLayout *pSpecVarsLayout = new QHBoxLayout;
         {
             m_prbAlpha    = new QRadioButton(ALPHAch);
-            m_prbCl       = new QRadioButton("Cl");
-            m_prbReynolds = new QRadioButton("Reynolds");
+            m_prbCl       = new QRadioButton(tr("Cl"));
+            m_prbReynolds = new QRadioButton(tr("Reynolds"));
             m_prbTheta    = new QRadioButton(THETAch);
             pSpecVarsLayout->addStretch();
             pSpecVarsLayout->addWidget(m_prbAlpha);

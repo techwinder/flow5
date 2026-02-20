@@ -25,12 +25,14 @@
 #pragma once
 
 #include <QMenu>
+#include <QCoreApplication>
 
 class MainFrame;
 class XDirect;
 class LineMenu;
 class XDirectMenus
 {
+    Q_DECLARE_TR_FUNCTIONS(XDirectMenus)
     friend class XDirect;
     friend class MainFrame;
     friend class OpPointWt;

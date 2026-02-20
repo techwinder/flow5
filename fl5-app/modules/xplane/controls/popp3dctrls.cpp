@@ -122,38 +122,38 @@ void POpp3dCtrls::setupLayout()
             QGridLayout *pCheckDispLayout = new QGridLayout;
             {
                 m_pchGamma          = new QCheckBox(GAMMAch);
-                QString gammatip("<p>Displays the distribution of doublet densities or vortex strengths.<br>"
+                QString gammatip(tr("<p>Displays the distribution of doublet densities or vortex strengths.<br>"
                                  "This is the main result of the potential flow calculation, and <u>all other results</u> "
                                  "are derived from this distribution. It is therefore important that it "
                                  "does not exhibit numerical issues which would show up as singularities i.e. areas with peak values."
-                                 "</p>");
+                                 "</p>"));
                 m_pchGamma->setToolTip(gammatip);
-                m_pchCp             = new QCheckBox("Cp");
-                m_pchCp->setToolTip("<p>Display the panel pressure coefficients</p>");
-                m_pchPanelForce     = new QCheckBox("F/s=q.Cp");
-                m_pchPanelForce->setToolTip("<p>Display the pressures &frac12; &rho; V<sup>2</sup> Cp acting on the panels</p>");
-                m_pchStripLift      = new QCheckBox("Strip lift");
-                m_pchPartForces     = new QCheckBox("Part forces");
-                m_pchIDrag          = new QCheckBox("Induced drag");
-                m_pchVDrag          = new QCheckBox("Viscous drag");
-                m_pchTrans          = new QCheckBox("Transitions");
-                m_pchMoment         = new QCheckBox("Moments");
-                m_pchDownwash       = new QCheckBox("Downwash");
-                m_pchStream         = new QCheckBox("Streamlines");
-                m_pchFlaps          = new QCheckBox("Flaps");
-                m_pchFlow           = new QCheckBox("Flow");
-                m_pchFlow->setToolTip("<p>Launches an animation of the flow around the model.<br>"
-                                      "The parameters are set in the last tab of the scales widget.</p>");
-                m_pchWakePanels     = new QCheckBox("Wake panels");
-                m_pchWakePanels->setToolTip("<p>T6 polars only</p>");
-                m_pchVortons        = new QCheckBox("Vortons");
-                m_pchVortons->setToolTip("<p>T6 polars + VPW only</p>");
-                m_pchHPlane         = new QCheckBox("Ground/Free surface");
-                m_pchPickPanel      = new QCheckBox("Pick value");
+                m_pchCp             = new QCheckBox(tr("Cp"));
+                m_pchCp->setToolTip(tr("<p>Display the panel pressure coefficients</p>"));
+                m_pchPanelForce     = new QCheckBox(tr("F/s=q.Cp"));
+                m_pchPanelForce->setToolTip(tr("<p>Display the pressures &frac12; &rho; V<sup>2</sup> Cp acting on the panels</p>"));
+                m_pchStripLift      = new QCheckBox(tr("Strip lift"));
+                m_pchPartForces     = new QCheckBox(tr("Part forces"));
+                m_pchIDrag          = new QCheckBox(tr("Induced drag"));
+                m_pchVDrag          = new QCheckBox(tr("Viscous drag"));
+                m_pchTrans          = new QCheckBox(tr("Transitions"));
+                m_pchMoment         = new QCheckBox(tr("Moments"));
+                m_pchDownwash       = new QCheckBox(tr("Downwash"));
+                m_pchStream         = new QCheckBox(tr("Streamlines"));
+                m_pchFlaps          = new QCheckBox(tr("Flaps"));
+                m_pchFlow           = new QCheckBox(tr("Flow"));
+                m_pchFlow->setToolTip(tr("<p>Launches an animation of the flow around the model.<br>"
+                                      "The parameters are set in the last tab of the scales widget.</p>"));
+                m_pchWakePanels     = new QCheckBox(tr("Wake panels"));
+                m_pchWakePanels->setToolTip(tr("<p>T6 polars only</p>"));
+                m_pchVortons        = new QCheckBox(tr("Vortons"));
+                m_pchVortons->setToolTip(tr("<p>T6 polars + VPW only</p>"));
+                m_pchHPlane         = new QCheckBox(tr("Ground/Free surface"));
+                m_pchPickPanel      = new QCheckBox(tr("Pick value"));
                 m_pchPickPanel->setShortcut(QKeySequence(Qt::SHIFT|Qt::Key_H));
-                QString tip("<p>Activate this checkbox and move the mouse\nover the Cp or Forces color plot. (Shift+H)</p>");
+                QString tip(tr("<p>Activate this checkbox and move the mouse\nover the Cp or Forces color plot. (Shift+H)</p>"));
                 m_pchPickPanel->setToolTip(tip);
-                m_pchPOppAnimate    = new QCheckBox("Animate");
+                m_pchPOppAnimate    = new QCheckBox(tr("Animate"));
 
                 m_pslAnimPOppSpeed  = new QSlider(Qt::Horizontal);
                 m_pslAnimPOppSpeed->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -206,12 +206,12 @@ void POpp3dCtrls::setupLayout()
     m_pFlowCtrls        = new FlowCtrls;
     m_pCrossFlowCtrls   = new CrossFlowCtrls;
 
-    addTab(pfr3dPage,           "Display");
-    addTab(m_pOpp3dScalesCtrls, "Scales");
-    addTab(m_pStab3dCtrls,      "Stability");
-    addTab(m_pStreamLinesCtrls,  "Streamlines");
-    addTab(m_pFlowCtrls,        "Flow");
-    addTab(m_pCrossFlowCtrls,   "Wake");
+    addTab(pfr3dPage,           tr("Display"));
+    addTab(m_pOpp3dScalesCtrls, tr("Scales"));
+    addTab(m_pStab3dCtrls,      tr("Stability"));
+    addTab(m_pStreamLinesCtrls, tr("Streamlines"));
+    addTab(m_pFlowCtrls,        tr("Flow"));
+    addTab(m_pCrossFlowCtrls,   tr("Wake"));
 }
 
 

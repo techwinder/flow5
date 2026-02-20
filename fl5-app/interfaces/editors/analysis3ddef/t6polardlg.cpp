@@ -469,17 +469,17 @@ void T6PolarDlg::setupLayout()
         {
             m_pcptOppRange = new CPTableView(this);
             m_pcptOppRange->setEditable(true);
-            m_pcptOppRange->setWindowTitle("Operating range");
+            m_pcptOppRange->setWindowTitle(tr("Operating range"));
 //            m_pcptOppRange->setMinimumWidth(fm.averageCharWidth() * 53);
 //            m_pcptOppRange->setMinimumHeight(fm.height() * 10);
 
             m_pOppRangeControlModel = new CtrlTableModel(this);
             m_pOppRangeControlModel->setRowCount(4);
             m_pOppRangeControlModel->setColumnCount(4);
-            m_pOppRangeControlModel->setHeaderData(0, Qt::Horizontal, "Operating parameter");
-            m_pOppRangeControlModel->setHeaderData(1, Qt::Horizontal, "Min.");
-            m_pOppRangeControlModel->setHeaderData(2, Qt::Horizontal, "Max.");
-            m_pOppRangeControlModel->setHeaderData(3, Qt::Horizontal, "Unit");
+            m_pOppRangeControlModel->setHeaderData(0, Qt::Horizontal, tr("Operating parameter"));
+            m_pOppRangeControlModel->setHeaderData(1, Qt::Horizontal, tr("Min."));
+            m_pOppRangeControlModel->setHeaderData(2, Qt::Horizontal, tr("Max."));
+            m_pOppRangeControlModel->setHeaderData(3, Qt::Horizontal, tr("Unit"));
 
             m_pcptOppRange->setModel(m_pOppRangeControlModel);
             m_pcptOppRange->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -507,9 +507,9 @@ void T6PolarDlg::setupLayout()
                 pVhLayout->addStretch();
             }
 
-            QString tip = "<p>Check this option if the velocity is to be adjusted to balance the weight.<br>"
+            QString tip = tr("<p>Check this option if the velocity is to be adjusted to balance the weight.<br>"
                           "In this case, the velocity parameter defined in the table below will be ignored.<br>"
-                          "This is the equivalent of a Type 2 fixed lift polar.</p>";
+                          "This is the equivalent of a Type 2 fixed lift polar.</p>");
             m_pchAdjustedVelocity->setToolTip(tip);
 
             QLabel* pParamLabel = new QLabel();
@@ -534,7 +534,7 @@ void T6PolarDlg::setupLayout()
         {
             m_pcptInertia = new CPTableView(this);
             m_pcptInertia->setEditable(true);
-            m_pcptInertia->setWindowTitle("Controls");
+            m_pcptInertia->setWindowTitle(tr("Controls"));
 //            m_pcptInertia->setMinimumWidth(400);
 //            m_pcptInertia->setMinimumHeight(150);
             //        m_pInertiaControlTable->horizontalHeader()->setStretchLastSection(true);
@@ -542,10 +542,10 @@ void T6PolarDlg::setupLayout()
             m_pInertiaControlModel = new CtrlTableModel(this);
             m_pInertiaControlModel->setRowCount(3);
             m_pInertiaControlModel->setColumnCount(4);
-            m_pInertiaControlModel->setHeaderData(0, Qt::Horizontal, "Inertia parameter");
-            m_pInertiaControlModel->setHeaderData(1, Qt::Horizontal, "Min.");
-            m_pInertiaControlModel->setHeaderData(2, Qt::Horizontal, "Max.");
-            m_pInertiaControlModel->setHeaderData(3, Qt::Horizontal, "Unit");
+            m_pInertiaControlModel->setHeaderData(0, Qt::Horizontal, tr("Inertia parameter"));
+            m_pInertiaControlModel->setHeaderData(1, Qt::Horizontal, tr("Min."));
+            m_pInertiaControlModel->setHeaderData(2, Qt::Horizontal, tr("Max."));
+            m_pInertiaControlModel->setHeaderData(3, Qt::Horizontal, tr("Unit"));
 
             m_pcptInertia->setModel(m_pInertiaControlModel);
             m_pcptInertia->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -580,7 +580,7 @@ void T6PolarDlg::setupLayout()
             m_pcptAngles = new CPTableView(this);
             m_pcptAngles->setEditable(true);
 
-            m_pcptAngles->setWindowTitle("Controls");
+            m_pcptAngles->setWindowTitle(tr("Controls"));
 //            m_pcptAngles->setMinimumWidth(400);
 //            m_pcptAngles->setMinimumHeight(150);
             //        m_pAngleControlTable->horizontalHeader()->setStretchLastSection(true);
@@ -588,10 +588,10 @@ void T6PolarDlg::setupLayout()
             m_pAngleControlModel = new CtrlTableModel(this);
             m_pAngleControlModel->setRowCount(10);//temporary
             m_pAngleControlModel->setColumnCount(4);
-            m_pAngleControlModel->setHeaderData(0, Qt::Horizontal, "Surface");
-            m_pAngleControlModel->setHeaderData(1, Qt::Horizontal, "Min.");
-            m_pAngleControlModel->setHeaderData(2, Qt::Horizontal, "Max.");
-            m_pAngleControlModel->setHeaderData(3, Qt::Horizontal, "Unit");
+            m_pAngleControlModel->setHeaderData(0, Qt::Horizontal, tr("Surface"));
+            m_pAngleControlModel->setHeaderData(1, Qt::Horizontal, tr("Min."));
+            m_pAngleControlModel->setHeaderData(2, Qt::Horizontal, tr("Max."));
+            m_pAngleControlModel->setHeaderData(3, Qt::Horizontal, tr("Unit"));
 
             m_pcptAngles->setModel(m_pAngleControlModel);
             m_pcptAngles->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
@@ -603,12 +603,12 @@ void T6PolarDlg::setupLayout()
 
             m_pAngleCtrlDelegate->setPrecision({2,3,3,-1}); m_pAngleCtrlDelegate->setEditable({false, true, true, false});
 
-            QLabel* pNotes = new QLabel("Notes:");
-            QLabel* pSignLabel = new QLabel("(1)\t+ sign means trailing edge down");
+            QLabel* pNotes = new QLabel(tr("Notes:"));
+            QLabel* pSignLabel = new QLabel(tr("(1)\t+ sign means trailing edge down"));
 
             QHBoxLayout *pAngleParamLayout = new QHBoxLayout;
             {
-                QLabel* pAngleLabel = new QLabel("(2)\tThe angles are ADDED to the preset wing and flap angles:");
+                QLabel* pAngleLabel = new QLabel(tr("(2)\tThe angles are ADDED to the preset wing and flap angles:"));
                 pAngleLabel->setAlignment(Qt::AlignLeft |Qt::AlignVCenter);
                 QLabel* pParamLabel = new QLabel();
                 QPixmap pixmap;
@@ -624,8 +624,8 @@ void T6PolarDlg::setupLayout()
                 pAngleParamLayout->addStretch();
             }
 
-            QLabel* pOriginLabel = new QLabel("(3)\tThe center of rotations are the wings leading point at the root chord");
-            QLabel* pNumberLabel = new QLabel("(4)\tFlaps are numbered from left tip to right tip");
+            QLabel* pOriginLabel = new QLabel(tr("(3)\tThe center of rotations are the wings leading point at the root chord"));
+            QLabel* pNumberLabel = new QLabel(tr("(4)\tFlaps are numbered from left tip to right tip"));
 
             pAngleControlPageLayout->addWidget(m_pcptAngles);
             pAngleControlPageLayout->addWidget(pNotes);
@@ -640,17 +640,17 @@ void T6PolarDlg::setupLayout()
     QTabWidget *pTabWt = new QTabWidget(this);
     {
         pTabWt->setMovable(true);
-        pTabWt->addTab(m_pfrMethod,       "Method");
-        pTabWt->addTab(m_pfrRefDims,      "Ref. dimensions");
-        pTabWt->addTab(m_pfrFluid,        "Fluid");
-        pTabWt->addTab(m_pfrViscosity,    "Viscosity");
-        pTabWt->addTab(pOppRangePage,     "Operating range");
-        pTabWt->addTab(pMassControlPage,  "Mass and inertia");
-        pTabWt->addTab(pAngleControlPage, "Angles");
-        pTabWt->addTab(m_pfrGround,       "Ground");
-        pTabWt->addTab(m_pfrFuseDrag,     "Fuselage");
-        pTabWt->addTab(m_pExtraDragWt,    "Extra drag");
-        pTabWt->addTab(m_pfrWake,         "Wake");
+        pTabWt->addTab(m_pfrMethod,       tr("Method"));
+        pTabWt->addTab(m_pfrRefDims,      tr("Ref. dimensions"));
+        pTabWt->addTab(m_pfrFluid,        tr("Fluid"));
+        pTabWt->addTab(m_pfrViscosity,    tr("Viscosity"));
+        pTabWt->addTab(pOppRangePage,     tr("Operating range"));
+        pTabWt->addTab(pMassControlPage,  tr("Mass and inertia"));
+        pTabWt->addTab(pAngleControlPage, tr("Angles"));
+        pTabWt->addTab(m_pfrGround,       tr("Ground"));
+        pTabWt->addTab(m_pfrFuseDrag,     tr("Fuselage"));
+        pTabWt->addTab(m_pExtraDragWt,    tr("Extra drag"));
+        pTabWt->addTab(m_pfrWake,         tr("Wake"));
         connect(pTabWt, &QTabWidget::currentChanged, this, &T6PolarDlg::onTabChanged);
     }
 

@@ -40,7 +40,7 @@
 
 BtPolarAutoNameDlg::BtPolarAutoNameDlg() : QDialog()
 {
-    setWindowTitle("Polar name options");
+    setWindowTitle(tr("Polar name options"));
 
     //make a dummy plane
     m_pBoat = new Boat;
@@ -111,11 +111,11 @@ void BtPolarAutoNameDlg::setupLayout()
 
         QGridLayout *pOptionsLayout = new QGridLayout;
         {
-            m_pchMethod      = new QCheckBox("Method");
-            m_pchControls    = new QCheckBox("Control data");
-            m_pchViscosity   = new QCheckBox("Viscosity");
-            m_pchExtraDrag   = new QCheckBox("Extra drag");
-            m_pchGround      = new QCheckBox("Ground effect");
+            m_pchMethod      = new QCheckBox(tr("Method"));
+            m_pchControls    = new QCheckBox(tr("Control data"));
+            m_pchViscosity   = new QCheckBox(tr("Viscosity"));
+            m_pchExtraDrag   = new QCheckBox(tr("Extra drag"));
+            m_pchGround      = new QCheckBox(tr("Ground effect"));
             pOptionsLayout->addWidget(m_pchMethod,    1, 1);
             pOptionsLayout->addWidget(m_pchViscosity, 1, 2);
             pOptionsLayout->addWidget(m_pchControls,  1, 3);

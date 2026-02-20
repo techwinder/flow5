@@ -194,7 +194,7 @@ void FoilPlrListDlg::onChangeDir()
 
 void FoilPlrListDlg::onDeleteSelectedFiles()
 {
-    int resp = QMessageBox::question(this, "Delete", "Delete permanently the selected files?",
+    int resp = QMessageBox::question(this, tr("Delete"), tr("Delete permanently the selected files?"),
                                      QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                                      QMessageBox::Yes);
     if(resp != QMessageBox::Yes)
@@ -297,7 +297,7 @@ void FoilPlrListDlg::onScanDirectory()
     m_pModel->removeRows(0, m_pModel->rowCount());
 
     QStandardItem *pRootItem = m_pModel->invisibleRootItem();
-    pRootItem->setText("Foils");
+    pRootItem->setText(tr("Foils"));
 
     QModelIndex ind = m_pModel->index(0,0);
     m_pTreeView->expand(ind);

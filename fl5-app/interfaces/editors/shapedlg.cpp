@@ -67,11 +67,11 @@ void ShapeDlg::setupLayout()
             QVBoxLayout *pLeftLayout = new QVBoxLayout;
             {
                 m_plwShapes  = new QListWidget;
-                m_ppbDelete  = new QPushButton("Delete selected");
+                m_ppbDelete  = new QPushButton(tr("Delete selected"));
                 m_pptoOutput = new PlainTextOutput;
                 m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Save | QDialogButtonBox::Discard);
                 {
-                    QPushButton *ppbClearOutput = new QPushButton("Clear output");
+                    QPushButton *ppbClearOutput = new QPushButton(tr("Clear output"));
                     connect(ppbClearOutput, SIGNAL(clicked(bool)), m_pptoOutput, SLOT(clear()));
                     m_pButtonBox->addButton(ppbClearOutput, QDialogButtonBox::ActionRole);
 

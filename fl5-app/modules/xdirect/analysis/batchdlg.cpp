@@ -74,7 +74,7 @@ QByteArray BatchDlg::s_HSplitterSizes;
 
 BatchDlg::BatchDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("Batch analysis");
+    setWindowTitle(tr("Batch analysis"));
 
     setWindowFlag(Qt::WindowMinMaxButtonsHint);
     m_pXFile = nullptr;
@@ -117,7 +117,7 @@ void BatchDlg::makeCommonWts()
                     {
                         QHBoxLayout *pRangeSpecLayout = new QHBoxLayout;
                         {
-                            QLabel *plabSpec = new QLabel("Specify:");
+                            QLabel *plabSpec = new QLabel(tr("Specify:"));
                             m_prbAlpha = new QRadioButton(ALPHAch);
                             m_prbCl = new QRadioButton("Cl");
                             pRangeSpecLayout->addWidget(plabSpec);
@@ -170,10 +170,10 @@ void BatchDlg::makeCommonWts()
                 {
                     QVBoxLayout *pOptionsLayout = new QVBoxLayout;
                     {
-                        m_pchStoreOpp        = new QCheckBox("Store operating points");
+                        m_pchStoreOpp        = new QCheckBox(tr("Store operating points"));
 
-                        m_pchUpdatePolarView = new QCheckBox("Update polar view");
-                        m_pchUpdatePolarView->setToolTip("Update the polar graphs after the completion of each foil/polar pair.\nUncheck for increased analysis speed.");
+                        m_pchUpdatePolarView = new QCheckBox(tr("Update polar view"));
+                        m_pchUpdatePolarView->setToolTip(tr("Update the polar graphs after the completion of each foil/polar pair.\nUncheck for increased analysis speed."));
 
                         pOptionsLayout->addWidget(m_pchStoreOpp);
                         pOptionsLayout->addWidget(m_pchUpdatePolarView);
@@ -183,11 +183,11 @@ void BatchDlg::makeCommonWts()
 
                 m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close, this);
                 {
-                    QPushButton *ppbClearBtn = new QPushButton("Clear Output");
+                    QPushButton *ppbClearBtn = new QPushButton(tr("Clear Output"));
                     connect(ppbClearBtn, SIGNAL(clicked()), m_ppto, SLOT(clear()));
                     m_pButtonBox->addButton(ppbClearBtn, QDialogButtonBox::ActionRole);
 
-                    m_ppbAnalyze   = new QPushButton("Calculate");
+                    m_ppbAnalyze   = new QPushButton(tr("Calculate"));
                     m_pButtonBox->addButton(m_ppbAnalyze, QDialogButtonBox::ActionRole);
 
                     connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onButton(QAbstractButton*)));
@@ -220,7 +220,7 @@ void BatchDlg::cleanUp()
         m_pXFile->close();
     }
     m_pButtonBox->button(QDialogButtonBox::Close)->setEnabled(true);
-    m_ppbAnalyze->setText("Calculate");
+    m_ppbAnalyze->setText(tr("Calculate"));
     m_bIsRunning = false;
     m_bCancel    = false;
     XFoil::setCancel(false);

@@ -68,7 +68,7 @@ QByteArray BatchAltDlg::s_VLeftSplitterSizes;
 
 BatchAltDlg::BatchAltDlg(QWidget *pParent) : BatchDlg(pParent)
 {
-    setWindowTitle("Multi-threaded batch analysis");
+    setWindowTitle(tr("Multi-threaded batch analysis"));
 
     setupLayout();
     connectBaseSignals();
@@ -103,7 +103,7 @@ void BatchAltDlg::setupLayout()
                 labels << "Object"  << "1234567"<< "";
 
                 m_pModel = new ObjectTreeModel(this);
-                m_pModel->setHeaderData(0, Qt::Horizontal, "Objects", Qt::DisplayRole);
+                m_pModel->setHeaderData(0, Qt::Horizontal, tr("Objects"), Qt::DisplayRole);
                 m_pModel->setHeaderData(1, Qt::Horizontal, "1234567890123", Qt::EditRole);
                 m_pModel->setHeaderData(1, Qt::Horizontal, "1234567890123", Qt::DisplayRole);
                 m_pModel->setHeaderData(2, Qt::Horizontal, "123", Qt::DisplayRole);
@@ -142,8 +142,8 @@ void BatchAltDlg::setupLayout()
         pFrame->setLayout(pLeftLayout);
     }
 
-    m_pLeftTabWt->addTab(pFrame, "Analyses");
-    m_pLeftTabWt->addTab(m_pfrRangeVars, "Operating points");
+    m_pLeftTabWt->addTab(pFrame, tr("Analyses"));
+    m_pLeftTabWt->addTab(m_pfrRangeVars, tr("Operating points"));
 
     QHBoxLayout *pBoxesLayout = new QHBoxLayout;
     {
@@ -350,7 +350,7 @@ void BatchAltDlg::onAnalyze()
         return;
     }
 
-    m_ppbAnalyze->setText("Cancel");
+    m_ppbAnalyze->setText(tr("Cancel"));
 
     m_nAnalysis = m_AnalysisPair.size();
     m_nTaskDone = 0;
@@ -379,7 +379,7 @@ void BatchAltDlg::onAnalyze()
 #if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
             QFuture<void> future = QtConcurrent::run(&BatchAltDlg::batchLaunch, this);
 #else
-            QtConcurrent::run(pXFoilTask, &XFoilTask::run);
+            QtConcurrent::run([this](){ this->batchLaunch(); });
 #endif
 }
 

@@ -55,7 +55,7 @@ double ShapeFixerDlg::s_MaxTolerance = 1.e-3; //no idea
 
 ShapeFixerDlg::ShapeFixerDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("Shape fixer");
+    setWindowTitle(tr("Shape fixer"));
     setupLayout();
     connectSignals();
 }
@@ -65,9 +65,9 @@ void ShapeFixerDlg::setupLayout()
 {
     QGridLayout *pFixerLayout = new QGridLayout;
     {
-        QLabel *pLabPrec   = new QLabel("Precision");
-        QLabel *pLabMinTol = new QLabel("Min. tolerance");
-        QLabel *pLabMaxTol = new QLabel("Max. tolerance");
+        QLabel *pLabPrec   = new QLabel(tr("Precision"));
+        QLabel *pLabMinTol = new QLabel(tr("Min. tolerance"));
+        QLabel *pLabMaxTol = new QLabel(tr("Max. tolerance"));
         pLabPrec->setAlignment(::Qt::AlignRight |Qt::AlignVCenter);
         pLabMinTol->setAlignment(::Qt::AlignRight |Qt::AlignVCenter);
         pLabMaxTol->setAlignment(::Qt::AlignRight |Qt::AlignVCenter);
@@ -108,12 +108,12 @@ void ShapeFixerDlg::setupLayout()
     }
     QGridLayout *pActionLayout = new QGridLayout;
     {
-        m_ppbListShapes = new QPushButton("List shapes");
-        m_ppbStitch = new QPushButton("Stitch shapes");
-        m_ppbReverseShapes = new QPushButton("Reverse shapes");
-        m_ppbSmallEdges = new QPushButton("Remove small edges");
-        m_ppbFixGaps = new QPushButton("Fix gaps");
-        m_ppbFixAll = new QPushButton("Fix everything");
+        m_ppbListShapes = new QPushButton(tr("List shapes"));
+        m_ppbStitch = new QPushButton(tr("Stitch shapes"));
+        m_ppbReverseShapes = new QPushButton(tr("Reverse shapes"));
+        m_ppbSmallEdges = new QPushButton(tr("Remove small edges"));
+        m_ppbFixGaps = new QPushButton(tr("Fix gaps"));
+        m_ppbFixAll = new QPushButton(tr("Fix everything"));
         pActionLayout->addWidget(m_ppbStitch);
         pActionLayout->addWidget(m_ppbReverseShapes);
         pActionLayout->addWidget(m_ppbSmallEdges);
@@ -125,7 +125,7 @@ void ShapeFixerDlg::setupLayout()
 
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Discard, this);
     {
-        m_ppbClearOutput = new QPushButton("Clear output");
+        m_ppbClearOutput = new QPushButton(tr("Clear output"));
         m_pButtonBox->addButton(m_ppbClearOutput, QDialogButtonBox::ActionRole);
         connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onButton(QAbstractButton*)));
     }
@@ -246,8 +246,8 @@ void ShapeFixerDlg::onStitchShapes()
     stitcher.Perform();
 
     QString logmsg;
-    logmsg += "Performing FACE stitching:\n";
-    logmsg += QString("   Nb of free edges=%1\n").arg(stitcher.NbFreeEdges());
+    logmsg += tr("Performing FACE stitching:\n");
+    logmsg += tr("   Nb of free edges=%1\n").arg(stitcher.NbFreeEdges());
     logmsg += QString("   Nb of contiguous edges=%1\n").arg(stitcher.NbContigousEdges());
 
 /*    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
@@ -303,11 +303,11 @@ void ShapeFixerDlg::onListShapes()
     TopoDS_ListIteratorOfListOfShape iterator;
     int ishape=0;
     QString strange, logmsg, prefix="      ";
-    strange = QString::asprintf("Fuselage is made of %d shape(s):", m_shapes.Extent());
+    strange = tr("Fuselage is made of %1 shape(s):").arg(m_shapes.Extent());
     outputMessage(strange+"\n");
     for (iterator.Initialize(m_shapes); iterator.More(); iterator.Next())
     {
-        strange = QString::asprintf("   Shape %d\n", ishape);
+        strange = tr("   Shape %1\n").arg(ishape);
         outputMessage(strange);
         listShapeProperties(logmsg, iterator.Value(), prefix);
         outputMessage(logmsg);
@@ -346,8 +346,8 @@ void ShapeFixerDlg::onReverseShapes()
     for (iterator.Initialize(m_shapes); iterator.More(); iterator.Next())
     {
         iterator.Value().Reverse();
-        if     (iterator.Value().Orientation()==TopAbs_FORWARD)  strange = QString::asprintf("   After: sub-shape %d has FORWARD  orientation", ishape);
-        else if(iterator.Value().Orientation()==TopAbs_REVERSED) strange = QString::asprintf("   After: sub-shape %d has REVERSED orientation", ishape);
+        if     (iterator.Value().Orientation()==TopAbs_FORWARD)  strange = tr("   After: sub-shape %1 has FORWARD  orientation").arg(ishape);
+        else if(iterator.Value().Orientation()==TopAbs_REVERSED) strange = tr("   After: sub-shape %1 has REVERSED orientation").arg(ishape);
 
         logmsg += strange +"\n";
         ishape++;
@@ -374,7 +374,7 @@ void ShapeFixerDlg::onSmallEdges()
     }
 
     m_shapes = fixedshapes;
-    outputMessage("Finished fixing small edges if any:\n");
+    outputMessage(tr("Finished fixing small edges if any:\n"));
     onListShapes();
 }
 
@@ -396,7 +396,7 @@ void ShapeFixerDlg::onFixGaps()
     }
 //    SFWF->DropSmallEdgesMode() = Standard_True;
       m_shapes = fixedshapes;
-      outputMessage("Finished fixing gaps if any:\n");
+      outputMessage(tr("Finished fixing gaps if any:\n"));
       onListShapes();
 }
 
@@ -418,7 +418,7 @@ void ShapeFixerDlg::onFixAll()
         sfs->SetMaxTolerance(s_MaxTolerance);
         sfs->Perform();
         TopoDS_Shape aResult = sfs->Shape();
-        strange = QString::asprintf("Fixed shape %d\n", ishape);
+        strange = tr("Fixed shape %1\n").arg(ishape);
         outputMessage(strange);
         listShapeProperties(logmsg, aResult, prefix);
 

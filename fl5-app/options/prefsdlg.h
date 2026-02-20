@@ -72,6 +72,8 @@ class PrefsDlg : public QDialog
         static void setStyleName(QString const &name){s_StyleName=name;}
         static QString const &styleName()  {return s_StyleName;}
 
+        static void setLanguage(QString const &lang) { s_Language = lang; }
+        static QString const &language() { return s_Language; }
 
 
     private:
@@ -87,6 +89,7 @@ class PrefsDlg : public QDialog
         void onButton(QAbstractButton *pButton);
         void onItemChanged(QTreeWidgetItem*pNewItem, QTreeWidgetItem *pPreviousItem);
         void onLocalization();
+        void onLanguageChanged(int index);
         void onMultiThreading();
         void onOK();
         void onStyleChanged(const QString &StyleName);
@@ -133,6 +136,7 @@ class PrefsDlg : public QDialog
 
         QCheckBox *m_pchLocale;
         QLabel *m_plabLocalOutput;
+        QComboBox *m_pcbLanguage;
 
         FloatEdit *m_pdeScaleFactor;
         IntEdit *m_pieIconSize;
@@ -141,6 +145,7 @@ class PrefsDlg : public QDialog
         QCheckBox *m_pchStyleSheetOverride;
 
         static QString s_StyleName;
+        static QString s_Language;
 
 
 

@@ -76,7 +76,7 @@ QVector<double> BatchXFoilDlg::s_NCritList;
 
 BatchXFoilDlg::BatchXFoilDlg(QWidget *pParent) : BatchDlg(pParent)
 {
-    setWindowTitle("Multi-threaded batch analysis");
+    setWindowTitle(tr("Multi-threaded batch analysis"));
 
     setupLayout();
     connectBaseSignals();
@@ -100,16 +100,16 @@ void BatchXFoilDlg::setupLayout()
     {
         QVBoxLayout *pPolarsLayout = new QVBoxLayout;
         {
-            QGroupBox *pPolarTypeBox = new QGroupBox("Polar type");
+            QGroupBox *pPolarTypeBox = new QGroupBox(tr("Polar type"));
             {
                 QHBoxLayout *pPolarTypeLayout =new QHBoxLayout;
                 {
-                    m_prbT1 = new QRadioButton("T1");
-                    m_prbT1->setToolTip("Fixed speed polar");
-                    m_prbT2 = new QRadioButton("T2");
-                    m_prbT2->setToolTip("Fixed lift polar");
-                    m_prbT3 = new QRadioButton("T3");
-                    m_prbT3->setToolTip("Rubber chord polar");
+                    m_prbT1 = new QRadioButton(tr("T1"));
+                    m_prbT1->setToolTip(tr("Fixed speed polar"));
+                    m_prbT2 = new QRadioButton(tr("T2"));
+                    m_prbT2->setToolTip(tr("Fixed lift polar"));
+                    m_prbT3 = new QRadioButton(tr("T3"));
+                    m_prbT3->setToolTip(tr("Rubber chord polar"));
                     pPolarTypeLayout->addStretch();
                     pPolarTypeLayout->addWidget(m_prbT1);
                     pPolarTypeLayout->addStretch();
@@ -134,10 +134,10 @@ void BatchXFoilDlg::setupLayout()
                 m_pReModel->setColumnCount(5);
                 m_pReModel->setActionColumn(4);
                 m_pReModel->setHeaderData(0, Qt::Horizontal, QString());
-                m_pReModel->setHeaderData(1, Qt::Horizontal, "Re");
-                m_pReModel->setHeaderData(2, Qt::Horizontal, "Mach");
-                m_pReModel->setHeaderData(3, Qt::Horizontal, "NCrit");
-                m_pReModel->setHeaderData(4, Qt::Horizontal, "Actions");
+                m_pReModel->setHeaderData(1, Qt::Horizontal, tr("Re"));
+                m_pReModel->setHeaderData(2, Qt::Horizontal, tr("Mach"));
+                m_pReModel->setHeaderData(3, Qt::Horizontal, tr("NCrit"));
+                m_pReModel->setHeaderData(4, Qt::Horizontal, tr("Actions"));
 
                 m_pcptReTable->setModel(m_pReModel);
 
@@ -153,28 +153,28 @@ void BatchXFoilDlg::setupLayout()
                 m_pFloatDelegate->setItemTypes({XflDelegate::CHECKBOX, XflDelegate::DOUBLE, XflDelegate::DOUBLE, XflDelegate::DOUBLE, XflDelegate::ACTION});
                 m_pcptReTable->setItemDelegate(m_pFloatDelegate);
 
-                m_pInsertBeforeAct  = new QAction("Insert before", this);
-                m_pInsertAfterAct   = new QAction("Insert after",  this);
-                m_pDeleteAct        = new QAction("Delete",        this);
+                m_pInsertBeforeAct  = new QAction(tr("Insert before"), this);
+                m_pInsertAfterAct   = new QAction(tr("Insert after"),  this);
+                m_pDeleteAct        = new QAction(tr("Delete"),        this);
             }
 
-            QGroupBox *m_pgbTransVars = new QGroupBox("Forced Transitions");
+            QGroupBox *m_pgbTransVars = new QGroupBox(tr("Forced Transitions"));
             {
                 QGridLayout *pTransVarsLayout = new QGridLayout;
                 {
-                    QLabel *plabTopTrans = new QLabel("Top transition location (x/c)");
-                    QLabel *plabBotTrans = new QLabel("Bottom transition location (x/c)");
+                    QLabel *plabTopTrans = new QLabel(tr("Top transition location (x/c)"));
+                    QLabel *plabBotTrans = new QLabel(tr("Bottom transition location (x/c)"));
                     m_pfeXTopTr = new FloatEdit(1.0f);
                     m_pfeXBotTr = new FloatEdit(1.0f);
 
-                    m_pchTransAtHinge = new QCheckBox("Force transition at hinge location");
-                    m_pchTransAtHinge->setToolTip("<p>"
+                    m_pchTransAtHinge = new QCheckBox(tr("Force transition at hinge location"));
+                    m_pchTransAtHinge->setToolTip(tr("<p>"
                                                   "Forces the laminar to turbulent transition at the hinge's location on both the top and bottom surfaces.<br>"
                                                   "The transition location is set as the most upwind position between the hinge's location "
                                                   "and the forced transition location.<br>"
                                                   "Only used in the case of flapped surfaces.<br>"
                                                   "This greatly increases the convergence success rate and the speed of XFoil calculations."
-                                                  "</p>");
+                                                  "</p>"));
 
                     pTransVarsLayout->addWidget(plabTopTrans,      1, 1);
                     pTransVarsLayout->addWidget(m_pfeXTopTr,       1, 2);
@@ -194,9 +194,9 @@ void BatchXFoilDlg::setupLayout()
         m_pfrPolars->setLayout(pPolarsLayout);
     }
 
-    m_pLeftTabWt->addTab(m_plwNameList,  "Foils");
-    m_pLeftTabWt->addTab(m_pfrPolars,    "Polars");
-    m_pLeftTabWt->addTab(m_pfrRangeVars, "Operating points");
+    m_pLeftTabWt->addTab(m_plwNameList,  tr("Foils"));
+    m_pLeftTabWt->addTab(m_pfrPolars,    tr("Polars"));
+    m_pLeftTabWt->addTab(m_pfrRangeVars, tr("Operating points"));
 
     QHBoxLayout *pBoxesLayout = new QHBoxLayout;
     {
@@ -734,7 +734,7 @@ void BatchXFoilDlg::onAnalyze()
     m_ppto->onAppendQText(strong);
 
 
-    m_ppbAnalyze->setText("Cancel");
+    m_ppbAnalyze->setText(tr("Cancel"));
 
     m_nAnalysis = 0;
     m_nTaskDone = 0;
@@ -812,7 +812,7 @@ void BatchXFoilDlg::onAnalyze()
 #if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
             QFuture<void> future = QtConcurrent::run(&BatchXFoilDlg::batchLaunch, this);
 #else
-            QtConcurrent::run(pXFoilTask, &XFoilTask::run);
+            QtConcurrent::run([this](){ this->batchLaunch(); });
 #endif
 }
 

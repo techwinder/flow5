@@ -185,7 +185,7 @@ void SailSplineDlg::initDialog(Sail *pSail)
     }
 
     m_ppbTETop->setEnabled(false);
-    m_ppbTEBotMid->setText("Mid. panels");
+    m_ppbTEBotMid->setText(tr("Mid. panels"));
     m_pchGuessOpposite->setEnabled(false);
     m_pfeTEAngle->setEnabled(false);
 }
@@ -692,7 +692,7 @@ void SailSplineDlg::onDeleteSection()
 
     if(pSS->sectionCount()<=2)
     {
-        QMessageBox::warning(window(), "Warning", "At least two sections are required to define the sail");
+        QMessageBox::warning(window(), tr("Warning"), tr("At least two sections are required to define the sail"));
         return;
     }
 

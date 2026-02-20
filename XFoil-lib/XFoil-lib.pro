@@ -10,7 +10,11 @@ TEMPLATE = lib
 
 DEFINES += XFOIL_LIBRARY
 
-CONFIG += c++17
+greaterThan(QT_MAJOR_VERSION, 5) {
+    CONFIG += c++20
+} else {
+    CONFIG += c++17
+}
 
 
 SOURCES += \

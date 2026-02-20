@@ -29,6 +29,7 @@
 //#define _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR
 
 #include <QCoreApplication>
+#include <QDateTime>
 #include <QFileInfo>
 #include <QDir>
 

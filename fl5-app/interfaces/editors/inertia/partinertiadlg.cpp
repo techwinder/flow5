@@ -66,7 +66,7 @@ Quaternion PartInertiaDlg::s_ab_quat(-0.212012, 0.148453, -0.554032, -0.79124);
 
 PartInertiaDlg::PartInertiaDlg(WingXfl *pWing, Fuse *pFuse, QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("Inertia Properties");
+    setWindowTitle(tr("Inertia Properties"));
     setWindowFlag(Qt::WindowMinMaxButtonsHint);
 
     if(pWing)

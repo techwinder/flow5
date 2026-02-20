@@ -57,7 +57,7 @@ gl3dFlowVtx::gl3dFlowVtx(QWidget *pParent) : gl3dTestGLView(pParent)
 
     m_bAxes = false;
 
-    m_stackInterval.resize(50, 0);
+    m_stackInterval.resize(50);
 
     QPalette palette;
     palette.setColor(QPalette::WindowText, DisplayOptions::textColor());
@@ -306,7 +306,7 @@ void gl3dFlowVtx::initializeGL()
         n=n/2;
     }while(n>1);
 
-    m_plabNMaxGroups->setText(QString("Max. number of groups = 2<sup>")+QString::asprintf("%d", pow)+QString("</sup>"));
+    m_plabNMaxGroups->setText(tr("Max. number of groups = 2<sup>%1</sup>").arg(pow));
 #endif
 }
 
@@ -396,8 +396,8 @@ void gl3dFlowVtx::glMake3dObjects()
     {
         // use only one buffer object used both as VBO and SSBO
         int NBoids = s_NGroups * GROUP_SIZE;
-        m_plabNParticles->setText(QString::asprintf("Number of particles = %d", NBoids));
-        //need to use 4 vertices for velocity due to std140/430 padding constraints for vec3:
+        m_plabNParticles->setText(tr("Number of particles = %1").arg(NBoids));
+        //need to use v4 vertices for velocity due to std140/430 padding constraints for vec3:
         int buffersize = NBoids*(4+4+4); //4 vertices + 4 velocity + 4 color components for each boid
 
         QColor clr(Qt::darkCyan);

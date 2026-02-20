@@ -25,12 +25,15 @@
 #pragma once
 
 #include <QMenu>
+#include <QCoreApplication>
 
 class XSail;
 class MainFrame;
 
 class XSailMenus
 {
+    Q_DECLARE_TR_FUNCTIONS(XSailMenus)
+
     friend class XSail;
     friend class MainFrame;
     friend class gl3dXSailView;

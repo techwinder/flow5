@@ -143,13 +143,13 @@ void CrossFlowCtrls::setupLayout()
 {
     QVBoxLayout *pWakeLayout = new QVBoxLayout;
     {
-        QGroupBox *pPlaneGeomBox = new QGroupBox("Crossflow plane geometry");
+        QGroupBox *pPlaneGeomBox = new QGroupBox(tr("Crossflow plane geometry"));
         {
             QVBoxLayout *pPlaneGeomLayout = new QVBoxLayout;
             {
                 QHBoxLayout *pXPosLayout = new QHBoxLayout;
                 {
-                    QLabel *pLabXPos = new QLabel("X");
+                    QLabel *pLabXPos = new QLabel(tr("X"));
                     m_pslPlanePos = new QSlider(Qt::Horizontal);
                     m_pslPlanePos->setRange(0, 1000);
                     m_pslPlanePos->setTickInterval(100);
@@ -169,9 +169,9 @@ void CrossFlowCtrls::setupLayout()
                     m_pdeWidth  = new FloatEdit;
                     m_pdeHeight = new FloatEdit;
 
-                    pPlaneParamsLayout->addWidget(new QLabel("Y"),     1, 2, Qt::AlignCenter);
-                    pPlaneParamsLayout->addWidget(new QLabel("Z"),     1, 3, Qt::AlignCenter);
-                    pPlaneParamsLayout->addWidget(new QLabel("Size:"), 2, 1, Qt::AlignRight | Qt::AlignVCenter);
+                    pPlaneParamsLayout->addWidget(new QLabel(tr("Y")),     1, 2, Qt::AlignCenter);
+                    pPlaneParamsLayout->addWidget(new QLabel(tr("Z")),     1, 3, Qt::AlignCenter);
+                    pPlaneParamsLayout->addWidget(new QLabel(tr("Size:")), 2, 1, Qt::AlignRight | Qt::AlignVCenter);
                     pPlaneParamsLayout->addWidget(m_pdeWidth,          2, 2);
                     pPlaneParamsLayout->addWidget(m_pdeHeight,         2, 3);
                     pPlaneParamsLayout->addWidget(m_pLabLen2,          2, 4);
@@ -183,20 +183,20 @@ void CrossFlowCtrls::setupLayout()
             pPlaneGeomBox->setLayout(pPlaneGeomLayout);
         }
 
-        QGroupBox *pVelocityBox = new QGroupBox("Velocity vectors");
+        QGroupBox *pVelocityBox = new QGroupBox(tr("Velocity vectors"));
         {
             QVBoxLayout *pParamLayout = new QVBoxLayout;
             {
-                QString tip("<p>Scale the vectors using the velocity slider in the scales tab</p>");
-                m_pchCrossFlowVel = new QCheckBox("Perturbation velocities");
+            QString tip(tr("<p>Scale the vectors using the velocity slider in the scales tab</p>"));
+            m_pchCrossFlowVel = new QCheckBox(tr("Perturbation velocities"));
                 m_pchCrossFlowVel->setToolTip(tip);
 
                 QHBoxLayout *pSamplesLayout =new QHBoxLayout;
                 {
-                    QLabel *pLabVel = new QLabel("Samples:");
+                    QLabel *pLabVel = new QLabel(tr("Samples:"));
                     m_pieVelocitySamples = new IntEdit;
-                    m_pieVelocitySamples->setToolTip("<p>The number of velocity vectors in each of the y and z directions.<br>"
-                                                     "Scale the vectors using the velocity slider in the scales tab.</p>");
+                    m_pieVelocitySamples->setToolTip(tr("<p>The number of velocity vectors in each of the y and z directions.<br>"
+                                                      "Scale the vectors using the velocity slider in the scales tab.</p>"));
                     pSamplesLayout->addWidget(pLabVel);
                     pSamplesLayout->addWidget(m_pieVelocitySamples);
                     pSamplesLayout->addStretch();
@@ -207,15 +207,15 @@ void CrossFlowCtrls::setupLayout()
             pVelocityBox->setLayout(pParamLayout);
         }
 
-        QGroupBox *pVorticityBox = new QGroupBox("Vorticity");
+        QGroupBox *pVorticityBox = new QGroupBox(tr("Vorticity"));
         {
             QVBoxLayout *pVorticityLayout = new QVBoxLayout;
             {
                 QHBoxLayout *pComponentLayout = new QHBoxLayout;
                 {
-                    m_pchVorticityMap = new QCheckBox("Crossflow vorticity (VPW only)");
+                    m_pchVorticityMap = new QCheckBox(tr("Crossflow vorticity (VPW only)"));
                     m_pcbOmegaDir = new QComboBox;
-                    m_pcbOmegaDir->addItems({"X", "Y", "Z", "Norm"});
+                    m_pcbOmegaDir->addItems({tr("X"), tr("Y"), tr("Z"), tr("Norm")});
                     m_pcbOmegaDir->setCurrentIndex(s_OmegaDir);
                     pComponentLayout->addWidget(m_pchVorticityMap);
                     pComponentLayout->addStretch();
@@ -224,21 +224,21 @@ void CrossFlowCtrls::setupLayout()
 
                 QGridLayout *pParamLayout = new QGridLayout;
                 {
-                    m_pchAutoOmegaScale = new QCheckBox("Auto scale");
+                    m_pchAutoOmegaScale = new QCheckBox(tr("Auto scale"));
                     m_pdeOmegaMin = new FloatEdit(s_OmegaMin);
                     m_pdeOmegaMax = new FloatEdit(s_OmegaMax);
 
                     m_pieVorticitySamples = new IntEdit;
-                    m_pieVorticitySamples->setToolTip("<p>Number of colour samples in the y and z directions.<br>"
-                                                      "Recommendation: N = 50 to 200 </p>");
+                    m_pieVorticitySamples->setToolTip(tr("<p>Number of colour samples in the y and z directions.<br>"
+                                                      "Recommendation: N = 50 to 200 </p>"));
 
-                    pParamLayout->addWidget(new QLabel("Min."),       3, 2, Qt::AlignCenter);
-                    pParamLayout->addWidget(new QLabel("Max."),       3, 3, Qt::AlignCenter);
+                    pParamLayout->addWidget(new QLabel(tr("Min.")),       3, 2, Qt::AlignCenter);
+                    pParamLayout->addWidget(new QLabel(tr("Max.")),       3, 3, Qt::AlignCenter);
                     pParamLayout->addWidget(m_pchAutoOmegaScale,      4, 1, Qt::AlignRight | Qt::AlignVCenter);
                     pParamLayout->addWidget(m_pdeOmegaMin,            4, 2);
                     pParamLayout->addWidget(m_pdeOmegaMax,            4, 3);
 
-                    pParamLayout->addWidget(new QLabel("Samples:"),   5, 1, Qt::AlignRight | Qt::AlignVCenter);
+                    pParamLayout->addWidget(new QLabel(tr("Samples:")),   5, 1, Qt::AlignRight | Qt::AlignVCenter);
                     pParamLayout->addWidget(m_pieVorticitySamples,    5, 2, Qt::AlignRight | Qt::AlignVCenter);
 
                     pParamLayout->setRowStretch(7,1);

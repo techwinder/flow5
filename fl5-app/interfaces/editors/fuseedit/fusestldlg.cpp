@@ -51,7 +51,7 @@ QByteArray FuseStlDlg::s_Geometry;
 
 FuseStlDlg::FuseStlDlg(QWidget *pParent) : FuseDlg(pParent)
 {
-    setWindowTitle("STL fuse editor");
+    setWindowTitle(tr("STL fuse editor"));
 
     m_pFuseStl = nullptr;
     setupLayout();
@@ -101,33 +101,33 @@ void FuseStlDlg::setupLayout()
                 {
                     QVBoxLayout *pMeshLayout = new QVBoxLayout;
                     {
-                        QGroupBox *pSplitTriangleBox = new QGroupBox("Split mesh panels");
+                        QGroupBox *pSplitTriangleBox = new QGroupBox(tr("Split mesh panels"));
                         {
                             QGridLayout *pSplitLayout = new QGridLayout;
                             {
-                                QString tip = "<p>This action splits all triangular panels with any edge length "
+                                QString tip = tr("<p>This action splits all triangular panels with any edge length "
                                                  "greater than the specified value at the midpoints of all 3 edges.<br>"
                                                  "This generate 4 new triangular sub-panels which are added to the mesh"
                                                  "in replacement of the original triangular panel.<br>"
                                                  "Make sure to select a not-too-small max. edge length to avoid excessive "
                                                  "mesh sizes.<br>"
-                                                 "This has no effect on the tessellation.</p>";
-                                m_ppbSplitTriangles = new QPushButton("Split oversized panels");
+                                                 "This has no effect on the tessellation.</p>");
+                                m_ppbSplitTriangles = new QPushButton(tr("Split oversized panels"));
                                 m_ppbSplitTriangles->setToolTip(tip);
 
-                                tip = "<p>This action restores a mesh by converting the base STL triangulation "
-                                         "to triangular panels</p>";
-                                m_ppbRestoreDefaultMesh = new QPushButton("Restore default mesh");
+                                tip = tr("<p>This action restores a mesh by converting the base STL triangulation "
+                                         "to triangular panels</p>");
+                                m_ppbRestoreDefaultMesh = new QPushButton(tr("Restore default mesh"));
                                 m_ppbRestoreDefaultMesh->setToolTip(tip);
-                                QLabel *pLabMaxEdgeLength = new QLabel("Max. edge length");
+                                QLabel *pLabMaxEdgeLength = new QLabel(tr("Max. edge length"));
                                 pLabMaxEdgeLength->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
                                 QLabel *pLabUnit = new QLabel(Units::lengthUnitQLabel());
                                 m_pdeMaxEdgeLength = new FloatEdit;
                                 m_pdeMaxEdgeLength->setToolTip(tip);
 
-                                QLabel *pLabMaxPanelCount = new QLabel("Max. panel count");
+                                QLabel *pLabMaxPanelCount = new QLabel(tr("Max. panel count"));
                                 pLabMaxPanelCount->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                                tip = "<p>The split operation will stop if the total number of panels exceeds this value</p>";
+                                tip = tr("<p>The split operation will stop if the total number of panels exceeds this value</p>");
                                 m_pieMaxPanelCount = new IntEdit;
                                 m_pieMaxPanelCount->setToolTip(tip);
 
@@ -147,7 +147,7 @@ void FuseStlDlg::setupLayout()
 
                         QHBoxLayout *pOtherActionsLayout = new QHBoxLayout;
                         {
-                            QMenu *pBodyMenu = new QMenu("Actions...", this);
+                            QMenu *pBodyMenu = new QMenu(tr("Actions..."), this);
                             {
                                 pBodyMenu->addAction(m_pTranslate);
                                 pBodyMenu->addAction(m_pScale);
@@ -155,7 +155,7 @@ void FuseStlDlg::setupLayout()
                                 pBodyMenu->addSeparator();
                                 pBodyMenu->addAction(m_pFuseInertia);
                             }
-                            QPushButton *pMenuButton = new QPushButton("Actions");
+                            QPushButton *pMenuButton = new QPushButton(tr("Actions"));
                             pMenuButton->setMenu(pBodyMenu);
 
                             pOtherActionsLayout->addWidget(pMenuButton);
@@ -167,15 +167,15 @@ void FuseStlDlg::setupLayout()
                     }
                     pMeshTab->setLayout(pMeshLayout);
                 }
-                pDefinitionTabWt->addTab(m_pMetaFrame, "Meta");
-                pDefinitionTabWt->addTab(pMeshTab, "Mesh");
+                pDefinitionTabWt->addTab(m_pMetaFrame, tr("Meta"));
+                pDefinitionTabWt->addTab(pMeshTab, tr("Mesh"));
             }
 
             m_pptoOutput = new PlainTextOutput;
 
-            QPushButton *pMenuButton = new QPushButton("Actions");
+            QPushButton *pMenuButton = new QPushButton(tr("Actions"));
             {
-                QMenu *pBodyMenu = new QMenu("Actions...",this);
+                QMenu *pBodyMenu = new QMenu(tr("Actions..."),this);
                 {
                     pBodyMenu->addAction(m_pTranslate);
                     pBodyMenu->addAction(m_pScale);

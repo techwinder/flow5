@@ -272,17 +272,17 @@ void CPTableView::resizeEvent(QResizeEvent *pEvent)
 
 void CPTableView::contextMenuEvent(QContextMenuEvent *pEvent)
 {
-    QAction *pCopyAction = new QAction("Copy", this);
+    QAction *pCopyAction = new QAction(tr("Copy"), this);
     pCopyAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_C));
 
-    QAction *pPasteAction = new QAction("Paste", this);
+    QAction *pPasteAction = new QAction(tr("Paste"), this);
     pPasteAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_V));
     pPasteAction->setEnabled(m_bIsEditable);
 
     connect(pCopyAction,  SIGNAL(triggered(bool)), this, SLOT(onCopySelection()));
     connect(pPasteAction, SIGNAL(triggered(bool)), this, SLOT(onPaste()));
 
-    QMenu *pCPTableMenu = new QMenu("context menu", this);
+    QMenu *pCPTableMenu = new QMenu(tr("context menu"), this);
     {
         pCPTableMenu->addAction(pCopyAction);
         pCPTableMenu->addAction(pPasteAction);

@@ -65,7 +65,7 @@ PlaneExplorer::PlaneExplorer(QWidget *pParent) : QWidget(pParent)
     setupLayout();
 
     m_pModel = new ObjectTreeModel(this);
-    m_pModel->setHeaderData(0, Qt::Horizontal, "Objects", Qt::DisplayRole);
+    m_pModel->setHeaderData(0, Qt::Horizontal, tr("Objects"), Qt::DisplayRole);
     m_pModel->setHeaderData(1, Qt::Horizontal, "1234567890123", Qt::EditRole);
     m_pModel->setHeaderData(1, Qt::Horizontal, "1234567890123", Qt::DisplayRole);
     m_pModel->setHeaderData(2, Qt::Horizontal, "123", Qt::DisplayRole);

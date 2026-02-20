@@ -80,9 +80,7 @@ int Panel3TestDlg::s_VComp = 0;
 
 Panel3TestDlg::Panel3TestDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("Panel3 test");
-    setWindowFlag(Qt::WindowStaysOnTopHint);
-
+    setWindowTitle(tr("Panel3 test"));
     m_pGraphWt = new GraphWt(this);
     {
         m_pGraphWt->showLegend(true);
@@ -147,12 +145,12 @@ QFrame* Panel3TestDlg::makeControls()
 
         QVBoxLayout * pFrameLayout =new QVBoxLayout;
         {
-            QGroupBox *pTypeBox = new QGroupBox("Panel type");
+            QGroupBox *pTypeBox = new QGroupBox(tr("Panel type"));
             {
                 QHBoxLayout *pTypeLayout = new QHBoxLayout;
                 {
-                    m_prbP3 = new QRadioButton("Triangles");
-                    m_prbP4 = new QRadioButton("Quads");
+                    m_prbP3 = new QRadioButton(tr("Triangles"));
+                    m_prbP4 = new QRadioButton(tr("Quads"));
                     pTypeLayout->addStretch();
                     pTypeLayout->addWidget(m_prbP3);
                     pTypeLayout->addStretch();

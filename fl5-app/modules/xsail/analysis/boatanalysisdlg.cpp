@@ -83,20 +83,20 @@ void BoatAnalysisDlg::setupLayout()
 
     m_pButtonBox = new QDialogButtonBox();
     {
-        m_pchLiveVortons = new QCheckBox("Live VPW update");
+        m_pchLiveVortons = new QCheckBox(tr("Live VPW update"));
         m_pchLiveVortons->setChecked(Task3d::bLiveUpdate());
         m_pButtonBox->addButton(m_pchLiveVortons, QDialogButtonBox::ActionRole);
         connect(m_pchLiveVortons, SIGNAL(clicked(bool)), SLOT(onLiveVortons()));
 
-        m_pchKeepOpenOnErrors = new QCheckBox("Keep opened on errors");
+        m_pchKeepOpenOnErrors = new QCheckBox(tr("Keep opened on errors"));
         m_pButtonBox->addButton(m_pchKeepOpenOnErrors, QDialogButtonBox::ActionRole);
         connect(m_pchKeepOpenOnErrors, SIGNAL(clicked(bool)), SLOT(onKeepOpenErrors()));
 
-        m_ppbStopIter = new QPushButton("End iterations");
+        m_ppbStopIter = new QPushButton(tr("End iterations"));
         m_pButtonBox->addButton(m_ppbStopIter, QDialogButtonBox::ActionRole);
         connect(m_ppbStopIter, SIGNAL(clicked(bool)), SLOT(onStopIterations()));
 
-        m_ppbCloseDialog = new QPushButton("Cancel/Close");
+        m_ppbCloseDialog = new QPushButton(tr("Cancel/Close"));
         m_pButtonBox->addButton(m_ppbCloseDialog, QDialogButtonBox::ActionRole);
         connect(m_ppbCloseDialog, SIGNAL(clicked(bool)), SLOT(onCancelClose()));
         m_ppbCloseDialog->setDefault(true);
@@ -241,7 +241,7 @@ void BoatAnalysisDlg::onTaskFinished()
         m_bHasErrors = m_pActiveTask->hasErrors();
     }
 
-    m_ppbCloseDialog->setText("Close");
+    m_ppbCloseDialog->setText(tr("Close"));
     cleanUp();
     emit analysisFinished();
 }
@@ -252,7 +252,7 @@ void BoatAnalysisDlg::onCancelClose()
     if(m_pActiveTask && m_pActiveTask->isRunning())
     {
         cancelTask(m_pActiveTask);
-        m_ppbCloseDialog->setText("Close");
+        m_ppbCloseDialog->setText(tr("Close"));
     }
     else
         close();
@@ -325,7 +325,7 @@ BoatTask* BoatAnalysisDlg::analyze(Boat *pBoat, BoatPolar *pBoatPolar, std::vect
 
     Task3d::setCancelled(false);
 
-    m_ppbCloseDialog->setText("Cancel");
+    m_ppbCloseDialog->setText(tr("Cancel"));
     SailObjects::setLastBtOpp(nullptr);
 
     m_plabTaskInfo->clear();

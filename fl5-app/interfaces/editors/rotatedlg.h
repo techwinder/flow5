@@ -35,6 +35,7 @@ class FloatEdit;
 
 class RotateDlg : public XflDialog
 {
+    Q_OBJECT
     public:
         RotateDlg(QWidget *pParent);
 

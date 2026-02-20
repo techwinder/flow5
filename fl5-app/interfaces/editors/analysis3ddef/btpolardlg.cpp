@@ -58,7 +58,7 @@ BoatPolar BtPolarDlg::s_BtPolar;
 BtPolarDlg::BtPolarDlg(QWidget *pParent) : Polar3dDlg(pParent)
 {
     m_pBoat     = nullptr;
-    m_BtPolarName = "SailPolar Name";
+    m_BtPolarName = tr("SailPolar Name");
 
     makeBaseCommonControls();
     makeTables();
@@ -87,17 +87,17 @@ void BtPolarDlg::makeTables()
     //--------- VARIABLE TABLE -----------
     m_pcptBtVariable = new CPTableView(this);
     m_pcptBtVariable->setEditable(true);
-    m_pcptBtVariable->setWindowTitle("Wind gradient");
+    m_pcptBtVariable->setWindowTitle(tr("Wind gradient"));
     m_pcptBtVariable->setCharSize(50,15);
 
     //Create the model associated to the table of variables
     m_pBtVariableModel = new QStandardItemModel(this);
     m_pBtVariableModel->setRowCount(5);//temporary
     m_pBtVariableModel->setColumnCount(4);
-    m_pBtVariableModel->setHeaderData(0, Qt::Horizontal, "Design Variable");
-    m_pBtVariableModel->setHeaderData(1, Qt::Horizontal, "Min.");
-    m_pBtVariableModel->setHeaderData(2, Qt::Horizontal, "Max.");
-    m_pBtVariableModel->setHeaderData(3, Qt::Horizontal, "Unit");
+    m_pBtVariableModel->setHeaderData(0, Qt::Horizontal, tr("Design Variable"));
+    m_pBtVariableModel->setHeaderData(1, Qt::Horizontal, tr("Min."));
+    m_pBtVariableModel->setHeaderData(2, Qt::Horizontal, tr("Max."));
+    m_pBtVariableModel->setHeaderData(3, Qt::Horizontal, tr("Unit"));
     m_pcptBtVariable->setModel(m_pBtVariableModel);
 
     QHeaderView *pHorizontalHeader = m_pcptBtVariable->horizontalHeader();
@@ -176,7 +176,7 @@ void BtPolarDlg::fillVariableList()
     // row 0 is Boat Speed range
     int row = 0;
     ind = m_pBtVariableModel->index(row, 0, QModelIndex());
-    m_pBtVariableModel->setData(ind, "Boat speed");
+    m_pBtVariableModel->setData(ind, tr("Boat speed"));
     ind = m_pBtVariableModel->index(row, 1, QModelIndex());
     m_pBtVariableModel->setData(ind, s_BtPolar.m_VBtMin*Units::mstoUnit());
     ind = m_pBtVariableModel->index(row, 2, QModelIndex());
@@ -187,7 +187,7 @@ void BtPolarDlg::fillVariableList()
     // row 1 is AWS range
     row++;
     ind = m_pBtVariableModel->index(row, 0, QModelIndex());
-    m_pBtVariableModel->setData(ind, "True Wind Speed (TWS)");
+    m_pBtVariableModel->setData(ind, tr("True Wind Speed (TWS)"));
     ind = m_pBtVariableModel->index(row, 1, QModelIndex());
     m_pBtVariableModel->setData(ind, s_BtPolar.m_TWSMin*Units::mstoUnit());
     ind = m_pBtVariableModel->index(row, 2, QModelIndex());
@@ -198,7 +198,7 @@ void BtPolarDlg::fillVariableList()
     // row 2 is AWA range
     row++;
     ind = m_pBtVariableModel->index(row, 0, QModelIndex());
-    m_pBtVariableModel->setData(ind, "True Wind Angle (TWA)");
+    m_pBtVariableModel->setData(ind, tr("True Wind Angle (TWA)"));
     ind = m_pBtVariableModel->index(row, 1, QModelIndex());
     m_pBtVariableModel->setData(ind, s_BtPolar.m_TWAMin);
     ind = m_pBtVariableModel->index(row, 2, QModelIndex());
@@ -209,7 +209,7 @@ void BtPolarDlg::fillVariableList()
     // row 3 is the bank angle range
     row++;
     ind = m_pBtVariableModel->index(row, 0, QModelIndex());
-    m_pBtVariableModel->setData(ind, "Heeling angle");
+    m_pBtVariableModel->setData(ind, tr("Heeling angle"));
     ind = m_pBtVariableModel->index(row, 1, QModelIndex());
     m_pBtVariableModel->setData(ind, s_BtPolar.m_PhiMin);
     ind = m_pBtVariableModel->index(row, 2, QModelIndex());
@@ -220,15 +220,15 @@ void BtPolarDlg::fillVariableList()
     // row 4 is the range of Ry
     row++;
     ind = m_pBtVariableModel->index(row, 0, QModelIndex());
-    m_pBtVariableModel->setData(ind, "Ry");
-    m_pBtVariableModel->setData(ind, "<p>Defines the rotation around the Y axis.<br>"
-                                     "Typically of use in the case of windsurf sails</p>", Qt::ToolTipRole);
+    m_pBtVariableModel->setData(ind, tr("Ry"));
+    m_pBtVariableModel->setData(ind, tr("<p>Defines the rotation around the Y axis.<br>"
+                                     "Typically of use in the case of windsurf sails</p>"), Qt::ToolTipRole);
     ind = m_pBtVariableModel->index(row, 1, QModelIndex());
     m_pBtVariableModel->setData(ind, s_BtPolar.RyMin());
-    m_pBtVariableModel->setData(ind, "<p>Defines the minimum rotation around the Y axis</p>", Qt::ToolTipRole);
+    m_pBtVariableModel->setData(ind, tr("<p>Defines the minimum rotation around the Y axis</p>"), Qt::ToolTipRole);
     ind = m_pBtVariableModel->index(row, 2, QModelIndex());
     m_pBtVariableModel->setData(ind, s_BtPolar.RyMax());
-    m_pBtVariableModel->setData(ind, "<p>Defines the maximum rotation around the Y axis</p>", Qt::ToolTipRole);
+    m_pBtVariableModel->setData(ind, tr("<p>Defines the maximum rotation around the Y axis</p>"), Qt::ToolTipRole);
     ind = m_pBtVariableModel->index(row, 3, QModelIndex());
     m_pBtVariableModel->setData(ind, DEGch);
 
@@ -238,14 +238,14 @@ void BtPolarDlg::fillVariableList()
         row++;
         Sail const *pSail = m_pBoat->sailAt(is);
         ind = m_pBtVariableModel->index(row, 0, QModelIndex());
-        m_pBtVariableModel->setData(ind, QString::fromStdString(pSail->name())+" angle");
-        m_pBtVariableModel->setData(ind, "<p>Defines the sail's rotation around its luff axis</p>", Qt::ToolTipRole);
+        m_pBtVariableModel->setData(ind, QString::fromStdString(pSail->name())+tr(" angle"));
+        m_pBtVariableModel->setData(ind, tr("<p>Defines the sail's rotation around its luff axis</p>"), Qt::ToolTipRole);
         ind = m_pBtVariableModel->index(row, 1, QModelIndex());
         m_pBtVariableModel->setData(ind, s_BtPolar.m_SailAngleMin[is]);
-        m_pBtVariableModel->setData(ind, "<p>Defines the sail's min. rotation around its luff axis</p>", Qt::ToolTipRole);
+        m_pBtVariableModel->setData(ind, tr("<p>Defines the sail's min. rotation around its luff axis</p>"), Qt::ToolTipRole);
         ind = m_pBtVariableModel->index(row, 2, QModelIndex());
         m_pBtVariableModel->setData(ind, s_BtPolar.m_SailAngleMax[is]);
-        m_pBtVariableModel->setData(ind, "<p>Defines the sail's max. rotation around its luff axis</p>", Qt::ToolTipRole);
+        m_pBtVariableModel->setData(ind, tr("<p>Defines the sail's max. rotation around its luff axis</p>"), Qt::ToolTipRole);
         ind = m_pBtVariableModel->index(row, 3, QModelIndex());
         m_pBtVariableModel->setData(ind, DEGch);
     }
@@ -445,7 +445,7 @@ void BtPolarDlg::initDialog(Boat const *pBoat, BoatPolar *pBtPolar)
         spline.duplicate(s_BtPolar.m_WindSpline);
         if(m_pWindGraphWt->graph())
         {
-            m_pWindGraphWt->graph()->addCurve("Wind gradient");
+            m_pWindGraphWt->graph()->addCurve(tr("Wind gradient"));
             spline.setColor(m_pWindGraphWt->graph()->curve(0)->fl5Clr());
         }
         spline.setStipple(Line::NOLINE);
@@ -520,7 +520,7 @@ void BtPolarDlg::onOK()
 
     if(fabs(s_BtPolar.referenceArea())<1.e-4 || fabs(s_BtPolar.referenceChordLength())<1.e-4)
     {
-        QMessageBox::warning(this, "Warning", "Reference dimensions cannot be null.");
+        QMessageBox::warning(this, tr("Warning"), tr("Reference dimensions cannot be null."));
         m_pTabWidget->setCurrentIndex(2);
         return;
     }
@@ -554,12 +554,12 @@ void BtPolarDlg::setupLayout()
     {
         QGridLayout *pRefDimLayout = new QGridLayout;
         {
-            m_pchUseSailDim = new QCheckBox("Use main sail reference dimensions");
+            m_pchUseSailDim = new QCheckBox(tr("Use main sail reference dimensions"));
             m_pfeRefArea = new FloatEdit;
             m_pfeRefChord = new FloatEdit;
-            QLabel *pLabRefArea    = new QLabel("Reference area:");
+            QLabel *pLabRefArea    = new QLabel(tr("Reference area:"));
             QLabel *pLabAreaUnit   = new QLabel(Units::areaUnitQLabel());
-            QLabel *pLabRefChord   = new QLabel("Reference chord:");
+            QLabel *pLabRefChord   = new QLabel(tr("Reference chord:"));
             QLabel *pLabLengthUnit = new QLabel(Units::lengthUnitQLabel());
 
             pRefDimLayout->addWidget(m_pchUseSailDim, 1,1,1,2);
@@ -581,9 +581,9 @@ void BtPolarDlg::setupLayout()
         QGridLayout *pInertiaDataLayout = new QGridLayout;
         {
 
-            QLabel *plab3 = new QLabel("X_CoG =");
-            QLabel *plab4 = new QLabel("Y_CoG =");
-            QLabel *plab5 = new QLabel("Z_CoG =");
+            QLabel *plab3 = new QLabel(tr("X_CoG ="));
+            QLabel *plab4 = new QLabel(tr("Y_CoG ="));
+            QLabel *plab5 = new QLabel(tr("Z_CoG ="));
             plab3->setAlignment(Qt::AlignRight | Qt::AlignCenter);
             plab4->setAlignment(Qt::AlignRight | Qt::AlignCenter);
             plab5->setAlignment(Qt::AlignRight | Qt::AlignCenter);
@@ -615,7 +615,7 @@ void BtPolarDlg::setupLayout()
     {
         QHBoxLayout *pAeroLayout = new QHBoxLayout;
         {
-            QGroupBox *pWindGradientBox = new QGroupBox("Wind gradient");
+            QGroupBox *pWindGradientBox = new QGroupBox(tr("Wind gradient"));
             {
                 QVBoxLayout *pWindGradientLayout = new QVBoxLayout;
                 {
@@ -629,8 +629,8 @@ void BtPolarDlg::setupLayout()
                         pGraph->setLegendPosition(Qt::AlignHCenter | Qt::AlignTop);
                         pGraph->setScaleType(GRAPH::RESETTING);
                         pGraph->setAuto(true);
-                        pGraph->setXVariableList({"Wind factor"});
-                        pGraph->setYVariableList({"Height (m)"});
+                        pGraph->setXVariableList({tr("Wind factor")});
+                        pGraph->setYVariableList({tr("Height (m)")});
 
                         m_pWindGraphWt->setXLimits(0.0, 1.0);
                         m_pWindGraphWt->setYLimits(0.0, 1.e10);
@@ -649,13 +649,13 @@ void BtPolarDlg::setupLayout()
 
     m_pTabWidget = new QTabWidget;
     m_pTabWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-    m_pTabWidget->addTab(m_pfrMethod,         "Method");
-    m_pTabWidget->addTab(pVariableFrame,      "Variables");
-    m_pTabWidget->addTab(pRefDimFrame,        "Ref. dimensions");
-    m_pTabWidget->addTab(pInertiaFrame,       "Inertia");
-    m_pTabWidget->addTab(pAeroData,           "Air");
-    m_pTabWidget->addTab(m_pExtraDragWt,      "Extra drag");
-    m_pTabWidget->addTab(m_pfrWake,           "Wake");
+    m_pTabWidget->addTab(m_pfrMethod,         tr("Method"));
+    m_pTabWidget->addTab(pVariableFrame,      tr("Variables"));
+    m_pTabWidget->addTab(pRefDimFrame,        tr("Ref. dimensions"));
+    m_pTabWidget->addTab(pInertiaFrame,       tr("Inertia"));
+    m_pTabWidget->addTab(pAeroData,           tr("Air"));
+    m_pTabWidget->addTab(m_pExtraDragWt,      tr("Extra drag"));
+    m_pTabWidget->addTab(m_pfrWake,           tr("Wake"));
 
     m_pTabWidget->setCurrentIndex(0);
 

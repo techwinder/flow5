@@ -26,6 +26,7 @@
 
 #include <QString>
 #include <QTextStream>
+#include <QCoreApplication>
 
 
 #include <wingxfl.h>
@@ -2661,43 +2662,43 @@ void WingXfl::getProperties(std::string &properties, std::string const &prefx) c
     QString strange;
     QString prefix = QString::fromStdString(prefx);
 
+    constexpr int labelWidth = 17;
+    auto label = [&](const char *sourceText) {
+        return QCoreApplication::translate("WingXfl", sourceText).leftJustified(labelWidth, ' ');
+    };
+
     strange = QString::asprintf("%9.3f", m_PlanformArea*Units::m2toUnit()) + " ";
-    props += prefix + "Wing area         ="+strange+Units::areaUnitQLabel() + "\n";
+    props += prefix + label("Wing area") + "=" + strange + Units::areaUnitQLabel() + "\n";
 
     strange = QString::asprintf("%9.3f", m_PlanformSpan*Units::mtoUnit()) + " ";
-    props += prefix + "Wing span         ="+strange+Units::lengthUnitQLabel() + "\n";
+    props += prefix + label("Wing span") + "=" + strange + Units::lengthUnitQLabel() + "\n";
 
     strange = QString::asprintf("%9.3f", m_ProjectedArea*Units::m2toUnit()) + " ";
-    props += prefix + "Projected area    ="+strange+Units::areaUnitQLabel() + "\n";
+    props += prefix + label("Projected area") + "=" + strange + Units::areaUnitQLabel() + "\n";
 
     strange = QString::asprintf("%9.3f", m_ProjectedSpan*Units::mtoUnit()) + " ";
-    props += prefix + "Projected span    ="+strange+Units::lengthUnitQLabel() + "\n";
+    props += prefix + label("Projected span") + "=" + strange + Units::lengthUnitQLabel() + "\n";
 
     strange = QString::asprintf("%9.3f", GChord()*Units::mtoUnit()) + " ";
-    props += prefix + "Mean geom. chord  ="+strange+Units::lengthUnitQLabel() + "\n";
+    props += prefix + label("Mean geom. chord") + "=" + strange + Units::lengthUnitQLabel() + "\n";
 
     strange = QString::asprintf("%9.3f", m_MAChord*Units::mtoUnit()) + " ";
-    props += prefix + "Mean aero. chord  ="+strange+Units::lengthUnitQLabel() + "\n";
+    props += prefix + label("Mean aero. chord") + "=" + strange + Units::lengthUnitQLabel() + "\n";
 
     strange = QString::asprintf("%9.3f", aspectRatio());
-    props += prefix + "Aspect ratio      ="+strange+ "\n";
+    props += prefix + label("Aspect ratio") + "=" + strange + "\n";
 
     if(tipChord()>0.0) strange = QString::asprintf("%9.3f", taperRatio());
-    else               strange = "Undefined";
-    props += prefix + "Taper ratio       ="+strange+"\n";
+    else               strange = QCoreApplication::translate("WingXfl", "Undefined");
+    props += prefix + label("Taper ratio") + "=" + strange + "\n";
 
     strange = QString::asprintf("%9.3f", averageSweep());
-    props += prefix + "Sweep             =" + strange + DEGch + "\n";
+    props += prefix + label("Sweep") + "=" + strange + DEGch + "\n";
 
 
-    strange = QString::asprintf("VLM panels        =%d\n", quadTotal(true));
-    props += prefix + strange;
-
-    strange = QString::asprintf("Quad panels       =%d\n", quadTotal(false));
-    props += prefix + strange;
-
-    strange = QString::asprintf("Triangular panels =%d", nTriangles());
-    props += prefix + strange;
+    props += prefix + label("VLM panels") + "=" + QString::number(quadTotal(true)) + "\n";
+    props += prefix + label("Quad panels") + "=" + QString::number(quadTotal(false)) + "\n";
+    props += prefix + label("Triangular panels") + "=" + QString::number(nTriangles());
 
     properties = props.toStdString();
 }

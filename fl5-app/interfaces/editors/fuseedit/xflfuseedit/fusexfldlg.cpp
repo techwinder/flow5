@@ -59,7 +59,7 @@ QByteArray FuseXflDlg::s_Geometry;
 
 FuseXflDlg::FuseXflDlg(QWidget *pParent) : FuseDlg(pParent)
 {
-    setWindowTitle("Xfl Fuse Editor");
+    setWindowTitle(tr("Xfl Fuse Editor"));
 
     m_pFuseXfl = nullptr;
     m_StackPos  = 0; //the current position on the stack
@@ -260,7 +260,7 @@ void FuseXflDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         pBodyMenu->addSeparator();
         pBodyMenu->addAction(m_pToFlatFace);
         pBodyMenu->addSeparator();
-        QMenu *pBackImageMenu = pBodyMenu->addMenu("Background image");
+        QMenu *pBackImageMenu = pBodyMenu->addMenu(tr("Background image"));
         {
             pBackImageMenu->addAction(m_pBackImageLoad);
             pBackImageMenu->addAction(m_pBackImageClear);

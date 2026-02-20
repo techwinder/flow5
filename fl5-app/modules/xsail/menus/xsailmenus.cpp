@@ -55,7 +55,7 @@ void XSailMenus::createMenus()
 void XSailMenus::createMainBarMenus()
 {
     XSailActions const *pActions = m_pXSail->m_pActions;
-    m_pXSailViewMenu =  m_pMainFrame->menuBar()->addMenu("&View");
+    m_pXSailViewMenu =  m_pMainFrame->menuBar()->addMenu(tr("&View"));
     {
         m_pXSailViewMenu->addAction(pActions->m_pPolarView);
         m_pXSailViewMenu->addAction(pActions->m_p3dView);
@@ -63,7 +63,7 @@ void XSailMenus::createMainBarMenus()
         m_pXSailViewMenu->addAction(pActions->m_p3dLightAct);
         m_pXSailViewMenu->addAction(pActions->m_pOpen3dViewInNewWindow);
         m_pXSailViewMenu->addSeparator();
-        QMenu *pBackImageMenu = m_pXSailViewMenu->addMenu("Background image");
+        QMenu *pBackImageMenu = m_pXSailViewMenu->addMenu(tr("Background image"));
         {
             pBackImageMenu->addAction(pActions->m_pBackImageLoad);
             pBackImageMenu->addAction(pActions->m_pBackImageClear);
@@ -74,11 +74,11 @@ void XSailMenus::createMainBarMenus()
 
     }
 
-    m_pBoatMenu = m_pMainFrame->menuBar()->addMenu("&Boat");
+    m_pBoatMenu = m_pMainFrame->menuBar()->addMenu(tr("&Boat"));
     {
         m_pBoatMenu->addAction(pActions->m_pDefineBoatAct);
         m_pBoatMenu->addAction(pActions->m_pManageBoats);
-        m_pCurBoatMenu = m_pBoatMenu->addMenu("Active boat");
+        m_pCurBoatMenu = m_pBoatMenu->addMenu(tr("Active boat"));
         {
             m_pCurBoatMenu->addSeparator();
             m_pCurBoatMenu->addAction(pActions->m_pEditBoatAct);
@@ -92,12 +92,12 @@ void XSailMenus::createMainBarMenus()
             m_pCurBoatMenu->addAction(pActions->m_pDeleteCurBoat);
             m_pCurBoatMenu->addAction(pActions->m_pSaveBoatAsProjectAct);
             m_pCurBoatMenu->addSeparator();
-            QMenu *pExportMenu = m_pCurBoatMenu->addMenu("Export");
+            QMenu *pExportMenu = m_pCurBoatMenu->addMenu(tr("Export"));
             {
                 pExportMenu->addAction(pActions->m_pExportBoatToXML);
             }
             m_pCurBoatMenu->addSeparator();
-            QMenu *pAnalysisMenu = m_pCurBoatMenu->addMenu("Analysis");
+            QMenu *pAnalysisMenu = m_pCurBoatMenu->addMenu(tr("Analysis"));
             {
                 pAnalysisMenu->addAction(pActions->m_pDefineBtPolar);
                 pAnalysisMenu->addAction(pActions->m_pDuplicateBtPolar);
@@ -108,7 +108,7 @@ void XSailMenus::createMainBarMenus()
                 pAnalysisMenu->addAction(pActions->m_pAnalysis3dSettings);
                 pAnalysisMenu->addAction(m_pMainFrame->m_pViewLogFile);
                 pAnalysisMenu->addSeparator();
-                QMenu *pMeshMenu = pAnalysisMenu->addMenu("Mesh");
+                QMenu *pMeshMenu = pAnalysisMenu->addMenu(tr("Mesh"));
                 {
                     pMeshMenu->addAction(pActions->m_pMeshInfo);
                     pMeshMenu->addAction(pActions->m_pConnectTriangles);
@@ -117,7 +117,7 @@ void XSailMenus::createMainBarMenus()
                 }
             }
             m_pCurBoatMenu->addSeparator();
-            QMenu *pPolarMenu = m_pCurBoatMenu->addMenu("Associated polars");
+            QMenu *pPolarMenu = m_pCurBoatMenu->addMenu(tr("Associated polars"));
             {
                 pPolarMenu->addAction(pActions->m_pShowBoatBtPlrs);
                 pPolarMenu->addAction(pActions->m_pHideBoatBtPlrs);
@@ -126,7 +126,7 @@ void XSailMenus::createMainBarMenus()
                 pPolarMenu->addAction(pActions->m_pShowBoatBtPolarsOnly);
             }
             m_pCurBoatMenu->addSeparator();
-            QMenu *pPOppMenu = m_pCurBoatMenu->addMenu("Associated operating points");
+            QMenu *pPOppMenu = m_pCurBoatMenu->addMenu(tr("Associated operating points"));
             {
                 pPOppMenu->addAction(pActions->m_pDeleteBoatBtOpps);
             }
@@ -134,9 +134,9 @@ void XSailMenus::createMainBarMenus()
         m_pBoatMenu->addAction(pActions->m_pImportBoatFromXml);
     }
 
-    m_pXSailWBtPlrMenu = m_pMainFrame->menuBar()->addMenu("Polars");
+    m_pXSailWBtPlrMenu = m_pMainFrame->menuBar()->addMenu(tr("Polars"));
     {
-        m_pCurBtPlrMenu = m_pXSailWBtPlrMenu->addMenu("Active polar");
+        m_pCurBtPlrMenu = m_pXSailWBtPlrMenu->addMenu(tr("Active polar"));
         {
             m_pCurBtPlrMenu->addAction(pActions->m_pEditBtPolar);
             m_pCurBtPlrMenu->addAction(pActions->m_pEditBtPolarPts);
@@ -145,12 +145,12 @@ void XSailMenus::createMainBarMenus()
             m_pCurBtPlrMenu->addAction(pActions->m_pDeleteCurBtPolar);
             m_pCurBtPlrMenu->addAction(pActions->m_pResetCurBtPolar);
             m_pCurBtPlrMenu->addSeparator();
-            QMenu *pPOppMenu = m_pCurBtPlrMenu->addMenu("Associated operating points");
+            QMenu *pPOppMenu = m_pCurBtPlrMenu->addMenu(tr("Associated operating points"));
             {
                 pPOppMenu->addAction(pActions->m_pDeleteAllBtPolarOpps);
             }
             m_pCurBtPlrMenu->addSeparator();
-            QMenu *pExportMenu = m_pCurBtPlrMenu->addMenu("Export data");
+            QMenu *pExportMenu = m_pCurBtPlrMenu->addMenu(tr("Export data"));
             {
                 pExportMenu->addAction(pActions->m_pExportCurBtPolar);
                 pExportMenu->addAction(pActions->m_pCopyCurBtPolarData);
@@ -162,7 +162,7 @@ void XSailMenus::createMainBarMenus()
         }
 
         m_pXSailWBtPlrMenu->addSeparator();
-        QMenu *pAllPolars = m_pXSailWBtPlrMenu->addMenu("All polars");
+        QMenu *pAllPolars = m_pXSailWBtPlrMenu->addMenu(tr("All polars"));
         {
             pAllPolars->addAction(pActions->m_pHideAllBtPlrs);
             pAllPolars->addAction(pActions->m_pShowAllBtPlrs);
@@ -170,12 +170,12 @@ void XSailMenus::createMainBarMenus()
         }
     }
 
-    m_pXSailBtOppMenu = m_pMainFrame->menuBar()->addMenu("Operating point");
+    m_pXSailBtOppMenu = m_pMainFrame->menuBar()->addMenu(tr("Operating point"));
     {
-        m_pCurBtOppMenu = m_pXSailBtOppMenu->addMenu("Active operating point");
+        m_pCurBtOppMenu = m_pXSailBtOppMenu->addMenu(tr("Active operating point"));
         {
             m_pCurBtOppMenu->addAction(pActions->m_pShowBoatBtOppProps);
-            QMenu *pExportMenu = m_pCurBtOppMenu->addMenu("Export data");
+            QMenu *pExportMenu = m_pCurBtOppMenu->addMenu(tr("Export data"));
             {
                 pExportMenu->addAction(pActions->m_pExportCurBtOpp);
                 pExportMenu->addAction(pActions->m_pCopyCurBtOppData);
@@ -183,14 +183,14 @@ void XSailMenus::createMainBarMenus()
             m_pCurBtOppMenu->addAction(pActions->m_pDeleteCurBtOpp);
         }
         m_pXSailBtOppMenu->addSeparator();
-        QMenu *pOpMenu = m_pXSailBtOppMenu->addMenu("Operating points");
+        QMenu *pOpMenu = m_pXSailBtOppMenu->addMenu(tr("Operating points"));
         {
             pOpMenu->addAction(pActions->m_pDeleteAllBtPolarOpps);
         }
     }
 
 
-    m_pXSailAnalysisMenu  = m_pMainFrame->menuBar()->addMenu("&Analysis");
+    m_pXSailAnalysisMenu  = m_pMainFrame->menuBar()->addMenu(tr("&Analysis"));
     {
         m_pXSailAnalysisMenu->addAction(pActions->m_pDefineBtPolar);
         m_pXSailAnalysisMenu->addAction(pActions->m_pDuplicateBtPolar);
@@ -201,7 +201,7 @@ void XSailMenus::createMainBarMenus()
         m_pXSailAnalysisMenu->addAction(pActions->m_pAnalysis3dSettings);
         m_pXSailAnalysisMenu->addAction(m_pMainFrame->m_pViewLogFile);
         m_pXSailAnalysisMenu->addSeparator();
-        QMenu *pMeshMenu = m_pXSailAnalysisMenu->addMenu("Mesh");
+        QMenu *pMeshMenu = m_pXSailAnalysisMenu->addMenu(tr("Mesh"));
         {
             pMeshMenu->addAction(pActions->m_pMeshInfo);
             pMeshMenu->addAction(pActions->m_pConnectTriangles);
@@ -215,14 +215,14 @@ void XSailMenus::createMainBarMenus()
 void XSailMenus::createSubMenus()
 {
     XSailActions const *pActions = m_pXSail->m_pActions;
-    m_pSubMainSailMenu = new QMenu("Main sail");
+    m_pSubMainSailMenu = new QMenu(tr("Main sail"));
     {
         m_pSubMainSailMenu->addAction(pActions->m_pEditMainSail);
         m_pSubMainSailMenu->addAction(pActions->m_pTranslateMainSail);
         m_pSubMainSailMenu->addAction(pActions->m_pScaleMainShape);
         m_pSubMainSailMenu->addAction(pActions->m_pScaleMainSize);
         m_pSubMainSailMenu->addSeparator();
-        QMenu *pExportMenu = m_pSubMainSailMenu->addMenu("Export");
+        QMenu *pExportMenu = m_pSubMainSailMenu->addMenu(tr("Export"));
         {
             pExportMenu->addAction(pActions->m_pExportMainSailToXml);
             pExportMenu->addAction(pActions->m_pExportMainSailToStep);
@@ -231,14 +231,14 @@ void XSailMenus::createSubMenus()
         m_pSubMainSailMenu->addAction(pActions->m_pConvertMainSailToNURBS);
     }
 
-    m_pSubJibMenu = new QMenu("Jib");
+    m_pSubJibMenu = new QMenu(tr("Jib"));
     {
         m_pSubJibMenu->addAction(pActions->m_pEditJib);
         m_pSubJibMenu->addAction(pActions->m_pTranslateJib);
         m_pSubJibMenu->addAction(pActions->m_pScaleJibShape);
         m_pSubJibMenu->addAction(pActions->m_pScaleJibSize);
         m_pSubJibMenu->addSeparator();
-        QMenu *pExportMenu = m_pSubJibMenu->addMenu("Export");
+        QMenu *pExportMenu = m_pSubJibMenu->addMenu(tr("Export"));
         {
             pExportMenu->addAction(pActions->m_pExportJibToXml);
             pExportMenu->addAction(pActions->m_pExportJibToStep);
@@ -247,7 +247,7 @@ void XSailMenus::createSubMenus()
         m_pSubJibMenu->addAction(pActions->m_pConvertJibToNURBS);
     }
 
-    m_pSubHullMenu = new QMenu("Hull");
+    m_pSubHullMenu = new QMenu(tr("Hull"));
     {
         m_pSubHullMenu->addAction(pActions->m_pEditHull);
         m_pSubHullMenu->addAction(pActions->m_pScaleHull);
@@ -259,14 +259,14 @@ void XSailMenus::createSubMenus()
 void XSailMenus::create3dCtxMenus()
 {
     XSailActions const *pActions = m_pXSail->m_pActions;
-    m_p3dCtxMenu = new QMenu("XSail3dCtxMenu", m_pMainFrame);
+    m_p3dCtxMenu = new QMenu(tr("Context Menu"), m_pMainFrame);
     m_p3dCtxMenu->addMenu(m_pCurBoatMenu);
     m_p3dCtxMenu->addMenu(m_pCurBtPlrMenu);
     m_p3dCtxMenu->addMenu(m_pCurBtOppMenu);
     m_p3dCtxMenu->addSeparator();
     m_p3dCtxMenu->addAction(pActions->m_p3dLightAct);
     m_p3dCtxMenu->addSeparator();
-    QMenu *pMeshMenu = m_p3dCtxMenu->addMenu("Mesh");
+    QMenu *pMeshMenu = m_p3dCtxMenu->addMenu(tr("Mesh"));
     {
         pMeshMenu->addAction(pActions->m_pMeshInfo);
         pMeshMenu->addAction(pActions->m_pConnectTriangles);
@@ -275,7 +275,7 @@ void XSailMenus::create3dCtxMenus()
     }
 
     m_p3dCtxMenu->addSeparator();
-    QMenu *pBackImageMenu = m_p3dCtxMenu->addMenu("Background image");
+    QMenu *pBackImageMenu = m_p3dCtxMenu->addMenu(tr("Background image"));
     {
         pBackImageMenu->addAction(pActions->m_pBackImageLoad);
         pBackImageMenu->addAction(pActions->m_pBackImageClear);
@@ -290,25 +290,25 @@ void XSailMenus::create3dCtxMenus()
 void XSailMenus::createPolarCtxMenus()
 {
     XSailActions const *pActions = m_pXSail->m_pActions;
-    m_pBtPlrCtxMenu = new QMenu("Context Menu", m_pMainFrame);
+    m_pBtPlrCtxMenu = new QMenu(tr("Context Menu"), m_pMainFrame);
     {
         m_pBtPlrCtxMenu->addMenu(m_pCurBoatMenu);
         m_pBtPlrCtxMenu->addSeparator();
         m_pBtPlrCtxMenu->addMenu(m_pCurBtPlrMenu);
         m_pBtPlrCtxMenu->addSeparator();
-        QMenu *pAllPolars = m_pBtPlrCtxMenu->addMenu("All polars");
+        QMenu *pAllPolars = m_pBtPlrCtxMenu->addMenu(tr("All polars"));
         {
             pAllPolars->addAction(pActions->m_pHideAllBtPlrs);
             pAllPolars->addAction(pActions->m_pShowAllBtPlrs);
             pAllPolars->addAction(pActions->m_pExportBtPolars);
         }
-        QMenu *pCurGraphCtxMenu = m_pBtPlrCtxMenu->addMenu("Graph");
+        QMenu *pCurGraphCtxMenu = m_pBtPlrCtxMenu->addMenu(tr("Graph"));
         {
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pResetGraphSplitter);
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pResetCurGraphScales);
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pCurGraphDlgAct);
             pCurGraphCtxMenu->addSeparator();
-            QMenu *pExportMenu = pCurGraphCtxMenu->addMenu("Export");
+            QMenu *pExportMenu = pCurGraphCtxMenu->addMenu(tr("Export"));
             {
                 pExportMenu->addAction(m_pMainFrame->m_pExportCurGraphDataToFile);
                 pExportMenu->addAction(m_pMainFrame->m_pCopyCurGraphDataAct);

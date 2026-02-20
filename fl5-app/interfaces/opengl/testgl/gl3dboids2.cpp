@@ -405,7 +405,7 @@ void gl3dBoids2::initializeGL()
         n=n/2;
     }while(n>1);
 
-    m_plabNMaxGroups->setText(QString("Max. number of groups = 2<sup>")+QString::asprintf("%d", pow)+QString("</sup>"));
+    m_plabNMaxGroups->setText(tr("Max. number of groups = 2<sup>%1</sup>").arg(pow));
 #endif
 }
 
@@ -420,7 +420,7 @@ void gl3dBoids2::glMake3dObjects()
     if(m_bResetInstances)
     {
         int nParticles = GROUP_SIZE * s_NGroups;
-        m_plabNParticles->setText(QString::asprintf("Number of particles =%d", nParticles));
+        m_plabNParticles->setText(tr("Number of particles =%1").arg(nParticles));
 
         QVector<Vector3d> boids(nParticles);
 

@@ -99,7 +99,7 @@ static struct Version versions[] = {
 
 OpenGlDlg::OpenGlDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("OpenGL context info");
+    setWindowTitle(tr("OpenGL context info"));
     setWindowFlag(Qt::WindowMinMaxButtonsHint);
 
     m_bChanged = false;
@@ -112,7 +112,7 @@ void OpenGlDlg::reject()
 {
     if(m_bChanged)
     {
-        int resp = QMessageBox::question(this, "Close", "Discard the changes?",
+        int resp = QMessageBox::question(this, tr("Close"), tr("Discard the changes?"),
                                          QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                                          QMessageBox::No);
         if(resp == QMessageBox::Yes)
@@ -140,8 +140,8 @@ QMessageBox::StandardButton OpenGlDlg::applyChanges()
 {
     if(m_bChanged)
     {
-        QString strange = "Use these settings as the future default?\n(Application restart required)";
-        QMessageBox::StandardButton resp = QMessageBox::question(this, "Close", strange,
+        QString strange = tr("Use these settings as the future default?\n(Application restart required)");
+        QMessageBox::StandardButton resp = QMessageBox::question(this, tr("Close"), strange,
                                                                  QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                                                                  QMessageBox::No);
         if(resp == QMessageBox::Yes)
@@ -397,24 +397,24 @@ void OpenGlDlg::setupLayout()
             m_ppbApply->setEnabled(false); // until something changes
             connect(m_ppbApply, SIGNAL(clicked()), SLOT(onApply()));
 
-            m_ppbTestView = new QPushButton("View type");
+            m_ppbTestView = new QPushButton(tr("View type"));
 
             QMenu *pViewSelMenu = new QMenu;
             {
-                QAction *pNewtonAct      = new QAction("Newton fractal",           this);
-                QAction *pMandelbrotAct  = new QAction("Mandelbrot",               this);
-                QAction *pQuatAct        = new QAction("Quaternion Julia fractal", this);
-                QAction *pSphereAct      = new QAction("Spheres",                  this);
-                QAction *pFlowAct        = new QAction("Horsehoe vortex flow",     this);
-                QAction *pLorenzAct      = new QAction("Lorenz (CPU)",             this);
-                QAction *pLorenz2Act     = new QAction("Lorenz (GPU)",             this);
-                QAction *pAttractorsAct  = new QAction("Attractors",               this);
-                QAction *pBoidsAct       = new QAction("Boids (CPU)",              this);
-                QAction *pBoids2Act      = new QAction("Boids (GPU)",              this);
-                QAction *pHydrogenAct    = new QAction("Hydrogen atom",            this);
-                QAction *pSolarSysAct    = new QAction("Solar system",             this);
-                QAction *pSagittariusAct = new QAction("Sagittarius A*",           this);
-                QAction *pSpaceAct       = new QAction("The final frontier",       this);
+                QAction *pNewtonAct      = new QAction(tr("Newton fractal"),           this);
+                QAction *pMandelbrotAct  = new QAction(tr("Mandelbrot"),               this);
+                QAction *pQuatAct        = new QAction(tr("Quaternion Julia fractal"), this);
+                QAction *pSphereAct      = new QAction(tr("Spheres"),                  this);
+                QAction *pFlowAct        = new QAction(tr("Horsehoe vortex flow"),     this);
+                QAction *pLorenzAct      = new QAction(tr("Lorenz (CPU)"),             this);
+                QAction *pLorenz2Act     = new QAction(tr("Lorenz (GPU)"),             this);
+                QAction *pAttractorsAct  = new QAction(tr("Attractors"),               this);
+                QAction *pBoidsAct       = new QAction(tr("Boids (CPU)"),              this);
+                QAction *pBoids2Act      = new QAction(tr("Boids (GPU)"),              this);
+                QAction *pHydrogenAct    = new QAction(tr("Hydrogen atom"),            this);
+                QAction *pSolarSysAct    = new QAction(tr("Solar system"),             this);
+                QAction *pSagittariusAct = new QAction(tr("Sagittarius A*"),           this);
+                QAction *pSpaceAct       = new QAction(tr("The final frontier"),       this);
 
 #ifdef Q_OS_MAC
                 pLorenz2Act->setEnabled(false);

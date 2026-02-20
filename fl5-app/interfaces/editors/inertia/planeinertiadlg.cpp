@@ -67,7 +67,7 @@ Quaternion PlaneInertiaDlg::s_ab_quat(-0.212012, 0.148453, -0.554032, -0.79124);
 
 PlaneInertiaDlg::PlaneInertiaDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("Inertia Properties");
+    setWindowTitle(tr("Inertia Properties"));
     setWindowFlag(Qt::WindowMinMaxButtonsHint);
 
     m_pPlane = nullptr;
@@ -110,7 +110,7 @@ void PlaneInertiaDlg::updateTotalInertia()
 void PlaneInertiaDlg::initDialog(Plane *pPlane)
 {
     m_pPlane = pPlane;
-    setWindowTitle("Inertia properties");
+    setWindowTitle(tr("Inertia properties"));
 
     if(pPlane)
         m_plabPlaneName->setText(QString::fromStdString(pPlane->name()));
@@ -162,7 +162,7 @@ void PlaneInertiaDlg::reject()
 {
     if(m_bChanged && xfl::bConfirmDiscard())
     {
-        int Ans = QMessageBox::question(this, "Question", "Discard the changes?",
+        int Ans = QMessageBox::question(this, tr("Question"), tr("Discard the changes?"),
                                         QMessageBox::Yes | QMessageBox::Cancel);
         if (QMessageBox::Yes == Ans)
         {
@@ -316,7 +316,7 @@ void PlaneInertiaDlg::makeCommonWts()
 {
     m_pInertiaManTable = new CPTableView(this);
     m_pInertiaManTable->setEditable(true);
-    m_pInertiaManTable->setWindowTitle("Wing list");
+    m_pInertiaManTable->setWindowTitle(tr("Wing list"));
     m_pInertiaManTable->setWordWrap(false);
 //    m_pInertiaManTable->sizePolicy().setVerticalStretch(2);
     m_pStructInertiaModel = new PartInertiaModel(this);

@@ -119,8 +119,8 @@ void LegendWt::onRightClickedCurveBtn(LineStyle )
     LegendBtn *pLegendBtn = dynamic_cast<LegendBtn*>(sender());
     m_pActiveCurve = dynamic_cast<Curve*>(m_CurveMap[pLegendBtn]);
 
-    QAction *pRenameCurve = new QAction("Rename", this);
-    QAction *pDeleteCurve = new QAction("Delete", this);
+    QAction *pRenameCurve = new QAction(tr("Rename"), this);
+    QAction *pDeleteCurve = new QAction(tr("Delete"), this);
     connect(pRenameCurve, SIGNAL(triggered(bool)), SLOT(onRenameActiveCurve()));
     connect(pDeleteCurve, SIGNAL(triggered(bool)), SLOT(onDeleteActiveCurve()));
     QMenu *pCtxMenu = new QMenu;

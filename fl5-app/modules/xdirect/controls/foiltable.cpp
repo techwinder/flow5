@@ -82,11 +82,11 @@ void FoilTable::makeFoilTable()
     m_pFoilModel->setHeaderData(6,  Qt::Horizontal, "TE Flap ("+DEGch+")");
     m_pFoilModel->setHeaderData(7,  Qt::Horizontal, "TE XHinge (%)");
     m_pFoilModel->setHeaderData(8,  Qt::Horizontal, "TE YHinge (%)");
-    m_pFoilModel->setHeaderData(9,  Qt::Horizontal, "Show");
-    m_pFoilModel->setHeaderData(10, Qt::Horizontal, "Camber line");
-    m_pFoilModel->setHeaderData(11, Qt::Horizontal, "Style");
+    m_pFoilModel->setHeaderData(9,  Qt::Horizontal, tr("Show"));
+    m_pFoilModel->setHeaderData(10, Qt::Horizontal, tr("Camber line"));
+    m_pFoilModel->setHeaderData(11, Qt::Horizontal, tr("Style"));
     setModel(m_pFoilModel);
-    setWindowTitle("Foils");
+    setWindowTitle(tr("Foils"));
 
     m_pFoilDelegate = new FoilTableDelegate(this);
     setItemDelegate(m_pFoilDelegate);
@@ -234,17 +234,17 @@ void FoilTable::contextMenuEvent(QContextMenuEvent *pEvent)
         return;
     }
 
-    QAction *pCopyAction = new QAction("Copy", this);
+    QAction *pCopyAction = new QAction(tr("Copy"), this);
     pCopyAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_C));
 
-    QAction *pPasteAction = new QAction("Paste", this);
+    QAction *pPasteAction = new QAction(tr("Paste"), this);
     pPasteAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_V));
     pPasteAction->setEnabled(m_bIsEditable);
 
     connect(pCopyAction,  SIGNAL(triggered(bool)), this, SLOT(onCopySelection()));
     connect(pPasteAction, SIGNAL(triggered(bool)), this, SLOT(onPaste()));
 
-    QMenu *pFoilTableMenu = new QMenu("context menu");
+    QMenu *pFoilTableMenu = new QMenu(tr("context menu"));
     {
         pFoilTableMenu->addAction(s_pXDirect->m_pActions->m_pGetFoilProps);
         pFoilTableMenu->addSeparator();
@@ -254,7 +254,7 @@ void FoilTable::contextMenuEvent(QContextMenuEvent *pEvent)
         pFoilTableMenu->addAction(s_pXDirect->m_pActions->m_pDuplicateCurFoil);
 
         pFoilTableMenu->addSeparator();
-        QMenu *pModifyMenu = pFoilTableMenu->addMenu("Modify");
+        QMenu *pModifyMenu = pFoilTableMenu->addMenu(tr("Modify"));
         {
 //            pModifyMenu->addAction(s_pXDirect->m_pActions->m_pNormalizeFoil);
             pModifyMenu->addAction(s_pXDirect->m_pActions->m_pDerotateFoil);

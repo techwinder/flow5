@@ -2351,8 +2351,8 @@ void XPlane::onDeleteCurPlane()
     stopAnimate();
 
     QString strong;
-    if(m_pCurPlane) strong = "Are you sure you want to delete the plane :\n" + QString::fromStdString(m_pCurPlane->name()) +"?\n";
-    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, "Question", strong, QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel)) return;
+    if(m_pCurPlane) strong = tr("Are you sure you want to delete the plane :\n") + QString::fromStdString(m_pCurPlane->name()) +"?\n";
+    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, tr("Question"), strong, QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel)) return;
     QString nextPlaneName = m_pPlaneExplorer->removePlane(m_pCurPlane);
     Objects3d::deletePlaneResults(m_pCurPlane, true);
     Objects3d::deleteExternalPolars(m_pCurPlane);
@@ -2470,8 +2470,8 @@ void XPlane::onDeletePlaneWPolars()
 
     PlaneName = QString::fromStdString(m_pCurPlane->name());
 
-    strong = "Are you sure you want to delete the polars associated to :\n" +  PlaneName +"?\n";
-    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, "Question", strong, QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel))
+    strong = tr("Are you sure you want to delete the polars associated to :\n") +  PlaneName +"?\n";
+    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, tr("Question"), strong, QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel))
         return;
 
     if(m_pCurPlane)
@@ -2499,8 +2499,8 @@ void XPlane::onDeleteCurPlPolar()
         return;
     }
 
-    QString strong = "Are you sure you want to delete the polar:\n" +  QString::fromStdString(m_pCurPlPolar->name()) +"?\n";
-    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, "Question", strong,
+    QString strong = tr("Are you sure you want to delete the polar:\n") +  QString::fromStdString(m_pCurPlPolar->name()) +"?\n";
+    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, tr("Question"), strong,
                                                   QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel)) return;
 
     stopAnimate();
@@ -3932,8 +3932,8 @@ void XPlane::onRenameCurPlane()
 void XPlane::onResetCurPlPolar()
 {
     if (!m_pCurPlane || !m_pCurPlPolar) return;
-    QString strong = "Are you sure you want to reset the content of the polar :\n"+ QString::fromStdString(m_pCurPlPolar->name()) +"?\n";
-    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, "Question", strong,
+    QString strong = tr("Are you sure you want to reset the content of the polar :\n")+ QString::fromStdString(m_pCurPlPolar->name()) +"?\n";
+    if (QMessageBox::Yes != QMessageBox::question(s_pMainFrame, tr("Question"), strong,
                                                   QMessageBox::Yes|QMessageBox::No,
                                                   QMessageBox::Yes)) return;
     Objects3d::deleteWPolarResults(m_pCurPlPolar);
@@ -6417,9 +6417,9 @@ void XPlane::onCheckPanels()
 
         QVector<int> qVec;
         if(dlg.checkSkinny())    qVec = QVector<int>(skinnylist.begin(), skinnylist.end());
-        if(dlg.checkMinAngles()) qVec = QVector<int>(anglelist.begin(),  anglelist.end());
-        if(dlg.checkMinArea())   qVec = QVector<int>(arealist.begin(),   arealist.end());
-        if(dlg.checkMinSize())   qVec = QVector<int>(sizelist.begin(),   sizelist.end());
+        if(dlg.checkMinAngles()) qVec = QVector<int>(anglelist.begin(), anglelist.end());
+        if(dlg.checkMinArea())   qVec = QVector<int>(arealist.begin(), arealist.end());
+        if(dlg.checkMinSize())   qVec = QVector<int>(sizelist.begin(), sizelist.end());
         m_pgl3dXPlaneView->appendHighlightList(qVec);
     }
 
@@ -6439,8 +6439,8 @@ void XPlane::onCheckPanels()
 
         QVector<int> qVec;
         if      (dlg.checkMinAngles())   qVec = QVector<int>(anglelist.begin(), anglelist.end());
-        else if (dlg.checkMinArea())     qVec = QVector<int>(arealist.begin(),  arealist.end());
-        else if (dlg.checkMinQuadWarp()) qVec = QVector<int>(warplist.begin(),  warplist.end());
+        else if (dlg.checkMinArea())     qVec = QVector<int>(arealist.begin(), arealist.end());
+        else if (dlg.checkMinQuadWarp()) qVec = QVector<int>(warplist.begin(), warplist.end());
 
         m_pgl3dXPlaneView->appendHighlightList(qVec);
     }

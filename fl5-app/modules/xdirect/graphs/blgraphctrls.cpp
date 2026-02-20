@@ -70,8 +70,8 @@ void BLGraphCtrls::setupLayout()
         {
             QGridLayout *plsLayout = new QGridLayout;
             {
-                m_pchTop = new QCheckBox("Top");
-                m_pchBot = new QCheckBox("Bottom");
+                m_pchTop = new QCheckBox(tr("Top"));
+                m_pchBot = new QCheckBox(tr("Bottom"));
                 m_plbTopStyle = new LineBtn;
                 m_plbBotStyle = new LineBtn;
                 plsLayout->addWidget(m_pchTop,       1,1);
@@ -81,7 +81,7 @@ void BLGraphCtrls::setupLayout()
                 plsLayout->setColumnStretch(3,1);
             }
 
-            m_pchShowInviscid = new QCheckBox("Inviscid curve");
+            m_pchShowInviscid = new QCheckBox(tr("Inviscid curve"));
             pBLOptionsLayout->addWidget(m_pchShowInviscid);
             pBLOptionsLayout->addLayout(plsLayout);
         }

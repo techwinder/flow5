@@ -43,10 +43,10 @@ void ScaleDlg::setupLayout()
             m_pdeXFactor = new FloatEdit(1.0);
             m_pdeYFactor = new FloatEdit(1.0);
             m_pdeZFactor = new FloatEdit(1.0);
-            QLabel *plab0 = new QLabel("Scale factor");
-            QLabel *plab1 = new QLabel("X Scale:");
-            QLabel *plab2 = new QLabel("Y Scale:");
-            QLabel *plab3 = new QLabel("Z Scale:");
+            QLabel *plab0 = new QLabel(tr("Scale factor"));
+            QLabel *plab1 = new QLabel(tr("X Scale:"));
+            QLabel *plab2 = new QLabel(tr("Y Scale:"));
+            QLabel *plab3 = new QLabel(tr("Z Scale:"));
             pScaleLayout->addWidget(plab0,        1,2, Qt::AlignCenter);
             pScaleLayout->addWidget(plab1,        2,1, Qt::AlignRight | Qt::AlignVCenter);
             pScaleLayout->addWidget(plab2,        3,1, Qt::AlignRight | Qt::AlignVCenter);

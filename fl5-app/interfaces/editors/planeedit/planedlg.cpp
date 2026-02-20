@@ -78,36 +78,36 @@ void PlaneDlg::makeCommonControls()
     m_pleName = new QLineEdit;
     m_pleName->setClearButtonEnabled(true);
     m_pleDescription = new QPlainTextEdit;
-    m_pleDescription->setToolTip("Enter here a short description for the plane");
+    m_pleDescription->setToolTip(tr("Enter here a short description for the plane"));
 
     m_ppto = new FormatTextOutput;
 
-    m_pCheckMesh            = new QAction("Check mesh", this);
-    m_pCheckFreeEdges       = new QAction("Check free edges", this);
+    m_pCheckMesh            = new QAction(tr("Check mesh"), this);
+    m_pCheckFreeEdges       = new QAction(tr("Check free edges"), this);
     m_pCheckFreeEdges->setShortcut(QKeySequence(Qt::ALT | Qt::Key_G));
-    m_pConnectPanels        = new QAction("Connect panels", this);
+    m_pConnectPanels        = new QAction(tr("Connect panels"), this);
     m_pConnectPanels->setShortcut(QKeySequence(Qt::ALT | Qt::Key_C));
-    m_pClearHighlighted     = new QAction("Clear highlighted", this);
+    m_pClearHighlighted     = new QAction(tr("Clear highlighted"), this);
     m_pClearHighlighted->setShortcut(QKeySequence(Qt::ALT | Qt::Key_L));
-    m_pMergeFuseToWingNodes = new QAction("Merge fuselage nodes with wing nodes");
-    m_pCenterOnPanel        = new QAction("Center view on panel", this);
+    m_pMergeFuseToWingNodes = new QAction(tr("Merge fuselage nodes with wing nodes"));
+    m_pCenterOnPanel        = new QAction(tr("Center view on panel"), this);
 
     m_pButtonBox->setStandardButtons(QDialogButtonBox::Save | QDialogButtonBox::Discard);
     {
-        m_pButtonBox->setToolTip("Ctrl+S to save and close\n"
+        m_pButtonBox->setToolTip(tr("Ctrl+S to save and close\n"
                                  "Ctrl+W to edit the main wing\n"
                                  "Ctrl+E to edit the elevator\n"
                                  "Ctrl+F to edit the fin\n"
-                                 "Ctrl+B to edit the first body/fuselage");
-        m_ppbActions = new QPushButton("Actions");
+                                 "Ctrl+B to edit the first body/fuselage"));
+        m_ppbActions = new QPushButton(tr("Actions"));
         {
-            QMenu *pCheckMeshMenu = new QMenu("Actions");
+            QMenu *pCheckMeshMenu = new QMenu(tr("Actions"));
             {
-                m_pClearOutput   = new QAction("Clear output", this);
+                m_pClearOutput   = new QAction(tr("Clear output"), this);
 
-                m_pPlaneInertia     = new QAction("Inertia", this);
+                m_pPlaneInertia     = new QAction(tr("Inertia"), this);
                 m_pPlaneInertia->setShortcut(Qt::Key_F12);
-                m_pFlipNormals      = new QAction("Flip normals", this);
+                m_pFlipNormals      = new QAction(tr("Flip normals"), this);
 
                 pCheckMeshMenu->addAction(m_pClearOutput);
                 pCheckMeshMenu->addSeparator();
@@ -117,7 +117,7 @@ void PlaneDlg::makeCommonControls()
             }
             m_ppbActions->setMenu(pCheckMeshMenu);
         }
-        m_ppbSaveAsNew = new QPushButton("Save as");
+        m_ppbSaveAsNew = new QPushButton(tr("Save as"));
         m_pButtonBox->addButton(m_ppbActions,   QDialogButtonBox::ActionRole);
         m_pButtonBox->addButton(m_ppbSaveAsNew, QDialogButtonBox::ActionRole);
     }
@@ -186,8 +186,8 @@ void PlaneDlg::reject()
 {
     if(m_bChanged && xfl::bConfirmDiscard())
     {
-        QString strong = "Discard the changes?";
-        int Ans = QMessageBox::question(this, "Question", strong,
+        QString strong = tr("Discard the changes?");
+        int Ans = QMessageBox::question(this, tr("Question"), strong,
                                         QMessageBox::Yes | QMessageBox::Cancel);
         if (QMessageBox::Yes == Ans)
         {
@@ -399,9 +399,9 @@ void PlaneDlg::onCheckMesh()
 
     QVector<int> qVec;
     if(dlg.checkSkinny())    qVec = QVector<int>(skinnylist.begin(), skinnylist.end());
-    if(dlg.checkMinAngles()) qVec = QVector<int>(anglelist.begin(),  anglelist.end());
-    if(dlg.checkMinArea())   qVec = QVector<int>(arealist.begin(),   arealist.end());
-    if(dlg.checkMinSize())   qVec = QVector<int>(sizelist.begin(),   sizelist.end());
+    if(dlg.checkMinAngles()) qVec = QVector<int>(anglelist.begin(), anglelist.end());
+    if(dlg.checkMinArea())   qVec = QVector<int>(arealist.begin(), arealist.end());
+    if(dlg.checkMinSize())   qVec = QVector<int>(sizelist.begin(), sizelist.end());
     m_pglPlaneView->appendHighlightList(qVec);
 
     updateStdOutput(log + "\n");

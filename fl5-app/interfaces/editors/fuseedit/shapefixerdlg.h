@@ -29,6 +29,8 @@
 #include <QDialogButtonBox>
 #include <QSettings>
 
+#include <TopoDS_ListOfShape.hxx>
+
 #include <TopoDS_Shape.hxx>
 
 class FloatEdit;

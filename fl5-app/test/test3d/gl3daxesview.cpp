@@ -60,7 +60,7 @@ Vector3d gl3dAxesView::s_Vec;
 
 gl3dAxesView::gl3dAxesView(QWidget *pParent) : gl3dXflView(pParent)
 {
-    setWindowTitle("Axes test");
+    setWindowTitle(tr("Axes test"));
     setupLayout();
     connectSignals();
 
@@ -86,7 +86,7 @@ void gl3dAxesView::setupLayout()
                 QLabel *plabDeg0 = new QLabel("<p>&deg;</p>");
                 QLabel *plabDeg1 = new QLabel("<p>&deg;</p>");
 
-                m_pchWindVec = new QCheckBox("Wind vectors");
+                m_pchWindVec = new QCheckBox(tr("Wind vectors"));
                 m_pchWindVec->setChecked(true);
                 m_plbWindVecs = new LineBtn(s_WindVecsStyle);
 
@@ -101,15 +101,15 @@ void gl3dAxesView::setupLayout()
                 pDataLayout->setColumnStretch(3,1);
             }
 
-            QGroupBox *pDisplayBox = new QGroupBox("Display");
+            QGroupBox *pDisplayBox = new QGroupBox(tr("Display"));
             {
                 QGridLayout *pDisplayLayout = new QGridLayout;
                 {
-                    m_pchGeomAxes      = new QCheckBox("Geometric axes");
+                    m_pchGeomAxes      = new QCheckBox(tr("Geometric axes"));
                     m_pchGeomAxes->setChecked(m_bAxes);
-                    m_pchWindAxes      = new QCheckBox("Wind axes");
-                    m_pchBodyAxes      = new QCheckBox("Body axes");
-                    m_pchStabilityAxes = new QCheckBox("Stability axes");
+                    m_pchWindAxes      = new QCheckBox(tr("Wind axes"));
+                    m_pchBodyAxes      = new QCheckBox(tr("Body axes"));
+                    m_pchStabilityAxes = new QCheckBox(tr("Stability axes"));
                     m_pchWindAxes->setChecked(true);
                     m_pchStabilityAxes->setChecked(true);
                     m_plbWind = new LineBtn(s_WindStyle);
@@ -126,21 +126,21 @@ void gl3dAxesView::setupLayout()
                 pDisplayBox->setLayout(pDisplayLayout);
             }
 
-            QGroupBox *pVectorBox = new QGroupBox("Vector");
+            QGroupBox *pVectorBox = new QGroupBox(tr("Vector"));
             {
                 QGridLayout * pVectorLayout = new QGridLayout;
                 {
-                    m_pchVector = new QCheckBox("Show");
+                    m_pchVector = new QCheckBox(tr("Show"));
                     m_pchVector->setChecked(false);
 
-                    QLabel *plabX = new QLabel("x=");
-                    QLabel *plabY = new QLabel("y=");
-                    QLabel *plabZ = new QLabel("z=");
+                    QLabel *plabX = new QLabel(tr("x="));
+                    QLabel *plabY = new QLabel(tr("y="));
+                    QLabel *plabZ = new QLabel(tr("z="));
                     m_pdeX = new FloatEdit(s_Vec.x);
                     m_pdeY = new FloatEdit(s_Vec.y);
                     m_pdeZ = new FloatEdit(s_Vec.z);
 
-                    m_ppbConvert = new QPushButton("Convert vector");
+                    m_ppbConvert = new QPushButton(tr("Convert vector"));
 
                     pVectorLayout->addWidget(m_pchVector, 1,1,1,2);
 

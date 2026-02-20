@@ -111,7 +111,7 @@ Grid SailDlg::s_SectionGrid;
 
 SailDlg::SailDlg(QWidget *pParent) : XflDialog(pParent)
 {
-    setWindowTitle("Sail Edition");
+    setWindowTitle(tr("Sail Edition"));
 //    setWindowFlags(Qt::Window);
 
     m_pTabWidget = nullptr;
@@ -190,7 +190,7 @@ void SailDlg::makeCommonWts()
     {
         QVBoxLayout *pMetaLayout = new QVBoxLayout;
         {
-            QGroupBox *pInfoBox = new QGroupBox("Description");
+            QGroupBox *pInfoBox = new QGroupBox(tr("Description"));
             {
                 QVBoxLayout *pInfoBoxLayout = new QVBoxLayout;
                 {
@@ -198,7 +198,7 @@ void SailDlg::makeCommonWts()
                     {
                         m_pleSailName = new QLineEdit;
                         m_pleSailName->setClearButtonEnabled(true);
-                        m_pleSailName->setToolTip("Enter the sail's name");
+                        m_pleSailName->setToolTip(tr("Enter the sail's name"));
 
                         m_pcbColor = new ColorBtn;
 
@@ -209,14 +209,14 @@ void SailDlg::makeCommonWts()
                     }
                     m_pteSailDescription = new QTextEdit;
                     m_pteSailDescription->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
-                    m_pteSailDescription->setToolTip("Use this field to enter a short text to describe the sail");
+                    m_pteSailDescription->setToolTip(tr("Use this field to enter a short text to describe the sail"));
 
                     pInfoBoxLayout->addLayout(m_pSailInfoLayout);
                     pInfoBoxLayout->addWidget(m_pteSailDescription);
                 }
                 pInfoBox->setLayout(pInfoBoxLayout);
             }
-            m_pSurfaceBox = new QGroupBox("Sail surface");
+            m_pSurfaceBox = new QGroupBox(tr("Sail surface"));
             {
                 QVBoxLayout *pSurfaceLayout = new QVBoxLayout;
                 {
@@ -224,10 +224,10 @@ void SailDlg::makeCommonWts()
                     {
                         QHBoxLayout *pThickLayout = new QHBoxLayout;
                         {
-                            QLabel *plabThick = new QLabel("Sail is a");
-                            QLabel *plabSurf  = new QLabel("surface");
-                            m_prbThin  = new QRadioButton("thin");
-                            m_prbThick = new QRadioButton("thick");
+                            QLabel *plabThick = new QLabel(tr("Sail is a"));
+                            QLabel *plabSurf  = new QLabel(tr("surface"));
+                            m_prbThin  = new QRadioButton(tr("thin"));
+                            m_prbThick = new QRadioButton(tr("thick"));
                             pThickLayout->addWidget(plabThick);
                             pThickLayout->addWidget(m_prbThin);
                             pThickLayout->addWidget(m_prbThick);
@@ -239,13 +239,13 @@ void SailDlg::makeCommonWts()
 
                     QGridLayout *pAreaLayout = new QGridLayout;
                     {
-                        QLabel *plabRefArea    = new QLabel("Reference area:");
+                        QLabel *plabRefArea    = new QLabel(tr("Reference area:"));
                         QLabel *plabAreaUnit   = new QLabel(Units::areaUnitQLabel());
-                        QLabel *plabRefChord   = new QLabel("Reference chord:");
+                        QLabel *plabRefChord   = new QLabel(tr("Reference chord:"));
                         QLabel *plabLengthUnit = new QLabel(Units::lengthUnitQLabel());
                         m_pfeRefArea  = new FloatEdit;
                         m_pfeRefChord = new FloatEdit;
-                        QString top("Set the reference dimension used to calculate lift and drag coefficents");
+                        QString top(tr("Set the reference dimension used to calculate lift and drag coefficents"));
                         m_pfeRefArea->setToolTip(top);
                         m_pfeRefChord->setToolTip(top);
 
@@ -276,13 +276,13 @@ void SailDlg::makeCommonWts()
     {
         QVBoxLayout *pMeshLayout = new QVBoxLayout;
         {
-            m_pgbMeshType = new QGroupBox("Mesh type");
+            m_pgbMeshType = new QGroupBox(tr("Mesh type"));
             {
                 QHBoxLayout *pMeshTypeLayout = new QHBoxLayout;
                 {
-                    QLabel *plabMeshType = new QLabel("Mesh type:");
-                    m_prbRuledMesh = new QRadioButton("Ruled");
-                    m_prbFreeMesh  = new QRadioButton("Free");
+                    QLabel *plabMeshType = new QLabel(tr("Mesh type:"));
+                    m_prbRuledMesh = new QRadioButton(tr("Ruled"));
+                    m_prbFreeMesh  = new QRadioButton(tr("Free"));
 
                     pMeshTypeLayout->addWidget(plabMeshType);
                     pMeshTypeLayout->addWidget(m_prbRuledMesh);
@@ -297,13 +297,13 @@ void SailDlg::makeCommonWts()
             {
                 QGridLayout *pRuledMeshLayout = new QGridLayout;
                 {
-                    QLabel *plabX = new QLabel("x");
-                    QLabel *plabZ = new QLabel("z");
-                    QLabel *plabNPanels  = new QLabel("Number of panels=");
-                    QLabel *plabDistType = new QLabel("Distribution=");
+                    QLabel *plabX = new QLabel(tr("x"));
+                    QLabel *plabZ = new QLabel(tr("z"));
+                    QLabel *plabNPanels  = new QLabel(tr("Number of panels="));
+                    QLabel *plabDistType = new QLabel(tr("Distribution="));
                     m_pieNXPanels   = new IntEdit(17);
                     m_pieNZPanels   = new IntEdit(17);
-                    QStringList disttypes = {"UNIFORM", "COSINE", "SINE", "INV_SINE", "TANH", "EXP", "INV_EXP"};
+                    QStringList disttypes = {tr("UNIFORM"), tr("COSINE"), tr("SINE"), tr("INV_SINE"), tr("TANH"), tr("EXP"), tr("INV_EXP")};
                     m_pcbXDistType = new QComboBox;
                     m_pcbZDistType = new QComboBox;
                     m_pcbXDistType->addItems(disttypes);
@@ -340,25 +340,25 @@ void SailDlg::makeCommonWts()
     {
         QGridLayout *pTELayout = new QGridLayout;
         {
-            m_ppbConnectPanels = new QPushButton("Connect panels");
-            QLabel *plabMaxAngle = new QLabel("Max T.E. angle for guesses:");
+            m_ppbConnectPanels = new QPushButton(tr("Connect panels"));
+            QLabel *plabMaxAngle = new QLabel(tr("Max T.E. angle for guesses:"));
             m_pfeTEAngle = new FloatEdit();
-            QLabel *plabDegree = new QLabel("<p>&deg;</p>");
+            QLabel *plabDegree = new QLabel(tr("<p>&deg;</p>"));
 
-            QLabel *plabAutoGuess = new QLabel("Automatic detection:");
-            m_ppbGuessTE = new QPushButton("Guess T.E.");
+            QLabel *plabAutoGuess = new QLabel(tr("Automatic detection:"));
+            m_ppbGuessTE = new QPushButton(tr("Guess T.E."));
 
-            m_ppbClearTE = new QPushButton("Clear T.E. panels");
+            m_ppbClearTE = new QPushButton(tr("Clear T.E. panels"));
 
-            QLabel *pLabTE = new QLabel("Manual selection:");
-            m_ppbTEBotMid = new QPushButton("Mid. panels");
+            QLabel *pLabTE = new QLabel(tr("Manual selection:"));
+            m_ppbTEBotMid = new QPushButton(tr("Mid. panels"));
             m_ppbTEBotMid->setCheckable(true);
-            m_ppbTETop = new QPushButton("Top panels");
+            m_ppbTETop = new QPushButton(tr("Top panels"));
             m_ppbTETop->setCheckable(true);
-            m_pchGuessOpposite = new QCheckBox("Guess opposite");
+            m_pchGuessOpposite = new QCheckBox(tr("Guess opposite"));
 
-            QLabel *pLabCheck = new QLabel("Verification");
-            m_ppbCheckTE = new QPushButton("Check T.E.");
+            QLabel *pLabCheck = new QLabel(tr("Verification"));
+            m_ppbCheckTE = new QPushButton(tr("Check T.E."));
 
             pTELayout->addWidget(m_ppbConnectPanels,  1, 2);
             pTELayout->addWidget(plabMaxAngle,        2, 1);
@@ -389,15 +389,15 @@ void SailDlg::makeCommonWts()
             m_p2dSectionView->setGrid(s_SectionGrid);
             QToolBar *pActionButtons = new QToolBar(this);
             {
-                m_pUndo = new QAction(QIcon(":/icons/OnUndo.png"), "Undo", this);
+                m_pUndo = new QAction(QIcon(":/icons/OnUndo.png"), tr("Undo"), this);
                 m_pUndo->setShortcut(Qt::CTRL | Qt::Key_Z);
-                m_pUndo->setStatusTip("Cancels the last modifiction made to the splines");
+                m_pUndo->setStatusTip(tr("Cancels the last modifiction made to the splines"));
 
-                m_pRedo = new QAction(QIcon(":/icons/OnRedo.png"), "Redo", this);
+                m_pRedo = new QAction(QIcon(":/icons/OnRedo.png"), tr("Redo"), this);
                 m_pRedo->setShortcut(Qt::CTRL | Qt::Key_Y);
-                m_pRedo->setStatusTip("Restores the last cancelled modifiction made to the splines");
+                m_pRedo->setStatusTip(tr("Restores the last cancelled modifiction made to the splines"));
 
-                m_pchFillFoil = new QCheckBox("Fill selected");
+                m_pchFillFoil = new QCheckBox(tr("Fill selected"));
                 m_plbSectionStyle = new LineBtn;
                 m_plbSectionStyle->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
 
@@ -438,11 +438,11 @@ void SailDlg::makeCommonWts()
             m_pglSailView->showPartFrame(false);
             m_pglSailControls = new gl3dGeomControls(m_pglSailView, SailLayout, false);
 
-            m_p3dLightAct        = new  QAction(QIcon(":/icons/light.png"), "Light settings\t(Alt+L)", this);
+            m_p3dLightAct        = new  QAction(QIcon(":/icons/light.png"), tr("Light settings\t(Alt+L)"), this);
 
-            m_pBackImageLoad     = new QAction("Load", this);
-            m_pBackImageClear    = new QAction("Clear", this);
-            m_pBackImageSettings = new QAction("Settings", this);
+            m_pBackImageLoad     = new QAction(tr("Load"), this);
+            m_pBackImageClear    = new QAction(tr("Clear"), this);
+            m_pBackImageSettings = new QAction(tr("Settings"), this);
 
             pViewLayout->addWidget(m_pglSailView);
             pViewLayout->addWidget(m_pglSailControls);
@@ -452,18 +452,18 @@ void SailDlg::makeCommonWts()
 
     m_pButtonBox->setStandardButtons(QDialogButtonBox::Save | QDialogButtonBox::Discard);
     {
-        m_ppbMeshOps = new QPushButton("Mesh actions");
+        m_ppbMeshOps = new QPushButton(tr("Mesh actions"));
         {
-            QMenu *pMeshMenu = new QMenu("Mesh");
+            QMenu *pMeshMenu = new QMenu(tr("Mesh"));
             {
-                m_pCheckFreeEdges   = new QAction("Check free edges", this);
+                m_pCheckFreeEdges   = new QAction(tr("Check free edges"), this);
                 m_pCheckFreeEdges->setShortcut(QKeySequence(Qt::ALT |  Qt::Key_G));
-                m_pConnectPanels    = new QAction("Connect panels", this);
+                m_pConnectPanels    = new QAction(tr("Connect panels"), this);
                 m_pConnectPanels->setShortcut(QKeySequence(Qt::ALT |  Qt::Key_C));
-                m_pClearHighlighted = new QAction("Clear highlighted", this);
+                m_pClearHighlighted = new QAction(tr("Clear highlighted"), this);
                 m_pClearHighlighted->setShortcut(QKeySequence(Qt::ALT | Qt::Key_L));
 
-                m_pClearTE = new QAction("Clear T.E. panels");
+                m_pClearTE = new QAction(tr("Clear T.E. panels"));
 
                 pMeshMenu->addAction(m_pClearTE);
                 pMeshMenu->addSeparator();
@@ -475,33 +475,33 @@ void SailDlg::makeCommonWts()
         }
         m_pButtonBox->addButton(m_ppbMeshOps, QDialogButtonBox::ActionRole);
 
-        m_ppbSailOps = new QPushButton("Sail actions");
+        m_ppbSailOps = new QPushButton(tr("Sail actions"));
         {
-            QMenu *pSailMenu = new QMenu("Sail");
+            QMenu *pSailMenu = new QMenu(tr("Sail"));
             {
-                m_pDefinitions = new QAction("Definitions", this);
+                m_pDefinitions = new QAction(tr("Definitions"), this);
                 connect(m_pDefinitions, SIGNAL(triggered(bool)), SLOT(onDefinitions()));
 
-                m_pTranslate = new QAction("Translate", this);
+                m_pTranslate = new QAction(tr("Translate"), this);
                 connect(m_pTranslate, SIGNAL(triggered(bool)), SLOT(onTranslateSail()));
 
-                m_pRotate = new QAction("Rotate", this); // connected in the ExternalSail subclass
+                m_pRotate = new QAction(tr("Rotate"), this); // connected in the ExternalSail subclass
 
-                m_pScaleSize = new QAction("Scale size", this);
+                m_pScaleSize = new QAction(tr("Scale size"), this);
                 m_pScaleSize->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_F10));
                 connect(m_pScaleSize, SIGNAL(triggered(bool)), SLOT(onScaleSize()));
 
-                m_pScaleShape = new QAction("Scale shape", this);
+                m_pScaleShape = new QAction(tr("Scale shape"), this);
                 m_pScaleShape->setShortcut(Qt::Key_F10);
                 connect(m_pScaleShape, SIGNAL(triggered(bool)), SLOT(onScaleShape()));
 
 
-                m_pFlipXZ = new QAction("Flip XZ", this);
+                m_pFlipXZ = new QAction(tr("Flip XZ"), this);
                 connect(m_pFlipXZ, SIGNAL(triggered(bool)), SLOT(onFlipXZ()));
 
-                m_pAlignLuff = new QAction("Align luff points", this);
-                QString tip("<p>Translates the intermediate sections to align the "
-                            "leading points between the top and bottom sections</p>");
+                m_pAlignLuff = new QAction(tr("Align luff points"), this);
+                QString tip(tr("<p>Translates the intermediate sections to align the "
+                            "leading points between the top and bottom sections</p>"));
                 m_pAlignLuff->setToolTip(tip);
                 connect(m_pAlignLuff, SIGNAL(triggered(bool)), SLOT(onAlignLuffPoints()));
 
@@ -516,21 +516,21 @@ void SailDlg::makeCommonWts()
                 pSailMenu->addSeparator();
                 pSailMenu->addAction(m_pAlignLuff);
 
-                QMenu *pExportMenu = pSailMenu->addMenu("Export");
+                QMenu *pExportMenu = pSailMenu->addMenu(tr("Export"));
                 {
-                    m_pExportXML = new QAction("to XML", this);
+                    m_pExportXML = new QAction(tr("to XML"), this);
                     connect(m_pExportXML, SIGNAL(triggered(bool)), SLOT(onExportToXml()));
                     pExportMenu->addAction(m_pExportXML);
 
-                    m_pExportStep = new QAction("to STEP", this);
+                    m_pExportStep = new QAction(tr("to STEP"), this);
                     connect(m_pExportStep, SIGNAL(triggered(bool)), SLOT(onExportToStep()));
                     pExportMenu->addAction(m_pExportStep);
 
-                    m_pExportMeshToSTL = new QAction("mesh to STL", this);
+                    m_pExportMeshToSTL = new QAction(tr("mesh to STL"), this);
                     connect(m_pExportMeshToSTL, SIGNAL(triggered(bool)), SLOT(onExportMeshToStl()));
                     pExportMenu->addAction(m_pExportMeshToSTL);
 
-                    m_pExportTrianglesToSTL = new QAction("triangulation to STL", this);
+                    m_pExportTrianglesToSTL = new QAction(tr("triangulation to STL"), this);
                     connect(m_pExportTrianglesToSTL, SIGNAL(triggered(bool)), SLOT(onExportTrianglesToStl()));
                     pExportMenu->addAction(m_pExportTrianglesToSTL);
                 }
@@ -701,7 +701,7 @@ void SailDlg::makeBaseTables()
     //Set Frame Table
     m_pcptSections = new CPTableView(this);
     m_pcptSections->setEditable(true);
-    m_pcptSections->setWindowTitle("Sail definition");
+    m_pcptSections->setWindowTitle(tr("Sail definition"));
     m_pcptSections->setSelectionBehavior(QAbstractItemView::SelectItems);
     m_pcptSections->setEditTriggers(QAbstractItemView::AllEditTriggers);
 
@@ -712,7 +712,7 @@ void SailDlg::makeBaseTables()
     //Set Point Table
     m_pcptPoints = new CPTableView(this);
     m_pcptPoints->setEditable(true);
-    m_pcptPoints->setWindowTitle("Point coordinates");
+    m_pcptPoints->setWindowTitle(tr("Point coordinates"));
     m_pcptPoints->setSelectionBehavior(QAbstractItemView::SelectItems);
     m_pcptPoints->setEditTriggers(QAbstractItemView::DoubleClicked  | QAbstractItemView::SelectedClicked |
                                   QAbstractItemView::EditKeyPressed | QAbstractItemView::AnyKeyPressed);
@@ -736,7 +736,7 @@ void SailDlg::makeBaseTables()
     m_pPointDelegate->setItemTypes({XflDelegate::DOUBLE, XflDelegate::DOUBLE, XflDelegate::ACTION});
     m_pSectionTableSplitter = new QSplitter(Qt::Horizontal);
     {
-        QGroupBox *pSectionBox = new QGroupBox("Sections");
+        QGroupBox *pSectionBox = new QGroupBox(tr("Sections"));
         {
             QVBoxLayout *pSectionBoxLayout = new QVBoxLayout;
             {
@@ -746,7 +746,7 @@ void SailDlg::makeBaseTables()
         }
 
         //lays out the control point table
-        QGroupBox *pgbNURBS = new QGroupBox("Section points coordinates");
+        QGroupBox *pgbNURBS = new QGroupBox(tr("Section points coordinates"));
         {
             QVBoxLayout *pPointDataLayout = new QVBoxLayout;
             {
@@ -903,7 +903,7 @@ m_pSail->makeTriPanels(Vector3d());*/
 
 void SailDlg::contextMenuEvent(QContextMenuEvent *pEvent)
 {
-    QMenu *pContextMenu = new QMenu("GraphMenu");
+    QMenu *pContextMenu = new QMenu(tr("GraphMenu"));
     {
         pContextMenu->addAction(m_pTranslate);
         pContextMenu->addAction(m_pScaleShape);
@@ -915,7 +915,7 @@ void SailDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         pContextMenu->addSeparator();
         pContextMenu->addAction(m_pAlignLuff);
         pContextMenu->addSeparator();
-        QMenu *pExportMenu = pContextMenu->addMenu("Export");
+        QMenu *pExportMenu = pContextMenu->addMenu(tr("Export"));
         {
             pExportMenu->addAction(m_pExportXML);
             pExportMenu->addAction(m_pExportMeshToSTL);
@@ -925,7 +925,7 @@ void SailDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         pContextMenu->addAction(m_p3dLightAct);
         pContextMenu->addSeparator();
 
-        QMenu *pBackImageMenu = pContextMenu->addMenu("Background image");
+        QMenu *pBackImageMenu = pContextMenu->addMenu(tr("Background image"));
         {
             pBackImageMenu->addAction(m_pBackImageLoad);
             pBackImageMenu->addAction(m_pBackImageClear);
@@ -1388,7 +1388,7 @@ void SailDlg::onExportTrianglesToStl()
 
     if (!XFile.open(QIODevice::WriteOnly))
     {
-        QMessageBox::warning(window(), "Warning", "Could not open the file for writing");
+        QMessageBox::warning(window(), tr("Warning"), tr("Could not open the file for writing"));
         return;
     }
 
@@ -1679,7 +1679,7 @@ void SailDlg::onCheckFreeEdges()
 
     m_pSail->triMesh().getFreeEdges(freeedges);
 
-    QVector<Segment3d> qVec = QVector<Segment3d>(freeedges.begin(), freeedges.end());
+    QVector<Segment3d> qVec(freeedges.begin(), freeedges.end());
     m_pglSailView->setSegments(qVec);
 
     m_pglSailView->resetgl3dMesh();
@@ -1713,7 +1713,7 @@ void SailDlg::onCheckTEPanels()
         m_ppto->onAppendQText("No TE error.\n");
     }
 
-    QVector<int> qVec = QVector<int>(errorlist.begin(), errorlist.end());
+    QVector<int> qVec(errorlist.begin(), errorlist.end());
     m_pglSailView->setHighlightList(qVec);
     m_pglSailView->resetgl3dMesh();
     m_pglSailView->update();
@@ -1917,7 +1917,7 @@ bool SailDlg::guessThinTE()
     std::vector<Segment3d> freeedges;
 
     m_pSail->triMesh().getFreeEdges(freeedges);
-    QVector<Segment3d> qVec = QVector<Segment3d>(freeedges.begin(), freeedges.end());
+    QVector<Segment3d> qVec(freeedges.begin(), freeedges.end());
     m_pglSailView->setSegments(qVec);
 
     if(freeedges.size()==0)

@@ -1350,7 +1350,7 @@ void gl3dXPlaneView::computeP4VelocityVectors(Opp3d const *pPOpp, QVector<Vector
         {
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
             futureSync.addFuture(QtConcurrent::run(this, &gl3dXPlaneView::makeQuadVelocityBlock,
-                                                   iBlock, points, pPOpp->gamma().constData(), pPOpp->sigma().constData(), velvectors.data()));
+                                                   iBlock, points, pPOpp->gamma().data(), pPOpp->sigma().data(), velvectors.data()));
 #else
             futureSync.addFuture(QtConcurrent::run(&gl3dXPlaneView::makeQuadVelocityBlock, this,
                                                    iBlock, points, pPOpp->gamma().data(), pPOpp->sigma().data(), velvectors.data()));
@@ -2221,7 +2221,7 @@ void gl3dXPlaneView::glMakeOppBuffers()
         }
         if(m_pPOpp3dControls->m_b3dCp)
         {
-            m_ColourLegend.setTitle("Cp");
+            m_ColourLegend.setTitle(tr("Cp"));
             m_ColourLegend.setRange(lmin, lmax);
             m_ColourLegend.makeLegend();
         }
@@ -2274,7 +2274,7 @@ void gl3dXPlaneView::glMakeOppBuffers()
         }
         if(m_pPOpp3dControls->m_bGamma)
         {
-            m_ColourLegend.setTitle("Gamma x1000");
+            m_ColourLegend.setTitle(tr("Gamma x1000"));
             m_ColourLegend.setRange(lmin*1000.0,lmax*1000.0);
             m_ColourLegend.makeLegend();
         }
@@ -2429,7 +2429,7 @@ void gl3dXPlaneView::glMakeOppBuffers()
                 gl::makeQuadContoursOnGrid(m_pglXPlaneBuffers->m_vboContourLines, m_pCrossFlowCtrls->s_nVorticitySamples, m_pCrossFlowCtrls->s_nVorticitySamples,
                                          m_pCrossFlowCtrls->m_GridNodesOmega, m_pCrossFlowCtrls->m_OmegaField, xfl::isMultiThreaded());
                 m_ColourLegend.setRange(lmin*1000.0, lmax*1000.0);
-                m_ColourLegend.setTitle("Omega x1000.0");
+                m_ColourLegend.setTitle(tr("Omega x1000.0"));
                 m_ColourLegend.makeLegend();
             }
 

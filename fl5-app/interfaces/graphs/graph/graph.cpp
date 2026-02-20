@@ -2466,17 +2466,19 @@ QColor Graph::borderColor() const {return xfl::fromfl5Clr(m_theBorderStyle.m_Col
 
 void Graph::setXVarStdList(std::vector<std::string> const &XVarList)
 {
-    m_XVarList.resize(XVarList.size());
+    m_XVarList.clear();
+    m_XVarList.reserve(XVarList.size());
     for(uint i=0; i<XVarList.size(); i++)
-        m_XVarList[i] = QString::fromStdString(XVarList.at(i));
+        m_XVarList.append(QString::fromStdString(XVarList.at(i)));
 }
 
 
 void Graph::setYVarStdList(std::vector<std::string> const &YVarList)
 {
-    m_YVarList.resize(YVarList.size());
+    m_YVarList.clear();
+    m_YVarList.reserve(YVarList.size());
     for(uint i=0; i<YVarList.size(); i++)
-        m_YVarList[i] = QString::fromStdString(YVarList.at(i));
+        m_YVarList.append(QString::fromStdString(YVarList.at(i)));
 }
 
 

@@ -51,7 +51,7 @@ double AeroDataDlg::s_Temperature = STANDARDTEMPERATURE;
 
 AeroDataDlg::AeroDataDlg(QWidget *parent) : QDialog(parent)
 {
-    setWindowTitle("Air data");
+    setWindowTitle(tr("Air data"));
 
     UniversalGasConstant = 8.3144621;     // [J/(mol.K)]
     DryAirMolarMass      = 0.02896442;    // [kg/mol]
@@ -146,17 +146,17 @@ double AeroDataDlg::airDensity()
 
 void AeroDataDlg::setupLayout()
 {
-    QLabel *pValid = new QLabel("<p>Applicable in the troposphere<br> i.e. Altitude &lt; 11000m</p>");
+    QLabel *pValid = new QLabel(tr("<p>Applicable in the troposphere<br> i.e. Altitude &lt; 11000m</p>"));
     pValid->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
     QGridLayout *pDataLayout = new QGridLayout;
     {
-        QLabel *plabTemp           = new QLabel("Temperature=");
-        QLabel *plabAltitude       = new QLabel("Altitude=");
-        QLabel *plabAirPressure    = new QLabel("Air pressure=");
+        QLabel *plabTemp           = new QLabel(tr("Temperature="));
+        QLabel *plabAltitude       = new QLabel(tr("Altitude="));
+        QLabel *plabAirPressure    = new QLabel(tr("Air pressure="));
         QLabel *plabAirDens        = new QLabel("<p>&rho;=</p>");
         QLabel *plabDynamicVisc    = new QLabel("<p>&mu;=</p>");
         QLabel *plabKinematicVisc  = new QLabel("<p>&nu;=</p>");
-        QLabel *plabSpeedOfSound   = new QLabel("Speed of Sound=");
+        QLabel *plabSpeedOfSound   = new QLabel(tr("Speed of Sound="));
 
 
         m_pfeTemperature = new FloatEdit(s_Temperature);
@@ -166,11 +166,11 @@ void AeroDataDlg::setupLayout()
 
         m_plabAirPressure        = new QLabel;
         m_plabAirDensity         = new QLabel;
-        m_plabAirDensity->setToolTip("Density");
+        m_plabAirDensity->setToolTip(tr("Density"));
         m_plabDynamicViscosity   = new QLabel;
-        m_plabDynamicViscosity->setToolTip("Dynamic viscosity");
+        m_plabDynamicViscosity->setToolTip(tr("Dynamic viscosity"));
         m_plabKinematicViscosity = new QLabel;
-        m_plabKinematicViscosity->setToolTip("Kinematic viscosity");
+        m_plabKinematicViscosity->setToolTip(tr("Kinematic viscosity"));
         m_plabSpeedOfSound       = new QLabel;
 
         m_plabAirPressure->setAlignment(Qt::AlignRight);

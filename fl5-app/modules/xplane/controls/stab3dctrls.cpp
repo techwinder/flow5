@@ -51,7 +51,7 @@ double Stab3dCtrls::s_Amplitude(0.5);
 
 Stab3dCtrls::Stab3dCtrls(QWidget *pParent) : QWidget(pParent)
 {
-    setWindowTitle("Stability 3d controls");
+    setWindowTitle(tr("Stability 3d controls"));
 
     m_iActiveMode = -1;
 
@@ -75,7 +75,7 @@ void Stab3dCtrls::setupLayout()
         {
             QButtonGroup *pGroup = new QButtonGroup;
             {
-                m_prbNoMode = new QRadioButton("No mode");
+                m_prbNoMode = new QRadioButton(tr("No mode"));
                 pGroup->addButton(m_prbNoMode);
 
                 for(int imode=0; imode<NMODES; imode++)
@@ -85,8 +85,8 @@ void Stab3dCtrls::setupLayout()
                 }
             }
 
-            QLabel *plabLong = new QLabel("Longitudinal mode:");
-            QLabel *plabLat  = new QLabel("Lateral mode:");
+            QLabel *plabLong = new QLabel(tr("Longitudinal mode:"));
+            QLabel *plabLat  = new QLabel(tr("Lateral mode:"));
 
             pModeLayout->addWidget(m_prbNoMode,  1, 3, 1, 4);
             pModeLayout->addWidget(plabLong,     2, 1);
@@ -103,22 +103,22 @@ void Stab3dCtrls::setupLayout()
 
         QHBoxLayout *pAmplitudeLayout = new QHBoxLayout;
         {
-            QLabel *plabAmplitude = new QLabel("Amplitude:");
+            QLabel *plabAmplitude = new QLabel(tr("Amplitude:"));
 
             m_pslAnimAmplitude = new QSlider(Qt::Horizontal);
-            m_pslAnimAmplitude->setToolTip("<p>Sets an arbitrary normalization factor used to display the mode state.<br>"
+            m_pslAnimAmplitude->setToolTip(tr("<p>Sets an arbitrary normalization factor used to display the mode state.<br>"
                                            "The 100% factor is calculated so that:"
                                            "<ul>"
                                            "<li>the maximum displacement does not exceed 20% of the span length,</li>"
                                            "<li>the maximum rotation around any axis does not exceed 20&deg;.</li>"
-                                           "</ul></p>");
+                                           "</ul></p>"));
             m_pslAnimAmplitude->setRange(0, 100);
             m_pslAnimAmplitude->setTickInterval(10);
             m_pslAnimAmplitude->setTickPosition(QSlider::TicksBelow);
             m_pslAnimAmplitude->setSliderPosition(int(s_Amplitude*100.0));
 
-            QLabel*plab0   = new QLabel("0%");
-            QLabel*plab100 = new QLabel("100%");
+            QLabel*plab0   = new QLabel(tr("0%"));
+            QLabel*plab100 = new QLabel(tr("100%"));
 
             pAmplitudeLayout->addWidget(plabAmplitude);
             pAmplitudeLayout->addSpacing(13);
@@ -129,9 +129,9 @@ void Stab3dCtrls::setupLayout()
 
         QHBoxLayout *pAnimationCommandsLayout = new QHBoxLayout;
         {
-            m_ppbAnimate = new QPushButton("Animate");
+            m_ppbAnimate = new QPushButton(tr("Animate"));
             m_ppbAnimate->setCheckable(true);
-            m_ppbAnimateRestart = new QPushButton("Restart");
+            m_ppbAnimateRestart = new QPushButton(tr("Restart"));
             pAnimationCommandsLayout->addWidget(m_ppbAnimate);
             pAnimationCommandsLayout->addWidget(m_ppbAnimateRestart);
         }
@@ -139,11 +139,11 @@ void Stab3dCtrls::setupLayout()
         QHBoxLayout *pStepLayout = new  QHBoxLayout;
         {
             m_pfeModeStep = new FloatEdit(s_dt);
-            m_pfeModeStep->setToolTip("<p>The time increment used to solve numerically the differential equations of motion. "
+            m_pfeModeStep->setToolTip(tr("<p>The time increment used to solve numerically the differential equations of motion. "
                                       "The display is updated after each time increment."
-                                      "</p>");
-            QLabel *pStepLabel = new QLabel("Time step:");
-            QLabel *pStepUnit  = new QLabel("s");
+                                      "</p>"));
+            QLabel *pStepLabel = new QLabel(tr("Time step:"));
+            QLabel *pStepUnit  = new QLabel(tr("s"));
             pStepLayout->addWidget(pStepLabel);
             pStepLayout->addWidget(m_pfeModeStep);
             pStepLayout->addWidget(pStepUnit);

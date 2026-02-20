@@ -38,7 +38,7 @@ double FoilTEGapDlg::s_BlendLength = 0.2;
 
 FoilTEGapDlg::FoilTEGapDlg(QWidget *pParent) : FoilDlg(pParent)
 {
-    setWindowTitle("Trailing edge gap");
+    setWindowTitle(tr("Trailing edge gap"));
 
     s_BlendLength = 0.8;
 

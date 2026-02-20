@@ -26,6 +26,7 @@
 #pragma once
 
 #include <QApplication>
+#include <QTranslator>
 
 
 class MainFrame;
@@ -44,9 +45,14 @@ class Flow5App : public QApplication
 
         void startTrace(const QString &filename);
 
+        void loadTranslations();
+
     private:
         MainFrame *m_pMainFrame;
         bool m_bDone;
+
+        QTranslator m_qtTranslator;
+        QTranslator m_appTranslator;
 };
 
 

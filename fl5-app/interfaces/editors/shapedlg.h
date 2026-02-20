@@ -29,6 +29,7 @@
 
 
 #include <TopoDS_Shape.hxx>
+#include <TopoDS_ListOfShape.hxx>
 
 
 #include <QDialog>

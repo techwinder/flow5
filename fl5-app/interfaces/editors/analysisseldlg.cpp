@@ -61,7 +61,7 @@ void AnalysisSelDlg::setupLayout()
 {
     QVBoxLayout *pMainLayout = new QVBoxLayout;
     {
-        m_plabTitle = new QLabel("Select the analyses to duplicate:");
+        m_plabTitle = new QLabel(tr("Select the analyses to duplicate:"));
 
         m_pStruct = new ExpandableTreeView;
         m_pStruct->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
@@ -72,10 +72,10 @@ void AnalysisSelDlg::setupLayout()
         m_pStruct->setSelectionMode(QAbstractItemView::MultiSelection);
 
         QStringList labels;
-        labels << "Object" << "1234567"<< "";
+        labels << tr("Object") << "1234567"<< "";
 
         m_pModel = new ObjectTreeModel(this);
-        m_pModel->setHeaderData(0, Qt::Horizontal, "Objects", Qt::DisplayRole);
+        m_pModel->setHeaderData(0, Qt::Horizontal, tr("Objects"), Qt::DisplayRole);
         m_pModel->setHeaderData(1, Qt::Horizontal, "1234567890123", Qt::EditRole);
         m_pModel->setHeaderData(1, Qt::Horizontal, "1234567890123", Qt::DisplayRole);
         m_pModel->setHeaderData(2, Qt::Horizontal, "123", Qt::DisplayRole);
@@ -146,12 +146,12 @@ void AnalysisSelDlg::hideEvent(QHideEvent *pEvent)
 void AnalysisSelDlg::initDialog(Foil const*pCurFoil, Plane const*pCurPlane, Boat const*pCurBoat)
 {
     ObjectTreeItem *pRootItem = m_pModel->rootItem();
-    pRootItem->setName("Objects");
+    pRootItem->setName(tr("Objects"));
 
     if(pCurFoil)
     {
         m_Object = FOIL;
-        m_plabTitle->setText(QString::fromStdString(pCurFoil->name())+":\nSelect the analyses to duplicate");
+        m_plabTitle->setText(QString::fromStdString(pCurFoil->name())+tr(":\nSelect the analyses to duplicate"));
         for(int iFoil=0; iFoil<Objects2d::nFoils(); iFoil++)
         {
             Foil const *pFoil = Objects2d::foilAt(iFoil);
@@ -176,7 +176,7 @@ void AnalysisSelDlg::initDialog(Foil const*pCurFoil, Plane const*pCurPlane, Boat
     else if(pCurPlane)
     {
         m_Object = PLANE;
-        m_plabTitle->setText(QString::fromStdString(pCurPlane->name())+":\nSelect the analyses to duplicate");
+        m_plabTitle->setText(QString::fromStdString(pCurPlane->name())+tr(":\nSelect the analyses to duplicate"));
         for(int iPlane=0; iPlane<Objects3d::nPlanes(); iPlane++)
         {
             Plane const *pPlane = Objects3d::planeAt(iPlane);
@@ -201,7 +201,7 @@ void AnalysisSelDlg::initDialog(Foil const*pCurFoil, Plane const*pCurPlane, Boat
     else if(pCurBoat)
     {
        m_Object = BOAT;
-       m_plabTitle->setText(QString::fromStdString(pCurBoat->name())+":\nSelect the analyses to duplicate");
+       m_plabTitle->setText(QString::fromStdString(pCurBoat->name())+tr(":\nSelect the analyses to duplicate"));
        for(int iBoat=0; iBoat<SailObjects::nBoats(); iBoat++)
        {
            Boat const *pBoat = SailObjects::boat(iBoat);

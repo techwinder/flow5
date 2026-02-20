@@ -77,11 +77,11 @@ void Polar3dDlg::makeBaseCommonControls()
 
             QHBoxLayout *pPolarNameLayout = new QHBoxLayout;
             {
-                m_pchAutoName = new QCheckBox("Auto analysis name");
-                m_plePolarName = new QLineEdit("Polar name");
+                m_pchAutoName = new QCheckBox(tr("Auto analysis name"));
+                m_plePolarName = new QLineEdit(tr("Polar name"));
                 m_plePolarName->setClearButtonEnabled(true);
 
-                m_ppbNameOptions = new QPushButton("Options");
+                m_ppbNameOptions = new QPushButton(tr("Options"));
                 pPolarNameLayout->addWidget(m_pchAutoName);
                 pPolarNameLayout->addWidget(m_plePolarName);
                 pPolarNameLayout->addWidget(m_ppbNameOptions);
@@ -98,15 +98,15 @@ void Polar3dDlg::makeBaseCommonControls()
         {
             QVBoxLayout *pAreaTypeLayout = new QVBoxLayout;
             {
-                m_prbArea1 = new QRadioButton("Wing planform (deprecated)");
-                m_prbArea2 = new QRadioButton("Wing planform projected on xy plane");
-                m_prbArea3 = new QRadioButton("Custom");
+                m_prbArea1 = new QRadioButton(tr("Wing planform (deprecated)"));
+                m_prbArea2 = new QRadioButton(tr("Wing planform projected on xy plane"));
+                m_prbArea3 = new QRadioButton(tr("Custom"));
 
                 QGridLayout *pRefAreaLayout = new QGridLayout;
                 {
-                    QLabel *pLabRefArea  = new QLabel("Ref. area=");
-                    QLabel *pLabRefSpan  = new QLabel("Ref. span length=");
-                    QLabel *pLabRefChord = new QLabel("Ref. chord length=");
+                    QLabel *pLabRefArea  = new QLabel(tr("Ref. area="));
+                    QLabel *pLabRefSpan  = new QLabel(tr("Ref. span length="));
+                    QLabel *pLabRefChord = new QLabel(tr("Ref. chord length="));
                     m_pfeRefArea  = new FloatEdit(0.0, 3);
                     m_pfeRefChord = new FloatEdit(0.0, 3);
                     m_pfeRefSpan  = new FloatEdit(0.0, 3);
@@ -144,7 +144,7 @@ void Polar3dDlg::makeBaseCommonControls()
 
             QVBoxLayout *pOtherWingsLayout = new QVBoxLayout;
             {
-                m_pchOtherWings = new QCheckBox("Include area of OTHERWINGS");
+                m_pchOtherWings = new QCheckBox(tr("Include area of OTHERWINGS"));
                 pOtherWingsLayout->addWidget(m_pchOtherWings);
                 pOtherWingsLayout->addStretch();
             }
@@ -159,21 +159,21 @@ void Polar3dDlg::makeBaseCommonControls()
     {
         QVBoxLayout *pMethodLayout = new QVBoxLayout;
         {
-            QGroupBox *pPanelMethodFrame = new QGroupBox("Analysis method");
+            QGroupBox *pPanelMethodFrame = new QGroupBox(tr("Analysis method"));
             {
                 QGridLayout *pPanelMethodLayout= new QGridLayout;
                 {
-                    m_prbLLTMethod    = new QRadioButton("LLT");
-                    m_prbVLM1Method   = new QRadioButton("Horseshoe vortices");
-                    m_prbVLM2Method   = new QRadioButton("Ring vortices" );
-                    m_prbQuadMethod   = new QRadioButton("Uniform density quad panels");
-                    m_prbTriUniMethod = new QRadioButton("Uniform density triangular panels");
-                    m_prbTriLinMethod = new QRadioButton("Linear density triangular panels");
+                    m_prbLLTMethod    = new QRadioButton(tr("LLT"));
+                    m_prbVLM1Method   = new QRadioButton(tr("Horseshoe vortices"));
+                    m_prbVLM2Method   = new QRadioButton(tr("Ring vortices"));
+                    m_prbQuadMethod   = new QRadioButton(tr("Uniform density quad panels"));
+                    m_prbTriUniMethod = new QRadioButton(tr("Uniform density triangular panels"));
+                    m_prbTriLinMethod = new QRadioButton(tr("Linear density triangular panels"));
 
-                    QLabel*plabLLT    = new QLabel("(Main wing only) (2d polar mesh required)");
-                    QLabel*plabVLM1   = new QLabel("(VLM1) (No sideslip) (Fuselage panels will be ignored)");
-                    QLabel*plabVLM2   = new QLabel("(VLM2) (Fuselage panels will be ignored)");
-                    QLabel*plabTriUni = new QLabel("(Recommended method)");
+                    QLabel*plabLLT    = new QLabel(tr("(Main wing only) (2d polar mesh required)"));
+                    QLabel*plabVLM1   = new QLabel(tr("(VLM1) (No sideslip) (Fuselage panels will be ignored)"));
+                    QLabel*plabVLM2   = new QLabel(tr("(VLM2) (Fuselage panels will be ignored)"));
+                    QLabel*plabTriUni = new QLabel(tr("(Recommended method)"));
 
 
                     pPanelMethodLayout->addWidget(m_prbLLTMethod,     1, 1);
@@ -194,18 +194,18 @@ void Polar3dDlg::makeBaseCommonControls()
                 pPanelMethodFrame->setLayout(pPanelMethodLayout);
             }
 
-            m_pgbWingSurf = new QGroupBox("Wings as");
+            m_pgbWingSurf = new QGroupBox(tr("Wings as"));
             {
                 QVBoxLayout *pWingSurfLayout = new QVBoxLayout;
                 {
-                    m_prbThinSurfaces  = new QRadioButton("Thin surfaces\t(Recommended method)");
-                    m_prbThinSurfaces->setToolTip("<p>When assembling the plane, "
+                    m_prbThinSurfaces  = new QRadioButton(tr("Thin surfaces\t(Recommended method)"));
+                    m_prbThinSurfaces->setToolTip(tr("<p>When assembling the plane, "
                                                   "ensure that the fuselage's mesh conforms to the wings' "
-                                                  "mid-camber line at their root chords.</p>");
-                    m_prbThickSurfaces = new QRadioButton("Thick surfaces");
-                    m_prbThickSurfaces->setToolTip("<p>When assembling the plane, "
+                                                  "mid-camber line at their root chords.</p>"));
+                    m_prbThickSurfaces = new QRadioButton(tr("Thick surfaces"));
+                    m_prbThickSurfaces->setToolTip(tr("<p>When assembling the plane, "
                                                   "ensure that the fuselage's mesh conforms to the wings' "
-                                                  "top and bottom surfaces at their root chords .</p>");
+                                                  "top and bottom surfaces at their root chords .</p>"));
 
                     pWingSurfLayout->addWidget(m_prbThinSurfaces);
                     pWingSurfLayout->addWidget(m_prbThickSurfaces);
@@ -213,12 +213,12 @@ void Polar3dDlg::makeBaseCommonControls()
                 m_pgbWingSurf->setLayout(pWingSurfLayout);
             }
 
-            m_pgbFuseMi = new QGroupBox("Moments");
+            m_pgbFuseMi = new QGroupBox(tr("Moments"));
             {
                 QVBoxLayout*pFuseMiLayout = new QVBoxLayout;
                 {
-                    m_pchIncludeFuseMi = new QCheckBox("Include the contribution of fuselage pressure forces");
-                    QString tip("<p>The pressure forces acting on the fuselage panels can be severely disturbed "
+                    m_pchIncludeFuseMi = new QCheckBox(tr("Include the contribution of fuselage pressure forces"));
+                    QString tip(tr("<p>The pressure forces acting on the fuselage panels can be severely disturbed "
                                "and overevaluated at the locations where the wing TE connect to the fuselage, "
                                "and where the wake panels which extend from the wing TE are likely "
                                "to interact numerically with the fuselage. "
@@ -226,10 +226,10 @@ void Polar3dDlg::makeBaseCommonControls()
                                "calculation of inviscid moments."
                                "<br>"
                                "<b>Recommendation:</b> Activate only in the case of a standalone fuselage, or if the "
-                               "wake panels are not likely to interact with the fuselage panels.</p>");
+                               "wake panels are not likely to interact with the fuselage panels.</p>"));
                     m_pchIncludeFuseMi->setToolTip(tip);
 
-                    m_pchIncludeWingTipMi = new QCheckBox("Include the contribution of wing tip pressure forces");
+                    m_pchIncludeWingTipMi = new QCheckBox(tr("Include the contribution of wing tip pressure forces"));
 
                     QLabel *pFlow5Link = new QLabel;
                     pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Analysis/Moments.html>https://flow5.tech/docs/flow5_doc/Analysis/Moments.html</a>");
@@ -244,13 +244,13 @@ void Polar3dDlg::makeBaseCommonControls()
                 m_pgbFuseMi->setLayout(pFuseMiLayout);
             }
 
-            m_pgbHullBox = new QGroupBox("Hull");
+            m_pgbHullBox = new QGroupBox(tr("Hull"));
             {
                 QHBoxLayout *pWingSurfLayout = new QHBoxLayout;
                 {
-                    m_pchIncludeHull  = new QCheckBox("Include hull (not recommended)");
-                    m_pchIncludeHull->setToolTip("<p>The hull <b>should not be included</b> in the analysis except "
-                                                 "if it is fully emerged such as in the case of the AC75.</p>");
+                    m_pchIncludeHull  = new QCheckBox(tr("Include hull (not recommended)"));
+                    m_pchIncludeHull->setToolTip(tr("<p>The hull <b>should not be included</b> in the analysis except "
+                                                 "if it is fully emerged such as in the case of the AC75.</p>"));
                     pWingSurfLayout->addWidget(m_pchIncludeHull);
                     pWingSurfLayout->addStretch();
                 }
@@ -271,16 +271,16 @@ void Polar3dDlg::makeBaseCommonControls()
     {
         QGridLayout *pAeroDataLayout = new QGridLayout;
         {
-            QLabel *plabRho = new QLabel("<p>&rho;=</p>");
+            QLabel *plabRho = new QLabel(tr("<p>&rho;=</p>"));
             m_pfeDensity = new FloatEdit;
-            m_pfeDensity->setToolTip("Density");
+            m_pfeDensity->setToolTip(tr("Density"));
             QLabel *plabDensityUnit = new QLabel(Units::densityUnitQLabel());
-            QLabel *plabNu = new QLabel("<p>&nu;=</p>");
+            QLabel *plabNu = new QLabel(tr("<p>&nu;=</p>"));
             m_pfeViscosity = new FloatEdit;
-            m_pfeViscosity->setToolTip("Kinematic viscosity");
+            m_pfeViscosity->setToolTip(tr("Kinematic viscosity"));
             QLabel *plabViscosityUnit = new QLabel(Units::viscosityUnitQLabel());
 
-            m_ppbFromData = new QPushButton("From altitude and temperature");
+            m_ppbFromData = new QPushButton(tr("From altitude and temperature"));
 
             pAeroDataLayout->addWidget(plabRho,              1, 1, Qt::AlignRight);
             pAeroDataLayout->addWidget(m_pfeDensity,         1, 2);
@@ -304,36 +304,36 @@ void Polar3dDlg::makeBaseCommonControls()
         {
             QVBoxLayout *pWakeTypeLayout = new QVBoxLayout;
             {
-                m_prbPanelWake  = new QRadioButton("Flat panel wake");
-                m_prbVortonWake = new QRadioButton("Vortex Particle Wake (Not recommended)");
+                m_prbPanelWake  = new QRadioButton(tr("Flat panel wake"));
+                m_prbVortonWake = new QRadioButton(tr("Vortex Particle Wake (Not recommended)"));
                 pWakeTypeLayout->addWidget(m_prbPanelWake);
                 pWakeTypeLayout->addWidget(m_prbVortonWake);
                 pWakeTypeLayout->addStretch();
             }
 
-            m_pgbFlatWakePanels = new QGroupBox("Flat wake panels");
+            m_pgbFlatWakePanels = new QGroupBox(tr("Flat wake panels"));
             {
                 QGridLayout *pWakeGridLayout = new QGridLayout;
                 {
-                    QLabel *pLabWake = new QLabel("The wake should extend to a distance where the influence of the plane's panels "
-                                                  "is no longer felt, e.g. > 30 x chord");
+                    QLabel *pLabWake = new QLabel(tr("The wake should extend to a distance where the influence of the plane's panels "
+                                                  "is no longer felt, e.g. > 30 x chord"));
                     m_pieNXWakePanels = new IntEdit(1);
-                    m_pieNXWakePanels->setToolTip("<p>The number of panels in each streamwise wake column.</p>");
+                    m_pieNXWakePanels->setToolTip(tr("<p>The number of panels in each streamwise wake column.</p>"));
                     m_pfeWakeLength = new FloatEdit(1.0f);
-                    m_pfeWakeLength->setToolTip("<p>The wake's total length.<br>Defines the position of the Trefftz plane.</p>");
+                    m_pfeWakeLength->setToolTip(tr("<p>The wake's total length.<br>Defines the position of the Trefftz plane.</p>"));
                     m_pfeWakePanelFactor = new FloatEdit(1.1f);
-                    m_pfeWakePanelFactor->setToolTip("<p>The ratio between the length of two wake panels in the x direction</p>");
+                    m_pfeWakePanelFactor->setToolTip(tr("<p>The ratio between the length of two wake panels in the x direction</p>"));
 
-                    QLabel *pLab1 = new QLabel("Nb. of wake panels:");
-                    QLabel *pLab2 = new QLabel("Total length:");
-                    QLabel *pLab3 = new QLabel("X-progression factor:");
+                    QLabel *pLab1 = new QLabel(tr("Nb. of wake panels:"));
+                    QLabel *pLab2 = new QLabel(tr("Total length:"));
+                    QLabel *pLab3 = new QLabel(tr("X-progression factor:"));
 
-                    m_plabWakeLengthLabUnit = new QLabel("x reference chord");
+                    m_plabWakeLengthLabUnit = new QLabel(tr("x reference chord"));
 
                     pWakeGridLayout->addWidget(pLabWake,                  1,1,1,3);
                     pWakeGridLayout->addWidget(pLab1,                     2,1, Qt::AlignRight | Qt::AlignVCenter);
                     pWakeGridLayout->addWidget(m_pieNXWakePanels,         2,2);
-                    pWakeGridLayout->addWidget(new QLabel("/wake column"),2,3, Qt::AlignLeft | Qt::AlignVCenter);
+                    pWakeGridLayout->addWidget(new QLabel(tr("/wake column")),2,3, Qt::AlignLeft | Qt::AlignVCenter);
                     pWakeGridLayout->addWidget(pLab2,                     3,1, Qt::AlignRight | Qt::AlignVCenter);
                     pWakeGridLayout->addWidget(m_pfeWakeLength,           3,2);
                     pWakeGridLayout->addWidget(m_plabWakeLengthLabUnit,   3,3);
@@ -343,7 +343,7 @@ void Polar3dDlg::makeBaseCommonControls()
                 }
                 m_pgbFlatWakePanels->setLayout(pWakeGridLayout);
             }
-            m_pgbVortonWake = new QGroupBox("Vortex Particle Wake (VPW)");
+            m_pgbVortonWake = new QGroupBox(tr("Vortex Particle Wake (VPW)"));
             {
                 QGridLayout *pWakeIterationsLayout = new QGridLayout;
                 {
@@ -351,59 +351,59 @@ void Polar3dDlg::makeBaseCommonControls()
 #ifdef Q_OS_MAC
                     fixedfnt.setPointSize(std::max(fixedfnt.pointSize(),14));
 #endif
-                    QLabel *pLab0 = new QLabel("Buffer wake panel length:");
+                    QLabel *pLab0 = new QLabel(tr("Buffer wake panel length:"));
                     pLab0->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                    m_plabVPWBufferWakeUnit = new QLabel("x reference chord");
+                    m_plabVPWBufferWakeUnit = new QLabel(tr("x reference chord"));
                     m_plabVPWBufferWakeUnit->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
                     m_plabVPWBufferWakeUnit->setFont(fixedfnt);
                     m_pfeVPWBufferWake = new FloatEdit;
-                    QString tip("<p>The buffer wake sheet has two purposes. The first is to provide a well defined potential jump "
+                    QString tip(tr("<p>The buffer wake sheet has two purposes. The first is to provide a well defined potential jump "
                                 "at the trailing edge. The second is to satisfy the Kutta condition (D.J. Willis 2005) "
                                 "The length of the buffer wake should typically be a fraction of the M.A.C, although "
                                 "this does not seem to have a great impact on the results.<br>"
-                                "<b>Recommentation:</b> 0.2-1.0 (x MAC)</p>");
+                                "<b>Recommentation:</b> 0.2-1.0 (x MAC)</p>"));
                     m_pfeVPWBufferWake->setToolTip(tip);
 
-                    QLabel *plab1 = new QLabel("Streamwise step:");
+                    QLabel *plab1 = new QLabel(tr("Streamwise step:"));
                     plab1->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                    m_plabVPWStepUnit = new QLabel("x reference chord");
+                    m_plabVPWStepUnit = new QLabel(tr("x reference chord"));
                     m_plabVPWStepUnit->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
                     m_plabVPWStepUnit->setFont(fixedfnt);
                     m_pfeVortonL0 = new FloatEdit(0.2f);
-                    tip = "<p>The first step is the half-distance of the first vorton from the trailing wake panel's edge.<br>"
-                          "<b>Recommendation:</b> L0 = 1.0 (x MAC)</p>";
+                    tip = tr("<p>The first step is the half-distance of the first vorton from the trailing wake panel's edge.<br>"
+                          "<b>Recommendation:</b> L0 = 1.0 (x MAC)</p>");
                     m_pfeVortonL0->setToolTip(tip);
 
-                    QLabel *pLab5 = new QLabel("Vorton core size:");
+                    QLabel *pLab5 = new QLabel(tr("Vorton core size:"));
                     pLab5->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
                     m_pfeVortonCoreSize = new FloatEdit;
-                    tip = QString("<p>The core size is the equivalent for the vorton of the vortex's core radius. "
+                    tip = tr("<p>The core size is the equivalent for the vorton of the vortex's core radius. "
                                   "It is used to calculate a mollification (damping) factor to apply to the potential velocity.<br>"
                                   "<b>Recommendation:</b> the core size should not be less than the distance between two vortons.</p>");
                     m_pfeVortonCoreSize->setToolTip(tip);
-                    m_plabVtnCoreUnit = new QLabel("x reference chord");
+                    m_plabVtnCoreUnit = new QLabel(tr("x reference chord"));
                     m_plabVtnCoreUnit->setFont(fixedfnt);
 
-                    QLabel *pLab7 = new QLabel("Discard vortons further downstream than:");
+                    QLabel *pLab7 = new QLabel(tr("Discard vortons further downstream than:"));
                     pLab7->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                    m_plabVPWDiscard = new QLabel("x reference chord");
+                    m_plabVPWDiscard = new QLabel(tr("x reference chord"));
                     m_plabVPWDiscard->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
                     m_plabVPWDiscard->setFont(fixedfnt);
 
                     m_pfeVPWLength = new FloatEdit;
-                    tip = "<p>To ensure that a steady-state solution is reached and to increase the speed of the analysis, "
+                    tip = tr("<p>To ensure that a steady-state solution is reached and to increase the speed of the analysis, "
                           "vortons far downstream can be discarded when their influence is no longer felt by the plane. "
                           "This is also a way to remove the initial rows of vortons from the analysis.<br>"
                           "<b>Recommendation:</b><br>"
                           "   - ensure that the number of iterations is sufficient for the vortons to exceed this distance.<br>"
                           "   - check visually that the end vortons are indeed discarded."
-                          "</p>";
+                          "</p>");
                     m_pfeVPWLength->setToolTip(tip);
 
-                    QLabel *pLab8 = new QLabel("Number of iterations:");
-                    tip = "<p>The number of iterations should be sufficient for the VPW to extend at least"
+                    QLabel *pLab8 = new QLabel(tr("Number of iterations:"));
+                    tip = tr("<p>The number of iterations should be sufficient for the VPW to extend at least"
                           "30 MACs donwstream. The minimum number depends on the streamwise step for the"
-                          "vortons that is set in the analysis.</p>";
+                          "vortons that is set in the analysis.</p>");
                     m_pieVPWIterations = new IntEdit;
                     m_pieVPWIterations->setToolTip(tip);
                     m_plabVPWMaxLength = new QLabel;
@@ -423,7 +423,7 @@ void Polar3dDlg::makeBaseCommonControls()
                     pWakeIterationsLayout->addWidget(m_pfeVPWBufferWake,       1,2);
                     pWakeIterationsLayout->addWidget(m_plabVPWBufferWakeUnit,  1,3);
 
-                    pWakeIterationsLayout->addWidget(new QLabel("Streamwise wake development:"), 3, 1,1,3);
+                    pWakeIterationsLayout->addWidget(new QLabel(tr("Streamwise wake development:")), 3, 1,1,3);
 
                     pWakeIterationsLayout->addWidget(plab1,                    4,1);
                     pWakeIterationsLayout->addWidget(m_pfeVortonL0,            4,2);
