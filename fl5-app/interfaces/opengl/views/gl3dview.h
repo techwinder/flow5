@@ -221,7 +221,7 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
 
         void getGLError();
 
-        void paintPoints2(QOpenGLBuffer &vbo, float width, int stride);
+        void paintPoints2(QOpenGLBuffer &vbo, float width, bool bUniformColor, const QColor &clr, int stride);
 
         void paintDebugPts();
         double drawReferenceLength();

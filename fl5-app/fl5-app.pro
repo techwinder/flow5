@@ -109,7 +109,7 @@ linux-g++ {
 
     #--------------------- GMSH ------------------------
     INCLUDEPATH += /usr/local/include/
-#    LIBS += -L/usr/local/lib64           # redundant
+    LIBS += -L/usr/local/lib64           # redundant
     LIBS += -lgmsh
 
 

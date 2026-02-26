@@ -135,11 +135,7 @@ int main(int argc, char *argv[])
     qDebug("\nStack Limit = %.2fMb soft limit and %ld bytes hard limit\n", (float)limit.rlim_cur/1024./1024., limit.rlim_max);*/
 #endif
 
-    //QLoggingCategory::setFilterRules("qt.*.debug=false");
-    //QLoggingCategory::setFilterRules(QStringLiteral("flow5.debug = true"));
-    //QLoggingCategory::defaultCategory()->setEnabled(QtDebugMsg, true);
-
-    qInstallMessageHandler(&customLogHandler);
+//    qInstallMessageHandler(&customLogHandler);
 
 
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))

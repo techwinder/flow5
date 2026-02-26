@@ -1,8 +1,8 @@
 /****************************************************************************
 
     flow5 application
-    Copyright (C) 2025 André Deperrois 
-    
+    Copyright (C) 2025 André Deperrois
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -99,7 +99,7 @@ gl3dSolarSys::gl3dSolarSys(QWidget *pParent) : gl3dTestGLView(pParent)
             m_plabDate->setFont(fnt);
 
             m_plabHalley = new QLabel("\n\n\n\n");
-//            m_plabHalley->setPalette(palette);
+            //            m_plabHalley->setPalette(palette);
             m_plabHalley->setFont(fnt);
 
             m_plabHalley->setMinimumWidth(fm.averageCharWidth()*30);
@@ -237,11 +237,11 @@ void gl3dSolarSys::glRenderView()
         {
             //paint Saturn's disk
             Planet const &Saturn = m_Planet.at(5);
-//            QMatrix4x4 scale, rotate, translate;
+            //            QMatrix4x4 scale, rotate, translate;
             m_matModel.translate(Saturn.m_var[0]/SCALEFACTOR, Saturn.m_var[1]/SCALEFACTOR, Saturn.m_var[2]/SCALEFACTOR);
             m_matModel.rotate(-27.0f, sqrtf(2)/2.0f, sqrtf(2)/2.0f,0.0f);
             m_matModel.scale(s_PlanetSize);
-//            m_pvmMatrix = m_pvmMatrix*translate*rotate*scale;
+            //            m_pvmMatrix = m_pvmMatrix*translate*rotate*scale;
 
             vmMat = m_matView*m_matModel;
             pvmMat = m_matProj*vmMat;
@@ -326,7 +326,7 @@ void gl3dSolarSys::glRenderView()
         m_shadPoint.setUniformValue(m_locPoint.m_pvmMatrix, pvmMat);
     }
     m_shadPoint.release();
-    paintPoints(m_vboLightSource, radius*m_glScalef*500.0, 0, false, Qt::yellow, 4);
+    paintPoints2(m_vboLightSource, radius*m_glScalef*500.0, false, Qt::black, 4);
 
 
     if (!m_bInitialized)
@@ -359,7 +359,7 @@ void gl3dSolarSys::glMake3dObjects()
         // make Halley's ellipse
         gl::makeEllipseFan(m_Halley.m_a/SCALEFACTOR, m_Halley.m_e, Vector3d(), m_vboHalleyEllipse);
 
-       m_bResetPlanets = false;
+        m_bResetPlanets = false;
     }
 
 }
@@ -398,8 +398,8 @@ void gl3dSolarSys::saveSettings(QSettings &settings)
 {
     settings.beginGroup("gl3dSolarSystem");
     {
-         settings.setValue("deltat", s_dt);
-         settings.setValue("PlanetSizeCoef", s_PlanetSize);
+        settings.setValue("deltat", s_dt);
+        settings.setValue("PlanetSizeCoef", s_PlanetSize);
     }
     settings.endGroup();
 }

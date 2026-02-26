@@ -78,11 +78,11 @@ void xfl::trace(const QString &msg, bool b)
 */
 void xfl::trace(const QString &msg)
 {
-#ifdef QT_DEBUG
-//    qDebug()<<msg;
-#endif
     if(!g_bTrace) return;
 
+#ifdef QT_DEBUG
+    qDebug("%s", msg.toStdString().c_str());
+#endif
 
     if(g_pTraceFile && g_pTraceFile->isOpen())
     {

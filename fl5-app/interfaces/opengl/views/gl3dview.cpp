@@ -1,8 +1,8 @@
 /****************************************************************************
 
     flow5 application
-    Copyright (C) 2025 André Deperrois 
-    
+    Copyright (C) 2025 André Deperrois
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -174,7 +174,7 @@ void gl3dView::initializeGL()
     QString strange;
 
     QSurfaceFormat const &ctxtFormat = format();
-//qDebug()<<"gl3dView::initializeGL"<<ctxtFormat;
+    //qDebug()<<"gl3dView::initializeGL"<<ctxtFormat;
 
     if(format().testOption(QSurfaceFormat::DeprecatedFunctions))
     {
@@ -202,7 +202,7 @@ void gl3dView::initializeGL()
 
         log += ("   Using GLSL v330 style shaders\n");
 
-/*        QOpenGLContext *pOglCtx = QOpenGLContext::currentContext();
+        /*        QOpenGLContext *pOglCtx = QOpenGLContext::currentContext();
         m_pOglLogger = new QOpenGLDebugLogger(this);
         m_pOglLogger->initialize(); // initializes in the current context, i.e. ctx
         if(pOglCtx->hasExtension(QByteArrayLiteral("GL_KHR_debug")))
@@ -212,7 +212,7 @@ void gl3dView::initializeGL()
         m_pOglLogger->enableMessages(); */
         log +="\n\n";
         xfl::trace(log);
-    }    
+    }
 
     QString vsrc, gsrc, fsrc;
 
@@ -409,8 +409,8 @@ void gl3dView::initializeGL()
     }
     m_shadDepth.release();
 
-//    glEnable(GL_LINE_SMOOTH); // https://www.khronos.org/opengl/wiki/Multisampling -->Modern programs should not make use of these features.
-//    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    //    glEnable(GL_LINE_SMOOTH); // https://www.khronos.org/opengl/wiki/Multisampling -->Modern programs should not make use of these features.
+    //    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
     glSetupLight();
 }
@@ -496,7 +496,7 @@ void gl3dView::set3dRotationCenter(QPoint const &point)
     // apply the model matrix inverse rotation
     QVector4D AA4(AA.xf(), AA.yf(), AA.zf(), 1.0);
     QVector4D BB4(BB.xf(), BB.yf(), BB.zf(), 1.0);
-/*    QMatrix4x4 minv = m_ModelMatrix.inverted();
+    /*    QMatrix4x4 minv = m_ModelMatrix.inverted();
     AA4 = minv * AA4;
     BB4 = minv * BB4;*/
 
@@ -532,7 +532,7 @@ void gl3dView::set3dRotationCenter(QPoint const &point)
     if(bIntersect)
     {
         // apply the model matrix rotation
-/*        QVector4D INear4d(I.xf(), I.yf(), I.zf(), 1.0);
+        /*        QVector4D INear4d(I.xf(), I.yf(), I.zf(), 1.0);
         QVector4D I4d = m_ModelMatrix * INear4d;
         I.set(double(I4d.x()), double(I4d.y()), double(I4d.z()));
 */
@@ -638,7 +638,7 @@ void gl3dView::on3dFlipV()
     m_QuatEnd = m_QuatStart*qtflip;
     m_ArcBall.setQuat(m_QuatEnd);
 
-//    memcpy(m_ArcBall.m_MatCurrent, ab_new, 16*sizeof(float));
+    //    memcpy(m_ArcBall.m_MatCurrent, ab_new, 16*sizeof(float));
 
     startRotationTimer();
     emit viewModified();
@@ -970,7 +970,7 @@ void gl3dView::keyPressEvent(QKeyEvent *pEvent)
 {
     bool bCtrl  = (pEvent->modifiers() & Qt::ControlModifier);
     bool bShift = (pEvent->modifiers() & Qt::ShiftModifier);
-//    bool bAlt   = (pEvent->modifiers() & Qt::AltModifier);
+    //    bool bAlt   = (pEvent->modifiers() & Qt::AltModifier);
 
     switch (pEvent->key())
     {
@@ -1074,7 +1074,7 @@ void gl3dView::keyPressEvent(QKeyEvent *pEvent)
         default:
             break;
     }
-//    pEvent->ignore();
+    //    pEvent->ignore();
     QOpenGLWidget::keyPressEvent(pEvent);
 }
 
@@ -1130,47 +1130,55 @@ void gl3dView::resizeGL(int width, int height)
 
 void gl3dView::getGLError()
 {
-    switch(glGetError())
+    //    https://registry.khronos.org/OpenGL-Refpages/gl4/html/glGetError.xhtml
+    //    glGetError should always be called in a loop, until it returns GL_NO_ERROR, if all error flags are to be reset.
+    int iter=0;
+    do
     {
-        case GL_NO_ERROR:
-            xfl::trace("No error has been recorded. The value of this symbolic constant is guaranteed to be 0.\n");
-            break;
+        switch(glGetError())
+        {
+            case GL_NO_ERROR:
+                xfl::trace("No error has been recorded. The value of this symbolic constant is guaranteed to be 0.\n");
+                return;
+                //                break;
 
-        case GL_INVALID_ENUM:
-            xfl::trace("An unacceptable value is specified for an enumerated argument. "
-                      "The offending command is ignored and has no other side effect than to set the error flag.\n");
-            break;
+            case GL_INVALID_ENUM:
+                xfl::trace("An unacceptable value is specified for an enumerated argument. "
+                           "The offending command is ignored and has no other side effect than to set the error flag.\n");
+                break;
 
-        case GL_INVALID_VALUE:
-            xfl::trace("A numeric argument is out of range. The offending command is ignored and has no other "
-                      "side effect than to set the error flag.\n");
-            break;
+            case GL_INVALID_VALUE:
+                xfl::trace("A numeric argument is out of range. The offending command is ignored and has no other "
+                           "side effect than to set the error flag.\n");
+                break;
 
-        case GL_INVALID_OPERATION:
-            xfl::trace("The specified operation is not allowed in the current state. The offending command is "
-                      "ignored and has no other side effect than to set the error flag.\n");
-            break;
+            case GL_INVALID_OPERATION:
+                xfl::trace("The specified operation is not allowed in the current state. The offending command is "
+                           "ignored and has no other side effect than to set the error flag.\n");
+                break;
 
-        case GL_INVALID_FRAMEBUFFER_OPERATION:
-            xfl::trace("The command is trying to render to or read from the framebuffer while the currently "
-                      "bound framebuffer is not framebuffer complete (i.e. the return value from glCheckFramebufferStatus "
-                      "is not GL_FRAMEBUFFER_COMPLETE). The offending command is ignored and has no other side effect than "
-                      "to set the error flag.\n");
-            break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION:
+                xfl::trace("The command is trying to render to or read from the framebuffer while the currently "
+                           "bound framebuffer is not framebuffer complete (i.e. the return value from glCheckFramebufferStatus "
+                           "is not GL_FRAMEBUFFER_COMPLETE). The offending command is ignored and has no other side effect than "
+                           "to set the error flag.\n");
+                break;
 
-        case GL_OUT_OF_MEMORY:
-            xfl::trace("There is not enough memory left to execute the command. The state of the GL is "
-                      "undefined, except for the state of the error flags, after this error is recorded.\n");
-            break;
+            case GL_OUT_OF_MEMORY:
+                xfl::trace("There is not enough memory left to execute the command. The state of the GL is "
+                           "undefined, except for the state of the error flags, after this error is recorded.\n");
+                break;
 
-        case GL_STACK_UNDERFLOW:
-            xfl::trace("An attempt has been made to perform an operation that would cause an internal stack to underflow.\n");
-            break;
+            case GL_STACK_UNDERFLOW:
+                xfl::trace("An attempt has been made to perform an operation that would cause an internal stack to underflow.\n");
+                break;
 
-        case GL_STACK_OVERFLOW:
-            xfl::trace("An attempt has been made to perform an operation that would cause an internal stack to overflow.\n");
-            break;
+            case GL_STACK_OVERFLOW:
+                xfl::trace("An attempt has been made to perform an operation that would cause an internal stack to overflow.\n");
+                break;
+        }
     }
+    while(iter++<100);//failsafe
 }
 
 
@@ -1237,19 +1245,18 @@ void gl3dView::glSetupLight()
         m_shadPoint.setUniformValue(m_shadPoint.uniformLocation("Kq"),                       s_Light.m_Attenuation.m_Quadratic);
     }
     m_shadPoint.release();
-
 }
 
 
 void gl3dView::paintGL()
 {
-//    auto t0 = std::chrono::high_resolution_clock::now();
+    //    auto t0 = std::chrono::high_resolution_clock::now();
 
     glMake3dObjects();
 
 
-//    QOpenGLPaintDevice device(size() * devicePixelRatio()); //"The context is captured upon construction."
-//    QPainter painter(&device);
+    //    QOpenGLPaintDevice device(size() * devicePixelRatio()); //"The context is captured upon construction."
+    //    QPainter painter(&device);
     QPainter painter(this);
 
     if(m_bIsImageLoaded && !m_BackImage.isNull())
@@ -1286,7 +1293,7 @@ void gl3dView::paintGL()
 
     paintOverlay();
 
-/*    auto t1 = std::chrono::high_resolution_clock::now();
+    /*    auto t1 = std::chrono::high_resolution_clock::now();
     int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
     qDebug("gl3dView::paintGL: %7d µs", duration);*/
 }
@@ -1309,7 +1316,7 @@ void gl3dView::paintOverlay()
 
 void gl3dView::paintGl3()
 {
-//    makeCurrent();
+    //    makeCurrent();
     if(W3dPrefs::s_bMultiSample) glEnable(GL_MULTISAMPLE);
     else                         glDisable(GL_MULTISAMPLE);
 
@@ -1350,10 +1357,23 @@ void gl3dView::paintGl3()
     if(m_shadPoint.isLinked())
     {
         m_shadPoint.bind();
-        m_shadPoint.setUniformValue(m_locPoint.m_ClipPlane, m_ClipPlanePos);
-        m_shadPoint.setUniformValue(m_locPoint.m_Viewport, QVector2D(float(m_GLViewRect.width()), float(m_GLViewRect.height())));
+        {
+            m_shadPoint.setUniformValue(m_locPoint.m_ClipPlane, m_ClipPlanePos);
+            m_shadPoint.setUniformValue(m_locPoint.m_Viewport, QVector2D(float(m_GLViewRect.width()), float(m_GLViewRect.height())));
+        }
         m_shadPoint.release();
     }
+
+    if(m_shadPoint2.isLinked())
+    {
+        m_shadPoint2.bind();
+        {
+            m_shadPoint2.setUniformValue(m_locPt2.m_ClipPlane, m_ClipPlanePos);
+            m_shadPoint2.setUniformValue(m_locPt2.m_Viewport, QVector2D(float(m_GLViewRect.width()), float(m_GLViewRect.height())));
+        }
+        m_shadPoint2.release();
+    }
+
 
     m_matProj.setToIdentity();
     m_matView.setToIdentity();
@@ -1372,8 +1392,8 @@ void gl3dView::paintGl3()
     else
     {
         m_matProj.perspective(GLLightDlg::verticalAngle(), width/(height*s), 0.1f, 500.0f);
-//        m_ProjectionMatrix.frustum(-1,1,-1,1, 1,10);
-//        m_ModelMatrix.translate(0,0,5);
+        //        m_ProjectionMatrix.frustum(-1,1,-1,1, 1,10);
+        //        m_ModelMatrix.translate(0,0,5);
         QVector4D viewpos(0,0,-GLLightDlg::viewDistance(), 1.0);
         viewpos = m_matView.inverted() * viewpos;
         m_matView.translate({viewpos.x(), viewpos.y(), viewpos.z()});
@@ -1405,7 +1425,7 @@ void gl3dView::paintGl3()
     if(m_bLightVisible)
     {
         double d = Vector3d(0,0,50).z-double(s_Light.m_Z);
-        double radius = 500000.0/d/d/d;
+        double radius = 10000000.0/d/d/d;
         QColor lightColor;
         lightColor.setRedF(  double(s_Light.m_Red));
         lightColor.setGreenF(double(s_Light.m_Green));
@@ -1416,17 +1436,17 @@ void gl3dView::paintGl3()
         m_matModel.setToIdentity();
         m_matModel.translate(s_Light.m_X, s_Light.m_Y, s_Light.m_Z);
 
-        m_shadPoint.bind();
+        m_shadPoint2.bind();
         {
-            m_shadPoint.setUniformValue(m_locPoint.m_vmMatrix, m_matModel);
-            m_shadPoint.setUniformValue(m_locPoint.m_pvmMatrix, m_matProj*m_matModel);
+            m_shadPoint2.setUniformValue(m_locPt2.m_vmMatrix, m_matModel);
+            m_shadPoint2.setUniformValue(m_locPt2.m_pvmMatrix, m_matProj*m_matModel);
         }
-        m_shadPoint.release();
+        m_shadPoint2.release();
 
-        paintPoints(m_vboLightSource, radius, 0, false, lightColor, 4);
+        paintPoints2(m_vboLightSource, radius, true, lightColor, 8);
 
-//        paintSphere(s_Light.m_X, s_Light.m_Y, s_Light.m_Z, radius, lightColor, false);
-         // leave things as they were
+        //        paintSphere(s_Light.m_X, s_Light.m_Y, s_Light.m_Z, radius, lightColor, false);
+        // leave things as they were
         m_matModel.setToIdentity();
         m_matView=vm;
 
@@ -1463,7 +1483,7 @@ void gl3dView::paintDebugPts()
 {
 #ifdef QT_DEBUG
     for(int i=0; i<m_DebugPts.size(); i++)
-         paintIcosahedron(m_DebugPts.at(i), 0.0075/m_glScalef, Qt::darkRed, W3dPrefs::s_OutlineStyle, true, true);
+        paintIcosahedron(m_DebugPts.at(i), 0.0075/m_glScalef, Qt::darkRed, W3dPrefs::s_OutlineStyle, true, true);
 
     for(int i=0; i<m_DebugVecs.size(); i++)
     {
@@ -1773,13 +1793,13 @@ void gl3dView::stopDynamicTimer()
     if(m_DynTimer.isActive())
     {
         m_DynTimer.stop();
-//        reset3dRotationCenter();
+        //        reset3dRotationCenter();
         //  inverse the rotation matrix and re-calculate the translation vector
         m_ArcBall.getRotationMatrix(m_MatOut, true);
         setViewportTranslation();
     }
     m_bDynTranslation = m_bDynRotation = m_bDynScaling = false;
-//    setMouseTracking(true);
+    //    setMouseTracking(true);
 }
 
 
@@ -1939,7 +1959,7 @@ double gl3dView::drawReferenceLength()
     strange = QString::asprintf("%g ", length*Units::mtoUnit());
     strange += Units::lengthUnitQLabel();
 
-//    strange = QString::asprintf("devicePixelRatioF %g", devicePixelRatioF());
+    //    strange = QString::asprintf("devicePixelRatioF %g", devicePixelRatioF());
     painter.drawText(xc-DisplayOptions::textFontStruct().width(strange)*devicePixelRatio()/2, DisplayOptions::textFontStruct().height()*devicePixelRatioF()*2, strange);
 
     painter.restore();
@@ -2231,11 +2251,11 @@ void gl3dView::paintThickArrow(Vector3d const &origin, const Vector3d& arrow, QC
     QQuaternion qqt = QQuaternion::rotationTo(N, A);
     QMatrix4x4 ArrowDirectionMat;
     ArrowDirectionMat.rotate(qqt);
-//    ArrowDirectionMat.translate(origin.xf(), origin.yf(), origin.zf());
+    //    ArrowDirectionMat.translate(origin.xf(), origin.yf(), origin.zf());
     ArrowDirectionMat.scale(length);
 
     QMatrix4x4 ArrowMat; // identity
-//    modelMat.translate(origin.xf(), origin.yf(), origin.zf());
+    //    modelMat.translate(origin.xf(), origin.yf(), origin.zf());
     ArrowMat.scale(0.3f,  0.3f,  1.0f); // squeeze the cylinder radially
     ArrowMat.scale(0.8f, 0.8f, 0.8f); // make it 80% of the arrow's length
     QMatrix4x4 pvmMatrix = m_matProj * m_matView * ModelMatrix *translation* ArrowDirectionMat * ArrowMat;
@@ -2546,7 +2566,7 @@ void gl3dView::paintSphereInstances(QOpenGLBuffer &vboPosInstances, float radius
             m_shadSurf.setAttributeBuffer(m_locSurf.m_attrNormal, GL_FLOAT, 3*sizeof(GLfloat), 3, 6*sizeof(GLfloat));
 
             nTriangles = m_vboIcoSphere.size()/3/6/int(sizeof(float));
-//            glDrawArrays(GL_TRIANGLES, 0, nTriangles*3); // 4 vertices defined but only 3 are used
+            //            glDrawArrays(GL_TRIANGLES, 0, nTriangles*3); // 4 vertices defined but only 3 are used
         }
         m_vboIcoSphere.release();
 
@@ -2641,8 +2661,8 @@ void gl3dView::paintTriangleFan(QOpenGLBuffer &vbo, QColor const &clr, bool bLig
 void gl3dView::onLoadBackImage()
 {
     m_ImagePath = QFileDialog::getOpenFileName(this, "Open Image File",
-                                            SaveOptions::lastDirName(),
-                                            "Image files (*.png *.jpg *.bmp)");
+                                               SaveOptions::lastDirName(),
+                                               "Image files (*.png *.jpg *.bmp)");
 
     QFileInfo fi(m_ImagePath);
     if(fi.exists())
@@ -2654,7 +2674,7 @@ void gl3dView::onLoadBackImage()
 
 #if (QT_VERSION < QT_VERSION_CHECK(6, 9, 0))
     if(m_bFlipH||m_bFlipV)
-    img = img.mirrored(m_bFlipH, m_bFlipV);
+        img = img.mirrored(m_bFlipH, m_bFlipV);
 #else
     if(m_bFlipV)
         img = img.flipped(Qt::Vertical);
@@ -2677,7 +2697,7 @@ void gl3dView::onClearBackImage()
 
 
 void gl3dView::onBackImageSettings()
-{    
+{
     QVector<double> values;
     values << m_ImageOffset.x() << m_ImageOffset.y() << m_ImageScaleX << m_ImageScaleY;
     ImageDlg dlg(this, values, m_bScaleImageWithView, m_bFlipH, m_bFlipV);
@@ -2701,7 +2721,7 @@ void gl3dView::onUpdateImageSettings(bool bScaleWithView, bool bFlipH, bool bFli
 
 #if (QT_VERSION < QT_VERSION_CHECK(6, 9, 0))
     if(m_bFlipH||m_bFlipV)
-    img = img.mirrored(m_bFlipH, m_bFlipV);
+        img = img.mirrored(m_bFlipH, m_bFlipV);
 #else
     if(m_bFlipV)
         img = img.flipped(Qt::Vertical);
@@ -2865,9 +2885,11 @@ void gl3dView::paintPoints(QOpenGLBuffer &vbo, float width, int iShape, bool bLi
 }
 
 
+// Issues with Zink on Linux apparently not handling GL_POINTS in the geometry shader
 void gl3dView::paintPoints(QOpenGLBuffer &vbo, float width, int iShape, bool bLight, QColor const &clr, int stride)
 {
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
+
     m_shadPoint.bind();
     {
         // iShape 0: Pentagon, 1: Icosahedron, 2: Cube
@@ -2880,13 +2902,14 @@ void gl3dView::paintPoints(QOpenGLBuffer &vbo, float width, int iShape, bool bLi
         if(vbo.bind())
         {
             m_shadPoint.enableAttributeArray(m_locPoint.m_attrVertex);
-            m_shadPoint.setAttributeBuffer(m_locPoint.m_attrVertex, GL_FLOAT, 0, 3, stride*sizeof(float));
-            m_shadPoint.enableAttributeArray(m_locPoint.m_State);
-            m_shadPoint.setAttributeBuffer(m_locPoint.m_State, GL_FLOAT, 3*sizeof(float), 1, stride*sizeof(float));
+            m_shadPoint.setAttributeBuffer(m_locPoint.m_attrVertex, GL_FLOAT, 0,               4, stride*sizeof(float));
+            //.w component is used as state
+            //            m_shadPoint.enableAttributeArray(m_locPoint.m_State);
+            //           m_shadPoint.setAttributeBuffer(m_locPoint.m_State,      GL_FLOAT, 3*sizeof(float), 1, stride*sizeof(float));
             int npts = vbo.size()/stride/int(sizeof(float));
-            glDrawArrays(GL_POINTS, 0, npts);// 4 vertices defined but only 3 are used
+            glDrawArrays(GL_POINTS, 0, npts);
             m_shadPoint.disableAttributeArray(m_locPoint.m_attrVertex);
-            m_shadPoint.disableAttributeArray(m_locPoint.m_State);
+            //            m_shadPoint.disableAttributeArray(m_locPoint.m_State);
         }
         vbo.release();
     }
@@ -2894,16 +2917,58 @@ void gl3dView::paintPoints(QOpenGLBuffer &vbo, float width, int iShape, bool bLi
 }
 
 
+// does not use the geometry shader for compatibility with Zink on Linux
+void gl3dView::paintPoints2(QOpenGLBuffer &vbo, float width, bool bUniformColor, QColor const &clr, int stride)
+{
+    QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
+
+    m_shadPoint2.bind();
+    {
+        m_shadPoint2.enableAttributeArray(m_locPt2.m_attrVertex);
+        m_shadPoint2.enableAttributeArray(m_locPt2.m_attrColor);
+
+        m_shadPoint2.setUniformValue(m_locPt2.m_HasUniColor, int(bUniformColor));
+        m_shadPoint2.setUniformValue(m_locPt2.m_UniColor, clr);
+
+        vbo.bind();
+        {
+            m_shadPoint2.setAttributeBuffer(m_locPt2.m_attrVertex, GL_FLOAT, 0,                  4, stride * sizeof(GLfloat));
+            m_shadPoint2.setAttributeBuffer(m_locPt2.m_attrColor,  GL_FLOAT, 4* sizeof(GLfloat), 4, stride * sizeof(GLfloat));
+
+            int nPoints = vbo.size()/stride/int(sizeof(float));
+            glPointSize(width);
+
+            m_shadPoint2.setUniformValue(m_locPt2.m_Shape, width);
+            glDisable(GL_POINT_SPRITE);
+            glDisable(GL_PROGRAM_POINT_SIZE); // To set the point size in the shader, glEnable with argument (GL_PROGRAM_POINT_SIZE)
+            glDrawArrays(GL_POINTS, 0, nPoints);
+        }
+        vbo.release();
+
+        m_shadPoint2.disableAttributeArray(m_locPt2.m_attrVertex);
+        m_shadPoint2.disableAttributeArray(m_locPt2.m_attrColor);
+    }
+    m_shadPoint2.release();
+}
+
+
 void gl3dView::glMakeLightSource()
 {
+    int stride = 8;
     int nPts = 1;
-    int buffersize = nPts*4;
+    int buffersize = nPts*stride;
     QVector<float> pts(buffersize);
 
     pts[0] = 0.0;
     pts[1] = 0.0;
     pts[2] = 0.0;
-    pts[3] = -1.0; // invalid state so that the shader uses the uniform colour instead
+    pts[3] = 1.0;
+
+
+    pts[4] = s_Light.m_Red;
+    pts[5] = s_Light.m_Green;
+    pts[6] = s_Light.m_Blue;
+    pts[7] = 1.0;
 
     if(m_vboLightSource.isCreated()) m_vboLightSource.destroy();
     m_vboLightSource.create();
@@ -2919,28 +2984,28 @@ void gl3dView::glMakeAxes()
 
     GLfloat const x_axis[] = {
         -1.0f,   0.0f,    0.0f,
-         1.0f,   0.0f,    0.0f,
-         1.0f,   0.0f,    0.0f,
-         0.95f,  0.015f,  0.015f,
-         1.0f,   0.0f,    0.0f,
-         0.95f, -0.015f, -0.015f
+        1.0f,   0.0f,    0.0f,
+        1.0f,   0.0f,    0.0f,
+        0.95f,  0.015f,  0.015f,
+        1.0f,   0.0f,    0.0f,
+        0.95f, -0.015f, -0.015f
     };
 
     GLfloat const y_axis[] = {
-          0.0f,    -1.0f,    0.0f,
-          0.0f,     1.0f,    0.0f,
-          0.f,      1.0f,    0.0f,
-          0.015f,   0.95f,   0.015f,
-          0.f,      1.0f,    0.0f,
-         -0.015f,   0.95f,  -0.015f
+        0.0f,    -1.0f,    0.0f,
+        0.0f,     1.0f,    0.0f,
+        0.f,      1.0f,    0.0f,
+        0.015f,   0.95f,   0.015f,
+        0.f,      1.0f,    0.0f,
+        -0.015f,   0.95f,  -0.015f
     };
 
     GLfloat const z_axis[] = {
-         0.0f,    0.0f,   -1.0f,
-         0.0f,    0.0f,    1.0f,
-         0.0f,    0.0f,    1.0f,
-         0.015f,  0.015f,  0.95f,
-         0.0f,    0.0f,    1.0f,
+        0.0f,    0.0f,   -1.0f,
+        0.0f,    0.0f,    1.0f,
+        0.0f,    0.0f,    1.0f,
+        0.015f,  0.015f,  0.95f,
+        0.0f,    0.0f,    1.0f,
         -0.015f, -0.015f,  0.95f
     };
 
@@ -2978,7 +3043,7 @@ void gl3dView::glMakeArcBall(ArcBall & arcball)
 
     int iv=0;
 
-//    int bufferSize = ((NUMCIRCLES*2)*(NUMANGLES-2) + (NUMPERIM-1)*2)*3;
+    //    int bufferSize = ((NUMCIRCLES*2)*(NUMANGLES-2) + (NUMPERIM-1)*2)*3;
     int nSegs= NUMCIRCLES * (NUMANGLES-3) *2;
     nSegs += (NUMPERIM-2)*2;
 
@@ -3119,19 +3184,19 @@ void gl3dView::glMakeCylinder(float h, float r, int nz, int nh)
 {
     int buffersize = 0;
     buffersize += // lateral triangles
-              nz     // nz quads in the z direction
-            * nh     // nh hoop quads
-            * 2;     // 2 triangles/quad
+        nz     // nz quads in the z direction
+        * nh     // nh hoop quads
+        * 2;     // 2 triangles/quad
 
     // top and bottom triangles
     buffersize +=
-            nh       // nh hoop triangles
-            *2;      // top and bottom faces
+        nh       // nh hoop triangles
+        *2;      // top and bottom faces
 
     // GLfloat count
     buffersize *=
-              3      // 3 vertices/triangle to close the triangle
-            * 6;     // (3 coords+3normal components)/ vertex
+        3      // 3 vertices/triangle to close the triangle
+        * 6;     // (3 coords+3normal components)/ vertex
 
     QVector<GLfloat> CylVertexArray(buffersize);
 
@@ -3372,11 +3437,11 @@ void gl3dView::glMakeUnitArrow()
     QVector<GLfloat>axisVertexArray(18);
 
     GLfloat const z_axis[] = {
-         0.0f,    0.0f,    0.0f,
-         0.0f,    0.0f,    1.0f,
-         0.0f,    0.0f,    1.0f,
-         0.025f,  0.025f,  0.89f,
-         0.0f,    0.0f,    1.0f,
+        0.0f,    0.0f,    0.0f,
+        0.0f,    0.0f,    1.0f,
+        0.0f,    0.0f,    1.0f,
+        0.025f,  0.025f,  0.89f,
+        0.0f,    0.0f,    1.0f,
         -0.025f, -0.025f,  0.89f
     };
 
@@ -3400,24 +3465,24 @@ void gl3dView::glMakeUnitArrow()
  */
 void gl3dView::glMakeCone(float h, float rad, int nz, int nh)
 {
-//    int nz = 1;   // number of steps in the Z direction
-//    int nh = 10;  // number of hoop steps
+    //    int nz = 1;   // number of steps in the Z direction
+    //    int nh = 10;  // number of hoop steps
 
     int buffersize = 0;
     buffersize += // lateral triangles
-              nz     // nz quads in the z direction
-            * nh     // nh hoop quads
-//            * 2;     // 2 triangles/quad
-            *1; // 1 triangle
+        nz     // nz quads in the z direction
+        * nh     // nh hoop quads
+        //            * 2;     // 2 triangles/quad
+        *1; // 1 triangle
     // top and bottom triangles
     buffersize +=
-            nh       // nh hoop triangles
-            *1;      // bottom faces
+        nh       // nh hoop triangles
+        *1;      // bottom faces
 
     // GLfloat count
     buffersize *=
-              3      // 3 vertices/triangle
-            * 6;     // (3 coords+3normal components)/ vertex
+        3      // 3 vertices/triangle
+        * 6;     // (3 coords+3normal components)/ vertex
 
     QVector<GLfloat> VertexArray(buffersize);
 
@@ -3511,7 +3576,7 @@ void gl3dView::glMakeCone(float h, float rad, int nz, int nh)
     buffersize = (nh+1)*3; // nh+1 vertices * 3 for a line strip
     VertexArray.resize(buffersize);
     z = 0.0;
-//    sign = -1.0f;
+    //    sign = -1.0f;
     iv=0;
     for (int iLat=0; iLat<=nh; iLat++)
     {
@@ -3569,7 +3634,6 @@ void gl3dView::paintTrianglesToDepthMap(QOpenGLBuffer &vbo, QMatrix4x4 const &Mo
 
     m_shadDepth.bind();
     {
-//        m_Shader_Depth.setUniformValue(m_uDepthLightViewMatrix, ModelMat*m_LightViewMatrix);
         m_shadDepth.setUniformValue(m_uDepthLightViewMatrix, m_LightViewMatrix*ModelMat);
         m_shadDepth.enableAttributeArray(m_attrDepthPos);
 
@@ -3586,38 +3650,6 @@ void gl3dView::paintTrianglesToDepthMap(QOpenGLBuffer &vbo, QMatrix4x4 const &Mo
 }
 
 
-
-void gl3dView::paintPoints2(QOpenGLBuffer &vbo, float width, int stride)
-{
-    QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
-
-    m_shadPoint2.bind();
-    {
-        m_shadPoint2.enableAttributeArray(m_locPt2.m_attrVertex);
-        m_shadPoint2.enableAttributeArray(m_locPt2.m_attrColor);
-
-        vbo.bind();
-        {
-            m_shadPoint2.setAttributeBuffer(m_locPt2.m_attrVertex, GL_FLOAT, 0,                  4, stride * sizeof(GLfloat));
-            m_shadPoint2.setAttributeBuffer(m_locPt2.m_attrColor,  GL_FLOAT, 4* sizeof(GLfloat), 4, stride * sizeof(GLfloat));
-
-            int nPoints = vbo.size()/stride/int(sizeof(float));
-            glPointSize(width);
-
-            m_shadPoint2.setUniformValue(m_locPt2.m_Shape, width);
-            glEnable (GL_POINT_SPRITE);
-            glEnable(GL_PROGRAM_POINT_SIZE); // To set the point size in the shader, glEnable with argument (GL_PROGRAM_POINT_SIZE)
-            glDrawArrays(GL_POINTS, 0, nPoints);
-        }
-        vbo.release();
-
-        m_shadPoint2.disableAttributeArray(m_locPt2.m_attrVertex);
-        m_shadPoint2.disableAttributeArray(m_locPt2.m_attrColor);
-    }
-    m_shadPoint2.release();
-}
-
-
 void gl3dView::paintTriangles3VtxShadow(QOpenGLBuffer &vbo, const QColor &backclr, bool bTwoSided, bool bLight,
                                         QMatrix4x4 const &modelmat, int stride)
 {
@@ -3627,7 +3659,7 @@ void gl3dView::paintTriangles3VtxShadow(QOpenGLBuffer &vbo, const QColor &backcl
     {
         m_shadSurf.setUniformValue(m_locSurf.m_UniColor, backclr);
 
-//        m_Shader_Surf.setUniformValue(m_uShadowLightViewMatrix, modelmat*m_LightViewMatrix);
+        //        m_Shader_Surf.setUniformValue(m_uShadowLightViewMatrix, modelmat*m_LightViewMatrix);
         m_shadSurf.setUniformValue(m_uShadowLightViewMatrix, m_LightViewMatrix*modelmat);
 
         if(bLight)
@@ -3971,18 +4003,18 @@ void gl3dView::onSaveImage()
     QString FileName;
     if(!loc.isEmpty()) FileName = loc.front() + QDir::separator() + "gl3dView.png";
 
-/*    FileName = QFileDialog::getSaveFileName(this, "Save image",
+    /*    FileName = QFileDialog::getSaveFileName(this, "Save image",
                                             FileName,
                                             filters.at(0),
                                             &Filter);
 
     if(FileName.right(4)!=".png") FileName+= ".png"; */
 
-//    QImage m_Img = grabFramebuffer();
-//    m_Img.save(FileName);
+    //    QImage m_Img = grabFramebuffer();
+    //    m_Img.save(FileName);
 
     QOpenGLFramebufferObjectFormat fboFormat;
-//        fboFormat.setInternalTextureFormat(GL_RGBA);
+    //        fboFormat.setInternalTextureFormat(GL_RGBA);
     fboFormat.setAttachment(QOpenGLFramebufferObject::Depth);
 
     QSize m_OffSize = QSize(1920, 1080);
@@ -4002,7 +4034,7 @@ void gl3dView::onSaveImage()
         // Enable face culling
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-//        glViewport(0,0,m_OffSize.width()*devicePixelRatio(), m_OffSize.height()*devicePixelRatio());
+        //        glViewport(0,0,m_OffSize.width()*devicePixelRatio(), m_OffSize.height()*devicePixelRatio());
 
 
         glRenderView();
@@ -4017,7 +4049,7 @@ void gl3dView::onSaveImage()
 
     delete m_pfboOff;
 
-//    makeCurrent();
+    //    makeCurrent();
 }
 
 

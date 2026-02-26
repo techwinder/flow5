@@ -2,7 +2,7 @@
 
     flow5 application
     Copyright © 2025 André Deperrois
-    
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -260,9 +260,9 @@ void gl3dSagittarius::saveSettings(QSettings &settings)
 {
     settings.beginGroup("gl3dSagittarius");
     {
-         settings.setValue("deltat",        s_dt);
-         settings.setValue("NSteps",        s_nStepsPerDay);
-         settings.setValue("MultiThreaded", s_bMultithread);
+        settings.setValue("deltat",        s_dt);
+        settings.setValue("NSteps",        s_nStepsPerDay);
+        settings.setValue("MultiThreaded", s_bMultithread);
     }
     settings.endGroup();
 }
@@ -292,7 +292,7 @@ void gl3dSagittarius::keyPressEvent(QKeyEvent *pEvent)
 void gl3dSagittarius::makeStars()
 {
     Planet::s_CentralMass = 4.154e6 * 2e30;// kg
-//    Planet::s_CentralMass = 1.0e6;
+    //    Planet::s_CentralMass = 1.0e6;
 
     m_Star.resize(9);
     m_Trace.resize(m_Star.size());
@@ -342,8 +342,8 @@ void gl3dSagittarius::makeStars()
 
 void gl3dSagittarius::onMoveStars()
 {
-   s_dt = m_pdeDt->value(); // days
-   m_Current = m_Current.addDays(s_dt);
+    s_dt = m_pdeDt->value(); // days
+    m_Current = m_Current.addDays(s_dt);
 
     s_nStepsPerDay = m_pieSteps->value();
     s_bMultithread = m_pchMultiThread->isChecked();
@@ -447,15 +447,15 @@ void gl3dSagittarius::glRenderView()
             paintTriangleFan(m_vboEllipseFan, clr, false, false);
         }
 
-        m_shadPoint.bind();
+        m_shadPoint2.bind();
         {
             QMatrix4x4  trans;
             trans.translate(pos.xf(), pos.yf(), pos.zf());
-            m_shadPoint.setUniformValue(m_locPoint.m_vmMatrix, vmMat*trans);
-            m_shadPoint.setUniformValue(m_locPoint.m_pvmMatrix, pvmMat*trans);
-            paintPoints(m_vboStar[is], 1.0, 0, false, Qt::red, 4);
+            m_shadPoint2.setUniformValue(m_locPt2.m_vmMatrix, vmMat*trans);
+            m_shadPoint2.setUniformValue(m_locPt2.m_pvmMatrix, pvmMat*trans);
+            paintPoints2(m_vboStar[is], 31.0f, false, Qt::black, 8);
         }
-        m_shadPoint.release();
+        m_shadPoint2.release();
 
         glRenderText(pos.x+0.013/m_glScalef, pos.y+0.013/m_glScalef, pos.z+0.013/m_glScalef, star.m_Name, star.m_Color);
     }
@@ -559,14 +559,21 @@ void gl3dSagittarius::glMake3dObjects()
 
         for(int is=0; is<m_Star.size(); is++)
         {
+            int stride = 8;
             int nPts = 1;
-            int buffersize = nPts*4;
+            int buffersize = nPts*stride;
             QVector<float> pts(buffersize);
             int iv = 0;
             pts[iv++] = 0.0f;
             pts[iv++] = 0.0f;
             pts[iv++] = 0.0f;
-            pts[iv++] = m_Star[is].m_Tau;
+            pts[iv++] = 1.0f;
+
+
+            pts[iv++] = xfl::getRed(m_Star[is].m_Tau);
+            pts[iv++] = xfl::getGreen(m_Star[is].m_Tau);
+            pts[iv++] = xfl::getBlue(m_Star[is].m_Tau);
+            pts[iv++] = 1.0;
 
             if(m_vboStar[is].isCreated()) m_vboStar[is].destroy();
             m_vboStar[is].create();

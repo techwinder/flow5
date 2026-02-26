@@ -2,7 +2,7 @@
 
     flow5 application
     Copyright © 2025 André Deperrois
-    
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -227,14 +227,15 @@ void gl3dAttractors::glRenderView()
 
     if(m_pchLeadingSphere->isChecked())
     {
-        m_shadPoint.bind();
+        m_shadPoint2.bind();
         {
-            m_shadPoint.setUniformValue(m_locPoint.m_vmMatrix, m_matView*m_matModel);
-            m_shadPoint.setUniformValue(m_locPoint.m_pvmMatrix, m_matProj*m_matView);
+            m_shadPoint2.setUniformValue(m_locPt2.m_vmMatrix, m_matView*m_matModel);
+            m_shadPoint2.setUniformValue(m_locPt2.m_pvmMatrix, m_matProj*m_matView);
         }
-        m_shadPoint.release();
-        paintPoints(m_vboPoints, 1.0f, 0, false, s_ls.m_Color, 4);
+        m_shadPoint2.release();
+        paintPoints2(m_vboPoints, 31.0f, false, Qt::black, 8);
     }
+
     if (!m_bInitialized)
     {
         m_bInitialized = true;
@@ -315,7 +316,7 @@ void gl3dAttractors::glMake3dObjects()
         m_vboTrace.release();
 
         // leading points
-        buffersize =  s_NTrace * 4;
+        buffersize =  s_NTrace * 8;
         buffer.resize(buffersize);
         iv = 0;
         for(int i=0; i<m_Trace.size(); i++)
@@ -324,10 +325,27 @@ void gl3dAttractors::glMake3dObjects()
             buffer[iv++] = m_Trace.at(i).at(m_iLead).xf();
             buffer[iv++] = m_Trace.at(i).at(m_iLead).yf();
             buffer[iv++] = m_Trace.at(i).at(m_iLead).zf();
+            buffer[iv++] = 1.0;
 
-            if(s_bDynColor)      buffer[iv++] = velocity.at(m_iLead)/m_MaxVelocity;
-            else                 buffer[iv++] = -1.0f;
+            double tau = velocity.at(m_iLead)/m_MaxVelocity;
+            if(s_bDynColor)
+            {
+                buffer[iv++] = xfl::getRed(tau);
+                buffer[iv++] = xfl::getGreen(tau);
+                buffer[iv++] = xfl::getBlue(tau);
+                buffer[iv++] = 1.0;
+            }
+            else
+            {
+                buffer[iv++] = s_ls.m_Color.redF();
+                buffer[iv++] = s_ls.m_Color.greenF();
+                buffer[iv++] = s_ls.m_Color.blueF();
+                buffer[iv++] = 1.0;
+            }
         }
+
+        Q_ASSERT(iv==buffersize);
+
         if(m_vboPoints.isCreated()) m_vboPoints.destroy();
         m_vboPoints.create();
         m_vboPoints.bind();
@@ -410,7 +428,7 @@ void gl3dAttractors::onRandomSeed()
     m_MaxVelocity = 0.0001;
 
     setReferenceLength(rmax*3.0);
-//    on3dReset();
+    //    on3dReset();
     m_bResetAttractor = true;
     setFocus();
     m_Timer.start(16);

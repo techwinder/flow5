@@ -220,7 +220,11 @@ gl3dHydrogen::gl3dHydrogen(QWidget *pParent) : gl3dTestGLView(pParent)
                         m_prbPtShader->setToolTip(tip);
                         m_prbSurfShader->setToolTip(tip);
                         m_prbPt2Shader->setToolTip(tip);
-                        s_iRenderer = 0;
+#ifdef Q_OS_LINUX
+                        // prevents issues with Zink on Linux
+                        if(s_iRenderer==0) s_iRenderer = 2;
+                        m_prbPtShader->setEnabled(false);
+#endif
                         switch (s_iRenderer)
                         {
                             default:
