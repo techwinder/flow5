@@ -370,7 +370,7 @@ void StabTimeCtrls::setupLayout()
     {
         QHBoxLayout *pDirLayout = new QHBoxLayout;
         {
-            QButtonGroup *pGroup = new QButtonGroup;
+            QButtonGroup *pGroup = new QButtonGroup(this);
             {
                 m_prbLongitudinal = new QRadioButton(tr("Longitudinal"));
                 m_prbLateral = new QRadioButton(tr("Lateral"));

@@ -1227,10 +1227,10 @@ void MainFrame::deleteProject()
 
 void MainFrame::keyPressEvent(QKeyEvent *pEvent)
 {
-
     bool bCtrl = (pEvent->modifiers() & Qt::ControlModifier);
     bool bAlt = (pEvent->modifiers() & Qt::AltModifier);
     bool bShift = (pEvent->modifiers() & Qt::ShiftModifier);
+
     if(s_iApp == xfl::XDIRECT && m_pXDirect)
     {
         m_pXDirect->keyPressEvent(pEvent);
@@ -1350,112 +1350,6 @@ void MainFrame::keyPressEvent(QKeyEvent *pEvent)
                     onOpenGLInfo();
                     pEvent->accept();
                 }
-                break;
-            }
-            case Qt::Key_F1:
-            {
-                gl3dView *pTestView = new gl3dFlowVtx;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F2:
-            {
-                gl2dFractal *pTestView = new gl2dFractal;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F3:
-            {
-                gl2dQuat *pTestView = new gl2dQuat;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-
-            }
-            case Qt::Key_F4:
-            {
-                gl2dNewton *pTestView  = new gl2dNewton;
-//                gl3dTexture *pTestView  = new gl3dTexture;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F5:
-            {
-                gl3dView *pTestView = new gl3dHydrogen;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F6:
-            {
-#ifdef Q_OS_MAC
-                gl3dView *pTestView = new gl3dLorenz;
-#else
-                gl3dView *pTestView = new gl3dLorenz2;
-#endif
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F7:
-            {
-                gl3dAttractors *pTestView = new gl3dAttractors;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F8:
-            {
-                gl3dTestGLView *pTestView = new gl3dSolarSys;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F9:
-            {
-                gl3dTestGLView *pTestView = new gl3dSagittarius;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F10:
-            {
-                gl3dTestGLView *pTestView = new gl3dSpace;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F11:
-            {
-                gl3dOptim2d *pTestView = new gl3dOptim2d;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F12:
-            {
-#ifdef Q_OS_MAC
-                gl3dTestGLView * pTestView = new gl3dBoids;
-#else
-                gl3dTestGLView * pTestView = new gl3dBoids2;
-#endif
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
                 break;
             }
             default:

@@ -73,7 +73,7 @@ void Stab3dCtrls::setupLayout()
     {
         QGridLayout *pModeLayout = new QGridLayout;
         {
-            QButtonGroup *pGroup = new QButtonGroup;
+            QButtonGroup *pGroup = new QButtonGroup(this);
             {
                 m_prbNoMode = new QRadioButton(tr("No mode"));
                 pGroup->addButton(m_prbNoMode);
