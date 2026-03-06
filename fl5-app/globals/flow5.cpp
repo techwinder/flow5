@@ -284,10 +284,6 @@ void Flow5App::loadTranslations()
     {
         locale = QLocale(QLocale::French, QLocale::France);
     }
-    else if (lang == "German")
-    {
-        locale = QLocale(QLocale::German, QLocale::Germany);
-    }
 
     const QString qtTrDir = QLibraryInfo::path(QLibraryInfo::TranslationsPath);
 

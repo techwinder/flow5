@@ -92,8 +92,8 @@ void PrefsDlg::connectSignals()
     connect(m_ppbTreeFont,           SIGNAL(clicked()),                    SLOT(onTreeFont()));
     connect(m_ppbToolTipFont,        SIGNAL(clicked()),                    SLOT(onToolTipFont()));
     connect(m_pchLocale,             SIGNAL(clicked()),                    SLOT(onLocalization()));
-    connect(m_pcbLanguage,           SIGNAL(currentIndexChanged(int)),     SLOT(onLanguageChanged(int)));
-    connect(m_pcbStyles,             SIGNAL(currentTextChanged(QString)),  SLOT(onStyleChanged(QString)));
+    connect(m_pcbLanguage,           SIGNAL(activated(int)),               SLOT(onLanguageChanged(int)));
+    connect(m_pcbStyles,             SIGNAL(textActivated(QString)),       SLOT(onStyleChanged(QString)));
     connect(m_pchStyleSheetOverride, SIGNAL(clicked(bool)),                SLOT(onStyleSheet(bool)));
     connect(m_pUnitsWt,              SIGNAL(unitsChanged()), m_p3dPrefsWt, SLOT(onUpdateUnits()));
 }
@@ -163,16 +163,16 @@ void PrefsDlg::setupLayout()
                         m_pcbStyles->setCurrentIndex(m_pcbStyles->findText(defaultStyle));
                     }
 
-                    m_pchStyleSheetOverride = new QCheckBox("Application dark mode override");
-                    m_pchStyleSheetOverride->setToolTip("<p>Set a dark mode for the application's buttons, menus, toolbars and other widgets.<br>"
+                    m_pchStyleSheetOverride = new QCheckBox(tr("Application dark mode override"));
+                    m_pchStyleSheetOverride->setToolTip(tr("<p>Set a dark mode for the application's buttons, menus, toolbars and other widgets.<br>"
                                                         "Customize by editing the text file flow5_dark.css located in the application's directory.<br>"
-                                                        "This option should be used together with the UI dark theme activated.</p>");
+                                                        "This option should be used together with the UI dark theme activated.</p>"));
 
                     QHBoxLayout *pIconLayout = new QHBoxLayout;
                     {
-                        QLabel *plabIconSize = new QLabel("Toolbar icon size:");
+                        QLabel *plabIconSize = new QLabel(tr("Toolbar icon size:"));
                         m_pieIconSize = new IntEdit;
-                        QLabel *plabMaxIconsSize = new QLabel("pixels; hint only; application restart required");
+                        QLabel *plabMaxIconsSize = new QLabel(tr("pixels; hint only; application restart required"));
                         pIconLayout->addWidget(plabIconSize);
                         pIconLayout->addWidget(m_pieIconSize);
                         pIconLayout->addWidget(plabMaxIconsSize);
@@ -193,16 +193,16 @@ void PrefsDlg::setupLayout()
                 {
                     QHBoxLayout *pThemeClrLayout = new QHBoxLayout;
                     {
-                        m_prbDark   = new QRadioButton("Dark");
-                        m_prbLight  = new QRadioButton("Light");
-                        m_prbCustomStyle = new QRadioButton("Custom");
+                        m_prbDark   = new QRadioButton(tr("Dark"));
+                        m_prbLight  = new QRadioButton(tr("Light"));
+                        m_prbCustomStyle = new QRadioButton(tr("Custom"));
                         pThemeClrLayout->addWidget(m_prbDark);
                         pThemeClrLayout->addWidget(m_prbLight);
                         pThemeClrLayout->addWidget(m_prbCustomStyle);
                     }
                     QHBoxLayout *pBackLayout = new QHBoxLayout;
                     {
-                        QLabel *pBackLab = new QLabel("Background");
+                        QLabel *pBackLab = new QLabel(tr("Background"));
                         pBackLab->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
                         m_pcbBackColor      = new ColorBtn(this);
                         pBackLayout->addWidget(pBackLab);
@@ -210,26 +210,26 @@ void PrefsDlg::setupLayout()
                         pBackLayout->setStretchFactor(pBackLab, 1);
                         pBackLayout->setStretchFactor(m_pcbBackColor, 7);
                     }
-                    QGroupBox *pFontBox = new QGroupBox("Fonts");
+                    QGroupBox *pFontBox = new QGroupBox(tr("Fonts"));
                     {
                         QGridLayout *pMainFontLayout = new QGridLayout;
                         {
-                            QLabel *plabMain = new QLabel("Main display font:");
+                            QLabel *plabMain = new QLabel(tr("Main display font:"));
                             m_ppbTextFont = new QPushButton;
-                            m_ppbTextFont->setToolTip("<p>The font used in the central views;\nuse preferably a fix-spaced font</p>");
+                            m_ppbTextFont->setToolTip(tr("<p>The font used in the central views;\nuse preferably a fix-spaced font</p>"));
                             m_ptcbTextClr  = new TextClrBtn(this);
 
-                            QLabel *plabTable = new QLabel("Table font:");
+                            QLabel *plabTable = new QLabel(tr("Table font:"));
                             m_ppbTableFont = new QPushButton;
-                            m_ppbTableFont->setToolTip("<p>The font used to display the contents of tables and output panes</p>");
+                            m_ppbTableFont->setToolTip(tr("<p>The font used to display the contents of tables and output panes</p>"));
 
-                            QLabel *plabTree = new QLabel("Object explorer font:");
+                            QLabel *plabTree = new QLabel(tr("Object explorer font:"));
                             m_ppbTreeFont = new QPushButton;
-                            m_ppbTreeFont->setToolTip("<p>The font used to display the contents of the object explorer views</p>");
+                            m_ppbTreeFont->setToolTip(tr("<p>The font used to display the contents of the object explorer views</p>"));
 
-                            QLabel *plabToolTip = new QLabel("Tool tip font:");
+                            QLabel *plabToolTip = new QLabel(tr("Tool tip font:"));
                             m_ppbToolTipFont = new QPushButton;
-                            m_ppbToolTipFont->setToolTip("<p>The font used to display pop-pup contextual tips</p>");
+                            m_ppbToolTipFont->setToolTip(tr("<p>The font used to display pop-pup contextual tips</p>"));
 
                             pMainFontLayout->addWidget(plabMain,         1,1, Qt::AlignRight);
                             pMainFontLayout->addWidget(m_ppbTextFont,    1,2);
@@ -258,9 +258,9 @@ void PrefsDlg::setupLayout()
             {
                 QVBoxLayout *pMiscLayout = new QVBoxLayout;
                 {
-                    m_pchConfirmDiscard = new QCheckBox("Confirm discard command when exiting editors");
+                    m_pchConfirmDiscard = new QCheckBox(tr("Confirm discard command when exiting editors"));
 
-                    m_pchDontUseNativeMacDlg  = new QCheckBox("Don't use native color and font dialog (macOS)");
+                    m_pchDontUseNativeMacDlg  = new QCheckBox(tr("Don't use native color and font dialog (macOS)"));
 #ifdef Q_OS_MAC
                     m_pchDontUseNativeMacDlg->setEnabled(true);
                     QString tip ="Currently, the native dialog for font selection is never used, but this is likely to change in future Qt releases.";
@@ -270,11 +270,11 @@ void PrefsDlg::setupLayout()
 #endif
                     QHBoxLayout *pScaleLayout = new QHBoxLayout;
                     {
-                        QLabel *pLabMouseWheel = new QLabel("Mouse wheel scale factor:");
+                        QLabel *pLabMouseWheel = new QLabel(tr("Mouse wheel scale factor:"));
                         m_pdeScaleFactor = new FloatEdit;
-                        m_pdeScaleFactor->setToolTip("Define the percentage increase by which the views should be zoomed in or out\n"
-                                                     "when using the mouse wheel.");
-                        QLabel *pLabComment = new QLabel("%; Set a negative value to reverse the direction");
+                        m_pdeScaleFactor->setToolTip(tr("Define the percentage increase by which the views should be zoomed in or out\n"
+                                                     "when using the mouse wheel."));
+                        QLabel *pLabComment = new QLabel(tr("%; Set a negative value to reverse the direction"));
 
                         pScaleLayout->addWidget(pLabMouseWheel);
                         pScaleLayout->addWidget(m_pdeScaleFactor);
@@ -291,15 +291,16 @@ void PrefsDlg::setupLayout()
             }
             m_pStyleWidgets.push_back(pMiscBox);
 
-            QGroupBox *pLocaleBox = new QGroupBox("Localization");
+            QGroupBox *pLocaleBox = new QGroupBox(tr("Localization"));
             {
                 QHBoxLayout *pLocaleLayout = new QHBoxLayout;
                 {
-                    QLabel *plabLang = new QLabel("Language:");
+                    QLabel *plabLang = new QLabel(tr("Language:"));
                     m_pcbLanguage = new QComboBox;
                     m_pcbLanguage->addItem("System");
                     m_pcbLanguage->addItem("Chinese");
-                    m_pchLocale = new QCheckBox("Use locale settings for number formatting");
+                    m_pcbLanguage->addItem("French");
+                    m_pchLocale = new QCheckBox(tr("Use locale settings for number formatting"));
                     m_plabLocalOutput = new QLabel("1.23456\n10,000");
                     
                     pLocaleLayout->addWidget(plabLang);
@@ -327,15 +328,14 @@ void PrefsDlg::setupLayout()
     {
         QVBoxLayout *pAllLayout = new QVBoxLayout;
         {
-            m_pchMultiThreading = new QCheckBox("Allow multithreading");
+            m_pchMultiThreading = new QCheckBox(tr("Allow multithreading"));
             connect(m_pchMultiThreading, SIGNAL(clicked(bool)), SLOT(onMultiThreading()));
-            QString strong;
-            strong = QString::asprintf("%2d", QThread::idealThreadCount());
-            QLabel *pIdealCountLab = new QLabel("Maximum thread count supported by the OS = " + strong);
+
+            QLabel *pIdealCountLab = new QLabel(tr("Maximum thread count supported by the OS = %1").arg(QThread::idealThreadCount()));
             pIdealCountLab->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
             QHBoxLayout *pMaxThreadLayout = new QHBoxLayout;
             {
-                QLabel *pMaxThreadLab = new QLabel("Maximum thread count to use = ");
+                QLabel *pMaxThreadLab = new QLabel(tr("Maximum thread count to use = "));
                 m_pieMaxThreadCount = new IntEdit(1);
                 pMaxThreadLayout->addStretch();
                 pMaxThreadLayout->addWidget(pMaxThreadLab);
@@ -343,7 +343,7 @@ void PrefsDlg::setupLayout()
             }
             QHBoxLayout *pThreadPriorityLayout = new QHBoxLayout;
             {
-                QLabel *pPriorityLabel = new QLabel("Thread priority");
+                QLabel *pPriorityLabel = new QLabel(tr("Thread priority"));
                 m_pcbThreadPriority = new QComboBox;
                 {
                     m_pcbThreadPriority->addItem("Idle");
@@ -374,7 +374,7 @@ void PrefsDlg::setupLayout()
             pAllLayout->addWidget(pIdealCountLab);
             pAllLayout->addLayout(pMaxThreadLayout);
             pAllLayout->addLayout(pThreadPriorityLayout);
-            QLabel *pLabPriorityDisable = new QLabel("Linux OS does not support thread priority");
+            QLabel *pLabPriorityDisable = new QLabel(tr("Linux OS does not support thread priority"));
             pLabPriorityDisable->setStyleSheet("font: italic");
             pLabPriorityDisable->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
             pAllLayout->addWidget(pLabPriorityDisable);
@@ -600,7 +600,7 @@ void PrefsDlg::fillTreeWidget()
 
     m_pStyleItem = new QTreeWidgetItem(m_ptwOptionsTree);
     {
-        m_pStyleItem->setText(0, "Application");
+        m_pStyleItem->setText(0, tr("Application"));
         QTreeWidgetItem *pSub0 = new QTreeWidgetItem(m_pStyleItem);
         pSub0->setText(0,"Style");
         m_pStyleItem->addChild(pSub0);
@@ -620,27 +620,27 @@ void PrefsDlg::fillTreeWidget()
 
     m_pSaveItem = new QTreeWidgetItem(m_ptwOptionsTree);
     {
-        m_pSaveItem->setText(0,"Save, load, export");
+        m_pSaveItem->setText(0, tr("Save, load, export"));
         QTreeWidgetItem *pSub1;
 
         pSub1 = new QTreeWidgetItem(m_pSaveItem);
-        pSub1->setText(0,"General");
+        pSub1->setText(0, tr("General"));
         m_pSaveItem->addChild(pSub1);
 
         pSub1 = new QTreeWidgetItem(m_pSaveItem);
-        pSub1->setText(0,"Directories");
+        pSub1->setText(0, tr("Directories"));
         m_pSaveItem->addChild(pSub1);
 
         pSub1 = new QTreeWidgetItem(m_pSaveItem);
-        pSub1->setText(0,"Export options");
+        pSub1->setText(0, tr("Export options"));
         m_pSaveItem->addChild(pSub1);
 
         pSub1 = new QTreeWidgetItem(m_pSaveItem);
-        pSub1->setText(0,"Foil to SVG");
+        pSub1->setText(0, tr("Foil to SVG"));
         m_pSaveItem->addChild(pSub1);
 
         pSub1 = new QTreeWidgetItem(m_pSaveItem);
-        pSub1->setText(0, "Operating points");
+        pSub1->setText(0, tr("Operating points"));
         m_pSaveItem->addChild(pSub1);
     }
 

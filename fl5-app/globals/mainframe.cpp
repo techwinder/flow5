@@ -254,7 +254,7 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
 
     if(oglversion<2)
     {
-        QString strong = tr("flow5 requires OpenGL 3.3 or greater.\n");
+        QString strong = tr("flow5 requires OpenGL 3.3 or greater.") + EOLch;
         QString strange = tr("Your system provides by default OpenGL %1.%2")
                                     .arg(QSurfaceFormat::defaultFormat().majorVersion())
                                     .arg(QSurfaceFormat::defaultFormat().minorVersion());
