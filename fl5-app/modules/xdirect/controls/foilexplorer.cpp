@@ -95,7 +95,7 @@ FoilExplorer::FoilExplorer(QWidget *pParent) : QWidget(pParent)
     m_pTreeView->setItemDelegate(m_pDelegate);
 
     connect(m_pTreeView, SIGNAL(pressed(QModelIndex)), SLOT(onItemClicked(QModelIndex)));
-    //    connect(m_pStruct, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onItemDoubleClicked(QModelIndex)));
+    connect(m_pTreeView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onItemDoubleClicked(QModelIndex)));
     connect(m_pTreeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(onCurrentRowChanged(QModelIndex,QModelIndex)));
 
     setupLayout();

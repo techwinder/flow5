@@ -27,7 +27,6 @@
 #include <QString>
 
 #include <fstream>
-#include <iostream>
 #include <cassert>
 #include <thread>
 
@@ -37,7 +36,7 @@
 #elif defined INTEL_MKL
     #include <mkl.h>
 #elif defined OPENBLAS
-    #include <openblas/lapacke.h>
+    #include <openblas/lapack.h>
     #include <openblas/cblas.h>
 #endif
 
@@ -1571,7 +1570,12 @@ int matrix::solveLinearSystem(int rank, float *M, int nrhs, float *rhs, int nThr
     {
         ldb = 1;
 #ifdef OPENBLAS
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+            // https://github.com/OpenMathLib/OpenBLAS/issues/3877
         sgetrs_(&trans, &nl, &ldb, M, &lda, ipiv.data(), rhs+k*rank, &nl, &info, 1);
+    #else
+        sgetrs_(&trans, &nl, &ldb, M, &lda, ipiv.data(), rhs+k*rank, &nl, &info);
+    #endif
 #elif defined INTEL_MKL
         sgetrs_(&trans, &nl, &ldb, M, &lda, ipiv.data(), rhs+k*rank, &nl, &info);
 #elif defined ACCELERATE
@@ -1623,7 +1627,13 @@ int matrix::solveLinearSystem(int rank, double *M, int nrhs, double *rhs, int nT
     {
         ldb = 1;
 #ifdef OPENBLAS
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+            // https://github.com/OpenMathLib/OpenBLAS/issues/3877
         dgetrs_(&trans, &nl, &ldb, M, &lda, ipiv.data(), rhs+k*rank, &nl, &info, 1);
+    #else
+
+        dgetrs_(&trans, &nl, &ldb, M, &lda, ipiv.data(), rhs+k*rank, &nl, &info);
+    #endif
 #elif defined INTEL_MKL
         dgetrs_(&trans, &nl, &ldb, M, &lda, ipiv.data(), rhs+k*rank, &nl, &info);
 #elif defined ACCELERATE

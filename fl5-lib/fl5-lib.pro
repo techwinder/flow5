@@ -79,8 +79,14 @@ linux-g++ {
     } else {
         # ---------------- system OpenBLAS -----------------------------
         DEFINES += OPENBLAS
+
+        # Fedora libs in /usr/lib64:
+        #   openblas:  single-threaded library
+        #   openblaso: built with USE_OPENMP=1
+        #   openblasp: multi-threading with OMP
         LIBS += -lopenblas
-        LIBS += -llapack -llapacke
+#        LIBS += -lopenblaso
+#        LIBS += -lopenblasp
     }
 
 

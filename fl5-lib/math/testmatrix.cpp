@@ -29,7 +29,6 @@
 #include "testmatrix.h"
 #include <matrix.h>
 
-#include <complex>
 #include <chrono>
 
 
@@ -39,7 +38,7 @@
 #elif defined INTEL_MKL
     #include <mkl.h>
 #elif defined OPENBLAS
-    #include <openblas/lapacke.h>
+    #include <openblas/lapack.h>
 #endif
 
 
@@ -343,55 +342,62 @@ bool testCholevski4()
 
 
 
-void testLapacke()
+void testLapacke(int dim)
 {
     std::string out;
 
     char trans = 'N';
-    int dim = 4;
     int nrhs = 1;
     int LDA = dim;
     int LDB = dim;
     int info;
 
-    double A[16] = {18, 22,  54,  42,
-                    22, 70,  86,  62,
-                    54, 86, 174, 134,
-                    42, 62, 134, 106};
+    std::vector<double> A(dim*dim), AMem;
+    std::vector<double> B(dim);
 
-    double B[4] = {1, 2, 3, 4};
+    for(int i=0; i<dim; i++)
+        for(int j=0; j<dim; j++)
+            A[i*dim+j]=1.0/(5.1+(2.0*double(i)-double(j))*double(i-j+1));
+
+
+    for(int j=0; j<dim; j++)
+        B[j]=double(j);
 
     std::cout << "A=" << std::endl;
-    matrix::display_mat(A,4,4, out);
+    matrix::display_mat(A.data(),dim, dim, out);
     std::cout << out  << std::endl;
-    matrix::display_vec(B, 4,out);
+    matrix::display_vec(B.data(), dim,out);
     std::cout << out  << std::endl;
 
-    double AMem[16];
-    memcpy(AMem, A, 16*sizeof(double));
+    AMem = A;
 
     int ipiv[4];
 
-    dgetrf_(&dim, &dim, A, &LDA, ipiv, &info);
+    dgetrf_(&dim, &dim, A.data(), &LDA, ipiv, &info);
 #ifdef OPENBLAS
-    dgetrs_(&trans, &dim, &nrhs, A, &LDA, ipiv, B, &LDB, &info, 1);
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+        // https://github.com/OpenMathLib/OpenBLAS/issues/3877
+        dgetrs_(&trans, &dim, &nrhs, A.data(), &LDA, ipiv, B.data(), &LDB, &info, 1);
+    #else
+        dgetrs_(&trans, &dim, &nrhs, A.data(), &LDA, ipiv, B.data(), &LDB, &info);
+    #endif
 #elif defined INTEL_MKL
-    dgetrs_(&trans, &dim, &nrhs, A, &LDA, ipiv, B, &LDB, &info);
+    dgetrs_(&trans, &dim, &nrhs, A.data(), &LDA, ipiv, B.data(), &LDB, &info);
 #elif defined ACCELERATE
-    dgetrs_(&trans, &dim, &nrhs, A, &LDA, ipiv, B, &LDB, &info);
+    dgetrs_(&trans, &dim, &nrhs, A.data(), &LDA, ipiv, B.data(), &LDB, &info);
 #endif
 
 
-
+/*
    std::cout << "X:" << std::endl;
-   matrix::display_vec(B, 4, out);
+   matrix::display_vec(B.data(), dim, out);
    std::cout << out  << std::endl;
-   double AX[4]{0};
-   matrix::matVecMultLapack(AMem, B, AX, 4, 1);
+   std::vector<double> AX(dim);
+   matrix::matVecMultLapack(AMem.data(), B.data(), AX.data(), dim, 1);
 
    std::cout << "AX=" << std::endl;
-   matrix::display_vec(AX, 4,out);
-   std::cout << out  << std::endl;
+   matrix::display_vec(AX.data(), dim,out);
+   std::cout << out  << std::endl;*/
 }
 
 
@@ -551,7 +557,12 @@ void testLapacke12()
     lapack_int lwork = m;
     std::vector<double> work(m*m);
 #ifdef OPENBLAS
-    dgels_(&trans,&m,&n,&nrhs,a,&lda,mu,&ldb, work.data(), &lwork, &info, 1);
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+        // https://github.com/OpenMathLib/OpenBLAS/issues/3877
+        dgels_(&trans,&m,&n,&nrhs,a,&lda,mu,&ldb, work.data(), &lwork, &info, 1);
+    #else
+        dgels_(&trans,&m,&n,&nrhs,a,&lda,mu,&ldb, work.data(), &lwork, &info, 1);
+    #endif
 #elif defined INTEL_MKL
     dgels_(&trans,&m,&n,&nrhs,a,&lda,mu,&ldb, work.data(), &lwork, &info);
 #elif defined ACCELERATE

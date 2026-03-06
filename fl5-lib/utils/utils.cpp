@@ -24,9 +24,7 @@
 
 #include <fstream>
 #include <iostream>
-#include <iomanip>
 #include <QString>
-#include <time.h>
 
 #include <QString>
 
@@ -36,7 +34,7 @@
 #elif defined INTEL_MKL
     #include <mkl.h>
 #elif defined OPENBLAS
-    #include <openblas/lapacke.h>
+    #include <openblas/lapack.h>
 #endif
 
 
@@ -62,7 +60,7 @@ fl5Color xfl::readQColor(QDataStream &ar)
 {
     uchar byte=0;
 
-    ar>>byte; // a format identifyer?
+    ar>>byte; // a format identifier?
 
     ar>>byte>>byte;
     int a = int(byte);

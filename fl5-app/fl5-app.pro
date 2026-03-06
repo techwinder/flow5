@@ -89,11 +89,16 @@ linux-g++ {
         #   LIBS += -lgomp
         ##    LIBS += -lmkl_intel_thread -lmkl_sequential
     } else {
-        # ---------------- system LAPACK/LAPACKE + CBLAS/OpenBLAS-----------------------------
+        # ---------------- system OpenBLAS -----------------------------
         DEFINES += OPENBLAS
 
-            LIBS += -llapack -llapacke
-            LIBS += -lopenblas
+        # Fedora libs in /usr/lib64:
+        #   openblas:  single-threaded library
+        #   openblaso: built with USE_OPENMP=1
+        #   openblasp: multi-threading with OMP
+        LIBS += -lopenblas
+#        LIBS += -lopenblaso
+#        LIBS += -lopenblasp
 
     }
 

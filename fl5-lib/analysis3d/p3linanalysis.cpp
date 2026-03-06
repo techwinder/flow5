@@ -43,7 +43,7 @@
 #elif defined INTEL_MKL
     #include <mkl.h>
 #elif defined OPENBLAS
-    #include <openblas/lapacke.h>
+#include <openblas/lapack.h>
 #endif
 
 
@@ -679,7 +679,12 @@ void P3LinAnalysis::makeNodeDoubletSurfaceVelocity(int iNode, std::vector<double
 
     double wkopt=0;
 #ifdef OPENBLAS
-    dgels_(&trans, &nnodes, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info,1);
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+        // https://github.com/OpenMathLib/OpenBLAS/issues/3877
+        dgels_(&trans, &nnodes, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info,1);
+    #else
+        dgels_(&trans, &nnodes, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info);
+    #endif
 #elif defined INTEL_MKL
     dgels_(&trans, &nnodes, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info);
 #elif defined ACCELERATE
@@ -691,7 +696,12 @@ void P3LinAnalysis::makeNodeDoubletSurfaceVelocity(int iNode, std::vector<double
     {
         std::vector<double> work(lwork);
 #ifdef OPENBLAS
-        dgels_(&trans, &nnodes, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info,1);
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+            // https://github.com/OpenMathLib/OpenBLAS/issues/3877
+            dgels_(&trans, &nnodes, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info,1);
+    #else
+            dgels_(&trans, &nnodes, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info);
+    #endif
 #elif defined INTEL_MKL
         dgels_(&trans, &nnodes, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info);
 #elif ACCELERATE

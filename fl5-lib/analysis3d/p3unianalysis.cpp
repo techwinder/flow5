@@ -41,7 +41,7 @@
 #elif defined INTEL_MKL
     #include <mkl.h>
 #elif defined OPENBLAS
-    #include <openblas/lapacke.h>
+    #include <openblas/lapack.h>
 #endif
 
 
@@ -381,7 +381,12 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
             char trans = 'N';
 
 #ifdef OPENBLAS
-            dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info,1);
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+                // https://github.com/OpenMathLib/OpenBLAS/issues/3877
+                dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info,1);
+    #else
+                dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info);
+    #endif
 #elif defined INTEL_MKL
             dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info);
 #elif defined ACCELERATE
@@ -395,7 +400,12 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
                 work.resize(lwork);
 
 #ifdef OPENBLAS
-                dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info,1);
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+                    // https://github.com/OpenMathLib/OpenBLAS/issues/3877
+                    dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info,1);
+    #else
+                    dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info);
+    #endif
 #elif defined INTEL_MKL
                 dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info);
 #elif defined ACCELERATE

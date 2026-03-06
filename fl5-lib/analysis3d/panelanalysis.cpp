@@ -46,15 +46,10 @@
 #elif defined INTEL_MKL
     #include <mkl.h>
 #elif defined OPENBLAS
-    #include <openblas/lapacke.h>
+    #include <openblas/cblas.h>
+    #include <openblas/lapack.h>
 #endif
 
-
-/*#else
-  #define lapack_complex_float std::complex<float>
-  #define lapack_complex_double std::complex<double>
-  #include <lapacke.h>
-#endif*/
 
 bool PanelAnalysis::s_bDoublePrecision(true);
 bool PanelAnalysis::s_bMultiThread(true);
@@ -193,7 +188,12 @@ void PanelAnalysis::releasePanelArrays()
  */
 bool PanelAnalysis::LUfactorize()
 {
-#ifdef INTEL_MKL
+#ifdef OPENBLAS
+    if(s_bMultiThread)
+        openblas_set_num_threads(s_MaxThreads);
+    else
+        openblas_set_num_threads(1);
+#elif defined INTEL_MKL
     if(s_bMultiThread)
         MKL_Set_Num_Threads_Local(s_MaxThreads);
     else
@@ -248,12 +248,25 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
     if(s_bDoublePrecision)
     {
 #ifdef OPENBLAS
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+        // https://github.com/OpenMathLib/OpenBLAS/issues/3877
         if(uRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), uRHS, &ldb, &info, 1);
         if(vRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), vRHS, &ldb, &info, 1);
         if(wRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), wRHS, &ldb, &info, 1);
         if(pRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), pRHS, &ldb, &info, 1);
         if(qRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), qRHS, &ldb, &info, 1);
         if(rRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), rRHS, &ldb, &info, 1);
+    #else
+
+        if(uRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), uRHS, &ldb, &info);
+        if(vRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), vRHS, &ldb, &info);
+        if(wRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), wRHS, &ldb, &info);
+        if(pRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), pRHS, &ldb, &info);
+        if(qRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), qRHS, &ldb, &info);
+        if(rRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), rRHS, &ldb, &info);
+    #endif
+
+
 #elif defined INTEL_MKL
         if(uRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), uRHS, &ldb, &info);
         if(vRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), vRHS, &ldb, &info);
@@ -282,7 +295,13 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
         {
             for(int i=0; i<n; i++) srhs[i] = float(uRHS[i]);
 #ifdef OPENBLAS
+
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+            // https://github.com/OpenMathLib/OpenBLAS/issues/3877
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info, 1);
+    #elif
+            sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
+    #endif
 #elif defined INTEL_MKL
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
 #elif defined ACCELERATE
@@ -293,8 +312,13 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
         if(vRHS)
         {
             for(int i=0; i<n; i++) srhs[i] = float(vRHS[i]);
-#ifdef OPENBLAS
+#ifdef OPENBLAS            
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+            // https://github.com/OpenMathLib/OpenBLAS/issues/3877
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info, 1);
+    #elif
+            sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
+    #endif
 #elif defined INTEL_MKL
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
 #elif ACCELERATE
@@ -306,7 +330,12 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
         {
             for(int i=0; i<n; i++) srhs[i] = float(wRHS[i]);
 #ifdef OPENBLAS
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+            // https://github.com/OpenMathLib/OpenBLAS/issues/3877
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info, 1);
+    #elif
+            sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
+    #endif
 #elif defined INTEL_MKL
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
 #elif defined ACCELERATE
@@ -318,7 +347,12 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
         {
             for(int i=0; i<n; i++) srhs[i] = float(pRHS[i]);
 #ifdef OPENBLAS
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+            // https://github.com/OpenMathLib/OpenBLAS/issues/3877
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info, 1);
+    #elif
+            sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
+    #endif
 #elif defined INTEL_MKL
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
 #elif defined ACCELERATE
@@ -330,7 +364,12 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
         {
             for(int i=0; i<n; i++) srhs[i] = float(qRHS[i]);
 #ifdef OPENBLAS
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+            // https://github.com/OpenMathLib/OpenBLAS/issues/3877
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info, 1);
+    #elif
+            sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info,);
+    #endif
 #elif defined INTEL_MKL
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
 #elif defined ACCELERATE
@@ -342,7 +381,12 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
         {
             for(int i=0; i<n; i++) srhs[i] = float(rRHS[i]);
 #ifdef OPENBLAS
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+            // https://github.com/OpenMathLib/OpenBLAS/issues/3877
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info, 1);
+    #elif
+            sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
+    #endif
 #elif defined INTEL_MKL
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
 #elif defined ACCELERATE
@@ -364,7 +408,12 @@ bool PanelAnalysis::backSubRHS(std::vector<double> &RHS)
     if(s_bDoublePrecision)
     {
 #ifdef OPENBLAS
-        dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), RHS.data(), &ldb, &info, 1);
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+            // https://github.com/OpenMathLib/OpenBLAS/issues/3877
+            dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), RHS.data(), &ldb, &info, 1);
+    #elif
+            dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), RHS.data(), &ldb, &info);
+    #endif
 #elif INTEL_MKL
         dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), RHS.data(), &ldb, &info);
 #endif
@@ -374,7 +423,12 @@ bool PanelAnalysis::backSubRHS(std::vector<double> &RHS)
         std::vector<float> cf(matsize,0);
         for(int i=0; i<n; i++)  cf[i] = float(RHS.at(i));
 #ifdef OPENBLAS
+    #ifdef LAPACK_FORTRAN_STRLEN_END
+            // https://github.com/OpenMathLib/OpenBLAS/issues/3877
         sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), cf.data(), &n, &info, 1);
+    #elif
+        sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), cf.data(), &n, &info);
+    #endif
 #elif INTEL_MKL
         sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), cf.data(), &n, &info);
 #endif

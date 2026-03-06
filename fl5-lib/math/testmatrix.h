@@ -35,7 +35,7 @@ void testMatrix();
 void testMatVecMult(int nThreads);
 
 
-void testLapacke();
+void testLapacke(int dim);
 void testLapacke3();
 void testLapacke4(int rank);
 

@@ -45,6 +45,11 @@
 
 #include <gmsh.h>
 
+#ifdef OPENBLAS
+    #include <openblas/cblas.h>
+#elif defined INTEL_MKL
+    #include <mkl.h>
+#endif
 
 #include <core/displayoptions.h>
 #include <core/saveoptions.h>
@@ -300,6 +305,7 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
     strange += QString::asprintf("Application device pixel ratio = %d\n\n", devicePixelRatio());
 #endif
 
+
     gl2dView::setImageSize(pScreen->size());
 
     displayMessage(strange + EOLch, false);
@@ -316,6 +322,40 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
     strange += tr("   File exports:     ") + SaveOptions::lastExportDirName() + EOLch;
 
     displayMessage(strange + EOLch, false);
+
+
+
+#ifdef OPENBLAS
+    strange.clear();
+    switch(openblas_get_parallel())
+    {
+        //        https://github.com/OpenMathLib/OpenBLAS/wiki/Faq/a15b786986841d2e4e4e84e3f2ecff9c3b263b32
+        //openblas_get_parallel() will return 0 for a single-threaded library, 1 if multithreading without OpenMP, 2 if built with USE_OPENMP=1
+        case 0: strange = "OpenBlas: single-threaded library";   break;
+        case 1:
+        {
+            strange = "OpenBlas: multi-threading with OMP";
+            break;
+        }
+        case 2: strange = "OpenBlas: built with USE_OPENMP=1";   break;
+        default:
+            strange = "openblas_get_parallel() return error";
+    }
+
+        displayMessage(strange + EOLch + EOLch, false);
+#elif defined INTEL_MKL
+    //https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-c/2025-0/mkl-get-dynamic.html
+    strange.clear();
+    int nt = mkl_get_max_threads();
+
+    if (1 == mkl_get_dynamic())
+        strange = QString::asprintf("Intel MKL may use less than %i threads for a large problem", nt);
+    else
+        strange = QString::asprintf("Intel MKL should use %i threads for a large problem", nt);
+    displayMessage(strange + EOLch + EOLch, false);
+#endif
+
+
 
     if(SaveOptions::bAutoSave())
     {

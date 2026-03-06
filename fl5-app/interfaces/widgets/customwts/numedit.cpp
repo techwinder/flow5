@@ -35,6 +35,7 @@ NumEdit::NumEdit(QWidget *pWidget) : QLineEdit(pWidget)
     QPalette palette;
     QColor clr = palette.color(QPalette::Active, QPalette::Window);
     setStyleSheet("QLineEdit{background-color: " + clr.name() + ";}"); // overrides background issue in Windows
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 
