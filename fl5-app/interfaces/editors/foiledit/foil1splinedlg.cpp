@@ -54,7 +54,7 @@ CubicSpline Foil1SplineDlg::s_CS;
 
 Foil1SplineDlg::Foil1SplineDlg(QWidget *pParent) : FoilDlg(pParent)
 {
-    setWindowTitle("Foil from spline");
+    setWindowTitle(tr("Foil from spline"));
     setupLayout();
     connectSignals();
 
@@ -285,15 +285,15 @@ void Foil1SplineDlg::setupLayout()
         QVBoxLayout *pLeftLayout = new QVBoxLayout;
         {
 
-            QGroupBox *pTypeBox = new QGroupBox("Spline type");
+            QGroupBox *pTypeBox = new QGroupBox(tr("Spline type"));
             {
                 QVBoxLayout *pTypeLayout = new QVBoxLayout;
                 {
                     QHBoxLayout *pSplineLayout = new QHBoxLayout;
                     {
                         m_prbBS = new QRadioButton("B-Spline");
-                        m_prbBZ = new QRadioButton("Bezier");
-                        m_prbCS = new QRadioButton("Cubic");
+                        m_prbBZ = new QRadioButton("Bézier");
+                        m_prbCS = new QRadioButton(tr("Cubic"));
 
                         m_prbBZ->setVisible(false);
                         m_prbBZ->setEnabled(false);
@@ -307,17 +307,17 @@ void Foil1SplineDlg::setupLayout()
 
                     QHBoxLayout * pStyleLayout = new QHBoxLayout;
                     {
-                        QLabel *pLabSplineStyle = new QLabel("Style:");
+                        QLabel *plabSplineStyle = new QLabel(tr("Style:"));
                         m_plbSplineStyle = new LineBtn;
 
-                        pStyleLayout->addWidget(pLabSplineStyle);
+                        pStyleLayout->addWidget(plabSplineStyle);
                         pStyleLayout->addWidget(m_plbSplineStyle);
                         pStyleLayout->addStretch();
                     }
 
                     QGridLayout *pPropsLayout = new QGridLayout;
                     {
-                        QLabel *pLabDeg = new QLabel("Degree=");
+                        QLabel *plabDeg = new QLabel(tr("Degree="));
                         m_pcbSplineDegree = new QComboBox;
                         for (int i=2; i<10; i++)
                         {
@@ -325,11 +325,11 @@ void Foil1SplineDlg::setupLayout()
                             m_pcbSplineDegree->addItem(str);
                         }
 
-                        m_pchClosedTE = new QCheckBox("Force closed T.E.");
-                        m_pchClosedTE->setToolTip("<p>Forces the spline's leading and trailing points to be at the same position</p>");
+                        m_pchClosedTE = new QCheckBox(tr("Force closed T.E."));
+                        m_pchClosedTE->setToolTip(tr("<p>Forces the spline's leading and trailing points to be at the same position</p>"));
 
 
-                        pPropsLayout->addWidget(pLabDeg,           1,1);
+                        pPropsLayout->addWidget(plabDeg,           1,1);
                         pPropsLayout->addWidget(m_pcbSplineDegree, 1,2);
 
                         pPropsLayout->addWidget(m_pchClosedTE,     4,1,1,2);
@@ -344,37 +344,36 @@ void Foil1SplineDlg::setupLayout()
                 pTypeBox->setLayout(pTypeLayout);
             }
 
-            QGroupBox *m_pBunchBox = new QGroupBox("Node bunching");
+            QGroupBox *m_pBunchBox = new QGroupBox(tr("Node bunching"));
             {
                 QVBoxLayout *pBoxLayout = new QVBoxLayout;
                 {
                     QHBoxLayout *pNbLayout = new QHBoxLayout;
                     {
-                        QLabel *pLabNPanels = new QLabel("Number of panels");
-                        pLabNPanels->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-                        pLabNPanels->setPalette(m_Palette);
-                        pLabNPanels->setAttribute(Qt::WA_NoSystemBackground);
+                        QLabel *plabNPanels = new QLabel(tr("Number of panels"));
+                        plabNPanels->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
+                        plabNPanels->setPalette(m_Palette);
+                        plabNPanels->setAttribute(Qt::WA_NoSystemBackground);
                         m_pieNPanels = new IntEdit;
-                        QString tip= "CAUTION: XFoil does not accept number of panel greater than ~300\n"
-                                     "Adjust the number of panels and the bunching parameters to\n"
-                                     "achieve the desired point distribution.";
+                        QString tip= tr("<p>Caution: XFoil does not accept number of panel greater than 300.<br>"
+                                     "Adjust the number of panels and the bunching parameters to achieve the desired point distribution.</p>");
                         m_pieNPanels->setToolTip(tip);
 
-                        pNbLayout->addWidget(pLabNPanels);
+                        pNbLayout->addWidget(plabNPanels);
                         pNbLayout->addWidget(m_pieNPanels);
                         pNbLayout->addStretch();
                     }
 
                     QHBoxLayout *pBunchLayout = new QHBoxLayout;
                     {
-                        QLabel *pLabNoAmp = new QLabel("Uniform");
-                        pLabNoAmp->setPalette(m_Palette);
-                        pLabNoAmp->setAttribute(Qt::WA_NoSystemBackground);
-                        pLabNoAmp->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
-                        QLabel *pLabAmp = new QLabel("Bunched");
-                        pLabAmp->setPalette(m_Palette);
-                        pLabAmp->setAttribute(Qt::WA_NoSystemBackground);
-                        pLabAmp->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
+                        QLabel *plabNoAmp = new QLabel(tr("Uniform"));
+                        plabNoAmp->setPalette(m_Palette);
+                        plabNoAmp->setAttribute(Qt::WA_NoSystemBackground);
+                        plabNoAmp->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+                        QLabel *plabAmp = new QLabel(tr("Bunched"));
+                        plabAmp->setPalette(m_Palette);
+                        plabAmp->setAttribute(Qt::WA_NoSystemBackground);
+                        plabAmp->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
                         m_pslBunchAmp = new QSlider(Qt::Horizontal);
                         m_pslBunchAmp->setPalette(m_SliderPalette);
                         m_pslBunchAmp->setRange(0, 100);
@@ -383,16 +382,13 @@ void Foil1SplineDlg::setupLayout()
                         m_pslBunchAmp->setTickPosition(QSlider::TicksBelow);
                         m_pslBunchAmp->setAutoFillBackground(true);
 
-                        QString tip = "Use the sliders to bunch the panels.\n"
-                                 "The amplitude slider determines the intensity of the bunching.\n"
-                                 "The distribution slider determines whether the bunching is towards\n"
-                                 "the leading or the trailing edge.";
+                        QString tip = tr("<p>Use the slider to bunch the panels.</p>");
                         m_pslBunchAmp->setToolTip(tip);
 
 
-                        pBunchLayout->addWidget(pLabNoAmp);
+                        pBunchLayout->addWidget(plabNoAmp);
                         pBunchLayout->addWidget(m_pslBunchAmp);
-                        pBunchLayout->addWidget(pLabAmp);
+                        pBunchLayout->addWidget(plabAmp);
                         pBunchLayout->setStretchFactor(m_pslBunchAmp,1);
 
                     }
@@ -404,12 +400,12 @@ void Foil1SplineDlg::setupLayout()
             }
 
 
-            QGroupBox *pOutputBox = new QGroupBox("Display");
+            QGroupBox *pOutputBox = new QGroupBox(tr("Display"));
             {
                 QGridLayout *pOutputLayout = new QGridLayout;
                 {
-                    m_pchShowCtrlPts = new QCheckBox("Control points");
-                    m_pchShowNormals = new QCheckBox("Normals");
+                    m_pchShowCtrlPts = new QCheckBox(tr("Control points"));
+                    m_pchShowNormals = new QCheckBox(tr("Normals"));
 
 
                     pOutputLayout->addWidget(m_pchShowCtrlPts,  1,2);
@@ -423,18 +419,18 @@ void Foil1SplineDlg::setupLayout()
 
             QHBoxLayout *pUndoRedoLayout = new QHBoxLayout;
             {
-                m_ppbUndo = new QPushButton(QIcon(":/icons/OnUndo.png"), "Undo");
+                m_ppbUndo = new QPushButton(QIcon(":/icons/OnUndo.png"), tr("Undo"));
                 m_ppbUndo->setToolTip("Ctrl+Z");
-                m_ppbRedo = new QPushButton(QIcon(":/icons/OnRedo.png"), "Redo");
+                m_ppbRedo = new QPushButton(QIcon(":/icons/OnRedo.png"), tr("Redo"));
                 m_ppbRedo->setToolTip("Ctrl+Y, Ctrl+Shift+Z");
                 pUndoRedoLayout->addWidget(m_ppbUndo);
                 pUndoRedoLayout->addWidget(m_ppbRedo);
             }
 
 
-            m_ppbActionsMenuBtn = new QPushButton("Actions");
+            m_ppbActionsMenuBtn = new QPushButton(tr("Actions"));
             {
-                QMenu *pActionsMenu = new QMenu("Actions");
+                QMenu *pActionsMenu = new QMenu(tr("Actions"));
                 m_ppbActionsMenuBtn->setMenu(pActionsMenu);
             }
 
@@ -489,9 +485,9 @@ void Foil1SplineDlg::connectSignals()
 
     QMenu *pActionsMenu = m_ppbActionsMenuBtn->menu();
     {
-        QAction *pActReset      = new QAction("Reset spline",     this);
-        m_pActApproxFoil        = new QAction("Approximate foil", this);
-        QAction *pActOverlay    = new QAction("Overlay foil",     this);
+        QAction *pActReset      = new QAction(tr("Reset spline"),     this);
+        m_pActApproxFoil        = new QAction(tr("Approximate foil"), this);
+        QAction *pActOverlay    = new QAction(tr("Overlay foil"),     this);
 
         connect(pActReset,        SIGNAL(triggered(bool)), SLOT(onMakeDefaultSpline()));
         connect(m_pActApproxFoil, SIGNAL(triggered(bool)), SLOT(onApproxFoil()));
@@ -853,7 +849,7 @@ void Foil1SplineDlg::onSplineDegree()
         else
         {
             // too few control points, adjust the degree
-            QMessageBox::warning(this,"Warning", "The spline degree must be less than the number of control points");
+            QMessageBox::warning(this,tr("Warning"), tr("The spline degree must be less than the number of control points"));
             m_pcbSplineDegree->setCurrentIndex(s_BS.degree()-2);
 
             s_BS.setDegree(std::max(2,int(s_BS.ctrlPointCount())-1));

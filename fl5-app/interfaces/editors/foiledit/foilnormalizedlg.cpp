@@ -64,8 +64,8 @@ void FoilNormalizeDlg::setupLayout()
 
             QHBoxLayout *pBtnLayout = new QHBoxLayout;
             {
-                m_ppbDerotate  = new QPushButton("De-rotate");
-                m_ppbNormalize = new QPushButton("Normalize");
+                m_ppbDerotate  = new QPushButton(tr("De-rotate"));
+                m_ppbNormalize = new QPushButton(tr("Normalize"));
                 pBtnLayout->addWidget(m_ppbDerotate);
                 pBtnLayout->addWidget(m_ppbNormalize);
             }

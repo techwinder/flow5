@@ -95,15 +95,15 @@ void FlowCtrls::setupLayout()
         else
             plabOGLVersion->setVisible(false);
 
-        QGroupBox *pgbBox = new QGroupBox("Box limits");
+        QGroupBox *pgbBox = new QGroupBox(tr("Box limits"));
         {
             QGridLayout *pBoxLayout = new QGridLayout;
             {
                 QString str = Units::lengthUnitQLabel();
                 for(int i=0; i<3; i++) m_plabFlowLength[i] = new QLabel(str);
 
-                QLabel *plabMin = new QLabel("Min.");
-                QLabel *plabMax = new QLabel("Max.");
+                QLabel *plabMin = new QLabel(tr("Min."));
+                QLabel *plabMax = new QLabel(tr("Max."));
 
                 QLabel *plabX = new QLabel("x:");
                 QLabel *plabY = new QLabel("y:");
@@ -137,21 +137,21 @@ void FlowCtrls::setupLayout()
             pgbBox->setLayout(pBoxLayout);
         }
 
-        QGroupBox *pgbODE = new QGroupBox("ODE");
+        QGroupBox *pgbODE = new QGroupBox(tr("ODE"));
         {
             QVBoxLayout *pODELayout = new QVBoxLayout;
             {
                 QHBoxLayout *pRKLayout = new QHBoxLayout;
                 {
-                    QLabel *plabODE = new QLabel("Method:");
+                    QLabel *plabODE = new QLabel(tr("Method:"));
                     QButtonGroup *pGroup = new QButtonGroup(this);
                     {
                         m_prbRK1 = new QRadioButton("Euler");
                         m_prbRK2 = new QRadioButton("RK2");
                         m_prbRK4 = new QRadioButton("RK4");
-                        QString tip("<p>The forward Euler method is the simplest, fastest and least precise method to calculate the flow lines.<br>"
+                        QString tip(tr("<p>The forward Euler method is the simplest, fastest and least precise method to calculate the flow lines.<br>"
                                     "The Runge-Kutta methods at order 2 and 4 are more accurate and more computationally expensive.<br>"
-                                    "<b>Recommendation:</b> select the most accurate method which does not slow down the frame rate.</p>");
+                                    "<b>Recommendation:</b> select the most accurate method which does not slow down the frame rate.</p>"));
                         m_prbRK1->setToolTip(tip);
                         m_prbRK2->setToolTip(tip);
                         m_prbRK4->setToolTip(tip);
@@ -170,9 +170,9 @@ void FlowCtrls::setupLayout()
                 {
                     QLabel *plabDt = new QLabel("dt=");
                     m_pfeDt = new FloatEdit(s_Flowdt);
-                    m_pfeDt->setToolTip("<p>Defines the time increment used to move the particles:<br>"
+                    m_pfeDt->setToolTip(tr("<p>Defines the time increment used to move the particles:<br>"
                                         "At each frame update, the particles move in the x-direction "
-                                        "a distance equal to V<sub>&infin;</sub>.dt</p>");
+                                        "a distance equal to V<sub>&infin;</sub>.dt</p>"));
                     QLabel *plabSec = new QLabel("s");
                     pDTLayout->addWidget(plabDt);
                     pDTLayout->addWidget(m_pfeDt);
@@ -186,23 +186,22 @@ void FlowCtrls::setupLayout()
             pgbODE->setLayout(pODELayout);
         }
 
-        QGroupBox *pgbParticles = new QGroupBox("Particles");
+        QGroupBox *pgbParticles = new QGroupBox(tr("Particles"));
         {
             QVBoxLayout *pParticlesLayout = new QVBoxLayout;
             {
                 QHBoxLayout *pGroupsLayout = new QHBoxLayout;
                 {
-                    QLabel *plabNGroups = new QLabel("Nbr. of groups=");
+                    QLabel *plabNGroups = new QLabel(tr("Nbr. of groups="));
                     m_pieNGroups = new IntEdit(s_FlowNGroups);
-                    QString str = QString::asprintf("The calculation of the flow is dispatched to the GPU where it is broken down into groups of %d particles.", GROUP_SIZE);
-                    str =   "<p>" + str + "<br>" +
-                            "The number of groups should be less than the max. number of groups "
-                            "accepted by the GPU.<br>"
-                            "The GroupSize is hard-coded in the compute shader.<br>"
-                            "The number of particles is NGroups x GroupSize.<br>"
-                            "In the present case the main limitation to the number of groups is "
-                            "the number of particles that can be computed "
-                            "and rendered without loss of frame rate.</p>";
+                    QString str = tr("<p>The calculation of the flow is dispatched to the GPU where it is broken down "
+                                     "into groups of %1 particles.<br>"
+                                     "The number of groups should be less than the max. number of groups accepted by the GPU.<br>"
+                                    "The GroupSize is hard-coded in the compute shader.<br>"
+                                    "The number of particles is NGroups x GroupSize.<br>"
+                                    "In the present case the main limitation to the number of groups is "
+                                    "the number of particles that can be computed "
+                                     "and rendered without loss of frame rate.</p>").arg(GROUP_SIZE);
 
                     m_pieNGroups->setToolTip(str);
 
@@ -216,7 +215,7 @@ void FlowCtrls::setupLayout()
 
                 QHBoxLayout *pStyleLayout = new QHBoxLayout;
                 {
-                    QLabel *plabStyle = new QLabel("Flow lines style:");
+                    QLabel *plabStyle = new QLabel(tr("Flow lines style:"));
                     m_plbFlowLines = new LineBtn(this);
                     m_plbFlowLines->setBackground(true);
 
@@ -232,7 +231,7 @@ void FlowCtrls::setupLayout()
             pgbParticles->setLayout(pParticlesLayout);
         }
 
-        m_plabFPS = new QLabel("FPS");
+        m_plabFPS = new QLabel(tr("FPS"));
         m_plabFPS->setFont(DisplayOptions::tableFont());
 
         QLabel *pFlow5Link = new QLabel;
@@ -348,7 +347,7 @@ void FlowCtrls::setFPS()
     for(int i=0; i<m_stackInterval.size()-1; i++)
         average += m_stackInterval.at(i+1)-m_stackInterval.at(i);
     average /= double(m_stackInterval.size()-1);
-    m_plabFPS->setText(QString::asprintf("Frames/s = %4.1f Hz", 1000.0/average));
+    m_plabFPS->setText(QString("Frames/s = %1 Hz").arg(1000.0/average, 4,'f',1));
     m_stackInterval.pop_front();
 }
 

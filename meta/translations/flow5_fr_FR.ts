@@ -62,7 +62,7 @@
     <message>
         <location filename="../../fl5-app/modules/xdirect/controls/analysis2dctrls.cpp" line="68"/>
         <source>Store operating points</source>
-        <translation>Enregistrer les points de fonctionnement</translation>
+        <translation>Conserver les points de fonctionnement</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xdirect/controls/analysis2dctrls.cpp" line="69"/>
@@ -91,6 +91,31 @@
         <location filename="../../fl5-app/modules/xdirect/analysis/analysis2dsettings.cpp" line="47"/>
         <source>XFoil settings</source>
         <translation>Paramètres XFoil</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xdirect/analysis/analysis2dsettings.cpp" line="76"/>
+        <source>Iteration limit=</source>
+        <translation>Limite d&apos;itérations =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xdirect/analysis/analysis2dsettings.cpp" line="79"/>
+        <source>Discard points with Cd&lt;</source>
+        <translation>Discard points with Cd&lt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xdirect/analysis/analysis2dsettings.cpp" line="81"/>
+        <source>&lt;p&gt;Operating points with drag coefficient less than this value will be considered to be spurious and will be discarded.&lt;br&gt;Recommendation: 0.001&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Les points dont le coefficient de traine est inférieur à cette valeur seront considérés des artefacts de calcul et seront rejetés.&lt;br&gt;Recommandatio: 0.001&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xdirect/analysis/analysis2dsettings.cpp" line="84"/>
+        <source>Show full log report after an XFoil analysis</source>
+        <translation>Afficher le rapport complet du calcul XFoil</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xdirect/analysis/analysis2dsettings.cpp" line="85"/>
+        <source>Keep XFoil interface open if analysis errors</source>
+        <translation>Laisse l&apos;interface de calcul ouverte en cas d&apos;erreur</translation>
     </message>
 </context>
 <context>
@@ -237,7 +262,7 @@ Select the analyses to duplicate</source>
     <message>
         <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="175"/>
         <source>Update polar view</source>
-        <translation>Mise à jour de la vue des polaires</translation>
+        <translation>Mise à jour auto. de la vue des polaires</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="176"/>
@@ -370,12 +395,12 @@ Uncheck for increased analysis speed.</source>
     <message>
         <location filename="../../fl5-app/modules/xdirect/analysis/batchxfoildlg.cpp" line="165"/>
         <source>Top transition location (x/c)</source>
-        <translation>Transition extrados (x/c)</translation>
+        <translation>Transition extrados (x/c) =</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xdirect/analysis/batchxfoildlg.cpp" line="166"/>
         <source>Bottom transition location (x/c)</source>
-        <translation>Transition intrados (x/c)</translation>
+        <translation>Transition intrados (x/c) =</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xdirect/analysis/batchxfoildlg.cpp" line="170"/>
@@ -1062,7 +1087,7 @@ Uncheck for increased analysis speed.</source>
     <message>
         <location filename="../../fl5-app/modules/xplane/graphs/cpgraphctrls.cpp" line="50"/>
         <source>Cp Graph Controls</source>
-        <translation>Contrôles de graphe Cp</translation>
+        <translation>Contrôles de graphique Cp</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xplane/graphs/cpgraphctrls.cpp" line="88"/>
@@ -1150,19 +1175,19 @@ Uncheck for increased analysis speed.</source>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="152"/>
-        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="218"/>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="219"/>
         <source>X</source>
         <translation>X</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="172"/>
-        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="218"/>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="219"/>
         <source>Y</source>
         <translation>Y</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="173"/>
-        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="218"/>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="219"/>
         <source>Z</source>
         <translation>Z</translation>
     </message>
@@ -1188,7 +1213,7 @@ Uncheck for increased analysis speed.</source>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="196"/>
-        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="241"/>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="242"/>
         <source>Samples:</source>
         <translation>Échantillons:</translation>
     </message>
@@ -1204,31 +1229,40 @@ Uncheck for increased analysis speed.</source>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="216"/>
-        <source>Crossflow vorticity (VPW only)</source>
-        <translation>Circulation dans le plan transverse (VPW uniquement)</translation>
+        <source>Crossflow vorticity</source>
+        <translation>Circulation plan transverse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="218"/>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="217"/>
+        <source>VPW only</source>
+        <translation>VPW seulement</translation>
+    </message>
+    <message>
+        <source>Crossflow vorticity (VPW only)</source>
+        <translation type="vanished">Circulation plan transverse (VPW)</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="219"/>
         <source>Norm</source>
         <translation>Norme</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="227"/>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="228"/>
         <source>Auto scale</source>
         <translation>Echelle automatique</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="232"/>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="233"/>
         <source>&lt;p&gt;Number of colour samples in the y and z directions.&lt;br&gt;Recommendation: N = 50 to 200 &lt;/p&gt;</source>
         <translation>&lt;p&gt;Nombre d&apos;échantillons de couleur dans les directions x et z.&lt;br&gt;Recommandation : N = 50 à 200 &lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="235"/>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="236"/>
         <source>Min.</source>
         <translation>Min.</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="236"/>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="237"/>
         <source>Max.</source>
         <translation>Max.</translation>
     </message>
@@ -1335,6 +1369,197 @@ Uncheck for increased analysis speed.</source>
     </message>
 </context>
 <context>
+    <name>FlowCtrls</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="98"/>
+        <source>Box limits</source>
+        <translation>Limites</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="105"/>
+        <source>Min.</source>
+        <translation>Min.</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="106"/>
+        <source>Max.</source>
+        <translation>Max.</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="140"/>
+        <source>ODE</source>
+        <translation>Eq. diffétentielle</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="146"/>
+        <source>Method:</source>
+        <translation>Méthode :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="152"/>
+        <source>&lt;p&gt;The forward Euler method is the simplest, fastest and least precise method to calculate the flow lines.&lt;br&gt;The Runge-Kutta methods at order 2 and 4 are more accurate and more computationally expensive.&lt;br&gt;&lt;b&gt;Recommendation:&lt;/b&gt; select the most accurate method which does not slow down the frame rate.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;La méthode d&apos;Euletr est la plus simple, la plus rapide et la moins précise des méthodes pour calculer les lignes d&apos;écoulement.&lt;br&gt;Les méthodes de runge-Kutta d&apos;ordre 2 et 4 sont plus précise et requièrent plus de calculs.&lt;br&gt;&lt;b&gt;Recommandation :&lt;/b&gt;Choisir la méthode la plus précise qui ne réduit pas le taux de rafraichissement.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="173"/>
+        <source>&lt;p&gt;Defines the time increment used to move the particles:&lt;br&gt;At each frame update, the particles move in the x-direction a distance equal to V&lt;sub&gt;&amp;infin;&lt;/sub&gt;.dt&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Définit l&apos;incrément de temps utilisé pour déplacer les particules:&lt;br&gt;A chaque rafraichissement, les particules se déplacent dans la direction X d&apos;une distance égale à V&lt;sub&gt;&amp;infin;&lt;/sub&gt;.dt&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="189"/>
+        <source>Particles</source>
+        <translation>Particules</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="195"/>
+        <source>Nbr. of groups=</source>
+        <translation>Nbre. de groupes =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="197"/>
+        <source>&lt;p&gt;The calculation of the flow is dispatched to the GPU where it is broken down into groups of %1 particles.&lt;br&gt;The number of groups should be less than the max. number of groups accepted by the GPU.&lt;br&gt;The GroupSize is hard-coded in the compute shader.&lt;br&gt;The number of particles is NGroups x GroupSize.&lt;br&gt;In the present case the main limitation to the number of groups is the number of particles that can be computed and rendered without loss of frame rate.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Le calcul de l&apos;écoulement est envoyé par la GPU où il est traité en groupes de %1 particules.&lt;br&gt;Le nombre de groupes doit être inférieur au nombre de groupes maximum supportés par la GPU.&lt;br&gt;Le GroupSize est codé en dur dans le compute shader. &lt;br&gt;Le nombre de particules est NGroups x GroupSize.&lt;br&gt;Dans le cas présent, la limitation principale au nombre  de groupes est le nombre de particucles qui peuvent être traitées sans réduction du taux de rafraichissement.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="218"/>
+        <source>Flow lines style:</source>
+        <translation>Style des lignes :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="234"/>
+        <source>FPS</source>
+        <translation>FPS</translation>
+    </message>
+    <message>
+        <source>%1 groups x %2 = %3 particles</source>
+        <translation type="vanished">%1 groupes x %2 = %3 particules</translation>
+    </message>
+</context>
+<context>
+    <name>Foil1SplineDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="57"/>
+        <source>Foil from spline</source>
+        <translation>Profil à partir d&apos;une spline</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="288"/>
+        <source>Spline type</source>
+        <translation>Type de spline</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="296"/>
+        <source>Cubic</source>
+        <translation>Cubique</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="310"/>
+        <source>Style:</source>
+        <translation>Style:</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="320"/>
+        <source>Degree=</source>
+        <translation>Degré =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="328"/>
+        <source>Force closed T.E.</source>
+        <translation>Forcer la fermeture du B.F.</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="329"/>
+        <source>&lt;p&gt;Forces the spline&apos;s leading and trailing points to be at the same position&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Force les points d&apos;extrémités de la spline à être confondus&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="347"/>
+        <source>Node bunching</source>
+        <translation>Groupement des noeuds</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="353"/>
+        <source>Number of panels</source>
+        <translation>Nombre de panneaux</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="358"/>
+        <source>&lt;p&gt;Caution: XFoil does not accept number of panel greater than 300.&lt;br&gt;Adjust the number of panels and the bunching parameters to achieve the desired point distribution.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Attention: XFoil requiert un nombre de panneaux inférieur à 300.&lt;br&gt;Ajuster le nombre de pannaux et l&apos;intensité du groupement our obtenir la distribution souhaitée.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="369"/>
+        <source>Uniform</source>
+        <translation>Uniforme</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="373"/>
+        <source>Bunched</source>
+        <translation>Groupé</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="385"/>
+        <source>&lt;p&gt;Use the slider to bunch the panels.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Utiliser le curseur pour grouper les panneaux.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="403"/>
+        <source>Display</source>
+        <translation>Affichage</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="407"/>
+        <source>Control points</source>
+        <translation>Points de contrôle</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="408"/>
+        <source>Normals</source>
+        <translation>Normales</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="422"/>
+        <source>Undo</source>
+        <translation>Défaire</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="424"/>
+        <source>Redo</source>
+        <translation>refaire</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="431"/>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="433"/>
+        <source>Actions</source>
+        <translation>Actions</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="488"/>
+        <source>Reset spline</source>
+        <translation>Réinitialiser la spline</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="489"/>
+        <source>Approximate foil</source>
+        <translation>Approximer le profil</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="490"/>
+        <source>Overlay foil</source>
+        <translation>Superposer un profil</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="852"/>
+        <source>Warning</source>
+        <translation>Attention</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foil1splinedlg.cpp" line="852"/>
+        <source>The spline degree must be less than the number of control points</source>
+        <translation>Le degré de la spline doit être inférieur au nombre de points de contrôle</translation>
+    </message>
+</context>
+<context>
     <name>Foil2SplineDlg</name>
     <message>
         <location filename="../../fl5-app/interfaces/editors/foiledit/foil2splinedlg.cpp" line="45"/>
@@ -1379,11 +1604,94 @@ Uncheck for increased analysis speed.</source>
     </message>
 </context>
 <context>
+    <name>FoilFlapDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilflapdlg.cpp" line="92"/>
+        <source>Flap angle</source>
+        <translation>Angle de volet</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilflapdlg.cpp" line="93"/>
+        <source>&lt;p&gt;&amp;deg; (+ is down)&lt;/p&gt;</source>
+        <translation>&lt;p&gt;&amp;deg; (+ est vers le bas)&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilflapdlg.cpp" line="94"/>
+        <source>Hinge x position</source>
+        <translation>Position en x de la charnière</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilflapdlg.cpp" line="95"/>
+        <source>% Chord</source>
+        <translation>% corde</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilflapdlg.cpp" line="96"/>
+        <source>Hinge y position</source>
+        <translation>Position en y de la charnière</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilflapdlg.cpp" line="97"/>
+        <source>% thickness</source>
+        <translation>% épaisseur</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilflapdlg.cpp" line="111"/>
+        <source>Make deflection permanent</source>
+        <translation>Rrendre la déflection permanente</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilflapdlg.cpp" line="112"/>
+        <source>&lt;p&gt;If activated, the foil&apos;s geometry will be modified to include the deflected T.E. flap.&lt;br&gt;This option should be avoided in the general case. It is of interest only in the special case where a plane needs to be built later on with a non-zero T.E. flap angle, to intersect the flapped wing with the fuselage&lt;br&gt;Starting in v7.50, it is recommended to deactivate this option and to set the T.E. flap angles in the foil and plane polars.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Si activée, la géométrie du profil sera modifiée pour inclure la déflection du volet de B.F.&lt;br&gt;Cette option n&apos;est pas recomandée dans le cas général. Elle n&apos;offre un intérêt que dans le cas particulier où un avion nécessitera une construction avec une déflection non-nulle du volet, typiquement pour connecter l&apos;aile au fuselage.&lt;br&gt;Il est recommandé de ne pas activer l&apos;option, et de fixer à la place l&apos;angle du volet dans la définition de l&apos;analyse.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilflapdlg.cpp" line="199"/>
+        <source>Warning</source>
+        <translation>Attention</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilflapdlg.cpp" line="199"/>
+        <source>The trailing edge hinge must be downstream of the leading edge hinge</source>
+        <translation>La charnière du bord de fuite doit être en aval de celle du bord d&apos;attaque</translation>
+    </message>
+</context>
+<context>
     <name>FoilLEDlg</name>
     <message>
         <location filename="../../fl5-app/interfaces/editors/foiledit/foilledlg.cpp" line="43"/>
         <source>Leading edge</source>
         <translation>Bord d&apos;attaque</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilledlg.cpp" line="67"/>
+        <source>&lt;p&gt;The radius of the LE Circle to display, for information only&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Le rayon de bord d&apos;attque à afficher, pour information seulement&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilledlg.cpp" line="70"/>
+        <source>L.E. display circle radius=</source>
+        <translation>Rayon de bord d&apos;attaque à afficher =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilledlg.cpp" line="73"/>
+        <source>% Chord</source>
+        <translation>% corde</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilledlg.cpp" line="78"/>
+        <source>Approximate new/old ratio for L.E. radius</source>
+        <translation>Ratio approximatif de rayon de cercle nouveau/ancien =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilledlg.cpp" line="88"/>
+        <source>Characteristic blending distance from L.E.</source>
+        <translation>Distance caractéristique de modif. à partir du B.A.</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilledlg.cpp" line="92"/>
+        <source>% chord</source>
+        <translation>% corde</translation>
     </message>
 </context>
 <context>
@@ -1392,6 +1700,16 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/interfaces/editors/foiledit/foilnormalizedlg.cpp" line="43"/>
         <source>Foil normalization</source>
         <translation>Normalisation du profil</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilnormalizedlg.cpp" line="67"/>
+        <source>De-rotate</source>
+        <translation>Dé-rotationner</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilnormalizedlg.cpp" line="68"/>
+        <source>Normalize</source>
+        <translation>Normaliser</translation>
     </message>
 </context>
 <context>
@@ -1442,7 +1760,7 @@ Uncheck for increased analysis speed.</source>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis2ddef/foilpolardlg.cpp" line="87"/>
         <source>&lt;p&gt;Free transitions (e&lt;sup&gt;n&lt;/sup&gt;) method&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Méthode des transitions libres (e&lt;sup&gt;n&lt;/sup&gt;)&gt;/p&gt;</translation>
+        <translation>&lt;p&gt;Méthode des transitions libres (e&lt;sup&gt;n&lt;/sup&gt;)&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis2ddef/foilpolardlg.cpp" line="88"/>
@@ -1457,12 +1775,12 @@ Uncheck for increased analysis speed.</source>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis2ddef/foilpolardlg.cpp" line="90"/>
         <source>Trip location (top)</source>
-        <translation>Transitions extrados</translation>
+        <translation>Extrados =</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis2ddef/foilpolardlg.cpp" line="91"/>
         <source>Trip location (bottom)</source>
-        <translation>Transition intrados</translation>
+        <translation>Intrados =</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis2ddef/foilpolardlg.cpp" line="109"/>
@@ -1527,7 +1845,7 @@ Uncheck for increased analysis speed.</source>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis2ddef/foilpolardlg.cpp" line="141"/>
         <source>&lt;p&gt;&amp;alpha;=&lt;/p&gt;</source>
-        <translation>&lt;p&gt;=&amp;alpha;&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;&amp;alpha;=&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis2ddef/foilpolardlg.cpp" line="142"/>
@@ -1552,7 +1870,7 @@ Uncheck for increased analysis speed.</source>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis2ddef/foilpolardlg.cpp" line="162"/>
         <source>T.E. flap</source>
-        <translation>Volet arrière</translation>
+        <translation>Volet de bord de fuite</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis2ddef/foilpolardlg.cpp" line="169"/>
@@ -1574,7 +1892,7 @@ Uncheck for increased analysis speed.</source>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis2ddef/foilpolardlg.cpp" line="289"/>
         <source>No T.E. flap</source>
-        <translation>Pas de volet de B.F.</translation>
+        <translation>Pas de volet de bord de fuite</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis2ddef/foilpolardlg.cpp" line="311"/>
@@ -1637,6 +1955,28 @@ Uncheck for increased analysis speed.</source>
         <source>Foil Geometry</source>
         <translation>Géométrie du profil</translation>
     </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilscaledlg.cpp" line="66"/>
+        <source>Camber</source>
+        <translation>Courbure</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilscaledlg.cpp" line="87"/>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilscaledlg.cpp" line="149"/>
+        <source>Value</source>
+        <translation>Valeur</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilscaledlg.cpp" line="91"/>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilscaledlg.cpp" line="153"/>
+        <source>x-pos</source>
+        <translation>Position en x =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foilscaledlg.cpp" line="128"/>
+        <source>Thickness</source>
+        <translation>Epaisseur</translation>
+    </message>
 </context>
 <context>
     <name>FoilTEGapDlg</name>
@@ -1644,6 +1984,22 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/interfaces/editors/foiledit/foiltegapdlg.cpp" line="41"/>
         <source>Trailing edge gap</source>
         <translation>Epaisseur du bord de fuite</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foiltegapdlg.cpp" line="63"/>
+        <source>T.E. Gap Value=</source>
+        <translation>Epaisseur de B.F. =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foiltegapdlg.cpp" line="68"/>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foiltegapdlg.cpp" line="79"/>
+        <source>% chord</source>
+        <translation>% corde</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/foiledit/foiltegapdlg.cpp" line="74"/>
+        <source>Characteristic blending distance from T.E.=</source>
+        <translation>Distance caractérique de modification à partir du B.F. =</translation>
     </message>
 </context>
 <context>
@@ -1842,6 +2198,26 @@ Uncheck for increased analysis speed.</source>
 <context>
     <name>FuseFrameWt</name>
     <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fuseframewt.cpp" line="58"/>
+        <source>Show active frame only</source>
+        <translation>Section active seulement</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fuseframewt.cpp" line="658"/>
+        <source>Scale frame</source>
+        <translation>Homothétie</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fuseframewt.cpp" line="661"/>
+        <source>Insert control point	Shift+Click</source>
+        <translation>Insérer un point de contrôle	Shift+Click</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fuseframewt.cpp" line="664"/>
+        <source>Remove control point	Ctrl+Click</source>
+        <translation>Supprimer un point de contrôle	Ctrl+Click</translation>
+    </message>
+    <message>
         <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fuseframewt.cpp" line="681"/>
         <source>Background image</source>
         <translation>Image de fond</translation>
@@ -1849,6 +2225,26 @@ Uncheck for increased analysis speed.</source>
 </context>
 <context>
     <name>FuseLineWt</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fuselinewt.cpp" line="379"/>
+        <source>Translate body</source>
+        <translation>Translation du fuselage</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fuselinewt.cpp" line="382"/>
+        <source>Scale body</source>
+        <translation>Hométhétie du fuselage</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fuselinewt.cpp" line="385"/>
+        <source>Insert control point	Shift+Click</source>
+        <translation>Insérer un point de contrôle	Shift+Click</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fuselinewt.cpp" line="388"/>
+        <source>Remove control point 	Ctrl+Click</source>
+        <translation>Supprimer un point de contrôle	Ctrl+Click</translation>
+    </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fuselinewt.cpp" line="403"/>
         <source>Background image</source>
@@ -1939,6 +2335,138 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/interfaces/editors/fuseedit/fusestldlg.cpp" line="171"/>
         <source>Mesh</source>
         <translation>Maillage</translation>
+    </message>
+</context>
+<context>
+    <name>FuseXflDefDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="135"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="140"/>
+        <source>NPanels</source>
+        <translation>Nbre. de panneaux</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="136"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="141"/>
+        <source>Actions</source>
+        <translation>Actions</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="300"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="407"/>
+        <source>Section</source>
+        <translation>Section</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="302"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="409"/>
+        <source>Insert before</source>
+        <translation>Insérer avant</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="306"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="413"/>
+        <source>Insert after</source>
+        <translation>Insérer après</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="310"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="417"/>
+        <source>Delete</source>
+        <translation>Supprimer</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="597"/>
+        <source>&lt;p&gt;The degree must be less than the number of frames&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Le degré doit être inférieur au nombre de sections&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="598"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="624"/>
+        <source>Warning</source>
+        <translation>Attention</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="623"/>
+        <source>&lt;p&gt;The degree must be less than the number of side lines&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Le degré doit être inférieur au nombre de lignes latérales&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="824"/>
+        <source>UV parameters</source>
+        <translation>Paramètres U-V</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="829"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="875"/>
+        <source>Hoop</source>
+        <translation>Circonférence</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="830"/>
+        <source>Degree</source>
+        <translation>Degré</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="849"/>
+        <source>NURBS fit</source>
+        <translation>Approx. NURBS</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="853"/>
+        <source>Fit tolerance</source>
+        <translation>Tolérance</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="868"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="876"/>
+        <source>Quad panels</source>
+        <translation>Panneaux quadrilatères</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="889"/>
+        <source>Uniform</source>
+        <translation>Uniforme</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="891"/>
+        <source>End points</source>
+        <translation>Points d&apos;extrémité</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="926"/>
+        <source>Frame positions</source>
+        <translation>Position des sections</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="938"/>
+        <source>Active frame points</source>
+        <translation>Points de la section active</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="951"/>
+        <source>Meta</source>
+        <translation>Méta-données</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="952"/>
+        <source>NURBS parameters</source>
+        <translation>Paramètres NURBS</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="953"/>
+        <source>Tables</source>
+        <translation>Tableaux</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="958"/>
+        <source>Undo</source>
+        <translation>Défaire</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="959"/>
+        <source>Redo</source>
+        <translation>Refaire</translation>
     </message>
 </context>
 <context>
@@ -2069,6 +2597,282 @@ Uncheck for increased analysis speed.</source>
     </message>
 </context>
 <context>
+    <name>GraphOptions</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="228"/>
+        <source>Fonts</source>
+        <translation>Polices</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="232"/>
+        <source>Axis titles:</source>
+        <translation>Titre des axes :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="233"/>
+        <source>Axis labels:</source>
+        <translation>Etiquette des axes :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="234"/>
+        <source>In-graph legend:</source>
+        <translation>Légende intra-graphique :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="235"/>
+        <source>Font</source>
+        <translation>Police</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="236"/>
+        <source>Colour</source>
+        <translation>Couleur</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="257"/>
+        <source>Title colour</source>
+        <translation>Couleur du titre</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="259"/>
+        <source>Label colour</source>
+        <translation>Couleur des étiquettes</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="261"/>
+        <source>Legend colour</source>
+        <translation>Couleur de la légende</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="270"/>
+        <source>Background</source>
+        <translation>Arrière-plan</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="274"/>
+        <source>Graph background</source>
+        <translation>Arrière plan du graphique</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="276"/>
+        <source>Graph border</source>
+        <translation>Bordure du graphique</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="293"/>
+        <source>Padding</source>
+        <translation>Espacement en bordure</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="297"/>
+        <source>pixels</source>
+        <translation>pixels</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="312"/>
+        <source>Axes and grids</source>
+        <translation>Axes et grilles</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="316"/>
+        <source>X</source>
+        <translation>X</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="320"/>
+        <source>Axis style</source>
+        <translation>Style des axes</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="323"/>
+        <source>X major grid</source>
+        <translation>Grille principale X</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="324"/>
+        <source>X minor grid</source>
+        <translation>Sous-grille X</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="341"/>
+        <source>Y-left</source>
+        <translation>Y-gauche</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="341"/>
+        <source>Y-right</source>
+        <translation>Y-droite</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="346"/>
+        <source>Axes style</source>
+        <translation>Style des axes</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="349"/>
+        <source>Y major grid - left</source>
+        <translation>Grille principale Y - gauche</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="350"/>
+        <source>Y minor grid - left</source>
+        <translation>Sous-grille Y - gauche</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="373"/>
+        <source>Curves</source>
+        <translation>Courbes</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="377"/>
+        <source>Default curve width:</source>
+        <translation>Epaisseur par défaut des courbes :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="381"/>
+        <source>Make children curve&apos;s style same as parent&apos;s style</source>
+        <translation>Appliquer le style des objets parents aux descendants</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="383"/>
+        <source>Color darker factor:</source>
+        <translation>Facteur d&apos;assombrissement des couleurs :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="384"/>
+        <source>&lt;p&gt;Set a value between 100 and 300 to increase the darkness of each polar or operating point in the sequence of their creation.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Entrer une valeur entre 100 et 300 pour augmenter l&apos;assombrissement de chaque objet hérité dans l&apos;ordre de leur création.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="400"/>
+        <source>Other</source>
+        <translation>Autres</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="406"/>
+        <source>Enable mouse animations</source>
+        <translation>Activer les animations de la souris</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="408"/>
+        <source>&lt;p&gt;Defines the damping of the animation at each frame update.&lt;br&gt;Set to 0 for perpetual movement.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Définit l&apos;amortissement appliqué à chaque rafraîchissement d&apos;écran.&lt;br&gt;Mettre à 0 pour un mouvement perpétuel.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="410"/>
+        <source>% damping</source>
+        <translation>% amortissement</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="417"/>
+        <source>Graphs steal focus on mouse move</source>
+        <translation>Les graphiques confisquent le focus sur mouvement de la souris</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="418"/>
+        <source>Show mouse coordinates</source>
+        <translation>Afficher les coordonées du curseur</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="419"/>
+        <source>&lt;p&gt;Display the coordinates of the mouse on the top right corner of the graph&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Affiche les coordonnées du curseur lors du déplacement de la souris dans le graphique.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="420"/>
+        <source>Enable anti-aliasing</source>
+        <translation>Activer l&apos;anti-aliasing</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="426"/>
+        <source>SVG font export: 1em=</source>
+        <translation>Export des polices en SVG: 1em=</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="428"/>
+        <source>&lt;p&gt;This value defines the reference font-size used when exporting to SVG.&lt;br&gt;Reduce this value to increase the size of fonts of the SVG image, and increase it to obtain smaller fonts.&lt;br&gt;Recommendation: size=10 to 12&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Cette valeur définit la taille de référence des polices lors d&apos;un export en SVG.&lt;br&gt;Reduire cette valeur pour accroître la taille des polices rendues dans l&apos;image SVG, et inversement pour réduire.&lt;br&gt;Recommendation: taille entre 10 et 12&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="432"/>
+        <source>points</source>
+        <translation>points</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphoptions.cpp" line="441"/>
+        <source>Fill background when exporting to SVG</source>
+        <translation>Remplir l&apos;arrière plan lors de l&apos;export SVG</translation>
+    </message>
+</context>
+<context>
+    <name>GraphTileCtrls</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="80"/>
+        <source>Variable sets</source>
+        <translation>Ensembles de variables</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="87"/>
+        <source>Variable set</source>
+        <translation>Ensemble de variables</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="88"/>
+        <source>Actions</source>
+        <translation>Actions</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="110"/>
+        <source>Graph %1</source>
+        <translation>Graphique %1</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="116"/>
+        <source>2 graphs</source>
+        <translation>2 graphiques</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="118"/>
+        <source>4 graphs</source>
+        <translation>4 graphiques</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="120"/>
+        <source>All graphs</source>
+        <translation>Tous les graphiques</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="244"/>
+        <source>Section</source>
+        <translation>Section</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="246"/>
+        <source>Move up</source>
+        <translation>Déplacer vers le haut</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="247"/>
+        <source>Move down</source>
+        <translation>Déplacer vers le bas</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="248"/>
+        <source>Delete</source>
+        <translation>Supprimer</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="249"/>
+        <source>Insert before</source>
+        <translation>Insérer avant</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="250"/>
+        <source>Insert after</source>
+        <translation>Insérer après</translation>
+    </message>
+</context>
+<context>
     <name>GraphWt</name>
     <message>
         <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="72"/>
@@ -2155,6 +2959,11 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/modules/xdirect/controls/lecircledlg.cpp" line="38"/>
         <source>L.E. Circle</source>
         <translation>Cercle du B.A.</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xdirect/controls/lecircledlg.cpp" line="50"/>
+        <source>% Chord</source>
+        <translation>% corde</translation>
     </message>
 </context>
 <context>
@@ -2677,12 +3486,12 @@ ____________Requête d&apos;annulation émise__________
     <message>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="863"/>
         <source>Boat object explorer</source>
-        <translation>Exploration d&apos;objets bateau</translation>
+        <translation>Explorateur de bateaux</translation>
     </message>
     <message>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="903"/>
         <source>Analysis 2d</source>
-        <translation>Analyse 2D</translation>
+        <translation>Analyse 2d</translation>
     </message>
     <message>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="912"/>
@@ -2692,7 +3501,7 @@ ____________Requête d&apos;annulation émise__________
     <message>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="921"/>
         <source>Foil object explorer</source>
-        <translation>Exploration d&apos;objets profils</translation>
+        <translation>Explorateur de profils</translation>
     </message>
     <message>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="931"/>
@@ -2702,7 +3511,7 @@ ____________Requête d&apos;annulation émise__________
     <message>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="1000"/>
         <source>Analysis 3d</source>
-        <translation>Analyse 3D</translation>
+        <translation>Analyse 3d</translation>
     </message>
     <message>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="1005"/>
@@ -3047,9 +3856,66 @@ ____________Requête d&apos;annulation émise__________
         <translation>Échelles de couleur</translation>
     </message>
     <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="86"/>
+        <source>Cp</source>
+        <translation>Cp</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="87"/>
+        <source>Pressure</source>
+        <translation>Pression</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="91"/>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="92"/>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="93"/>
+        <source>Auto</source>
+        <translation>Auto.</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="103"/>
+        <source>Min:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="104"/>
+        <source>Max:</source>
+        <translation></translation>
+    </message>
+    <message>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="128"/>
         <source>Display length scales</source>
         <translation>Afficher les échelles de longueur</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="176"/>
+        <source>Part forces:</source>
+        <translation>Forces composants :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="177"/>
+        <source>Panel forces:</source>
+        <translation>Forces panneaux :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="178"/>
+        <source>Strip lift:</source>
+        <translation>Portance des bandes</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="179"/>
+        <source>Moments:</source>
+        <translation>Moments :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="180"/>
+        <source>Drag:</source>
+        <translation>Traînée :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="181"/>
+        <source>Velocity:</source>
+        <translation>Vitesse:</translation>
     </message>
 </context>
 <context>
@@ -3300,6 +4166,56 @@ over the Cp or Forces color plot. (Shift+H)&lt;/p&gt;</source>
         <source>Inertia Properties</source>
         <translation>Propriétés d&apos;inertie</translation>
     </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/partinertiadlg.cpp" line="496"/>
+        <source>Object Mass - Structural only, excluding point masses</source>
+        <translation>Masse du composant - Structure seulement, masses ponctuelles exclues</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/partinertiadlg.cpp" line="501"/>
+        <source>Structural mass</source>
+        <translation>Masse structurelle</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/partinertiadlg.cpp" line="505"/>
+        <source>Auto estimation of inertia</source>
+        <translation>Estimation auto. de l&apos;inertie</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/partinertiadlg.cpp" line="536"/>
+        <source>Additional point masses</source>
+        <translation>Masses ponctuelles</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/partinertiadlg.cpp" line="555"/>
+        <source>Total Inertia = Structural + point masses</source>
+        <translation>Inertie complète = Structurelle + masses ponctuelles</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/partinertiadlg.cpp" line="559"/>
+        <source>Center of gravity</source>
+        <translation>Centre d&apos;inertie</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/partinertiadlg.cpp" line="575"/>
+        <source>Total Mass=</source>
+        <translation>Masse totale =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/partinertiadlg.cpp" line="599"/>
+        <source>Inertia in CoG Frame</source>
+        <translation>Inertie repère CG</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/partinertiadlg.cpp" line="649"/>
+        <source>to AVL file</source>
+        <translation>vers AVL</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/partinertiadlg.cpp" line="652"/>
+        <source>to clipboard</source>
+        <translation>dans le presse-papier</translation>
+    </message>
 </context>
 <context>
     <name>PlainTextOutput</name>
@@ -3451,6 +4367,62 @@ Ctrl+B pour modifier le premier fuselage</translation>
         <source>Wing list</source>
         <translation>Liste des ailes</translation>
     </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/planeinertiadlg.cpp" line="334"/>
+        <source>Additional point masses</source>
+        <translation>Masses ponctuelles</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/planeinertiadlg.cpp" line="350"/>
+        <source>Total Mass = Volume + point masses</source>
+        <translation>Masse totale = structure + masses ponctuelles</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/planeinertiadlg.cpp" line="352"/>
+        <location filename="../../fl5-app/interfaces/editors/inertia/planeinertiadlg.cpp" line="356"/>
+        <source>Center of gravity</source>
+        <translation>Centre d&apos;inertie</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/planeinertiadlg.cpp" line="370"/>
+        <source>Total Mass=</source>
+        <translation>Masse totale =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/planeinertiadlg.cpp" line="393"/>
+        <source>Inertia in CoG Frame</source>
+        <translation>Inertie repère CG</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/planeinertiadlg.cpp" line="447"/>
+        <source>Actions</source>
+        <translation>Actions</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/planeinertiadlg.cpp" line="451"/>
+        <source>Import from other plane</source>
+        <translation>Copier d&apos;un autre avion</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/planeinertiadlg.cpp" line="452"/>
+        <source>Export</source>
+        <translation>Exporter</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/planeinertiadlg.cpp" line="454"/>
+        <source>to AVL file</source>
+        <translation>vers AVL</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/planeinertiadlg.cpp" line="455"/>
+        <source>to clipboard</source>
+        <translation>dans le presse-papier</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/inertia/planeinertiadlg.cpp" line="468"/>
+        <source>Save as</source>
+        <translation>Enregistrer sous</translation>
+    </message>
 </context>
 <context>
     <name>PlanePolarDlg</name>
@@ -3522,7 +4494,7 @@ Ctrl+B pour modifier le premier fuselage</translation>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/planepolardlg.cpp" line="142"/>
         <source>&lt;p&gt;Height should be positive in the case of a ground effect&lt;br&gt;and negative in the case of a free surface effect.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;L&apos;altitude doit être positive dans le cas d&apos;un effet au sol&lt;br&gt;et négative dans le cas d&apos;un effet de surface libre.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;L&apos;altitude doit être positive dans le cas d&apos;un effet de sol&lt;br&gt;et négative dans le cas d&apos;un effet de surface libre.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/planepolardlg.cpp" line="164"/>
@@ -3562,7 +4534,7 @@ Ctrl+B pour modifier le premier fuselage</translation>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/planepolardlg.cpp" line="207"/>
         <source>from </source>
-        <translation>à partir </translation>
+        <translation>à partir de </translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/planepolardlg.cpp" line="207"/>
@@ -3923,7 +4895,7 @@ Ctrl+B pour modifier le premier fuselage</translation>
     <message>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="317"/>
         <source>Target assembly:</source>
-        <translation>Assemblage cible</translation>
+        <translation>Assemblage cible :</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="320"/>
@@ -4479,7 +5451,7 @@ Ctrl+B pour modifier le premier fuselage</translation>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/polar3ddlg.cpp" line="318"/>
         <source>The wake should extend to a distance where the influence of the plane&apos;s panels is no longer felt, e.g. &gt; 30 x chord</source>
-        <translation>Le sillage doit s&apos;étendre jusqu&apos;à une distance où l&apos;influence des panneaux de l&apos;avion n&apos;est plus ressentie, typiquement &gt; 30 x cordes moyennes</translation>
+        <translation>&lt;p&gt;Le sillage doit s&apos;étendre jusqu&apos;à une distance où l&apos;influence des panneaux&lt;br&gt;e l&apos;avion n&apos;est plus ressentie, typiquement &gt; 30 x cordes moyennes.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/polar3ddlg.cpp" line="321"/>
@@ -4518,7 +5490,7 @@ Ctrl+B pour modifier le premier fuselage</translation>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/polar3ddlg.cpp" line="384"/>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/polar3ddlg.cpp" line="389"/>
         <source>x reference chord</source>
-        <translation>Cordes de référence selon x</translation>
+        <translation>cordes de référence selon x</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/polar3ddlg.cpp" line="336"/>
@@ -4707,11 +5679,13 @@ Ctrl+B pour modifier le premier fuselage</translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="205"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="662"/>
         <source>Background</source>
         <translation>Arrière-plan</translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="213"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="658"/>
         <source>Fonts</source>
         <translation>Polices</translation>
     </message>
@@ -4796,7 +5770,7 @@ lors de l&apos;utilisation de la roulette</translation>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="303"/>
         <source>Use locale settings for number formatting</source>
-        <translation>Utiliser la localisation pour le formattage des nombres</translation>
+        <translation>Utiliser la localisation pour le formatage des nombres</translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="331"/>
@@ -4806,12 +5780,12 @@ lors de l&apos;utilisation de la roulette</translation>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="334"/>
         <source>Maximum thread count supported by the OS = %1</source>
-        <translation>Nombre maximal de threads supportés par l&apos;OS = %1</translation>
+        <translation>Nombre maximum de threads supportés par l&apos;OS = %1</translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="338"/>
         <source>Maximum thread count to use = </source>
-        <translation>Nombre maximale de threads à utiliser = </translation>
+        <translation>Nombre maximum de threads à utiliser = </translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="346"/>
@@ -4840,6 +5814,7 @@ lors de l&apos;utilisation de la roulette</translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="627"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="688"/>
         <source>General</source>
         <translation>Général</translation>
     </message>
@@ -4862,6 +5837,67 @@ lors de l&apos;utilisation de la roulette</translation>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="643"/>
         <source>Operating points</source>
         <translation>Points de fonctionnement</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="649"/>
+        <source>Units</source>
+        <translation>Unités</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="654"/>
+        <source>Graphs</source>
+        <translation>Graphiques</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="666"/>
+        <source>Padding</source>
+        <translation>Espacement en bordure</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="674"/>
+        <source>Curves</source>
+        <translation>Courbes</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="678"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="710"/>
+        <source>Other</source>
+        <translation>Autres</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="684"/>
+        <source>2d views</source>
+        <translation>Vues 2d</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="692"/>
+        <source>Axes and grids</source>
+        <translation>Axes et grilles</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="698"/>
+        <source>3d views</source>
+        <translation>Vues 3d</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="702"/>
+        <source>Colours</source>
+        <translation>Couleurs</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="706"/>
+        <source>Tessellation</source>
+        <translation>Triangulation</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="716"/>
+        <source>Multithreading</source>
+        <translation>Multi-threading</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="720"/>
+        <source>Option</source>
+        <translation>Option</translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="943"/>
@@ -6062,6 +7098,89 @@ Import depuis un fichier binaire
     </message>
 </context>
 <context>
+    <name>StreamLineCtrls</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="94"/>
+        <source>Streamwise segments:</source>
+        <translation>Nbre de segments :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="95"/>
+        <source>1&lt;sup&gt;st&lt;/sup&gt; segment:</source>
+        <translation>1&lt;sup&gt;er&lt;/sup&gt; segment :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="96"/>
+        <source>Progression factor:</source>
+        <translation>Facteur de progression :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="97"/>
+        <source>Total length:</source>
+        <translation>Longueur totale:</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="121"/>
+        <source>Style</source>
+        <translation>Style</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="123"/>
+        <source>Use wing or sail colour</source>
+        <translation>Utiliser la couleur de l&apos;aile ou de la voile</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="131"/>
+        <source>Start streamlines at</source>
+        <translation>Départ des lignes de courant</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="142"/>
+        <source>T.E.</source>
+        <translation>Bord de fuite</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="143"/>
+        <source>Y-Line</source>
+        <translation>Ligne suivant Y</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="144"/>
+        <source>Z-Line</source>
+        <translation>Ligne suivant Z</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="157"/>
+        <source>&lt;p&gt;Defines the offset from the trailing edge of the streamline&apos;s starting point. Numerical issues occur if the offset is zero in both X and Z directions due to the singularity of the velocity field at the panel edges.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Définit l&apos;offset depuis le bord de fuite du point de départ des lignes de courant.Un offset de 0 suivant X et Z peut causer des instabilités numériques dues à la singularité de la vitesse au arêtes de panneaux.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="205"/>
+        <source>Nbr. of streamlines:</source>
+        <translation>Nbre de lignes de courant</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="206"/>
+        <source>Increment:</source>
+        <translation>Incrément :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="211"/>
+        <source>&lt;p&gt;Defines the number of strealines to be drawn along the Y or Z line&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Définit le nombre de lignes de courant à dessiner suivant la ligne en Y ou en Z&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="213"/>
+        <source>&lt;p&gt;Defines the distance between the starting points of two adjacent streamlines along the Y or Z directions&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Définit la distance entre deux points de départ adjacents des lignes de courant suviant Y ou Z&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/poppctrls/streamlinesctrls.cpp" line="229"/>
+        <source>Apply</source>
+        <translation>Appliquer</translation>
+    </message>
+</context>
+<context>
     <name>T1234578PolarDlg</name>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="60"/>
@@ -6081,7 +7200,7 @@ Import depuis un fichier binaire
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="364"/>
         <source>Type 1 (fixed V</source>
-        <translation>Type 1 (V fixe)</translation>
+        <translation>Type 1 (V fixe</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="364"/>
@@ -6244,7 +7363,7 @@ Import depuis un fichier binaire
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="551"/>
         <source>Extra drag</source>
-        <translation>Traînée supplémentaire</translation>
+        <translation>Traînée ajoutée</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="552"/>
@@ -6494,6 +7613,19 @@ Import depuis un fichier binaire
         <location filename="../../fl5-app/modules/xplane/controls/targetcurvedlg.cpp" line="108"/>
         <source>Style</source>
         <translation>Style</translation>
+    </message>
+</context>
+<context>
+    <name>TextDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/textdlg.cpp" line="38"/>
+        <source>Text dialog</source>
+        <translation>Dialogue de texte</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/textdlg.cpp" line="50"/>
+        <source>Description:</source>
+        <translation>Description:</translation>
     </message>
 </context>
 <context>
@@ -7665,7 +8797,7 @@ Import depuis un fichier binaire
     <message>
         <location filename="../../fl5-app/modules/xdirect/menus/xdirectmenus.cpp" line="252"/>
         <source>Cp graph</source>
-        <translation>Graphe Cp</translation>
+        <translation>Graphique Cp</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xdirect/menus/xdirectmenus.cpp" line="272"/>
@@ -7784,7 +8916,7 @@ Import depuis un fichier binaire
     <message>
         <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="56"/>
         <source>Polar view	F8</source>
-        <translation>Vue des polaire	F8</translation>
+        <translation>Vue des polaires	F8</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="59"/>
@@ -7933,7 +9065,7 @@ Import depuis un fichier binaire
     <message>
         <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="133"/>
         <source>Select wing curves to display</source>
-        <translation>Sélectionnez les courbes des ailes à afficher</translation>
+        <translation>Sélection des courbes des ailes à afficher</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="136"/>
@@ -9379,6 +10511,79 @@ over the Cp or Forces color plot. (Shift+H)&lt;/p&gt;</source>
         <location filename="../../fl5-app/interfaces/opengl/testgl/gl3dflowvtx.cpp" line="399"/>
         <source>Number of particles = %1</source>
         <translation>Nombre de particules = %1</translation>
+    </message>
+</context>
+<context>
+    <name>gl3dGeomControls</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="96"/>
+        <source>Axes</source>
+        <translation>Axes</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="97"/>
+        <source>Surfaces</source>
+        <translation>Surfaces</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="98"/>
+        <source>Outline</source>
+        <translation>Contour</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="99"/>
+        <source>Panels</source>
+        <translation>Panneaux</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="100"/>
+        <source>Foils</source>
+        <translation>Profils</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="101"/>
+        <source>Masses</source>
+        <translation>Masses</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="102"/>
+        <source>Tessellation</source>
+        <translation>Triangulation</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="103"/>
+        <source>Normals</source>
+        <translation>Normales</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="104"/>
+        <source>Highlight panel</source>
+        <translation>Sélection panneau</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="105"/>
+        <source>Ctrl points</source>
+        <translation>Points de contrôle</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="106"/>
+        <source>Corner points</source>
+        <translation>Sommets</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="108"/>
+        <source>Sections</source>
+        <translation>Sections</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="109"/>
+        <source>Cp</source>
+        <translation>Cp</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dgeomcontrols.cpp" line="110"/>
+        <source>Isobars</source>
+        <translation>Isobars</translation>
     </message>
 </context>
 <context>

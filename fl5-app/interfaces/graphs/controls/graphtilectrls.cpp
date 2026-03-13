@@ -77,15 +77,15 @@ void GraphTileCtrls::makeCommonWts()
     m_pcptVariableSet->setSelectionMode(QAbstractItemView::SingleSelection);
     m_pcptVariableSet->setEditable(true);
     m_pcptVariableSet->setCharSize(3,7);
-    m_pcptVariableSet->setWindowTitle("Variable sets");
+    m_pcptVariableSet->setWindowTitle(tr("Variable sets"));
     m_pcptVariableSet->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
     m_pVariableSetModel = new ActionItemModel(this);
     m_pVariableSetModel->setRowCount(1);//temporary
     m_pVariableSetModel->setColumnCount(2);
     m_pVariableSetModel->setActionColumn(1);
-    m_pVariableSetModel->setHeaderData(0, Qt::Horizontal, "Variable set");
-    m_pVariableSetModel->setHeaderData(1, Qt::Horizontal, "Actions");
+    m_pVariableSetModel->setHeaderData(0, Qt::Horizontal, tr("Variable set"));
+    m_pVariableSetModel->setHeaderData(1, Qt::Horizontal, tr("Actions"));
 
     m_pcptVariableSet->setModel(m_pVariableSetModel);
 
@@ -107,17 +107,17 @@ void GraphTileCtrls::makeCommonWts()
     QString strange;
     for(int ig=0; ig<5; ig++)
     {
-        strange = QString::asprintf("Graph %d", ig+1);
+        strange = tr("Graph %1").arg(ig+1);
         m_prbGraph[ig] = new QRadioButton(strange, this);
         strange = QString::asprintf("(%d)", ig+1);
         m_prbGraph[ig]->setToolTip(strange);
     }
 
-    m_prbTwoGraphs  = new QRadioButton("2 graphs");
+    m_prbTwoGraphs  = new QRadioButton(tr("2 graphs"));
     m_prbTwoGraphs->setToolTip("(T)");
-    m_prbFourGraphs = new QRadioButton("4 graphs");
+    m_prbFourGraphs = new QRadioButton(tr("4 graphs"));
     m_prbFourGraphs->setToolTip("(F)");
-    m_prbAllGraphs  = new QRadioButton("All graphs");
+    m_prbAllGraphs  = new QRadioButton(tr("All graphs"));
     m_prbAllGraphs->setToolTip("(A)");
 }
 
@@ -241,13 +241,13 @@ void GraphTileCtrls::onVarSetClicked(QModelIndex index)
             m_pcptVariableSet->selectRow(index.row());
             QRect itemrect = m_pcptVariableSet->visualRect(index);
             QPoint menupos = m_pcptVariableSet->mapToGlobal(itemrect.topLeft());
-            QMenu *pWingTableRowMenu = new QMenu("Section",this);
+            QMenu *pWingTableRowMenu = new QMenu(tr("Section"),this);
 
-            QAction *m_pMoveUpAct        = new QAction("Move up",       this);
-            QAction *m_pMoveDownAct        = new QAction("Move down",     this);
-            QAction *m_pDeleteAct        = new QAction("Delete",        this);
-            QAction *m_pInsertBeforeAct = new QAction("Insert before", this);
-            QAction *m_pInsertAfterAct  = new QAction("Insert after",  this);
+            QAction *m_pMoveUpAct       = new QAction(tr("Move up"),       this);
+            QAction *m_pMoveDownAct     = new QAction(tr("Move down"),     this);
+            QAction *m_pDeleteAct       = new QAction(tr("Delete"),        this);
+            QAction *m_pInsertBeforeAct = new QAction(tr("Insert before"), this);
+            QAction *m_pInsertAfterAct  = new QAction(tr("Insert after"),  this);
 
             connect(m_pDeleteAct,       SIGNAL(triggered(bool)), SLOT(onDelete()));
             connect(m_pMoveUpAct,       SIGNAL(triggered(bool)), SLOT(onMoveUp()));

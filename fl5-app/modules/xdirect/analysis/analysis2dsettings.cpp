@@ -73,16 +73,16 @@ void Analysis2dSettings::setupLayout()
         m_pdeVAccel->setToolTip(tip);
 
         QLabel *plabVaccel  = new QLabel("VAccel=");
-        QLabel *plabIterLim = new QLabel("Iteration limit=");
+        QLabel *plabIterLim = new QLabel(tr("Iteration limit="));
         m_pieIterLimit      = new IntEdit;
 
-        QLabel *plabCdError = new QLabel("Discard points with Cd<");
+        QLabel *plabCdError = new QLabel(tr("Discard points with Cd<"));
         m_pfeCdError = new FloatEdit(XFoilTask::CdError());
-        m_pfeCdError->setToolTip("<p>Operating points with drag coefficient less than this value will be considered to be spurious and will be discarded.<br>"
-                                 "Recommendation: 0.001</p>");
+        m_pfeCdError->setToolTip(tr("<p>Operating points with drag coefficient less than this value will be considered to be spurious and will be discarded.<br>"
+                                 "Recommendation: 0.001</p>"));
 
-        m_pchFullReport     = new QCheckBox("Show full log report after an XFoil analysis");
-        m_pchKeepErrorsOpen = new QCheckBox("Keep XFoil interface open if analysis errors");
+        m_pchFullReport     = new QCheckBox(tr("Show full log report after an XFoil analysis"));
+        m_pchKeepErrorsOpen = new QCheckBox(tr("Keep XFoil interface open if analysis errors"));
 
         pSettingsLayout->addWidget(plabVaccel,          1,1, Qt::AlignRight);
         pSettingsLayout->addWidget(m_pdeVAccel,         1,2);

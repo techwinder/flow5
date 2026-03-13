@@ -93,21 +93,21 @@ void gl3dGeomControls::connectSignals()
 
 void gl3dGeomControls::makeControls()
 {
-    m_pchAxes         = new QCheckBox("Axes",            this);
-    m_pchSurfaces     = new QCheckBox("Surfaces",        this);
-    m_pchOutline      = new QCheckBox("Outline",         this);
-    m_pchPanels       = new QCheckBox("Panels",          this);
-    m_pchFoilNames    = new QCheckBox("Foils",           this);
-    m_pchMasses       = new QCheckBox("Masses",          this);
-    m_pchTessellation = new QCheckBox("Tessellation",    this);
-    m_pchNormals      = new QCheckBox("Normals",         this);
-    m_pchHighlight    = new QCheckBox("Highlight panel", this);
-    m_pchCtrlPts      = new QCheckBox("Ctrtl points",    this);
-    m_pchCornerPts    = new QCheckBox("Corner points",   this);
+    m_pchAxes         = new QCheckBox(tr("Axes"),            this);
+    m_pchSurfaces     = new QCheckBox(tr("Surfaces"),        this);
+    m_pchOutline      = new QCheckBox(tr("Outline"),         this);
+    m_pchPanels       = new QCheckBox(tr("Panels"),          this);
+    m_pchFoilNames    = new QCheckBox(tr("Foils"),           this);
+    m_pchMasses       = new QCheckBox(tr("Masses"),          this);
+    m_pchTessellation = new QCheckBox(tr("Tessellation"),    this);
+    m_pchNormals      = new QCheckBox(tr("Normals"),         this);
+    m_pchHighlight    = new QCheckBox(tr("Highlight panel"), this);
+    m_pchCtrlPts      = new QCheckBox(tr("Ctrl points"),     this);
+    m_pchCornerPts    = new QCheckBox(tr("Corner points"),   this);
 
-    m_pchCpSections = new QCheckBox("Sections");
-    m_pchCp         = new QCheckBox("Cp");
-    m_pchCpIsobars  = new QCheckBox("Isobars");
+    m_pchCpSections = new QCheckBox(tr("Sections"));
+    m_pchCp         = new QCheckBox(tr("Cp"));
+    m_pchCpIsobars  = new QCheckBox(tr("Isobars"));
 
     m_pchAxes->setSizePolicy(        QSizePolicy::Maximum, QSizePolicy::Maximum);
     m_pchSurfaces->setSizePolicy(    QSizePolicy::Maximum, QSizePolicy::Maximum);

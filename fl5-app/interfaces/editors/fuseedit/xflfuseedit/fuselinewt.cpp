@@ -376,16 +376,16 @@ void FuseLineWt::dragSelectedPoint(double x, double y)
 
 void FuseLineWt::createContextMenu()
 {
-    QAction *pTranslateBody = new QAction("Translate body", this);
+    QAction *pTranslateBody = new QAction(tr("Translate body"), this);
     connect(pTranslateBody,  SIGNAL(triggered()), this, SLOT(onTranslateBody()));
 
-    QAction *pScaleBody = new QAction("Scale body", this);
+    QAction *pScaleBody = new QAction(tr("Scale body"), this);
     connect(pScaleBody,  SIGNAL(triggered()), this, SLOT(onScaleBody()));
 
-    QAction *pInsertPt = new QAction("Insert control point\tShift+Click", this);
+    QAction *pInsertPt = new QAction(tr("Insert control point\tShift+Click"), this);
     connect(pInsertPt, SIGNAL(triggered()), this, SLOT(onInsertPt()));
 
-    QAction *pRemovePt = new QAction("Remove control point \tCtrl+Click", this);
+    QAction *pRemovePt = new QAction(tr("Remove control point \tCtrl+Click"), this);
     connect(pRemovePt, SIGNAL(triggered()), this, SLOT(onRemovePt()));
 
     m_pSection2dContextMenu = new QMenu(this);

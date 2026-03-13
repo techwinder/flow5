@@ -83,14 +83,14 @@ void Opp3dScalesCtrls::setupLayout()
             QGridLayout *pCpScaleLayout = new QGridLayout;
             {
                 QLabel *plabGamma    = new QLabel(GAMMAch);
-                QLabel *plabCp       = new QLabel("Cp");
-                QLabel *plabPressure = new QLabel("Pressure");
+                QLabel *plabCp       = new QLabel(tr("Cp"));
+                QLabel *plabPressure = new QLabel(tr("Pressure"));
                 plabGamma->setAlignment(   Qt::AlignCenter);
                 plabCp->setAlignment(      Qt::AlignCenter);
                 plabPressure->setAlignment(Qt::AlignCenter);
-                m_pchAutoGammaScale    = new QCheckBox("Auto");
-                m_pchAutoCpScale       = new QCheckBox("Auto");
-                m_pchAutoPressureScale = new QCheckBox("Auto");
+                m_pchAutoGammaScale    = new QCheckBox(tr("Auto"));
+                m_pchAutoCpScale       = new QCheckBox(tr("Auto"));
+                m_pchAutoPressureScale = new QCheckBox(tr("Auto"));
                 m_pfeGammaMin    = new FloatEdit(-1.0f);
                 m_pfeGammaMax    = new FloatEdit( 1.0f);
                 m_pfeCpMin       = new FloatEdit(-1.0f);
@@ -100,8 +100,8 @@ void Opp3dScalesCtrls::setupLayout()
 
                 m_plabPressureUnit1 = new QLabel(Units::pressureUnitQLabel());
                 m_plabPressureUnit2 = new QLabel(Units::pressureUnitQLabel());
-                QLabel *plabMin = new QLabel("Min:");
-                QLabel *plabMax = new QLabel("Max:");
+                QLabel *plabMin = new QLabel(tr("Min:"));
+                QLabel *plabMax = new QLabel(tr("Max:"));
 
                 pCpScaleLayout->addWidget(plabGamma,                2, 2);
                 pCpScaleLayout->addWidget(plabCp,                   2, 3);
@@ -173,12 +173,12 @@ void Opp3dScalesCtrls::setupLayout()
                 m_pesVelocity->setTickInterval(50);
                 m_pesVelocity->setTickPosition(QSlider::TicksBelow);
 
-                QLabel *pLab1 = new QLabel("Part forces:");
-                QLabel *pLab2 = new QLabel("Panel forces:");
-                QLabel *pLab3 = new QLabel("Strip lift:");
-                QLabel *pLab4 = new QLabel("Moments:");
-                QLabel *pLab5 = new QLabel("Drag:");
-                QLabel *pLab6 = new QLabel("Velocity:");
+                QLabel *pLab1 = new QLabel(tr("Part forces:"));
+                QLabel *pLab2 = new QLabel(tr("Panel forces:"));
+                QLabel *pLab3 = new QLabel(tr("Strip lift:"));
+                QLabel *pLab4 = new QLabel(tr("Moments:"));
+                QLabel *pLab5 = new QLabel(tr("Drag:"));
+                QLabel *pLab6 = new QLabel(tr("Velocity:"));
 
                 pScaleLayout->addWidget(pLab1,             2, 1, Qt::AlignVCenter | Qt::AlignRight);
                 pScaleLayout->addWidget(pLab2,             3, 1, Qt::AlignVCenter | Qt::AlignRight);

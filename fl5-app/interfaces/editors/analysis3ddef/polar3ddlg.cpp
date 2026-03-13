@@ -315,7 +315,7 @@ void Polar3dDlg::makeBaseCommonControls()
             {
                 QGridLayout *pWakeGridLayout = new QGridLayout;
                 {
-                    QLabel *pLabWake = new QLabel(tr("The wake should extend to a distance where the influence of the plane's panels "
+                    QLabel *plabWake = new QLabel(tr("The wake should extend to a distance where the influence of the plane's panels "
                                                   "is no longer felt, e.g. > 30 x chord"));
                     m_pieNXWakePanels = new IntEdit(1);
                     m_pieNXWakePanels->setToolTip(tr("<p>The number of panels in each streamwise wake column.</p>"));
@@ -324,20 +324,20 @@ void Polar3dDlg::makeBaseCommonControls()
                     m_pfeWakePanelFactor = new FloatEdit(1.1f);
                     m_pfeWakePanelFactor->setToolTip(tr("<p>The ratio between the length of two wake panels in the x direction</p>"));
 
-                    QLabel *pLab1 = new QLabel(tr("Nb. of wake panels:"));
-                    QLabel *pLab2 = new QLabel(tr("Total length:"));
-                    QLabel *pLab3 = new QLabel(tr("X-progression factor:"));
+                    QLabel *plab1 = new QLabel(tr("Nb. of wake panels:"));
+                    QLabel *plab2 = new QLabel(tr("Total length:"));
+                    QLabel *plab3 = new QLabel(tr("X-progression factor:"));
 
                     m_plabWakeLengthLabUnit = new QLabel(tr("x reference chord"));
 
-                    pWakeGridLayout->addWidget(pLabWake,                  1,1,1,3);
-                    pWakeGridLayout->addWidget(pLab1,                     2,1, Qt::AlignRight | Qt::AlignVCenter);
+                    pWakeGridLayout->addWidget(plabWake,                  1,1,1,3);
+                    pWakeGridLayout->addWidget(plab1,                     2,1, Qt::AlignRight | Qt::AlignVCenter);
                     pWakeGridLayout->addWidget(m_pieNXWakePanels,         2,2);
                     pWakeGridLayout->addWidget(new QLabel(tr("/wake column")),2,3, Qt::AlignLeft | Qt::AlignVCenter);
-                    pWakeGridLayout->addWidget(pLab2,                     3,1, Qt::AlignRight | Qt::AlignVCenter);
+                    pWakeGridLayout->addWidget(plab2,                     3,1, Qt::AlignRight | Qt::AlignVCenter);
                     pWakeGridLayout->addWidget(m_pfeWakeLength,           3,2);
                     pWakeGridLayout->addWidget(m_plabWakeLengthLabUnit,   3,3);
-                    pWakeGridLayout->addWidget(pLab3,                     4,1, Qt::AlignRight | Qt::AlignVCenter);
+                    pWakeGridLayout->addWidget(plab3,                     4,1, Qt::AlignRight | Qt::AlignVCenter);
                     pWakeGridLayout->addWidget(m_pfeWakePanelFactor,      4,2);
                     pWakeGridLayout->setColumnStretch(3,1);
                 }

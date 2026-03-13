@@ -35,7 +35,7 @@ QByteArray TextDlg::s_WindowGeometry;
 
 TextDlg::TextDlg(QString const &text, QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("Text dialog");
+    setWindowTitle(tr("Text dialog"));
 
     setupLayout();
 
@@ -47,7 +47,7 @@ void TextDlg::setupLayout()
 {
     QVBoxLayout *pMainLayout = new QVBoxLayout;
     {
-        m_plabQuestion = new QLabel("Description:");
+        m_plabQuestion = new QLabel(tr("Description:"));
         m_ppteText = new QPlainTextEdit(this);
 
         m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);

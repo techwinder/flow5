@@ -55,7 +55,7 @@ FuseFrameWt::FuseFrameWt(QWidget *pParent, FuseXfl *pBody) : Section2dWt(pParent
 
     createBaseActions();
     m_pShowCurFrameOnly = nullptr;
-    m_pShowCurFrameOnly = new QAction("Show active frame only", this);
+    m_pShowCurFrameOnly = new QAction(tr("Show active frame only"), this);
     m_pShowCurFrameOnly->setCheckable(true);
     m_pShowCurFrameOnly->setChecked(s_bCurFrameOnly);
     connect(m_pShowCurFrameOnly, SIGNAL(triggered()), SLOT(onShowCurFrameOnly()));
@@ -655,13 +655,13 @@ void FuseFrameWt::drawScaleLegend(QPainter &painter)
 
 void FuseFrameWt::createContextMenu()
 {
-    QAction *pScaleFrame = new QAction("Scale frame", this);
+    QAction *pScaleFrame = new QAction(tr("Scale frame"), this);
     connect(pScaleFrame,  SIGNAL(triggered()), SLOT(onScaleFrame()));
 
-    QAction *pInsertPt = new QAction("Insert control point\tShift+Click", this);
+    QAction *pInsertPt = new QAction(tr("Insert control point\tShift+Click"), this);
     connect(pInsertPt, SIGNAL(triggered()), SLOT(onInsertPt()));
 
-    QAction *pRemovePt = new QAction("Remove control point\tCtrl+Click", this);
+    QAction *pRemovePt = new QAction(tr("Remove control point\tCtrl+Click"), this);
     connect(pRemovePt, SIGNAL(triggered()), SLOT(onRemovePt()));
 
     m_pSection2dContextMenu = new QMenu(this);

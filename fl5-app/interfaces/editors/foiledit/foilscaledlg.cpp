@@ -63,7 +63,7 @@ void FoilScaleDlg::setupLayout()
         m_pOverlayFrame->setFrameShape(QFrame::NoFrame);
         QVBoxLayout *pFrameLayout = new QVBoxLayout;
         {
-            QGroupBox *pCamberGroup = new QGroupBox("Camber");
+            QGroupBox *pCamberGroup = new QGroupBox(tr("Camber"));
             {
                 pCamberGroup->setPalette(m_Palette);
                 pCamberGroup->setAutoFillBackground(false);
@@ -84,11 +84,11 @@ void FoilScaleDlg::setupLayout()
                     m_pslXCamberSlide->setMinimumWidth(DisplayOptions::tableFontStruct().averageCharWidth()*50);
                     m_pslXCamberSlide->setPalette(m_SliderPalette);
                     m_pfeXCamber = new FloatEdit;
-                    QLabel *lab1 = new QLabel("Value");
+                    QLabel *lab1 = new QLabel(tr("Value"));
                     QLabel *lab2 = new QLabel("%");
                     QLabel *lab3 = new QLabel("0%");
                     QLabel *lab4 = new QLabel("10%");
-                    QLabel *lab5 = new QLabel("x-pos");
+                    QLabel *lab5 = new QLabel(tr("x-pos"));
                     QLabel *lab6 = new QLabel("%");
                     QLabel *lab7 = new QLabel("0%");
                     QLabel *lab8 = new QLabel("100%");
@@ -125,7 +125,7 @@ void FoilScaleDlg::setupLayout()
                 pCamberGroup->setLayout(pCamberLayout);
             }
 
-            QGroupBox *pThicknessGroup = new QGroupBox("Thickness");
+            QGroupBox *pThicknessGroup = new QGroupBox(tr("Thickness"));
             {
                 pThicknessGroup->setPalette(m_Palette);
                 pThicknessGroup->setAutoFillBackground(false);
@@ -146,11 +146,11 @@ void FoilScaleDlg::setupLayout()
                     m_pslXThickSlide->setTickPosition(QSlider::TicksBelow);
                     m_pslXThickSlide->setMinimumWidth(DisplayOptions::tableFontStruct().averageCharWidth()*50);
                     m_pfeXThickness = new FloatEdit;
-                    QLabel *lab11 = new QLabel("Value");
+                    QLabel *lab11 = new QLabel(tr("Value"));
                     QLabel *lab12 = new QLabel("%");
                     QLabel *lab13 = new QLabel("0%");
                     QLabel *lab14 = new QLabel("20%");
-                    QLabel *lab15 = new QLabel("x-pos");
+                    QLabel *lab15 = new QLabel(tr("x-pos"));
                     QLabel *lab16 = new QLabel("%");
                     QLabel *lab17 = new QLabel("0%");
                     QLabel *lab18 = new QLabel("100%");

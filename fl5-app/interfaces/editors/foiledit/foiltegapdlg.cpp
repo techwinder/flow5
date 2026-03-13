@@ -60,34 +60,34 @@ void FoilTEGapDlg::setupLayout()
 
         QGridLayout *pParamsLayout = new QGridLayout;
         {
-            QLabel *pLab1 = new QLabel("T.E. Gap Value=");
-            pLab1->setPalette(m_Palette);
-            pLab1->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            pLab1->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+            QLabel *plab1 = new QLabel(tr("T.E. Gap Value="));
+            plab1->setPalette(m_Palette);
+            plab1->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+            plab1->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-            QLabel *pLab2 = new QLabel("% chord");
-            pLab2->setPalette(m_Palette);
-            pLab2->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+            QLabel *plab2 = new QLabel(tr("% chord"));
+            plab2->setPalette(m_Palette);
+            plab2->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
             m_pdeGap = new FloatEdit(0,3);
 
-            QLabel *pLab3 = new QLabel("Characteristic blending distance from L.E.=");
-            pLab3->setPalette(m_Palette);
-            pLab3->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            pLab3->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+            QLabel *plab3 = new QLabel(tr("Characteristic blending distance from T.E.="));
+            plab3->setPalette(m_Palette);
+            plab3->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+            plab3->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-            QLabel *pLab4 = new QLabel("% chord");
-            pLab4->setPalette(m_Palette);
-            pLab4->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+            QLabel *plab4 = new QLabel(tr("% chord"));
+            plab4->setPalette(m_Palette);
+            plab4->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
             m_pdeBlend = new FloatEdit;
 
-            pParamsLayout->addWidget(pLab1,      1,1);
+            pParamsLayout->addWidget(plab1,      1,1);
             pParamsLayout->addWidget(m_pdeGap,   1,2);
-            pParamsLayout->addWidget(pLab2,      1,3);
-            pParamsLayout->addWidget(pLab3,      2,1);
+            pParamsLayout->addWidget(plab2,      1,3);
+            pParamsLayout->addWidget(plab3,      2,1);
             pParamsLayout->addWidget(m_pdeBlend, 2,2);
-            pParamsLayout->addWidget(pLab4,      2,3);
+            pParamsLayout->addWidget(plab4,      2,3);
         }
         m_pOverlayFrame->setLayout(pParamsLayout);
     }

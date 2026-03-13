@@ -493,16 +493,16 @@ void PartInertiaDlg::setupLayout()
                     {
                         QVBoxLayout *pObjectMassLayout = new QVBoxLayout;
                         {
-                            QLabel *plab0 = new QLabel("Object Mass - Structural only, excluding point masses");
+                            QLabel *plab0 = new QLabel(tr("Object Mass - Structural only, excluding point masses"));
                             plab0->setStyleSheet("QLabel { font-weight: bold;}");
 
                             QHBoxLayout *pMassLayout = new QHBoxLayout;
                             {
-                                QLabel *plabMass = new QLabel("Structural mass");
+                                QLabel *plabMass = new QLabel(tr("Structural mass"));
                                 plabMass->setAlignment(Qt::AlignRight);
                                 m_pfeStructMass = new FloatEdit(0.,3);
                                 QLabel *plabMassUnit1 = new QLabel(Units::massUnitQLabel());
-                                m_pchAutoInertia = new QCheckBox("Auto estimation of inertia");
+                                m_pchAutoInertia = new QCheckBox(tr("Auto estimation of inertia"));
                                 pMassLayout->addWidget(m_pchAutoInertia);
                                 pMassLayout->addStretch();
                                 pMassLayout->addWidget(plabMass);
@@ -533,7 +533,7 @@ void PartInertiaDlg::setupLayout()
                         //                        pPointMassFrame->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
                         QVBoxLayout *pPointMassLayout = new QVBoxLayout;
                         {
-                            QLabel *pPointMassesLabel = new QLabel("Additional point masses");
+                            QLabel *pPointMassesLabel = new QLabel(tr("Additional point masses"));
                             pPointMassesLabel->setStyleSheet("QLabel { font-weight: bold;}");
 
                             m_ppmtMasses = new PointMassTable(this);
@@ -552,11 +552,11 @@ void PartInertiaDlg::setupLayout()
                 {
                     QVBoxLayout *pTotalLayout = new QVBoxLayout;
                     {
-                        QLabel *pTotalMassLabel = new QLabel("Total Inertia = Structural + point masses");
-                        pTotalMassLabel->setStyleSheet("QLabel { font-weight: bold;}");
+                        QLabel *plabTotalMass = new QLabel(tr("Total Inertia = Structural + point masses"));
+                        plabTotalMass->setStyleSheet("QLabel { font-weight: bold;}");
                         QHBoxLayout *pTotalMassLayout = new QHBoxLayout;
                         {
-                            QGroupBox *pTotalCoGBox = new QGroupBox("Center of gravity");
+                            QGroupBox *pTotalCoGBox = new QGroupBox(tr("Center of gravity"));
                             {
                                 QGridLayout *pTotalCoGLayout = new QGridLayout;
                                 {
@@ -572,7 +572,7 @@ void PartInertiaDlg::setupLayout()
                                     QLabel *plabLengthUnit20 = new QLabel(Units::lengthUnitQLabel());
                                     QLabel *plabLengthUnit21 = new QLabel(Units::lengthUnitQLabel());
                                     QLabel *plabLengthUnit22 = new QLabel(Units::lengthUnitQLabel());
-                                    QLabel *plabTotalMassLabel   = new QLabel("Total Mass=");
+                                    QLabel *plabTotalMassLabel   = new QLabel(tr("Total Mass="));
                                     QLabel *plabMassUnit2        = new QLabel(Units::massUnitQLabel());
                                     m_pfeTotalMass         = new FloatEdit(1.0f,3);
                                     m_pfeTotalMass->setEnabled(false);
@@ -596,7 +596,7 @@ void PartInertiaDlg::setupLayout()
                                 pTotalCoGBox->setLayout(pTotalCoGLayout);
                             }
 
-                            QGroupBox *pTotalInertiaBox = new QGroupBox("Inertia in CoG Frame");
+                            QGroupBox *pTotalInertiaBox = new QGroupBox(tr("Inertia in CoG Frame"));
                             {
                                 QGridLayout *pTotalInertiaLayout = new QGridLayout;
                                 {
@@ -637,7 +637,7 @@ void PartInertiaDlg::setupLayout()
                             pTotalMassLayout->addWidget(pTotalCoGBox);
                             pTotalMassLayout->addWidget(pTotalInertiaBox);
                         }
-                        pTotalLayout->addWidget(pTotalMassLabel);
+                        pTotalLayout->addWidget(plabTotalMass);
                         pTotalLayout->addLayout(pTotalMassLayout);
                     }
                     pTotalMassBox->setLayout(pTotalLayout);
@@ -646,10 +646,10 @@ void PartInertiaDlg::setupLayout()
                 //__________________Control buttons___________________
                 m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Save | QDialogButtonBox::Discard);
                 {
-                    m_ppbExportToAVL = new QPushButton("to AVL file");
+                    m_ppbExportToAVL = new QPushButton(tr("to AVL file"));
                     m_pButtonBox->addButton(m_ppbExportToAVL, QDialogButtonBox::ActionRole);
 
-                    m_ppbExportToClipboard = new QPushButton("to clipboard");
+                    m_ppbExportToClipboard = new QPushButton(tr("to clipboard"));
                     m_pButtonBox->addButton(m_ppbExportToClipboard, QDialogButtonBox::ActionRole);
                 }
 

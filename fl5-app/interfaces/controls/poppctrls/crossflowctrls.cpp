@@ -213,7 +213,8 @@ void CrossFlowCtrls::setupLayout()
             {
                 QHBoxLayout *pComponentLayout = new QHBoxLayout;
                 {
-                    m_pchVorticityMap = new QCheckBox(tr("Crossflow vorticity (VPW only)"));
+                    m_pchVorticityMap = new QCheckBox(tr("Crossflow vorticity"));
+                    m_pchVorticityMap->setToolTip(tr("VPW only"));
                     m_pcbOmegaDir = new QComboBox;
                     m_pcbOmegaDir->addItems({tr("X"), tr("Y"), tr("Z"), tr("Norm")});
                     m_pcbOmegaDir->setCurrentIndex(s_OmegaDir);

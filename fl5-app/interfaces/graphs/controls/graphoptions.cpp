@@ -225,15 +225,15 @@ void GraphOptions::connectSignals()
 void GraphOptions::makeWidgets()
 {
     //________Font Page___________________________
-    m_pGroupBox.push_back(new QGroupBox("Fonts"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Fonts")));
     {
         QGridLayout *pFontButtonsLayout = new QGridLayout;
         {
-            QLabel *plab1    = new QLabel("Axis titles:");
-            QLabel *plab2    = new QLabel("Axis labels:");
-            QLabel *plab3    = new QLabel("In-graph legend:");
-            QLabel *plab402  = new QLabel("Font");
-            QLabel *plab403  = new QLabel("Colour");
+            QLabel *plab1    = new QLabel(tr("Axis titles:"));
+            QLabel *plab2    = new QLabel(tr("Axis labels:"));
+            QLabel *plab3    = new QLabel(tr("In-graph legend:"));
+            QLabel *plab402  = new QLabel(tr("Font"));
+            QLabel *plab403  = new QLabel(tr("Colour"));
             plab1->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
             plab2->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
             plab3->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
@@ -254,11 +254,11 @@ void GraphOptions::makeWidgets()
             pFontButtonsLayout->addWidget(m_ppbLegend,4,2);
 
             m_ptcbTitleClr  = new TextClrBtn(this);
-            m_ptcbTitleClr->setText("Title colour");
+            m_ptcbTitleClr->setText(tr("Title colour"));
             m_ptcbLabelClr  = new TextClrBtn(this);
-            m_ptcbLabelClr->setText("Label colour");
+            m_ptcbLabelClr->setText(tr("Label colour"));
             m_ptcbLegendClr  = new TextClrBtn(this);
-            m_ptcbLegendClr->setText("Legend colour");
+            m_ptcbLegendClr->setText(tr("Legend colour"));
 
             pFontButtonsLayout->addWidget(m_ptcbTitleClr,2,3);
             pFontButtonsLayout->addWidget(m_ptcbLabelClr,3,3);
@@ -267,22 +267,22 @@ void GraphOptions::makeWidgets()
         m_pGroupBox.back()->setLayout(pFontButtonsLayout);
     }
 
-    m_pGroupBox.push_back(new QGroupBox("Background"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Background")));
     {
         QGridLayout *pBackDataLayout = new QGridLayout;
         {
-            QLabel *GraphBackLabel = new QLabel("Graph background");
-            GraphBackLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            m_pchGraphBorder = new QCheckBox("Graph border");
+            QLabel *plabGraphBack = new QLabel(tr("Graph background"));
+            plabGraphBack ->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+            m_pchGraphBorder = new QCheckBox(tr("Graph border"));
 
             m_pcobGraphBack = new ColorBtn;
             m_plbBorderStyle = new LineBtn(this);
 
-            pBackDataLayout->addWidget(GraphBackLabel,1,1);
-            pBackDataLayout->addWidget(m_pchGraphBorder,2,1,1,1,Qt::AlignRight | Qt::AlignVCenter);
+            pBackDataLayout->addWidget(plabGraphBack,    1,1);
+            pBackDataLayout->addWidget(m_pchGraphBorder, 2,1,1,1,Qt::AlignRight | Qt::AlignVCenter);
 
-            pBackDataLayout->addWidget(m_pcobGraphBack,1,2);
-            pBackDataLayout->addWidget(m_plbBorderStyle,2,2);
+            pBackDataLayout->addWidget(m_pcobGraphBack,  1,2);
+            pBackDataLayout->addWidget(m_plbBorderStyle, 2,2);
 
             pBackDataLayout->setColumnStretch(1,7);
             pBackDataLayout->setColumnStretch(2,3);
@@ -290,11 +290,11 @@ void GraphOptions::makeWidgets()
         m_pGroupBox.back()->setLayout(pBackDataLayout);
     }
 
-    m_pGroupBox.push_back(new QGroupBox("Padding"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Padding")));
     {
         QGridLayout *pPaddingLayout = new QGridLayout;
         {
-            QLabel *plabMarginUnit = new QLabel("pixels");
+            QLabel *plabMarginUnit = new QLabel(tr("pixels"));
             m_pieLMargin = new IntEdit(31, this);
             m_pieRMargin = new IntEdit(31, this);
             m_pieTMargin = new IntEdit(31, this);
@@ -309,53 +309,53 @@ void GraphOptions::makeWidgets()
         m_pGroupBox.back()->setLayout(pPaddingLayout);
     }
 
-    m_pGroupBox.push_back(new QGroupBox("Axes and grids"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Axes and grids")));
     {
         QVBoxLayout *pAxisDataLayout = new QVBoxLayout;
         {
-            QGroupBox *pgbXBox = new QGroupBox("X");
+            QGroupBox *pgbXBox = new QGroupBox(tr("X"));
             {
                 QGridLayout *pXBoxLayout = new QGridLayout;
                 {
-                    QLabel *pAxisStyleLabel = new QLabel("Axis Style");
+                    QLabel *plabAxisStyle = new QLabel(tr("Axis style"));
                     m_plbXAxisStyle = new LineBtn(this);
 
-                    m_pchXMajGridShow = new QCheckBox("X Major Grid");
-                    m_pchXMinGridShow = new QCheckBox("X Minor Grid");
+                    m_pchXMajGridShow = new QCheckBox(tr("X major grid"));
+                    m_pchXMinGridShow = new QCheckBox(tr("X minor grid"));
 
                     m_plbXMajGridStyle = new LineBtn(this);
                     m_plbXMinGridStyle = new LineBtn(this);
 
-                    pXBoxLayout->addWidget(pAxisStyleLabel,1,1,Qt::AlignRight);
-                    pXBoxLayout->addWidget(m_plbXAxisStyle,1,2);
-                    pXBoxLayout->addWidget(m_pchXMajGridShow,2,1,Qt::AlignRight);
-                    pXBoxLayout->addWidget(m_pchXMinGridShow,3,1,Qt::AlignRight);
-                    pXBoxLayout->addWidget(m_plbXMajGridStyle,2,2);
-                    pXBoxLayout->addWidget(m_plbXMinGridStyle,3,2);
+                    pXBoxLayout->addWidget(plabAxisStyle,      1,1,Qt::AlignRight);
+                    pXBoxLayout->addWidget(m_plbXAxisStyle,    1,2);
+                    pXBoxLayout->addWidget(m_pchXMajGridShow,  2,1,Qt::AlignRight);
+                    pXBoxLayout->addWidget(m_pchXMinGridShow,  3,1,Qt::AlignRight);
+                    pXBoxLayout->addWidget(m_plbXMajGridStyle, 2,2);
+                    pXBoxLayout->addWidget(m_plbXMinGridStyle, 3,2);
                 }
                 pgbXBox->setLayout(pXBoxLayout);
             }
             QGroupBox *pgbYBox[]{nullptr, nullptr};
             for(int iy=0; iy<2; iy++)
             {
-                QString name = iy==0 ? "Y-left" : "Y-right";
+                QString name = iy==0 ? tr("Y-left") : tr("Y-right");
                 pgbYBox[iy] = new QGroupBox(name);
                 {
                     QGridLayout *pYBoxLayout = new QGridLayout;
                     {
-                        QLabel *pAxisStyleLabel = new QLabel("Axes style");
+                        QLabel *plabAxisStyle = new QLabel(tr("Axes style"));
                         m_plbYAxisStyle[iy] = new LineBtn(this);
 
-                        m_pchYMajGridShow[iy] = new QCheckBox("Y major grid - left");
-                        m_pchYMinGridShow[iy] = new QCheckBox("Y minor grid - left");
+                        m_pchYMajGridShow[iy] = new QCheckBox(tr("Y major grid - left"));
+                        m_pchYMinGridShow[iy] = new QCheckBox(tr("Y minor grid - left"));
                         m_plbYMajGridStyle[iy] = new LineBtn(this);
                         m_plbYMinGridStyle[iy] = new LineBtn(this);
-                        pYBoxLayout->addWidget(pAxisStyleLabel,1,1,Qt::AlignRight);
-                        pYBoxLayout->addWidget(m_plbYAxisStyle[iy],1,2);
-                        pYBoxLayout->addWidget(m_pchYMajGridShow[iy],4,1,Qt::AlignRight);
-                        pYBoxLayout->addWidget(m_pchYMinGridShow[iy],5,1,Qt::AlignRight);
-                        pYBoxLayout->addWidget(m_plbYMajGridStyle[iy],4,2);
-                        pYBoxLayout->addWidget(m_plbYMinGridStyle[iy],5,2);
+                        pYBoxLayout->addWidget(plabAxisStyle,          1,1,Qt::AlignRight);
+                        pYBoxLayout->addWidget(m_plbYAxisStyle[iy],    1,2);
+                        pYBoxLayout->addWidget(m_pchYMajGridShow[iy],  4,1,Qt::AlignRight);
+                        pYBoxLayout->addWidget(m_pchYMinGridShow[iy],  5,1,Qt::AlignRight);
+                        pYBoxLayout->addWidget(m_plbYMajGridStyle[iy], 4,2);
+                        pYBoxLayout->addWidget(m_plbYMinGridStyle[iy], 5,2);
                     }
                     pgbYBox[iy]->setLayout(pYBoxLayout);
                 }
@@ -370,19 +370,19 @@ void GraphOptions::makeWidgets()
         m_pGroupBox.back()->setLayout(pAxisDataLayout);
     }
 
-    m_pGroupBox.push_back(new QGroupBox("Curves"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Curves")));
     {
         QGridLayout *pDefaultLineLayout = new QGridLayout;
         {
-            QLabel *plabLine = new QLabel("Default curve width:");
+            QLabel *plabLine = new QLabel(tr("Default curve width:"));
             plabLine->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
             m_pcbLine = new LineCbBox;
 
-            m_pchAlignChilren = new QCheckBox("Make children curve's style same as parent's style");
+            m_pchAlignChilren = new QCheckBox(tr("Make children curve's style same as parent's style"));
 
-            QLabel *plabIncrement = new QLabel("Color darker factor:");
-            QString tip("<p>Set a value between 100 and 300 to increase the darkness of each polar "
-                        "or operating point in the sequence of their creation.</p>");
+            QLabel *plabIncrement = new QLabel(tr("Color darker factor:"));
+            QString tip(tr("<p>Set a value between 100 and 300 to increase the darkness of each polar "
+                        "or operating point in the sequence of their creation.</p>"));
             m_pieColorIncrement = new IntEdit;
             m_pieColorIncrement->setToolTip(tip);
 
@@ -397,39 +397,39 @@ void GraphOptions::makeWidgets()
         m_pGroupBox.back()->setLayout(pDefaultLineLayout);
     }
 
-    m_pGroupBox.push_back(new QGroupBox("Other"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Other")));
     {
         QVBoxLayout *pOtherLayout = new QVBoxLayout;
         {
             QHBoxLayout *pDynamicLayout = new QHBoxLayout;
             {
-                m_pchSpinAnimation = new QCheckBox("Enable mouse animations");
+                m_pchSpinAnimation = new QCheckBox(tr("Enable mouse animations"));
                 m_pfeSpinDamping = new FloatEdit;
-                m_pfeSpinDamping->setToolTip("<p>Defines the damping of the animation at each frame update.<br>"
-                                             "Set to 0 for perpetual movement.</p>");
-                QLabel *plabpcDamping = new QLabel("% damping");
+                m_pfeSpinDamping->setToolTip(tr("<p>Defines the damping of the animation at each frame update.<br>"
+                                             "Set to 0 for perpetual movement.</p>"));
+                QLabel *plabpcDamping = new QLabel(tr("% damping"));
                 pDynamicLayout->addWidget(m_pchSpinAnimation);
                 pDynamicLayout->addWidget(m_pfeSpinDamping);
                 pDynamicLayout->addWidget(plabpcDamping);
                 pDynamicLayout->addStretch();
             }
 
-            m_pchMouseTracking = new QCheckBox("Graphs steal focus on mouse move");
-            m_pchShowMousePos = new QCheckBox("Show mouse coordinates");
-            m_pchShowMousePos->setToolTip("<p>Display the coordinates of the mouse on the top right corner of the graph</p>");
-            m_pchAntiAliasing  = new QCheckBox("Enable anti-aliasing");
+            m_pchMouseTracking = new QCheckBox(tr("Graphs steal focus on mouse move"));
+            m_pchShowMousePos = new QCheckBox(tr("Show mouse coordinates"));
+            m_pchShowMousePos->setToolTip(tr("<p>Display the coordinates of the mouse on the top right corner of the graph</p>"));
+            m_pchAntiAliasing  = new QCheckBox(tr("Enable anti-aliasing"));
 
             QGridLayout *pGraphOtherLayout = new QGridLayout;
             {
 
 
-                QLabel *plabSVGFont = new QLabel("SVG font export: 1em=");
+                QLabel *plabSVGFont = new QLabel(tr("SVG font export: 1em="));
                 m_pieSVGRefFontSize = new IntEdit;
-                m_pieSVGRefFontSize->setToolTip("<p>This value defines the reference font-size used when exporting to SVG.<br>"
+                m_pieSVGRefFontSize->setToolTip(tr("<p>This value defines the reference font-size used when exporting to SVG.<br>"
                                                 "Reduce this value to increase the size of fonts of the SVG image, and increase "
                                                 "it to obtain smaller fonts.<br>"
-                                                "Recommendation: size=10 to 12</p>");
-                QLabel *plabPoints = new QLabel("points");
+                                                "Recommendation: size=10 to 12</p>"));
+                QLabel *plabPoints = new QLabel(tr("points"));
 
 
                 pGraphOtherLayout->addWidget(plabSVGFont,         2, 1);
@@ -438,7 +438,7 @@ void GraphOptions::makeWidgets()
                 pGraphOtherLayout->setColumnStretch(4,1);
             }
 
-            m_pchSVGFillBackground = new QCheckBox("Fill background when exporting to SVG");
+            m_pchSVGFillBackground = new QCheckBox(tr("Fill background when exporting to SVG"));
 
             pOtherLayout->addLayout(pDynamicLayout);
             pOtherLayout->addWidget(m_pchMouseTracking);

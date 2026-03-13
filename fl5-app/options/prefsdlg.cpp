@@ -646,24 +646,24 @@ void PrefsDlg::fillTreeWidget()
 
     m_pUnitItem = new QTreeWidgetItem(m_ptwOptionsTree);
     {
-        m_pUnitItem->setText(0, "Units");
+        m_pUnitItem->setText(0, tr("Units"));
     }
 
     QTreeWidgetItem *m_pGraphItem = new QTreeWidgetItem(m_ptwOptionsTree);
     {
-        m_pGraphItem->setText(0, "Graphs");
+        m_pGraphItem->setText(0, tr("Graphs"));
         QTreeWidgetItem *pSub1;
 
         pSub1 = new QTreeWidgetItem(m_pGraphItem);
-        pSub1->setText(0, "Fonts");
+        pSub1->setText(0, tr("Fonts"));
         m_pGraphItem->addChild(pSub1);
 
         pSub1 = new QTreeWidgetItem(m_pGraphItem);
-        pSub1->setText(0, "Background");
+        pSub1->setText(0, tr("Background"));
         m_pGraphItem->addChild(pSub1);
 
         pSub1 = new QTreeWidgetItem(m_pGraphItem);
-        pSub1->setText(0, "Padding");
+        pSub1->setText(0, tr("Padding"));
         m_pGraphItem->addChild(pSub1);
 
         pSub1 = new QTreeWidgetItem(m_pGraphItem);
@@ -671,53 +671,53 @@ void PrefsDlg::fillTreeWidget()
         m_pGraphItem->addChild(pSub1);
 
         pSub1 = new QTreeWidgetItem(m_pGraphItem);
-        pSub1->setText(0, "Curves");
+        pSub1->setText(0, tr("Curves"));
         m_pGraphItem->addChild(pSub1);
 
         pSub1 = new QTreeWidgetItem(m_pGraphItem);
-        pSub1->setText(0, "Other");
+        pSub1->setText(0, tr("Other"));
         m_pGraphItem->addChild(pSub1);
     }
 
     m_p2dItem = new QTreeWidgetItem(m_ptwOptionsTree);
     {
-        m_p2dItem->setText(0, "2d views");
+        m_p2dItem->setText(0, tr("2d views"));
         QTreeWidgetItem *pSub2;
 
         pSub2 = new QTreeWidgetItem(m_p2dItem);
-        pSub2->setText(0, "General");
+        pSub2->setText(0, tr("General"));
         m_p2dItem->addChild(pSub2);
 
         pSub2 = new QTreeWidgetItem(m_p2dItem);
-        pSub2->setText(0, "Axes and grids");
+        pSub2->setText(0, tr("Axes and grids"));
         m_p2dItem->addChild(pSub2);
     }
 
     m_p3dItem = new QTreeWidgetItem(m_ptwOptionsTree);
     {
-        m_p3dItem->setText(0, "3d views");
+        m_p3dItem->setText(0, tr("3d views"));
         QTreeWidgetItem *pSub2;
 
         pSub2 = new QTreeWidgetItem(m_p3dItem);
-        pSub2->setText(0, "Colours");
+        pSub2->setText(0, tr("Colours"));
         m_p3dItem->addChild(pSub2);
 
         pSub2 = new QTreeWidgetItem(m_p3dItem);
-        pSub2->setText(0,"Tessellation");
+        pSub2->setText(0, tr("Tessellation"));
         m_p3dItem->addChild(pSub2);
 
         pSub2 = new QTreeWidgetItem(m_p3dItem);
-        pSub2->setText(0,"Other");
+        pSub2->setText(0, tr("Other"));
         m_p3dItem->addChild(pSub2);
     }
 
     QTreeWidgetItem *m_pMultiThreadItem = new QTreeWidgetItem(m_ptwOptionsTree);
     {
-        m_pMultiThreadItem->setText(0, "Multithreading");
+        m_pMultiThreadItem->setText(0, tr("Multithreading"));
     }
 
 //    m_pOptionsTree->insertTopLevelItems(0, items);
-    m_ptwOptionsTree->setHeaderLabels(QStringList() << "Option");
+    m_ptwOptionsTree->setHeaderLabels(QStringList() << tr("Option"));
 }
 
 

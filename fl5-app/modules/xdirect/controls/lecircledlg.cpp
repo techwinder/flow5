@@ -47,7 +47,7 @@ void LECircleDlg::setupLayout()
     {
         m_pdeRadius = new FloatEdit(0.0,3);
         QLabel *plab0 = new QLabel("r=");
-        QLabel *plab1 = new QLabel("% Chord");
+        QLabel *plab1 = new QLabel(tr("% Chord"));
         plab0->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         pLERadiusLayout->addStretch(1);
         pLERadiusLayout->addWidget(plab0);

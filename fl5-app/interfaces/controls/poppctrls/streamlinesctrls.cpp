@@ -91,10 +91,10 @@ void StreamLineCtrls::setupLayout()
                 m_pfeMaxLength->setToolTip(tip);
                 m_pfeMaxLength->setEnabled(false);
 
-                QLabel *pLab4 = new QLabel("Streamwise segments:");
-                QLabel *pLab5 = new QLabel("1<sup>st</sup> segment:");
-                QLabel *pLab6 = new QLabel("Progression factor:");
-                QLabel *pLab7 = new QLabel("Total length:");
+                QLabel *pLab4 = new QLabel(tr("Streamwise segments:"));
+                QLabel *pLab5 = new QLabel(tr("1<sup>st</sup> segment:"));
+                QLabel *pLab6 = new QLabel(tr("Progression factor:"));
+                QLabel *pLab7 = new QLabel(tr("Total length:"));
 
                 m_plabLengthUnit0 = new QLabel("parsecs");
                 m_plabLengthUnit1 = new QLabel("miles");
@@ -118,9 +118,9 @@ void StreamLineCtrls::setupLayout()
 
         QHBoxLayout *pStreamStyleLayout = new QHBoxLayout;
         {
-            QLabel *pLabStream = new QLabel("Style");
+            QLabel *pLabStream = new QLabel(tr("Style"));
             m_plbStreamLines   = new LineBtn(this);
-            m_pchUseWingColour = new QCheckBox("Use wing or sail colour");
+            m_pchUseWingColour = new QCheckBox(tr("Use wing or sail colour"));
 
             pStreamStyleLayout->addWidget(pLabStream);
             pStreamStyleLayout->addWidget(m_plbStreamLines);
@@ -128,7 +128,7 @@ void StreamLineCtrls::setupLayout()
             pStreamStyleLayout->addStretch();
         }
 
-        QGroupBox *pStartBox = new QGroupBox("Start streamlines at");
+        QGroupBox *pStartBox = new QGroupBox(tr("Start streamlines at"));
         {
             QVBoxLayout *pStartLayout = new QVBoxLayout;
             {
@@ -139,9 +139,9 @@ void StreamLineCtrls::setupLayout()
 
                 QHBoxLayout *pLineLayout = new QHBoxLayout;
                 {
-                    m_prbTE    = new QRadioButton("T.E.");
-                    m_prbYLine = new QRadioButton("Y-Line");
-                    m_prbZLine = new QRadioButton("Z-Line");
+                    m_prbTE    = new QRadioButton(tr("T.E."));
+                    m_prbYLine = new QRadioButton(tr("Y-Line"));
+                    m_prbZLine = new QRadioButton(tr("Z-Line"));
                     pLineLayout->addStretch();
                     pLineLayout->addWidget(m_prbTE);
                     pLineLayout->addWidget(m_prbYLine);
@@ -154,9 +154,9 @@ void StreamLineCtrls::setupLayout()
                     QLabel *pLabYOffset = new QLabel("<p>&Delta;Y=</p>");
                     QLabel *pLabZOffset = new QLabel("<p>&Delta;Z=</p>");
 
-                    QString tip5 = "<p>Defines the offset from the trailing edge of the streamline's starting point. "
+                    QString tip5 = tr("<p>Defines the offset from the trailing edge of the streamline's starting point. "
                                       "Numerical issues occur if the offset is zero in both X and Z directions "
-                                      "due to the singularity of the velocity field at the panel edges.</p>";
+                                      "due to the singularity of the velocity field at the panel edges.</p>");
                     m_pslXOffset = new QSlider(Qt::Horizontal);
                     m_pslXOffset->setTickPosition(QSlider::TicksBelow);
                     m_pslXOffset->setRange(-100,100);
@@ -202,15 +202,15 @@ void StreamLineCtrls::setupLayout()
 
                 QGridLayout *pLinesLayout = new QGridLayout;
                 {
-                    QLabel *plabNStreamLines = new QLabel("Nbr. of streamlines:");
-                    QLabel *plabDeltaL       = new QLabel("Increment:");
+                    QLabel *plabNStreamLines = new QLabel(tr("Nbr. of streamlines:"));
+                    QLabel *plabDeltaL       = new QLabel(tr("Increment:"));
                     plabNStreamLines->setAlignment(Qt::AlignVCenter |Qt::AlignRight);
                     plabDeltaL->setAlignment(Qt::AlignVCenter |Qt::AlignRight);
 
                     m_pieNStreamLines = new IntEdit(s_NStreamLines);
-                    m_pieNStreamLines->setToolTip("<p>Defines the number of strealines to be drawn along the Y or Z line</p>");
+                    m_pieNStreamLines->setToolTip(tr("<p>Defines the number of strealines to be drawn along the Y or Z line</p>"));
                     m_pfeDeltaPos     = new FloatEdit(s_DeltaL*Units::mtoUnit());
-                    m_pfeDeltaPos->setToolTip("<p>Defines the distance between the starting points of two adjacent streamlines along the Y or Z directions</p>");
+                    m_pfeDeltaPos->setToolTip(tr("<p>Defines the distance between the starting points of two adjacent streamlines along the Y or Z directions</p>"));
 
                     pLinesLayout->addWidget(plabNStreamLines,   4,1);
                     pLinesLayout->addWidget(m_pieNStreamLines,  4,2);
@@ -226,7 +226,7 @@ void StreamLineCtrls::setupLayout()
             pStartBox->setLayout(pStartLayout);
         }
 
-        m_ppbUpdateStreamLines = new QPushButton("Apply");
+        m_ppbUpdateStreamLines = new QPushButton(tr("Apply"));
 
 
         pStreamlineLayout->addWidget(pfrStatic);

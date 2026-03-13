@@ -331,7 +331,7 @@ void PlaneInertiaDlg::makeCommonWts()
     {
         QVBoxLayout *pPointMassLayout = new QVBoxLayout;
         {
-            QLabel *pPointMassesLabel = new QLabel("Additional point masses");
+            QLabel *pPointMassesLabel = new QLabel(tr("Additional point masses"));
             pPointMassesLabel->setStyleSheet("QLabel { font-weight: bold;}");
 
             m_ppmtMasses = new PointMassTable(this);
@@ -347,13 +347,13 @@ void PlaneInertiaDlg::makeCommonWts()
     {
         QVBoxLayout *pTotalLayout = new QVBoxLayout;
         {
-            QLabel *pTotalMassLabel = new QLabel("Total Mass = Volume + point masses");
-            pTotalMassLabel->setStyleSheet("QLabel { font-weight: bold;}");
-            QGroupBox *pTotalCoGBox = new QGroupBox("Center of gravity");
+            QLabel *plabTotalMass = new QLabel(tr("Total Mass = Volume + point masses"));
+            plabTotalMass->setStyleSheet("QLabel { font-weight: bold;}");
+            QGroupBox *pTotalCoGBox = new QGroupBox(tr("Center of gravity"));
             {
                 QGridLayout *pTotalCoGLayout = new QGridLayout;
                 {
-                    QLabel *TotalLabel = new QLabel("Center of gravity");
+                    QLabel *TotalLabel = new QLabel(tr("Center of gravity"));
                     TotalLabel->setAlignment(Qt::AlignRight);
                     QLabel *pXTotalLab = new QLabel("CoG_x=");
                     QLabel *pYTotalLab = new QLabel("CoG_y=");
@@ -367,7 +367,7 @@ void PlaneInertiaDlg::makeCommonWts()
                     QLabel *plabLengthUnit20 = new QLabel(Units::lengthUnitQLabel());
                     QLabel *plabLengthUnit21 = new QLabel(Units::lengthUnitQLabel());
                     QLabel *plabLengthUnit22 = new QLabel(Units::lengthUnitQLabel());
-                    QLabel *plabTotalMass    = new QLabel("Total Mass=");
+                    QLabel *plabTotalMass    = new QLabel(tr("Total Mass="));
                     QLabel *plabMassUnit2    = new QLabel(Units::massUnitQLabel());
                     m_pfeTotalMass     = new FloatEdit(0.0f,3);
                     m_pfeTotalMass->setEnabled(false);
@@ -390,7 +390,7 @@ void PlaneInertiaDlg::makeCommonWts()
                 pTotalCoGBox->setLayout(pTotalCoGLayout);
             }
 
-            QGroupBox *pTotalInertiaBox = new QGroupBox("Inertia in CoG Frame");
+            QGroupBox *pTotalInertiaBox = new QGroupBox(tr("Inertia in CoG Frame"));
             {
                 QGridLayout *pTotalInertiaLayout = new QGridLayout;
                 {
@@ -434,7 +434,7 @@ void PlaneInertiaDlg::makeCommonWts()
                 pTotalMassLayout->addWidget(pTotalCoGBox);
                 pTotalMassLayout->addWidget(pTotalInertiaBox);
             }
-            pTotalLayout->addWidget(pTotalMassLabel);
+            pTotalLayout->addWidget(plabTotalMass );
             pTotalLayout->addLayout(pTotalMassLayout);
         }
         m_pfrTotalMass->setLayout(pTotalLayout);
@@ -444,15 +444,15 @@ void PlaneInertiaDlg::makeCommonWts()
     //__________________Control buttons___________________
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Save | QDialogButtonBox::Discard);
     {
-        QPushButton *ppbActtions = new QPushButton("Actions");
+        QPushButton *ppbActtions = new QPushButton(tr("Actions"));
         {
             QMenu *pActionMenu = new QMenu;
             {
-                m_pImportInertia = new QAction("Import from other plane");
-                QMenu *pExportMenu = new QMenu("Export");
+                m_pImportInertia = new QAction(tr("Import from other plane"));
+                QMenu *pExportMenu = new QMenu(tr("Export"));
                 {
-                    m_pExportToAVL = new QAction("to AVL file", this);
-                    m_pExportToClipboard = new QAction("to clipboard", this);
+                    m_pExportToAVL = new QAction(tr("to AVL file"), this);
+                    m_pExportToClipboard = new QAction(tr("to clipboard"), this);
                     pExportMenu->addAction(m_pExportToAVL);
                     pExportMenu->addAction(m_pExportToClipboard);
                 }
@@ -465,7 +465,7 @@ void PlaneInertiaDlg::makeCommonWts()
         m_pButtonBox->addButton(ppbActtions, QDialogButtonBox::ActionRole);
 
 
-        m_ppbSaveAsNew = new QPushButton("Save as");
+        m_ppbSaveAsNew = new QPushButton(tr("Save as"));
         m_pButtonBox->addButton(m_ppbSaveAsNew, QDialogButtonBox::ActionRole);
 
         connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onButton(QAbstractButton*)));

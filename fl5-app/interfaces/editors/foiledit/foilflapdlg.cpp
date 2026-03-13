@@ -89,12 +89,12 @@ void FoilFlapDlg::setupLayout()
             m_pfeTEFlapAngle = new FloatEdit;
             m_pfeLEFlapAngle = new FloatEdit;
 
-            QLabel *plab1 = new QLabel("Flap angle");
-            QLabel *plab2 = new QLabel("<p>&deg; (+ is down)</p>");
-            QLabel *plab3 = new QLabel("Hinge x position");
-            QLabel *plab4 = new QLabel("% Chord");
-            QLabel *plab5 = new QLabel("Hinge y position");
-            QLabel *plab6 = new QLabel("% thickness");
+            QLabel *plab1 = new QLabel(tr("Flap angle"));
+            QLabel *plab2 = new QLabel(tr("<p>&deg; (+ is down)</p>"));
+            QLabel *plab3 = new QLabel(tr("Hinge x position"));
+            QLabel *plab4 = new QLabel(tr("% Chord"));
+            QLabel *plab5 = new QLabel(tr("Hinge y position"));
+            QLabel *plab6 = new QLabel(tr("% thickness"));
             plab1->setPalette(m_Palette);
             plab2->setPalette(m_Palette);
             plab3->setPalette(m_Palette);
@@ -108,13 +108,13 @@ void FoilFlapDlg::setupLayout()
             plab5->setAttribute(Qt::WA_NoSystemBackground);
             plab6->setAttribute(Qt::WA_NoSystemBackground);
 
-            m_pchMakePermanent = new QCheckBox("Make deflection permanent");
-            QString tip("<p>"
+            m_pchMakePermanent = new QCheckBox(tr("Make deflection permanent"));
+            QString tip(tr("<p>"
                         "If activated, the foil's geometry will be modified to include the deflected T.E. flap.<br>"
                         "This option should be avoided in the general case. It is of interest only in the special case where a plane needs to be "
                         "built later on with a non-zero T.E. flap angle, to intersect the flapped wing with the fuselage<br>"
                         "Starting in v7.50, it is recommended to deactivate this option and to set the T.E. flap angles in the foil and plane polars."
-                        "</p>");
+                        "</p>"));
             m_pchMakePermanent->setToolTip(tip);
 
             QLabel *pFlow5Link = new QLabel;
@@ -196,7 +196,7 @@ void FoilFlapDlg::readParams()
 
     if(m_LEXHinge>=m_TEXHinge && m_bLEFlap && m_bTEFlap)
     {
-        QMessageBox::information(window(), "Warning", "The trailing edge hinge must be downstream of the leading edge hinge");
+        QMessageBox::information(window(), tr("Warning"), tr("The trailing edge hinge must be downstream of the leading edge hinge"));
         m_pfeLEXHinge->setFocus();
         m_pfeLEXHinge->selectAll();
     }

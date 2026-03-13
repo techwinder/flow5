@@ -2942,7 +2942,6 @@ void MainFrame::saveSettings()
     SelectionDlg::saveSettings(settings);
     SeparatorsDlg::saveSettings(settings);
     Stab3dCtrls::saveSettings(settings);
-    Stab3dCtrls::saveSettings(settings);
     StreamLineCtrls::saveSettings(settings);
     VortonTestDlg::saveSettings(settings);
     W3dPrefs::saveSettings(settings);

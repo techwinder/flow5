@@ -64,18 +64,18 @@ void FoilLEDlg::setupLayout()
         QGridLayout *pParamsLayout = new QGridLayout;
         {
             m_pfeDisplayRadius = new FloatEdit(0.1f,3);
-            m_pfeDisplayRadius->setToolTip("The radius of the LE Circle to display, for information only");
+            m_pfeDisplayRadius->setToolTip(tr("<p>The radius of the LE Circle to display, for information only</p>"));
             connect(m_pfeDisplayRadius, SIGNAL(floatChanged(float)), this, SLOT(onLERadiusDisplay()));
 
-            QLabel *pLabr = new QLabel("L.E. display circle radius=");
+            QLabel *pLabr = new QLabel(tr("L.E. display circle radius="));
             pLabr->setPalette(m_Palette);
 
-            QLabel *pLabChord = new QLabel("% Chord");
+            QLabel *pLabChord = new QLabel(tr("% Chord"));
             pLabChord->setPalette(m_Palette);
             pLabr->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
 
-            QLabel *pLab1 = new QLabel("Approximate new/old ratio for L.E. radius");
+            QLabel *pLab1 = new QLabel(tr("Approximate new/old ratio for L.E. radius"));
             pLab1->setPalette(m_Palette);
             pLab1->setAlignment(Qt::AlignRight);
 
@@ -85,11 +85,11 @@ void FoilLEDlg::setupLayout()
             m_pfeLEfactor = new FloatEdit;
 
 
-            QLabel *pLab3 = new QLabel("Characteristic blending distance from L.E.");
+            QLabel *pLab3 = new QLabel(tr("Characteristic blending distance from L.E."));
             pLab3->setPalette(m_Palette);
             pLab3->setAlignment(Qt::AlignRight);
 
-            QLabel *pLab4 = new QLabel("% chord");
+            QLabel *pLab4 = new QLabel(tr("% chord"));
             pLab4->setPalette(m_Palette);
 
             m_pfeBlend = new FloatEdit;
