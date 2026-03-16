@@ -34,9 +34,10 @@
 #include <QToolTip>
 #include <QMouseEvent>
 
+#include "graphwt.h"
+
 #include <core/xflcore.h>
 #include <core/displayoptions.h>
-#include <interfaces/graphs/containers/graphwt.h>
 #include <interfaces/graphs/controls/graphdlg.h>
 #include <interfaces/graphs/graph/graph.h>
 #include <interfaces/graphs/globals/graph_globals.h>

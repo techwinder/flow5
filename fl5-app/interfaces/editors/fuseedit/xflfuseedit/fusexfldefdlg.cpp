@@ -37,6 +37,7 @@
 #include <QMessageBox>
 #include <QHeaderView>
 
+#include "fusexfldefdlg.h"
 
 
 #include <api/frame.h>
@@ -44,9 +45,9 @@
 #include <api/fusexfl.h>
 #include <api/quad3d.h>
 #include <api/units.h>
+
 #include <interfaces/editors/fuseedit/xflfuseedit/fuseframewt.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fuselinewt.h>
-#include <interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <interfaces/opengl/fl5views/gl3dfuseview.h>
 #include <interfaces/widgets/customwts/actionitemmodel.h>

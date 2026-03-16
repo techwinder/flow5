@@ -181,8 +181,8 @@ void OptimPlaneDlg::setupLayout()
                             m_pptePolar = new QPlainTextEdit;
                             m_pptePolar->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
                             m_pptePolar->setFont(DisplayOptions::tableFont());
-                            m_ppbAnalysisDef = new QPushButton("Define analysis");
-                            m_ppbRunAnalysis = new QPushButton("Run analysis");
+                            m_ppbAnalysisDef = new QPushButton(tr("Define analysis"));
+                            m_ppbRunAnalysis = new QPushButton(tr("Run calculation"));
                             pAnalysisLayout->addWidget(m_pptePolar);
                             pAnalysisLayout->addWidget(m_ppbAnalysisDef);
                             pAnalysisLayout->addWidget(m_ppbRunAnalysis);
@@ -200,11 +200,11 @@ void OptimPlaneDlg::setupLayout()
                                 m_pObjModel = new QStandardItemModel(this);
                                 m_pObjModel->setRowCount(1);//temporary
                                 m_pObjModel->setColumnCount(5);
-                                m_pObjModel->setHeaderData(0, Qt::Horizontal, "Active");
-                                m_pObjModel->setHeaderData(1, Qt::Horizontal, "Objective");
-                                m_pObjModel->setHeaderData(2, Qt::Horizontal, "Type");
-                                m_pObjModel->setHeaderData(3, Qt::Horizontal, "Target");
-                                m_pObjModel->setHeaderData(4, Qt::Horizontal, "Max. error");
+                                m_pObjModel->setHeaderData(0, Qt::Horizontal, tr("Active"));
+                                m_pObjModel->setHeaderData(1, Qt::Horizontal, tr("Objective"));
+                                m_pObjModel->setHeaderData(2, Qt::Horizontal, tr("Type"));
+                                m_pObjModel->setHeaderData(3, Qt::Horizontal, tr("Target"));
+                                m_pObjModel->setHeaderData(4, Qt::Horizontal, tr("Max. error"));
                                 for(int icol=0; icol<m_pObjModel->columnCount(); icol++)
                                     m_pObjModel->setHeaderData(icol, Qt::Horizontal, Qt::AlignCenter, Qt::TextAlignmentRole);
                                 m_pcptObjective->setModel(m_pObjModel);

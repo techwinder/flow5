@@ -31,7 +31,7 @@
 
 
 
-#include <interfaces/controls/splinectrl/splinectrl.h>
+#include "splinectrl.h"
 #include <interfaces/widgets/customwts/actionitemmodel.h>
 #include <interfaces/widgets/customwts/cptableview.h>
 #include <interfaces/widgets/customwts/intedit.h>
@@ -58,7 +58,7 @@ void SplineCtrl::setupLayout()
 {
     QVBoxLayout *pMainLayout = new QVBoxLayout;
     {
-        m_pSplineParamBox = new QGroupBox("Spline definition");
+        m_pSplineParamBox = new QGroupBox(tr("Spline definition"));
         {
             QVBoxLayout *pSplineParamLayout = new QVBoxLayout;
             {
@@ -72,7 +72,7 @@ void SplineCtrl::setupLayout()
 
                 m_pcptPoint = new CPTableView(this);
                 m_pcptPoint->setEditable(true);
-                m_pcptPoint->setWindowTitle("Control points");
+                m_pcptPoint->setWindowTitle(tr("Control points"));
 
                 m_pPointModel = new ActionItemModel(this);
                 m_pPointModel->setActionColumn(2);
@@ -80,7 +80,7 @@ void SplineCtrl::setupLayout()
                 m_pPointModel->setColumnCount(3);
                 m_pPointModel->setHeaderData(0, Qt::Horizontal, "x");
                 m_pPointModel->setHeaderData(1, Qt::Horizontal, "y");
-                m_pPointModel->setHeaderData(2, Qt::Horizontal, "Actions");
+                m_pPointModel->setHeaderData(2, Qt::Horizontal, tr("Actions"));
 
                 m_pcptPoint->setModel(m_pPointModel);
                 m_pcptPoint->horizontalHeader()->setStretchLastSection(true);
@@ -90,18 +90,18 @@ void SplineCtrl::setupLayout()
                 m_pPointFloatDelegate->setDigits({5,5,0});
                 m_pPointFloatDelegate->setItemTypes({XflDelegate::DOUBLE, XflDelegate::DOUBLE, XflDelegate::ACTION});
 
-                m_pchClosedTE = new QCheckBox("Force closed TE");
-                m_pchClosedTE->setToolTip("Forces the spline's leading and trailing points to be at the same position");
-                m_pchSymmetric = new QCheckBox("Symmetric spline");
+                m_pchClosedTE = new QCheckBox(tr("Force closed T.E."));
+                m_pchClosedTE->setToolTip(tr("<p>Forces the spline's leading and trailing points to be at the same position</p>"));
+                m_pchSymmetric = new QCheckBox(tr("Symmetric spline"));
                 QString tip("<p>The trailing end point will be forced in the top half plane, i.e. y>=0.<br>"
-                                 "The leading end point will be forced in on the x-axis, i.e. y=0.<br>"
-                                 "Make the upper part of the foil with the spline,then Apply to generate "
-                                 "the symmetric foil.</p>");
+                            "The leading end point will be forced in on the x-axis, i.e. y=0.<br>"
+                            "Make the upper part of the foil with the spline,then Apply to generate "
+                            "the symmetric foil.</p>");
                 m_pchSymmetric->setToolTip(tip);
 
                 QHBoxLayout *pDegreeLayout = new QHBoxLayout;
                 {
-                    QLabel *pLabDegree = new QLabel("Degree");
+                    QLabel *pLabDegree = new QLabel(tr("Degree"));
                     pDegreeLayout->addStretch();
                     pDegreeLayout->addWidget(pLabDegree);
                     pDegreeLayout->addWidget(m_pcbSplineDegree);
@@ -120,18 +120,18 @@ void SplineCtrl::setupLayout()
             m_pSplineParamBox->setLayout(pSplineParamLayout);
         }
 
-        m_pBunchBox = new QGroupBox("Output points bunching");
+        m_pBunchBox = new QGroupBox(tr("Output points bunching"));
         {
             QGridLayout *pBunchLayout = new QGridLayout;
             {
-                QLabel *pLabNoAmp = new QLabel("None");
+                QLabel *pLabNoAmp = new QLabel(tr("None"));
                 pLabNoAmp->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
-                QLabel *pLabAmp = new QLabel("Full");
+                QLabel *pLabAmp = new QLabel(tr("Full"));
                 pLabAmp->setAlignment(Qt::AlignVCenter|Qt::AlignLeft);
                 m_pslBunchAmp = new QSlider(Qt::Horizontal);
                 m_pslBunchAmp->setRange(0, 100);
                 m_pslBunchAmp->setTickPosition(QSlider::TicksBelow);
-                QString tip = "Defines the intensity of the bunching of the output points";
+                QString tip = tr("<p>Defines the intensity of the bunching of the output points</p>");
                 pLabNoAmp->setToolTip(tip);
                 pLabAmp->setToolTip(tip);
                 m_pslBunchAmp->setToolTip(tip);
@@ -143,16 +143,16 @@ void SplineCtrl::setupLayout()
             m_pBunchBox->setLayout(pBunchLayout);
         }
 
-        m_pOuputFrame = new QGroupBox("Display");
+        m_pOuputFrame = new QGroupBox(tr("Display"));
         {
             QGridLayout *pOutputLayout = new QGridLayout;
             {
-                m_pchShow        = new QCheckBox("Show");
-                m_pchShowNormals = new QCheckBox("Normals");
-                QLabel *pLabSplineStyle = new QLabel("Style:");
+                m_pchShow        = new QCheckBox(tr("Show"));
+                m_pchShowNormals = new QCheckBox(tr("Normals"));
+                QLabel *pLabSplineStyle = new QLabel(tr("Style:"));
                 m_plbSplineStyle = new LineBtn;
 
-                QLabel *pLabN = new QLabel("Number of curve points:");
+                QLabel *pLabN = new QLabel(tr("Number of curve points:"));
                 m_pieOutputPoints = new IntEdit;
                 m_pieOutputPoints->setMin(0);
                 m_pieOutputPoints->setMax(1000);
@@ -490,11 +490,11 @@ void SplineCtrl::onCtrlPointTableClicked(QModelIndex index)
             m_pcptPoint->selectRow(index.row());
             QRect itemrect = m_pcptPoint->visualRect(index);
             QPoint menupos = m_pcptPoint->mapToGlobal(itemrect.topLeft());
-            QMenu *pWingTableRowMenu = new QMenu("Section",this);
+            QMenu *pWingTableRowMenu = new QMenu(tr("Section"),this);
 
-            QAction *m_pInsertBeforeAct    = new QAction("Insert before", this);
-            QAction *m_pInsertAfterAct    = new QAction("Insert after", this);
-            QAction *m_pDeleteAct        = new QAction("Delete", this);
+            QAction *m_pInsertBeforeAct    = new QAction(tr("Insert before"), this);
+            QAction *m_pInsertAfterAct    = new QAction(tr("Insert after"), this);
+            QAction *m_pDeleteAct        = new QAction(tr("Delete"), this);
 
             connect(m_pDeleteAct,       SIGNAL(triggered(bool)), SLOT(onDelete()));
             connect(m_pInsertBeforeAct, SIGNAL(triggered(bool)), SLOT(onInsertBefore()));

@@ -44,6 +44,7 @@
 #include <QButtonGroup>
 #include <QToolBar>
 
+#include "saildlg.h"
 
 #include <api/constants.h>
 #include <api/objects_global.h>
@@ -52,12 +53,11 @@
 #include <api/sailnurbs.h>
 #include <api/trimesh.h>
 #include <api/units.h>
-
+#include <api/xmlsailwriter.h>
 
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/w3dprefs.h>
-#include <interfaces/editors/boatedit/saildlg.h>
 #include <interfaces/editors/boatedit/sailscaledlg.h>
 #include <interfaces/editors/boatedit/sailsectionview.h>
 #include <interfaces/editors/scaledlg.h>
@@ -82,7 +82,6 @@
 #include <interfaces/widgets/customwts/xfldelegate.h>
 #include <interfaces/widgets/line/linebtn.h>
 #include <interfaces/widgets/line/linemenu.h>
-#include <api/xmlsailwriter.h>
 #include <modules/xobjects.h>
 
 Quaternion SailDlg::s_ab_quat(-0.212012, 0.148453, -0.554032, -0.79124);

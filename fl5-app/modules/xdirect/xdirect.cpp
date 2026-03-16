@@ -30,6 +30,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include "xdirect.h"
 
 #include <core/displayoptions.h>
 #include <core/saveoptions.h>
@@ -83,7 +84,6 @@
 #include <modules/xdirect/view2d/dfoillegendwt.h>
 #include <modules/xdirect/view2d/dfoilwt.h>
 #include <modules/xdirect/view2d/oppointwt.h>
-#include <modules/xdirect/xdirect.h>
 #include <modules/xobjects.h>
 
 #include <api/constants.h>

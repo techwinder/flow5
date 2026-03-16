@@ -94,9 +94,9 @@ void GridControl::setupLayout()
         QLabel *plabX = new QLabel("X");
         QLabel *plabY = new QLabel("Y");
 
-        QLabel *plabAxes = new QLabel("Axes");
-        QLabel *plabMajGrid = new QLabel("Major grid");
-        QLabel *plabMinGrid = new QLabel("Minor grid");
+        QLabel *plabAxes = new QLabel(tr("Axes"));
+        QLabel *plabMajGrid = new QLabel(tr("Major grid"));
+        QLabel *plabMinGrid = new QLabel(tr("Minor grid"));
 
         m_pchXAxisShow  = new QCheckBox(QString());
         m_pchYAxisShow  = new QCheckBox(QString());

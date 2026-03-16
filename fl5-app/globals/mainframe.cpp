@@ -51,6 +51,9 @@
     #include <mkl.h>
 #endif
 
+#include "mainframe.h"
+
+
 #include <core/displayoptions.h>
 #include <core/saveoptions.h>
 #include <api/trace.h>
@@ -58,7 +61,6 @@
 #include <globals/aboutf5.h>
 #include <globals/creditsdlg.h>
 #include <globals/gui_params.h>
-#include <globals/mainframe.h>
 #include <interfaces/controls/poppctrls/crossflowctrls.h>
 #include <interfaces/controls/poppctrls/flowctrls.h>
 #include <interfaces/controls/poppctrls/opp3dscalesctrls.h>

@@ -27,12 +27,14 @@
 
 #include  <QDockWidget>
 
+#include "xplaneactions.h"
+
 #include <globals/mainframe.h>
 #include <modules/xplane/analysis/planeanalysisdlg.h>
 #include <modules/xplane/controls/xplanewt.h>
 #include <modules/xplane/glview/gl3dxplaneview.h>
-#include <modules/xplane/menus/xplaneactions.h>
 #include <modules/xplane/xplane.h>
+
 #include <api/enums_objects.h>
 #include <api/planepolar.h>
 #include <api/planexfl.h>

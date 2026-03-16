@@ -44,6 +44,9 @@
 
 
 
+
+#include "boatdlg.h"
+
 #include <api/boat.h>
 #include <api/flow5events.h>
 #include <api/fuseocc.h>
@@ -60,13 +63,13 @@
 #include <api/sailstl.h>
 #include <api/sailwing.h>
 #include <api/units.h>
-
-
+#include <api/xmlboatreader.h>
+#include <api/xmlfusereader.h>
+#include <api/xmlsailreader.h>
 
 #include <core/saveoptions.h>
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>
-#include <interfaces/editors/boatedit/boatdlg.h>
 #include <interfaces/editors/boatedit/sailcadreaderdlg.h>
 #include <interfaces/editors/boatedit/sailnurbsdlg.h>
 #include <interfaces/editors/boatedit/sailoccdlg.h>
@@ -86,9 +89,6 @@
 #include <interfaces/widgets/customwts/cptableview.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <interfaces/widgets/customwts/xfldelegate.h>
-#include <api/xmlfusereader.h>
-#include <api/xmlboatreader.h>
-#include <api/xmlsailreader.h>
 #include <modules/xobjects.h>
 
 QByteArray BoatDlg::s_WindowGeometry;

@@ -36,6 +36,7 @@
 #include <QFileSystemModel>
 
 
+#include "batchxmldlg.h"
 
 #include <api/fl5core.h>
 #include <api/flow5events.h>
@@ -46,11 +47,11 @@
 #include <api/planetask.h>
 #include <api/planexfl.h>
 #include <api/task3d.h>
+#include <api/units.h>
 #include <api/xmlplanepolarreader.h>
 #include <api/xmlplanepolarwriter.h>
 
 #include <core/displayoptions.h>
-#include <api/units.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/analysisrangetable.h>
@@ -66,7 +67,6 @@
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <interfaces/widgets/customwts/xfldelegate.h>
 #include <modules/xplane/analysis/analysis3dsettings.h>
-#include <modules/xplane/analysis/batchxmldlg.h>
 #include <modules/xplane/xplane.h>
 
 

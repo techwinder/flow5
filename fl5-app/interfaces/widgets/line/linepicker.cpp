@@ -31,9 +31,11 @@
 #include <QDir>
 #include <QFileInfo>
 
+#include "linepicker.h"
+
+
 #include <core/xflcore.h>
 #include <core/displayoptions.h>
-#include <interfaces/widgets/line/linepicker.h>
 #include <interfaces/widgets/color/textclrbtn.h>
 
 

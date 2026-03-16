@@ -34,12 +34,15 @@
 #include <QColorDialog>
 #include <QPushButton>
 
+#include "w3dprefs.h"
+
+
 #include <api/fl5color.h>
 #include <api/sail.h>
 #include <api/units.h>
+
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
-#include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/controls/arcball.h>
 #include <interfaces/opengl/controls/colourlegend.h>
 #include <interfaces/opengl/views/gl3dview.h>
@@ -397,16 +400,16 @@ void W3dPrefs::setupLayout()
                 pColorGridLayout->addWidget(pLabFlow,               16,1, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbFlowLines,         16,2);
 
-                pColorGridLayout->addWidget(pLabVortons,            17,1,1,4, Qt::AlignCenter);
-                pColorGridLayout->addWidget(new QLabel("Colour:"),  18,1, Qt::AlignVCenter | Qt::AlignRight);
-                pColorGridLayout->addWidget(m_pcbVortonColor,      18,2);
-                pColorGridLayout->addWidget(new QLabel("Radius:"),  18,3, Qt::AlignVCenter | Qt::AlignRight);
-                pColorGridLayout->addWidget(m_pfeVortonRadius,      18,4);
-                pColorGridLayout->addWidget(new QLabel("% viewport width"),      18,5, Qt::AlignVCenter | Qt::AlignLeft);
+                pColorGridLayout->addWidget(pLabVortons,                         17,1,1,4, Qt::AlignCenter);
+                pColorGridLayout->addWidget(new QLabel(tr("Colour:")),           18,1, Qt::AlignVCenter | Qt::AlignRight);
+                pColorGridLayout->addWidget(m_pcbVortonColor,                    18,2);
+                pColorGridLayout->addWidget(new QLabel(tr("Radius:")),           18,3, Qt::AlignVCenter | Qt::AlignRight);
+                pColorGridLayout->addWidget(m_pfeVortonRadius,                   18,4);
+                pColorGridLayout->addWidget(new QLabel(tr("% viewport width")),  18,5, Qt::AlignVCenter | Qt::AlignLeft);
 
             }
 
-            QGroupBox *pGroundBox = new QGroupBox("Ground/Water");
+            QGroupBox *pGroundBox = new QGroupBox(tr("Ground/Water"));
             {
                 QVBoxLayout *pBoxLayout = new QVBoxLayout;
                 {
@@ -414,16 +417,16 @@ void W3dPrefs::setupLayout()
                     {
                         QFormLayout *pGroundLayout = new QFormLayout;
                         {
-                            m_pchGround = new QCheckBox("Show ground surface");
+                            m_pchGround = new QCheckBox(tr("Show ground surface"));
                             m_pcbWaterColor   = new ColorBtn;
 
                             pGroundLayout->addRow(m_pchGround);
-                            pGroundLayout->addRow("Ground/Water", m_pcbWaterColor);
+                            pGroundLayout->addRow(tr("Ground/Water"), m_pcbWaterColor);
                         }
                         QGridLayout *pBoxSizeLayout = new QGridLayout;
                         {
-                            QLabel *pLabX = new QLabel("x-length");
-                            QLabel *pLabY = new QLabel("y-width");
+                            QLabel *pLabX = new QLabel(tr("x-length"));
+                            QLabel *pLabY = new QLabel(tr("y-width"));
 
                             m_pLabXUnit = new QLabel(Units::lengthUnitQLabel());
                             m_pLabYUnit = new QLabel(Units::lengthUnitQLabel());
@@ -446,20 +449,20 @@ void W3dPrefs::setupLayout()
                     }
 
                     pBoxLayout->addLayout(pGroundBoxLayout);
-                    QLabel *pInfoLab = new QLabel("Note: This is only a visual help feature. "
-                                                  "The actual ground surface used in the analysis extends to infinity.");
+                    QLabel *pInfoLab = new QLabel(tr("<p>Note: This is only a visual help feature.<br>"
+                                                      "The actual ground surface used in the analysis extends to infinity.</p>"));
                     pBoxLayout->addWidget(pInfoLab);
                 }
                 pGroundBox->setLayout(pBoxLayout);
             }
 
-            QGroupBox *pColourMapBox = new QGroupBox("Colour map");
+            QGroupBox *pColourMapBox = new QGroupBox(tr("Colour map"));
             {
                 QVBoxLayout *pContoursLayout = new QVBoxLayout;
                 {
                     QHBoxLayout *pColourGradLayout = new QHBoxLayout;
                     {
-                        QLabel *pLabGrad = new QLabel("Gradient colours:");
+                        QLabel *pLabGrad = new QLabel(tr("Gradient colours:"));
                         m_ppbGradientBtn = new QPushButton;
                         m_ppbGradientBtn->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
                         connect(m_ppbGradientBtn, SIGNAL(clicked()), SLOT(onColorGradient()));
@@ -473,7 +476,7 @@ void W3dPrefs::setupLayout()
                         m_pieNContourLines = new IntEdit(s_NContourLines);
                         m_plbContourLines = new LineBtn;
 
-                        pClrMapContoursLayout->addWidget(new QLabel("Nbr. of isobars (trilinear only):"));
+                        pClrMapContoursLayout->addWidget(new QLabel(tr("Nbr. of isobars (trilinear only):")));
                         pClrMapContoursLayout->addWidget(m_pieNContourLines);
                         pClrMapContoursLayout->addWidget(m_plbContourLines);
                         pClrMapContoursLayout->addStretch();
@@ -495,9 +498,9 @@ void W3dPrefs::setupLayout()
     {
         QVBoxLayout *pTessLayout = new QVBoxLayout;
         {
-            QLabel *pTessLabel = new QLabel("<p>Increase the number of points to improve the tessellation of the surfaces.<br>"
+            QLabel *pTessLabel = new QLabel(tr("<p>Increase the number of points to improve the tessellation of the surfaces.<br>"
                                             "This may increase the loading times and also slow down the display on low-end graphic cards.<br>"
-                                            "Reload required to take effect.</p>");
+                                            "Reload required to take effect.</p>"));
 
             m_pieChordwiseRes = new IntEdit(37, this);
             m_pieBodyAxialRes = new IntEdit(29, this);
@@ -505,15 +508,15 @@ void W3dPrefs::setupLayout()
             m_pieSailXRes     = new IntEdit(37, this);
             m_pieSailZRes     = new IntEdit(31, this);
 
-            QGroupBox *pRuledTessellationBox = new QGroupBox("Ruled surfaces");
+            QGroupBox *pRuledTessellationBox = new QGroupBox(tr("Ruled surfaces"));
             {
                 QFormLayout *pFormLayout = new QFormLayout;
                 {
-                    pFormLayout->addRow("Wing chordwise direction:", m_pieChordwiseRes);
-                    pFormLayout->addRow("Body axial direction:",     m_pieBodyAxialRes);
-                    pFormLayout->addRow("Body hoop direction:",      m_pieBodyHoopRes);
-                    pFormLayout->addRow("Sail x-direction:",         m_pieSailXRes);
-                    pFormLayout->addRow("Sail z-direction:",         m_pieSailZRes);
+                    pFormLayout->addRow(tr("Wing chordwise direction:"), m_pieChordwiseRes);
+                    pFormLayout->addRow(tr("Body axial direction:"),     m_pieBodyAxialRes);
+                    pFormLayout->addRow(tr("Body hoop direction:"),      m_pieBodyHoopRes);
+                    pFormLayout->addRow(tr("Sail x-direction:"),         m_pieSailXRes);
+                    pFormLayout->addRow(tr("Sail z-direction:"),         m_pieSailZRes);
                 }
                 pRuledTessellationBox->setLayout(pFormLayout);
             }
@@ -523,40 +526,40 @@ void W3dPrefs::setupLayout()
         m_pGroupBox.back()->setLayout(pTessLayout);
     }
 
-    m_pGroupBox.push_back(new QGroupBox("Other"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Other")));
     {
         QVBoxLayout *pOtherLayout = new QVBoxLayout;
         {
             QGridLayout *pGridLayout = new QGridLayout;
             {   
-                m_pchSpinAnimation = new QCheckBox("Enable mouse animations");
+                m_pchSpinAnimation = new QCheckBox(tr("Enable mouse animations"));
                 m_pfeSpinDamping = new FloatEdit;
-                m_pfeSpinDamping->setToolTip("Defines the damping of the animation at each frame update.<br>"
-                                             "Set to 0 for perpetual movement.");
+                m_pfeSpinDamping->setToolTip(tr("<p>Defines the damping of the animation at each frame update.<br>"
+                                             "Set to 0 for perpetual movement.</p>"));
                 QLabel *plabpcDamping = new QLabel("% damping");
                 pGridLayout->addWidget(m_pchSpinAnimation, 1, 1);
                 pGridLayout->addWidget(m_pfeSpinDamping,   1, 2);
                 pGridLayout->addWidget(plabpcDamping,      1, 3);
 
-                m_pchAnimateTransitions = new QCheckBox("Animate view transitions");
+                m_pchAnimateTransitions = new QCheckBox(tr("Animate view transitions"));
                 m_pieAnimationTime = new IntEdit;
-                QString tip = "<p>Defines the duration of animations in ms</p>";
+                QString tip = tr("<p>Defines the duration of animations in ms</p>");
                 m_pieAnimationTime->setToolTip(tip);
                 QLabel *pLabms =new QLabel("ms");
                 pGridLayout->addWidget(m_pchAnimateTransitions, 2, 1);
                 pGridLayout->addWidget(m_pieAnimationTime,      2, 2);
                 pGridLayout->addWidget(pLabms,                  2, 3);
 
-                QLabel *labArcBall = new QLabel("Arcball radius:");
-                QLabel *labPercent = new QLabel("% view width");
+                QLabel *labArcBall = new QLabel(tr("Arcball radius:"));
+                QLabel *labPercent = new QLabel(tr("% view width"));
                 m_pfeArcballRadius = new FloatEdit(100.0,0);
-                m_pfeArcballRadius->setToolTip("<p>The radius of the arcball as a percentage of the view's width</p>");
+                m_pfeArcballRadius->setToolTip(tr("<p>The radius of the arcball as a percentage of the view's width</p>"));
 
                 pGridLayout->addWidget(labArcBall,         3, 1, Qt::AlignVCenter |Qt::AlignRight);
                 pGridLayout->addWidget(m_pfeArcballRadius, 3, 2);
                 pGridLayout->addWidget(labPercent,         3, 3);
 
-                QLabel *pLabZAngle    = new QLabel("Auto z-rotation incremental angle:");
+                QLabel *pLabZAngle    = new QLabel(tr("Auto z-rotation incremental angle:"));
                 m_pfeZAnimAngle = new FloatEdit(1);
                 QLabel *plabDeg = new QLabel("<p>&deg;</p>");
                 pGridLayout->addWidget(pLabZAngle,      4, 1, Qt::AlignVCenter |Qt::AlignRight);
@@ -564,11 +567,11 @@ void W3dPrefs::setupLayout()
                 pGridLayout->addWidget(plabDeg,         4, 3);
                 pGridLayout->setColumnStretch(          5, 1);
             }
-            m_pchAutoAdjustScale = new QCheckBox("Auto adjust 3d scale");
-            m_pchAutoAdjustScale->setToolTip("<p>Automatically adjust the 3D scale to fit the plane in the display when switching between planes</p>");
-            m_pcbEnableClipPlane = new QCheckBox("Enable clip plane");
-            m_pchShowRefLength   = new QCheckBox("Display reference length");
-            m_pchSaveViewPoints  = new QCheckBox("Save viewpoints when exiting 3d views");
+            m_pchAutoAdjustScale = new QCheckBox(tr("Auto adjust 3d scale"));
+            m_pchAutoAdjustScale->setToolTip(tr("<p>Automatically adjust the 3d scale to fit the plane in the display when switching between planes</p>"));
+            m_pcbEnableClipPlane = new QCheckBox(tr("Enable clip plane"));
+            m_pchShowRefLength   = new QCheckBox(tr("Display reference length"));
+            m_pchSaveViewPoints  = new QCheckBox(tr("Save viewpoints when exiting 3d views"));
             pOtherLayout->addLayout(pGridLayout);
 
             pOtherLayout->addWidget(m_pchAutoAdjustScale);
@@ -760,7 +763,7 @@ void W3dPrefs::onVLMMesh()
 
 void W3dPrefs::onMasses()
 {
-    QColor clr = QColorDialog::getColor(s_MassColor, this, "Mass colour", QColorDialog::ShowAlphaChannel);
+    QColor clr = QColorDialog::getColor(s_MassColor, this, tr("Mass colour"), QColorDialog::ShowAlphaChannel);
     if(clr.isValid())
     {
         s_MassColor = clr;
@@ -772,7 +775,7 @@ void W3dPrefs::onMasses()
 
 void W3dPrefs::onWaterColor()
 {
-    QColor clr = QColorDialog::getColor(s_WaterColor, this, "Water colour", QColorDialog::ShowAlphaChannel);
+    QColor clr = QColorDialog::getColor(s_WaterColor, this, tr("Water colour"), QColorDialog::ShowAlphaChannel);
     if(clr.isValid())
     {
         s_WaterColor = clr;
@@ -805,7 +808,7 @@ void W3dPrefs::onBackPanelClr()
 
 void W3dPrefs::onFusePanelClr()
 {
-    QColor clr = QColorDialog::getColor(s_FusePanelColor, this, "Fuse colour", QColorDialog::ShowAlphaChannel);
+    QColor clr = QColorDialog::getColor(s_FusePanelColor, this, tr("Fuse colour"), QColorDialog::ShowAlphaChannel);
     if(clr.isValid())
     {
         s_FusePanelColor = clr;
@@ -817,7 +820,7 @@ void W3dPrefs::onFusePanelClr()
 
 void W3dPrefs::onWingPanelClr()
 {
-    QColor clr = QColorDialog::getColor(s_WingPanelColor, this, "Wing colour", QColorDialog::ShowAlphaChannel);
+    QColor clr = QColorDialog::getColor(s_WingPanelColor, this, tr("Wing colour"), QColorDialog::ShowAlphaChannel);
     if(clr.isValid())
     {
         s_WingPanelColor = clr;
@@ -829,7 +832,7 @@ void W3dPrefs::onWingPanelClr()
 
 void W3dPrefs::onFlapPanelClr()
 {
-    QColor clr = QColorDialog::getColor(s_FlapPanelColor, this, "Flap colour", QColorDialog::ShowAlphaChannel);
+    QColor clr = QColorDialog::getColor(s_FlapPanelColor, this, tr("Flap colour"), QColorDialog::ShowAlphaChannel);
     if(clr.isValid())
     {
         s_FlapPanelColor = clr;
@@ -841,7 +844,7 @@ void W3dPrefs::onFlapPanelClr()
 
 void W3dPrefs::onWakePanelClr()
 {   
-    QColor clr = QColorDialog::getColor(s_WakePanelColor, this, "Wake colour", QColorDialog::ShowAlphaChannel);
+    QColor clr = QColorDialog::getColor(s_WakePanelColor, this, tr("Wake colour"), QColorDialog::ShowAlphaChannel);
     if(clr.isValid())
     {
         s_WakePanelColor = clr;
@@ -853,7 +856,7 @@ void W3dPrefs::onWakePanelClr()
 
 void W3dPrefs::onVortonClr()
 {
-    QColor clr = QColorDialog::getColor(s_VortonColor, this, "Vorton colour", QColorDialog::ShowAlphaChannel);
+    QColor clr = QColorDialog::getColor(s_VortonColor, this, tr("Vorton colour"), QColorDialog::ShowAlphaChannel);
     if(clr.isValid())
     {
         s_VortonColor = clr;

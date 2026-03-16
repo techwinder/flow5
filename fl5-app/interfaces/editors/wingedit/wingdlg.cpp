@@ -36,33 +36,35 @@
 #include <QMessageBox>
 #include <QColorDialog>
 
-#include <interfaces/opengl/controls/gl3dgeomcontrols.h>
-#include <interfaces/opengl/fl5views/gl3dwingview.h>
-#include <core/saveoptions.h>
+#include "wingdlg.h"
+
+#include <api/foil.h>
+#include <api/objects2d.h>
+#include <api/objects3d.h>
+#include <api/occ_globals.h>
+#include <api/planexfl.h>
+#include <api/polar.h>
+#include <api/surface.h>
 #include <api/units.h>
+#include <api/wingxfl.h>
+#include <api/xmlwingwriter.h>
+
+#include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/inertia/partinertiadlg.h>
 #include <interfaces/editors/planeedit/planexfldlg.h>
 #include <interfaces/editors/translatedlg.h>
-#include <interfaces/editors/wingedit/wingdlg.h>
 #include <interfaces/editors/wingedit/wingscaledlg.h>
 #include <interfaces/editors/wingedit/wingsectiondelegate.h>
 #include <interfaces/exchange/stlwriterdlg.h>
 #include <interfaces/exchange/wingexportdlg.h>
-#include <api/foil.h>
-#include <api/objects2d.h>
-#include <api/polar.h>
-#include <api/objects3d.h>
-#include <api/planexfl.h>
-#include <api/surface.h>
-#include <api/wingxfl.h>
-#include <api/occ_globals.h>
-#include <api/xmlwingwriter.h>
+#include <interfaces/opengl/controls/gl3dgeomcontrols.h>
+#include <interfaces/opengl/fl5views/gl3dwingview.h>
 #include <interfaces/widgets/color/colorbtn.h>
 #include <interfaces/widgets/customdlg/intvaluedlg.h>
-
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
+
 
 QByteArray WingDlg::s_Geometry;
 

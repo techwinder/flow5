@@ -30,7 +30,7 @@
 #include <QGroupBox>
 #include <QHeaderView>
 
-#include <interfaces/graphs/controls/graphdlg.h>
+#include "graphdlg.h"
 
 #include <interfaces/graphs/graph/graph.h>
 #include <interfaces/widgets/customwts/floatedit.h>
@@ -1067,23 +1067,23 @@ void GraphDlg::setupLayout()
     {
         QGridLayout *pXGridStyleLayout = new QGridLayout;
         {
-            QLabel *pXGridLabel = new QLabel("X");
-            QLabel *pAxisStyleLabel = new QLabel("Axis style");
+            QLabel *plabXGrid = new QLabel("X");
+            QLabel *plabAxisStyle = new QLabel(tr("Axis style"));
 
             m_plbXAxisStyle = new LineBtn(this);
 
-            m_pchXMajGridShow = new QCheckBox("Major grid");
-            m_pchXMinGridShow = new QCheckBox("Minor grid");
+            m_pchXMajGridShow = new QCheckBox(tr("Major grid"));
+            m_pchXMinGridShow = new QCheckBox(tr("Minor grid"));
 
             m_plbXMajGridStyle = new LineBtn(this);
             m_plbXMinGridStyle = new LineBtn(this);
 
 
-            pXGridStyleLayout->addWidget(pAxisStyleLabel,      1, 0, Qt::AlignHCenter | Qt::AlignRight);
+            pXGridStyleLayout->addWidget(plabAxisStyle,      1, 0, Qt::AlignHCenter | Qt::AlignRight);
             pXGridStyleLayout->addWidget(m_pchXMajGridShow,  2, 0, Qt::AlignHCenter | Qt::AlignRight);
             pXGridStyleLayout->addWidget(m_pchXMinGridShow,  3, 0, Qt::AlignHCenter | Qt::AlignRight);
 
-            pXGridStyleLayout->addWidget(pXGridLabel,  0, 1, Qt::AlignHCenter);
+            pXGridStyleLayout->addWidget(plabXGrid,           0, 1, Qt::AlignHCenter);
 
 
             pXGridStyleLayout->addWidget(m_plbXAxisStyle,     1, 1);
@@ -1099,27 +1099,27 @@ void GraphDlg::setupLayout()
             {
                 QString name = iy==0 ? "Y left" : "Y right";
 
-                QLabel *pXGridLabel = new QLabel(name);
-                QLabel *pAxisStyleLabel = new QLabel("Axis style");
+                QLabel *plabXGrid      = new QLabel(name);
+                QLabel *plabAxisStyle  = new QLabel("Axis style");
 
-                m_plbYAxisStyle[iy] = new LineBtn(this);
+                m_plbYAxisStyle[iy]    = new LineBtn(this);
 
                 m_plabYMajGridShow[iy] = new QCheckBox("Major grid");
-                m_pchMinGridShow[iy] = new QCheckBox("Minor grid");
+                m_pchMinGridShow[iy]   = new QCheckBox("Minor grid");
 
                 m_plbYMajGridStyle[iy] = new LineBtn(this);
                 m_plbYMinGridStyle[iy] = new LineBtn(this);
 
 
-                pYGridStyleLayout->addWidget(pAxisStyleLabel,        1, 0, Qt::AlignHCenter | Qt::AlignRight);
+                pYGridStyleLayout->addWidget(plabAxisStyle,          1, 0, Qt::AlignHCenter | Qt::AlignRight);
                 pYGridStyleLayout->addWidget(m_plabYMajGridShow[iy], 2, 0, Qt::AlignHCenter | Qt::AlignRight);
                 pYGridStyleLayout->addWidget(m_pchMinGridShow[iy],   3, 0, Qt::AlignHCenter | Qt::AlignRight);
 
-                pYGridStyleLayout->addWidget(pXGridLabel,  0, 1, Qt::AlignHCenter);
+                pYGridStyleLayout->addWidget(plabXGrid,              0, 1, Qt::AlignHCenter);
 
-                pYGridStyleLayout->addWidget(m_plbYAxisStyle[iy],     1, 1);
-                pYGridStyleLayout->addWidget(m_plbYMajGridStyle[iy],  2, 1);
-                pYGridStyleLayout->addWidget(m_plbYMinGridStyle[iy],  3, 1);
+                pYGridStyleLayout->addWidget(m_plbYAxisStyle[iy],    1, 1);
+                pYGridStyleLayout->addWidget(m_plbYMajGridStyle[iy], 2, 1);
+                pYGridStyleLayout->addWidget(m_plbYMinGridStyle[iy], 3, 1);
                 pYGridStyleLayout->setRowStretch(4,1);
 
             }
@@ -1179,14 +1179,14 @@ void GraphDlg::setupLayout()
 
         m_pcpCurveTable->setModel(m_pCurveModel);
 
-        XflDelegate *m_pEditActionDelegate = new XflDelegate(this);
-        m_pEditActionDelegate->setActionColumn(2);
-        m_pEditActionDelegate->setDigits({-1,-1,-1});
+        XflDelegate *pEditActionDelegate = new XflDelegate(this);
+        pEditActionDelegate->setActionColumn(2);
+        pEditActionDelegate->setDigits({-1,-1,-1});
 
         QVector<XflDelegate::enumItemType> ItemType = {XflDelegate::STRING, XflDelegate::LINE, XflDelegate::ACTION};
-        m_pEditActionDelegate->setItemTypes(ItemType);
+        pEditActionDelegate->setItemTypes(ItemType);
 
-        m_pcpCurveTable->setItemDelegate(m_pEditActionDelegate);
+        m_pcpCurveTable->setItemDelegate(pEditActionDelegate);
         pCurveLayout->addWidget(m_pcpCurveTable);
     }
     pCurvePage->setLayout(pCurveLayout);

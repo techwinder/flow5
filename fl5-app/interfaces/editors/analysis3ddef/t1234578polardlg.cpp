@@ -37,6 +37,10 @@
 #include <QMessageBox>
 #include <QMenu>
 
+
+#include "t1234578polardlg.h"
+
+
 #include <api/objects3d.h>
 #include <api/planexfl.h>
 #include <api/units.h>
@@ -47,7 +51,6 @@
 #include <core/xflcore.h>
 #include <interfaces/editors/analysis3ddef/ctrltablemodel.h>
 #include <interfaces/editors/analysis3ddef/extradragwt.h>
-#include <interfaces/editors/analysis3ddef/t1234578polardlg.h>
 #include <interfaces/widgets/customwts/actionitemmodel.h>
 #include <interfaces/widgets/customwts/cptableview.h>
 #include <interfaces/widgets/customwts/ctrltabledelegate.h>
@@ -361,11 +364,11 @@ void T1234578PolarDlg::setupLayout()
         {
             QVBoxLayout *pAnalysisTypeLayout = new QVBoxLayout;
             {
-                m_prbType1 = new QRadioButton(tr("Type 1 (fixed V") + INFch + tr(")"));
+                m_prbType1 = new QRadioButton(tr("Type 1 (fixed velocity)"));
                 m_prbType2 = new QRadioButton(tr("Type 2 (fixed lift)"));
                 m_prbType3 = new QRadioButton(tr("Type 3 (speed polar)"));
-                m_prbType4 = new QRadioButton(tr("Type 4 (fixed ") + ALPHAch + tr(")"));
-                m_prbType5 = new QRadioButton(tr("Type 5 (") + BETAch + tr("  range, fixed ") + ALPHAch + tr(" and V") + INFch + tr(")"));
+                m_prbType4 = new QRadioButton(tr("Type 4 (fixed angle of attack)"));
+                m_prbType5 = new QRadioButton(tr("Type 5 (sideslip analysis)"));
                 m_prbType7 = new QRadioButton(tr("Type 7 (stability analysis)"));
                 m_prbType8 = new QRadioButton(tr("Type 8"));
 

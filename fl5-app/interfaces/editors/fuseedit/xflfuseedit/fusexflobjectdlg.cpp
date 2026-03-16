@@ -33,16 +33,14 @@
 #include <QShowEvent>
 
 
-#include <interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.h>
-
-
+#include "fusexflobjectdlg.h"
 
 #include <api/fusexfl.h>
 #include <api/planexfl.h>
+#include <api/units.h>
 #include <api/xmlfusereader.h>
 #include <api/xmlfusewriter.h>
 #include <core/enums_core.h>
-#include <api/units.h>
 #include <core/saveoptions.h>
 #include <interfaces/editors/editobjectdelegate.h>
 #include <interfaces/editors/fuseedit/bodyscaledlg.h>

@@ -27,7 +27,8 @@
 #include <QFontDatabase>
 #include <QGroupBox>
 
-#include <options/unitswt.h>
+#include "unitswt.h"
+
 #include <api/units.h>
 
 

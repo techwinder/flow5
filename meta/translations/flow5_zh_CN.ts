@@ -2345,131 +2345,131 @@ Uncheck for increased analysis speed.</source>
 <context>
     <name>FuseXflDefDlg</name>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="135"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="140"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="136"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="141"/>
         <source>NPanels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="136"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="141"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="137"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="142"/>
         <source>Actions</source>
         <translation type="unfinished">操作</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="300"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="407"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="301"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="408"/>
         <source>Section</source>
         <translation type="unfinished">截面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="302"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="409"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="303"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="410"/>
         <source>Insert before</source>
         <translation type="unfinished">在前插入</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="306"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="413"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="307"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="414"/>
         <source>Insert after</source>
         <translation type="unfinished">在后插入</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="310"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="417"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="311"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="418"/>
         <source>Delete</source>
         <translation type="unfinished">删除</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="597"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="598"/>
         <source>&lt;p&gt;The degree must be less than the number of frames&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="598"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="624"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="599"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="625"/>
         <source>Warning</source>
         <translation type="unfinished">警告</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="623"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="624"/>
         <source>&lt;p&gt;The degree must be less than the number of side lines&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="824"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="825"/>
         <source>UV parameters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="829"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="875"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="830"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="876"/>
         <source>Hoop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="830"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="831"/>
         <source>Degree</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="849"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="850"/>
         <source>NURBS fit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="853"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="854"/>
         <source>Fit tolerance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="868"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="876"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="869"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="877"/>
         <source>Quad panels</source>
         <translation type="unfinished">四边形面板数</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="889"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="890"/>
         <source>Uniform</source>
         <translation type="unfinished">均匀</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="891"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="892"/>
         <source>End points</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="926"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="927"/>
         <source>Frame positions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="938"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="939"/>
         <source>Active frame points</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="951"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="952"/>
         <source>Meta</source>
         <translation type="unfinished">元数据</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="952"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="953"/>
         <source>NURBS parameters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="953"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="954"/>
         <source>Tables</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="958"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="959"/>
         <source>Undo</source>
         <translation type="unfinished">撤销</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="959"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="960"/>
         <source>Redo</source>
         <translation type="unfinished">重做</translation>
     </message>
@@ -2490,100 +2490,100 @@ Uncheck for increased analysis speed.</source>
 <context>
     <name>FuseXflObjectDlg</name>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="62"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="60"/>
         <source>Body object explorer</source>
         <translation>机身对象浏览器</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="71"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="69"/>
         <source>Insert before</source>
         <translation>在前插入</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="72"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="70"/>
         <source>Insert after</source>
         <translation>在后插入</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="73"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="71"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="75"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="73"/>
         <source>Section</source>
         <translation>截面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="142"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="174"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="140"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="172"/>
         <source>Insert point mass before</source>
         <translation>在前插入点质量</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="143"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="175"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="141"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="173"/>
         <source>Insert point mass after</source>
         <translation>在后插入点质量</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="144"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="176"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="142"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="174"/>
         <source>Delete point mass</source>
         <translation>删除点质量</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="161"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="159"/>
         <source>Insert point before</source>
         <translation>在前插入点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="162"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="160"/>
         <source>Insert point after</source>
         <translation>在后插入点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="163"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="161"/>
         <source>Delete point</source>
         <translation>删除点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="167"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="165"/>
         <source>Insert frame before</source>
         <translation>在前插入框架</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="168"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="166"/>
         <source>Insert frame after</source>
         <translation>在后插入框架</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="169"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="167"/>
         <source>Delete frame</source>
         <translation>删除框架</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="187"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="185"/>
         <source>Object</source>
         <translation>对象</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="187"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="185"/>
         <source>Field</source>
         <translation>字段</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="187"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="185"/>
         <source>Value</source>
         <translation>值</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="187"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="185"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="202"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="200"/>
         <source>Objects</source>
         <translation>对象</translation>
     </message>
@@ -2599,6 +2599,24 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/interfaces/mesh/gmesherwt.cpp" line="238"/>
         <source>The min. element size must be at least </source>
         <translation>最小单元尺寸必须至少为 </translation>
+    </message>
+</context>
+<context>
+    <name>GraphDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphdlg.cpp" line="1071"/>
+        <source>Axis style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphdlg.cpp" line="1075"/>
+        <source>Major grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphdlg.cpp" line="1076"/>
+        <source>Minor grid</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2880,44 +2898,62 @@ Uncheck for increased analysis speed.</source>
 <context>
     <name>GraphWt</name>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="72"/>
+        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="73"/>
         <source>Reset scales	R</source>
         <translation>重置比例	R</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="73"/>
+        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="74"/>
         <source>Show legend</source>
         <translation>显示图例</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="75"/>
+        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="76"/>
         <source>Settings	G</source>
         <translation>设置	G</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="76"/>
+        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="77"/>
         <source>to clipboard</source>
         <translation>复制到剪贴板</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="77"/>
+        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="78"/>
         <source>to text file</source>
         <translation>导出为文本文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="78"/>
+        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="79"/>
         <source>to SVG</source>
         <translation>导出为 SVG</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="79"/>
+        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="80"/>
         <source>Close window</source>
         <translation>关闭窗口</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="300"/>
+        <location filename="../../fl5-app/interfaces/graphs/containers/graphwt.cpp" line="301"/>
         <source>Export</source>
         <translation>导出</translation>
+    </message>
+</context>
+<context>
+    <name>GridControl</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customwts/gridcontrol.cpp" line="97"/>
+        <source>Axes</source>
+        <translation type="unfinished">轴</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customwts/gridcontrol.cpp" line="98"/>
+        <source>Major grid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customwts/gridcontrol.cpp" line="99"/>
+        <source>Minor grid</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3073,7 +3109,7 @@ Uncheck for increased analysis speed.</source>
 <context>
     <name>LinePicker</name>
     <message>
-        <location filename="../../fl5-app/interfaces/widgets/line/linepicker.cpp" line="70"/>
+        <location filename="../../fl5-app/interfaces/widgets/line/linepicker.cpp" line="72"/>
         <source>Other</source>
         <translation>其他</translation>
     </message>
@@ -3117,538 +3153,538 @@ _____________已发出取消请求_____________
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="257"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="259"/>
         <source>flow5 requires OpenGL 3.3 or greater.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="258"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="260"/>
         <source>Your system provides by default OpenGL %1.%2</source>
         <translation>您的系统默认提供 OpenGL %1.%2</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="261"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="263"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="313"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="315"/>
         <source>Directories:</source>
         <translation>目录：</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="314"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="316"/>
         <source>   Last used :       </source>
         <translation>   上次使用：       </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="315"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="317"/>
         <source>   Foil .dat files:  </source>
         <translation>   翼型 .dat 文件：  </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="316"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="318"/>
         <source>   Polar .plr files: </source>
         <translation>   极曲线 .plr 文件： </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="317"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="319"/>
         <source>   Plane .xml files: </source>
         <translation>   飞机 .xml 文件： </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="318"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="320"/>
         <source>   Polar .xml files: </source>
         <translation>   极曲线 .xml 文件： </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="319"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="321"/>
         <source>   CAD files:        </source>
         <translation>   CAD 文件：        </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="320"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="322"/>
         <source>   STL files:        </source>
         <translation>   STL 文件：        </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="321"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="323"/>
         <source>   Temporary files:  </source>
         <translation>   临时文件：  </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="322"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="324"/>
         <source>   File exports:     </source>
         <translation>   文件导出：     </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="558"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="565"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="775"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="560"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="567"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="777"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="558"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="560"/>
         <source>Please wait for the analysis to finish before closing</source>
         <translation>请等待分析完成后再关闭</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="565"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="567"/>
         <source>Save the project before closing?</source>
         <translation>关闭前保存项目吗？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="642"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="644"/>
         <source>New project</source>
         <translation>新建项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="644"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="646"/>
         <source>Save and close the current project, create a new project</source>
         <translation>保存并关闭当前项目，创建一个新项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="647"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="649"/>
         <source>Close the project</source>
         <translation>关闭项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="648"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="650"/>
         <source>Save and close the current project</source>
         <translation>保存并关闭当前项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="651"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="653"/>
         <source>Open a project</source>
         <translation>打开项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="653"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="655"/>
         <source>Open an existing project file</source>
         <translation>打开现有的项目文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="656"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="658"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="658"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="660"/>
         <source>Save the project to disk</source>
         <translation>将项目保存到磁盘</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="661"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="663"/>
         <source>Load foil(s)</source>
         <translation>加载翼型</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="663"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="665"/>
         <source>Load foil(s) from .dat file</source>
         <translation>从 .dat 文件加载翼型</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="666"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="668"/>
         <source>Load polar file(s)</source>
         <translation>加载极曲线文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="667"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="669"/>
         <source>Load a .plr file</source>
         <translation>加载 .plr 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="670"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="672"/>
         <source>Insert project</source>
         <translation>插入项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="671"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="673"/>
         <source>&lt;p&gt;Insert an existing project in the current project&lt;/p&gt;</source>
         <translation>&lt;p&gt;在当前项目中插入现有项目&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="675"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="677"/>
         <source>Close all</source>
         <translation>全部关闭</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="677"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="679"/>
         <source>&lt;p&gt;Close all modules, but do not unload the active project&lt;/p&gt;</source>
         <translation>&lt;p&gt;关闭所有模块，但不卸载活动项目&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="680"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="682"/>
         <source>Foil design</source>
         <translation>翼型设计</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="682"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="684"/>
         <source>&lt;p&gt;Open the Foil direct analysis module&lt;/p&gt;</source>
         <translation>&lt;p&gt;打开翼型直接分析模块&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="685"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="687"/>
         <source>Plane design</source>
         <translation>飞机设计</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="687"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="689"/>
         <source>&lt;p&gt;Open the Wing/plane design and analysis module&lt;/p&gt;</source>
         <translation>&lt;p&gt;打开机翼/飞机设计与分析模块&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="690"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="692"/>
         <source>Sail design</source>
         <translation>帆船设计</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="692"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="694"/>
         <source>Open the sail design and analysis module</source>
         <translation>打开帆船设计与分析模块</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="695"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="697"/>
         <source>Load last project</source>
         <translation>加载上一个项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="697"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="699"/>
         <source>Loads the last saved project</source>
         <translation>加载上一次保存的项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="700"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="702"/>
         <source>Save project as</source>
         <translation>项目另存为</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="702"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="704"/>
         <source>Save the current project under a new name</source>
         <translation>将当前项目另存为新名称</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="705"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="707"/>
         <source>Preferences</source>
         <translation>首选项</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="706"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="708"/>
         <source>Set default preferences for this application</source>
         <translation>设置此应用程序的默认首选项</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="709"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="711"/>
         <source>Restore toolbars</source>
         <translation>恢复工具栏</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="710"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="712"/>
         <source>Restores the toolbars to their original state</source>
         <translation>将工具栏恢复到原始状态</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="713"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="715"/>
         <source>Save view to image file</source>
         <translation>将视图保存为图像文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="715"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="717"/>
         <source>Saves the current view to a file on disk</source>
         <translation>将当前视图保存到磁盘上的文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="718"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="720"/>
         <source>Execute script</source>
         <translation>执行脚本</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="720"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="722"/>
         <source>Executes a set of foil and plane analysis defined in an xml file</source>
         <translation>执行 xml 文件中定义的一组翼型和飞机分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="723"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="725"/>
         <source>Restore default settings</source>
         <translation>恢复默认设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="724"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="726"/>
         <source>will revert to default settings at the next session</source>
         <translation>将在下次会话时恢复默认设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="735"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="737"/>
         <source>to file</source>
         <translation>导出到文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="736"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="738"/>
         <source>Export the current graph data to a text file</source>
         <translation>将当前图表数据导出为文本文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="739"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="741"/>
         <source>to SVG file</source>
         <translation>导出到 SVG 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="742"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="744"/>
         <source>to clipboard</source>
         <translation>复制到剪贴板</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="743"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="745"/>
         <source>Copies the curve data to the clipboard, for pasting in an external editor or a spreadsheet</source>
         <translation>将曲线数据复制到剪贴板，以便粘贴到外部编辑器或电子表格中</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="746"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="748"/>
         <source>Reset scales 	R</source>
         <translation>重置比例 	R</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="747"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="749"/>
         <source>Restores the graph&apos;s x and y scales</source>
         <translation>恢复图表的 x 和 y 比例</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="750"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="752"/>
         <source>Reset splitter sizes</source>
         <translation>重置分割器大小</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="751"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="753"/>
         <source>Resets the split splizes to their default values</source>
         <translation>将分割器大小恢复为默认值</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="755"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="757"/>
         <source>Show legend</source>
         <translation>显示图例</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="757"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="759"/>
         <source>Toggle the in-graph legend display</source>
         <translation>切换图形内图例显示</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="760"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="762"/>
         <source>Settings	G</source>
         <translation>设置	G</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="763"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="765"/>
         <source>Open in new window</source>
         <translation>在新窗口中打开</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="767"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="769"/>
         <source>Fast graph</source>
         <translation>快速绘图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="771"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="773"/>
         <source>Show log window</source>
         <translation>显示日志窗口</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="777"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="779"/>
         <source>Exit the application</source>
         <translation>退出应用程序</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="780"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="782"/>
         <source>OpenGL settings</source>
         <translation>OpenGL 设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="784"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="786"/>
         <source>View last log file</source>
         <translation>查看上次日志文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="788"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="790"/>
         <source>View trace file</source>
         <translation>查看跟踪文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="805"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="807"/>
         <source>3d Cp graph</source>
         <translation>3D Cp 图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="853"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="855"/>
         <source>Boat analysis</source>
         <translation>船体分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="858"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="860"/>
         <source>Sail 3d controls</source>
         <translation>帆 3D 控制</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="863"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="865"/>
         <source>Boat object explorer</source>
         <translation>船体对象浏览器</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="903"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="905"/>
         <source>Analysis 2d</source>
         <translation>2D 分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="912"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="914"/>
         <source>Operating point</source>
         <translation>操作点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="921"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="923"/>
         <source>Foil object explorer</source>
         <translation>翼型对象浏览器</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="931"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="933"/>
         <source>Foil object table</source>
         <translation>翼型对象表</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1000"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1002"/>
         <source>Analysis 3d</source>
         <translation>3D 分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1005"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1007"/>
         <source>Plane Explorer</source>
         <translation>飞机浏览器</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1010"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1012"/>
         <source>Plane 3d view</source>
         <translation>飞机 3D 视图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1015"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1017"/>
         <source>Graphs</source>
         <translation>图表</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1019"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1021"/>
         <source>Stability time controls</source>
         <translation>稳定性时间控制</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1030"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1032"/>
         <source>&amp;File</source>
         <translation>文件(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1059"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1061"/>
         <source>&amp;Module</source>
         <translation>模块(&amp;M)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1072"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1074"/>
         <source>&amp;Options</source>
         <translation>选项(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1084"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1086"/>
         <source>&amp;?</source>
         <translation>帮助(&amp;?)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1086"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1088"/>
         <source>About flow5</source>
         <translation>关于 flow5</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1087"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1089"/>
         <source>More information about flow5</source>
         <translation>关于 flow5 的更多信息</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1090"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1092"/>
         <source>About Qt</source>
         <translation>关于 Qt</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1093"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1095"/>
         <source>Credits</source>
         <translation>鸣谢</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1096"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1098"/>
         <source>Online doc.</source>
         <translation>在线文档</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1099"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1101"/>
         <source>Release notes</source>
         <translation>发行说明</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1129"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1131"/>
         <source>Ready</source>
         <translation>就绪</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1140"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1142"/>
         <source>MainToolBar</source>
         <translation>主工具栏</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1163"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1165"/>
         <source>XSailToolBar</source>
         <translation>XSail 工具栏</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1174"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1176"/>
         <source>XDirect</source>
         <translation>XDirect</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1185"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1187"/>
         <source>Foil</source>
         <translation>翼型</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1207"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1209"/>
         <source>PlaneToolBar</source>
         <translation>飞机工具栏</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1222"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1224"/>
         <source>Deleting current project
 </source>
         <translation>正在删除当前项目
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1227"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1229"/>
         <source>   Deleting 2d objects
 </source>
         <translation>   正在删除 2D 对象
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1771"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1773"/>
         <source>Question</source>
         <translation>问题</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1771"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1773"/>
         <source>Save the current project?</source>
         <translation>保存当前项目？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1783"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1785"/>
         <source>The project </source>
         <translation>项目 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1783"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1785"/>
         <source> has been saved
 
 </source>
@@ -3657,18 +3693,18 @@ _____________已发出取消请求_____________
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1829"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1833"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1831"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1835"/>
         <source>Default Settings</source>
         <translation>默认设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1829"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1831"/>
         <source>Are you sure you want to reset the default settings?</source>
         <translation>您确定要重置默认设置吗？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1833"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1835"/>
         <source>The settings will be reset at the next session</source>
         <translation>设置将在下次会话时重置</translation>
     </message>
@@ -3925,6 +3961,41 @@ _____________已发出取消请求_____________
 </context>
 <context>
     <name>OptimPlaneDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="184"/>
+        <source>Define analysis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="185"/>
+        <source>Run calculation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="203"/>
+        <source>Active</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="204"/>
+        <source>Objective</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="205"/>
+        <source>Type</source>
+        <translation type="unfinished">类型</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="206"/>
+        <source>Target</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="207"/>
+        <source>Max. error</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="230"/>
         <source>Plane</source>
@@ -6068,380 +6139,380 @@ when using the mouse wheel.</source>
 <context>
     <name>SailDlg</name>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="114"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="113"/>
         <source>Sail Edition</source>
         <translation>帆船版</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="193"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="192"/>
         <source>Description</source>
         <translation>说明</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="201"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="200"/>
         <source>Enter the sail&apos;s name</source>
         <translation>输入帆的名称</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="212"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="211"/>
         <source>Use this field to enter a short text to describe the sail</source>
         <translation>使用此字段输入简短文本以描述帆</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="219"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="218"/>
         <source>Sail surface</source>
         <translation>帆面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="227"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="226"/>
         <source>Sail is a</source>
         <translation>帆是</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="228"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="227"/>
         <source>surface</source>
         <translation>曲面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="229"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="228"/>
         <source>thin</source>
         <translation>薄</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="230"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="229"/>
         <source>thick</source>
         <translation>厚</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="242"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="241"/>
         <source>Reference area:</source>
         <translation>参考面积:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="244"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="243"/>
         <source>Reference chord:</source>
         <translation>参考弦长:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="248"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="247"/>
         <source>Set the reference dimension used to calculate lift and drag coefficents</source>
         <translation>设置用于计算升阻系数的参考尺寸</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="279"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="278"/>
         <source>Mesh type</source>
         <translation>网格类型</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="283"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="282"/>
         <source>Mesh type:</source>
         <translation>网格类型:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="284"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="283"/>
         <source>Ruled</source>
         <translation>直纹</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="285"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="284"/>
         <source>Free</source>
         <translation>自由</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="300"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="299"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="301"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="300"/>
         <source>z</source>
         <translation>z</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="302"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="301"/>
         <source>Number of panels=</source>
         <translation>面板数量=</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="303"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="302"/>
         <source>Distribution=</source>
         <translation>分布=</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="306"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
         <source>UNIFORM</source>
         <translation>均匀</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="306"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
         <source>COSINE</source>
         <translation>余弦</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="306"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
         <source>SINE</source>
         <translation>正弦</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="306"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
         <source>INV_SINE</source>
         <translation>反弦</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="306"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
         <source>TANH</source>
         <translation>双曲正切</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="306"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
         <source>EXP</source>
         <translation>EXP</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="306"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
         <source>INV_EXP</source>
         <translation>反指数</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="343"/>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="461"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="342"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="460"/>
         <source>Connect panels</source>
         <translation>连接面板</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="344"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="343"/>
         <source>Max T.E. angle for guesses:</source>
         <translation>猜测的最大后缘角度:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="346"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="345"/>
         <source>&lt;p&gt;&amp;deg;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&amp;deg;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="348"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="347"/>
         <source>Automatic detection:</source>
         <translation>自动检测:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="349"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="348"/>
         <source>Guess T.E.</source>
         <translation>猜测后缘</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="351"/>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="466"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="350"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="465"/>
         <source>Clear T.E. panels</source>
         <translation>清除后缘面板</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="353"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="352"/>
         <source>Manual selection:</source>
         <translation>手动选择:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="354"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="353"/>
         <source>Mid. panels</source>
         <translation>中间面板</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="356"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="355"/>
         <source>Top panels</source>
         <translation>顶部面板</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="358"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="357"/>
         <source>Guess opposite</source>
         <translation>猜测对面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="360"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="359"/>
         <source>Verification</source>
         <translation>验证</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="361"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="360"/>
         <source>Check T.E.</source>
         <translation>检查后缘</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="392"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="391"/>
         <source>Undo</source>
         <translation>撤销</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="394"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="393"/>
         <source>Cancels the last modifiction made to the splines</source>
         <translation>取消上次对样条的修改</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="396"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="395"/>
         <source>Redo</source>
         <translation>重做</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="398"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="397"/>
         <source>Restores the last cancelled modifiction made to the splines</source>
         <translation>恢复上次取消的样条修改</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="400"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="399"/>
         <source>Fill selected</source>
         <translation>填充选定</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="441"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="440"/>
         <source>Light settings	(Alt+L)</source>
         <translation>灯光设置	(Alt+L)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="443"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="442"/>
         <source>Load</source>
         <translation>加载</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="444"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="443"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="445"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="444"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="455"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="454"/>
         <source>Mesh actions</source>
         <translation>网格操作</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="457"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="456"/>
         <source>Mesh</source>
         <translation>网格</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="459"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="458"/>
         <source>Check free edges</source>
         <translation>检查自由边</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="463"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="462"/>
         <source>Clear highlighted</source>
         <translation>清除高亮</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="478"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="477"/>
         <source>Sail actions</source>
         <translation>帆操作</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="480"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="479"/>
         <source>Sail</source>
         <translation>帆</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="482"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="481"/>
         <source>Definitions</source>
         <translation>定义</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="485"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="484"/>
         <source>Translate</source>
         <translation>平移</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="488"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="487"/>
         <source>Rotate</source>
         <translation>旋转</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="490"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="489"/>
         <source>Scale size</source>
         <translation>缩放大小</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="494"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="493"/>
         <source>Scale shape</source>
         <translation>缩放形状</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="499"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="498"/>
         <source>Flip XZ</source>
         <translation>翻转 XZ</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="502"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="501"/>
         <source>Align luff points</source>
         <translation>对齐前缘点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="503"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="502"/>
         <source>&lt;p&gt;Translates the intermediate sections to align the leading points between the top and bottom sections&lt;/p&gt;</source>
         <translation>&lt;p&gt;平移中间截面以对齐顶部和底部截面之间的前缘点&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="519"/>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="918"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="518"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="917"/>
         <source>Export</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="521"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="520"/>
         <source>to XML</source>
         <translation>导出到 XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="525"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="524"/>
         <source>to STEP</source>
         <translation>导出到 STEP</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="529"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="528"/>
         <source>mesh to STL</source>
         <translation>网格导出到 STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="533"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="532"/>
         <source>triangulation to STL</source>
         <translation>三角剖分导出到 STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="704"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="703"/>
         <source>Sail definition</source>
         <translation>帆定义</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="715"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="714"/>
         <source>Point coordinates</source>
         <translation>点坐标</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="739"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="738"/>
         <source>Sections</source>
         <translation>截面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="749"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="748"/>
         <source>Section points coordinates</source>
         <translation>截面点坐标</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="906"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="905"/>
         <source>GraphMenu</source>
         <translation>图表菜单</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="928"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="927"/>
         <source>Background image</source>
         <translation>背景图像</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="1391"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="1390"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="1391"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="1390"/>
         <source>Could not open the file for writing</source>
         <translation>无法打开文件进行写入</translation>
     </message>
@@ -6847,6 +6918,86 @@ when using the mouse wheel.</source>
 <context>
     <name>SplineCtrl</name>
     <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="61"/>
+        <source>Spline definition</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="75"/>
+        <source>Control points</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="83"/>
+        <source>Actions</source>
+        <translation type="unfinished">操作</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="93"/>
+        <source>Force closed T.E.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="94"/>
+        <source>&lt;p&gt;Forces the spline&apos;s leading and trailing points to be at the same position&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="95"/>
+        <source>Symmetric spline</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="104"/>
+        <source>Degree</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="123"/>
+        <source>Output points bunching</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="127"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="129"/>
+        <source>Full</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="134"/>
+        <source>&lt;p&gt;Defines the intensity of the bunching of the output points&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="146"/>
+        <source>Display</source>
+        <translation type="unfinished">显示</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="150"/>
+        <source>Show</source>
+        <translation type="unfinished">显示</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="151"/>
+        <source>Normals</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="152"/>
+        <source>Style:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="155"/>
+        <source>Number of curve points:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="355"/>
         <source>Warning</source>
         <translation>警告</translation>
@@ -6855,6 +7006,26 @@ when using the mouse wheel.</source>
         <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="355"/>
         <source>The spline degree must be less than the number of control points</source>
         <translation>样条阶数必须小于控制点的数量</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="493"/>
+        <source>Section</source>
+        <translation type="unfinished">截面</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="495"/>
+        <source>Insert before</source>
+        <translation type="unfinished">在前插入</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="496"/>
+        <source>Insert after</source>
+        <translation type="unfinished">在后插入</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/splinectrl/splinectrl.cpp" line="497"/>
+        <source>Delete</source>
+        <translation type="unfinished">删除</translation>
     </message>
 </context>
 <context>
@@ -7259,265 +7430,272 @@ Importing from a binary file
 <context>
     <name>T1234578PolarDlg</name>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="60"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="63"/>
         <source>Analysis definition</source>
         <translation>分析定义</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="286"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="289"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="286"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="289"/>
         <source>Mass must be non-zero for type 2 polars</source>
         <translation>对于类型 2 极曲线，质量必须非零</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="364"/>
         <source>Type 1 (fixed V</source>
-        <translation>类型 1 (固定 V</translation>
+        <translation type="vanished">类型 1 (固定 V</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="364"/>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="367"/>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="368"/>
         <source>)</source>
-        <translation>)</translation>
+        <translation type="vanished">)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="365"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="368"/>
         <source>Type 2 (fixed lift)</source>
         <translation>类型 2 (固定升力)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="366"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="369"/>
         <source>Type 3 (speed polar)</source>
         <translation>类型 3 (速度极曲线)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="367"/>
         <source>Type 4 (fixed </source>
-        <translation>类型 4 (固定 </translation>
+        <translation type="vanished">类型 4 (固定 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="368"/>
         <source>Type 5 (</source>
-        <translation>类型 5 (</translation>
+        <translation type="vanished">类型 5 (</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="368"/>
         <source>  range, fixed </source>
-        <translation>  范围，固定 </translation>
+        <translation type="vanished">  范围，固定 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="368"/>
         <source> and V</source>
-        <translation> 和 V</translation>
+        <translation type="vanished"> 和 V</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="369"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="367"/>
+        <source>Type 1 (fixed velocity)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="370"/>
+        <source>Type 4 (fixed angle of attack)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="371"/>
+        <source>Type 5 (sideslip analysis)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="372"/>
         <source>Type 7 (stability analysis)</source>
         <translation>类型 7 (稳定性分析)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="370"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="373"/>
         <source>Type 8</source>
         <translation>类型 8</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="428"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="431"/>
         <source>&lt;p&gt;&amp;phi; =&lt;/p&gt;</source>
         <translation>&lt;p&gt;&amp;phi; =&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="430"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="433"/>
         <source>&lt;p&gt;The bank angle&lt;/p&gt;</source>
         <translation>&lt;p&gt;倾斜角&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="431"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="434"/>
         <source>&lt;p&gt;&amp;deg;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&amp;deg;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="445"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="448"/>
         <source>&lt;p&gt;V&lt;sub&gt;&amp;infin;&lt;/sub&gt;=</source>
         <translation>&lt;p&gt;V&lt;sub&gt;&amp;infin;&lt;/sub&gt;=</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="462"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="465"/>
         <source>Wing loading = 0.033 kg/dm2</source>
         <translation>翼载荷 = 0.033 kg/dm2</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="463"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="466"/>
         <source>Re info</source>
         <translation>雷诺数信息</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="499"/>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="511"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="502"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="514"/>
         <source>Controls</source>
         <translation>控制</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="504"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="507"/>
         <source>Control name</source>
         <translation>控制名称</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="516"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="519"/>
         <source>Control surfaces</source>
         <translation>控制面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="517"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="520"/>
         <source>Gain (</source>
         <translation>增益 (</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="517"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="520"/>
         <source>)/ ctrl unit</source>
         <translation>)/ 控制单位</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="532"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="535"/>
         <source>&lt;p&gt;Each set of controls is used to calculate a control derivative.&lt;/p&gt;</source>
         <translation>&lt;p&gt;每组控制用于计算控制导数。&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="541"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="544"/>
         <source>Polar type</source>
         <translation>极曲线类型</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="542"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="545"/>
         <source>Method</source>
         <translation>方法</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="543"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="546"/>
         <source>Ref. dimensions</source>
         <translation>参考尺寸</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="544"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="547"/>
         <source>Fluid</source>
         <translation>流体</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="545"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="548"/>
         <source>Inertia</source>
         <translation>惯性矩</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="546"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="549"/>
         <source>Viscosity</source>
         <translation>粘度</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="547"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="550"/>
         <source>Flaps</source>
         <translation>襟翼</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="548"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="551"/>
         <source>AVL-type ctrls</source>
         <translation>AVL 类型控制</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="549"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="552"/>
         <source>Ground</source>
         <translation>地面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="550"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="553"/>
         <source>Fuselage</source>
         <translation>机身</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="551"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="554"/>
         <source>Extra drag</source>
         <translation>额外阻力</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="552"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="555"/>
         <source>Wake</source>
         <translation>尾流</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="581"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="584"/>
         <source>Wing loading = </source>
         <translation>翼载荷 = </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="605"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="608"/>
         <source>Root Re = %1</source>
         <translation>根部 Re = %1</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="608"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="611"/>
         <source>Tip Re   = %1</source>
         <translation>翼梢 Re   = %1</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="615"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="618"/>
         <source>V</source>
         <translation>V</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="615"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="618"/>
         <source>.sqrt(Cl) = %1</source>
         <translation>.sqrt(Cl) = %1</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="619"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="622"/>
         <source>Root Re.sqrt(Cl) = %1</source>
         <translation>根部 Re.sqrt(Cl) = %1</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="623"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="626"/>
         <source>Tip Re.sqrt(Cl) = %1</source>
         <translation>翼梢 Re.sqrt(Cl) = %1</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="743"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="746"/>
         <source>Append new control set</source>
         <translation>追加新控制集</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="744"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="747"/>
         <source>Delete selected</source>
         <translation>删除选定</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="745"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="748"/>
         <source>Duplicate</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="746"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="749"/>
         <source>Move up</source>
         <translation>上移</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="747"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="750"/>
         <source>Move down</source>
         <translation>下移</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="759"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="762"/>
         <source>Duplicate %1</source>
         <translation>复制 %1</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="760"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="763"/>
         <source>Delete %1</source>
         <translation>删除 %1</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="784"/>
+        <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="787"/>
         <source>new control_%1</source>
         <translation>新控件_%1</translation>
     </message>
@@ -7730,62 +7908,62 @@ Importing from a binary file
 <context>
     <name>UnitsWt</name>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="36"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="37"/>
         <source>Units</source>
         <translation>单位</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="47"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="48"/>
         <source>Conversion factors</source>
         <translation>转换因子</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="51"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="52"/>
         <source>Length:</source>
         <translation>长度:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="52"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="53"/>
         <source>Area:</source>
         <translation>面积:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="53"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="54"/>
         <source>Velocity:</source>
         <translation>速度:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="54"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="55"/>
         <source>Mass:</source>
         <translation>质量:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="55"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="56"/>
         <source>Force:</source>
         <translation>力:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="56"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="57"/>
         <source>Moment:</source>
         <translation>力矩:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="57"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="58"/>
         <source>Pressure:</source>
         <translation>压力:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="58"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="59"/>
         <source>Inertia:</source>
         <translation>惯量:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="315"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="316"/>
         <source>Density:             </source>
         <translation>密度:             </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="316"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="317"/>
         <source>Kinematic viscosity: </source>
         <translation>运动粘度: </translation>
     </message>
@@ -7793,139 +7971,335 @@ Importing from a binary file
 <context>
     <name>W3dPrefs</name>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="111"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="114"/>
         <source>3d Styles</source>
         <translation>3d 样式</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="263"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="266"/>
         <source>Colour settings</source>
         <translation>颜色设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="269"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="272"/>
         <source>Geometry</source>
         <translation>几何</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="270"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="273"/>
         <source>Mesh</source>
         <translation>网格</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="271"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="274"/>
         <source>Vortons</source>
         <translation>涡元</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="276"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="279"/>
         <source>Results</source>
         <translation>结果</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="277"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="280"/>
         <source>Selected</source>
         <translation>已选</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="278"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="281"/>
         <source>Highlighted</source>
         <translation>高亮</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="279"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="282"/>
         <source>Axes</source>
         <translation>轴</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="280"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="283"/>
         <source>Wind</source>
         <translation>风</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="281"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="284"/>
         <source>Geometry outline</source>
         <translation>几何轮廓</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="282"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="285"/>
         <source>Transitions</source>
         <translation>转捩</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="283"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="286"/>
         <source>Lift and forces</source>
         <translation>升力和力</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="284"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="287"/>
         <source>Moments</source>
         <translation>力矩</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="285"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="288"/>
         <source>Induced drag</source>
         <translation>诱导阻力</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="286"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="289"/>
         <source>Viscous drag</source>
         <translation>粘性阻力</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="287"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="290"/>
         <source>Velocity vectors</source>
         <translation>速度矢量</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="288"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="291"/>
         <source>Streamlines</source>
         <translation>流线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="289"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="292"/>
         <source>Flow lines</source>
         <translation>流线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="290"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="293"/>
         <source>Masses</source>
         <translation>质量</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="291"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="294"/>
         <source>Panel outline</source>
         <translation>面板轮廓</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="292"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="295"/>
         <source>Fuse panels:</source>
         <translation>机身面板:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="293"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="296"/>
         <source>Wing panels:</source>
         <translation>机翼面板:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="294"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="297"/>
         <source>Flap panels:</source>
         <translation>襟翼面板:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="295"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="298"/>
         <source>Wake panels:</source>
         <translation>尾流面板:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="312"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="315"/>
         <source>Use wing colour</source>
         <translation>使用机翼颜色</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="316"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="319"/>
         <source>Use background color for mesh panels</source>
         <translation>对网格面板使用背景颜色</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="404"/>
+        <source>Colour:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="406"/>
+        <source>Radius:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="408"/>
+        <source>% viewport width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="412"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="424"/>
+        <source>Ground/Water</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="420"/>
+        <source>Show ground surface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="428"/>
+        <source>x-length</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="429"/>
+        <source>y-width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="452"/>
+        <source>&lt;p&gt;Note: This is only a visual help feature.&lt;br&gt;The actual ground surface used in the analysis extends to infinity.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="459"/>
+        <source>Colour map</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="465"/>
+        <source>Gradient colours:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="479"/>
+        <source>Nbr. of isobars (trilinear only):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="501"/>
+        <source>&lt;p&gt;Increase the number of points to improve the tessellation of the surfaces.&lt;br&gt;This may increase the loading times and also slow down the display on low-end graphic cards.&lt;br&gt;Reload required to take effect.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="511"/>
+        <source>Ruled surfaces</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="515"/>
+        <source>Wing chordwise direction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="516"/>
+        <source>Body axial direction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="517"/>
+        <source>Body hoop direction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="518"/>
+        <source>Sail x-direction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="519"/>
+        <source>Sail z-direction:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="529"/>
+        <source>Other</source>
+        <translation type="unfinished">其他</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="535"/>
+        <source>Enable mouse animations</source>
+        <translation type="unfinished">启用鼠标动画</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="537"/>
+        <source>&lt;p&gt;Defines the damping of the animation at each frame update.&lt;br&gt;Set to 0 for perpetual movement.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="544"/>
+        <source>Animate view transitions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="546"/>
+        <source>&lt;p&gt;Defines the duration of animations in ms&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="553"/>
+        <source>Arcball radius:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="554"/>
+        <source>% view width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="556"/>
+        <source>&lt;p&gt;The radius of the arcball as a percentage of the view&apos;s width&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="562"/>
+        <source>Auto z-rotation incremental angle:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="570"/>
+        <source>Auto adjust 3d scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="571"/>
+        <source>&lt;p&gt;Automatically adjust the 3d scale to fit the plane in the display when switching between planes&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="572"/>
+        <source>Enable clip plane</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="573"/>
+        <source>Display reference length</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="574"/>
+        <source>Save viewpoints when exiting 3d views</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="766"/>
+        <source>Mass colour</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="778"/>
+        <source>Water colour</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="811"/>
+        <source>Fuse colour</source>
+        <translation type="unfinished">机身颜色</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="823"/>
+        <source>Wing colour</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="835"/>
+        <source>Flap colour</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="847"/>
+        <source>Wake colour</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="859"/>
+        <source>Vorton colour</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -8084,153 +8458,153 @@ Recommendation 2-5.</source>
 <context>
     <name>WingDlg</name>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="86"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="88"/>
         <source>Wing editor</source>
         <translation>机翼编辑器</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="96"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="98"/>
         <source>Insert before</source>
         <translation>在前插入</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="98"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="100"/>
         <source>Insert after</source>
         <translation>在后插入</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="100"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="102"/>
         <source>Insert multiple sections before</source>
         <translation>在前插入多个截面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="102"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="104"/>
         <source>Insert multiple sections after</source>
         <translation>在后插入多个截面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="104"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="106"/>
         <source>Duplicate section</source>
         <translation>复制截面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="105"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="107"/>
         <source>Delete section</source>
         <translation>删除截面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="106"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="108"/>
         <source>Reset section</source>
         <translation>重置截面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="107"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="109"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="109"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="111"/>
         <source>Paste</source>
         <translation>粘贴</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="112"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="114"/>
         <source>Load</source>
         <translation>加载</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="113"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="115"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="114"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="116"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="116"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="118"/>
         <source>Reset mesh</source>
         <translation>重置网格</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="117"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="119"/>
         <source>Translate</source>
         <translation>平移</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="118"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="120"/>
         <source>Scale</source>
         <translation>缩放</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="119"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="121"/>
         <source>Inertia</source>
         <translation>惯性矩</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="120"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="122"/>
         <source>to XML file</source>
         <translation>导出到 XML 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="121"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="123"/>
         <source>to CAD file</source>
         <translation>导出到 CAD 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="122"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="124"/>
         <source>to STL file</source>
         <translation>导出到 STL 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="138"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="140"/>
         <source>WingName</source>
         <translation>机翼名称</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="142"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="144"/>
         <source>Enter here a short description for the wing</source>
         <translation>在此输入描述机翼的简短文本</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="149"/>
         <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="151"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="153"/>
         <source>Actions</source>
         <translation>操作</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="154"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="156"/>
         <source>Export</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="164"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="166"/>
         <source>Save as</source>
         <translation>另存为</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="173"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="175"/>
         <source>Surface colour</source>
         <translation>表面颜色</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="217"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="219"/>
         <source>GraphMenu</source>
         <translation>图表菜单</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="218"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="220"/>
         <source>Selected section</source>
         <translation>选定的截面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="228"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="230"/>
         <source>Wing</source>
         <translation>机翼</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="238"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="240"/>
         <source>Background image</source>
         <translation>背景图像</translation>
     </message>
@@ -9051,744 +9425,744 @@ Recommendation 2-5.</source>
 <context>
     <name>XPlaneActions</name>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="50"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="52"/>
         <source>Operating point view	F5</source>
         <translation>操作点视图	F5</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="53"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="55"/>
         <source>Switch to the operating point view</source>
         <translation>切换到操作点视图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="56"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="58"/>
         <source>Polar view	F8</source>
         <translation>极曲线视图	F8</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="59"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="61"/>
         <source>Switch to the polar view</source>
         <translation>切换到极曲线视图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="62"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="64"/>
         <source>Time response view</source>
         <translation>时间响应视图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="65"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="67"/>
         <source>Switch to stability analysis post-processing</source>
         <translation>切换到稳定性分析后处理</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="68"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="70"/>
         <source>Root locus view</source>
         <translation>根轨迹视图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="71"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="73"/>
         <source>Switch to root locus view</source>
         <translation>切换到根轨迹视图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="74"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="76"/>
         <source>3d view	F4</source>
         <translation>3D 视图 F4</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="77"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="79"/>
         <source>Switch to the 3D view</source>
         <translation>切换到 3D 视图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="80"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="82"/>
         <source>Cp view	F9</source>
         <translation>Cp 视图 F9</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="83"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="85"/>
         <source>Switch to the Cp view</source>
         <translation>切换到 Cp 视图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="86"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="88"/>
         <source>Light settings</source>
         <translation>光照设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="87"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="89"/>
         <source>&lt;p&gt;Define the light options in 3d views&lt;/p&gt;</source>
         <translation>&lt;p&gt;定义 3D 视图中的光照选项&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="91"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="93"/>
         <source>Load</source>
         <translation>加载</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="94"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="96"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="97"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="99"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="100"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="102"/>
         <source>Reset view	R</source>
         <translation>重置视图	R</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="103"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="105"/>
         <source>Define a new plane</source>
         <translation>定义新飞机</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="104"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="106"/>
         <source>Shows a dialogbox to create a new plane definition</source>
         <translation>显示创建新飞机定义的对话框</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="108"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="110"/>
         <source>From an STL file</source>
         <translation>从 STL 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="109"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="111"/>
         <source>Import a complete plane geometry from an STL file</source>
         <translation>从 STL 文件导入完整的飞机几何形状</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="113"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="216"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="222"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="227"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="233"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="386"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="115"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="218"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="224"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="229"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="235"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="388"/>
         <source>Edit</source>
         <translation>编辑</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="114"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="127"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="116"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="129"/>
         <source>Shows a form to edit the active plane</source>
         <translation>显示编辑当前飞机的表单</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="118"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="120"/>
         <source>Edit description</source>
         <translation>编辑描述</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="121"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="123"/>
         <source>Optimize</source>
         <translation>优化</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="122"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="124"/>
         <source>Opens the module to optimize the active plane</source>
         <translation>打开优化当前飞机的模块</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="126"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="242"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="247"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="252"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="257"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="128"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="244"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="249"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="254"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="259"/>
         <source>Scale</source>
         <translation>缩放</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="130"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="261"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="265"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="269"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="273"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="132"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="263"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="267"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="271"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="275"/>
         <source>Translate</source>
         <translation>平移</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="133"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="135"/>
         <source>Select wing curves to display</source>
         <translation>选择要显示的机翼曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="136"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="138"/>
         <source>Mesh information</source>
         <translation>网格信息</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="139"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="141"/>
         <source>Connect triangles</source>
         <translation>连接三角形</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="143"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="145"/>
         <source>Check panels</source>
         <translation>检查面板</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="146"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="148"/>
         <source>Check free edges</source>
         <translation>检查自由边</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="150"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="152"/>
         <source>Clear highlighted</source>
         <translation>清除高亮</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="154"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="156"/>
         <source>Center on panel</source>
         <translation>以面板为中心</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="155"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="157"/>
         <source>Centers the 3d view on the panel with the selected index</source>
         <translation>将 3D 视图中心对准选定索引的面板</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="158"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="160"/>
         <source>Show panel normals</source>
         <translation>显示面板法线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="162"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="164"/>
         <source>Show node normals</source>
         <translation>显示节点法线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="166"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="168"/>
         <source>Show vortices and ctrl points</source>
         <translation>显示涡旋和控制点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="170"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="172"/>
         <source>Rename	F2</source>
         <translation>重命名	F2</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="171"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="173"/>
         <source>Rename the active object</source>
         <translation>重命名当前对象</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="174"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="176"/>
         <source>to AVL</source>
         <translation>导出到 AVL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="175"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="177"/>
         <source>Export the active plane or wing to a text file in the format required by AVL</source>
         <translation>将当前飞机或机翼导出为 AVL 所需格式的文本文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="178"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="180"/>
         <source>tessellation to STL</source>
         <translation>曲面细分导出到 STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="179"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="181"/>
         <source>Export the plane&apos;s tessellation to a file in the STL format</source>
         <translation>将飞机的曲面细分导出为 STL 格式的文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="182"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="184"/>
         <source>mesh to STL</source>
         <translation>网格导出到 STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="183"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="185"/>
         <source>Export the plane&apos;s mesh to a file in the STL format</source>
         <translation>将飞机的网格导出为 STL 格式的文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="186"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="188"/>
         <source>to XML</source>
         <translation>导出到 XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="189"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="191"/>
         <source>to a text file</source>
         <translation>导出到文本文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="190"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="192"/>
         <source>Export the current operating point to a text or csv file</source>
         <translation>将当前操作点导出为文本或 csv 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="193"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="473"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="195"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="475"/>
         <source>to clipboard</source>
         <translation>复制到剪贴板</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="217"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="219"/>
         <source>Shows a form to edit the wing of the active plane</source>
         <translation>显示编辑当前飞机机翼的表单</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="234"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="236"/>
         <source>Shows a form to edit the body of the active plane</source>
         <translation>显示编辑当前飞机机身的表单</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="238"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="240"/>
         <source>Edit (Advanced)</source>
         <translation>编辑 (高级)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="243"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="245"/>
         <source>Scale the dimensions of the main wing</source>
         <translation>缩放主翼尺寸</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="248"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="250"/>
         <source>Scale the dimensions of the elevator</source>
         <translation>缩放平尾尺寸</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="253"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="255"/>
         <source>Scale the dimensions of the fin</source>
         <translation>缩放垂尾尺寸</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="258"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="260"/>
         <source>Scale the dimensions of the active fuse</source>
         <translation>缩放当前机身尺寸</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="274"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="276"/>
         <source>Translate the dimensions of the active fuse</source>
         <translation>平移当前机身尺寸</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="277"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="281"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="285"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="289"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="279"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="283"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="287"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="291"/>
         <source>Inertia</source>
         <translation>惯性矩</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="292"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="296"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="300"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="304"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="500"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="505"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="294"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="298"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="302"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="306"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="502"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="507"/>
         <source>Properties</source>
         <translation>属性</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="307"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="309"/>
         <source>Fuse mesher</source>
         <translation>机身网格生成器</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="311"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="313"/>
         <source>Reset triangular mesh</source>
         <translation>重置三角形网格</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="312"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="314"/>
         <source>Resets the triangular mesh based on the uncut fuse</source>
         <translation>基于未切割的机身重置三角形网格</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="315"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="317"/>
         <source>Export</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="316"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="318"/>
         <source>Export all available polars to text files</source>
         <translation>将所有可用的极曲线导出为文本文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="319"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="321"/>
         <source>Inertia	F12</source>
         <translation>惯性矩	F12</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="320"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="322"/>
         <source>Define the inertia for the active plane</source>
         <translation>定义当前飞机的惯性矩</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="323"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="325"/>
         <source>Show active only</source>
         <translation>仅显示当前</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="324"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="326"/>
         <source>Hide all the curves except for the one corresponding to the active operating point</source>
         <translation>隐藏除对应当前操作点以外的所有曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="328"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="330"/>
         <source>Show all</source>
         <translation>显示所有</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="329"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="331"/>
         <source>Show the graph curves of all operating points</source>
         <translation>显示所有操作点的图表曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="332"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="334"/>
         <source>Hide all</source>
         <translation>隐藏所有</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="333"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="335"/>
         <source>Hide the graph curves of all operating points</source>
         <translation>隐藏所有操作点的图表曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="336"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="338"/>
         <source>Delete all</source>
         <translation>删除所有</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="337"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="339"/>
         <source>Delete all the operating points of all planes and polars</source>
         <translation>删除所有飞机和极曲线的所有操作点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="340"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="415"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="431"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="439"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="342"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="417"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="433"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="441"/>
         <source>Show</source>
         <translation>显示</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="341"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="343"/>
         <source>Show the curves of all the operating points of the active polar</source>
         <translation>显示当前极曲线的所有操作点曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="344"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="411"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="427"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="435"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="346"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="413"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="429"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="437"/>
         <source>Hide</source>
         <translation>隐藏</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="345"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="347"/>
         <source>Hide the curves of all the operating points of the active polar</source>
         <translation>隐藏当前极曲线的所有操作点曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="348"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="419"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="443"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="447"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="485"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="489"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="350"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="421"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="445"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="449"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="487"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="491"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="349"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="351"/>
         <source>Delete all the operating points of the active polar</source>
         <translation>删除当前极曲线的所有操作点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="352"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="354"/>
         <source>Show only the polar&apos;s operating points</source>
         <translation>仅显示极曲线的操作点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="355"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="357"/>
         <source>Show target curve</source>
         <translation>显示目标曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="359"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="361"/>
         <source>Define an analysis</source>
         <translation>定义分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="361"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="363"/>
         <source>Define an analysis for the active plane</source>
         <translation>定义当前飞机的分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="364"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="366"/>
         <source>Define a control analysis</source>
         <translation>定义控制分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="366"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="368"/>
         <source>Shows a form to edit a new control analysis</source>
         <translation>显示编辑新控制分析的表单</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="369"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="371"/>
         <source>Define a stability analysis</source>
         <translation>定义稳定性分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="371"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="373"/>
         <source>Define a stability analysis for the current wing or plane</source>
         <translation>定义当前机翼或飞机的稳定性分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="374"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="376"/>
         <source>Duplicate existing analyses</source>
         <translation>复制现有分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="378"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="380"/>
         <source>Batch analysis (1)</source>
         <translation>批处理分析 (1)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="382"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="384"/>
         <source>Batch analysis (2)</source>
         <translation>批处理分析 (2)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="387"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="389"/>
         <source>Modify the analysis parameters of this polar</source>
         <translation>修改此极曲线的分析参数</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="391"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="393"/>
         <source>Edit extra drag</source>
         <translation>编辑额外阻力</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="392"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="394"/>
         <source>Modify the extra drag parameters and the AVL-type parabolic drag without recalculating the polar.</source>
         <translation>修改额外阻力参数和 AVL 类型抛物线阻力，无需重新计算极曲线。</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="395"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="397"/>
         <source>Edit data points</source>
         <translation>编辑数据点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="396"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="398"/>
         <source>Modify the data points of this polar</source>
         <translation>修改此极曲线的数据点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="399"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="401"/>
         <source>Import analyses from xml</source>
         <translation>从 xml 导入分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="400"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="402"/>
         <source>Import one or more analyses defined by xml files.</source>
         <translation>导入由 xml 文件定义的一个或多个分析。</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="403"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="405"/>
         <source>Import external polar</source>
         <translation>导入外部极曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="404"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="406"/>
         <source>Create a polar and import its data from an external source.</source>
         <translation>创建极曲线并从外部源导入其数据。</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="407"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="409"/>
         <source>Analysis auto name options</source>
         <translation>分析自动命名选项</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="408"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="410"/>
         <source>Set the default options for automatic naming of polars</source>
         <translation>设置极曲线自动命名的默认选项</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="412"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="414"/>
         <source>Hide all the polar curves associated to the active wing or plane</source>
         <translation>隐藏与当前机翼或飞机关联的所有极曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="416"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="418"/>
         <source>Show all the polar curves associated to the active wing or plane</source>
         <translation>显示与当前机翼或飞机关联的所有极曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="420"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="422"/>
         <source>Delete all the polars associated to the active wing or plane</source>
         <translation>删除与当前机翼或飞机关联的所有极曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="423"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="425"/>
         <source>Show only plane polars</source>
         <translation>仅显示飞机极曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="428"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="430"/>
         <source>Hide all the polar curves of all wings and planes</source>
         <translation>隐藏所有机翼和飞机的极曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="432"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="434"/>
         <source>&lt;p&gt;Show all the polar curves of all wings and planes&lt;/p&gt;</source>
         <translation>&lt;p&gt;显示所有机翼和飞机的极曲线&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="436"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="438"/>
         <source>&lt;p&gt;Hide all the operating point curves of the active wing or plane&lt;/p&gt;</source>
         <translation>&lt;p&gt;隐藏当前机翼或飞机的所有操作点曲线&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="440"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="442"/>
         <source>Show all the operating point curves of the active wing or plane</source>
         <translation>显示当前机翼或飞机的所有操作点曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="444"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="446"/>
         <source>&lt;p&gt;Delete all the operating points of the active wing or plane&lt;/p&gt;</source>
         <translation>&lt;p&gt;删除当前机翼或飞机的所有操作点&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="449"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="451"/>
         <source>&lt;p&gt;Delete the active wing or plane&lt;/p&gt;</source>
         <translation>&lt;p&gt;删除当前机翼或飞机&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="452"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="465"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="454"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="467"/>
         <source>Duplicate</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="454"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="456"/>
         <source>Duplicate the active wing or plane</source>
         <translation>复制当前机翼或飞机</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="457"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="459"/>
         <source>Save as project</source>
         <translation>另存为项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="458"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="460"/>
         <source>Save the active wing or plane as a new separate project</source>
         <translation>将当前机翼或飞机另存为新的独立项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="461"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="463"/>
         <source>Rename	Shift+F2</source>
         <translation>重命名	Shift+F2</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="462"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="464"/>
         <source>Rename the active polar</source>
         <translation>重命名当前极曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="469"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="471"/>
         <source>to file</source>
         <translation>导出到文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="470"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="472"/>
         <source>Export the active polar to a text or csv file</source>
         <translation>将当前极曲线导出为文本或 csv 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="477"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="479"/>
         <source>Reset</source>
         <translation>重置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="478"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="480"/>
         <source>Delete all the points of the active polar, but keep the analysis settings</source>
         <translation>删除当前极曲线的所有点，但保留分析设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="481"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="483"/>
         <source>Show only active polar</source>
         <translation>仅显示当前极曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="486"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="488"/>
         <source>Delete the active polar</source>
         <translation>删除当前极曲线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="490"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="492"/>
         <source>Delete the active operating point</source>
         <translation>删除当前操作点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="493"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="495"/>
         <source>Open the analysis window</source>
         <translation>打开分析窗口</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="497"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="499"/>
         <source>3d analysis settings</source>
         <translation>3D 分析设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="501"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="503"/>
         <source>Show the properties of the active polar</source>
         <translation>显示当前极曲线的属性</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="506"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="508"/>
         <source>Show the properties of the active operating point</source>
         <translation>显示当前操作点的属性</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="510"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="512"/>
         <source>From an xml file</source>
         <translation>从 xml 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="513"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="515"/>
         <source>Export analysis to xml file</source>
         <translation>导出分析到 xml 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="516"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="518"/>
         <source>Open 3d view in new window</source>
         <translation>在新窗口中打开 3D 视图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="524"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="541"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="554"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="567"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="526"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="543"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="556"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="569"/>
         <source>to XML file</source>
         <translation>导出到 XML 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="528"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="544"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="557"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="569"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="530"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="546"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="559"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="571"/>
         <source>to STEP file</source>
         <translation>导出到 STEP 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="533"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="547"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="560"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="571"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="535"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="549"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="562"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="573"/>
         <source>tessellation to STL file</source>
         <translation>曲面细分导出到 STL 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="537"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="550"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="563"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="573"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="539"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="552"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="565"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="575"/>
         <source>mesh to STL file</source>
         <translation>网格导出到 STL 文件</translation>
     </message>
