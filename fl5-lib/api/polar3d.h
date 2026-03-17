@@ -186,7 +186,7 @@ class FL5LIB_EXPORT Polar3d : public XflObject
         void setIzz(double Izz) {m_Inertia[2]=Izz;}
         void setIxz(double Ixz) {m_Inertia[3]=Ixz;}
 
-        bool isPlanePolar() const {return isType123() || isType5() || isType6() || isType7() || isType8();}
+        bool isPlanePolar() const {return isType123() || isType4() || isType5() || isType6() || isType7() || isType8();}
         bool isBoatPolar() const  {return m_Type==xfl::BOATPOLAR;}
 
         bool isType1()           const {return m_Type==xfl::T1POLAR;}   /**< returns true if the polar is of the FIXEDSPEEDPOLAR type, false otherwise >*/
