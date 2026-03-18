@@ -143,7 +143,7 @@
     <message>
         <location filename="../../fl5-app/modules/xplane/controls/analysis3dctrls.cpp" line="108"/>
         <source>Calculate</source>
-        <translation>Calculer (Ctrl+A)</translation>
+        <translation>Calculer</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xplane/controls/analysis3dctrls.cpp" line="112"/>
@@ -272,12 +272,17 @@ Uncheck for increased analysis speed.</source>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="186"/>
-        <source>Clear Output</source>
-        <translation>Effacer l&apos;affichage</translation>
+        <source>Clear output</source>
+        <translation>Effacer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="190"/>
-        <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="223"/>
+        <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="187"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Efface la sortie texte&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="191"/>
+        <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="224"/>
         <source>Calculate</source>
         <translation>Calculer</translation>
     </message>
@@ -308,6 +313,11 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/modules/xplane/analysis/batchplanedlg.cpp" line="211"/>
         <source>&lt;p&gt;If activated, stability derivatives and eigenthings will be computed during a T12358 run.&lt;br&gt;Deactivate to save a little computation time.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Si activé, les dérivées de stabilité et les valeurs propres seront calculées pendant une simulation T12358. Désactivez pour économiser un peu de temps de calcul.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchplanedlg.cpp" line="247"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Efface la sortie texte&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -525,105 +535,110 @@ Uncheck for increased analysis speed.</source>
     <message>
         <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="355"/>
         <source>Clear output</source>
-        <translation>Effacer l&apos;affichage</translation>
+        <translation>Effacer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="357"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="356"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Efface la sortie texte&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="358"/>
         <source>Calculate</source>
         <translation>Calculer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="482"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="483"/>
         <source>Select directory</source>
         <translation>Sélectionner un répertoire</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="584"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="585"/>
         <source>Analysis</source>
         <translation>Analyse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="586"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="587"/>
         <source>Edit analysis</source>
         <translation>Editer l&apos;analyse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="589"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="590"/>
         <source>Clear plane name</source>
         <translation>Effacer le nom de l&apos;avion</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="592"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="593"/>
         <source>Rename</source>
         <translation>Renommer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="595"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="596"/>
         <source>Duplicate</source>
         <translation>Dupliquer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="598"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="599"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="604"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="605"/>
         <source>File</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="677"/>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="746"/>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1085"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="678"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="747"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1086"/>
         <source>Exit</source>
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="677"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="678"/>
         <source>Replace the existing file?</source>
         <translation>Remplacer le fichier existant ?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="705"/>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1049"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="706"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1050"/>
         <source>XML file (*.xml)</source>
         <translation>Fichier XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="706"/>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1061"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="707"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1062"/>
         <source>Export analysis definition to xml file</source>
         <translation>Exporter la définition de l&apos;analyse au format xml</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="715"/>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="722"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="716"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="723"/>
         <source>Write error</source>
         <translation>Erreur d&amp;apos; écriture</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="715"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="716"/>
         <source>Failed to read the file</source>
         <translation>Erreur de lecture du  fichier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="722"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="723"/>
         <source>Failed to save the new file</source>
         <translation>Impossible d&amp;apos; enregistrer le nouveau fichier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="746"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="747"/>
         <source>Really delete this file?</source>
         <translation>Vraiment supprimer ce fichier ?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1085"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1086"/>
         <source>Discard the analysis </source>
         <translation>Abandonner l&amp;apos; analyse </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1246"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1247"/>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
@@ -1065,6 +1080,19 @@ Uncheck for increased analysis speed.</source>
     </message>
 </context>
 <context>
+    <name>CADExportDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/exchange/cadexportdlg.cpp" line="179"/>
+        <source>Clear output</source>
+        <translation>Effacer</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/exchange/cadexportdlg.cpp" line="180"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Efface la sortie texte&lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
     <name>CPTableView</name>
     <message>
         <location filename="../../fl5-app/interfaces/widgets/customwts/cptableview.cpp" line="275"/>
@@ -1236,10 +1264,6 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="217"/>
         <source>VPW only</source>
         <translation>VPW seulement</translation>
-    </message>
-    <message>
-        <source>Crossflow vorticity (VPW only)</source>
-        <translation type="vanished">Circulation plan transverse (VPW)</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="219"/>
@@ -1429,10 +1453,6 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/flowctrls.cpp" line="234"/>
         <source>FPS</source>
         <translation>FPS</translation>
-    </message>
-    <message>
-        <source>%1 groups x %2 = %3 particles</source>
-        <translation type="vanished">%1 groupes x %2 = %3 particules</translation>
     </message>
 </context>
 <context>
@@ -2257,6 +2277,16 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/interfaces/editors/fuseedit/fusemesherdlg.cpp" line="100"/>
         <source>Fuse mesh tester</source>
         <translation>Testeur de maillage du fuselage</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusemesherdlg.cpp" line="247"/>
+        <source>Clear output</source>
+        <translation>Effacer</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusemesherdlg.cpp" line="248"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Efface la sortie texte&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -3142,12 +3172,6 @@ ____________Requête d&apos;annulation émise__________
 <context>
     <name>MainFrame</name>
     <message>
-        <source>flow5 requires OpenGL 3.3 or greater.
-</source>
-        <translation type="vanished">flow5 nécessite OpenGL 3.3 ou une version supérieure.
-</translation>
-    </message>
-    <message>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="259"/>
         <source>flow5 requires OpenGL 3.3 or greater.</source>
         <translation>flow5 nécessite OpenGL 3.3 ou plus récent</translation>
@@ -3517,7 +3541,7 @@ ____________Requête d&apos;annulation émise__________
     <message>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="860"/>
         <source>Sail 3d controls</source>
-        <translation>Contrôles 3D de voile</translation>
+        <translation>Contrôles 3d de voile</translation>
     </message>
     <message>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="865"/>
@@ -3921,7 +3945,7 @@ ____________Requête d&apos;annulation émise__________
     <message>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="128"/>
         <source>Display length scales</source>
-        <translation>Afficher les échelles de longueur</translation>
+        <translation>Echelles</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="176"/>
@@ -3936,7 +3960,7 @@ ____________Requête d&apos;annulation émise__________
     <message>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="178"/>
         <source>Strip lift:</source>
-        <translation>Portance des bandes</translation>
+        <translation>Portance en envergure :</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/opp3dscalesctrls.cpp" line="179"/>
@@ -3956,6 +3980,11 @@ ____________Requête d&apos;annulation émise__________
 </context>
 <context>
     <name>OptimPlaneDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="169"/>
+        <source>Reset variables</source>
+        <translation>Réinitialiser les variables</translation>
+    </message>
     <message>
         <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="184"/>
         <source>Define analysis</source>
@@ -4028,22 +4057,143 @@ ____________Requête d&apos;annulation émise__________
         <translation>Particules de frontière</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="705"/>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="320"/>
+        <source>Swarm size:</source>
+        <translation>Taille de l&apos;essaim :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="323"/>
+        <source>Max. Pareto size:</source>
+        <translation>Taille max. du Pareto :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="325"/>
+        <source>&lt;p&gt;The maximum size of the Pareto frontier&lt;/p&gt;</source>
+        <translation>&lt;p&gt;La taille maximale de la frontière de l&apos;ensemble de Pareto&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="327"/>
+        <source>Inertia weight:</source>
+        <translation>Poids de l&apos;inertie :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="329"/>
+        <source>&lt;p&gt;The inertia weight determines the influence of the particle&apos;s current velocity on its updated velocity.&lt;br&gt;Recommendation: 0.3&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Le poids de l&apos;inertie détermine l&apos;influence de la vitesse actuelle de la particule sur sa vitesse actualisée.&lt;br&gt;Recommendation: 0.3&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="333"/>
+        <source>Cognitive weight:</source>
+        <translation>Poids de la connaissance :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="335"/>
+        <source>&lt;p&gt;The cognitive weight determines the influence of the particle&apos;s best position.&lt;br&gt;Recommendation: 0.7&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Le poids de la connaissance détermine l&apos;influence de la meilleure position de la particule.&lt;br&gt;Recommendation: 0.7&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="338"/>
+        <source>Social weight:</source>
+        <translation>Poids social :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="340"/>
+        <source>&lt;p&gt;The social weight determines the influence of the global best-known position.&lt;br&gt;Recommendation: 0.7&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Le poids social détermine l&apos;influence de la meilleure position connue au global.&lt;br&gt;Recommendation: 0.7&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="343"/>
+        <source>Regeneration probability:</source>
+        <translation>Probabilité de régénération :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="346"/>
+        <source>&lt;p&gt;The probability that a particle will be re-created at a random position at each iteration.&lt;br&gt;Increases the likelyhood that the swarm will not get stuck on a local minimum.&lt;br&gt;Recommendation: 5% to 25%&lt;/p&gt;</source>
+        <translation>&lt;p&gt;La probabilité que la particule soit re-créée à une position aléatoire à chaque iteration.&lt;br&gt;Accroit la probabilité pour que l&apos;essaim ne soit pas bloqué sur un minimum local.&lt;br&gt;Recommendation: 5% to 25%&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="351"/>
+        <source>Max. iterations:</source>
+        <translation>Limite d&apos;itérations :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="354"/>
+        <source>Restore defaults</source>
+        <translation>Restaurer les paramètres par défaut</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="357"/>
+        <source>Multi-threaded</source>
+        <translation>Multi-fils</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="440"/>
+        <source>Make random swarm</source>
+        <translation>Créer un essaim aléatoire</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="442"/>
+        <source>Store best</source>
+        <translation>Enregistrer la meilleur solution</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="443"/>
+        <source>&lt;p&gt;Adds the current best to the database&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Ajoute la meilleure solution à la base de données interne&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="444"/>
+        <source>Continue from current best</source>
+        <translation>Continuer à partir du meilleur</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="445"/>
+        <source>&lt;p&gt;Uses the current best plane as the basis for further optimization&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Utilise la meilleure solution trouvée pour continuer l&apos;optimisation&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="461"/>
+        <source>2d single-objective demo</source>
+        <translation>Démo. 2d à 1 objectif</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="465"/>
+        <source>Reset Pareto frontier</source>
+        <translation>Réinitialiser la frontère du Pareto</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="476"/>
+        <source>Clear output</source>
+        <translation>Effacer</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="477"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Efface la sortie texte&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="706"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="705"/>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="706"/>
         <source>Discard results?</source>
         <translation>Abandonner les résultats ?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="925"/>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="441"/>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="926"/>
         <source>Swarm</source>
         <translation>Calculer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="1081"/>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="83"/>
+        <source>Optimization 3d</source>
+        <translation>Optimisation 3d</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="1082"/>
         <source>Interrupt task</source>
         <translation>Interrompre la tâche</translation>
     </message>
@@ -4078,7 +4228,7 @@ ____________Requête d&apos;annulation émise__________
     <message>
         <location filename="../../fl5-app/modules/xplane/controls/popp3dctrls.cpp" line="135"/>
         <source>Strip lift</source>
-        <translation>Portance des bandes</translation>
+        <translation>Portance en envergure</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xplane/controls/popp3dctrls.cpp" line="136"/>
@@ -4378,27 +4528,32 @@ Ctrl+B pour modifier le premier fuselage</translation>
         <translation>Effacer l&apos;output</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="108"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="107"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Efface la sortie texte&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="109"/>
         <source>Inertia</source>
         <translation>Inertie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="110"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="111"/>
         <source>Flip normals</source>
         <translation>Renverser les normales</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="120"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="121"/>
         <source>Save as</source>
         <translation>Enregistrer sous</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="189"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="190"/>
         <source>Discard the changes?</source>
         <translation>Abandonner les modifications ?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="190"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="191"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
@@ -6723,6 +6878,11 @@ lors de l&apos;utilisation de la roulette</translation>
         <source>Clear output</source>
         <translation>Vider l&apos;affichage</translation>
     </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/shapedlg.cpp" line="75"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Efface la sortie texte&lt;/p&gt;</translation>
+    </message>
 </context>
 <context>
     <name>ShapeFixerDlg</name>
@@ -6782,57 +6942,62 @@ lors de l&apos;utilisation de la roulette</translation>
         <translation>Vider l&apos;output</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="249"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="129"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Efface la sortie texte&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="250"/>
         <source>Performing FACE stitching:
 </source>
         <translation>Exécution de l&apos;assemblage des FACE :
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="250"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="251"/>
         <source>   Nb of free edges=%1
 </source>
         <translation>   Nombre d&apos;arêtes libres = %1
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="306"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="307"/>
         <source>Fuselage is made of %1 shape(s):</source>
         <translation>Le fuselage est composé de %1 shape(s) :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="310"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="311"/>
         <source>   Shape %1
 </source>
         <translation>   Shape %1
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="349"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="350"/>
         <source>   After: sub-shape %1 has FORWARD  orientation</source>
         <translation>   Après : la sous-shape %1 a une orientation FORWARD</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="350"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="351"/>
         <source>   After: sub-shape %1 has REVERSED orientation</source>
         <translation>   Après : la sous-shape %1 a une orientation REVERSED</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="377"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="378"/>
         <source>Finished fixing small edges if any:
 </source>
         <translation>Terminé correction des petites arêtes :
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="399"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="400"/>
         <source>Finished fixing gaps if any:
 </source>
         <translation>Terminé correction des petits trous :
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="421"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="422"/>
         <source>Fixed shape %1
 </source>
         <translation>Shape %1 corrigée
@@ -6997,7 +7162,7 @@ lors de l&apos;utilisation de la roulette</translation>
     <message>
         <location filename="../../fl5-app/modules/xplane/controls/stab3dctrls.cpp" line="109"/>
         <source>&lt;p&gt;Sets an arbitrary normalization factor used to display the mode state.&lt;br&gt;The 100% factor is calculated so that:&lt;ul&gt;&lt;li&gt;the maximum displacement does not exceed 20% of the span length,&lt;/li&gt;&lt;li&gt;the maximum rotation around any axis does not exceed 20&amp;deg;.&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Definit un facteur de normalisation arbitraire pour visualier les modes.&lt;br&gt;Le facteur 100% est calculé pour que:&lt;ul&gt;&lt;li&gt;le déplacement maximal n&apos;excède pas 20% de l&apos;envergure,&lt;/li&gt;&lt;li&gt;La rotation maximale n&apos;excède pas 20&amp;deg;.&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Définit un facteur de normalisation arbitraire pour visualier les modes.&lt;br&gt;Le facteur 100% est calculé pour que:&lt;ul&gt;&lt;li&gt;le déplacement maximal n&apos;excède pas 20% de l&apos;envergure,&lt;/li&gt;&lt;li&gt;La rotation maximale n&apos;excède pas 20&amp;deg;.&lt;/li&gt;&lt;/ul&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xplane/controls/stab3dctrls.cpp" line="120"/>
@@ -7369,14 +7534,6 @@ Import depuis un fichier binaire
         <translation>La masse doit être non nulle pour les polaires du type 2</translation>
     </message>
     <message>
-        <source>Type 1 (fixed V</source>
-        <translation type="vanished">Type 1 (V fixe</translation>
-    </message>
-    <message>
-        <source>)</source>
-        <translation type="vanished">)</translation>
-    </message>
-    <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="368"/>
         <source>Type 2 (fixed lift)</source>
         <translation>Type 2 (portance fixe)</translation>
@@ -7385,22 +7542,6 @@ Import depuis un fichier binaire
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="369"/>
         <source>Type 3 (speed polar)</source>
         <translation>Type 3 (polaire de vitesse)</translation>
-    </message>
-    <message>
-        <source>Type 4 (fixed </source>
-        <translation type="vanished">Type 4 (fixé </translation>
-    </message>
-    <message>
-        <source>Type 5 (</source>
-        <translation type="vanished">Type 5 (</translation>
-    </message>
-    <message>
-        <source>  range, fixed </source>
-        <translation type="vanished">range, fixe </translation>
-    </message>
-    <message>
-        <source> and V</source>
-        <translation type="vanished"> et V</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="367"/>
@@ -10592,7 +10733,7 @@ Import depuis un fichier binaire
     <message>
         <location filename="../../fl5-app/modules/xsail/controls/xsaildisplayctrls.cpp" line="146"/>
         <source>Pick value</source>
-        <translation>Sélection de valeur</translation>
+        <translation>Sélection valeur locale</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xsail/controls/xsaildisplayctrls.cpp" line="148"/>

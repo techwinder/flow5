@@ -104,6 +104,7 @@ void PlaneDlg::makeCommonControls()
             QMenu *pCheckMeshMenu = new QMenu(tr("Actions"));
             {
                 m_pClearOutput   = new QAction(tr("Clear output"), this);
+                m_pClearOutput->setToolTip(tr("<p>Clears the text output</p>"));
 
                 m_pPlaneInertia     = new QAction(tr("Inertia"), this);
                 m_pPlaneInertia->setShortcut(Qt::Key_F12);

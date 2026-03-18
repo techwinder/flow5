@@ -26,12 +26,13 @@
 
 
 #include <interfaces/optim/psotaskplane.h>
+
 #include <api/panelanalysis.h>
 #include <api/planetask.h>
 #include <api/planeopp.h>
 #include <api/planepolar.h>
 #include <api/planexfl.h>
-
+#include <api/objects3d.h>
 
 PlanePolar PSOTaskPlane::s_WPolar;
 
@@ -153,6 +154,7 @@ void PSOTaskPlane::calcFitness(Particle *pParticle, bool bLong, bool bTrace) con
 
     std::vector<double> opplist{pParticle->pos(0)}; // first coordinate is the aoa
     pTask->setOppList(opplist);
+    pTask->setKeepOpps(true);
 
 
     pTask->run();
@@ -195,7 +197,8 @@ void PSOTaskPlane::calcFitness(Particle *pParticle, bool bLong, bool bTrace) con
                     break;
             }
         }
-        delete pPOpp;
+//        delete pPOpp;
+        Objects3d::deletePlaneOpp(pPOpp);
     }
 
     delete pPlaneXfl;

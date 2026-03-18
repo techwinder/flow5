@@ -176,10 +176,10 @@ class OptimPlaneDlg : public QDialog
         QFrame *m_pPSOFrame;
         IntEdit *m_pieSwarmSize, *m_pieArchiveSize;
         IntEdit *m_pieMaxIter;
-        FloatEdit *m_pdeInertiaWeight;
-        FloatEdit *m_pdeCognitiveWeight;
-        FloatEdit *m_pdeSocialWeight;
-        FloatEdit *m_pdePropRegenerate;
+        FloatEdit *m_pfeInertiaWeight;
+        FloatEdit *m_pfeCognitiveWeight;
+        FloatEdit *m_pfeSocialWeight;
+        FloatEdit *m_pfePropRegenerate;
         QPushButton *m_ppbRestoreDefault;
         QCheckBox *m_pchMultiThread;
 

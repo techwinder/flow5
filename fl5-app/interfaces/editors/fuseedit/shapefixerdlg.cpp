@@ -126,6 +126,7 @@ void ShapeFixerDlg::setupLayout()
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Discard, this);
     {
         m_ppbClearOutput = new QPushButton(tr("Clear output"));
+        m_ppbClearOutput->setToolTip(tr("<p>Clears the text output</p>"));
         m_pButtonBox->addButton(m_ppbClearOutput, QDialogButtonBox::ActionRole);
         connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onButton(QAbstractButton*)));
     }

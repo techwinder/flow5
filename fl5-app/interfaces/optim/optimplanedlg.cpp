@@ -80,7 +80,7 @@ QByteArray OptimPlaneDlg::s_RightVSplitterSizes;
 
 OptimPlaneDlg::OptimPlaneDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("Optimization 3d");
+    setWindowTitle(tr("Optimization 3d"));
 
     m_bChanged = false;
     m_bSaved   = true;
@@ -166,7 +166,7 @@ void OptimPlaneDlg::setupLayout()
                                 m_pVariableDelegate = new EditObjectDelegate(this);
                                 m_ptvPlane->setItemDelegate(m_pVariableDelegate);
                             }
-                            m_ppbResetVariables = new QPushButton("Reset variables");
+                            m_ppbResetVariables = new QPushButton(tr("Reset variables"));
 
                             pVarLayout->addWidget(m_ptvPlane);
                             pVarLayout->addWidget(m_ppbResetVariables);
@@ -317,44 +317,44 @@ void OptimPlaneDlg::makeCommonWt()
     {
         QGridLayout *pSwarmLayout = new QGridLayout;
         {
-            QLabel *plabPopSize = new QLabel("Swarm size:");
+            QLabel *plabPopSize = new QLabel(tr("Swarm size:"));
             m_pieSwarmSize = new IntEdit(PSOTask::s_PopSize);
 
-            QLabel *plabArchiveSize = new QLabel("Max. Pareto size:");
+            QLabel *plabArchiveSize = new QLabel(tr("Max. Pareto size:"));
             m_pieArchiveSize = new IntEdit(PSOTask::s_ArchiveSize);
-            m_pieArchiveSize->setToolTip("The maximum size of the Pareto frontier");
+            m_pieArchiveSize->setToolTip(tr("<p>The maximum size of the Pareto frontier</p>"));
 
-            QLabel *plabInertia = new QLabel("Inertia weight:");
-            m_pdeInertiaWeight = new FloatEdit(PSOTask::s_InertiaWeight);
-            m_pdeInertiaWeight->setToolTip("<p>The inertia weight determines the influence of the particle's "
+            QLabel *plabInertia = new QLabel(tr("Inertia weight:"));
+            m_pfeInertiaWeight = new FloatEdit(PSOTask::s_InertiaWeight);
+            m_pfeInertiaWeight->setToolTip(tr("<p>The inertia weight determines the influence of the particle's "
                                            "current velocity on its updated velocity.<br>"
-                                           "Recommendation: 0.3</p>");
+                                           "Recommendation: 0.3</p>"));
 
-            QLabel *plabCognitive = new QLabel("Cognitive weight:");
-            m_pdeCognitiveWeight = new FloatEdit(PSOTask::s_CognitiveWeight);
-            m_pdeCognitiveWeight->setToolTip("<p>The cognitive weight determines the influence of the particle's best position.<br>"
-                                             "Recommendation: 0.7</p>");
+            QLabel *plabCognitive = new QLabel(tr("Cognitive weight:"));
+            m_pfeCognitiveWeight = new FloatEdit(PSOTask::s_CognitiveWeight);
+            m_pfeCognitiveWeight->setToolTip(tr("<p>The cognitive weight determines the influence of the particle's best position.<br>"
+                                             "Recommendation: 0.7</p>"));
 
-            QLabel *plabSocial = new QLabel("Social weight:");
-            m_pdeSocialWeight = new FloatEdit(PSOTask::s_SocialWeight);
-            m_pdeSocialWeight->setToolTip("<p>The social weight determines the influence of the global best-known position.<br>"
-                                          "Recommendation: 0.7</p<");
+            QLabel *plabSocial = new QLabel(tr("Social weight:"));
+            m_pfeSocialWeight = new FloatEdit(PSOTask::s_SocialWeight);
+            m_pfeSocialWeight->setToolTip(tr("<p>The social weight determines the influence of the global best-known position.<br>"
+                                          "Recommendation: 0.7</p>"));
 
-            QLabel *pLabRegen = new QLabel("Regeneration probability:");
-            m_pdePropRegenerate = new FloatEdit(PSOTask::s_ProbRegenerate*100.0);
-            m_pdePropRegenerate->setRange(0.0, 100.0);
-            m_pdePropRegenerate->setToolTip("<p>The probability that a particle will be re-created at a random position at each iteration.<br>"
-                                        "Increases the likelyhood that the swarm will not get stuck on a local minimum.<br>"
-                                        "Recommendation: 5% to 25%</p>");
+            QLabel *pLabRegen = new QLabel(tr("Regeneration probability:"));
+            m_pfePropRegenerate = new FloatEdit(PSOTask::s_ProbRegenerate*100.0);
+            m_pfePropRegenerate->setRange(0.0, 100.0);
+            m_pfePropRegenerate->setToolTip(tr("<p>The probability that a particle will be re-created at a random position at each iteration.<br>"
+                                               "Increases the likelyhood that the swarm will not get stuck on a local minimum.<br>"
+                                               "Recommendation: 5% to 25%</p>"));
             QLabel *pLabPercent = new QLabel("%");
 
-            QLabel *plabMaxIter = new QLabel("Max. iterations:");
+            QLabel *plabMaxIter = new QLabel(tr("Max. iterations:"));
             m_pieMaxIter = new IntEdit(PSOTask::s_MaxIter);
 
-            m_ppbRestoreDefault = new QPushButton("Restore defaults");
+            m_ppbRestoreDefault = new QPushButton(tr("Restore defaults"));
 
 
-            m_pchMultiThread = new QCheckBox("Multi-threaded");
+            m_pchMultiThread = new QCheckBox(tr("Multi-threaded"));
             m_pchMultiThread->setChecked(PSOTask::s_bMultiThreaded);
 
             QLabel *pFlow5Link = new QLabel;
@@ -370,16 +370,16 @@ void OptimPlaneDlg::makeCommonWt()
             pSwarmLayout->addWidget(m_pieArchiveSize,     2, 2);
 
             pSwarmLayout->addWidget(plabInertia,          3, 1);
-            pSwarmLayout->addWidget(m_pdeInertiaWeight,   3, 2);
+            pSwarmLayout->addWidget(m_pfeInertiaWeight,   3, 2);
 
             pSwarmLayout->addWidget(plabCognitive,        4, 1);
-            pSwarmLayout->addWidget(m_pdeCognitiveWeight, 4, 2);
+            pSwarmLayout->addWidget(m_pfeCognitiveWeight, 4, 2);
 
             pSwarmLayout->addWidget(plabSocial,           5, 1);
-            pSwarmLayout->addWidget(m_pdeSocialWeight,    5, 2);
+            pSwarmLayout->addWidget(m_pfeSocialWeight,    5, 2);
 
             pSwarmLayout->addWidget(pLabRegen,            6, 1);
-            pSwarmLayout->addWidget(m_pdePropRegenerate,  6, 2);
+            pSwarmLayout->addWidget(m_pfePropRegenerate,  6, 2);
             pSwarmLayout->addWidget(pLabPercent,          6, 3);
 
             pSwarmLayout->addWidget(plabMaxIter,          7, 1);
@@ -437,12 +437,12 @@ void OptimPlaneDlg::makeCommonWt()
     m_ParetoGraph.setScaleType(GRAPH::EXPANDING);
     GraphOptions::resetGraphSettings(m_ParetoGraph);
 
-    m_ppbMakeSwarm = new QPushButton("Make random swarm");
-    m_ppbSwarm = new QPushButton("Swarm");
-    m_ppbStoreBest= new QPushButton("Store best");
-    m_ppbStoreBest->setToolTip("Adds the current best to the database");
-    m_ppbContinueBest = new QPushButton("Continue from current best");
-    m_ppbContinueBest->setToolTip("Uses the current best plane as the basis for further optimization");
+    m_ppbMakeSwarm = new QPushButton(tr("Make random swarm"));
+    m_ppbSwarm = new QPushButton(tr("Swarm"));
+    m_ppbStoreBest= new QPushButton(tr("Store best"));
+    m_ppbStoreBest->setToolTip(tr("<p>Adds the current best to the database</p>"));
+    m_ppbContinueBest = new QPushButton(tr("Continue from current best"));
+    m_ppbContinueBest->setToolTip(tr("<p>Uses the current best plane as the basis for further optimization</p>"));
 
     m_pFlow5Link = new QLabel;
     m_pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/MOPSO/3d_inverse.html#StepByStep>https://flow5.tech/docs/flow5_doc/MOPSO/3d_inverse.html</a>");
@@ -458,11 +458,11 @@ void OptimPlaneDlg::makeCommonWt()
         {
             QMenu *pMenu = new QMenu("Actions", this);
             {
-                 QAction *p2dDemo = new QAction("2d single-objective demo", this);
+                 QAction *p2dDemo = new QAction(tr("2d single-objective demo"), this);
                  p2dDemo->setShortcut(Qt::Key_F11);
                  connect(p2dDemo, SIGNAL(triggered()), SLOT(on2dDemo()));
 
-                 QAction *pResetParetoFrontier = new QAction("Reset Pareto frontier", this);
+                 QAction *pResetParetoFrontier = new QAction(tr("Reset Pareto frontier"), this);
                  connect(pResetParetoFrontier,  SIGNAL(triggered()), SLOT(onResetParetoFrontier()));
 
                  pMenu->addAction(p2dDemo);
@@ -473,7 +473,8 @@ void OptimPlaneDlg::makeCommonWt()
         }
         m_pButtonBox->addButton(m_ppbMenuBtn, QDialogButtonBox::ActionRole);
 
-        QPushButton *ppbClear = new QPushButton("Clear output");
+        QPushButton *ppbClear = new QPushButton(tr("Clear output"));
+        ppbClear->setToolTip(tr("<p>Clears the text output</p>"));
         connect(ppbClear, SIGNAL(clicked()), m_ppto, SLOT(clear()));
         m_pButtonBox->addButton(ppbClear, QDialogButtonBox::ActionRole);
 
@@ -523,10 +524,10 @@ void OptimPlaneDlg::onRestorePSODefaults()
     m_pieSwarmSize->setValue(        PSOTask::s_PopSize);
     m_pieArchiveSize->setValue(    PSOTask::s_ArchiveSize);
     m_pieMaxIter->setValue(        PSOTask::s_MaxIter);
-    m_pdeInertiaWeight->setValue(  PSOTask::s_InertiaWeight);
-    m_pdeCognitiveWeight->setValue(PSOTask::s_CognitiveWeight);
-    m_pdeSocialWeight->setValue(   PSOTask::s_SocialWeight);
-    m_pdePropRegenerate->setValue( PSOTask::s_ProbRegenerate*100.0);
+    m_pfeInertiaWeight->setValue(  PSOTask::s_InertiaWeight);
+    m_pfeCognitiveWeight->setValue(PSOTask::s_CognitiveWeight);
+    m_pfeSocialWeight->setValue(   PSOTask::s_SocialWeight);
+    m_pfePropRegenerate->setValue( PSOTask::s_ProbRegenerate*100.0);
 }
 
 
@@ -859,10 +860,10 @@ void OptimPlaneDlg::updateParetoViews(int iSelect)
 void OptimPlaneDlg::readData()
 {
     PSOTask::s_ArchiveSize     = m_pieArchiveSize->value();
-    PSOTask::s_InertiaWeight   = m_pdeInertiaWeight->value();
-    PSOTask::s_CognitiveWeight = m_pdeCognitiveWeight->value();
-    PSOTask::s_SocialWeight    = m_pdeSocialWeight->value();
-    PSOTask::s_ProbRegenerate  = m_pdePropRegenerate->value()/100.0;
+    PSOTask::s_InertiaWeight   = m_pfeInertiaWeight->value();
+    PSOTask::s_CognitiveWeight = m_pfeCognitiveWeight->value();
+    PSOTask::s_SocialWeight    = m_pfeSocialWeight->value();
+    PSOTask::s_ProbRegenerate  = m_pfePropRegenerate->value()/100.0;
 
     PSOTask::s_MaxIter         = m_pieMaxIter->value();
     PSOTask::s_PopSize         = m_pieSwarmSize->value();
@@ -1070,8 +1071,8 @@ void OptimPlaneDlg::onSwarm()
     m_pPSOTask->setAnalysisStatus(xfl::RUNNING);
     m_pPSOTask->moveToThread(pThread); // don't touch it until the PSO end task event is received
 
-    enableControls(false); // prevent the user from doing stupid things
-    m_Clock.restart(); // put pressure on something (Jerry)
+    enableControls(false);
+    m_Clock.restart();
 
     onOutputMessage("Launching optimization task asynchronously\n");
     connect(pThread,   SIGNAL(started()),      m_pPSOTask, SLOT(onStartIterations()));

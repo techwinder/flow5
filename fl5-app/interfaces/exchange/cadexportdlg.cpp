@@ -176,9 +176,10 @@ void CADExportDlg::makeCommonWts()
 
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     {
-        QPushButton *ppbClearOutput = new QPushButton("Clear output");
-        connect(ppbClearOutput, SIGNAL(clicked(bool)), m_ppto, SLOT(clear()));
-        m_pButtonBox->addButton(ppbClearOutput, QDialogButtonBox::ActionRole);
+        QPushButton *ppbClear = new QPushButton(tr("Clear output"));
+        ppbClear->setToolTip(tr("<p>Clears the text output</p>"));
+        connect(ppbClear, SIGNAL(clicked(bool)), m_ppto, SLOT(clear()));
+        m_pButtonBox->addButton(ppbClear, QDialogButtonBox::ActionRole);
         connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onButton(QAbstractButton*)));
     }
 }

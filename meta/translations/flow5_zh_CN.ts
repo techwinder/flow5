@@ -274,12 +274,17 @@ Uncheck for increased analysis speed.</source>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="186"/>
-        <source>Clear Output</source>
-        <translation>清除输出</translation>
+        <source>Clear output</source>
+        <translation type="unfinished">清除输出</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="190"/>
-        <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="223"/>
+        <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="187"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="191"/>
+        <location filename="../../fl5-app/modules/xdirect/analysis/batchdlg.cpp" line="224"/>
         <source>Calculate</source>
         <translation>计算</translation>
     </message>
@@ -310,6 +315,11 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/modules/xplane/analysis/batchplanedlg.cpp" line="211"/>
         <source>&lt;p&gt;If activated, stability derivatives and eigenthings will be computed during a T12358 run.&lt;br&gt;Deactivate to save a little computation time.&lt;/p&gt;</source>
         <translation>&lt;p&gt;如果激活，将在T12358运行期间计算稳定性导数和特征值。&lt;br&gt;取消激活以节省少量计算时间。&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchplanedlg.cpp" line="247"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -530,102 +540,107 @@ Uncheck for increased analysis speed.</source>
         <translation>清除输出</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="357"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="356"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="358"/>
         <source>Calculate</source>
         <translation>计算</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="482"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="483"/>
         <source>Select directory</source>
         <translation>选择目录</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="584"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="585"/>
         <source>Analysis</source>
         <translation>分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="586"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="587"/>
         <source>Edit analysis</source>
         <translation>编辑分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="589"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="590"/>
         <source>Clear plane name</source>
         <translation>清除飞机名称</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="592"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="593"/>
         <source>Rename</source>
         <translation>重命名</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="595"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="596"/>
         <source>Duplicate</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="598"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="599"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="604"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="605"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="677"/>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="746"/>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1085"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="678"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="747"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1086"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="677"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="678"/>
         <source>Replace the existing file?</source>
         <translation>替换现有文件？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="705"/>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1049"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="706"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1050"/>
         <source>XML file (*.xml)</source>
         <translation>XML 文件 (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="706"/>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1061"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="707"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1062"/>
         <source>Export analysis definition to xml file</source>
         <translation>将分析定义导出为 XML 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="715"/>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="722"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="716"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="723"/>
         <source>Write error</source>
         <translation>写入错误</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="715"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="716"/>
         <source>Failed to read the file</source>
         <translation>读取文件失败</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="722"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="723"/>
         <source>Failed to save the new file</source>
         <translation>保存新文件失败</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="746"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="747"/>
         <source>Really delete this file?</source>
         <translation>确定删除此文件？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1085"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1086"/>
         <source>Discard the analysis </source>
         <translation>放弃分析 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1246"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/batchxmldlg.cpp" line="1247"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -1067,6 +1082,19 @@ Uncheck for increased analysis speed.</source>
     </message>
 </context>
 <context>
+    <name>CADExportDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/exchange/cadexportdlg.cpp" line="179"/>
+        <source>Clear output</source>
+        <translation type="unfinished">清除输出</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/exchange/cadexportdlg.cpp" line="180"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CPTableView</name>
     <message>
         <location filename="../../fl5-app/interfaces/widgets/customwts/cptableview.cpp" line="275"/>
@@ -1237,10 +1265,6 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="217"/>
         <source>VPW only</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Crossflow vorticity (VPW only)</source>
-        <translation type="vanished">横流涡量（仅 VPW）</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/controls/poppctrls/crossflowctrls.cpp" line="228"/>
@@ -1935,10 +1959,6 @@ Uncheck for increased analysis speed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>&lt;p&gt;CAUTION: XFoil does not accept number of panels greater than 255. Adjust the number of panels and the bunching parameters to achieve the desired point distribution.&lt;/p&gt;</source>
-        <translation type="vanished">&lt;p&gt;注意：XFoil 不接受大于 255 的面板数量。调整面板数量和集束参数以获得所需的点分布。&lt;/p&gt;</translation>
-    </message>
-    <message>
         <location filename="../../fl5-app/interfaces/editors/foiledit/foilrepaneldlg.cpp" line="115"/>
         <source>Uniform</source>
         <translation>均匀</translation>
@@ -1947,10 +1967,6 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/interfaces/editors/foiledit/foilrepaneldlg.cpp" line="119"/>
         <source>Bunched</source>
         <translation>集束</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;&lt;font color=red&gt;XFoil requires NPanels&amp;lt;255&lt;/font&gt;&lt;/p&gt;</source>
-        <translation type="vanished">&lt;p&gt;&lt;font color=red&gt;XFoil 要求面板数 NPanels&amp;lt;255&lt;/font&gt;&lt;/p&gt;</translation>
     </message>
 </context>
 <context>
@@ -2262,6 +2278,16 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/interfaces/editors/fuseedit/fusemesherdlg.cpp" line="100"/>
         <source>Fuse mesh tester</source>
         <translation>机身网格测试器</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusemesherdlg.cpp" line="247"/>
+        <source>Clear output</source>
+        <translation type="unfinished">清除输出</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusemesherdlg.cpp" line="248"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3147,12 +3173,6 @@ _____________已发出取消请求_____________
 <context>
     <name>MainFrame</name>
     <message>
-        <source>flow5 requires OpenGL 3.3 or greater.
-</source>
-        <translation type="vanished">flow5 需要 OpenGL 3.3 或更高版本。
-</translation>
-    </message>
-    <message>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="259"/>
         <source>flow5 requires OpenGL 3.3 or greater.</source>
         <translation type="unfinished"></translation>
@@ -3962,6 +3982,11 @@ _____________已发出取消请求_____________
 <context>
     <name>OptimPlaneDlg</name>
     <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="169"/>
+        <source>Reset variables</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="184"/>
         <source>Define analysis</source>
         <translation type="unfinished"></translation>
@@ -4033,22 +4058,143 @@ _____________已发出取消请求_____________
         <translation>边界粒子</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="705"/>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="320"/>
+        <source>Swarm size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="323"/>
+        <source>Max. Pareto size:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="325"/>
+        <source>&lt;p&gt;The maximum size of the Pareto frontier&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="327"/>
+        <source>Inertia weight:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="329"/>
+        <source>&lt;p&gt;The inertia weight determines the influence of the particle&apos;s current velocity on its updated velocity.&lt;br&gt;Recommendation: 0.3&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="333"/>
+        <source>Cognitive weight:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="335"/>
+        <source>&lt;p&gt;The cognitive weight determines the influence of the particle&apos;s best position.&lt;br&gt;Recommendation: 0.7&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="338"/>
+        <source>Social weight:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="340"/>
+        <source>&lt;p&gt;The social weight determines the influence of the global best-known position.&lt;br&gt;Recommendation: 0.7&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="343"/>
+        <source>Regeneration probability:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="346"/>
+        <source>&lt;p&gt;The probability that a particle will be re-created at a random position at each iteration.&lt;br&gt;Increases the likelyhood that the swarm will not get stuck on a local minimum.&lt;br&gt;Recommendation: 5% to 25%&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="351"/>
+        <source>Max. iterations:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="354"/>
+        <source>Restore defaults</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="357"/>
+        <source>Multi-threaded</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="440"/>
+        <source>Make random swarm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="442"/>
+        <source>Store best</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="443"/>
+        <source>&lt;p&gt;Adds the current best to the database&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="444"/>
+        <source>Continue from current best</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="445"/>
+        <source>&lt;p&gt;Uses the current best plane as the basis for further optimization&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="461"/>
+        <source>2d single-objective demo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="465"/>
+        <source>Reset Pareto frontier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="476"/>
+        <source>Clear output</source>
+        <translation type="unfinished">清除输出</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="477"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="706"/>
         <source>Question</source>
         <translation>问题</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="705"/>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="706"/>
         <source>Discard results?</source>
         <translation>放弃结果？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="925"/>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="441"/>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="926"/>
         <source>Swarm</source>
         <translation>群</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="1081"/>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="83"/>
+        <source>Optimization 3d</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/optim/optimplanedlg.cpp" line="1082"/>
         <source>Interrupt task</source>
         <translation>中断任务</translation>
     </message>
@@ -4383,27 +4529,32 @@ Ctrl+B 编辑第一机身</translation>
         <translation>清除输出</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="108"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="107"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="109"/>
         <source>Inertia</source>
         <translation>惯性矩</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="110"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="111"/>
         <source>Flip normals</source>
         <translation>翻转法线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="120"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="121"/>
         <source>Save as</source>
         <translation>另存为</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="189"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="190"/>
         <source>Discard the changes?</source>
         <translation>放弃更改?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="190"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="191"/>
         <source>Question</source>
         <translation>问题</translation>
     </message>
@@ -4920,65 +5071,9 @@ Ctrl+B 编辑第一机身</translation>
 <context>
     <name>PlaneXfl</name>
     <message>
-        <source>Wing span</source>
-        <translation type="vanished">翼展</translation>
-    </message>
-    <message>
-        <source>xyProj. span</source>
-        <translation type="vanished">平面投影翼展</translation>
-    </message>
-    <message>
-        <source>Wing area</source>
-        <translation type="vanished">机翼面积</translation>
-    </message>
-    <message>
-        <source>Projected area</source>
-        <translation type="vanished">投影面积</translation>
-    </message>
-    <message>
-        <source>Mass</source>
-        <translation type="vanished">质量</translation>
-    </message>
-    <message>
         <location filename="../../fl5-lib/objects3d/planeobjects/plane/planexfl.cpp" line="1598"/>
         <source>CoG</source>
         <translation>重心</translation>
-    </message>
-    <message>
-        <source>Wing load</source>
-        <translation type="vanished">翼载</translation>
-    </message>
-    <message>
-        <source>Tail volume (H)</source>
-        <translation type="vanished">水平尾容积系数</translation>
-    </message>
-    <message>
-        <source>Tail volume (V)</source>
-        <translation type="vanished">垂直尾容积系数</translation>
-    </message>
-    <message>
-        <source>Root chord</source>
-        <translation type="vanished">根弦长</translation>
-    </message>
-    <message>
-        <source>MAC</source>
-        <translation type="vanished">平均气动弦长</translation>
-    </message>
-    <message>
-        <source>Tip twist</source>
-        <translation type="vanished">翼尖扭转</translation>
-    </message>
-    <message>
-        <source>Aspect Ratio</source>
-        <translation type="vanished">展弦比</translation>
-    </message>
-    <message>
-        <source>Taper Ratio</source>
-        <translation type="vanished">锥度比</translation>
-    </message>
-    <message>
-        <source>Root-Tip Sweep</source>
-        <translation type="vanished">根梢后掠角</translation>
     </message>
 </context>
 <context>
@@ -6043,21 +6138,6 @@ when using the mouse wheel.</source>
     </message>
 </context>
 <context>
-    <name>QObject</name>
-    <message>
-        <source>Main wing</source>
-        <translation type="vanished">主翼</translation>
-    </message>
-    <message>
-        <source>Elevator</source>
-        <translation type="vanished">平尾</translation>
-    </message>
-    <message>
-        <source>Fin</source>
-        <translation type="vanished">垂尾</translation>
-    </message>
-</context>
-<context>
     <name>RenameDlg</name>
     <message>
         <location filename="../../fl5-app/interfaces/widgets/customdlg/renamedlg.cpp" line="36"/>
@@ -6799,6 +6879,11 @@ when using the mouse wheel.</source>
         <source>Clear output</source>
         <translation>清除输出</translation>
     </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/shapedlg.cpp" line="75"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ShapeFixerDlg</name>
@@ -6858,57 +6943,62 @@ when using the mouse wheel.</source>
         <translation>清除输出</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="249"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="129"/>
+        <source>&lt;p&gt;Clears the text output&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="250"/>
         <source>Performing FACE stitching:
 </source>
         <translation>正在执行侧面缝合:
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="250"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="251"/>
         <source>   Nb of free edges=%1
 </source>
         <translation>   自由边数量=%1
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="306"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="307"/>
         <source>Fuselage is made of %1 shape(s):</source>
         <translation>机身由 %1 个形状组成:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="310"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="311"/>
         <source>   Shape %1
 </source>
         <translation>   形状 %1
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="349"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="350"/>
         <source>   After: sub-shape %1 has FORWARD  orientation</source>
         <translation>   之后: 子形状 %1 具有 FORWARD 方向</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="350"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="351"/>
         <source>   After: sub-shape %1 has REVERSED orientation</source>
         <translation>   之后: 子形状 %1 具有 REVERSED 方向</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="377"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="378"/>
         <source>Finished fixing small edges if any:
 </source>
         <translation>完成小边修复(如果有):
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="399"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="400"/>
         <source>Finished fixing gaps if any:
 </source>
         <translation>完成间隙修复(如果有):
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="421"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/shapefixerdlg.cpp" line="422"/>
         <source>Fixed shape %1
 </source>
         <translation>固定形状 %1
@@ -7445,14 +7535,6 @@ Importing from a binary file
         <translation>对于类型 2 极曲线，质量必须非零</translation>
     </message>
     <message>
-        <source>Type 1 (fixed V</source>
-        <translation type="vanished">类型 1 (固定 V</translation>
-    </message>
-    <message>
-        <source>)</source>
-        <translation type="vanished">)</translation>
-    </message>
-    <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="368"/>
         <source>Type 2 (fixed lift)</source>
         <translation>类型 2 (固定升力)</translation>
@@ -7461,22 +7543,6 @@ Importing from a binary file
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="369"/>
         <source>Type 3 (speed polar)</source>
         <translation>类型 3 (速度极曲线)</translation>
-    </message>
-    <message>
-        <source>Type 4 (fixed </source>
-        <translation type="vanished">类型 4 (固定 </translation>
-    </message>
-    <message>
-        <source>Type 5 (</source>
-        <translation type="vanished">类型 5 (</translation>
-    </message>
-    <message>
-        <source>  range, fixed </source>
-        <translation type="vanished">  范围，固定 </translation>
-    </message>
-    <message>
-        <source> and V</source>
-        <translation type="vanished"> 和 V</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="367"/>
@@ -8418,22 +8484,6 @@ Importing from a binary file
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>two-sided</source>
-        <translation type="vanished">双侧</translation>
-    </message>
-    <message>
-        <source>symmetric</source>
-        <translation type="vanished">对称</translation>
-    </message>
-    <message>
-        <source>Right Side</source>
-        <translation type="vanished">右侧</translation>
-    </message>
-    <message>
-        <source>Left Side</source>
-        <translation type="vanished">左侧</translation>
-    </message>
-    <message>
         <location filename="../../fl5-app/interfaces/editors/wingedit/wingdefdlg.cpp" line="162"/>
         <source>Close inner side</source>
         <translation>封闭内侧</translation>
@@ -8442,12 +8492,6 @@ Importing from a binary file
         <location filename="../../fl5-app/interfaces/editors/wingedit/wingdefdlg.cpp" line="199"/>
         <source>Description:</source>
         <translation>描述:</translation>
-    </message>
-    <message>
-        <source>Number of horizontal panel strips at the wing tips.
-Recommendation 2-5.</source>
-        <translation type="vanished">机翼翼尖水平面板条带数量。
-建议 2-5。</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/wingedit/wingdefdlg.cpp" line="214"/>
@@ -8678,57 +8722,9 @@ Recommendation 2-5.</source>
 <context>
     <name>WingXfl</name>
     <message>
-        <source>Wing area</source>
-        <translation type="vanished">机翼面积</translation>
-    </message>
-    <message>
-        <source>Wing span</source>
-        <translation type="vanished">翼展</translation>
-    </message>
-    <message>
-        <source>Projected area</source>
-        <translation type="vanished">投影面积</translation>
-    </message>
-    <message>
-        <source>Projected span</source>
-        <translation type="vanished">投影翼展</translation>
-    </message>
-    <message>
-        <source>Mean geom. chord</source>
-        <translation type="vanished">平均几何弦长</translation>
-    </message>
-    <message>
-        <source>Mean aero. chord</source>
-        <translation type="vanished">平均气动弦长</translation>
-    </message>
-    <message>
-        <source>Aspect ratio</source>
-        <translation type="vanished">展弦比</translation>
-    </message>
-    <message>
-        <source>Taper ratio</source>
-        <translation type="vanished">锥度比</translation>
-    </message>
-    <message>
         <location filename="../../fl5-lib/objects3d/planeobjects/wing/wingxfl.cpp" line="2692"/>
         <source>Undefined</source>
         <translation>未定义</translation>
-    </message>
-    <message>
-        <source>Sweep</source>
-        <translation type="vanished">后掠角</translation>
-    </message>
-    <message>
-        <source>VLM panels</source>
-        <translation type="vanished">VLM 面板数</translation>
-    </message>
-    <message>
-        <source>Quad panels</source>
-        <translation type="vanished">四边形面板数</translation>
-    </message>
-    <message>
-        <source>Triangular panels</source>
-        <translation type="vanished">三角形面板数</translation>
     </message>
 </context>
 <context>

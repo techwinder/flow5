@@ -71,9 +71,10 @@ void ShapeDlg::setupLayout()
                 m_pptoOutput = new PlainTextOutput;
                 m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Save | QDialogButtonBox::Discard);
                 {
-                    QPushButton *ppbClearOutput = new QPushButton(tr("Clear output"));
-                    connect(ppbClearOutput, SIGNAL(clicked(bool)), m_pptoOutput, SLOT(clear()));
-                    m_pButtonBox->addButton(ppbClearOutput, QDialogButtonBox::ActionRole);
+                    QPushButton *ppbClear = new QPushButton(tr("Clear output"));
+                    ppbClear->setToolTip(tr("<p>Clears the text output</p>"));
+                    connect(ppbClear, SIGNAL(clicked(bool)), m_pptoOutput, SLOT(clear()));
+                    m_pButtonBox->addButton(ppbClear, QDialogButtonBox::ActionRole);
 
                     connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onButton(QAbstractButton*)));
                 }

@@ -183,9 +183,10 @@ void BatchDlg::makeCommonWts()
 
                 m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close, this);
                 {
-                    QPushButton *ppbClearBtn = new QPushButton(tr("Clear Output"));
-                    connect(ppbClearBtn, SIGNAL(clicked()), m_ppto, SLOT(clear()));
-                    m_pButtonBox->addButton(ppbClearBtn, QDialogButtonBox::ActionRole);
+                    QPushButton *ppbClear = new QPushButton(tr("Clear output"));
+                    ppbClear->setToolTip(tr("<p>Clears the text output</p>"));
+                    connect(ppbClear, SIGNAL(clicked()), m_ppto, SLOT(clear()));
+                    m_pButtonBox->addButton(ppbClear, QDialogButtonBox::ActionRole);
 
                     m_ppbAnalyze   = new QPushButton(tr("Calculate"));
                     m_pButtonBox->addButton(m_ppbAnalyze, QDialogButtonBox::ActionRole);

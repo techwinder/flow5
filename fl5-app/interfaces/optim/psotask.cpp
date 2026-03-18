@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-
+#include <QCoreApplication>
 #include <QtConcurrent/QtConcurrent>
 
 #include <interfaces/optim/psotask.h>
@@ -191,18 +191,18 @@ void PSOTask::onMakeParticleSwarm()
     //    thread()->exit(0); // exit event loop so that finished() is emitted
 
     // this task may be resumed, so move it back to the main GUI thread
- //   moveToThread(QApplication::instance()->thread());
+    moveToThread(qApp->instance()->thread());
 }
 
 
 void PSOTask::onStartIterations()
 {
-/*    if(m_Swarm.size()==0 || m_Swarm.size()!=s_PopSize)
+    if(m_Swarm.size()==0 || m_Swarm.size()!=s_PopSize)
     {
         m_Status = xfl::PENDING;
         outputMsg("Invalid swarm size\n");
         postPSOEvent(0); // notifiy finished
-        moveToThread(QApplication::instance()->thread());
+        moveToThread(qApp->instance()->thread());
         return;
     }
 
@@ -214,7 +214,9 @@ void PSOTask::onStartIterations()
     {
         onIteration();
     }
-    while(m_Status==xfl::RUNNING);*/
+    while(m_Status==xfl::RUNNING);
+
+    moveToThread(qApp->instance()->thread());
 }
 
 

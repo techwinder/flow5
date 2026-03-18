@@ -244,6 +244,7 @@ void BatchPlaneDlg::setupLayout()
                         m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
                         {
                             QPushButton *ppbClear = new QPushButton("Clear output");
+                            ppbClear->setToolTip(tr("<p>Clears the text output</p>"));
                             connect(ppbClear, SIGNAL(clicked()), m_ppto, SLOT(clear()));
                             m_ppbAnalyze =  new QPushButton("Calculate");
                             m_ppbAnalyze->setDefault(true);

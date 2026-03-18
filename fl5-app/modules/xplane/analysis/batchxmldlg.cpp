@@ -353,6 +353,7 @@ void BatchXmlDlg::setupLayout()
                         m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
                         {
                             QPushButton *ppbClear = new QPushButton(tr("Clear output"));
+                            ppbClear->setToolTip(tr("<p>Clears the text output</p>"));
                             connect(ppbClear, SIGNAL(clicked()), m_pptoAnalysisOutput, SLOT(clear()));
                             m_ppbAnalyze =  new QPushButton(tr("Calculate"));
                             m_ppbAnalyze->setDefault(true);
