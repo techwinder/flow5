@@ -24,34 +24,54 @@ int main()
     // flow5 objects, i.e. foils, planes, boats and their polar and opp children
     // should always be allocated on the heap
 
-    Foil *pFoilN2413 = foil::makeNacaFoil(2413, "NACA 2413");
-    Foil *pFoilN0009 = foil::makeNacaFoil(9,    "NACA 0009");
+    // makeNacaFoil has been deprecated in v7.55;
+//    Foil *pFoilN2413 = foil::makeNacaFoil(2413, "NACA 2413");
+//    Foil *pFoilN0009 = foil::makeNacaFoil(9,    "NACA 0009");
+
+    // Using seperate methods for creating and sotring
+    Foil *pFoilN2413 = new Foil;
+    if(!Objects2d::makeNacaFoil(pFoilN2413, 2413, 200))
     {
-        if(!pFoilN0009 || !pFoilN2413)
-        {
-            // failsafe; this should not happen
-            std::cout <<"Error creating the foils ...aborting" << std::endl;
-            if(pFoilN0009) delete pFoilN0009;
-            if(pFoilN2413) delete pFoilN2413;
-            return 0;
-        }
-
-
-        // set the style for these foils and their children objects, i.e. polars and operating points
-        pFoilN0009->setTheStyle({true, Line::SOLID, 2, {31, 111, 231}, Line::NOSYMBOL});
-        pFoilN2413->setTheStyle({true, Line::SOLID, 2, {231, 111, 31}, Line::NOSYMBOL});
-
-
-        // repanel
-        int  npanels = 149; // prefer primes
-        double amp = 0.7; // 0.0: no bunching, 1.0: max. bunching
-        pFoilN0009->rePanel(npanels, amp);
-        pFoilN2413->rePanel(npanels, amp);
-
-        // define the flaps
-        pFoilN0009->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
-        pFoilN2413->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
+        delete pFoilN2413;
+        return 0;
     }
+    pFoilN2413->setName("NACA 2413");
+    Objects2d::insertThisFoil(pFoilN2413);
+
+    Foil *pFoilN0009 = new Foil;
+    if(!Objects2d::makeNacaFoil(pFoilN0009, 9, 200))
+    {
+        delete pFoilN0009;
+        return 0;
+    }
+    pFoilN0009->setName("NACA 0009");
+    Objects2d::insertThisFoil(pFoilN0009);
+
+    if(!pFoilN0009 || !pFoilN2413)
+    {
+        // failsafe; this should not happen
+        std::cout <<"Error creating the foils ...aborting" << std::endl;
+        if(pFoilN0009) delete pFoilN0009;
+        if(pFoilN2413) delete pFoilN2413;
+        return 0;
+    }
+
+
+    // set the style for these foils and their children objects, i.e. polars and operating points
+    pFoilN0009->setTheStyle({true, Line::SOLID, 2, {31, 111, 231}, Line::NOSYMBOL});
+    pFoilN2413->setTheStyle({true, Line::SOLID, 2, {231, 111, 31}, Line::NOSYMBOL});
+
+
+    // repanel the foils
+    int  npanels = 149; // prefer primes
+    double amp = 0.7; // 0.0: no bunching, 1.0: max. bunching
+    pFoilN0009->rePanel(npanels, amp);
+    pFoilN2413->rePanel(npanels, amp);
+
+    // define the flaps
+    pFoilN0009->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
+    pFoilN2413->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
+
 
 
     // Create and define a new xfl-type plane
@@ -75,6 +95,7 @@ int main()
 
         // Set the inertia properties
         // All units must be provided in I.S. standard, i.e. meters and kg
+        // Get a reference to the plane's inertia for ease of access
         Inertia &inertia = pPlaneXfl->inertia();
         inertia.appendPointMass(0.20, {-0.35,0,0},  "Nose lead");
         inertia.appendPointMass(0.20, {-0.25,0,0},  "Battery and receiver");

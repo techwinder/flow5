@@ -138,6 +138,11 @@ Foil * foil::loadFoil(std::string const &pathname)
 }
 
 
+/** @deprecated Deprecating in v7.55 since the method does two different things:
+ *  1. create the foil
+ *  2. store it in the database
+ *  Use preferably the code snippet below directly in the source code.
+ */
 Foil *foil::makeNacaFoil(int digits, std::string const &name)
 {
     Foil *pFoil = new Foil;
