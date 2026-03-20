@@ -41,7 +41,7 @@ class ModDlg : public QDialog
 
     public:
         void initDialog();
-        void setQuestion(QString quest) {m_Question=quest;}
+        void setQuestion(QString const &quest) {m_Question=quest;}
 
     private slots:
         void onSaveAsNew();

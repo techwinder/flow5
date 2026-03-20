@@ -1450,36 +1450,40 @@ void MainFrame::handleIOResults(bool bError)
     else if(Objects3d::nPlanes())  iApp = xfl::XPLANE;
     else                           iApp = xfl::XDIRECT;
 
-
-    if(iApp==xfl::XDIRECT)
+    switch (iApp)
     {
-        m_pXDirect->setFoil();
-//        m_pXDirect->setPolar();
-
-        setSavedState(false);
-
-        if(iApp==xfl::XDIRECT)
+        case xfl::XDIRECT:
         {
-            m_pXDirect->setControls();
-        }
+            m_pXDirect->setFoil();
 
-        onXDirect();
-    }
-    else if(iApp==xfl::XPLANE)
-    {
-        for(Plane *pPlane : Objects3d::planes())
-        {
-            Objects3d::makePlaneTriangulation(pPlane);
+            setSavedState(false);
+
+            if(iApp==xfl::XDIRECT)
+            {
+                m_pXDirect->setControls();
+            }
+
+            onXDirect();
+            break;
         }
-        onXPlane();
-    }
-    else if(iApp==xfl::XSAIL)
-    {
-        for(Boat *pBoat : SailObjects::boats())
+        case xfl::XPLANE:
         {
-            Objects3d::makeBoatTriangulation(pBoat);
+//            for(Plane *pPlane : Objects3d::planes())
+//                Objects3d::makePlaneTriangulation(pPlane);
+
+            onXPlane();
+            break;
         }
-        onXSail();
+        case xfl::XSAIL:
+        {
+            for(Boat *pBoat : SailObjects::boats())
+            {
+                Objects3d::makeBoatTriangulation(pBoat);
+            }
+            onXSail();
+            break;
+        }
+        case xfl::NOAPP: break;
     }
 
     if(!bError)

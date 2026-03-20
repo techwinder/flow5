@@ -17,15 +17,22 @@ int main()
     std::string nacaname = "theNaca2410";
     std::cout << "Making foil " << nacaname << std::endl;
 
-    Foil *pFoil = foil::makeNacaFoil(2410, nacaname); // "high level" function which also inserts the foil object in the database
+    // makeNacaFoil has been deprecated in v7.55;
+//    Foil *pFoil = foil::makeNacaFoil(2410, nacaname); // "high level" function which also inserts the foil object in the database
 
-    if(pFoil)
-        std::cout <<"The foil "<< pFoil-> name() <<" has been created and added to the database" << std::endl<< std::endl;
-    else
+    // Using seperate methods for creating and storing
+    // Create
+    Foil *pFoil = new Foil;
+    if(!Objects2d::makeNacaFoil(pFoil, 2410, 200))
     {
-        std::cout <<"Error creating the foil ...aborting" << std::endl;
+        if(pFoil) delete pFoil;
         return 0;
     }
+    std::cout <<"The foil "<< pFoil-> name() <<" has been created and added to the database" << std::endl<< std::endl;
+    pFoil->setName("NACA 2410");
+
+    // Store
+    Objects2d::insertThisFoil(pFoil);
 
 //    std::string coords = pFoil->listCoords();
 //    std::cout << coords << std::endl;
@@ -85,13 +92,12 @@ int main()
 
     printf(exportstr.c_str());
 
-    std::cout << "done" << std::endl;
 
     globals::saveFl5Project("/tmp/XFoilRun.fl5");
 
-
-
     globals::deleteObjects(); // Must call! will delete the foil and the polar objects
+
+    std::cout << "done" << std::endl;
 
     return 0;
 

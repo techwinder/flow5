@@ -23,6 +23,7 @@
 *****************************************************************************/
 
 #include <QDebug>
+#include <QThread>
 
 #include <filesystem>
 
@@ -1045,6 +1046,9 @@ void gmesh::tessellateBRep(std::string const&BRep, GmshParams const &params, std
         gmsh::option::setNumber("Mesh.MeshSizeMax",           params.m_MaxSize);
         gmsh::option::setNumber("Mesh.MeshSizeFromCurvature", params.m_nCurvature);
 
+//        gmsh::option::setNumber("General.NumThreads", QThread::idealThreadCount());
+//        gmsh::option::setNumber("Mesh.MaxNumThreads2D", QThread::idealThreadCount());
+        gmsh::option::setNumber("Mesh.Algorithm", 1);
         gmsh::model::mesh::generate(2);
     }
     catch(...)

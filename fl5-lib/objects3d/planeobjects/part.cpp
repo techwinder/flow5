@@ -29,6 +29,7 @@
 
 bool Part::s_bOccTessellator = false;
 
+GmshParams Part::s_GmshTessDefault;
 
 Part::Part()
 {
@@ -58,9 +59,10 @@ Part::Part()
 
     m_bAutoInertia = true;
 
-    m_GmshTessParams.m_MinSize    = 0.01; // fine for tessellation
-    m_GmshTessParams.m_MaxSize    = 1.00;
-    m_GmshTessParams.m_nCurvature = 30;
+    m_GmshTessParams = s_GmshTessDefault;
+ //   m_GmshTessParams.m_MinSize    = 0.015; // fine for tessellation
+ //   m_GmshTessParams.m_MaxSize    = 1.00;
+ //   m_GmshTessParams.m_nCurvature = 20;
 }
 
 

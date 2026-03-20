@@ -41,6 +41,7 @@ class IntEdit;
 class FloatEdit;
 class ColorBtn;
 class LineBtn;
+class GmshCtrlsWt;
 
 class W3dPrefs : public QWidget
 {
@@ -161,6 +162,11 @@ class W3dPrefs : public QWidget
 
         IntEdit *m_pieChordwiseRes, *m_pieBodyAxialRes, *m_pieBodyHoopRes;
         IntEdit *m_pieSailXRes, *m_pieSailZRes;
+
+//        FloatEdit *m_pfeGmshMin,  *m_pfeGmshMax;
+//        IntEdit   *m_pieGmshNCurv;
+
+        GmshCtrlsWt *m_pGmshCtrlsWt;
 
         FloatEdit *m_pfeArcballRadius;
 

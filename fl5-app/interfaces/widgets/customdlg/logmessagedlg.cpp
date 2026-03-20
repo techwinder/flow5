@@ -38,7 +38,7 @@
 LogMessageDlg::LogMessageDlg(QWidget *pParent) : QWidget(pParent)
 {
     setWindowFlag(Qt::WindowStaysOnTopHint, true);
-    setWindowTitle("All-purpose log message window");
+    setWindowTitle(tr("All-purpose log message window"));
     setupLayout();
 }
 

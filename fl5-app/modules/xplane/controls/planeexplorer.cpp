@@ -1369,7 +1369,6 @@ void PlaneExplorer::onSetFilter()
 }
 
 
-
 void PlaneExplorer::onCurrentRowChanged(QModelIndex currentfilteredidx)
 {
     setObjectFromIndex(currentfilteredidx);

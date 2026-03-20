@@ -45,43 +45,45 @@ void GmshCtrlsWt::setupLayout()
 {
     QGridLayout *pMainLayout = new QGridLayout;
     {
-        QLabel *plabMinSize = new QLabel("Minimum element size=");
+        QLabel *plabMinSize = new QLabel(tr("Minimum element size="));
         m_pfeMinSize = new FloatEdit;
-        m_pfeMinSize->setToolTip("<p>The minimum acceptable size of the triangles. "
+        m_pfeMinSize->setToolTip(tr("<p>The minimum acceptable size of the triangles. "
                                  "This value should be stricly positive to prevent "
                                  "excessively fine meshes, high number of elements. and long meshing times."
                                  "</p>"
                                  "<p>"
                                  "Min.acceptable value= 0.1 mm"
-                                 "</p>");
+                                 "</p>"));
         QLabel *plabMinUnit = new QLabel(Units::lengthUnitQLabel());
 
-        QLabel *plabMaxSize = new QLabel("Maximum element size=");
+        QLabel *plabMaxSize = new QLabel(tr("Maximum element size="));
         m_pfeMaxSize = new FloatEdit;
-        m_pfeMaxSize->setToolTip("<p>The maximum acceptable size of the triangles. "
-                                 "Reduce the value to increase the mesh density.</p>");
+        m_pfeMaxSize->setToolTip(tr("<p>The maximum acceptable size of the triangles. "
+                                 "Reduce the value to increase the mesh density.</p>"));
         QLabel *plabMaxUnit = new QLabel(Units::lengthUnitQLabel());
 
 
-        QLabel *plabnCurvature = new QLabel("<p>Nbr. of elements=</p>");
+        QLabel *plabnCurvature = new QLabel(tr("<p>Nbr. of elements=</p>"));
         m_pienCurvature = new IntEdit;
-        m_pienCurvature->setToolTip("<p> Automatically compute mesh element sizes from curvature, "
+        m_pienCurvature->setToolTip(tr("<p> Automatically compute mesh element sizes from curvature, "
                                     "using the value as the target number of elements per 2&pi;.<br>"
                                     "This is the main parameter that should be used to control mesh density.<br>"
-                                    "Recommendation: between 10 and 50.</p>");
+                                    "Recommendation: between 10 and 50.</p>"));
         QLabel *plabnUnit = new QLabel("<p>/2&pi;</p>");
 
-        pMainLayout->addWidget(plabMinSize,     1, 1);
+        pMainLayout->addWidget(plabMinSize,     1, 1, Qt::AlignRight);
         pMainLayout->addWidget(m_pfeMinSize,    1, 2);
         pMainLayout->addWidget(plabMinUnit,     1, 3);
-        pMainLayout->addWidget(plabMaxSize,     2, 1);
+        pMainLayout->addWidget(plabMaxSize,     2, 1, Qt::AlignRight);
         pMainLayout->addWidget(m_pfeMaxSize,    2, 2);
         pMainLayout->addWidget(plabMaxUnit,     2, 3);
-        pMainLayout->addWidget(plabnCurvature,  3, 1);
+        pMainLayout->addWidget(plabnCurvature,  3, 1, Qt::AlignRight);
         pMainLayout->addWidget(m_pienCurvature, 3, 2);
         pMainLayout->addWidget(plabnUnit,       3, 3);
 
         pMainLayout->setColumnStretch(1,1);
+        pMainLayout->setColumnStretch(4,1);
+        pMainLayout->setRowStretch(4,1);
     }
 
     setLayout(pMainLayout);

@@ -44,10 +44,9 @@ void TessControlsDlg::setupLayout()
 {
     QVBoxLayout *pMainLayout = new QVBoxLayout;
     {
-
-        QString warning("<p>Proceed with caution!<br>"
+        QString warning(tr("<p>Proceed with caution!<br>"
                         "Tessellation at high precision can be a lengthy task "
-                        "and produce an excessive number of triangles.</p>");
+                        "and produce an excessive number of triangles.</p>"));
         QLabel *pCautionLabel = new QLabel(warning);
         pCautionLabel->setWordWrap(true);
 

@@ -2526,9 +2526,6 @@ void XPlane::onDeleteCurPlPolar()
 }
 
 
-/**
- * The user has requested a duplication of the currently selected wing or plane
- */
 void XPlane::onDuplicateCurPlane()
 {
     if(!m_pCurPlane) return;
@@ -2786,8 +2783,8 @@ Plane* XPlane::setModPlane(Plane *pModPlane, bool bUsed, bool bAsNew)
     }
     else if(bUsed)
     {
-        mdDlg.setQuestion("The modification will erase all results associated to this plane\n"
-                              "Continue?");
+        mdDlg.setQuestion(tr("<p>The modification will erase all results associated to this plane.<br>"
+                              "Continue?</p>"));
         mdDlg.initDialog();
 
         int Ans = mdDlg.exec();
@@ -3719,12 +3716,13 @@ void XPlane::onNewPlane()
 
     emit projectModified();
 
+
     if(m_pCurPlane)
         m_pCurPlane->setInitialized(false);
 
-    m_pPlaneExplorer->insertPlane(pPlane);
+    m_pPlaneExplorer->insertPlane(m_pCurPlane);
     m_pPlaneExplorer->update();
-    m_pPlaneExplorer->selectPlane(pPlane);
+    m_pPlaneExplorer->selectPlane(m_pCurPlane);
 
     m_pCurPlPolar = nullptr;
     m_pCurPOpp = nullptr;
@@ -4643,7 +4641,10 @@ Plane *XPlane::setPlane(Plane* pPlane)
         if(!m_pCurPlane->isInitialized())
         {
             // initialize on the fly when needed
+            QApplication::setOverrideCursor(Qt::WaitCursor);
             m_pCurPlane->makePlane(true, false, true);
+            Objects3d::makePlaneTriangulation(m_pCurPlane);
+            QApplication::restoreOverrideCursor();
         }
         if(pPlane==m_pCurPlane)
         {
@@ -4720,11 +4721,17 @@ Plane *XPlane::setPlane(Plane* pPlane)
     }
     if(!m_pCurPlane->isInitialized())
     {
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+
         // initialize on the fly when needed
         m_pCurPlane->makePlane(true, false, true);
+        Objects3d::makePlaneTriangulation(m_pCurPlane);
+
         m_pgl3dXPlaneView->s_bResetglGeom = true;
         m_pgl3dXPlaneView->resetglMesh();
         m_pgl3dXPlaneView->s_bResetglWake = true;
+
+        QApplication::restoreOverrideCursor();
     }
 
     std::string log;
@@ -6759,6 +6766,7 @@ void XPlane::onImportAnalysesFromXML()
             {
                 strange = "The polar " + QString::fromStdString(pWPolar->name()) + " could not be associated to any plane... discarding\n";
                 delete pWPolar;
+                pWPolar = nullptr;
                 continue;
             }
 

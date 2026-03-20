@@ -215,6 +215,9 @@ class FL5LIB_EXPORT Part
         static bool isOccTessellator() {return s_bOccTessellator;}
         static void setOccTessellator(bool bOcc) {s_bOccTessellator=bOcc;}
 
+        static GmshParams const &gmshTessDefault() {return s_GmshTessDefault;}
+        static void setGmshTessDefault(GmshParams const &params) {s_GmshTessDefault=params;}
+
     protected:
         int m_FirstPanel3Index;
         int m_FirstPanel4Index;
@@ -251,8 +254,10 @@ class FL5LIB_EXPORT Part
         GmshParams m_GmshParams;     /** used to create the panels - CAD fuse + and Occ, spline and Nurbs sails*/
 
         bool m_bLocked;  /** true if the object instance is used by a running analysis */
-        static bool s_bOccTessellator;  /** true if parts are to be tesselated with OCC's IncrementalMesher, false if using Gmsh */
 
+
+        static bool s_bOccTessellator;  /** true if parts are to be tesselated with OCC's IncrementalMesher, false if using Gmsh */
+        static GmshParams s_GmshTessDefault;
 
 };
 

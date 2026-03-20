@@ -2649,9 +2649,12 @@ void PlaneXflDlg::saveSettings(QSettings &settings)
 }
 
 
-
 void PlaneXflDlg::onInsertFuseXfl()
 {
+    QApplication::setOverrideCursor(Qt::BusyCursor);
+
+    QElapsedTimer t; t.start();
+
     QAction *pSenderAction = qobject_cast<QAction *>(sender());
     if (!pSenderAction) return;
 
@@ -2659,19 +2662,37 @@ void PlaneXflDlg::onInsertFuseXfl()
     if     (pSenderAction==m_pInsertFuseXflFlat)     type=Fuse::FlatFace;
     else if(pSenderAction==m_pInsertFuseXflSections) type=Fuse::Sections;
 
+
+    QString strange = QString::asprintf("   fuse xfl 0: %.3f s\n", double(t.elapsed())/1000.0);
+    updateOutput(strange);
+
     Fuse *pFuse = m_pPlaneXfl->makeNewFuse(type);
+
+
+    strange = QString::asprintf("   fuse xfl 1: %.3f s\n", double(t.elapsed())/1000.0);
+    updateOutput(strange);
 
     QString strong;
     strong = QString::asprintf("xfl_fuse_%d", m_pPlaneXfl->xflFuseCount());
     pFuse->setName(strong.toStdString());
     pFuse->makeFuseGeometry();
 
+    strange = QString::asprintf("   fuse xfl 2: %.3f s\n", double(t.elapsed())/1000.0);
+    updateOutput(strange);
+
     QString logg;
     gmesh::makeFuseTriangulation(pFuse, logg, "   ");
+
+    strange = QString::asprintf("   fuse xfl 3: %.3f s\n", double(t.elapsed())/1000.0);
+    updateOutput(strange);
+
     pFuse->saveBaseTriangulation();
 
     std::string logmsg;
     pFuse->makeDefaultTriMesh(logmsg, "");
+
+    strange = QString::asprintf("   fuse xfl 4: %.3f s\n", double(t.elapsed())/1000.0);
+    updateOutput(strange);
 
     setControls();
 
@@ -2679,7 +2700,11 @@ void PlaneXflDlg::onInsertFuseXfl()
 
     onUpdatePlane();
 
+    strange = QString::asprintf("   fuse xfl 5: %.3f s\n", double(t.elapsed())/1000.0);
+    updateOutput(strange);
+
     m_bChanged = true;
+    QApplication::restoreOverrideCursor();
 }
 
 

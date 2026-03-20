@@ -31,7 +31,7 @@
 
 ModDlg::ModDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("Modification");
+    setWindowTitle(tr("Modification"));
     m_Question = "";
     setupLayout();
 }
@@ -49,7 +49,7 @@ void ModDlg::setupLayout()
 
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Discard, this);
     {
-        m_pSaveNewButton = new QPushButton("Save as new");
+        m_pSaveNewButton = new QPushButton(tr("Save as new"));
         {
             m_pButtonBox->addButton(m_pSaveNewButton, QDialogButtonBox::ActionRole);
             connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(onButton(QAbstractButton*)));

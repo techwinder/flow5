@@ -88,7 +88,7 @@ GMesherWt::GMesherWt(QWidget *pParent) : QFrame{pParent}
     m_pWorker->moveToThread(&m_MeshThread);
     connect(&m_MeshThread, &QThread::finished,          m_pWorker,  &QObject::deleteLater);
     connect(this,          &GMesherWt::meshCurrent,     m_pWorker,  &GMesher::onMeshCurrentModel);
-    connect(m_pWorker,     &GMesher::displayMessage,    m_ppto, &PlainTextOutput::onAppendQText, Qt::BlockingQueuedConnection);
+    connect(m_pWorker,     &GMesher::displayMessage,    m_ppto,     &PlainTextOutput::onAppendQText, Qt::BlockingQueuedConnection);
     connect(m_pWorker,     &GMesher::meshDone,          this,       &GMesherWt::onHandleMeshResults);
 
     m_MeshThread.start();
@@ -96,7 +96,7 @@ GMesherWt::GMesherWt(QWidget *pParent) : QFrame{pParent}
     connect(&m_LogTimer, SIGNAL(timeout()), SLOT(onCheckLogger()));
 
 
-    gmsh::option::setNumber("General.NumThreads", 16);
+    gmsh::option::setNumber("General.NumThreads", QThread::idealThreadCount());
 
     std::string list;
     gmesh::listMainOptions(list);

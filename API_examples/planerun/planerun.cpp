@@ -28,7 +28,8 @@ int main()
 //    Foil *pFoilN2413 = foil::makeNacaFoil(2413, "NACA 2413");
 //    Foil *pFoilN0009 = foil::makeNacaFoil(9,    "NACA 0009");
 
-    // Using seperate methods for creating and sotring
+    // Using seperate methods for creating and storing
+    // Create
     Foil *pFoilN2413 = new Foil;
     if(!Objects2d::makeNacaFoil(pFoilN2413, 2413, 200))
     {
@@ -36,8 +37,10 @@ int main()
         return 0;
     }
     pFoilN2413->setName("NACA 2413");
+    // Store
     Objects2d::insertThisFoil(pFoilN2413);
 
+    // Create
     Foil *pFoilN0009 = new Foil;
     if(!Objects2d::makeNacaFoil(pFoilN0009, 9, 200))
     {
@@ -45,16 +48,8 @@ int main()
         return 0;
     }
     pFoilN0009->setName("NACA 0009");
+    // Store
     Objects2d::insertThisFoil(pFoilN0009);
-
-    if(!pFoilN0009 || !pFoilN2413)
-    {
-        // failsafe; this should not happen
-        std::cout <<"Error creating the foils ...aborting" << std::endl;
-        if(pFoilN0009) delete pFoilN0009;
-        if(pFoilN2413) delete pFoilN2413;
-        return 0;
-    }
 
 
     // set the style for these foils and their children objects, i.e. polars and operating points

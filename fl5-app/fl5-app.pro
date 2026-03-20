@@ -45,8 +45,6 @@ INCLUDEPATH += $$PWD/../fl5-lib/api
 
 linux-g++ {
 
-    CONFIG += thread
-
     # VARIABLES
     isEmpty(PREFIX):PREFIX = /usr/local
     BINDIR = $$PREFIX/bin
@@ -58,17 +56,15 @@ linux-g++ {
     icon128.path = $$SHAREDIR
     icon128.files += ../meta/res/$${TARGET}.png
 
-    target.path = $$BINDIR
-
     translations.path = $$SHAREDIR/translations
-    translations.files = ../meta/translations/*.qm
+    translations.files += ../meta/translations/*.qm
 
     target.path = $$BINDIR
 
     # MAKE INSTALL
     INSTALLS += target desktop icon128 translations
 
-
+    #comment out to use OpenBLAS
 #    CONFIG += INTEL_MKL
 
     INTEL_MKL {

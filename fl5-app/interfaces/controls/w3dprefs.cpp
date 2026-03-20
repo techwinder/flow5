@@ -43,6 +43,7 @@
 
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
+#include <interfaces/mesh/gmshctrlswt.h>
 #include <interfaces/opengl/controls/arcball.h>
 #include <interfaces/opengl/controls/colourlegend.h>
 #include <interfaces/opengl/views/gl3dview.h>
@@ -52,6 +53,7 @@
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/line/linebtn.h>
 #include <interfaces/widgets/line/linemenu.h>
+
 
 bool W3dPrefs::s_bSaveViewPoints(true);
 bool W3dPrefs::s_bShowRefLength(false);
@@ -167,6 +169,8 @@ void W3dPrefs::readData()
 
     Sail::setTessellation(m_pieSailXRes->value(), m_pieSailZRes->value());
 
+    Part::setGmshTessDefault(m_pGmshCtrlsWt->params());
+
     s_bShowGround = m_pchGround->isChecked();
     s_BoxX        = m_pfeBoxX->value()/Units::mtoUnit();
     s_BoxY        = m_pfeBoxY->value()/Units::mtoUnit();
@@ -233,6 +237,8 @@ void W3dPrefs::initWidgets()
     m_pieBodyHoopRes->setValue(s_iBodyHoopRes);
     m_pieSailXRes->setValue(Sail::iXRes());
     m_pieSailZRes->setValue(Sail::iZRes());
+
+    m_pGmshCtrlsWt->initWt(Part::gmshTessDefault());
 
     m_pfeArcballRadius->setValue(ArcBall::sphereRadius()*100.0);
 
@@ -494,34 +500,53 @@ void W3dPrefs::setupLayout()
         m_pGroupBox.back()->setLayout(pColorPrefs);
     }
 
-    m_pGroupBox.push_back(new QGroupBox("Tessellation"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Tessellation")));
     {
         QVBoxLayout *pTessLayout = new QVBoxLayout;
         {
-            QLabel *pTessLabel = new QLabel(tr("<p>Increase the number of points to improve the tessellation of the surfaces.<br>"
-                                            "This may increase the loading times and also slow down the display on low-end graphic cards.<br>"
-                                            "Reload required to take effect.</p>"));
-
-            m_pieChordwiseRes = new IntEdit(37, this);
-            m_pieBodyAxialRes = new IntEdit(29, this);
-            m_pieBodyHoopRes  = new IntEdit(17, this);
-            m_pieSailXRes     = new IntEdit(37, this);
-            m_pieSailZRes     = new IntEdit(31, this);
-
-            QGroupBox *pRuledTessellationBox = new QGroupBox(tr("Ruled surfaces"));
+            QGroupBox *pgbRuledTessellation = new QGroupBox(tr("Ruled surfaces"));
             {
-                QFormLayout *pFormLayout = new QFormLayout;
+                QVBoxLayout *pRuledLayout = new QVBoxLayout;
                 {
-                    pFormLayout->addRow(tr("Wing chordwise direction:"), m_pieChordwiseRes);
-                    pFormLayout->addRow(tr("Body axial direction:"),     m_pieBodyAxialRes);
-                    pFormLayout->addRow(tr("Body hoop direction:"),      m_pieBodyHoopRes);
-                    pFormLayout->addRow(tr("Sail x-direction:"),         m_pieSailXRes);
-                    pFormLayout->addRow(tr("Sail z-direction:"),         m_pieSailZRes);
+                    QLabel *plabTess = new QLabel(tr("<p>Increase the number of points to improve the tessellation of the surfaces.<br>"
+                                                       "This may increase the loading times and also slow down the display on low-end graphic cards.<br>"
+                                                       "Reload required to take effect.</p>"));
+
+                    QFormLayout *pFormLayout = new QFormLayout;
+                    {
+                        m_pieChordwiseRes = new IntEdit(37, this);
+                        m_pieBodyAxialRes = new IntEdit(29, this);
+                        m_pieBodyHoopRes  = new IntEdit(17, this);
+                        m_pieSailXRes     = new IntEdit(37, this);
+                        m_pieSailZRes     = new IntEdit(31, this);
+
+                        pFormLayout->addRow(tr("Wing chordwise direction:"), m_pieChordwiseRes);
+                        pFormLayout->addRow(tr("Body axial direction:"),     m_pieBodyAxialRes);
+                        pFormLayout->addRow(tr("Body hoop direction:"),      m_pieBodyHoopRes);
+                        pFormLayout->addRow(tr("Sail x-direction:"),         m_pieSailXRes);
+                        pFormLayout->addRow(tr("Sail z-direction:"),         m_pieSailZRes);
+                    }
+
+                    pRuledLayout->addWidget(plabTess);
+                    pRuledLayout->addLayout(pFormLayout);
                 }
-                pRuledTessellationBox->setLayout(pFormLayout);
+                pgbRuledTessellation->setLayout(pRuledLayout);
             }
-            pTessLayout->addWidget(pTessLabel);
-            pTessLayout->addWidget(pRuledTessellationBox);
+
+            QGroupBox *pgbGmshTess = new QGroupBox(tr("Gmsh tessellation defaults for fuselages"));
+            {
+                QVBoxLayout *pGmshLayout = new QVBoxLayout;
+                {
+                    QLabel *plabInfo = new QLabel(tr("<p>The defaults will be applied to new parts only.</p>"));
+                    m_pGmshCtrlsWt = new GmshCtrlsWt(this);
+                    pGmshLayout->addWidget(plabInfo);
+                    pGmshLayout->addWidget(m_pGmshCtrlsWt);
+                }
+                pgbGmshTess->setLayout(pGmshLayout);
+            }
+
+            pTessLayout->addWidget(pgbRuledTessellation);
+            pTessLayout->addWidget(pgbGmshTess);
         }
         m_pGroupBox.back()->setLayout(pTessLayout);
     }
@@ -935,6 +960,10 @@ void W3dPrefs::saveSettings(QSettings &settings)
         settings.setValue("SailXRes",     Sail::iXRes());
         settings.setValue("SailZRes",     Sail::iZRes());
 
+        settings.setValue("Gmsh_Min",     Part::gmshTessDefault().m_MinSize);
+        settings.setValue("Gmsh_Max",     Part::gmshTessDefault().m_MaxSize);
+        settings.setValue("Gmsh_NCurv",   Part::gmshTessDefault().m_nCurvature);
+
         settings.setValue("ArcBallRadius", ArcBall::sphereRadius());
 
         settings.setValue("SpinAnimation",      s_bSpinAnimation);
@@ -1008,6 +1037,12 @@ void W3dPrefs::loadSettings(QSettings &settings)
         int iSailXRes     = settings.value("SailXRes",   Sail::iXRes()).toInt();
         int iSailZRes     = settings.value("SailZRes",   Sail::iZRes()).toInt();
         Sail::setTessellation(iSailXRes, iSailZRes);
+
+        GmshParams params;
+        params.m_MinSize    = settings.value("Gmsh_Min",     Part::gmshTessDefault().m_MinSize).toDouble();
+        params.m_MaxSize    = settings.value("Gmsh_Max",     Part::gmshTessDefault().m_MaxSize).toDouble();
+        params.m_nCurvature = settings.value("Gmsh_NCurv",     Part::gmshTessDefault().m_nCurvature).toInt();
+        Part::setGmshTessDefault(params);
 
         ArcBall::setSphereRadius(settings.value("ArcBallRadius", 0.8).toDouble());
 

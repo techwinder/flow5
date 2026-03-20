@@ -247,10 +247,9 @@ void ThreadTestDlg::consumer()
 void ThreadTestDlg::testComm()
 {
     //running this function in a separate thread to keep the UI responsive
-    QtConcurrent::run([this](){ this->runComm(); });
-
-
+    QFuture<void> future = QtConcurrent::run([this](){ this->runComm(); });
 }
+
 
 void ThreadTestDlg::runComm()
 {

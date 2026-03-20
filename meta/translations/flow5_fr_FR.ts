@@ -2627,6 +2627,39 @@ Uncheck for increased analysis speed.</source>
     </message>
 </context>
 <context>
+    <name>GmshCtrlsWt</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/mesh/gmshctrlswt.cpp" line="48"/>
+        <source>Minimum element size=</source>
+        <translation>Taille minimum des éléments =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/mesh/gmshctrlswt.cpp" line="50"/>
+        <source>&lt;p&gt;The minimum acceptable size of the triangles. This value should be stricly positive to prevent excessively fine meshes, high number of elements. and long meshing times.&lt;/p&gt;&lt;p&gt;Min.acceptable value= 0.1 mm&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Cette valeur doit être strictement positive pour éviter des maillages excessivement fins.&lt;/p&gt;&lt;p&gt;Valeur mini acceptable = 0.1 mm&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/mesh/gmshctrlswt.cpp" line="59"/>
+        <source>Maximum element size=</source>
+        <translation>Taille maximale des éléments =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/mesh/gmshctrlswt.cpp" line="61"/>
+        <source>&lt;p&gt;The maximum acceptable size of the triangles. Reduce the value to increase the mesh density.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Réduire cette valeur pour accroître la densité du maillage&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/mesh/gmshctrlswt.cpp" line="66"/>
+        <source>&lt;p&gt;Nbr. of elements=&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Nombre d&apos;éléments =&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/mesh/gmshctrlswt.cpp" line="68"/>
+        <source>&lt;p&gt; Automatically compute mesh element sizes from curvature, using the value as the target number of elements per 2&amp;pi;.&lt;br&gt;This is the main parameter that should be used to control mesh density.&lt;br&gt;Recommendation: between 10 and 50.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Permet le calcul automatique des tailles d&apos;éléments à partir de la courbure locale, en utilisant cette valeur comme la cible du nombre d&apos;éléments selon 2 &amp;pi;.&lt;br&gt;Il s&apos;agit là du paramètre principal pour contrôler la densité du maillage.&lt;br&gt;Recommandation : entre 10 et 50.&lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
     <name>GraphDlg</name>
     <message>
         <location filename="../../fl5-app/interfaces/graphs/controls/graphdlg.cpp" line="1071"/>
@@ -3137,6 +3170,14 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/interfaces/widgets/line/linepicker.cpp" line="72"/>
         <source>Other</source>
         <translation>Autre</translation>
+    </message>
+</context>
+<context>
+    <name>LogMessageDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/logmessagedlg.cpp" line="41"/>
+        <source>All-purpose log message window</source>
+        <translation>Informations</translation>
     </message>
 </context>
 <context>
@@ -3688,22 +3729,22 @@ ____________Requête d&apos;annulation émise__________
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1773"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1777"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1773"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1777"/>
         <source>Save the current project?</source>
         <translation>Sauvegarder le projet actuel ?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1785"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1789"/>
         <source>The project </source>
         <translation>Le projet </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1785"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1789"/>
         <source> has been saved
 
 </source>
@@ -3712,20 +3753,33 @@ ____________Requête d&apos;annulation émise__________
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1831"/>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="1835"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1839"/>
         <source>Default Settings</source>
         <translation>Paramètres par défaut</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1831"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1835"/>
         <source>Are you sure you want to reset the default settings?</source>
         <translation>Êtes-vous sûr de vouloir réinitialiser les paramètres par défaut?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1835"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1839"/>
         <source>The settings will be reset at the next session</source>
         <translation>Les paramètres seront réinitialisés à la prochaine session</translation>
+    </message>
+</context>
+<context>
+    <name>ModDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/moddlg.cpp" line="34"/>
+        <source>Modification</source>
+        <translation>Modification</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/moddlg.cpp" line="52"/>
+        <source>Save as new</source>
+        <translation>Enregistrer sous</translation>
     </message>
 </context>
 <context>
@@ -5429,17 +5483,17 @@ Ctrl+B pour modifier le premier fuselage</translation>
         <translation>Composant sélectionné</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="2839"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="2864"/>
         <source>Selected part</source>
         <translation>Composant sélectionné</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3088"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3113"/>
         <source>Object List</source>
         <translation>Liste d&apos;objets</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3457"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3482"/>
         <source>stack: %1/%2</source>
         <translation>pile : %1 / %2</translation>
     </message>
@@ -5905,13 +5959,13 @@ Ctrl+B pour modifier le premier fuselage</translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="205"/>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="662"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="663"/>
         <source>Background</source>
         <translation>Arrière-plan</translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="213"/>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="658"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="659"/>
         <source>Fonts</source>
         <translation>Polices</translation>
     </message>
@@ -5994,144 +6048,144 @@ lors de l&apos;utilisation de la roulette</translation>
         <translation>Langage:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="303"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="304"/>
         <source>Use locale settings for number formatting</source>
         <translation>Utiliser la localisation pour le formatage des nombres</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="331"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="332"/>
         <source>Allow multithreading</source>
         <translation>Autoriser le multithreading (recommandé)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="334"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="335"/>
         <source>Maximum thread count supported by the OS = %1</source>
         <translation>Nombre maximum de threads supportés par l&apos;OS = %1</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="338"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="339"/>
         <source>Maximum thread count to use = </source>
         <translation>Nombre maximum de threads à utiliser = </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="346"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="347"/>
         <source>Thread priority</source>
         <translation>Priorité des threads</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="377"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="378"/>
         <source>Linux OS does not support thread priority</source>
         <translation>Linux ne propose pas d&apos;option pour la priotarisation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="493"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="494"/>
         <source>Text colour</source>
         <translation>Couleur du texte</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="603"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="604"/>
         <source>Application</source>
         <translation>Application</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="623"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="624"/>
         <source>Save, load, export</source>
         <translation>Enregistrer et exporter</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="627"/>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="688"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="628"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="689"/>
         <source>General</source>
         <translation>Général</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="631"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="632"/>
         <source>Directories</source>
         <translation>Répertoires</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="635"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="636"/>
         <source>Export options</source>
         <translation>Options d&apos;export</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="639"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="640"/>
         <source>Foil to SVG</source>
         <translation>Profil vers SVG</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="643"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="644"/>
         <source>Operating points</source>
         <translation>Points de fonctionnement</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="649"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="650"/>
         <source>Units</source>
         <translation>Unités</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="654"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="655"/>
         <source>Graphs</source>
         <translation>Graphiques</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="666"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="667"/>
         <source>Padding</source>
         <translation>Espacement en bordure</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="674"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="675"/>
         <source>Curves</source>
         <translation>Courbes</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="678"/>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="710"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="679"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="711"/>
         <source>Other</source>
         <translation>Autres</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="684"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="685"/>
         <source>2d views</source>
         <translation>Vues 2d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="692"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="693"/>
         <source>Axes and grids</source>
         <translation>Axes et grilles</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="698"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="699"/>
         <source>3d views</source>
         <translation>Vues 3d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="702"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="703"/>
         <source>Colours</source>
         <translation>Couleurs</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="706"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="707"/>
         <source>Tessellation</source>
         <translation>Triangulation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="716"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="717"/>
         <source>Multithreading</source>
         <translation>Multi-threading</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="720"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="721"/>
         <source>Option</source>
         <translation>Option</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="943"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="944"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="943"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="944"/>
         <source>The change will take effect after restarting the application.</source>
         <translation>La modification prendra effet après le redémarrage de l&apos;application.</translation>
     </message>
@@ -7935,6 +7989,14 @@ Import depuis un fichier binaire
     </message>
 </context>
 <context>
+    <name>TessControlsDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/mesh/tesscontrolsdlg.cpp" line="47"/>
+        <source>&lt;p&gt;Proceed with caution!&lt;br&gt;Tessellation at high precision can be a lengthy task and produce an excessive number of triangles.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Procéder avec prudence !&lt;br&gt;Une triangulation trop fine peut être longue à réaliser et produire un nombre excessif de triangles.&lt;/p&gt;</translation>
+    </message>
+</context>
+<context>
     <name>TextDlg</name>
     <message>
         <location filename="../../fl5-app/interfaces/widgets/customdlg/textdlg.cpp" line="38"/>
@@ -8036,333 +8098,348 @@ Import depuis un fichier binaire
 <context>
     <name>W3dPrefs</name>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="114"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="116"/>
         <source>3d Styles</source>
         <translation>Styles 3d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="266"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="272"/>
         <source>Colour settings</source>
         <translation>Paramètres de couleur</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="272"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="278"/>
         <source>Geometry</source>
         <translation>Géométrie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="273"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="279"/>
         <source>Mesh</source>
         <translation>Maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="274"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="280"/>
         <source>Vortons</source>
         <translation>Vortons</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="279"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="285"/>
         <source>Results</source>
         <translation>Résultats</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="280"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="286"/>
         <source>Selected</source>
         <translation>Sélection</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="281"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="287"/>
         <source>Highlighted</source>
         <translation>Surlignage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="282"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="288"/>
         <source>Axes</source>
         <translation>Axes</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="283"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="289"/>
         <source>Wind</source>
         <translation>Vent</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="284"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="290"/>
         <source>Geometry outline</source>
         <translation>Contour géométrique</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="285"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="291"/>
         <source>Transitions</source>
         <translation>Transitions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="286"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="292"/>
         <source>Lift and forces</source>
         <translation>Portance et forces</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="287"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="293"/>
         <source>Moments</source>
         <translation>Moments</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="288"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="294"/>
         <source>Induced drag</source>
         <translation>Traînée induite</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="289"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="295"/>
         <source>Viscous drag</source>
         <translation>Traînée visqueuse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="290"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="296"/>
         <source>Velocity vectors</source>
         <translation>Vecteurs de vitesse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="291"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="297"/>
         <source>Streamlines</source>
         <translation>Lignes de courant</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="292"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="298"/>
         <source>Flow lines</source>
         <translation>Lignes de flux</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="293"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="299"/>
         <source>Masses</source>
         <translation>Masses</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="294"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="300"/>
         <source>Panel outline</source>
         <translation>Contour de panneaux</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="295"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="301"/>
         <source>Fuse panels:</source>
         <translation>Panneaux de fuselage :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="296"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="302"/>
         <source>Wing panels:</source>
         <translation>Panneaux d&apos;aile :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="297"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="303"/>
         <source>Flap panels:</source>
         <translation>Panneaux des volets :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="298"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="304"/>
         <source>Wake panels:</source>
         <translation>Panneaux de sillage :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="315"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="321"/>
         <source>Use wing colour</source>
         <translation>Utiliser la couleur des ailes</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="319"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="325"/>
         <source>Use background color for mesh panels</source>
         <translation>Utiliser la couleur du fond pour les panneaux du maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="404"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="410"/>
         <source>Colour:</source>
         <translation>Couleur :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="406"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="412"/>
         <source>Radius:</source>
         <translation>Rayon :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="408"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="414"/>
         <source>% viewport width</source>
         <translation>% largeur de la vue</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="412"/>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="424"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="418"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="430"/>
         <source>Ground/Water</source>
         <translation>Sol/eau</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="420"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="426"/>
         <source>Show ground surface</source>
         <translation>Afficher la surface du sol</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="428"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="434"/>
         <source>x-length</source>
         <translation>Longueur suvant X :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="429"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="435"/>
         <source>y-width</source>
         <translation>Longueur suvant Z :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="452"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="458"/>
         <source>&lt;p&gt;Note: This is only a visual help feature.&lt;br&gt;The actual ground surface used in the analysis extends to infinity.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Note: Aide visuelle seulement.&lt;br&gt;La surface prise en compte dans le calcul s&apos;étend à l&apos;infini.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="459"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="465"/>
         <source>Colour map</source>
         <translation>Coloriage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="465"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="471"/>
         <source>Gradient colours:</source>
         <translation>Couleurs du gradient :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="479"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="485"/>
         <source>Nbr. of isobars (trilinear only):</source>
         <translation>Nbre d&apos;isobars (tri-linéaire seulement) :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="501"/>
-        <source>&lt;p&gt;Increase the number of points to improve the tessellation of the surfaces.&lt;br&gt;This may increase the loading times and also slow down the display on low-end graphic cards.&lt;br&gt;Reload required to take effect.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Augmenter le nombre de points por améliorer la triangulation des surfaces.&lt;br&gt;Ceci peut rendre les temps de chargement plus long, et décroître la performance d&apos;affichage.&lt;br&gt;Recharger le projet pour prise d&apos;effet.&lt;/p&gt;</translation>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="503"/>
+        <source>Tessellation</source>
+        <translation>Triangulation</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="511"/>
+        <source>&lt;p&gt;Increase the number of points to improve the tessellation of the surfaces.&lt;br&gt;This may increase the loading times and also slow down the display on low-end graphic cards.&lt;br&gt;Reload required to take effect.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Augmenter le nombre de points pour améliorer la triangulation des surfaces.&lt;br&gt;Ceci peut rendre les temps de chargement plus long, et décroître la performance d&apos;affichage.&lt;br&gt;Recharger le projet pour prise d&apos;effet.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="536"/>
+        <source>Gmsh tessellation defaults for fuselages</source>
+        <translation>Paramètres Gmsh de triangulation pour fuselages</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="507"/>
         <source>Ruled surfaces</source>
         <translation>Surfaces réglées</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="515"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="523"/>
         <source>Wing chordwise direction:</source>
         <translation>Discrétisation suivant corde des ailes :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="516"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="524"/>
         <source>Body axial direction:</source>
         <translation>Discrétisation des fuselages sens longitudinal :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="517"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="525"/>
         <source>Body hoop direction:</source>
         <translation>Discrétisation des fuselages selon circonférence :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="518"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="526"/>
         <source>Sail x-direction:</source>
         <translation>Discrétisation voiles selon x :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="519"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="527"/>
         <source>Sail z-direction:</source>
         <translation>Discrétisation voiles selon z :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="529"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="540"/>
+        <source>&lt;p&gt;The defaults will be applied to new parts only.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Ces valeurs ne seront appliquées qu&apos;aux nouveaux composants.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="554"/>
         <source>Other</source>
         <translation>Autres</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="535"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="560"/>
         <source>Enable mouse animations</source>
         <translation>Activer les animations de la souris</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="537"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="562"/>
         <source>&lt;p&gt;Defines the damping of the animation at each frame update.&lt;br&gt;Set to 0 for perpetual movement.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Définit l&apos;amortissement appliqué à chaque rafraîchissement d&apos;écran.&lt;br&gt;Mettre à 0 pour un mouvement perpétuel.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="544"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="569"/>
         <source>Animate view transitions</source>
         <translation>Animer les transitions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="546"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="571"/>
         <source>&lt;p&gt;Defines the duration of animations in ms&lt;/p&gt;</source>
         <translation>&lt;p&gt;Définit la durée des animations en ms&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="553"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="578"/>
         <source>Arcball radius:</source>
         <translation>Rayon de la boule de rotation :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="554"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="579"/>
         <source>% view width</source>
         <translation>% largeur de la vue</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="556"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="581"/>
         <source>&lt;p&gt;The radius of the arcball as a percentage of the view&apos;s width&lt;/p&gt;</source>
         <translation>&lt;p&gt;Le rayon de la boule de commande enpourcentage de la largeur de la vue&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="562"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="587"/>
         <source>Auto z-rotation incremental angle:</source>
         <translation>Incrément d&apos;angle pour la rotation automatique autour de Z :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="570"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="595"/>
         <source>Auto adjust 3d scale</source>
         <translation>Ajustement auto. de l&apos;échelle 3d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="571"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="596"/>
         <source>&lt;p&gt;Automatically adjust the 3d scale to fit the plane in the display when switching between planes&lt;/p&gt;</source>
         <translation>&lt;p&gt;Ajuste automatiquement l&apos;échelle 3d à l&apos;avion sélectionné&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="572"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="597"/>
         <source>Enable clip plane</source>
         <translation>Activer le plan de coupe vertical</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="573"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="598"/>
         <source>Display reference length</source>
         <translation>Afficher la longueur de référence</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="574"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="599"/>
         <source>Save viewpoints when exiting 3d views</source>
         <translation>Sauvegarder les points de vue en sortant des éditeurs</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="766"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="791"/>
         <source>Mass colour</source>
         <translation>Couleur des masses</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="778"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="803"/>
         <source>Water colour</source>
         <translation>Couleur de l&apos;eau</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="811"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="836"/>
         <source>Fuse colour</source>
         <translation>Couleur du fuselage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="823"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="848"/>
         <source>Wing colour</source>
         <translation>Couleur des ailes</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="835"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="860"/>
         <source>Flap colour</source>
         <translation>Couleur des volets</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="847"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="872"/>
         <source>Wake colour</source>
         <translation>Couleur du sillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="859"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="884"/>
         <source>Vorton colour</source>
         <translation>Couleur des vortons</translation>
     </message>
@@ -9390,7 +9467,7 @@ Import depuis un fichier binaire
         <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2355"/>
         <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2474"/>
         <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2503"/>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="3936"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="3934"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
@@ -9409,7 +9486,12 @@ Import depuis un fichier binaire
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="3935"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2786"/>
+        <source>&lt;p&gt;The modification will erase all results associated to this plane.&lt;br&gt;Continue?&lt;/p&gt;</source>
+        <translation>&lt;p&gt;La modification effacera tous les résusltas associés à cet avion.&lt;br&gt;Continuer ?&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="3933"/>
         <source>Are you sure you want to reset the content of the polar :
 </source>
         <translation>Etes-vous sûr de vouloir réinitialiser la polaire :
