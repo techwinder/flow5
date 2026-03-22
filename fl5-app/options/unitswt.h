@@ -46,6 +46,8 @@ class UnitsWt : public QWidget
         void setupLayout();
         void setLabels();
 
+        void updateFluid();
+
     private slots:
         void onSelChanged();
         void onFluidUnit();

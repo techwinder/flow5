@@ -55,6 +55,8 @@ Boat::Boat()
 
     m_theStyle.m_Stipple = Line::SOLID;
     m_theStyle.m_Width = 2;
+
+    m_bIsInitialized = false;
 }
 
 
@@ -443,9 +445,9 @@ void Boat::duplicate(Boat const*pBoat)
         m_Hull.push_back(pHull);
     }
 
-    m_Name = pBoat->m_Name;
-    m_Description = pBoat->m_Description;
-    m_theStyle = pBoat->m_theStyle;
+    m_Name            = pBoat->m_Name;
+    m_Description    = pBoat->m_Description;
+    m_theStyle       = pBoat->m_theStyle;
 }
 
 

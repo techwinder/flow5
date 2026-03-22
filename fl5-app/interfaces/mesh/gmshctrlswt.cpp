@@ -28,6 +28,7 @@
 #include "gmshctrlswt.h"
 
 #include <api/units.h>
+#include <api/part.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 
@@ -54,13 +55,13 @@ void GmshCtrlsWt::setupLayout()
                                  "<p>"
                                  "Min.acceptable value= 0.1 mm"
                                  "</p>"));
-        QLabel *plabMinUnit = new QLabel(Units::lengthUnitQLabel());
+        m_plabMinUnit = new QLabel(Units::lengthUnitQLabel());
 
         QLabel *plabMaxSize = new QLabel(tr("Maximum element size="));
         m_pfeMaxSize = new FloatEdit;
         m_pfeMaxSize->setToolTip(tr("<p>The maximum acceptable size of the triangles. "
                                  "Reduce the value to increase the mesh density.</p>"));
-        QLabel *plabMaxUnit = new QLabel(Units::lengthUnitQLabel());
+        m_plabMaxUnit = new QLabel(Units::lengthUnitQLabel());
 
 
         QLabel *plabnCurvature = new QLabel(tr("<p>Nbr. of elements=</p>"));
@@ -73,10 +74,10 @@ void GmshCtrlsWt::setupLayout()
 
         pMainLayout->addWidget(plabMinSize,     1, 1, Qt::AlignRight);
         pMainLayout->addWidget(m_pfeMinSize,    1, 2);
-        pMainLayout->addWidget(plabMinUnit,     1, 3);
+        pMainLayout->addWidget(m_plabMinUnit,     1, 3);
         pMainLayout->addWidget(plabMaxSize,     2, 1, Qt::AlignRight);
         pMainLayout->addWidget(m_pfeMaxSize,    2, 2);
-        pMainLayout->addWidget(plabMaxUnit,     2, 3);
+        pMainLayout->addWidget(m_plabMaxUnit,     2, 3);
         pMainLayout->addWidget(plabnCurvature,  3, 1, Qt::AlignRight);
         pMainLayout->addWidget(m_pienCurvature, 3, 2);
         pMainLayout->addWidget(plabnUnit,       3, 3);
@@ -119,8 +120,22 @@ GmshParams GmshCtrlsWt::params() const
     params.m_MaxSize = m_pfeMaxSize->value()/Units::mtoUnit();
     params.m_nCurvature = m_pienCurvature->value();
 
-    params.m_MinSize = std::max(params.m_MinSize, 0.001); // failsafe
     return params;
 }
+
+
+void GmshCtrlsWt::updateUnits(GmshParams const &parameters)
+{
+    m_pfeMinSize->setValue(parameters.m_MinSize*Units::mtoUnit());
+    m_pfeMaxSize->setValue(parameters.m_MaxSize*Units::mtoUnit());
+
+    m_plabMinUnit->setText(Units::lengthUnitQLabel());
+    m_plabMaxUnit->setText(Units::lengthUnitQLabel());
+}
+
+
+
+
+
 
 

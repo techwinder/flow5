@@ -123,8 +123,9 @@ bool Part::serializePartFl5(QDataStream &ar, bool bIsStoring)
     //500001: new fl5 format;
     //500002: added m_bReversed
     //500754: added GmshParams;
+    //500755: modified GmshParams to avoid excessively small tessellation elements;
 
-    int ArchiveFormat = 500754;
+    int ArchiveFormat = 500755;
     if(bIsStoring)
     {
         ar << ArchiveFormat;
@@ -182,6 +183,12 @@ bool Part::serializePartFl5(QDataStream &ar, bool bIsStoring)
             ar >> m_GmshTessParams.m_MinSize;
             ar >> m_GmshTessParams.m_MaxSize;
             ar >> m_GmshTessParams.m_nCurvature;
+
+            if(ArchiveFormat<500755)
+            {
+                m_GmshTessParams.m_MinSize = std::max(m_GmshTessParams.m_MinSize, 0.02); // could be 0.5 mm by default in v7.54
+            }
+
 
             if(m_GmshTessParams.m_MinSize<0.0005) m_GmshTessParams.m_MinSize = 0.0005; // avoid excessively long tessellations
             if(m_GmshTessParams.m_MaxSize<0.001) m_GmshTessParams.m_MaxSize = 10.0; // cleaning past errors

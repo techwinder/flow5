@@ -1074,9 +1074,9 @@ void Objects3d::makeBoatTriangulation(Boat *pBoat)
         pFuse->saveBaseTriangulation();
     }
 
-    for(int i=0; i<pBoat->nSails(); i++)
+    for(int is=0; is<pBoat->nSails(); is++)
     {
-        Objects3d::makeSailTriangulation(pBoat->sail(i));
+        Objects3d::makeSailTriangulation(pBoat->sail(is));
     }
 }
 
@@ -1089,7 +1089,7 @@ void Objects3d::makeSailTriangulation(Sail *pSail, int nx, int nz)
     {
         gmesh::makeSailOccTriangulation(pSailOcc);
     }
-    else
+    else if(pSail)
         pSail->makeTriangulation(nx, nz);
 }
 

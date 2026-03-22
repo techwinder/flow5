@@ -119,11 +119,15 @@ class FL5LIB_EXPORT Boat : public fl5Object
 
         void rotateMesh(const BoatPolar *pBtPolar, double phi, double Ry, double ctrl, std::vector<Panel3> &panels) const;
 
+        bool isInitialized() const {return m_bIsInitialized;}
+        void setInitialized(bool b) {m_bIsInitialized=b;}
+
 
     private:
         std::vector <Sail*> m_Sail;
         std::vector <Fuse*> m_Hull;
 
+        bool m_bIsInitialized;
 };
 
 

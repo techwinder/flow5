@@ -38,12 +38,12 @@ void ExternalSail::duplicate(Sail const*pSail)
 {
     Sail::duplicate(pSail);
 
-    ExternalSail const *pSTLSail = dynamic_cast<ExternalSail const*>(pSail);
+    ExternalSail const *pExternalSail = dynamic_cast<ExternalSail const*>(pSail);
 
-    m_Lx = pSTLSail->m_Lx;
-    m_Ly = pSTLSail->m_Ly;
-    m_Lz = pSTLSail->m_Lz;
-    m_WettedArea = pSTLSail->m_WettedArea;
+    m_Lx = pExternalSail->m_Lx;
+    m_Ly = pExternalSail->m_Ly;
+    m_Lz = pExternalSail->m_Lz;
+    m_WettedArea = pExternalSail->m_WettedArea;
 }
 
 

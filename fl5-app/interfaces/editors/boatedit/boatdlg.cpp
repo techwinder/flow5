@@ -691,7 +691,7 @@ void BoatDlg::onImportHullXML()
     if (!XFile.open(QIODevice::ReadOnly))
     {
         QString strange = "Could not open the file\n"+PathName;
-        QMessageBox::warning(this, "Warning", strange);
+        QMessageBox::warning(this, tr("Warning"), strange);
         return;
     }
 
@@ -1005,7 +1005,7 @@ void BoatDlg::onAddSail()
             break;
         case 3:
             pNewSail = new SailSpline(Spline::POINT);
-            pNewSail->setName(QString("point spline Sail %1").arg(m_pBoat->nSails()+1).toStdString());
+            pNewSail->setName(QString("Point spline Sail %1").arg(m_pBoat->nSails()+1).toStdString());
             break;
         case 4:
             pNewSail = new SailSpline(Spline::CUBIC);
@@ -1018,6 +1018,7 @@ void BoatDlg::onAddSail()
     }
 
     pNewSail->makeDefaultSail();
+    pNewSail->makeTriangulation();
     m_pBoat->appendSail(pNewSail);
     m_pBoat->makeRefTriMesh(true, true);
 
@@ -1228,7 +1229,7 @@ void BoatDlg::onImportSailFromXml()
     if (!xmlfile.open(QIODevice::ReadOnly))
     {
         QString strange = "Could not open the file\n"+xmlfile.fileName();
-        QMessageBox::warning(this, "Warning", strange);
+        QMessageBox::warning(this, tr("Warning"), strange);
         return;
     }
 
@@ -1436,6 +1437,7 @@ void BoatDlg::editSplineSail(Sail *pSail)
         delete pMemSail;
         return;
     }
+
     pSail->makeSurface();
     Objects3d::makeSailTriangulation(pSail);
     m_pglBoatView->resetglSail();
@@ -1457,6 +1459,8 @@ void BoatDlg::editOccSail(Sail *pSail)
         delete pMemSail;
         return;
     }
+
+    pSail->makeSurface();
     Objects3d::makeSailTriangulation(pSail);
     m_pglBoatView->resetglSail();
 }
@@ -1477,6 +1481,8 @@ void BoatDlg::editStlSail(Sail *pSail)
         delete pMemSail;
         return;
     }
+
+    pSail->makeSurface();
     Objects3d::makeSailTriangulation(pSail);
     m_pglBoatView->resetglSail();
 }
@@ -1497,6 +1503,7 @@ void BoatDlg::editNurbsSail(Sail *pSail)
         delete pMemSail;
         return;
     }
+
     pSail->makeSurface();
     Objects3d::makeSailTriangulation(pSail);
     m_pglBoatView->resetglSail();
@@ -1588,7 +1595,7 @@ void BoatDlg::reject()
     if(m_bChanged && xfl::bConfirmDiscard())
     {
         QString strong = "Discard the changes?";
-        int Ans = QMessageBox::question(this, "Question", strong,
+        int Ans = QMessageBox::question(this, tr("Question"), strong,
                                         QMessageBox::Ok | QMessageBox::Cancel);
         if (QMessageBox::Ok == Ans)
         {

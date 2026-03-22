@@ -434,17 +434,17 @@ void W3dPrefs::setupLayout()
                             QLabel *pLabX = new QLabel(tr("x-length"));
                             QLabel *pLabY = new QLabel(tr("y-width"));
 
-                            m_pLabXUnit = new QLabel(Units::lengthUnitQLabel());
-                            m_pLabYUnit = new QLabel(Units::lengthUnitQLabel());
+                            m_plabXUnit = new QLabel(Units::lengthUnitQLabel());
+                            m_plabYUnit = new QLabel(Units::lengthUnitQLabel());
                             m_pfeBoxX = new FloatEdit;
                             m_pfeBoxY = new FloatEdit;
 
                             pBoxSizeLayout->addWidget(pLabX,       1, 1, Qt::AlignVCenter|Qt::AlignRight);
                             pBoxSizeLayout->addWidget(m_pfeBoxX,   1, 2);
-                            pBoxSizeLayout->addWidget(m_pLabXUnit, 1, 3, Qt::AlignVCenter|Qt::AlignLeft);
+                            pBoxSizeLayout->addWidget(m_plabXUnit, 1, 3, Qt::AlignVCenter|Qt::AlignLeft);
                             pBoxSizeLayout->addWidget(pLabY,       2, 1, Qt::AlignVCenter|Qt::AlignRight);
                             pBoxSizeLayout->addWidget(m_pfeBoxY,   2, 2);
-                            pBoxSizeLayout->addWidget(m_pLabYUnit, 2, 3, Qt::AlignVCenter|Qt::AlignLeft);
+                            pBoxSizeLayout->addWidget(m_plabYUnit, 2, 3, Qt::AlignVCenter|Qt::AlignLeft);
                             pBoxSizeLayout->setColumnStretch(3,1);
                         }
 
@@ -504,6 +504,11 @@ void W3dPrefs::setupLayout()
     {
         QVBoxLayout *pTessLayout = new QVBoxLayout;
         {
+            QLabel *pFlow5Link = new QLabel;
+            pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Modelling/Tessellation.html>https://flow5.tech/docs/flow5_doc/Modelling/Tessellation.html</a>");
+            pFlow5Link->setOpenExternalLinks(true);
+            pFlow5Link->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
+
             QGroupBox *pgbRuledTessellation = new QGroupBox(tr("Ruled surfaces"));
             {
                 QVBoxLayout *pRuledLayout = new QVBoxLayout;
@@ -533,11 +538,11 @@ void W3dPrefs::setupLayout()
                 pgbRuledTessellation->setLayout(pRuledLayout);
             }
 
-            QGroupBox *pgbGmshTess = new QGroupBox(tr("Gmsh tessellation defaults for fuselages"));
+            QGroupBox *pgbGmshTess = new QGroupBox(tr("Gmsh tessellation defaults for fuselages and sails"));
             {
                 QVBoxLayout *pGmshLayout = new QVBoxLayout;
                 {
-                    QLabel *plabInfo = new QLabel(tr("<p>The defaults will be applied to new parts only.</p>"));
+                    QLabel *plabInfo = new QLabel(tr("<p>The defaults will apply to new parts only.</p>"));
                     m_pGmshCtrlsWt = new GmshCtrlsWt(this);
                     pGmshLayout->addWidget(plabInfo);
                     pGmshLayout->addWidget(m_pGmshCtrlsWt);
@@ -545,6 +550,7 @@ void W3dPrefs::setupLayout()
                 pgbGmshTess->setLayout(pGmshLayout);
             }
 
+            pTessLayout->addWidget(pFlow5Link);
             pTessLayout->addWidget(pgbRuledTessellation);
             pTessLayout->addWidget(pgbGmshTess);
         }
@@ -1167,8 +1173,10 @@ void W3dPrefs::onUpdateUnits()
 {
     m_pfeBoxX->setValue(s_BoxX*Units::mtoUnit());
     m_pfeBoxY->setValue(s_BoxY*Units::mtoUnit());
-    m_pLabXUnit->setText(Units::lengthUnitQLabel());
-    m_pLabYUnit->setText(Units::lengthUnitQLabel());
+    m_plabXUnit->setText(Units::lengthUnitQLabel());
+    m_plabYUnit->setText(Units::lengthUnitQLabel());
+
+    m_pGmshCtrlsWt->updateUnits(Part::gmshTessDefault());
 }
 
 

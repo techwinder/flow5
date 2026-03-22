@@ -43,7 +43,7 @@ class GmshCtrlsWt : public QWidget
         GmshCtrlsWt(QWidget *parent = nullptr);
 
         void initWt(const GmshParams &params);
-        void updateUnits();
+        void updateUnits(const GmshParams &parameters);
 
         int nCurvature() const;
         void setnCurvature(int n);
@@ -66,6 +66,7 @@ class GmshCtrlsWt : public QWidget
         FloatEdit *m_pfeMinSize, *m_pfeMaxSize;
         IntEdit *m_pienCurvature;
 
+        QLabel *m_plabMinUnit, *m_plabMaxUnit;
 
         bool m_bChanged;
 

@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-#include <iostream>
+
 
 #include <QGroupBox>
 #include <QHBoxLayout>
@@ -128,8 +128,6 @@ void BatchAltDlg::setupLayout()
                 m_pDelegate->showStyle(false);
                 m_pStruct->setItemDelegate(m_pDelegate);
 
-                QItemSelectionModel *selectionModel = new QItemSelectionModel(m_pModel);
-                m_pStruct->setSelectionModel(selectionModel);
                 m_pptoObjectProps = new PlainTextOutput;
 
                 m_psplVLeft->addWidget(m_pStruct);
@@ -290,7 +288,7 @@ void BatchAltDlg::setObjectProperties(QModelIndex index)
 
 
 
-void BatchAltDlg::onAnalyze()
+void BatchAltDlg::onCalculate()
 {
     if(m_bIsRunning)
     {
@@ -323,23 +321,24 @@ void BatchAltDlg::onAnalyze()
     QModelIndexList indexes = m_pStruct->selectionModel()->selectedIndexes();
     for(QModelIndex const &index : indexes)
     {
-        if (index.isValid())
+        if(!index.isValid()) continue;
+        if(index.column()!=0) continue; // ignore style and visibility columns
+
+        ObjectTreeItem *pSelectedItem = m_pModel->itemFromIndex(index);
+        if(pSelectedItem && pSelectedItem->isPolarLevel())
         {
-            ObjectTreeItem *pSelectedItem = m_pModel->itemFromIndex(index);
-            if(pSelectedItem && pSelectedItem->isPolarLevel())
+            ObjectTreeItem *parentItem = pSelectedItem->parentItem();
+            if(parentItem)
             {
-                ObjectTreeItem *parentItem = pSelectedItem->parentItem();
-                if(parentItem)
+                Foil *pFoil = Objects2d::foil(parentItem->name().toStdString());
+                Polar *pPolar = Objects2d::polar(pFoil, pSelectedItem->name().toStdString());
+                if(pFoil && pPolar)
                 {
-                    Foil *pFoil = Objects2d::foil(parentItem->name().toStdString());
-                    Polar *pPolar = Objects2d::polar(pFoil, pSelectedItem->name().toStdString());
-                    if(pFoil && pPolar)
-                    {
-                        m_AnalysisPair.push_back({pFoil, pPolar});
-                    }
+                    m_AnalysisPair.push_back({pFoil, pPolar});
                 }
             }
         }
+
     }
 
     if(m_AnalysisPair.isEmpty())

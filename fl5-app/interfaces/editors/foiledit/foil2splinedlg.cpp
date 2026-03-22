@@ -81,7 +81,7 @@ void Foil2SplineDlg::onNewSpline()
 
     if(bQuestion)
     {
-        int resp = QMessageBox::question(this, "Question", "Discard the changes?",  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        int resp = QMessageBox::question(this, tr("Question"), tr("Discard the changes?"),  QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
         if(resp != QMessageBox::Yes) return;
     }
 

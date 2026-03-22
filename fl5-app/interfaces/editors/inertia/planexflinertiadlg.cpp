@@ -712,7 +712,7 @@ void PlaneXflInertiaDlg::onOK(int iExitCode)
                     {
                         QString strange = QString::asprintf("Possible duplicate of point mass %d in part ", imass+1) + QString::fromStdString(pPart->name());
                         strange += "\nContinue?";
-                        int Ans = QMessageBox::question(this, "Question", strange,
+                        int Ans = QMessageBox::question(this, tr("Question"), strange,
                                                         QMessageBox::Yes | QMessageBox::No);
                         if (Ans != QMessageBox::Yes)
                             return;

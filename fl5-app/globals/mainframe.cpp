@@ -1476,10 +1476,8 @@ void MainFrame::handleIOResults(bool bError)
         }
         case xfl::XSAIL:
         {
-            for(Boat *pBoat : SailObjects::boats())
-            {
-                Objects3d::makeBoatTriangulation(pBoat);
-            }
+//            for(Boat *pBoat : SailObjects::boats())
+//                Objects3d::makeBoatTriangulation(pBoat);
             onXSail();
             break;
         }

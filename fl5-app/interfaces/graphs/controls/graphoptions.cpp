@@ -67,7 +67,7 @@ Axis GraphOptions::s_XAxis;
 Axis GraphOptions::s_YAxis[2]; /**< the two Y axes */
 
 
-bool GraphOptions::s_bBorder=true; /**< if false, the right axis is disabled altogether for this graph; the default is false */
+bool GraphOptions::s_bBorder=false;
 bool GraphOptions::s_bShowLegend=false;
 
 Qt::Alignment GraphOptions::s_LegendPosition = Qt::AlignTop | Qt::AlignHCenter;
@@ -107,7 +107,7 @@ void GraphOptions::resetGraphSettings(Graph &graph)
 
 void GraphOptions::setDefaults(bool bDark)
 {
-    s_bBorder  = true;
+    s_bBorder  = false;
     s_theBorderStyle.m_Stipple = Line::SOLID;
     s_theBorderStyle.m_Width = 2;
 
@@ -942,7 +942,7 @@ void GraphOptions::loadSettings(QSettings &settings)
         if(settings.contains("LabelColor")) s_LegendColor = settings.value("LegendColor", QColor(0,0,0)).value<QColor>();
 
         if(settings.contains("BorderStyle")) xfl::loadLineSettings(settings, s_theBorderStyle, "BorderStyle");
-        if(settings.contains("BorderShow")) s_bBorder = settings.value("BorderShow", true).toBool();
+        if(settings.contains("BorderVisible")) s_bBorder = settings.value("BorderVisible", true).toBool();
 
         if(settings.contains("BackgroundColor")) s_BackColor  = settings.value("BackgroundColor", QColor(255,255,255)).value<QColor>();
 
@@ -1007,7 +1007,7 @@ void GraphOptions::saveSettings(QSettings &settings)
         settings.setValue("LegendColor", s_LegendColor);
 
         xfl::saveLineSettings(settings, s_theBorderStyle, "BorderStyle");
-        settings.setValue("BorderShow", s_bBorder);
+        settings.setValue("BorderVisible", s_bBorder);
 
         settings.setValue("BackgroundColor", s_BackColor);
 

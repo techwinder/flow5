@@ -65,7 +65,7 @@ Graph::Graph()
     m_XVarList = QStringList({"x"});
     m_YVarList = QStringList({"y"});
 
-    m_bBorder       = true;
+    m_bBorder       = false;
     m_theBorderStyle.m_Stipple = Line::SOLID;
     m_theBorderStyle.m_Width = 2;
 
@@ -145,7 +145,6 @@ void Graph::copySettings(Graph const *pGraph)
     m_LabelColor     = pGraph->m_LabelColor;
     m_LegendColor    = pGraph->m_LegendColor;
 
-    m_bBorder        = pGraph->m_bBorder;
     for(int i=0; i<4; i++) m_margin[i] = pGraph->m_margin[i];
 
     m_bShowLegend    = pGraph->m_bShowLegend;
@@ -1693,7 +1692,7 @@ void Graph::saveSettings(QSettings &settings)
 
 
         xfl::saveLineSettings(settings, m_theBorderStyle, "BorderStyle");
-        settings.setValue("BorderShow", m_bBorder);
+        settings.setValue("BorderVisible", m_bBorder);
 
         settings.setValue("BackgroundColor", m_BkColor);
 
@@ -1768,7 +1767,7 @@ void Graph::loadSettings(QSettings &settings)
 
         xfl::loadLineSettings(settings, m_theBorderStyle, "BorderStyle");
 
-        m_bBorder = settings.value("BorderShow", true).toBool();
+        m_bBorder = settings.value("BorderVisible", m_bBorder).toBool();
 
         clr  = settings.value("BackgroundColor", QColor(255,255,255)).value<QColor>();
         setBkColor(clr);

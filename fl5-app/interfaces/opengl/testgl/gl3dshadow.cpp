@@ -92,7 +92,7 @@ gl3dShadow::gl3dShadow(QWidget *pParent) : gl3dTestGLView(pParent)
                     m_peslYObj->setTickPosition(QSlider::TicksBelow);
                     connect(m_peslYObj, SIGNAL(sliderMoved(int)), SLOT(onObjectPos()));
 
-                    m_peslZObj  = new ExponentialSlider(false, 1, Qt::Horizontal);
+                    m_peslZObj = new ExponentialSlider(false, 1, Qt::Horizontal);
                     m_peslZObj->setMinimum(0);
                     m_peslZObj->setMaximum(100);
                     m_peslZObj->setTickInterval(10);

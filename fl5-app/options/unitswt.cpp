@@ -283,7 +283,8 @@ void UnitsWt::initWidget()
 
     m_prbUnit1->setChecked(Units::fluidUnitType()==0);
     m_prbUnit2->setChecked(Units::fluidUnitType()==1);
-    onFluidUnit();
+
+    updateFluid();
 
     m_pcbLength->setFocus();
     setLabels();
@@ -310,13 +311,18 @@ void UnitsWt::onSelChanged()
 
 void UnitsWt::onFluidUnit()
 {
+    updateFluid();
+    emit unitsChanged();
+}
+
+
+void UnitsWt::updateFluid()
+{
     if(m_prbUnit1->isChecked()) Units::setFluidUnitType(0);
     else                        Units::setFluidUnitType(1);
     Units::setUnitConversionFactors();
     m_plabFluidUnit->setText(tr("Density:             ") + Units::densityUnitQLabel()   +"\n" +
                              tr("Kinematic viscosity: ") + Units::viscosityUnitQLabel() +"\n");
-
-    emit unitsChanged();
 }
 
 

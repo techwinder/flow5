@@ -143,7 +143,7 @@ void PartInertiaDlg::reject()
     if(m_bChanged && xfl::bConfirmDiscard())
     {
         QString strong = "Discard the changes?";
-        int Ans = QMessageBox::question(this, "Question", strong,
+        int Ans = QMessageBox::question(this, tr("Question"), strong,
                                         QMessageBox::Yes | QMessageBox::Cancel);
         if (QMessageBox::Yes == Ans)
         {

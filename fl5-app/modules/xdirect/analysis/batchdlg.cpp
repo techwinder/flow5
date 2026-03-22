@@ -292,7 +292,7 @@ void BatchDlg::connectBaseSignals()
 void BatchDlg::onButton(QAbstractButton *pButton)
 {
     if      (pButton == m_pButtonBox->button(QDialogButtonBox::Close)) onClose();
-    else if (pButton == m_ppbAnalyze)                                  onAnalyze();
+    else if (pButton == m_ppbAnalyze)                                  onCalculate();
 }
 
 
@@ -304,7 +304,7 @@ void BatchDlg::keyPressEvent(QKeyEvent *pEvent)
         case Qt::Key_Enter:
         {
             if(m_pButtonBox->button(QDialogButtonBox::Close)->hasFocus())   done(1);
-            else if(m_ppbAnalyze->hasFocus())  onAnalyze();
+            else if(m_ppbAnalyze->hasFocus())  onCalculate();
             else                               m_ppbAnalyze->setFocus();
             break;
         }

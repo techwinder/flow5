@@ -86,7 +86,7 @@ class BatchDlg : public QDialog
         void batchLaunch();
 
     protected slots:
-        virtual void onAnalyze() = 0;
+        virtual void onCalculate() = 0;
 
         void onAcl();
         void onButton(QAbstractButton *pButton);

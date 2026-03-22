@@ -46,6 +46,7 @@ PlPolarNameMaker::PlPolarNameMaker()
 {
 }
 
+
 QString PlPolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWPolar)
 {
     QString plrname;

@@ -111,8 +111,6 @@ void SailOccDlg::initDialog(Sail *pSail)
     m_prbThin->setChecked(pOccSail->isThinSurface());
     m_prbThick->setChecked(!pOccSail->isThinSurface());
 
-    m_pglSailView->setReferenceLength(2.0*pOccSail->size());
-
     m_pfeTEAngle->setValue(s_TEMaxAngle);
 
     setControls();

@@ -137,7 +137,7 @@ void WingDlg::makeCommonWts()
     m_plabPlaneName    = new QLabel;
     m_plabPlaneName->setStyleSheet("font: bold");
 
-    m_pleWingName      = new QLineEdit(tr("WingName"));
+    m_pleWingName      = new QLineEdit("Wing name");
     m_pcbColor         = new ColorBtn;
 
     m_ppteDescription = new QPlainTextEdit;
@@ -259,7 +259,7 @@ bool WingDlg::checkWing()
 {
     if(!m_pWing->name().length())
     {
-        QMessageBox::warning(this, "Warning", "Please enter a name for the wing");
+        QMessageBox::warning(this, tr("Warning"), tr("Please enter a name for the wing"));
         return false;
     }
 
@@ -267,8 +267,8 @@ bool WingDlg::checkWing()
     {
         if(m_pWing->yPosition(k) + LENGTHPRECISION < m_pWing->yPosition(k-1))
         {
-            QMessageBox::warning(this, "Warning", "Warning : Panel sequence is inconsistent. "
-                                                  "The sections should be ordered from root to tip");
+            QMessageBox::warning(this, tr("Warning"), tr("<p>The panel sequence is inconsistent. "
+                                                     "The sections should be ordered from root to tip.</p>"));
             return false;
         }
     }
@@ -277,7 +277,7 @@ bool WingDlg::checkWing()
     {
         if(fabs(m_pWing->chord(k))<LENGTHPRECISION)
         {
-            QMessageBox::warning(this, "Warning", "Zero length chords will cause a division by zero and should be avoided.");
+            QMessageBox::warning(this, tr("Warning"), tr("Zero length chords will cause a division by zero and should be avoided."));
             return false;
         }
     }
@@ -290,7 +290,7 @@ bool WingDlg::checkWing()
         {
             if((pLeftFoil->TEXHinge()>=0.99&& pLeftFoil->hasTEFlap()) ||(pLeftFoil->LEXHinge()<0.01&&pLeftFoil->hasLEFlap()))
             {
-                QMessageBox::warning(this, "Warning", QString::fromStdString(pLeftFoil->name())+": Zero length flaps will cause a division by zero and should be avoided.");
+                QMessageBox::warning(this, tr("Warning"), QString::fromStdString(pLeftFoil->name())+": " +tr("Zero length flaps will cause a division by zero and should be avoided."));
                 return false;
             }
         }
@@ -298,7 +298,7 @@ bool WingDlg::checkWing()
         {
             if((pRightFoil->TEXHinge()>=0.99&& pRightFoil->hasTEFlap()) ||(pRightFoil->LEXHinge()<0.01&&pRightFoil->hasLEFlap()))
             {
-                QMessageBox::warning(this, "Warning", QString::fromStdString(pRightFoil->name())+": Zero length flaps will cause a division by zero and should be avoided.");
+                QMessageBox::warning(this, tr("Warning"), QString::fromStdString(pRightFoil->name())+": "+tr("Zero length flaps will cause a division by zero and should be avoided."));
                 return false;
             }
         }
@@ -454,14 +454,14 @@ void WingDlg::onDeleteSection()
     if(m_iSection <0 || m_iSection>m_pWing->nSections()) return;
     if(m_iSection==0)
     {
-        QMessageBox::warning(this, "Warning","The first section cannot be deleted");
+        QMessageBox::warning(this, tr("Warning"), tr("The first section cannot be deleted"));
         return;
     }
 
     int size = m_pWing->nSections();
     if(size<=2)
     {
-        QMessageBox::warning(this, "Warning","The number of sections cannot be less than two");
+        QMessageBox::warning(this, tr("Warning"), tr("The number of sections cannot be less than two"));
         return;
     }
     int ny = m_pWing->nYPanels(m_iSection-1) + m_pWing->nYPanels(m_iSection);
@@ -508,7 +508,7 @@ void WingDlg::onInsertNBefore()
 
     if(m_iSection<=0)
     {
-        QMessageBox::warning(this, "Warning", "Insertion not possible before the first section");
+        QMessageBox::warning(this, tr("Warning"), tr("Insertion not possible before the first section"));
         return;
     }
 
@@ -519,7 +519,7 @@ void WingDlg::onInsertNBefore()
     {
         IntValueDlg dlg(this);
         dlg.setValue(1);
-        dlg.setLeftLabel("Number of sections to insert:");
+        dlg.setLeftLabel(tr("Number of sections to insert:"));
         if(dlg.exec()!=QDialog::Accepted) return;
         nsec = dlg.value();
         if(nsec<=0) return;
@@ -544,7 +544,7 @@ void WingDlg::onInsertNAfter()
     {
         IntValueDlg dlg(this);
         dlg.setValue(1);
-        dlg.setLeftLabel("Number of sections to insert:");
+        dlg.setLeftLabel(tr("Number of sections to insert:"));
         if(dlg.exec()!=QDialog::Accepted) return;
         nsec = dlg.value();
         if(nsec<=0) return;
@@ -750,8 +750,8 @@ void WingDlg::reject()
 {
     if(m_bChanged && xfl::bConfirmDiscard())
     {
-        QString strong = "Discard the changes?";
-        int Ans = QMessageBox::question(this, "Question", strong,
+        QString strong = tr("Discard the changes?");
+        int Ans = QMessageBox::question(this, tr("Question"), strong,
                                         QMessageBox::Yes | QMessageBox::Cancel);
         if (QMessageBox::Yes == Ans)
         {

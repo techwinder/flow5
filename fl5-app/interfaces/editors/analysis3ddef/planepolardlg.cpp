@@ -827,7 +827,7 @@ bool PlanePolarDlg::checkWPolarData()
 
     if(!m_plePolarName->text().length())
     {
-        QMessageBox::warning(this, "Warning", "Must enter a name for the polar");
+        QMessageBox::warning(this, tr("Warning"), tr("Must enter a name for the polar"));
         m_plePolarName->setFocus();
         return false;
     }
@@ -837,7 +837,7 @@ bool PlanePolarDlg::checkWPolarData()
     {
         if(s_WPolar.referenceArea()<1.-6 || s_WPolar.referenceSpanLength()<1.e-4 || s_WPolar.referenceChordLength()<1.e-4)
         {
-            QMessageBox::warning(this, "Warning", "Invalid reference dimensions");
+            QMessageBox::warning(this, tr("Warning"), tr("Invalid reference dimensions"));
             return false;
         }
     }
@@ -846,7 +846,7 @@ bool PlanePolarDlg::checkWPolarData()
     {
         if(!s_WPolar.isType6() || s_WPolar.isLLTMethod() || s_WPolar.isVLM())
         {
-            QMessageBox::warning(this, "Warning", "The vorton wake is only compatible with T6 analyses and panel methods");
+            QMessageBox::warning(this, tr("Warning"), tr("The vorton wake is only compatible with T6 analyses and panel methods"));
             return false;
         }
     }

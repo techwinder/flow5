@@ -73,10 +73,16 @@ void TessControlsDlg::setupLayout()
             m_pStackedWt->addWidget(m_pGmshWt);
         }
 
+        QLabel *pFlow5Link = new QLabel;
+        pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Modelling/Tessellation.html>https://flow5.tech/docs/flow5_doc/Modelling/Tessellation.html</a>");
+        pFlow5Link->setOpenExternalLinks(true);
+        pFlow5Link->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
+
         pMainLayout->addWidget(pCautionLabel);
         pMainLayout->addStretch();
         pMainLayout->addLayout(pOptionLayout);
         pMainLayout->addWidget(m_pStackedWt);
+        pMainLayout->addWidget(pFlow5Link);
         pMainLayout->addWidget(m_pButtonBox);
 
         setButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);

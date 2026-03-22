@@ -195,7 +195,6 @@ void XDirect::makeBLGraphs()
         m_BLGraph.back()->setYMax(0, 0.1);
         m_BLGraph.back()->setScaleType(GRAPH::RESETTING);
         m_BLGraph.back()->setBorderColor(QColor(200,200,200));
-        m_BLGraph.back()->setBorder(true);
         m_BLGraph.back()->setBorderStyle(Line::SOLID);
         m_BLGraph.back()->setBorderWidth(3);
         m_BLGraph.back()->setMargins(50);
@@ -229,7 +228,6 @@ void XDirect::makeOppGraph()
     m_pOppGraph->setYMax(0, 0.1);
     m_pOppGraph->setScaleType(GRAPH::EXPANDING);
     m_pOppGraph->setBorderColor(QColor(200,200,200));
-    m_pOppGraph->setBorder(true);
     m_pOppGraph->setBorderStyle(Line::SOLID);
     m_pOppGraph->setBorderWidth(3);
     m_pOppGraph->setMargins(50);
@@ -258,7 +256,6 @@ void XDirect::makePolarGraphs()
         m_PlrGraph.back()->setYMax(0, 0.1);
         m_PlrGraph.back()->setScaleType(GRAPH::RESETTING);
         m_PlrGraph.back()->setBorderColor(QColor(200,200,200));
-        m_PlrGraph.back()->setBorder(true);
         m_PlrGraph.back()->setBorderStyle(Line::SOLID);
         m_PlrGraph.back()->setBorderWidth(3);
         m_PlrGraph.back()->setMargins(50);

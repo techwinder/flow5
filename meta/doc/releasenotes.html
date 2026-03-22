@@ -20,19 +20,19 @@
                 </h1>
 
                 <h3>
-                    flow5 v7.55, , 2026
+                    flow5 v7.55, March 22, 2026
                 </h3>
                 <ul>
                     <li>General
                         <ul>
-                            <li>Moved the fuselage triangulation to the plane initialisation phase in order to speed up project loading</li>
+                            <li>Moved the fuselage tessellation to the plane initialisation phase in order to speed up project loading;
+                            also added an option in the Preferences to customize the <a href="https://flow5.tech/docs/flow5_doc/Modelling/Tessellation.html">default Gmsh tessellation parameters</a></li>
                         </ul>
                     </li>
                     <li>Modelling/Meshing
                         <ul>
                             <li>raised the upper limit of the number of foil panels from 255 to 300</li>
                             <li>fixed <a href="https://github.com/techwinder/flow5/issues/16">issue #16</a></li>
-                            <li>added an option in the preferences to customize the default gmsh tessellation parameters</li>
                         </ul>
                     </li>
                     <li>Analysis
@@ -41,6 +41,7 @@
                             <li>fixed <a href="https://github.com/techwinder/flow5/issues/3">issue #3</a></li>
                             <li>fixed <a href="https://github.com/techwinder/flow5/issues/25">issue #25</a></li>
                             <li>fixed <a href="https://github.com/techwinder/flow5/issues/30">issue #30</a></li>
+                            <li>removed duplicate runs in foil batch mode</li>
                         </ul>
                     </li>
                     <li>API
@@ -50,7 +51,6 @@
                     </li>
                     <li>Post-processing
                         <ul>
-                            <li></li>
                         </ul>
                     </li>
                     <li>UI
@@ -63,7 +63,6 @@
                     </li>
                     <li>Other
                         <ul>
-                            <li></li>
                         </ul>
                     </li>
                 </ul>

@@ -458,7 +458,7 @@ void FuseDlg::onExportTrianglesToSTLFile()
 
     if (!XFile.open(QIODevice::WriteOnly))
     {
-        QMessageBox::warning(window(), "Warning", "Could not open the file for writing");
+        QMessageBox::warning(window(), tr("Warning"), tr("Could not open the file for writing"));
         return;
     }
 
@@ -485,19 +485,20 @@ void FuseDlg::onTessellation()
     if(dlg.exec()==QDialog::Accepted)
     {
         QApplication::setOverrideCursor(Qt::WaitCursor);
+
         Fuse::setOccTessellator(dlg.bOcc());
         m_pFuse->setOccTessParams(dlg.occParameters());
         m_pFuse->setGmshTessParams(dlg.gmshParameters());
 
         m_pFuse->clearOccTriangulation();
         m_bDescriptionChanged = true;
-        QString strange;
-//        m_pFuse->makeShellTriangulation(strange, QString());
 
+        QString strange;
         gmesh::makeFuseTriangulation(m_pFuse, strange);
         m_pglFuseView->resetFuse();
         updateView();
         updateOutput("\n"+strange+"\n");
+
         QApplication::restoreOverrideCursor();
     }
 }

@@ -101,7 +101,7 @@ void FuseOccDlg::initDialog(Fuse*pFuse)
 
 void FuseOccDlg::createActions()
 {
-    m_pFlipTessNormals = new QAction("Flip normals", this);
+    m_pFlipTessNormals = new QAction(tr("Flip normals"), this);
 }
 
 
@@ -292,18 +292,18 @@ void FuseOccDlg::connectSignals()
 {
     connectBaseSignals();
 
-    connect(m_ppbShapeFix,           SIGNAL(clicked(bool)),    SLOT(onShapeFix()));
+    connect(m_ppbShapeFix,           SIGNAL(clicked(bool)),     SLOT(onShapeFix()));
 
     connect(m_pExportToCADFile,      SIGNAL(triggered()),       SLOT(onExportBodyToCADFile()));
     connect(m_pFlipTessNormals,      SIGNAL(triggered()),       SLOT(onFlipTessNormals()));
 
 
-    connect(m_prbfl5Mesher,           SIGNAL(clicked(bool)),              SLOT(onSelMesher()));
-    connect(m_prbGMesher,             SIGNAL(clicked(bool)),              SLOT(onSelMesher()));
-    connect(m_pMesherWt,              SIGNAL(outputMsg(QString)), m_ppto, SLOT(onAppendQText(QString)));
-    connect(m_pMesherWt,              SIGNAL(updateFuseView()),           SLOT(onUpdateFuseView()));
-    connect(m_pGMesherWt,             SIGNAL(outputMsg(QString)), m_ppto, SLOT(onAppendQText(QString)));
-    connect(m_pGMesherWt,             SIGNAL(updateFuseView()),           SLOT(onUpdateFuseView()));
+    connect(m_prbfl5Mesher,          SIGNAL(clicked(bool)),              SLOT(onSelMesher()));
+    connect(m_prbGMesher,            SIGNAL(clicked(bool)),              SLOT(onSelMesher()));
+    connect(m_pMesherWt,             SIGNAL(outputMsg(QString)), m_ppto, SLOT(onAppendQText(QString)));
+    connect(m_pMesherWt,             SIGNAL(updateFuseView()),           SLOT(onUpdateFuseView()));
+    connect(m_pGMesherWt,            SIGNAL(outputMsg(QString)), m_ppto, SLOT(onAppendQText(QString)));
+    connect(m_pGMesherWt,            SIGNAL(updateFuseView()),           SLOT(onUpdateFuseView()));
 
     connect(m_pCheckMesh,            SIGNAL(triggered()),       SLOT(onCheckMesh()));
     connect(m_pCenterOnPanel,        SIGNAL(triggered()),       SLOT(onCenterViewOnPanel()));

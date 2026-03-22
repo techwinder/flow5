@@ -180,10 +180,24 @@ bool SailOcc::serializeSailFl5(QDataStream &ar, bool bIsStoring)
 
         m_bRuledMesh = false; // forced in v7.55
 
+        makeSurface();
         computeProperties();
         updateStations();
     }
     return true;
+}
+
+
+void SailOcc::makeSurface()
+{
+    m_Lx = fabs(m_Tack.x-m_Clew.x);
+    m_Lx = std::max(m_Lx, fabs(m_Head.x-m_Peak.x));
+
+    m_Ly = fabs(m_Tack.y-m_Clew.y);
+    m_Ly = std::max(m_Ly, fabs(m_Head.y-m_Peak.y));
+
+    m_Lz = fabs(m_Head.z-m_Tack.z);
+    m_Lz = std::max(m_Lz, fabs(m_Peak.z-m_Clew.z));
 }
 
 

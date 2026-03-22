@@ -117,9 +117,9 @@ void gl3dSailView::setSail(Sail const* pSail)
     {
         ExternalSail const *pExtSail = dynamic_cast<ExternalSail const*>(m_pSail);
         int size = pExtSail->size();
-        if(size<1.e-3) size = pExtSail->refChord(); // case where the corner points have not been defined
+        if(size<1.e-3) size = pExtSail->refChord()*3.0; // case where the corner points have not been defined
 
-        setReferenceLength(size*2.5);
+        setReferenceLength(size*1.1);
     }
     else
         setReferenceLength(m_pSail->luffLength()*2);

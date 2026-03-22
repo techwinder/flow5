@@ -55,7 +55,7 @@ class FL5LIB_EXPORT ExternalSail : public Sail
         virtual void rotate(const Vector3d &origin, const Vector3d &axis, double theta) = 0;
 
     protected:
-        double m_Lx, m_Ly, m_Lz;
+        double m_Lx, m_Ly, m_Lz; // used to define a scale for display
         double m_WettedArea;
 };
 

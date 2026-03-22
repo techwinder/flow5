@@ -180,7 +180,6 @@ void XSail::makePlrgraphs()
         m_PlrGraph.back()->setYMax(0, 0.1);
         m_PlrGraph.back()->setScaleType(GRAPH::RESETTING);
         m_PlrGraph.back()->setBorderColor(QColor(200,200,200));
-        m_PlrGraph.back()->setBorder(true);
         m_PlrGraph.back()->setBorderStyle(Line::SOLID);
         m_PlrGraph.back()->setBorderWidth(3);
         m_PlrGraph.back()->setMargins(50);
@@ -1218,6 +1217,7 @@ Boat *XSail::setBoat(QString const &BoatName)
 
 Boat *XSail::setBoat(Boat *pBoat)
 {
+    QApplication::setOverrideCursor(Qt::WaitCursor);
     m_pCurBoat = pBoat;
     cancelDisplayThreads();
 
@@ -1225,7 +1225,22 @@ Boat *XSail::setBoat(Boat *pBoat)
     {
         m_pgl3dXSailView->setBoat(nullptr);
         setBtPolar();
+
+        QApplication::restoreOverrideCursor();
         return nullptr;
+    }
+
+    if(!m_pCurBoat->isInitialized())
+    {
+        Objects3d::makeBoatTriangulation(pBoat);
+
+        for(int is=0; is<pBoat->nSails(); is++)
+        {
+            ExternalSail *pExtSail = dynamic_cast<ExternalSail*>(pBoat->sail(is));
+            if(pExtSail) pExtSail->computeProperties();
+        }
+
+        pBoat->setInitialized(true);
     }
 
     m_pCurBoat->makeRefTriMesh(true, xfl::isMultiThreaded());
@@ -1235,6 +1250,8 @@ Boat *XSail::setBoat(Boat *pBoat)
     m_pgl3dXSailView->resetglBoat();
 
     if(W3dPrefs::autoAdjust3dScale()) m_pgl3dXSailView->reset3dScale();
+
+    QApplication::restoreOverrideCursor();
 
     return m_pCurBoat;
 }

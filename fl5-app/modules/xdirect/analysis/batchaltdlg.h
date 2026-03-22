@@ -52,7 +52,7 @@ class BatchAltDlg : public BatchDlg
 
 
     private slots:
-        void onAnalyze() override;
+        void onCalculate() override;
         void onCurrentRowChanged(QModelIndex currentidx, QModelIndex);
 
     private:

@@ -173,7 +173,7 @@ class W3dPrefs : public QWidget
         QCheckBox *m_pchGround;
         ColorBtn *m_pcbWaterColor;
         FloatEdit *m_pfeBoxX, *m_pfeBoxY;
-        QLabel *m_pLabXUnit, *m_pLabYUnit;
+        QLabel *m_plabXUnit, *m_plabYUnit;
 
         QPushButton *m_ppbGradientBtn;
 

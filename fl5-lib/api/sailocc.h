@@ -51,7 +51,7 @@ class FL5LIB_EXPORT SailOcc : public ExternalSail
         void duplicate(Sail const*pSail) override;
         void flipXZ() override;
         void makeDefaultSail() override {}
-        void makeSurface() override {}
+        void makeSurface() override;
         void makeTriangulation(int nx=s_iXRes, int nz=s_iZRes) override;
         void properties(std::string &properties, std::string const &prefx, bool bFull=false) const override;
         void resizeSections(int , int ) override {}

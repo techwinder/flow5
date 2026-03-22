@@ -689,7 +689,7 @@ void BatchXFoilDlg::readFoils(QVector<Foil*> &foils)
 }
 
 
-void BatchXFoilDlg::onAnalyze()
+void BatchXFoilDlg::onCalculate()
 {
     if(m_bIsRunning)
     {
