@@ -24,8 +24,6 @@
 
 
 
-
-
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QAction>
@@ -65,16 +63,16 @@ void gl3dControls::makeCommonWts()
     m_ptbFineCtrls = new QToolButton(this);
     m_ptbDistance  = new QToolButton(this);
 
-    QAction *pXView      = new QAction(QIcon(":/icons/OnXView.png"),      "X view\t(X)\n\t(Shift+X)",    this);
-    QAction *pYView      = new QAction(QIcon(":/icons/OnYView.png"),      "Y view\t(Y)\n\t(Shift+Y)",    this);
-    QAction *pZView      = new QAction(QIcon(":/icons/OnZView.png"),      "Z view\t(Z)\n\t(Shift+Z)",    this);
-    QAction *pIsoView    = new QAction(QIcon(":/icons/OnIsoView.png"),    "Pseudo iso View\t(I)",        this);
-    QAction *pFlipHView  = new QAction(QIcon(":/icons/OnFlipHView.png"),  "Flip view horizontally\t(H)", this);
-    QAction *pFlipVView  = new QAction(QIcon(":/icons/OnFlipVView.png"),  "Flip view vertically\t(V)",   this);
-    QAction *pResetView  = new QAction(QIcon(":/icons/reset3dscale.png"), "Reset 3d scale \t(R)",        this);
-    QAction *pLightView  = new QAction(QIcon(":/icons/light.png"),        "Toggle the light on/off",     this);
-    QAction *pFineCtrls  = new QAction(QIcon(":/icons/OnFineCtrls.png"),  "Show/hide the fine controls", this);
-    QAction *pDistance   = new QAction(QIcon(":/icons/OnDistance.png"),   "Node distance",               this);
+    QAction *pXView      = new QAction(QIcon(":/icons/OnXView.png"),      tr("X view\t(X)\n\t(Shift+X)"),    this);
+    QAction *pYView      = new QAction(QIcon(":/icons/OnYView.png"),      tr("Y view\t(Y)\n\t(Shift+Y)"),    this);
+    QAction *pZView      = new QAction(QIcon(":/icons/OnZView.png"),      tr("Z view\t(Z)\n\t(Shift+Z)"),    this);
+    QAction *pIsoView    = new QAction(QIcon(":/icons/OnIsoView.png"),    tr("Pseudo iso view\t(I)"),        this);
+    QAction *pFlipHView  = new QAction(QIcon(":/icons/OnFlipHView.png"),  tr("Flip view horizontally\t(H)"), this);
+    QAction *pFlipVView  = new QAction(QIcon(":/icons/OnFlipVView.png"),  tr("Flip view vertically\t(V)"),   this);
+    QAction *pResetView  = new QAction(QIcon(":/icons/reset3dscale.png"), tr("Reset 3d scale \t(R)"),        this);
+    QAction *pLightView  = new QAction(QIcon(":/icons/light.png"),        tr("Toggle the light on/off"),     this);
+    QAction *pFineCtrls  = new QAction(QIcon(":/icons/OnFineCtrls.png"),  tr("Show/hide the fine controls"), this);
+    QAction *pDistance   = new QAction(QIcon(":/icons/OnDistance.png"),   tr("Node distance"),               this);
 
     pXView->setCheckable(false);
     pYView->setCheckable(false);
@@ -95,7 +93,20 @@ void gl3dControls::makeCommonWts()
     m_ptbReset->setDefaultAction(pResetView);
     m_ptbFineCtrls->setDefaultAction(pFineCtrls);
     m_ptbDistance->setDefaultAction(pDistance);
-    m_ptbDistance->setToolTip("<p>Click on two mesh nodes to display their distance</p>");
+    m_ptbDistance->setToolTip(tr("<p>Click on two mesh nodes to display their distance</p>"));
+
+
+    int iconsize = DisplayOptions::iconSize();
+    m_ptbX->setIconSize(        QSize(iconsize, iconsize));
+    m_ptbY->setIconSize(        QSize(iconsize, iconsize));
+    m_ptbZ->setIconSize(        QSize(iconsize, iconsize));
+    m_ptbIso->setIconSize(      QSize(iconsize, iconsize));
+    m_ptbHFlip->setIconSize(    QSize(iconsize, iconsize));
+    m_ptbVFlip->setIconSize(    QSize(iconsize, iconsize));
+    m_ptbReset->setIconSize(    QSize(iconsize, iconsize));
+    m_ptbFineCtrls->setIconSize(QSize(iconsize, iconsize));
+    m_ptbDistance->setIconSize( QSize(iconsize, iconsize));
+
 
     m_pFineCtrls = new Fine3dControls(m_pgl3dView);
     m_pFineCtrls->setVisible(false);

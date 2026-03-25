@@ -1151,12 +1151,11 @@ void MainFrame::createToolbars()
     createXSailToolbars();
 
     int minsize = DisplayOptions::iconSize();
-
-    if(m_ptbMain->iconSize().height()<minsize)    m_ptbMain->setIconSize(QSize(minsize,minsize));
-    if(m_ptbXPlane->iconSize().height()<minsize)  m_ptbXPlane->setIconSize(QSize(minsize,minsize));
-    if(m_ptbXDirect->iconSize().height()<minsize) m_ptbXDirect->setIconSize(QSize(minsize,minsize));
-    if(m_ptbDFoil->iconSize().height()<minsize)   m_ptbDFoil->setIconSize(QSize(minsize,minsize));
-    if(m_ptbXSail->iconSize().height()<minsize)   m_ptbXSail->setIconSize(QSize(minsize,minsize));
+    if(m_ptbMain->iconSize().height()<minsize)    m_ptbMain->setIconSize(   QSize(minsize, minsize));
+    if(m_ptbXPlane->iconSize().height()<minsize)  m_ptbXPlane->setIconSize( QSize(minsize, minsize));
+    if(m_ptbXDirect->iconSize().height()<minsize) m_ptbXDirect->setIconSize(QSize(minsize, minsize));
+    if(m_ptbDFoil->iconSize().height()<minsize)   m_ptbDFoil->setIconSize(  QSize(minsize, minsize));
+    if(m_ptbXSail->iconSize().height()<minsize)   m_ptbXSail->setIconSize(  QSize(minsize, minsize));
 }
 
 

@@ -62,7 +62,7 @@ QByteArray PlaneAnalysisDlg::s_Geometry;
 
 PlaneAnalysisDlg::PlaneAnalysisDlg(QWidget *pParent) : QDialog(pParent)
 {
-    setWindowTitle("Plane analysis");
+    setWindowTitle(tr("Plane analysis"));
     setWindowFlag(Qt::WindowStaysOnTopHint);// | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
     setWindowFlag(Qt::WindowMinMaxButtonsHint);
     setupLayout();

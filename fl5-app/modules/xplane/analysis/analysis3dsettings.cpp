@@ -119,41 +119,41 @@ void Analysis3dSettings::setupLayout()
         {
             QGridLayout *pGeomLayout = new QGridLayout;
             {
-                QLabel *plabnRHS  = new QLabel("Max. number of operating points/analysis=");
+                QLabel *plabnRHS  = new QLabel(tr("Max. number of operating points/analysis="));
                 m_pieMaxRHS = new IntEdit;
-                m_pieMaxRHS->setToolTip("<p>Defines the maximum number of operating points to be calculated in a single run."
+                m_pieMaxRHS->setToolTip(tr("<p>Defines the maximum number of operating points to be calculated in a single run."
                                           "Intended as a safety limit to prevent excessively lengthy analyses."
-                                          "</p>");
+                                          "</p>"));
 
-                m_pchKeepOpenOnErrors  = new QCheckBox("Keep analysis window opened on errors");
+                m_pchKeepOpenOnErrors  = new QCheckBox(tr("Keep analysis window opened on errors"));
 
-                QLabel *plabWingPanels  = new QLabel("Ignore wing panels with span width <");
+                QLabel *plabWingPanels  = new QLabel(tr("<p>Ignore wing surfaces with span width &lt;</p>"));
                 QLabel *plabLength1     = new QLabel(Units::lengthUnitQLabel());
                 m_pfeMinPanelSize = new FloatEdit;
-                m_pfeMinPanelSize->setToolTip("<p>Wing surfaces with span width less than this value will be ignored "
+                m_pfeMinPanelSize->setToolTip(tr("<p>Wing surfaces with span width less than this value will be ignored "
                                               "in the mesh operation.<br>"
-                                              "This is to allow the definition of duplicate sections at a given span positions.</p>");
+                                              "This is to allow the definition of duplicate sections at a given span positions.</p>"));
 
-                QLabel *plabRFF = new QLabel("Far field factor=");
+                QLabel *plabRFF = new QLabel(tr("Far field factor="));
                 m_pfeRFF = new FloatEdit;
-                m_pfeRFF->setToolTip("<p>RFF is the far-field radius factor used in the evaluation of influence coefficients. "
-                                          "If the evaluation point is at a distance greater than  RFF x panel_size, then the "
-                                          "panel is considered to be a point source or point doublet with strength = area x density.<br>"
+                m_pfeRFF->setToolTip(tr("<p>RFF is the far-field radius factor used in the evaluation of influence coefficients. "
+                                          "If the evaluation point is at a distance greater than  RFF &times; panel_size, then the "
+                                          "panel is considered to be a point source or point doublet with strength = area &times; density.<br>"
                                           "This reduces significantly the computation times at the expense of precision. Practically, "
                                           "the difference is in the order of 0.5% at RFF=7.<br>"
                                           "RFF=10 is the recommended value.<br>"
-                                          "Cf. Report NASA 4023 for a more detailed explanation.</p>");
+                                          "Cf. Report NASA 4023 for a more detailed explanation.</p>"));
 
-                pGeomLayout->addWidget(m_pchKeepOpenOnErrors,2,1,1,3);
-                pGeomLayout->addWidget(plabnRHS,             4,1, Qt::AlignRight);
-                pGeomLayout->addWidget(m_pieMaxRHS,          4,2);
-                pGeomLayout->addWidget(plabWingPanels,       5,1, Qt::AlignRight);
-                pGeomLayout->addWidget(m_pfeMinPanelSize,    5,2);
-                pGeomLayout->addWidget(plabLength1,          5,3);
-                pGeomLayout->addWidget(plabRFF,              6,1, Qt::AlignRight);
-                pGeomLayout->addWidget(m_pfeRFF,             6,2);
-                pGeomLayout->setRowStretch(                  7,1);
-                pGeomLayout->setColumnStretch(               4,1);
+                pGeomLayout->addWidget(m_pchKeepOpenOnErrors, 2,1,1,3);
+                pGeomLayout->addWidget(plabnRHS,              4,1, Qt::AlignRight);
+                pGeomLayout->addWidget(m_pieMaxRHS,           4,2);
+                pGeomLayout->addWidget(plabWingPanels,        5,1, Qt::AlignRight);
+                pGeomLayout->addWidget(m_pfeMinPanelSize,     5,2);
+                pGeomLayout->addWidget(plabLength1,           5,3);
+                pGeomLayout->addWidget(plabRFF,               6,1, Qt::AlignRight);
+                pGeomLayout->addWidget(m_pfeRFF,              6,2);
+                pGeomLayout->setRowStretch(                   7,1);
+                pGeomLayout->setColumnStretch(                4,1);
             }
             pCommonFrame->setLayout(pGeomLayout);
         }
@@ -162,10 +162,10 @@ void Analysis3dSettings::setupLayout()
         {
             QGridLayout *pLLTLayout = new QGridLayout;
             {
-                QLabel *pLabNStations = new QLabel("Number of spanwise stations=");
-                QLabel *pLabRelax     = new QLabel("Relaxation factor=");
-                QLabel *pLabAlphaCv   = new QLabel("<p>&alpha; precision=</p>");
-                QLabel *pLabIter      = new QLabel("Maximum iterations=");
+                QLabel *pLabNStations = new QLabel(tr("Number of spanwise stations="));
+                QLabel *pLabRelax     = new QLabel(tr("Relaxation factor="));
+                QLabel *pLabAlphaCv   = new QLabel(tr("<p>&alpha; precision=</p>"));
+                QLabel *pLabIter      = new QLabel(tr("Maximum iterations="));
                 QLabel *pLabDegree    = new QLabel("<p>&deg;</p>");
 
                 m_pieLLTNStation     = new IntEdit;
@@ -194,8 +194,8 @@ void Analysis3dSettings::setupLayout()
                 m_pfeVortexPos    = new FloatEdit(25.0, 2);
                 m_pfeControlPos   = new FloatEdit(75.0, 2);
 
-                QLabel *plab6  = new QLabel("Vortex position=");
-                QLabel *plab7  = new QLabel("Control point position=");
+                QLabel *plab6  = new QLabel(tr("Vortex position="));
+                QLabel *plab7  = new QLabel(tr("Control point position="));
                 QLabel *plab8  = new QLabel("%");
                 QLabel *plab9  = new QLabel("%");
                 plab6->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -220,7 +220,7 @@ void Analysis3dSettings::setupLayout()
             {
                 QHBoxLayout *pQuadratureLayout = new QHBoxLayout;
                 {
-                    QLabel *plabQuad = new QLabel("Order of 2d Gaussian quadrature for triangle scalar products=");
+                    QLabel *plabQuad = new QLabel(tr("Order of 2d Gaussian quadrature for triangle scalar products="));
                     m_pieQuadPoints = new IntEdit(0);
                     pQuadratureLayout->addWidget(plabQuad);
                     pQuadratureLayout->addWidget(m_pieQuadPoints);
@@ -250,14 +250,14 @@ void Analysis3dSettings::setupLayout()
         {
             QGridLayout *pPrecisionLayout = new QGridLayout;
             {
-                QLabel *pLabPrecision = new QLabel("Matrix float precision:");
-                m_prbSinglePrecision = new QRadioButton("Single precision, 4 bytes/value");
-                m_prbDoublePrecision = new QRadioButton("Double precision, 8 bytes/value (recommended)");
-                QString precisiontip = "<p>This defines with what precision the influence matrix will be stored. "
+                QLabel *pLabPrecision = new QLabel(tr("Matrix float precision:"));
+                m_prbSinglePrecision = new QRadioButton(tr("Single precision, 4 bytes/value"));
+                m_prbDoublePrecision = new QRadioButton(tr("Double precision, 8 bytes/value (recommended)"));
+                QString precisiontip = tr("<p>This defines with what precision the influence matrix will be stored. "
                                        "Single precision will use half the memory required for double precision. "
                                        "Accuracy of the results may also be reduced by a few percent.<br>"
                                        "Use single precision only for large calculations where memory allocation "
-                                       "may be an issue.</p>";
+                                       "may be an issue.</p>");
                 pLabPrecision->setToolTip(precisiontip);
                 m_prbSinglePrecision->setToolTip(precisiontip);
                 m_prbDoublePrecision->setToolTip(precisiontip);
@@ -275,47 +275,47 @@ void Analysis3dSettings::setupLayout()
         {
             QGridLayout *pViscIterLayout = new QGridLayout;
             {
-                QLabel *pLabRelax   = new QLabel("Relax. factor=");
-                QLabel *pLabAlphaCv = new QLabel("Virtual twist precision=");
-                QLabel *pLabIter    = new QLabel("Max. iterations=");
-                QLabel *pLabDegree    = new QLabel("<p>&deg;</p>");
+                QLabel *plabRelax   = new QLabel(tr("Relaxation factor="));
+                QLabel *plabAlphaCv = new QLabel(tr("Virtual twist precision="));
+                QLabel *plabIter    = new QLabel(tr("Max. iterations="));
+                QLabel *plabDegree  = new QLabel("<p>&deg;</p>");
 
                 m_pfeViscPanelRelax = new FloatEdit(1.0);
                 m_pfeViscPanelRelax->setRange(0.0,1.0);
-                QString tip = "<p>The relaxation factor is a multiplier applied to the increase of virtual twist at each viscous iteration. "
+                QString tip = tr("<p>The relaxation factor is a multiplier applied to the increase of virtual twist at each viscous iteration. "
                               "At low Reynolds numbers, convergence may be improved by reducing this coefficient to a value less than 1."
                               "The coefficient should always be greater than zero and less than 1.<br>"
                               "Recommendation: 0.3 < relax < 0.7"
-                              "</p>";
+                              "</p>");
                 m_pfeViscPanelRelax->setToolTip(tip);
 
                 m_pfeViscPanelTwistPrec    = new FloatEdit;
-                tip = "<p>This parameter controls the maximum acceptable error for virtual twist. "
+                tip = tr("<p>This parameter controls the maximum acceptable error for virtual twist. "
                       "Convergence is achieved if the max. increase of virtual twist from one "
                       "viscous iteration to the next is less than this value.<br>"
-                      "Recommendation: 0.01&deg;</p>";
+                      "Recommendation: 0.01&deg;</p>");
                 m_pfeViscPanelTwistPrec->setToolTip(tip);
 
                 m_pieViscPanelIterMax      = new IntEdit;
-                tip = "<p>This parameter sets the maximum number of viscous iterations.<br>"
-                      "Recommendation: max. iter = 30</p>";
+                tip = tr("<p>This parameter sets the maximum number of viscous iterations.<br>"
+                      "Recommendation: max. iter = 30</p>");
                 m_pieViscPanelIterMax->setToolTip(tip);
 
-                m_pchViscInitVTwist = new QCheckBox("Initialize the virtual twist at each new operating point calculation");
-                QString TipInit("<p>"
-                                "If activated the virtual twist will be set to 0 when starting the calculation "
-                                "of a new operating point. "
-                                "Otherwise the iterations will start with the virtual twist from the previous "
-                                "converged operating point.<br>"
-                                "Recommendation: do not activate</p>");
-                m_pchViscInitVTwist->setToolTip(TipInit);
+                m_pchViscInitVTwist = new QCheckBox(tr("Initialize the virtual twist at each new operating point calculation"));
+                tip = tr("<p>"
+                         "If activated the virtual twist will be set to 0 when starting the calculation "
+                         "of a new operating point. "
+                         "Otherwise the iterations will start with the virtual twist from the previous "
+                         "converged operating point.<br>"
+                         "Recommendation: do not activate</p>");
+                m_pchViscInitVTwist->setToolTip(tip);
 
-                pViscIterLayout->addWidget(pLabRelax,                 1,1, Qt::AlignRight | Qt::AlignVCenter);
+                pViscIterLayout->addWidget(plabRelax,                 1,1, Qt::AlignRight | Qt::AlignVCenter);
                 pViscIterLayout->addWidget(m_pfeViscPanelRelax,       1,2);
-                pViscIterLayout->addWidget(pLabAlphaCv,               2,1, Qt::AlignRight | Qt::AlignVCenter);
+                pViscIterLayout->addWidget(plabAlphaCv,               2,1, Qt::AlignRight | Qt::AlignVCenter);
                 pViscIterLayout->addWidget(m_pfeViscPanelTwistPrec,   2,2);
-                pViscIterLayout->addWidget(pLabDegree,                2,3, Qt::AlignLeft | Qt::AlignVCenter);
-                pViscIterLayout->addWidget(pLabIter,                  3,1, Qt::AlignRight | Qt::AlignVCenter);
+                pViscIterLayout->addWidget(plabDegree,                2,3, Qt::AlignLeft | Qt::AlignVCenter);
+                pViscIterLayout->addWidget(plabIter,                  3,1, Qt::AlignRight | Qt::AlignVCenter);
                 pViscIterLayout->addWidget(m_pieViscPanelIterMax,     3,2);
                 pViscIterLayout->addWidget(m_pchViscInitVTwist,       4,1,1,3);
                 pViscIterLayout->setRowStretch(5,1);
@@ -416,11 +416,11 @@ void Analysis3dSettings::setupLayout()
                 m_pchVortonRedist = new QCheckBox("Vorton redistribution");
                 m_pchVortonRedist->setToolTip(tip);
 
-                QLabel *pLabCoreSize = new QLabel("The vorton core size and VPW length have been moved to the analysis definition.");
+                QLabel *plabCoreSize = new QLabel("The vorton core size and VPW length have been moved to the analysis definition.");
 
                 pVPWBoxLayout->addWidget(m_pchVortonStrengthEx, 1, 1, 1, 2);
                 pVPWBoxLayout->addWidget(m_pchVortonRedist,     2, 1, 1, 2);
-                pVPWBoxLayout->addWidget(pLabCoreSize,          3, 1, 1, 3);
+                pVPWBoxLayout->addWidget(plabCoreSize,          3, 1, 1, 3);
                 pVPWBoxLayout->setRowStretch(5,1);
                 pVPWBoxLayout->setColumnStretch(4,1);
             }
@@ -428,14 +428,14 @@ void Analysis3dSettings::setupLayout()
             pVPWFrame->setLayout(pVPWBoxLayout);
         }
 
-        m_pTabWt->addTab(pCommonFrame,     "Common");
+        m_pTabWt->addTab(pCommonFrame,     tr("Common"));
         m_pTabWt->addTab(pLLTFrame,        "LLT");
         m_pTabWt->addTab(pVLMFrame,        "VLM");
-        m_pTabWt->addTab(p3dPanelFrame,    "3d linear panels");
-        m_pTabWt->addTab(pSolverFrame,     "Solver");
-        m_pTabWt->addTab(pViscLoopFrame,   "Viscous loop");
-        m_pTabWt->addTab(pVortexCoreFrame, "Vortex");
-        m_pTabWt->addTab(pVPWFrame,        "Vorton wake");
+        m_pTabWt->addTab(p3dPanelFrame,    tr("3d linear panels"));
+        m_pTabWt->addTab(pSolverFrame,     tr("Solver"));
+        m_pTabWt->addTab(pViscLoopFrame,   tr("Viscous loop"));
+        m_pTabWt->addTab(pVortexCoreFrame, tr("Vortex"));
+        m_pTabWt->addTab(pVPWFrame,        tr("Vorton wake"));
     }
 
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close | QDialogButtonBox::Reset);

@@ -1,6 +1,6 @@
 [Desktop Entry]
 Categories=Science;Engineering;
-Version=7.55
+Version=7.56
 Comment=flow5 - Airfoil and plane analysis tool
 Exec=/usr/local/bin/flow5
 Icon=/usr/local/share/flow5/flow5.png

@@ -168,6 +168,162 @@
         <source>3d analysis advanced settings</source>
         <translation>Paramètres avancés de l&apos;analyse 3d</translation>
     </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="122"/>
+        <source>Max. number of operating points/analysis=</source>
+        <translation>Nbre max. de points de fonctionnement par calcul =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="124"/>
+        <source>&lt;p&gt;Defines the maximum number of operating points to be calculated in a single run.Intended as a safety limit to prevent excessively lengthy analyses.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Définit le nombre maximum de points de fonctionnement à calculer lors d&apos;une analyse. Il s&apos;agit là d&apos;une limite de sécurité pour éviter les calculs trop longs.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="128"/>
+        <source>Keep analysis window opened on errors</source>
+        <translation>Garder cette fenêtre ouverte en cas d&apos;erreurs</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="130"/>
+        <source>&lt;p&gt;Ignore wing surfaces with span width &amp;lt;&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Ignorer  les surfaces d&apos;ailes d&apos;envergure &amp;lt;&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="133"/>
+        <source>&lt;p&gt;Wing surfaces with span width less than this value will be ignored in the mesh operation.&lt;br&gt;This is to allow the definition of duplicate sections at a given span positions.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Les surfaces d&apos;ailes dont l&apos;envergure est inférieur à cette valeur seront ignorées lors du maillage.&lt;br&gt;Cela permet de doubler une section à une position donnée.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="137"/>
+        <source>Far field factor=</source>
+        <translation>Facteur de distance =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="139"/>
+        <source>&lt;p&gt;RFF is the far-field radius factor used in the evaluation of influence coefficients. If the evaluation point is at a distance greater than  RFF &amp;times; panel_size, then the panel is considered to be a point source or point doublet with strength = area &amp;times; density.&lt;br&gt;This reduces significantly the computation times at the expense of precision. Practically, the difference is in the order of 0.5% at RFF=7.&lt;br&gt;RFF=10 is the recommended value.&lt;br&gt;Cf. Report NASA 4023 for a more detailed explanation.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;RFF est le facteur de distance radiale utilisé dans le calcul des coefficients d&apos;influence. Si le point d&apos;évaluation est plus loin que RFF &amp;times; longueur_panneau, alors le panneau source est assimilé à une source ou un dipôle ponctuel de force = aire &amp;times; densité.&lt;br&gt; Ceci réduit de façon significative les temps de calcul au prix d&apos;une perte de précision. En pratique, la différence est de l&apos;ordre de 0.5% à RFF = 7.&lt;br&gt;Recommandation: RFF = 10.&lt;br&gt;Voir le rapport NASA 4023 pour plus d&apos;explications.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="165"/>
+        <source>Number of spanwise stations=</source>
+        <translation>Nombre de stations en envergure =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="166"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="278"/>
+        <source>Relaxation factor=</source>
+        <translation>Facteur de relaxation =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="167"/>
+        <source>&lt;p&gt;&amp;alpha; precision=&lt;/p&gt;</source>
+        <translation>&lt;p&gt;&amp;alpha; précision=&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="168"/>
+        <source>Maximum iterations=</source>
+        <translation>Limite d&apos;itérations :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="197"/>
+        <source>Vortex position=</source>
+        <translation>Position du vortex =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="198"/>
+        <source>Control point position=</source>
+        <translation>Position du point de contrôle =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="223"/>
+        <source>Order of 2d Gaussian quadrature for triangle scalar products=</source>
+        <translation>Ordre de la quadrature 2d de Gauss pour les produits scalaires de triangles =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="253"/>
+        <source>Matrix float precision:</source>
+        <translation>Précision flottante pour la matrice d&apos;influence =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="254"/>
+        <source>Single precision, 4 bytes/value</source>
+        <translation>Simple précision, 4 octets/valeur</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="255"/>
+        <source>Double precision, 8 bytes/value (recommended)</source>
+        <translation>Double précision, 8 octets/valeur</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="256"/>
+        <source>&lt;p&gt;This defines with what precision the influence matrix will be stored. Single precision will use half the memory required for double precision. Accuracy of the results may also be reduced by a few percent.&lt;br&gt;Use single precision only for large calculations where memory allocation may be an issue.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Ceci définit la précision avec laquelle la matrice d&apos;influence sera construite. La simple précision utilise moitié moins de mémoire vive que la double précision. La précision des résultats peut aussi en être réduite de quelques pourcents.&lt;br&gt;N&apos;utiliser la simple précision que pour les gros calculs pour lesquels l&apos;allocation mémoire peut ête un problème.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="279"/>
+        <source>Virtual twist precision=</source>
+        <translation>Précision du vrillage virtuel =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="280"/>
+        <source>Max. iterations=</source>
+        <translation>Limite d&apos;itérations :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="285"/>
+        <source>&lt;p&gt;The relaxation factor is a multiplier applied to the increase of virtual twist at each viscous iteration. At low Reynolds numbers, convergence may be improved by reducing this coefficient to a value less than 1.The coefficient should always be greater than zero and less than 1.&lt;br&gt;Recommendation: 0.3 &lt; relax &lt; 0.7&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Le facteur de relaxation est un facteur multiplicatif appliqué au vrillage virtuel à chaque itération visqueuese. A faibles nombres de Reynolds, la convergence peut être améliorée en réduisant ce facteur à une valeur inférieure à 1. Le coefficient doit être compris entre 0 et 1.&lt;br&gt;Recommandation : 0.3 &amp;lt relax &amp;lt, 0.7&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="293"/>
+        <source>&lt;p&gt;This parameter controls the maximum acceptable error for virtual twist. Convergence is achieved if the max. increase of virtual twist from one viscous iteration to the next is less than this value.&lt;br&gt;Recommendation: 0.01&amp;deg;&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Ce paramètre controle l&apos;erreur maximale acceptable pour le vrillage virtuel. La convergence est atteinte si l&apos;augmentation maximale du vrillage d&apos;une itération visqueuse à l&apos;autre est inférieure à cette valeur.&lt;br&gt;Recommandation: 0.1&amp;deg;&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="300"/>
+        <source>&lt;p&gt;This parameter sets the maximum number of viscous iterations.&lt;br&gt;Recommendation: max. iter = 30&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Ce paramètre définit le nombre maximum d&apos;itérations.&lt;br&gt;Recommandation : nombre max. = 30&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="304"/>
+        <source>Initialize the virtual twist at each new operating point calculation</source>
+        <translation>Ré-initialise le vrillage virtuel à chaque calcul d&apos;un nouveau point de fonctionnement</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="305"/>
+        <source>&lt;p&gt;If activated the virtual twist will be set to 0 when starting the calculation of a new operating point. Otherwise the iterations will start with the virtual twist from the previous converged operating point.&lt;br&gt;Recommendation: do not activate&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Si activé, le vrillage virtuel sera réinitialisé à 0 à chaque calcul d&apos;un nouveau point de fonctionnement. Sans quoi les itérations commenceront avec le vrillage virtuel résultat du calcul précédent.&lt;br&gt;Recommendation; ne pas activer&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="431"/>
+        <source>Common</source>
+        <translation>Commun</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="434"/>
+        <source>3d linear panels</source>
+        <translation>Panneaux linéaires 3d</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="435"/>
+        <source>Solver</source>
+        <translation>Solveur</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="436"/>
+        <source>Viscous loop</source>
+        <translation>Boucle visqueuse</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="437"/>
+        <source>Vortex</source>
+        <translation>Vortex</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="438"/>
+        <source>Vorton wake</source>
+        <translation>Traînée de vortons</translation>
+    </message>
 </context>
 <context>
     <name>AnalysisSelDlg</name>
@@ -1027,7 +1183,7 @@ Uncheck for increased analysis speed.</source>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/btpolardlg.cpp" line="562"/>
         <source>Reference chord:</source>
-        <translation>Chorde de référence:</translation>
+        <translation>Corde de référence:</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/btpolardlg.cpp" line="584"/>
@@ -2046,42 +2202,42 @@ Uncheck for increased analysis speed.</source>
 <context>
     <name>FoilTable</name>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="85"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="83"/>
         <source>Show</source>
         <translation>Afficher</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="86"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="84"/>
         <source>Camber line</source>
         <translation>Ligne de courbure moyenne</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="87"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="85"/>
         <source>Style</source>
         <translation>Style</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="89"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="87"/>
         <source>Foils</source>
         <translation>Profils</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="237"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="235"/>
         <source>Copy</source>
         <translation>Copier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="240"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="238"/>
         <source>Paste</source>
         <translation>Coller</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="247"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="245"/>
         <source>context menu</source>
         <translation>menu contextuel</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="257"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="255"/>
         <source>Modify</source>
         <translation>Modifier</translation>
     </message>
@@ -3215,6 +3371,11 @@ Uncheck for increased analysis speed.</source>
         <source>All-purpose log message window</source>
         <translation>Informations</translation>
     </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/logmessagedlg.cpp" line="95"/>
+        <source>Clear output</source>
+        <translation>Effacer</translation>
+    </message>
 </context>
 <context>
     <name>LogWt</name>
@@ -3731,56 +3892,56 @@ ____________Requête d&apos;annulation émise__________
         <translation>Barre d&apos;outils principale</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1165"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1164"/>
         <source>XSailToolBar</source>
         <translation>Barre d&apos;outils XSail</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1176"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1175"/>
         <source>XDirect</source>
         <translation>XDirect</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1187"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1186"/>
         <source>Foil</source>
         <translation>Profil</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1209"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1208"/>
         <source>PlaneToolBar</source>
         <translation>Barre d&apos;outils avions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1224"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1223"/>
         <source>Deleting current project
 </source>
         <translation>Suppression du projet actuel
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1229"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1228"/>
         <source>   Deleting 2d objects
 </source>
         <translation>   Suppression des objets 2D
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1775"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1774"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1775"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1774"/>
         <source>Save the current project?</source>
         <translation>Sauvegarder le projet actuel ?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1787"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1786"/>
         <source>The project </source>
         <translation>Le projet </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1787"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1786"/>
         <source> has been saved
 
 </source>
@@ -3789,18 +3950,18 @@ ____________Requête d&apos;annulation émise__________
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1833"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1837"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1832"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1836"/>
         <source>Default Settings</source>
         <translation>Paramètres par défaut</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1833"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1832"/>
         <source>Are you sure you want to reset the default settings?</source>
         <translation>Êtes-vous sûr de vouloir réinitialiser les paramètres par défaut?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1837"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1836"/>
         <source>The settings will be reset at the next session</source>
         <translation>Les paramètres seront réinitialisés à la prochaine session</translation>
     </message>
@@ -4562,6 +4723,14 @@ over the Cp or Forces color plot. (Shift+H)&lt;/p&gt;</source>
     </message>
 </context>
 <context>
+    <name>PlaneAnalysisDlg</name>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/planeanalysisdlg.cpp" line="65"/>
+        <source>Plane analysis</source>
+        <translation>Calcul avion</translation>
+    </message>
+</context>
+<context>
     <name>PlaneDlg</name>
     <message>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planedlg.cpp" line="81"/>
@@ -5039,7 +5208,7 @@ Ctrl+B pour modifier le premier fuselage</translation>
     <message>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planestldlg.cpp" line="88"/>
         <source>Ref. chord:</source>
-        <translation>Chorde de référence:</translation>
+        <translation>Corde de référence:</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planestldlg.cpp" line="117"/>
@@ -5546,6 +5715,26 @@ Ctrl+B pour modifier le premier fuselage</translation>
         <translation>Composant sélectionné</translation>
     </message>
     <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1364"/>
+        <source>Root chord:</source>
+        <translation>Corde emplanture =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1364"/>
+        <source>Span:</source>
+        <translation>Envergure =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1364"/>
+        <source>Nbr. of panels:</source>
+        <translation>Nombre de panneaux =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1400"/>
+        <source>&lt;p&gt;Number of icosahedron splits (0&amp;le;n&amp;le;4)&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Nbre de divisions de l&apos;icosahèdre (0&amp;le;n&amp;le;4)&lt;/p&gt;</translation>
+    </message>
+    <message>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="2864"/>
         <source>Selected part</source>
         <translation>Composant sélectionné</translation>
@@ -5554,6 +5743,32 @@ Ctrl+B pour modifier le premier fuselage</translation>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3113"/>
         <source>Object List</source>
         <translation>Liste d&apos;objets</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3302"/>
+        <source>Scale factor:</source>
+        <translation>Facteur d&apos;échelle :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3326"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3362"/>
+        <source>Length=</source>
+        <translation>Longueur =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3326"/>
+        <source>Radius=</source>
+        <translation>Rayon =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3362"/>
+        <source>Width=</source>
+        <translation>Largeur =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3362"/>
+        <source>Height=</source>
+        <translation>Hauteur =</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3482"/>
@@ -7819,7 +8034,7 @@ Import depuis un fichier binaire
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="608"/>
         <source>Root Re = %1</source>
-        <translation>Re eplanture = %1</translation>
+        <translation>Re emplanture = %1</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysis3ddef/t1234578polardlg.cpp" line="611"/>
@@ -11222,6 +11437,67 @@ over the Cp or Forces color plot. (Shift+H)&lt;/p&gt;</source>
         <location filename="../../fl5-app/interfaces/opengl/testgl/gl3dboids2.cpp" line="423"/>
         <source>Number of particles =%1</source>
         <translation>Nombre de particules = %1</translation>
+    </message>
+</context>
+<context>
+    <name>gl3dControls</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="66"/>
+        <source>X view	(X)
+	(Shift+X)</source>
+        <translation>Vue suivant X	(X, Shift+X)</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="67"/>
+        <source>Y view	(Y)
+	(Shift+Y)</source>
+        <translation>Vue suivant Y	(Y, Shift+Y)</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="68"/>
+        <source>Z view	(Z)
+	(Shift+Z)</source>
+        <translation>Vue suivant Z	(Z, Shift+Z)</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="69"/>
+        <source>Pseudo iso view	(I)</source>
+        <translation>Vue pseudo-iso	(I)</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="70"/>
+        <source>Flip view horizontally	(H)</source>
+        <translation>Retourner horizontalement	(H)</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="71"/>
+        <source>Flip view vertically	(V)</source>
+        <translation>Retourner verticalement	(V)</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="72"/>
+        <source>Reset 3d scale 	(R)</source>
+        <translation>Rétablir l&apos;échelle	(R)</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="73"/>
+        <source>Toggle the light on/off</source>
+        <translation>Allumer ou éteindre la lumière</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="74"/>
+        <source>Show/hide the fine controls</source>
+        <translation>Afficher/masquer les contrôles fins</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="75"/>
+        <source>Node distance</source>
+        <translation>Distance entre noeuds</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="96"/>
+        <source>&lt;p&gt;Click on two mesh nodes to display their distance&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Cliquer deux noeuds du maillage pour obtenir la distance les séparant&lt;/p&gt;</translation>
     </message>
 </context>
 <context>

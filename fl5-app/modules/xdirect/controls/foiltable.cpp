@@ -24,8 +24,6 @@
 
 
 
-
-
 #include <QHeaderView>
 
 

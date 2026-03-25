@@ -787,22 +787,6 @@ QTableView QTableCornerButton::section
     border: 2px outset #313131;
 }
 
-/*_____________________  QTreeView  ______________________*/
-
-
-/*
-QTreeView::branch:has-children:!has-siblings:closed,
-QTreeView::branch:closed:has-children:has-siblings {
-        border-image: none;
-        image: url(qss-img/branch-closed.png);
-}
-
-QTreeView::branch:open:has-children:!has-siblings,
-QTreeView::branch:open:has-children:has-siblings  {
-        border-image: none;
-        image: url(qss-img/branch-open.png);
-} */
-
 
 /*_____________________  QHeaderView  ______________________*/
 

@@ -168,6 +168,162 @@
         <source>3d analysis advanced settings</source>
         <translation>3D 分析高级设置</translation>
     </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="122"/>
+        <source>Max. number of operating points/analysis=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="124"/>
+        <source>&lt;p&gt;Defines the maximum number of operating points to be calculated in a single run.Intended as a safety limit to prevent excessively lengthy analyses.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="128"/>
+        <source>Keep analysis window opened on errors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="130"/>
+        <source>&lt;p&gt;Ignore wing surfaces with span width &amp;lt;&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="133"/>
+        <source>&lt;p&gt;Wing surfaces with span width less than this value will be ignored in the mesh operation.&lt;br&gt;This is to allow the definition of duplicate sections at a given span positions.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="137"/>
+        <source>Far field factor=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="139"/>
+        <source>&lt;p&gt;RFF is the far-field radius factor used in the evaluation of influence coefficients. If the evaluation point is at a distance greater than  RFF &amp;times; panel_size, then the panel is considered to be a point source or point doublet with strength = area &amp;times; density.&lt;br&gt;This reduces significantly the computation times at the expense of precision. Practically, the difference is in the order of 0.5% at RFF=7.&lt;br&gt;RFF=10 is the recommended value.&lt;br&gt;Cf. Report NASA 4023 for a more detailed explanation.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="165"/>
+        <source>Number of spanwise stations=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="166"/>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="278"/>
+        <source>Relaxation factor=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="167"/>
+        <source>&lt;p&gt;&amp;alpha; precision=&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="168"/>
+        <source>Maximum iterations=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="197"/>
+        <source>Vortex position=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="198"/>
+        <source>Control point position=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="223"/>
+        <source>Order of 2d Gaussian quadrature for triangle scalar products=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="253"/>
+        <source>Matrix float precision:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="254"/>
+        <source>Single precision, 4 bytes/value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="255"/>
+        <source>Double precision, 8 bytes/value (recommended)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="256"/>
+        <source>&lt;p&gt;This defines with what precision the influence matrix will be stored. Single precision will use half the memory required for double precision. Accuracy of the results may also be reduced by a few percent.&lt;br&gt;Use single precision only for large calculations where memory allocation may be an issue.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="279"/>
+        <source>Virtual twist precision=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="280"/>
+        <source>Max. iterations=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="285"/>
+        <source>&lt;p&gt;The relaxation factor is a multiplier applied to the increase of virtual twist at each viscous iteration. At low Reynolds numbers, convergence may be improved by reducing this coefficient to a value less than 1.The coefficient should always be greater than zero and less than 1.&lt;br&gt;Recommendation: 0.3 &lt; relax &lt; 0.7&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="293"/>
+        <source>&lt;p&gt;This parameter controls the maximum acceptable error for virtual twist. Convergence is achieved if the max. increase of virtual twist from one viscous iteration to the next is less than this value.&lt;br&gt;Recommendation: 0.01&amp;deg;&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="300"/>
+        <source>&lt;p&gt;This parameter sets the maximum number of viscous iterations.&lt;br&gt;Recommendation: max. iter = 30&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="304"/>
+        <source>Initialize the virtual twist at each new operating point calculation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="305"/>
+        <source>&lt;p&gt;If activated the virtual twist will be set to 0 when starting the calculation of a new operating point. Otherwise the iterations will start with the virtual twist from the previous converged operating point.&lt;br&gt;Recommendation: do not activate&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="431"/>
+        <source>Common</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="434"/>
+        <source>3d linear panels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="435"/>
+        <source>Solver</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="436"/>
+        <source>Viscous loop</source>
+        <translation type="unfinished">粘性循环</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="437"/>
+        <source>Vortex</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/analysis3dsettings.cpp" line="438"/>
+        <source>Vorton wake</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AnalysisSelDlg</name>
@@ -2047,42 +2203,42 @@ Uncheck for increased analysis speed.</source>
 <context>
     <name>FoilTable</name>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="85"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="83"/>
         <source>Show</source>
         <translation>显示</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="86"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="84"/>
         <source>Camber line</source>
         <translation>中弧线</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="87"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="85"/>
         <source>Style</source>
         <translation>样式</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="89"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="87"/>
         <source>Foils</source>
         <translation>翼型</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="237"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="235"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="240"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="238"/>
         <source>Paste</source>
         <translation>粘贴</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="247"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="245"/>
         <source>context menu</source>
         <translation>上下文菜单</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="257"/>
+        <location filename="../../fl5-app/modules/xdirect/controls/foiltable.cpp" line="255"/>
         <source>Modify</source>
         <translation>修改</translation>
     </message>
@@ -3216,6 +3372,11 @@ Uncheck for increased analysis speed.</source>
         <source>All-purpose log message window</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/logmessagedlg.cpp" line="95"/>
+        <source>Clear output</source>
+        <translation type="unfinished">清除输出</translation>
+    </message>
 </context>
 <context>
     <name>LogWt</name>
@@ -3732,56 +3893,56 @@ _____________已发出取消请求_____________
         <translation>主工具栏</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1165"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1164"/>
         <source>XSailToolBar</source>
         <translation>XSail 工具栏</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1176"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1175"/>
         <source>XDirect</source>
         <translation>XDirect</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1187"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1186"/>
         <source>Foil</source>
         <translation>翼型</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1209"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1208"/>
         <source>PlaneToolBar</source>
         <translation>飞机工具栏</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1224"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1223"/>
         <source>Deleting current project
 </source>
         <translation>正在删除当前项目
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1229"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1228"/>
         <source>   Deleting 2d objects
 </source>
         <translation>   正在删除 2D 对象
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1775"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1774"/>
         <source>Question</source>
         <translation>问题</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1775"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1774"/>
         <source>Save the current project?</source>
         <translation>保存当前项目？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1787"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1786"/>
         <source>The project </source>
         <translation>项目 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1787"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1786"/>
         <source> has been saved
 
 </source>
@@ -3790,18 +3951,18 @@ _____________已发出取消请求_____________
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1833"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1837"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1832"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1836"/>
         <source>Default Settings</source>
         <translation>默认设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1833"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1832"/>
         <source>Are you sure you want to reset the default settings?</source>
         <translation>您确定要重置默认设置吗？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1837"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1836"/>
         <source>The settings will be reset at the next session</source>
         <translation>设置将在下次会话时重置</translation>
     </message>
@@ -4560,6 +4721,14 @@ over the Cp or Forces color plot. (Shift+H)&lt;/p&gt;</source>
         <location filename="../../fl5-app/interfaces/widgets/customwts/plaintextoutput.cpp" line="131"/>
         <source>Copy all</source>
         <translation>复制全部</translation>
+    </message>
+</context>
+<context>
+    <name>PlaneAnalysisDlg</name>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/analysis/planeanalysisdlg.cpp" line="65"/>
+        <source>Plane analysis</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -5547,6 +5716,26 @@ Ctrl+B 编辑第一机身</translation>
         <translation>选中部件</translation>
     </message>
     <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1364"/>
+        <source>Root chord:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1364"/>
+        <source>Span:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1364"/>
+        <source>Nbr. of panels:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1400"/>
+        <source>&lt;p&gt;Number of icosahedron splits (0&amp;le;n&amp;le;4)&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="2864"/>
         <source>Selected part</source>
         <translation>选定部件</translation>
@@ -5555,6 +5744,32 @@ Ctrl+B 编辑第一机身</translation>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3113"/>
         <source>Object List</source>
         <translation>对象列表</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3302"/>
+        <source>Scale factor:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3326"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3362"/>
+        <source>Length=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3326"/>
+        <source>Radius=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3362"/>
+        <source>Width=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3362"/>
+        <source>Height=</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3482"/>
@@ -11225,6 +11440,67 @@ over the Cp or Forces color plot. (Shift+H)&lt;/p&gt;</source>
         <location filename="../../fl5-app/interfaces/opengl/testgl/gl3dboids2.cpp" line="423"/>
         <source>Number of particles =%1</source>
         <translation>粒子数量 = %1</translation>
+    </message>
+</context>
+<context>
+    <name>gl3dControls</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="66"/>
+        <source>X view	(X)
+	(Shift+X)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="67"/>
+        <source>Y view	(Y)
+	(Shift+Y)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="68"/>
+        <source>Z view	(Z)
+	(Shift+Z)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="69"/>
+        <source>Pseudo iso view	(I)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="70"/>
+        <source>Flip view horizontally	(H)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="71"/>
+        <source>Flip view vertically	(V)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="72"/>
+        <source>Reset 3d scale 	(R)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="73"/>
+        <source>Toggle the light on/off</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="74"/>
+        <source>Show/hide the fine controls</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="75"/>
+        <source>Node distance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gl3dcontrols.cpp" line="96"/>
+        <source>&lt;p&gt;Click on two mesh nodes to display their distance&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

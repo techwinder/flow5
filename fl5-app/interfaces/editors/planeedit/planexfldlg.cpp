@@ -1223,7 +1223,7 @@ void PlaneXflDlg::onInsertFuseStl()
 
 void PlaneXflDlg::onInsertSTLCylinderFuse()
 {
-    DoubleValueDlg dlg(this, {2.0*Units::mtoUnit(), 0.1*Units::mtoUnit(), 37, 31}, {"Length", "Radius", "Ny", "NHoop"},
+    DoubleValueDlg dlg(this, {2.0*Units::mtoUnit(), 0.1*Units::mtoUnit(), 37, 31}, {"Length=", "Radius=", "Ny=", "NHoop="},
                        {Units::lengthUnitQLabel(), Units::lengthUnitQLabel(), QString(), QString()});
     if(dlg.exec()!=QDialog::Accepted) return;
 
@@ -1361,7 +1361,7 @@ void PlaneXflDlg::onInsertSTLCylinderFuse()
 void PlaneXflDlg::onInsertEllipticWing()
 {
     DoubleValueDlg dlg(this, {0.3*Units::mtoUnit(), 3.0*Units::mtoUnit(), 15},
-                             {"Root chord:", "Span:", "N Panels:"},
+                             {tr("Root chord:"), tr("Span:"), tr("Nbr. of panels:")},
                              {Units::lengthUnitQLabel(), Units::lengthUnitQLabel(), QString()});
     if(dlg.exec()!=QDialog::Accepted)  return;
 
@@ -1397,7 +1397,7 @@ void PlaneXflDlg::onInsertSTLSphereFuse()
 {
     IntValueDlg dlg(this);
     dlg.setValue(2);
-    dlg.setLeftLabel("Number of icosahedron splits (0<=n<=4)");
+    dlg.setLeftLabel(tr("<p>Number of icosahedron splits (0&le;n&le;4)</p>"));
     if(dlg.exec()!=QDialog::Accepted) return;
 
     int nSplit = std::min(dlg.value(), 4);
@@ -3299,7 +3299,7 @@ void PlaneXflDlg::onPickedNodePair(QPair<int, int> nodepair)
 
 void PlaneXflDlg::onScalePlane()
 {
-    QStringList labels("Scale factor:");
+    QStringList labels(tr("Scale factor:"));
     QStringList rightlabels("");
     QVector<double> vals({1});
     DoubleValueDlg dlg(this, vals, labels, rightlabels);
@@ -3323,7 +3323,7 @@ void PlaneXflDlg::onInsertCADShape()
 
     if(pSenderAction==m_pInsertCADCylinder)
     {
-        DoubleValueDlg dlg(this, {2.0*Units::mtoUnit(), 0.1*Units::mtoUnit()}, {"Length", "Radius"},
+        DoubleValueDlg dlg(this, {2.0*Units::mtoUnit(), 0.1*Units::mtoUnit()}, {tr("Length="), tr("Radius=")},
                            {Units::lengthUnitQLabel(), Units::lengthUnitQLabel()});
         if(dlg.exec()!=QDialog::Accepted) return;
 
@@ -3359,7 +3359,7 @@ void PlaneXflDlg::onInsertCADShape()
     }
     else if(pSenderAction==m_pInsertCADBox)
     {
-        DoubleValueDlg dlg(this, {1.0*Units::mtoUnit(), 1.0*Units::mtoUnit(), 1.0*Units::mtoUnit()}, {"Length", "Width", "Height"},
+        DoubleValueDlg dlg(this, {1.0*Units::mtoUnit(), 1.0*Units::mtoUnit(), 1.0*Units::mtoUnit()}, {tr("Length="), tr("Width="), tr("Height=")},
                            {Units::lengthUnitQLabel(), Units::lengthUnitQLabel(), Units::lengthUnitQLabel()});
         if(dlg.exec()!=QDialog::Accepted) return;
 

@@ -92,7 +92,7 @@ void LogMessageDlg::setupLayout()
 {
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     {
-        m_ppbClearButton= new QPushButton("Clear text");
+        m_ppbClearButton= new QPushButton(tr("Clear output"));
         m_pButtonBox->addButton(m_ppbClearButton, QDialogButtonBox::ActionRole);
 
         connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(onButton(QAbstractButton*)));
