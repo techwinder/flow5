@@ -397,7 +397,7 @@ bool Boat::serializeBoatFl5(QDataStream &ar, bool bIsStoring)
                 if(pBodyStl) m_Hull.push_back(pBodyStl);
             }
             m_Hull.back()->triMesh().serializePanelsFl5(ar, bIsStoring);
-            m_Hull.back()->saveBaseTriangulation();
+//            m_Hull.back()->saveBaseTriangulation();
 
             // compatibility
             if(m_Hull.back()->nPanel3()==0)

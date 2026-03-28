@@ -114,10 +114,6 @@ class FL5LIB_EXPORT Fuse : public Part
 
         int nPanel4() const override = 0;
 
-        void saveBaseTriangulation() {m_BaseTriangulation = m_Triangulation;}
-
-        void setBaseTriangles(std::vector<Triangle3d> const &trianglelist) {m_BaseTriangulation.setTriangles(trianglelist);}
-
         virtual void computeStructuralInertia(Vector3d const &PartPosition) override;
         virtual void computeSurfaceProperties(std::string &log, std::string const &prefix) = 0;
         virtual void computeWettedArea();
@@ -155,10 +151,6 @@ class FL5LIB_EXPORT Fuse : public Part
         Vector3d m_Force;     /** The force on the fUSE (N/q) */
         Vector3d m_Mi;        /** The moments of induced or pressure forces (N.m/q) w.r.t the polar's ref CoG */
         Vector3d m_CP;        /**< the centre of pressure's position */
-
-
-        Triangulation m_BaseTriangulation;  /** the triangulation of the UNCUT fuse; used to make the wing surfaces */
-
 
         double m_MaxElementSize; /** used by the flow5 mesher */
 

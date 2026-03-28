@@ -353,8 +353,10 @@ void gl2dQuat::glRenderView()
             m_shadQuat.enableAttributeArray(m_attrVertexPosition);
             m_shadQuat.setAttributeBuffer(m_attrVertexPosition, GL_FLOAT, 0, stride, stride*sizeof(GLfloat));
 
+            glEnable(GL_CULL_FACE);
+            glEnable(GL_POLYGON_OFFSET_FILL);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            glDisable(GL_CULL_FACE);
+            glPolygonOffset(DEPTHFACTOR, DEPTHUNITS);
 
             int nvtx = m_vboQuad.size()/stride/int(sizeof(float));
             glDrawArrays(GL_TRIANGLE_STRIP, 0, nvtx);
@@ -362,9 +364,10 @@ void gl2dQuat::glRenderView()
             m_shadQuat.disableAttributeArray(m_attrVertexPosition);
         }
         m_vboQuad.release();
-        m_shadQuat.release();
     }
+    m_shadQuat.release();
 
+//    paintDisk(Vector2d(), 1.0, QColor(255,150,31));
 
     QString strange = QString::asprintf("Scale = %g\n", m_fScale);
     strange += QString::asprintf("Seed = (%.3f, %.3f, %.3f, %.3f)\n", s_Seed[0], s_Seed[1], s_Seed[2], s_Seed[3]);

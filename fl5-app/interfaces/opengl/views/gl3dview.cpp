@@ -35,19 +35,20 @@
 #include <QVector4D>
 #include <QQuaternion>
 
-#include <interfaces/controls/w3dprefs.h>
+#include <api/geom_global.h>
+#include <api/node.h>
+#include <api/trace.h>
+#include <api/triangle3d.h>
+#include <api/units.h>
+
 #include <core/displayoptions.h>
 #include <core/saveoptions.h>
-#include <api/trace.h>
-#include <api/units.h>
 #include <core/xflcore.h>
+#include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/controls/gllightdlg.h>
 #include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/opengl/views/gl3dview.h>
 #include <interfaces/widgets/customdlg/imagedlg.h>
-#include <api/node.h>
-#include <api/triangle3d.h>
-#include <api/geom_global.h>
 
 #define ZANIMINTERVAL 15
 
@@ -174,7 +175,6 @@ void gl3dView::initializeGL()
     QString strange;
 
     QSurfaceFormat const &ctxtFormat = format();
-    //qDebug()<<"gl3dView::initializeGL"<<ctxtFormat;
 
     if(format().testOption(QSurfaceFormat::DeprecatedFunctions))
     {
@@ -1386,19 +1386,7 @@ void gl3dView::paintGl3()
                            float(m[8]),  float(m[9]),  float(m[10]), float(m[11]),
                            float(m[12]), float(m[13]), float(m[14]), float(m[15]));
 
-
-    if(GLLightDlg::isOrtho())
-        m_matProj.ortho(-s,s,-(height*s)/width,(height*s)/width,-1.0e3*s,1.0e3*s);
-    else
-    {
-        m_matProj.perspective(GLLightDlg::verticalAngle(), width/(height*s), 0.1f, 500.0f);
-        //        m_ProjectionMatrix.frustum(-1,1,-1,1, 1,10);
-        //        m_ModelMatrix.translate(0,0,5);
-        QVector4D viewpos(0,0,-GLLightDlg::viewDistance(), 1.0);
-        viewpos = m_matView.inverted() * viewpos;
-        m_matView.translate({viewpos.x(), viewpos.y(), viewpos.z()});
-    }
-
+    m_matProj.ortho(-s,s,-(height*s)/width,(height*s)/width,-1.0e3*s,1.0e3*s);
 
     if(m_bArcball)   paintArcBall();
 

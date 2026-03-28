@@ -103,6 +103,11 @@ void globals::deleteObjects()
 }
 
 
+/** @deprecated Deprecated in v7.56 since the method does two different things:
+ *  1. load the foil
+ *  2. store it in the database
+ *  Use preferably the code snippet below directly in the source code.
+ */
 Foil * foil::loadFoil(std::string const &pathname)
 {
     Foil *pFoil = new Foil();
@@ -138,7 +143,7 @@ Foil * foil::loadFoil(std::string const &pathname)
 }
 
 
-/** @deprecated Deprecating in v7.55 since the method does two different things:
+/** @deprecated Deprecated in v7.55 since the method does two different things:
  *  1. create the foil
  *  2. store it in the database
  *  Use preferably the code snippet below directly in the source code.
@@ -160,12 +165,18 @@ Foil *foil::makeNacaFoil(int digits, std::string const &name)
 }
 
 
+/** @deprecated Deprecated in v7.56: No benefit
+ *  Use preferably the code snippet below directly in the source code.
+ */
 Foil* foil::foil(const std::string &name)
 {
     return Objects2d::foil(name);
 }
 
 
+/** @deprecated Deprecated in v7.56: No benefit
+ *  Use preferably the code snippet below directly in the source code.
+ */
 Polar * foil::createAnalysis(std::string const &foilname)
 {
     Foil const *pFoil = Objects2d::foil(foilname);
@@ -182,7 +193,9 @@ Polar * foil::createAnalysis(std::string const &foilname)
     return pPolar;
 }
 
-
+/** @deprecated Deprecated in v7.56: No benefit
+ *  Use preferably the code snippet below directly in the source code.
+ */
 PlaneXfl *plane::makeEmptyPlane()
 {
     PlaneXfl *pPlaneXfl = new PlaneXfl;

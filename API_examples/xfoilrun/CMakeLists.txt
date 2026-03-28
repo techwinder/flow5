@@ -20,7 +20,6 @@ set(CMAKE_CXX_FLAGS /Zc:__cplusplus)
 else ()
 include_directories(/usr/local/include/XFoil/)
 include_directories(/usr/local/include/fl5-lib/)
-include_directories(/usr/local/include/fl5-lib/api/)
 include_directories(/usr/include/qt6)
 include_directories(/usr/include/qt6/QtCore)
 
@@ -29,11 +28,8 @@ link_directories(/usr/lib64/)
 endif (WIN32)
 
 
-
-
 add_executable(XFoilRun xfoilrun.cpp)
 
-# if using MKL, link their libraries
 target_link_libraries(XFoilRun XFoil fl5-lib Qt6Core)
 
 

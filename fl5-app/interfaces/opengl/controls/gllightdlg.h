@@ -47,6 +47,7 @@ class GLLightDlg : public QDialog
 
     public:
         GLLightDlg(QWidget *pParent=nullptr);
+
         void apply();
         void readParams(void);
         void setDefaults();
@@ -55,14 +56,14 @@ class GLLightDlg : public QDialog
 
         QSize sizeHint() const override {return QSize(475, 475);}
 
-        static double verticalAngle() {return s_VerticalAngle;}
+//        static double verticalAngle() {return s_VerticalAngle;}
         static double viewDistance()  {return s_ViewDistance;}
-        static bool   isOrtho()       {return s_bOrtho;}
+//        static bool   isOrtho()       {return s_bOrtho;}
         static double refLength()     {return s_RefLength;}
 
-        static void setVerticalAngle(double theta) {s_VerticalAngle=theta;}
+//        static void setVerticalAngle(double theta) {s_VerticalAngle=theta;}
         static void setViewDistance(double l)      {s_ViewDistance=l;}
-        static void setOrtho(bool b)               {s_bOrtho=b;}
+//        static void setOrtho(bool b)               {s_bOrtho=b;}
         static void setRefLength(double l)         {s_RefLength=l;}
 
 
@@ -83,7 +84,7 @@ class GLLightDlg : public QDialog
         void onChanged();
         void onDefaults();
         void onLight();
-        void onViewProjection();
+//        void onViewProjection();
         void onButton(QAbstractButton *pButton);
 
     private:
@@ -101,17 +102,17 @@ class GLLightDlg : public QDialog
         QLabel *m_plabEyeDist;
         QDialogButtonBox *m_pButtonBox;
 
-        FloatEdit *m_pdeConstantAttenuation , *m_pdeLinearAttenuation , *m_pdeQuadAttenuation ;
+        FloatEdit *m_pfeConstantAttenuation , *m_pfeLinearAttenuation , *m_pfeQuadAttenuation ;
 
-        QRadioButton *m_prbOrtho, *m_prbPerspective;
-        FloatEdit *m_pdeVerticalAngle, *m_pdeViewDistance;
+//        QRadioButton *m_prbOrtho, *m_prbPerspective;
+//        FloatEdit *m_pdeVerticalAngle, *m_pdeViewDistance;
 
     private:
         gl3dView *m_pglView;
 
-        static double s_VerticalAngle;
+//        static double s_VerticalAngle;
         static double s_ViewDistance;
-        static bool s_bOrtho;
+//        static bool s_bOrtho;
 
         static double s_RefLength;
 

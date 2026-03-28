@@ -1510,7 +1510,7 @@ void gl::makeUnitDisk(int nTriangles, QOpenGLBuffer &vbo)
         costh1 = cosf(th1);
         sinth1 = sinf(th1);
 
-        t2d.setTriangle({0,0},{costh0, sinth0}, {costh1, sinth1});
+        t2d.setTriangle({0,0}, {costh0, sinth0}, {costh1, sinth1});
 
         costh0 = costh1;
         sinth0 = sinth1;

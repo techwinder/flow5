@@ -95,10 +95,10 @@ void PlaneDlg::makeCommonControls()
     m_pButtonBox->setStandardButtons(QDialogButtonBox::Save | QDialogButtonBox::Discard);
     {
         m_pButtonBox->setToolTip(tr("Ctrl+S to save and close\n"
-                                 "Ctrl+W to edit the main wing\n"
-                                 "Ctrl+E to edit the elevator\n"
-                                 "Ctrl+F to edit the fin\n"
-                                 "Ctrl+B to edit the first body/fuselage"));
+                                    "Ctrl+W to edit the main wing\n"
+                                    "Ctrl+E to edit the elevator\n"
+                                    "Ctrl+F to edit the fin\n"
+                                    "Ctrl+B to edit the first body/fuselage"));
         m_ppbActions = new QPushButton(tr("Actions"));
         {
             QMenu *pCheckMeshMenu = new QMenu(tr("Actions"));
@@ -134,7 +134,7 @@ void PlaneDlg::connectBaseSignals()
     connect(m_pCheckMesh,            SIGNAL(triggered()),            SLOT(onCheckMesh()));
     connect(m_pCenterOnPanel,        SIGNAL(triggered()),            SLOT(onCenterViewOnPanel()));
     connect(m_pClearHighlighted,     SIGNAL(triggered()),            SLOT(onClearHighlighted()));
-    connect(m_pMergeFuseToWingNodes,      SIGNAL(triggered()),       SLOT(onMergeFuseToWingNodes()));
+    connect(m_pMergeFuseToWingNodes, SIGNAL(triggered()),            SLOT(onMergeFuseToWingNodes()));
     connect(m_pConnectPanels,        SIGNAL(triggered()),            SLOT(onConnectPanels()));
     connect(m_pCheckFreeEdges,       SIGNAL(triggered()),            SLOT(onCheckFreeEdges()));
     connect(m_pglPlaneView,          SIGNAL(pickedNodeIndex(int)),   SLOT(onPickedNode(int)));

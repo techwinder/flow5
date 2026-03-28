@@ -43,7 +43,7 @@ void main()
         vertexpos += vec4(vertexOffset, 0.0);    // then translate
     }
 
-    // Output position of the vertex, in clip space : MVP * position
+    // Output position of the vertex, in clip space: MVP * position
     gl_Position =  pvmMatrix * vertexpos;
 
     vec4 vsPos = vmMatrix * vertexpos; // position of vertex in viewspace

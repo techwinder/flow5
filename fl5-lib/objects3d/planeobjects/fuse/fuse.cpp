@@ -87,7 +87,6 @@ Fuse::Fuse(const Fuse &aFuse)
     m_MaxHeight    = aFuse.m_MaxHeight;
     m_MaxFrameArea = aFuse.m_MaxFrameArea;
 
-    m_BaseTriangulation = aFuse.m_BaseTriangulation;
     m_Triangulation = aFuse.m_Triangulation;
 
     m_Shape = aFuse.m_Shape;
@@ -111,7 +110,6 @@ void Fuse::duplicateFuse(Fuse const &aFuse)
     m_MaxHeight    = aFuse.m_MaxHeight;
     m_MaxFrameArea = aFuse.m_MaxFrameArea;
 
-    m_BaseTriangulation = aFuse.m_BaseTriangulation;
     m_Triangulation = aFuse.m_Triangulation;
 
     m_Shape = aFuse.m_Shape;
@@ -290,10 +288,8 @@ bool Fuse::stitchShells(TopoDS_Shell &fusedshell, std::string &msg, std::string 
 
 void Fuse::scale(double XFactor, double YFactor, double ZFactor)
 {
-    for(int it=0; it<m_BaseTriangulation.nTriangles(); it++)
-        m_BaseTriangulation.triangle(it).scale(XFactor, YFactor, ZFactor);
-
-    for(int it=0; it<m_Triangulation.nTriangles(); it++) m_Triangulation.triangle(it).scale(XFactor, YFactor, ZFactor);
+    for(int it=0; it<m_Triangulation.nTriangles(); it++)
+        m_Triangulation.triangle(it).scale(XFactor, YFactor, ZFactor);
     m_Length *= XFactor;
 
     // scale the tri mesh, if any
@@ -304,11 +300,6 @@ void Fuse::scale(double XFactor, double YFactor, double ZFactor)
 
 void Fuse::translate(Vector3d const &T)
 {
-    for(int it=0; it<m_BaseTriangulation.nTriangles(); it++)
-    {
-        m_BaseTriangulation.triangle(it).translate(T);
-    }
-
     for(int it=0; it<m_Triangulation.nTriangles(); it++)
     {
         m_Triangulation.triangle(it).translate(T);
@@ -322,7 +313,6 @@ void Fuse::translate(Vector3d const &T)
 
 void Fuse::rotate(Vector3d const &origin, Vector3d const &axis, double theta)
 {
-    m_BaseTriangulation.rotate(origin, axis, theta);
     m_Triangulation.rotate(origin, axis, theta);
 }
 
@@ -590,7 +580,7 @@ void Fuse::getProperties(std::string &properties, const std::string &prefx, bool
 bool Fuse::intersectFuseTriangulation(Vector3d const &A, Vector3d const &B, Vector3d &I) const
 {
     Vector3d N;
-    return m_BaseTriangulation.intersect(A, B, I, N);
+    return m_Triangulation.intersect(A, B, I, N);
 }
 
 

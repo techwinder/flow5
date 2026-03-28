@@ -84,9 +84,9 @@ linux-g++ {
         #   openblas:  single-threaded library
         #   openblaso: built with USE_OPENMP=1
         #   openblasp: multi-threading with OMP
-        LIBS += -lopenblas
+#        LIBS += -lopenblas
 #        LIBS += -lopenblaso
-#        LIBS += -lopenblasp
+        LIBS += -lopenblasp
     }
 
 

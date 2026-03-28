@@ -56,15 +56,15 @@ SaveOptionsWt::SaveOptionsWt(QWidget *parent) : QWidget{parent}
 void SaveOptionsWt::setupLayout()
 {
 //    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
-    m_pGroupBox.push_back(new QGroupBox("General"));
+    m_pGroupBox.push_back(new QGroupBox(tr("General")));
     {
         QVBoxLayout *pGeneralLayout = new QVBoxLayout;
         {
-            m_pchAutoLoadLast = new QCheckBox("Load last project on startup");
+            m_pchAutoLoadLast = new QCheckBox(tr("Load last project on startup"));
 
             QHBoxLayout *pSaveTimerLayout = new QHBoxLayout;
             {
-                m_pchAutoSave = new QCheckBox("Autosave every");
+                m_pchAutoSave = new QCheckBox(tr("Autosave every"));
                 m_pieSaveInterval = new IntEdit(SaveOptions::s_SaveInterval);
                 QLabel *plabMinutes = new QLabel("mn");
                 pSaveTimerLayout->addWidget(m_pchAutoSave);
@@ -81,17 +81,17 @@ void SaveOptionsWt::setupLayout()
         m_pGroupBox.back()->setLayout(pGeneralLayout);
     }
 
-    m_pGroupBox.push_back(new QGroupBox("Directories"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Directories")));
     {
         QGridLayout *pDirLayout = new QGridLayout;
         {
             QHBoxLayout *pLastDirLayout = new QHBoxLayout;
             {
-                QLabel *plabLast           = new QLabel("Project files:");
+                QLabel *plabLast           = new QLabel(tr("Project files:"));
                 QButtonGroup *pGroup = new QButtonGroup(this);
                 {
-                    m_prbUseLastDir = new QRadioButton("Use last used directory");
-                    m_prbUseFixedDir = new QRadioButton("Use fixed directory");
+                    m_prbUseLastDir = new QRadioButton(tr("Use last used directory"));
+                    m_prbUseFixedDir = new QRadioButton(tr("Use fixed directory"));
                     pGroup->addButton(m_prbUseLastDir);
                     pGroup->addButton(m_prbUseFixedDir);
                     connect(m_prbUseLastDir,  SIGNAL(clicked()), SLOT(onLastUsedDir()));
@@ -188,65 +188,65 @@ void SaveOptionsWt::setupLayout()
             }
             connect(m_pleTempDir, SIGNAL(editingFinished()), SLOT(onCheckTempDir()));
             m_pleApplicationDir = new QLineEdit;
-            QLabel *plabDatDir         = new QLabel("Foil files:");
-            QLabel *plabPlrDir         = new QLabel("Foil polar files:");
-            QLabel *plabXmlPolarDir    = new QLabel("XML foil analysis files:");
-            QLabel *plabXmlPlaneDir    = new QLabel("XML plane and boat files:");
-            QLabel *plabXmlWPolarDir   = new QLabel("XML plane and boat analysis files:");
-            QLabel *plabXMLScript      = new QLabel("XML script files:");
-            QLabel *plabCAD            = new QLabel("CAD files:");
-            QLabel *plabSTL            = new QLabel("STL files:");
-            QLabel *plabTemp           = new QLabel("Temporary files:");
-            QLabel *plapAppDir         = new QLabel("Application directory:");
+            QLabel *plabDatDir         = new QLabel(tr("Foil files:"));
+            QLabel *plabPlrDir         = new QLabel(tr("Foil polar files:"));
+            QLabel *plabXmlPolarDir    = new QLabel(tr("XML foil analysis files:"));
+            QLabel *plabXmlPlaneDir    = new QLabel(tr("XML plane and boat files:"));
+            QLabel *plabXmlWPolarDir   = new QLabel(tr("XML plane and boat analysis files:"));
+            QLabel *plabXMLScript      = new QLabel(tr("XML script files:"));
+            QLabel *plabCAD            = new QLabel(tr("CAD files:"));
+            QLabel *plabSTL            = new QLabel(tr("STL files:"));
+            QLabel *plabTemp           = new QLabel(tr("Temporary files:"));
+            QLabel *plapAppDir         = new QLabel(tr("Application directory:"));
 
 
             QToolButton *pActiveDirBtn = new QToolButton();
-            QAction *pActiveDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), "Set directory", this);
+            QAction *pActiveDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Set directory"), this);
             pActiveDirBtn->setDefaultAction(pActiveDirAction);
             connect(pActiveDirAction, SIGNAL(triggered(bool)), this, SLOT(onActiveDir()));
 
             QToolButton *pDatFoilDirBtn = new QToolButton();
-            QAction *pDatFoilDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), "Set directory", this);
+            QAction *pDatFoilDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Set directory"), this);
             pDatFoilDirBtn->setDefaultAction(pDatFoilDirAction);
             connect(pDatFoilDirAction, SIGNAL(triggered(bool)), this, SLOT(onDatFoilDir()));
 
             QToolButton *pPlrPolarDirBtn = new QToolButton();
-            QAction *pPlrPolarDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), "Set directory", this);
+            QAction *pPlrPolarDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Set directory"), this);
             pPlrPolarDirBtn->setDefaultAction(pPlrPolarDirAction);
             connect(pPlrPolarDirAction, SIGNAL(triggered(bool)), this, SLOT(onPlrPolarDir()));
 
             QToolButton *pXmlPolarDirBtn = new QToolButton();
-            QAction *pXmlPolarDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), "Set directory", this);
+            QAction *pXmlPolarDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Set directory"), this);
             pXmlPolarDirBtn->setDefaultAction(pXmlPolarDirAction);
             connect(pXmlPolarDirAction, SIGNAL(triggered(bool)), this, SLOT(onXmlPolarDir()));
 
             QToolButton *pXmlPlaneDirBtn = new QToolButton();
-            QAction *pXmlPlaneDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), "Set directory", this);
+            QAction *pXmlPlaneDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Set directory"), this);
             pXmlPlaneDirBtn->setDefaultAction(pXmlPlaneDirAction);
             connect(pXmlPlaneDirAction, SIGNAL(triggered(bool)), this, SLOT(onXmlPlaneDir()));
 
             QToolButton *pXmlWPolarDirBtn = new QToolButton();
-            QAction *pXmlWPolarDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), "Set directory", this);
+            QAction *pXmlWPolarDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Set directory"), this);
             pXmlWPolarDirBtn->setDefaultAction(pXmlWPolarDirAction);
             connect(pXmlWPolarDirAction, SIGNAL(triggered(bool)), this, SLOT(onXmlWPolarDir()));
 
             QToolButton *pXMLScriptDirBtn = new QToolButton();
-            QAction *pXMLScriptDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), "Set directory", this);
+            QAction *pXMLScriptDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Set directory"), this);
             pXMLScriptDirBtn->setDefaultAction(pXMLScriptDirAction);
             connect(pXMLScriptDirAction, SIGNAL(triggered(bool)), this, SLOT(onXmlScriptDir()));
 
             QToolButton *pCADDirBtn = new QToolButton();
-            QAction *pCADDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), "Set directory", this);
+            QAction *pCADDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Set directory"), this);
             pCADDirBtn->setDefaultAction(pCADDirAction);
             connect(pCADDirAction, SIGNAL(triggered(bool)), this, SLOT(onCADDir()));
 
             QToolButton *pSTLDirBtn = new QToolButton();
-            QAction *pSTLDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), "Set directory", this);
+            QAction *pSTLDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Set directory"), this);
             pSTLDirBtn->setDefaultAction(pSTLDirAction);
             connect(pSTLDirAction, SIGNAL(triggered(bool)), this, SLOT(onSTLDir()));
 
             QToolButton *pTmpDirBtn = new QToolButton();
-            QAction *pTmpDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), "Set directory", this);
+            QAction *pTmpDirAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Set directory"), this);
             pTmpDirBtn->setDefaultAction(pTmpDirAction);
             connect(pTmpDirAction, SIGNAL(triggered(bool)), this, SLOT(onTempDir()));
 
@@ -291,24 +291,24 @@ void SaveOptionsWt::setupLayout()
         m_pGroupBox.back()->setLayout(pDirLayout);
     }
 
-    m_pGroupBox.push_back(new QGroupBox("Export options"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Export options")));
     {
         QVBoxLayout *pExportOptionsLayout = new QVBoxLayout;
         {
-            QGroupBox *pgbTextExport = new QGroupBox("To text files");
+            QGroupBox *pgbTextExport = new QGroupBox(tr("To text files"));
             {
                 QHBoxLayout *pTextExportLayout = new QHBoxLayout;
                 {
                     m_pTXT = new QRadioButton("TXT");
                     m_pCSV = new QRadioButton("CSV");
-                    QLabel *pLabCsv = new QLabel("CSV field separator");
-                    pLabCsv->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
+                    QLabel *plabCsv = new QLabel(tr("CSV field separator"));
+                    plabCsv->setAlignment(Qt::AlignVCenter|Qt::AlignRight);
                     m_pleCsvSeparator = new QLineEdit;
 
                     pTextExportLayout->addWidget(m_pTXT);
                     pTextExportLayout->addWidget(m_pCSV);
                     pTextExportLayout->addStretch();
-                    pTextExportLayout->addWidget(pLabCsv);
+                    pTextExportLayout->addWidget(plabCsv);
                     pTextExportLayout->addWidget(m_pleCsvSeparator);
 
                     connect(m_pTXT, SIGNAL(clicked(bool)), SLOT(onExportFormat()));
@@ -317,11 +317,11 @@ void SaveOptionsWt::setupLayout()
                 pgbTextExport->setLayout(pTextExportLayout);
             }
 
-            QGroupBox *pgbXmlExport = new QGroupBox("To Xml files");
+            QGroupBox *pgbXmlExport = new QGroupBox(tr("To Xml files"));
             {
                 QHBoxLayout *pXmlExportLayout = new QHBoxLayout;
                 {
-                    m_pchXmlWingFoils = new QCheckBox("Include airfoil .dat files when exporting wings");
+                    m_pchXmlWingFoils = new QCheckBox(tr("Include airfoil .dat files when exporting wings"));
                     pXmlExportLayout->addWidget(m_pchXmlWingFoils);
                 }
                 pgbXmlExport->setLayout(pXmlExportLayout);
@@ -333,26 +333,26 @@ void SaveOptionsWt::setupLayout()
         m_pGroupBox.back()->setLayout(pExportOptionsLayout);
     }
 
-    m_pGroupBox.push_back(new QGroupBox("SVG foil export"));
+    m_pGroupBox.push_back(new QGroupBox(tr("SVG foil export")));
     {
         QVBoxLayout *pExportLayout = new QVBoxLayout;
         {
-            m_pchSVGCloseTE = new QCheckBox("Close foil TE");
-            m_pchSVGFillFoil = new QCheckBox("Fill foil");
-            m_pdeSVGScaleFactor = new FloatEdit;
-            m_pdeSVGScaleFactor->setToolTip("Recommendation: Scale factor>=10000 for a smooth foil shape");
-            m_pchSVGExportStyle = new QCheckBox("Export style");
-            m_pdeSVGMargin = new FloatEdit;
+            m_pchSVGCloseTE = new QCheckBox(tr("Close foil TE"));
+            m_pchSVGFillFoil = new QCheckBox(tr("Fill foil"));
+            m_pfeSVGScaleFactor = new FloatEdit;
+            m_pfeSVGScaleFactor->setToolTip(tr("<p>Recommendation: Scale factor>=10000 for a smooth foil shape</p>"));
+            m_pchSVGExportStyle = new QCheckBox(tr("Export style"));
+            m_pfeSVGMargin = new FloatEdit;
             pExportLayout->addWidget(m_pchSVGCloseTE);
             pExportLayout->addWidget(m_pchSVGFillFoil);
             pExportLayout->addWidget(m_pchSVGExportStyle);
             QGridLayout *pScaleLayout = new QGridLayout;
             {
-                pScaleLayout->addWidget(new QLabel("Margin"),       1,1);
-                pScaleLayout->addWidget(m_pdeSVGMargin,             1,2);
-                pScaleLayout->addWidget(new QLabel("(Foil units)"), 1,3);
-                pScaleLayout->addWidget(new QLabel("Scale factor"), 2,1);
-                pScaleLayout->addWidget(m_pdeSVGScaleFactor,        2,2);
+                pScaleLayout->addWidget(new QLabel(tr("Margin")),       1,1);
+                pScaleLayout->addWidget(m_pfeSVGMargin,                 1,2);
+                pScaleLayout->addWidget(new QLabel(tr("(Foil units)")), 1,3);
+                pScaleLayout->addWidget(new QLabel(tr("Scale factor")), 2,1);
+                pScaleLayout->addWidget(m_pfeSVGScaleFactor,            2,2);
                 pScaleLayout->setColumnStretch(4,1);
             }
             pExportLayout->addLayout(pScaleLayout);
@@ -361,16 +361,16 @@ void SaveOptionsWt::setupLayout()
         m_pGroupBox.back()->setLayout(pExportLayout);
     }
 
-    m_pGroupBox.push_back(new QGroupBox("Operating points"));
+    m_pGroupBox.push_back(new QGroupBox(tr("Operating points")));
     {
         QHBoxLayout *pSaveOppLayout = new QHBoxLayout;
         {
-            QLabel *pSaveLabel = new QLabel("Save:");
-            pSaveLabel->setAlignment(Qt::AlignRight);
-            m_pchOpps  = new QCheckBox("Foil operating points");
-            m_pchPOpps = new QCheckBox("Plane operating points");
-            m_pchBtOpps = new QCheckBox("Boat operating points");
-            pSaveOppLayout->addWidget(pSaveLabel);
+            QLabel *plabSave = new QLabel(tr("Save operating points for:"));
+            plabSave->setAlignment(Qt::AlignRight);
+            m_pchOpps  = new QCheckBox(tr("Foils"));
+            m_pchPOpps = new QCheckBox(tr("Planes"));
+            m_pchBtOpps = new QCheckBox(tr("Boats"));
+            pSaveOppLayout->addWidget(plabSave);
             pSaveOppLayout->addStretch();
             pSaveOppLayout->addWidget(m_pchOpps);
             pSaveOppLayout->addWidget(m_pchPOpps);
@@ -464,8 +464,8 @@ void SaveOptionsWt::initWidget()
     m_pchSVGCloseTE->setChecked(FoilSVGWriter::bSVGClosedTE());
     m_pchSVGFillFoil->setChecked(FoilSVGWriter::bSVGFillFoil());
     m_pchSVGExportStyle->setChecked(FoilSVGWriter::bSVGExportStyle());
-    m_pdeSVGScaleFactor->setValue(FoilSVGWriter::SVGScaleFactor());
-    m_pdeSVGMargin->setValue(FoilSVGWriter::SVGMargin());
+    m_pfeSVGScaleFactor->setValue(FoilSVGWriter::SVGScaleFactor());
+    m_pfeSVGMargin->setValue(FoilSVGWriter::SVGMargin());
     m_pchCleanOnExit->setChecked(SaveOptions::s_bCleanOnExit);
 }
 
@@ -501,8 +501,8 @@ void SaveOptionsWt::readData()
     FoilSVGWriter::setSVGClosedTE(m_pchSVGCloseTE->isChecked());
     FoilSVGWriter::setSVGFillFoil(m_pchSVGFillFoil->isChecked());
     FoilSVGWriter::setSVGExportStyle(m_pchSVGExportStyle->isChecked());
-    FoilSVGWriter::setSVGScaleFactor(m_pdeSVGScaleFactor->value());
-    FoilSVGWriter::setSVGMargin(m_pdeSVGMargin->value());
+    FoilSVGWriter::setSVGScaleFactor(m_pfeSVGScaleFactor->value());
+    FoilSVGWriter::setSVGMargin(m_pfeSVGMargin->value());
     SaveOptions::s_bCleanOnExit = m_pchCleanOnExit->isChecked();
 }
 
@@ -532,7 +532,7 @@ void SaveOptionsWt::onLastUsedDir()
 
 void SaveOptionsWt::onActiveDir()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, "Select directory",
+    QString dirName = QFileDialog::getExistingDirectory(this, tr("Select directory"),
                                                  m_pleLastDir->text(),
                                                  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
     if(dirName.length())
@@ -545,7 +545,7 @@ void SaveOptionsWt::onActiveDir()
 
 void SaveOptionsWt::onDatFoilDir()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, "Select directory",
+    QString dirName = QFileDialog::getExistingDirectory(this, tr("Select directory"),
                                                         m_pleDatFoilDir->text(),
                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
@@ -573,7 +573,7 @@ void SaveOptionsWt::onPlrPolarDir()
 
 void SaveOptionsWt::onXmlPolarDir()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, "Select directory",
+    QString dirName = QFileDialog::getExistingDirectory(this, tr("Select directory"),
                                                         m_pleXmlPolarDir->text(),
                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
@@ -587,7 +587,7 @@ void SaveOptionsWt::onXmlPolarDir()
 
 void SaveOptionsWt::onXmlPlaneDir()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, "Select directory",
+    QString dirName = QFileDialog::getExistingDirectory(this, tr("Select directory"),
                                                         m_pleXmlPlaneDir->text(),
                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
@@ -601,7 +601,7 @@ void SaveOptionsWt::onXmlPlaneDir()
 
 void SaveOptionsWt::onXmlWPolarDir()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, "Select directory",
+    QString dirName = QFileDialog::getExistingDirectory(this, tr("Select directory"),
                                                         m_pleXmlWPolarDir->text(),
                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
@@ -615,7 +615,7 @@ void SaveOptionsWt::onXmlWPolarDir()
 
 void SaveOptionsWt::onXmlScriptDir()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, "Select directory",
+    QString dirName = QFileDialog::getExistingDirectory(this, tr("Select directory"),
                                                         m_pleXmlScriptDir->text(),
                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
@@ -629,7 +629,7 @@ void SaveOptionsWt::onXmlScriptDir()
 
 void SaveOptionsWt::onCADDir()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, "Select directory",
+    QString dirName = QFileDialog::getExistingDirectory(this, tr("Select directory"),
                                                         m_pleCADDir->text(),
                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
@@ -643,7 +643,7 @@ void SaveOptionsWt::onCADDir()
 
 void SaveOptionsWt::onSTLDir()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this, "Select directory",
+    QString dirName = QFileDialog::getExistingDirectory(this, tr("Select directory"),
                                                         m_pleSTLDir->text(),
                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
@@ -658,7 +658,7 @@ void SaveOptionsWt::onSTLDir()
 void SaveOptionsWt::onTempDir()
 {
     QString oldname = SaveOptions::s_TempDirName;
-    QString dirName = QFileDialog::getExistingDirectory(this, "Select directory",
+    QString dirName = QFileDialog::getExistingDirectory(this, tr("Select directory"),
                                                         m_pleTempDir->text(),
                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 

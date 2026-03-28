@@ -722,7 +722,6 @@ void gl2dView::paintDisk(float xf, float yf, float rad, const QColor &clr)
 
 
         m_shadSurf.setUniformValue(m_locSurf.m_TwoSided, 0);
-        glEnable(GL_CULL_FACE);
 
         m_shadSurf.enableAttributeArray(m_locSurf.m_attrVertex);
         m_shadSurf.enableAttributeArray(m_locSurf.m_attrNormal);
@@ -733,6 +732,7 @@ void gl2dView::paintDisk(float xf, float yf, float rad, const QColor &clr)
 
             m_shadSurf.setAttributeBuffer(m_locSurf.m_attrVertex, GL_FLOAT, 0,                 3, stride*sizeof(GLfloat));
             m_shadSurf.setAttributeBuffer(m_locSurf.m_attrNormal, GL_FLOAT, 3*sizeof(GLfloat), 3, stride*sizeof(GLfloat));
+            glEnable(GL_CULL_FACE);
             glEnable(GL_POLYGON_OFFSET_FILL);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
             glPolygonOffset(DEPTHFACTOR, DEPTHUNITS);
@@ -740,11 +740,12 @@ void gl2dView::paintDisk(float xf, float yf, float rad, const QColor &clr)
             glDrawArrays(GL_TRIANGLES, 0, nTriangles*3); // 4 vertices defined but only 3 are used
         }
         m_vboDisk.release();
-        glDisable(GL_POLYGON_OFFSET_FILL);
 
         m_shadSurf.disableAttributeArray(m_locSurf.m_attrVertex);
         m_shadSurf.disableAttributeArray(m_locSurf.m_attrNormal);
         m_shadSurf.setUniformValue(m_locSurf.m_TwoSided, 0); // leave things as they were
+
+        glDisable(GL_POLYGON_OFFSET_FILL);
         glEnable(GL_CULL_FACE);
     }
     m_shadSurf.release();
@@ -1094,11 +1095,11 @@ void gl2dView::initializeGL()
     m_shadSurf.link();
     m_shadSurf.bind();
     {
-        m_locSurf.m_attrVertex = m_shadSurf.attributeLocation("vertexPosition_modelSpace");
-        m_locSurf.m_attrNormal = m_shadSurf.attributeLocation("vertexNormal_modelSpace");
-        m_locSurf.m_attrUV     = m_shadSurf.attributeLocation("vertexUV");
-        m_locSurf.m_attrColor  = m_shadSurf.attributeLocation("vertexColor");
-        m_locSurf.m_attrOffset = m_shadSurf.attributeLocation("vertexOffset");
+        m_locSurf.m_attrVertex   = m_shadSurf.attributeLocation("vertexPosition_modelSpace");
+        m_locSurf.m_attrNormal   = m_shadSurf.attributeLocation("vertexNormal_modelSpace");
+        m_locSurf.m_attrUV       = m_shadSurf.attributeLocation("vertexUV");
+        m_locSurf.m_attrColor    = m_shadSurf.attributeLocation("vertexColor");
+        m_locSurf.m_attrOffset   = m_shadSurf.attributeLocation("vertexOffset");
 
         m_locSurf.m_ClipPlane    = m_shadSurf.uniformLocation("clipPlane0");
         m_locSurf.m_pvmMatrix    = m_shadSurf.uniformLocation("pvmMatrix");
@@ -1110,7 +1111,7 @@ void gl2dView::initializeGL()
         m_locSurf.m_HasTexture   = m_shadSurf.uniformLocation("HasTexture");
         m_locSurf.m_TexSampler   = m_shadSurf.uniformLocation("TheSampler");
         m_locSurf.m_IsInstanced  = m_shadSurf.uniformLocation("Instanced");
-        m_locSurf.m_Scale      = m_shadSurf.uniformLocation("uScale");
+        m_locSurf.m_Scale        = m_shadSurf.uniformLocation("uScale");
 
         m_uHasShadow             = m_shadSurf.uniformLocation("HasShadow");
         m_uShadowLightViewMatrix = m_shadSurf.uniformLocation("LightViewMatrix");

@@ -2863,7 +2863,7 @@ void XDirect::onRenameCurPolar()
     QString OldName = QString::fromStdString(s_pCurPolar->name());
 
     RenameDlg renameDlg(s_pMainFrame);
-    renameDlg.initDialog(s_pCurPolar->name(), Objects2d::polarList(s_pCurFoil), "Enter the new name for the foil polar:");
+    renameDlg.initDialog(s_pCurPolar->name(), Objects2d::polarList(s_pCurFoil), tr("Enter the new name for the foil polar:"));
 
     bool bExists = true;
 

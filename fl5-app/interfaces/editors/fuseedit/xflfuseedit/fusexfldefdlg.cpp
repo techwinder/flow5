@@ -854,9 +854,9 @@ void FuseXflDefDlg::setupLayout()
                                 QLabel *plabFit = new QLabel(tr("Fit tolerance"));
                                 QLabel *plabLengthUnit = new QLabel(Units::lengthUnitQLabel());
                                 m_pfeFitPrecision = new FloatEdit;
-                                QString tip("<p>Defines the precision with which the spline will be fit to the control points.<br>"
+                                QString tip(tr("<p>Defines the precision with which the spline will be fit to the control points.<br>"
                                             "Reduce this precision for a better fit with the risk of potential NURBS oscillations.<br>"
-                                            "Increase this precision to get a smoother NURBS with a less precise fit.</p>");
+                                            "Increase this precision to get a smoother NURBS with a less precise fit.</p>"));
                                 m_pfeFitPrecision->setToolTip(tip);
 
                                 pFitLayout->addWidget(plabFit);
@@ -866,7 +866,7 @@ void FuseXflDefDlg::setupLayout()
                             m_pgbFit->setLayout(pFitLayout);
                         }
 
-                        QGroupBox *pBunchParams = new QGroupBox(tr("Quad panels"));
+                        QGroupBox *pBunchParams = new QGroupBox(tr("Panels"));
                         {
                             QVBoxLayout *pMeshLayout = new QVBoxLayout;
                             {
@@ -874,7 +874,7 @@ void FuseXflDefDlg::setupLayout()
                                 {
                                     QLabel *plab1 = new QLabel("x");
                                     QLabel *plab2 = new QLabel(tr("Hoop"));
-                                    QLabel *plab4 = new QLabel(tr("Quad panels"));
+                                    QLabel *plab4 = new QLabel(tr("Number of panels"));
                                     m_pieNXPanels = new IntEdit;
                                     m_pieNHoopPanels = new IntEdit;
 

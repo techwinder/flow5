@@ -80,7 +80,7 @@ class SaveOptionsWt : public QWidget
 
         QRadioButton *m_pCSV, *m_pTXT;
         QCheckBox *m_pchSVGExportStyle, *m_pchSVGCloseTE, *m_pchSVGFillFoil;
-        FloatEdit *m_pdeSVGScaleFactor, *m_pdeSVGMargin;
+        FloatEdit *m_pfeSVGScaleFactor, *m_pfeSVGMargin;
         QLineEdit *m_pleCsvSeparator;
 };
 

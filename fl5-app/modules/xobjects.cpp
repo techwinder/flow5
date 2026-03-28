@@ -30,6 +30,7 @@
 #include "xobjects.h"
 
 #include <api/boatopp.h>
+#include <api/fusexfl.h>
 #include <api/objects3d.h>
 #include <api/planepolar.h>
 #include <api/polar.h>
@@ -42,11 +43,13 @@
 #include <api/sailstl.h>
 #include <api/sailocc.h>
 #include <api/sailwing.h>
-#include <interfaces/mesh/gmesh_globals.h>
 
 #include <core/xflcore.h>
-#include <interfaces/widgets/customdlg/renamedlg.h>
 #include <globals/mainframe.h>
+#include <interfaces/controls/w3dprefs.h>
+#include <interfaces/mesh/gmesh_globals.h>
+#include <interfaces/widgets/customdlg/renamedlg.h>
+
 
 MainFrame *Objects3d::g_pMainFrame = nullptr;
 
@@ -282,7 +285,7 @@ Plane * Objects3d::setModifiedPlane(Plane *pModPlane)
     QString OldName = QString::fromStdString(pModPlane->name());
 
     RenameDlg renDlg(g_pMainFrame);
-    renDlg.initDialog(QString::fromStdString(pModPlane->name()), planeNames(), "Enter the new name for the Plane :");
+    renDlg.initDialog(QString::fromStdString(pModPlane->name()), planeNames(), QObject::tr("Enter the new name for the plane:"));
 
     while (bExists || pModPlane->name().length()==0)
     {
@@ -1058,8 +1061,17 @@ void Objects3d::makePlaneTriangulation(Plane *pPlane)
     for(int i=0; i<pPlane->nFuse(); i++)
     {
         Fuse *pFuse =  pPlane->fuse(i);
-        gmesh::makeFuseTriangulation(pFuse, logmsg);
-        pFuse->saveBaseTriangulation();
+        if(pFuse->isStlType())
+        {
+            // do nothing, using STl triangles
+        }
+        else if(pFuse->isXflType())
+        {
+            FuseXfl* pFuseXfl = dynamic_cast<FuseXfl*>(pFuse);
+            pFuseXfl->makeSurfaceTriangulation(W3dPrefs::bodyAxialRes(), W3dPrefs::bodyHoopRes());
+        }
+        else if(pFuse->isOccType())
+            gmesh::makeFuseTriangulation(pFuse, logmsg);
     }
 }
 
@@ -1071,7 +1083,6 @@ void Objects3d::makeBoatTriangulation(Boat *pBoat)
     {
         Fuse *pFuse =  pBoat->hull(i);
         gmesh::makeFuseTriangulation(pFuse, logmsg);
-        pFuse->saveBaseTriangulation();
     }
 
     for(int is=0; is<pBoat->nSails(); is++)

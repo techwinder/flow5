@@ -28,11 +28,12 @@ int main()
         if(pFoil) delete pFoil;
         return 0;
     }
-    std::cout <<"The foil "<< pFoil-> name() <<" has been created and added to the database" << std::endl<< std::endl;
     pFoil->setName("NACA 2410");
 
     // Store
     Objects2d::insertThisFoil(pFoil);
+
+    std::cout <<"The foil "<< pFoil-> name() <<" has been created and added to the database" << std::endl<< std::endl;
 
 //    std::string coords = pFoil->listCoords();
 //    std::cout << coords << std::endl;
@@ -44,7 +45,7 @@ int main()
 
     Polar *pPolar = Objects2d::createPolar(pFoil, xfl::T1POLAR, 100000.0, 0.0, 9.0, 1.0, 1.0); // "low level" function
     pPolar->setName("T1 test polar");
-    Objects2d::insertPolar(pPolar); // so that it won't get lost and will be neatly deleted on exit
+    Objects2d::insertPolar(pPolar); // so that it doesn't get lost and will be deleted on exit
 
     std::cout << "polar properties:" << std::endl;
     std::cout << pPolar->name() << std::endl;

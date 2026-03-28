@@ -118,7 +118,7 @@ void FuseOccDlg::setupLayout()
                     pDefinitionTab->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
                     QVBoxLayout *pDefLayout = new QVBoxLayout;
                     {
-                        QGroupBox *pShapeFixBox = new QGroupBox("Shape healing");
+                        QGroupBox *pShapeFixBox = new QGroupBox(tr("Shape healing"));
                         {
                             QVBoxLayout *pShapeFixLayout = new QVBoxLayout;
                             {
@@ -127,7 +127,7 @@ void FuseOccDlg::setupLayout()
                                 pFlow5Link->setOpenExternalLinks(true);
                                 pFlow5Link->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
                                 pFlow5Link->setAlignment(Qt::AlignVCenter| Qt::AlignLeft);
-                                m_ppbShapeFix = new QPushButton("Fix shapes");
+                                m_ppbShapeFix = new QPushButton(tr("Fix shapes"));
                                 m_ppbShapeFix->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_F));
                                 pShapeFixLayout->addWidget(m_ppbShapeFix);
                                 pShapeFixLayout->addWidget(pFlow5Link);
@@ -154,7 +154,7 @@ void FuseOccDlg::setupLayout()
                                 {
                                     QButtonGroup *pGroup = new QButtonGroup;
                                     {
-                                        m_prbfl5Mesher = new QRadioButton("flow5 mesher (deprecated)");
+                                        m_prbfl5Mesher = new QRadioButton(tr("flow5 mesher (deprecated)"));
                                         m_prbGMesher   = new QRadioButton("Gmsh");
                                         m_prbfl5Mesher->setChecked(FuseOccDlg::bfl5Mesher());
                                         m_prbGMesher->setChecked(!FuseOccDlg::bfl5Mesher());
@@ -186,20 +186,20 @@ void FuseOccDlg::setupLayout()
 
                         QHBoxLayout *pActionLayout = new QHBoxLayout;
                         {
-                            QPushButton *m_ppbCheckMenuBtn = new QPushButton("Actions");
+                            QPushButton *m_ppbCheckMenuBtn = new QPushButton(tr("Actions"));
                             {
-                                QMenu *pCheckMeshMenu = new QMenu("Actions");
+                                QMenu *pCheckMeshMenu = new QMenu(tr("Actions"));
                                 {
-                                    m_pCheckMesh        = new QAction("Check mesh", this);
-                                    m_pCheckFreeEdges   = new QAction("Check free edges", this);
+                                    m_pCheckMesh        = new QAction(tr("Check mesh"), this);
+                                    m_pCheckFreeEdges   = new QAction(tr("Check free edges"), this);
                                     m_pCheckFreeEdges->setShortcut(QKeySequence(Qt::ALT | Qt::Key_G));
-                                    m_pConnectPanels    = new QAction("Connect panels", this);
+                                    m_pConnectPanels    = new QAction(tr("Connect panels"), this);
                                     m_pConnectPanels->setShortcut(QKeySequence(Qt::ALT | Qt::Key_C));
-                                    m_pClearHighlighted = new QAction("Clear highlighted", this);
+                                    m_pClearHighlighted = new QAction(tr("Clear highlighted"), this);
                                     m_pClearHighlighted->setShortcut(QKeySequence(Qt::ALT | Qt::Key_L));
-                                    m_pCleanDoubleNode  = new QAction("Clean double nodes");
-                                    m_pCenterOnPanel    = new QAction("Center view on panel", this);
-                                    m_pRestoreFuseMesh  = new QAction("Restore default mesh",this);
+                                    m_pCleanDoubleNode  = new QAction(tr("Clean double nodes"));
+                                    m_pCenterOnPanel    = new QAction(tr("Center view on panel"), this);
+                                    m_pRestoreFuseMesh  = new QAction(tr("Restore default mesh"),this);
                                     pCheckMeshMenu->addAction(m_pCheckMesh);
                                     pCheckMeshMenu->addAction(m_pConnectPanels);
                                     pCheckMeshMenu->addAction(m_pCheckFreeEdges);
@@ -224,15 +224,15 @@ void FuseOccDlg::setupLayout()
                     pMeshTab->setLayout(pMeshLayout);
                 }
 
-                pTabViewWidget->addTab(pDefinitionTab, "Geometry");
-                pTabViewWidget->addTab(pMeshTab, "Mesh");
+                pTabViewWidget->addTab(pDefinitionTab, tr("Geometry"));
+                pTabViewWidget->addTab(pMeshTab,       tr("Mesh"));
             }
 
             m_ppto = new PlainTextOutput;
 
-            QPushButton *pMenuButton = new QPushButton("Actions");
+            QPushButton *pMenuButton = new QPushButton(tr("Actions"));
             {
-                QMenu *pBodyMenu = new QMenu("Actions...", this);
+                QMenu *pBodyMenu = new QMenu(tr("Actions..."), this);
                 {
                     pBodyMenu->addAction(m_pScale);
                     pBodyMenu->addAction(m_pTranslate);

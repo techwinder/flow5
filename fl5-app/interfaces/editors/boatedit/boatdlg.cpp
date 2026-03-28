@@ -752,7 +752,7 @@ void BoatDlg::onImportHullCAD()
     m_ppto->appendPlainText("Making shell triangulation\n");
 
     gmesh::makeFuseTriangulation(pNewHullOcc, logmsg, "   ");
-    pNewHullOcc->saveBaseTriangulation();
+
     pNewHullOcc->computeSurfaceProperties(strlog, "   ");
     logmsg += QString::fromStdString(strlog);
     m_ppto->onAppendQText(logmsg+"\n");
@@ -796,7 +796,6 @@ void BoatDlg::onImportHullSTL()
     QString strong;
     strong = QString::asprintf("STL_type_hull_%d", m_pBoat->stlFuseCount());
     pNewHullStl->setName(strong.toStdString());
-    pNewHullStl->setBaseTriangles(dlg.triangleList());
     pNewHullStl->setTriangles(dlg.triangleList());
     pNewHullStl->makeTriangleNodes();
     pNewHullStl->makeNodeNormals();

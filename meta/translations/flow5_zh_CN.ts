@@ -979,12 +979,12 @@ Uncheck for increased analysis speed.</source>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="694"/>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="1232"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="1231"/>
         <source>Warning</source>
         <translation type="unfinished">警告</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="1598"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="1597"/>
         <source>Question</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2489,6 +2489,78 @@ Uncheck for increased analysis speed.</source>
         <source>Flip normals</source>
         <translation type="unfinished">翻转法线</translation>
     </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="121"/>
+        <source>Shape healing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="130"/>
+        <source>Fix shapes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="157"/>
+        <source>flow5 mesher (deprecated)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="189"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="191"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="233"/>
+        <source>Actions</source>
+        <translation type="unfinished">操作</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="193"/>
+        <source>Check mesh</source>
+        <translation type="unfinished">检查网格</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="194"/>
+        <source>Check free edges</source>
+        <translation type="unfinished">检查自由边</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="196"/>
+        <source>Connect panels</source>
+        <translation type="unfinished">连接面板</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="198"/>
+        <source>Clear highlighted</source>
+        <translation type="unfinished">清除高亮</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="200"/>
+        <source>Clean double nodes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="201"/>
+        <source>Center view on panel</source>
+        <translation type="unfinished">视图中心对准面板</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="202"/>
+        <source>Restore default mesh</source>
+        <translation type="unfinished">恢复默认网格</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="227"/>
+        <source>Geometry</source>
+        <translation type="unfinished">几何</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="228"/>
+        <source>Mesh</source>
+        <translation type="unfinished">网格</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fuseoccdlg.cpp" line="235"/>
+        <source>Actions...</source>
+        <translation type="unfinished">操作...</translation>
+    </message>
 </context>
 <context>
     <name>FuseStlDlg</name>
@@ -2641,10 +2713,19 @@ Uncheck for increased analysis speed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="857"/>
+        <source>&lt;p&gt;Defines the precision with which the spline will be fit to the control points.&lt;br&gt;Reduce this precision for a better fit with the risk of potential NURBS oscillations.&lt;br&gt;Increase this precision to get a smoother NURBS with a less precise fit.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="869"/>
+        <source>Panels</source>
+        <translation type="unfinished">面板</translation>
+    </message>
+    <message>
         <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="877"/>
-        <source>Quad panels</source>
-        <translation type="unfinished">四边形面板数</translation>
+        <source>Number of panels</source>
+        <translation type="unfinished">面板数量</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.cpp" line="890"/>
@@ -2696,13 +2777,68 @@ Uncheck for increased analysis speed.</source>
     <name>FuseXflDlg</name>
     <message>
         <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="62"/>
-        <source>Xfl Fuse Editor</source>
-        <translation>Xfl 机身编辑器</translation>
+        <source>Xfl fuse editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="80"/>
+        <source>Restore geometry and mesh</source>
+        <translation type="unfinished">恢复几何和网格</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="81"/>
+        <source>Scale</source>
+        <translation type="unfinished">缩放</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="82"/>
+        <source>Export body geometry to an XML file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="83"/>
+        <source>Translate</source>
+        <translation type="unfinished">平移</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="84"/>
+        <source>to flat face type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="86"/>
+        <source>Actions...</source>
+        <translation type="unfinished">操作...</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="136"/>
+        <source>&lt;p&gt;Cannot remove: the number of frames must be at least equal to the x degree + 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="137"/>
+        <source>Warning</source>
+        <translation type="unfinished">警告</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="263"/>
         <source>Background image</source>
         <translation>背景图像</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="546"/>
+        <source>Regenerate	(F4)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="547"/>
+        <source>Actions</source>
+        <translation type="unfinished">操作</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="574"/>
+        <source>Export fuselage definition to xml file</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2804,6 +2940,104 @@ Uncheck for increased analysis speed.</source>
         <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.cpp" line="200"/>
         <source>Objects</source>
         <translation>对象</translation>
+    </message>
+</context>
+<context>
+    <name>GLLightDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="50"/>
+        <source>OpenGL Light Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="86"/>
+        <source>Light</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="87"/>
+        <source>Intensity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="93"/>
+        <source>Diffuse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="94"/>
+        <source>Ambient</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="95"/>
+        <source>Specular</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="98"/>
+        <source>&lt;p&gt;&lt;b&gt;Ambient:&lt;/b&gt;&lt;br&gt;Bounced light which has been scattered so much that it is impossible to tell the direction to its source. It is not attenuated by distance, and disappears if the light is turned off.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="104"/>
+        <source>&lt;p&gt;&lt;b&gt;Diffuse:&lt;/b&gt;&lt;br&gt;Directional light which is brighter on perpendicular surfaces. Its reflection is scattered evenly.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="108"/>
+        <source>&lt;p&gt;&lt;b&gt;Specular:&lt;/b&gt;&lt;br&gt;Directional light which tends to reflect in a preferred direction. It is associated with shininess.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="141"/>
+        <source>Attenuation factor=1/(</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="166"/>
+        <source>Colour</source>
+        <translation type="unfinished">颜色</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="170"/>
+        <source>Red</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="171"/>
+        <source>Green</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="172"/>
+        <source>Blue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="213"/>
+        <source>Material shininess</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="221"/>
+        <source>Position, view-space</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="223"/>
+        <source>&lt;p&gt;This set of sliders define the light&apos;s position in view-space coordidates.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="260"/>
+        <source>View distance:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/controls/gllightdlg.cpp" line="263"/>
+        <source>&lt;p&gt;This value defines how far way the eye is from the scene.&lt;br&gt;In the default orthographic projection, this only changes the position of the point of reflection on surfaces and does not affect the view&apos;s proportions.&lt;br&gt;The position is expressed in view-space coordinates.&lt;br&gt;Recommendation: set the position to the max. distance if using orthographic projection.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -3927,22 +4161,22 @@ _____________已发出取消请求_____________
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1774"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1782"/>
         <source>Question</source>
         <translation>问题</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1774"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1782"/>
         <source>Save the current project?</source>
         <translation>保存当前项目？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1786"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1794"/>
         <source>The project </source>
         <translation>项目 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1786"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1794"/>
         <source> has been saved
 
 </source>
@@ -3951,18 +4185,18 @@ _____________已发出取消请求_____________
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1832"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1836"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1840"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1844"/>
         <source>Default Settings</source>
         <translation>默认设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1832"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1840"/>
         <source>Are you sure you want to reset the default settings?</source>
         <translation>您确定要重置默认设置吗？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1836"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1844"/>
         <source>The settings will be reset at the next session</source>
         <translation>设置将在下次会话时重置</translation>
     </message>
@@ -5716,63 +5950,63 @@ Ctrl+B 编辑第一机身</translation>
         <translation>选中部件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1364"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1362"/>
         <source>Root chord:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1364"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1362"/>
         <source>Span:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1364"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1362"/>
         <source>Nbr. of panels:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1400"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1398"/>
         <source>&lt;p&gt;Number of icosahedron splits (0&amp;le;n&amp;le;4)&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="2864"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="2854"/>
         <source>Selected part</source>
         <translation>选定部件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3113"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3103"/>
         <source>Object List</source>
         <translation>对象列表</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3302"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3292"/>
         <source>Scale factor:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3326"/>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3362"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3316"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3352"/>
         <source>Length=</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3326"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3316"/>
         <source>Radius=</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3362"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3352"/>
         <source>Width=</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3362"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3352"/>
         <source>Height=</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3482"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3472"/>
         <source>stack: %1/%2</source>
         <translation>堆栈: %1/%2</translation>
     </message>
@@ -6332,6 +6566,26 @@ when using the mouse wheel.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="300"/>
+        <source>System</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="301"/>
+        <source>Chinese</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="302"/>
+        <source>English</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="303"/>
+        <source>French</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="304"/>
         <source>Use locale settings for number formatting</source>
         <translation type="unfinished"></translation>
@@ -6475,11 +6729,29 @@ when using the mouse wheel.</source>
     </message>
 </context>
 <context>
+    <name>QObject</name>
+    <message>
+        <location filename="../../fl5-app/modules/xobjects.cpp" line="288"/>
+        <source>Enter the new name for the plane:</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>RenameDlg</name>
     <message>
         <location filename="../../fl5-app/interfaces/widgets/customdlg/renamedlg.cpp" line="36"/>
         <source>Rename</source>
         <translation>重命名</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/renamedlg.cpp" line="54"/>
+        <source>Overwrite</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/renamedlg.cpp" line="66"/>
+        <source>Existing names:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/widgets/customdlg/renamedlg.cpp" line="102"/>
@@ -6994,6 +7266,208 @@ when using the mouse wheel.</source>
 </context>
 <context>
     <name>SaveOptionsWt</name>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="59"/>
+        <source>General</source>
+        <translation type="unfinished">常规</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="63"/>
+        <source>Load last project on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="67"/>
+        <source>Autosave every</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="84"/>
+        <source>Directories</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="90"/>
+        <source>Project files:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="93"/>
+        <source>Use last used directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="94"/>
+        <source>Use fixed directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="191"/>
+        <source>Foil files:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="192"/>
+        <source>Foil polar files:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="193"/>
+        <source>XML foil analysis files:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="194"/>
+        <source>XML plane and boat files:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="195"/>
+        <source>XML plane and boat analysis files:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="196"/>
+        <source>XML script files:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="197"/>
+        <source>CAD files:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="198"/>
+        <source>STL files:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="199"/>
+        <source>Temporary files:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="200"/>
+        <source>Application directory:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="204"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="209"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="214"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="219"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="224"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="229"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="234"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="239"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="244"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="249"/>
+        <source>Set directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="294"/>
+        <source>Export options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="298"/>
+        <source>To text files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="304"/>
+        <source>CSV field separator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="320"/>
+        <source>To Xml files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="324"/>
+        <source>Include airfoil .dat files when exporting wings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="336"/>
+        <source>SVG foil export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="340"/>
+        <source>Close foil TE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="341"/>
+        <source>Fill foil</source>
+        <translation type="unfinished">填充翼型</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="343"/>
+        <source>&lt;p&gt;Recommendation: Scale factor&gt;=10000 for a smooth foil shape&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="344"/>
+        <source>Export style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="351"/>
+        <source>Margin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="353"/>
+        <source>(Foil units)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="354"/>
+        <source>Scale factor</source>
+        <translation type="unfinished">比例因子</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="364"/>
+        <source>Operating points</source>
+        <translation type="unfinished">操作点</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="368"/>
+        <source>Save operating points for:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="370"/>
+        <source>Foils</source>
+        <translation type="unfinished">翼型</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="371"/>
+        <source>Planes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="372"/>
+        <source>Boats</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="535"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="548"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="576"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="590"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="604"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="618"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="632"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="646"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="661"/>
+        <source>Select directory</source>
+        <translation type="unfinished">选择目录</translation>
+    </message>
     <message>
         <location filename="../../fl5-app/options/saveoptionswt.cpp" line="683"/>
         <source>Warning</source>
@@ -9205,6 +9679,11 @@ Importing from a binary file
         <source>?</source>
         <translation>？</translation>
     </message>
+    <message>
+        <location filename="../../fl5-app/modules/xdirect/xdirect.cpp" line="2866"/>
+        <source>Enter the new name for the foil polar:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>XDirectActions</name>
@@ -9840,6 +10319,11 @@ Importing from a binary file
 </source>
         <translation>您确定要重置极曲线的内容：
 </translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="5726"/>
+        <source>Export plane definition to xml file</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -10800,6 +11284,11 @@ Importing from a binary file
 </source>
         <translation>您确定要删除该船只吗：
 </translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/modules/xsail/xsail.cpp" line="3247"/>
+        <source>Enter the new name for the boat:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

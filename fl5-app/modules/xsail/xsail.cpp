@@ -3244,7 +3244,7 @@ Boat* XSail::setModifiedBoat(Boat *pModBoat)
     QString OldName = QString::fromStdString(pModBoat->name());
 
     RenameDlg renDlg(s_pMainFrame);
-    renDlg.initDialog(pModBoat->name(), SailObjects::boatNames(), "Enter the new name for the boat:");
+    renDlg.initDialog(pModBoat->name(), SailObjects::boatNames(), tr("Enter the new name for the boat:"));
 
     while (bExists)
     {

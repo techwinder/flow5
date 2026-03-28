@@ -1050,7 +1050,7 @@ void PlaneXflDlg::onInsertFuseXml()
     FuseXfl *pFuseXfl = fusereader.fuseXfl();
     pFuseXfl->makeFuseGeometry();
     pFuseXfl->makeSurfaceTriangulation(50,30);
-    pFuseXfl->saveBaseTriangulation();
+
     std::string logmsg;
     pFuseXfl->makeDefaultTriMesh(logmsg, "");
 
@@ -1164,7 +1164,7 @@ void PlaneXflDlg::onInsertFuseOcc()
         logmsg.clear();
         updateOutput("Making shell triangulation\n");
         gmesh::makeFuseTriangulation(pFuseOcc, logmsg, "   ");
-        pFuseOcc->saveBaseTriangulation();
+
         pFuseOcc->computeSurfaceProperties(str, "   ");
         updateStdOutput(logmsg.toStdString() + str+"\n");
         m_ppto->appendPlainText("---updating plane-----\n");
@@ -1201,7 +1201,6 @@ void PlaneXflDlg::onInsertFuseStl()
     QString strong;
     strong = QString::asprintf("STL_type_fuse_%d", m_pPlaneXfl->stlFuseCount());
     pFuse->setName(strong.toStdString());
-    pFuse->setBaseTriangles(dlg.triangleList());
     pFuse->setTriangles(dlg.triangleList());
     pFuse->makeTriangleNodes();
     pFuse->makeNodeNormals();
@@ -1338,7 +1337,6 @@ void PlaneXflDlg::onInsertSTLCylinderFuse()
     strong = QString::asprintf("Cylinder_STL_fuse_%d", m_pPlaneXfl->stlFuseCount());
     pFuse->setName(strong.toStdString());
 
-    pFuse->setBaseTriangles(triangles);
     pFuse->setTriangles(triangles);
     pFuse->makeTriangleNodes();
     pFuse->makeNodeNormals();
@@ -1412,7 +1410,6 @@ void PlaneXflDlg::onInsertSTLSphereFuse()
     strong = QString::asprintf("Sphere_STL_fuse_%d", m_pPlaneXfl->stlFuseCount());
     pFuse->setName(strong.toStdString());
 
-    pFuse->setBaseTriangles(triangles);
     pFuse->setTriangles(triangles);
     pFuse->makeTriangleNodes();
     pFuse->makeNodeNormals();
@@ -2095,8 +2092,9 @@ void PlaneXflDlg::onThinListClick()
 
     if(m_pPlaneXfl->isThickBuild())
     {
-        for(WingXfl const &wing : winglist)
+        for(int iw=0; iw<winglist.size(); iw++)
         {
+            WingXfl const &wing = winglist.at(iw);
             if(!wing.isTwoSided())
             {
                 if(wing.isClosedInnerSide())
@@ -2287,11 +2285,6 @@ bool PlaneXflDlg::makeFragments()
         iShell++;
     }
 //    updateOutput(strange+"\n");
-qDebug("%s",strange.toStdString().c_str());
-
-
-qDebug()<<"nshells="<<pFuse->shells().Extent();
-qDebug()<<"nshapes="<<pFuse->shapes().Extent();
 
     updateOutput("Fragmenting body shape with selected wings...\n");
 
@@ -2686,8 +2679,6 @@ void PlaneXflDlg::onInsertFuseXfl()
     strange = QString::asprintf("   fuse xfl 3: %.3f s\n", double(t.elapsed())/1000.0);
     updateOutput(strange);
 
-    pFuse->saveBaseTriangulation();
-
     std::string logmsg;
     pFuse->makeDefaultTriMesh(logmsg, "");
 
@@ -2727,7 +2718,7 @@ void PlaneXflDlg::onTessellation()
 
         QString strange;
         gmesh::makeFuseTriangulation(pFuse, strange, "   ");
-        pFuse->saveBaseTriangulation();
+
         updateOutput(strange);
 
         gl3dPlaneXflView*pglPlaneXflView = dynamic_cast<gl3dPlaneXflView*>(m_pglPlaneView);
@@ -2825,7 +2816,6 @@ void PlaneXflDlg::onResetFuse()
     pglPlaneXflView->resetgl3dFuse();
     QString str;
     gmesh::makeFuseTriangulation(pFuse, str, "   ");
-    pFuse->saveBaseTriangulation();
 
     strange = "The fuse " + pFuse->name() + " has been reset.\n";
     updateStdOutput(strange+"\n");
@@ -3393,7 +3383,7 @@ void PlaneXflDlg::onInsertCADShape()
         updateOutput("Making shell triangulation\n");
 //        pFuseOcc->makeShellTriangulation(logmsg, "   ");
         gmesh::makeFuseTriangulation(pFuseOcc, logmsg, "   ");
-        pFuseOcc->saveBaseTriangulation();
+
         std::string str;
         pFuseOcc->computeSurfaceProperties(str, "   ");
         updateStdOutput(str+"\n");

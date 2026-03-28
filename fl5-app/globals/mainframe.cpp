@@ -1393,6 +1393,14 @@ void MainFrame::keyPressEvent(QKeyEvent *pEvent)
                 }
                 break;
             }
+            case Qt::Key_F3:
+            {
+                gl2dQuat *pTestView = new gl2dQuat;
+                pTestView->setAttribute(Qt::WA_DeleteOnClose);
+                pTestView->show();
+                pTestView->activateWindow();
+                break;
+            }
             default:
                 pEvent->ignore();
                 return;

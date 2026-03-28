@@ -1475,8 +1475,8 @@ void PlaneExplorer::onItemClicked(const QModelIndex &index)
 
         if(pPOpp)
         {
-            if(s_pXPlane->isPOppView())
-                emit s_pXPlane->projectModified();
+ //           if(s_pXPlane->isPOppView())
+ //               emit s_pXPlane->projectModified();
             {
                 LineStyle ls(pPOpp->theStyle());
                 LineMenu *pLineMenu = new LineMenu(nullptr);
@@ -1509,7 +1509,7 @@ void PlaneExplorer::onItemClicked(const QModelIndex &index)
         }
         else if(pPlane)
         {
-            if(!s_pXPlane->is3dView())
+//            if(!s_pXPlane->is3dView())
             {
                 LineStyle ls(pPlane->theStyle());
                 LineMenu *pLineMenu = new LineMenu(nullptr);
@@ -1530,7 +1530,7 @@ void PlaneExplorer::onItemClicked(const QModelIndex &index)
     {
         if(pPOpp)
         {
-            if(s_pXPlane->isPOppView())
+//            if(s_pXPlane->isPOppView())
             {
                 ObjectTreeItem *pItem = m_pModel->itemFromIndex(index);
                 if(pItem)
@@ -1560,7 +1560,7 @@ void PlaneExplorer::onItemClicked(const QModelIndex &index)
         }
         else if(pPlane)
         {
-            if(!s_pXPlane->is3dView())
+//            if(!s_pXPlane->is3dView())
             {
                 ObjectTreeItem *pItem = m_pModel->itemFromIndex(index);
                 if(pItem)

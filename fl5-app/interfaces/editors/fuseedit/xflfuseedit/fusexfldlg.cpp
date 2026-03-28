@@ -59,7 +59,7 @@ QByteArray FuseXflDlg::s_Geometry;
 
 FuseXflDlg::FuseXflDlg(QWidget *pParent) : FuseDlg(pParent)
 {
-    setWindowTitle(tr("Xfl Fuse Editor"));
+    setWindowTitle(tr("Xfl fuse editor"));
 
     m_pFuseXfl = nullptr;
     m_StackPos  = 0; //the current position on the stack
@@ -77,13 +77,13 @@ FuseXflDlg::~FuseXflDlg()
 
 void FuseXflDlg::createActions()
 {
-    m_pResetFuse     = new QAction("Restore geometry and mesh", this);
-    m_pScaleBody     = new QAction("Scale", this);
-    m_pExportBodyXML = new QAction("Export body geometry to an XML file", this);
-    m_pTranslateBody = new QAction("Translate", this);
-    m_pToFlatFace    = new QAction("to flat face type", this);
+    m_pResetFuse     = new QAction(tr("Restore geometry and mesh"), this);
+    m_pScaleBody     = new QAction(tr("Scale"), this);
+    m_pExportBodyXML = new QAction(tr("Export body geometry to an XML file"), this);
+    m_pTranslateBody = new QAction(tr("Translate"), this);
+    m_pToFlatFace    = new QAction(tr("to flat face type"), this);
 
-    QMenu *pBodyMenu = new QMenu("Actions...",this);
+    QMenu *pBodyMenu = new QMenu(tr("Actions..."), this);
     {
         pBodyMenu->addAction(m_pResetFuse);
         pBodyMenu->addSeparator();
@@ -133,8 +133,8 @@ void FuseXflDlg::onRemoveFrame(int iFrame)
 {
     if(m_pFuseXfl->isSplineType() && (m_pFuseXfl->frameCount()<=m_pFuseXfl->nurbs().uDegree()+1))
     {
-        QString strange("Cannot remove: the number of frames must be at least equal to the x degree+1");
-        QMessageBox::warning(this, "Warning", strange);
+        QString strange(tr("<p>Cannot remove: the number of frames must be at least equal to the x degree + 1"));
+        QMessageBox::warning(this, tr("Warning"), strange);
         return;
     }
 
@@ -543,8 +543,8 @@ void FuseXflDlg::makeCommonWts()
 
 //    m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Save | QDialogButtonBox::Discard);
     {
-        m_ppblRedraw = new QPushButton("Regenerate\t(F4)");
-        m_ppbMenuButton = new QPushButton("Actions");
+        m_ppblRedraw = new QPushButton(tr("Regenerate\t(F4)"));
+        m_ppbMenuButton = new QPushButton(tr("Actions"));
 
         m_pButtonBox->addButton(m_ppblRedraw, QDialogButtonBox::ActionRole);
         m_pButtonBox->addButton(m_ppbMenuButton, QDialogButtonBox::ActionRole);
@@ -571,7 +571,7 @@ void FuseXflDlg::onExportFuseToXML()
 
     strong = QString::fromStdString(m_pFuseXfl->name()).trimmed();
     strong.replace(' ', '_');
-    FileName = QFileDialog::getSaveFileName(window(), "Export plane definition to xml file",
+    FileName = QFileDialog::getSaveFileName(window(), tr("Export fuselage definition to xml file"),
                                             SaveOptions::xmlPlaneDirName() +'/'+strong,
                                             filter,
                                             &filter);

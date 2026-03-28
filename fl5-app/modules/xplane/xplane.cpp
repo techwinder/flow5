@@ -5723,7 +5723,7 @@ void XPlane::onExportFuseToXML()
 
     strong = QString::fromStdString(pFuse->name()).trimmed()+".xml";
     strong.replace(' ', '_');
-    FileName = QFileDialog::getSaveFileName(s_pMainFrame, "Export plane definition to xml file",
+    FileName = QFileDialog::getSaveFileName(s_pMainFrame, tr("Export plane definition to xml file"),
                                             SaveOptions::xmlPlaneDirName() +'/'+strong,
                                             filter,
                                             &filter);

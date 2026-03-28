@@ -74,7 +74,7 @@ void FuseStl::translate(Vector3d const &T)
 
 void FuseStl::computeWettedArea()
 {
-    m_WettedArea = m_BaseTriangulation.wettedArea();
+    m_WettedArea = m_Triangulation.wettedArea();
 }
 
 
@@ -193,7 +193,6 @@ bool FuseStl::serializePartFl5(QDataStream &ar, bool bIsStoring)
 
         std::string logmsg;
         makeDefaultTriMesh(logmsg, "");
-        m_BaseTriangulation.setTriangles(m_Triangulation.triangles());
     }
     return true;
 }
@@ -203,7 +202,7 @@ bool FuseStl::serializePartFl5(QDataStream &ar, bool bIsStoring)
 bool FuseStl::intersectFuse(const Vector3d &A, const Vector3d &B, Vector3d &I, bool bMultiThreaded) const
 {
     Node nd;
-    bool b = geom::intersectTriangles(m_BaseTriangulation.triangles(), A, B, nd, bMultiThreaded);
+    bool b = geom::intersectTriangles(m_Triangulation.triangles(), A, B, nd, bMultiThreaded);
     I = nd;
     return b;
 }
@@ -223,7 +222,7 @@ int FuseStl::makeDefaultTriMesh(std::string &logmsg, std::string const &prefix)
 void FuseStl::computeStructuralInertia(Vector3d const &PartPosition)
 {
     if(!m_bAutoInertia) return;
-    objects::computeSurfaceInertia(m_Inertia, m_BaseTriangulation.triangles(), PartPosition);
+    objects::computeSurfaceInertia(m_Inertia, m_Triangulation.triangles(), PartPosition);
 }
 
 

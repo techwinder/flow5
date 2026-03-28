@@ -51,7 +51,7 @@ void RenameDlg::setupLayout()
 {
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     {
-        m_pOverwriteButton = new QPushButton("Overwrite");
+        m_pOverwriteButton = new QPushButton(tr("Overwrite"));
         m_pOverwriteButton->setAutoDefault(false);
         m_pButtonBox->addButton(m_pOverwriteButton, QDialogButtonBox::ActionRole);
         connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(onButton(QAbstractButton*)));
@@ -63,7 +63,7 @@ void RenameDlg::setupLayout()
 
         m_pleName = new QLineEdit("");
         m_pleName->setClearButtonEnabled(true);
-        QLabel* NameListLabel = new QLabel("Existing names:");
+        QLabel* NameListLabel = new QLabel(tr("Existing names:"));
         m_plwNameList = new QListWidget;
         pMainLayout->setStretchFactor(m_plwNameList, 5);
 

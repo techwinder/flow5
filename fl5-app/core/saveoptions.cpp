@@ -105,9 +105,9 @@ void SaveOptions::loadSettings(QSettings &settings)
         int k = settings.value("ExportFormat", 0).toInt();
         if(k) s_ExportFileType = xfl::CSV;
         else  s_ExportFileType = xfl::TXT;
-        s_CsvSeparator   = settings.value("CSVSeparator", ",").toString();
+        s_CsvSeparator   = settings.value("CSVSeparator", s_CsvSeparator).toString();
 
-        s_bCleanOnExit = settings.value("CleanLogOnExit", true).toBool();
+        s_bCleanOnExit = settings.value("CleanLogOnExit", s_bCleanOnExit).toBool();
     }
     settings.endGroup();
 }

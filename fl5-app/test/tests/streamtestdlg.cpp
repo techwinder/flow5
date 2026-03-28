@@ -56,8 +56,6 @@ void StreamTestDlg::setupLayout()
     {
         m_ppto = new PlainTextOutput;
 
-
-
         m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
         {
             m_ppbSave = new QPushButton("Save");
