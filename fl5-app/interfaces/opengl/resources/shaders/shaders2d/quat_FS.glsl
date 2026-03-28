@@ -123,9 +123,8 @@ void main(void)
     if(iter == maxiters) FragmentColor = vec4(0,0,0,1);
     else
     {
-        FragmentColor = min(32.0, float(iter))/32.0 * color;
-//        FragmentColor =  float(iter)/float(maxiters) * color;
-//        FragmentColor =  float(iter)/32.0 * color;
+        float coef = min(32.0, float(iter))/32.0;
+        FragmentColor =  vec4(coef*color.x, coef*color.y, coef*color.z, 1.0);
     }
 }
 

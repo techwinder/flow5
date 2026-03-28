@@ -2,7 +2,7 @@
 
     flow5 application
     Copyright © 2025 André Deperrois
-    
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -257,7 +257,7 @@ void gl2dQuat::saveSettings(QSettings &settings)
 void gl2dQuat::initializeGL()
 {
     QString strange, vsrc, fsrc;
-    vsrc = ":/shaders/shaders2d/fractal_VS.glsl";
+    vsrc = ":/shaders/shaders2d/gl2dview_VS.glsl";
     m_shadQuat.addShaderFromSourceFile(QOpenGLShader::Vertex, vsrc);
     if(m_shadQuat.log().length())
     {
@@ -299,8 +299,8 @@ void gl2dQuat::glRenderView()
 {
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
 
-//    glDisable(GL_BLEND);
-//    glDisable(GL_DEPTH_TEST);
+    //    glDisable(GL_BLEND);
+    //    glDisable(GL_DEPTH_TEST);
 
     double w = m_rectView.width();
     QVector2D off(-m_ptOffset.x()/width()*w, m_ptOffset.y()/width()*w);
@@ -359,7 +359,7 @@ void gl2dQuat::glRenderView()
             glPolygonOffset(DEPTHFACTOR, DEPTHUNITS);
 
             int nvtx = m_vboQuad.size()/stride/int(sizeof(float));
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, nvtx);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, nvtx);
 
             m_shadQuat.disableAttributeArray(m_attrVertexPosition);
         }
@@ -367,31 +367,31 @@ void gl2dQuat::glRenderView()
     }
     m_shadQuat.release();
 
-//    paintDisk(Vector2d(), 1.0, QColor(255,150,31));
+    //    paintDisk(Vector2d(), 1.0, QColor(255,150,31));
 
     QString strange = QString::asprintf("Scale = %g\n", m_fScale);
     strange += QString::asprintf("Seed = (%.3f, %.3f, %.3f, %.3f)\n", s_Seed[0], s_Seed[1], s_Seed[2], s_Seed[3]);
 
     switch(s_iSlice)
     {
-        case 0:
-            strange += QString::asprintf("Slice.x=%.3f, Slice.y=%.3f)", s_Slicer[0], s_Slicer[1]);
-            break;
-        case 1:
-            strange += QString::asprintf("Slice.x=%.3f, Slice.z=%.3f)", s_Slicer[0], s_Slicer[1]);
-            break;
-        case 2:
-            strange += QString::asprintf("Slice.y=%.3f, Slice.z=%.3f)", s_Slicer[0], s_Slicer[1]);
-            break;
-        case 3:
-            strange += QString::asprintf("Slice.x=%.3f, Slice.w=%.3f)", s_Slicer[0], s_Slicer[1]);
-            break;
-        case 4:
-            strange += QString::asprintf("Slice.y=%.3f, Slice.w=%.3f)", s_Slicer[0], s_Slicer[1]);
-            break;
-        case 5:
-            strange += QString::asprintf("Slice.z=%.3f, Slice.w=%.3f)", s_Slicer[0], s_Slicer[1]);
-            break;
+    case 0:
+        strange += QString::asprintf("Slice.x=%.3f, Slice.y=%.3f)", s_Slicer[0], s_Slicer[1]);
+        break;
+    case 1:
+        strange += QString::asprintf("Slice.x=%.3f, Slice.z=%.3f)", s_Slicer[0], s_Slicer[1]);
+        break;
+    case 2:
+        strange += QString::asprintf("Slice.y=%.3f, Slice.z=%.3f)", s_Slicer[0], s_Slicer[1]);
+        break;
+    case 3:
+        strange += QString::asprintf("Slice.x=%.3f, Slice.w=%.3f)", s_Slicer[0], s_Slicer[1]);
+        break;
+    case 4:
+        strange += QString::asprintf("Slice.y=%.3f, Slice.w=%.3f)", s_Slicer[0], s_Slicer[1]);
+        break;
+    case 5:
+        strange += QString::asprintf("Slice.z=%.3f, Slice.w=%.3f)", s_Slicer[0], s_Slicer[1]);
+        break;
     }
     m_plabScale->setText(strange);
 
@@ -417,34 +417,34 @@ void gl2dQuat::onSlice()
     QString str0, str1;
     switch(s_iSlice)
     {
-        case 0:
-            str0 = "Slice.x =";
-            str1 = "Slice.y =";
-            break;
-        case 1:
-            str0 = "Slice.x =";
-            str1 = "Slice.z =";
-            break;
-        case 2:
-            str0 = "Slice.y =";
-            str1 = "Slice.z =";
-            break;
-        case 3:
-            str0 = "Slice.x =";
-            str1 = "Slice.w =:";
-            break;
-        case 4:
-            str0 = "Slice.y =";
-            str1 = "Slice.w =";
-            break;
-        case 5:
-            str0 = "Slice.z =";
-            str1 = "Slice.w =";
-            break;
-        case 6:
-            str0 = "Slice." + THETAch +" =";
-            str1 = "Slice.length =";
-            break;
+    case 0:
+        str0 = "Slice.x =";
+        str1 = "Slice.y =";
+        break;
+    case 1:
+        str0 = "Slice.x =";
+        str1 = "Slice.z =";
+        break;
+    case 2:
+        str0 = "Slice.y =";
+        str1 = "Slice.z =";
+        break;
+    case 3:
+        str0 = "Slice.x =";
+        str1 = "Slice.w =:";
+        break;
+    case 4:
+        str0 = "Slice.y =";
+        str1 = "Slice.w =";
+        break;
+    case 5:
+        str0 = "Slice.z =";
+        str1 = "Slice.w =";
+        break;
+    case 6:
+        str0 = "Slice." + THETAch +" =";
+        str1 = "Slice.length =";
+        break;
     }
     m_plabSlice[0]->setText(str0);
     m_plabSlice[1]->setText(str1);
@@ -460,26 +460,26 @@ void gl2dQuat::onSaveImage()
 
     switch(s_iSlice)
     {
-        case 0:
-            description += QString::asprintf("Slice x=%.3f, y=%.3f", s_Slicer.x(), s_Slicer.y());
-            break;
-        case 1:
-            description += QString::asprintf("Slice x=%.3f, z=%.3f", s_Slicer.x(), s_Slicer.y());
-            break;
-        case 2:
-            description += QString::asprintf("Slice y=%.3f, z=%.3f", s_Slicer.x(), s_Slicer.y());
-            break;
-        case 3:
-            description += QString::asprintf("Slice x=%.3f, w=%.3f", s_Slicer.x(), s_Slicer.y());
-            break;
-        case 4:
-            description += QString::asprintf("Slice y=%.3f, w=%.3f", s_Slicer.x(), s_Slicer.y());
-            break;
-        case 5:
-            description += QString::asprintf("Slice z=%.3f, w=%.3f", s_Slicer.x(), s_Slicer.y());
-            break;
-        case 6:
-            break;
+    case 0:
+        description += QString::asprintf("Slice x=%.3f, y=%.3f", s_Slicer.x(), s_Slicer.y());
+        break;
+    case 1:
+        description += QString::asprintf("Slice x=%.3f, z=%.3f", s_Slicer.x(), s_Slicer.y());
+        break;
+    case 2:
+        description += QString::asprintf("Slice y=%.3f, z=%.3f", s_Slicer.x(), s_Slicer.y());
+        break;
+    case 3:
+        description += QString::asprintf("Slice x=%.3f, w=%.3f", s_Slicer.x(), s_Slicer.y());
+        break;
+    case 4:
+        description += QString::asprintf("Slice y=%.3f, w=%.3f", s_Slicer.x(), s_Slicer.y());
+        break;
+    case 5:
+        description += QString::asprintf("Slice z=%.3f, w=%.3f", s_Slicer.x(), s_Slicer.y());
+        break;
+    case 6:
+        break;
     }
     saveImage(filename, description);
 }

@@ -2,7 +2,7 @@
 
     flow5 application
     Copyright © 2025 André Deperrois
-    
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -48,7 +48,7 @@ QVector2D gl2dFractal::s_Seed(-0.35099f, -0.605502f);
 gl2dFractal::gl2dFractal(QWidget *pParent) : gl2dView(pParent)
 {
     setWindowTitle("Fractals");
-//    setMouseTracking(true);
+    //    setMouseTracking(true);
 
     m_fScale = 0.5f;
 
@@ -117,8 +117,8 @@ gl2dFractal::gl2dFractal(QWidget *pParent) : gl2dView(pParent)
 
                 pHueLayout->addWidget(plabHue,         1, 1);
                 pHueLayout->addWidget(m_pslTau,        1, 2);
-//                pHueLayout->addWidget(plabBrightness,  2, 1);
-//                pHueLayout->addWidget(m_pslBrightness, 2, 2);
+                //                pHueLayout->addWidget(plabBrightness,  2, 1);
+                //                pHueLayout->addWidget(m_pslBrightness, 2, 2);
             }
 
             m_plabScale = new QLabel();
@@ -201,7 +201,7 @@ void gl2dFractal::onMode()
 void gl2dFractal::initializeGL()
 {
     QString strange, vsrc, fsrc;
-    vsrc = ":/shaders/shaders2d/fractal_VS.glsl";
+    vsrc = ":/shaders/shaders2d/gl2dview_VS.glsl";
     m_shadFrac.addShaderFromSourceFile(QOpenGLShader::Vertex, vsrc);
     if(m_shadFrac.log().length())
     {
@@ -269,11 +269,13 @@ void gl2dFractal::glRenderView()
             m_shadFrac.enableAttributeArray(m_attrVertexPosition);
             m_shadFrac.setAttributeBuffer(m_attrVertexPosition, GL_FLOAT, 0, stride, stride*sizeof(GLfloat));
 
+            glEnable(GL_CULL_FACE);
+            glEnable(GL_POLYGON_OFFSET_FILL);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            glDisable(GL_CULL_FACE);
+            glPolygonOffset(DEPTHFACTOR, DEPTHUNITS);
 
             int nvtx = m_vboQuad.size()/stride/int(sizeof(float));
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, nvtx);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, nvtx);
 
             m_shadFrac.disableAttributeArray(m_attrVertexPosition);
         }
@@ -285,18 +287,23 @@ void gl2dFractal::glRenderView()
     {
         if(m_bResetRoots)
         {
+            int stride = 8; // 4 vtx coordinates and 4 colour components
+
             int nseed = 1;
-            int buffersize = nseed*4;
+            int buffersize = nseed*stride;
             QVector<float> pts(buffersize);
             int iv = 0;
 
             pts[iv++] = s_Seed.x();
             pts[iv++] = s_Seed.y();
+            pts[iv++] = 1.0f; // z offset above the quad
+            pts[iv++] = 1.0f; // w component
+
+            // colour
+            pts[iv++] = 0.23f;
+            pts[iv++] = 0.23f;
+            pts[iv++] = 0.23f;
             pts[iv++] = 1.0f;
-            if (m_iHoveredRoot==0 || m_iSelectedRoot==0)
-                pts[iv++] = 1.0f;
-            else
-                pts[iv++] = -1.0f; // invalid state, use uniform
 
             if(m_vboRoots.isCreated()) m_vboRoots.destroy();
             m_vboRoots.create();
@@ -374,17 +381,16 @@ void gl2dFractal::glRenderView()
             paintSegments(m_vboSegs, Qt::darkCyan, 1.0f, Line::SOLID, false);
         }
 
-        m_shadPoint.bind();
+        m_shadPoint2.bind();
         {
-            float m_ClipPlanePos(500.0);
-            m_shadPoint.setUniformValue(m_locPoint.m_ClipPlane, m_ClipPlanePos);
-            m_shadPoint.setUniformValue(m_locPoint.m_Viewport, QVector2D(float(m_GLViewRect.width()), float(m_GLViewRect.height())));
-            m_shadPoint.setUniformValue(m_locPoint.m_vmMatrix,  vmMat);
-            m_shadPoint.setUniformValue(m_locPoint.m_pvmMatrix, pvmMat);
+            m_shadPoint2.setUniformValue(m_locPt2.m_vmMatrix,    vmMat);
+            m_shadPoint2.setUniformValue(m_locPt2.m_pvmMatrix,   pvmMat);
+            m_shadPoint2.setUniformValue(m_locPt2.m_HasUniColor, 0);
         }
-        m_shadPoint.release();
+        m_shadPoint2.release();
 
-        paintPoints(m_vboRoots, 1.0, 0, false, Qt::white, 4);
+        glDisable(GL_BLEND);
+        paintPoints2(m_vboRoots, 23.0);
     }
 
     m_plabScale->setText(tr("Scale = %1").arg(m_fScale));
@@ -407,8 +413,8 @@ void gl2dFractal::mousePressEvent(QMouseEvent *pEvent)
     {
         if(pt.distanceToPoint(s_Seed)<0.025/m_fScale)
         {
-//            m_Timer.stop();
-//            m_pchAnimateRoots->setChecked(false);
+            //            m_Timer.stop();
+            //            m_pchAnimateRoots->setChecked(false);
             m_iSelectedRoot = 0;
             return;
         }
@@ -428,7 +434,7 @@ void gl2dFractal::mouseMoveEvent(QMouseEvent *pEvent)
         s_Seed = pt;
         m_amp0 = sqrt(s_Seed.x()*s_Seed.x()+s_Seed.y()*s_Seed.y());
         m_phi0 = atan2f(s_Seed.y(), s_Seed.x());
-//        m_Time = 0;
+        //        m_Time = 0;
         m_bResetRoots = true;
         update();
         return;

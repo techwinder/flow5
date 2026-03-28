@@ -75,7 +75,8 @@ void main(void)
     if(iter == maxiters) FragmentColor = vec4(0,0,0,1);
     else
     {
-        FragmentColor = min(32.0, float(iter))/32.0 * vec4(glGetRed(tau), glGetGreen(tau), glGetBlue(tau), 1.0);
+        float coef = min(32.0, float(iter))/32.0;
+        FragmentColor = vec4(glGetRed(tau)*coef, glGetGreen(tau)*coef, glGetBlue(tau)*coef, 1.0);
     }
 }
 

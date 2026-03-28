@@ -2,7 +2,7 @@
 
     flow5 application
     Copyright © 2025 André Deperrois
-    
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -49,7 +49,7 @@ QColor gl2dNewton::s_Colors[5] = {QColor(77,27,21), QColor(75,111,117), QColor(1
 gl2dNewton::gl2dNewton(QWidget *pParent) : gl2dView(pParent)
 {
     setWindowTitle("Newton fractal");
-//    setMouseTracking(true);
+    //    setMouseTracking(true);
 
     m_rectView = QRectF(-1.0, -1.0, 2.0, 2.0);
 
@@ -147,10 +147,10 @@ gl2dNewton::gl2dNewton(QWidget *pParent) : gl2dView(pParent)
         pCmdFrame->setLayout(pFrameLayout);
 
         pCmdFrame->setStyleSheet("QFrame{background-color: transparent; color: white}"
-                              "QRadioButton{background-color: transparent; color: white}"
-                              "QCheckBox{background-color: transparent; color: white}");
+                                 "QRadioButton{background-color: transparent; color: white}"
+                                 "QCheckBox{background-color: transparent; color: white}");
 
-//        wt::setWidgetStyle(pFrame, palette);
+        //        wt::setWidgetStyle(pFrame, palette);
     }
     connect(&m_Timer, SIGNAL(timeout()), SLOT(onMoveRoots()));
 
@@ -185,7 +185,7 @@ void gl2dNewton::initializeGL()
     gl2dView::initializeGL();
 
     QString strange, vsrc, gsrc, fsrc;
-    vsrc = ":/shaders/shaders2d/fractal_VS.glsl";
+    vsrc = ":/shaders/shaders2d/gl2dview_VS.glsl";
     m_shadNewton.addShaderFromSourceFile(QOpenGLShader::Vertex, vsrc);
     if(m_shadNewton.log().length())
     {
@@ -257,11 +257,13 @@ void gl2dNewton::glRenderView()
             m_shadNewton.enableAttributeArray(m_attrVertexPosition);
             m_shadNewton.setAttributeBuffer(m_attrVertexPosition, GL_FLOAT, 0, 2, stride*sizeof(GLfloat));
 
+            glEnable(GL_CULL_FACE);
+            glEnable(GL_POLYGON_OFFSET_FILL);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            glDisable(GL_CULL_FACE);
+            glPolygonOffset(DEPTHFACTOR, DEPTHUNITS);
 
             int nvtx = m_vboQuad.size()/stride/int(sizeof(float));
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, nvtx);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, nvtx);
 
             m_shadNewton.disableAttributeArray(m_attrVertexPosition);
         }
@@ -274,19 +276,40 @@ void gl2dNewton::glRenderView()
 
         if(m_bResetRoots)
         {
+            int stride = 8; // 4 vtx coordinates and 4 colour components
             int nroots = m_prb3roots->isChecked() ? 3 : 5;
-            int buffersize = nroots*4;
+            int buffersize = nroots*stride;
             QVector<float> pts(buffersize);
             int iv = 0;
             for(int is=0; is<nroots; is++)
             {
                 pts[iv++] = m_Root[is].x();
                 pts[iv++] = m_Root[is].y();
-                pts[iv++] = 1.0f;
-                if (is==m_iSelectedRoot || is==m_iHoveredRoot)
+                pts[iv++] = 1.0f; // z offset above the quad
+                pts[iv++] = 1.0f; // w component
+
+
+                if (is==m_iSelectedRoot)
+                {
                     pts[iv++] = 1.0f;
+                    pts[iv++] = 0.0f;
+                    pts[iv++] = 0.0f;
+                    pts[iv++] = 1.0f;
+                }
+                else if (is==m_iHoveredRoot)
+                {
+                    pts[iv++] = 0.0f;
+                    pts[iv++] = 0.0f;
+                    pts[iv++] = 1.0f;
+                    pts[iv++] = 1.0f;
+                }
                 else
-                    pts[iv++] = -1.0f; // invalid state, use uniform
+                {
+                    pts[iv++] = 0.23f;
+                    pts[iv++] = 0.23f;
+                    pts[iv++] = 0.23f;
+                    pts[iv++] = 1.0f;
+                }
             }
 
             if(m_vboRoots.isCreated()) m_vboRoots.destroy();
@@ -298,33 +321,30 @@ void gl2dNewton::glRenderView()
             m_bResetRoots = false;
         }
 
-        QMatrix4x4 m_matModel;
-        QMatrix4x4 m_matView;
-        QMatrix4x4 m_matProj;
+        QMatrix4x4 matModel;
+        QMatrix4x4 matView;
+        QMatrix4x4 matProj;
         float s = 1.0;
         int width  = geometry().width();
         int height = geometry().height();
-        m_matProj.ortho(-s,s,-(height*s)/width,(height*s)/width,-1.0e3*s,1.0e3*s);
+        matProj.ortho(-s,s,-(height*s)/width,(height*s)/width,-1.0e3*s,1.0e3*s);
 
-        m_matView.scale(m_fScale, m_fScale, m_fScale);
-        m_matView.translate(-off.x(), -off.y(), 0.0f);
+        matView.scale(m_fScale, m_fScale, m_fScale);
+        matView.translate(-off.x(), -off.y(), 0.0f);
 
-        QMatrix4x4 vmMat(m_matView*m_matModel);
-        QMatrix4x4 pvmMat(m_matProj*vmMat);
+        QMatrix4x4 vmMat(matView*matModel);
+        QMatrix4x4 pvmMat(matProj*vmMat);
 
-
-        m_shadPoint.bind();
+        m_shadPoint2.bind();
         {
-            float m_ClipPlanePos(500.0);
-            m_shadPoint.setUniformValue(m_locPoint.m_ClipPlane, m_ClipPlanePos);
-            m_shadPoint.setUniformValue(m_locPoint.m_Viewport, QVector2D(float(m_GLViewRect.width()), float(m_GLViewRect.height())));
-    //        m_shadPoint.setUniformValue(m_locPoint.m_Viewport, QVector2D(float(m_rectView.width()), float(m_rectView.height())));
-            m_shadPoint.setUniformValue(m_locPoint.m_vmMatrix,  vmMat);
-            m_shadPoint.setUniformValue(m_locPoint.m_pvmMatrix, pvmMat);
+            m_shadPoint2.setUniformValue(m_locPt2.m_vmMatrix,    vmMat);
+            m_shadPoint2.setUniformValue(m_locPt2.m_pvmMatrix,   pvmMat);
+            m_shadPoint2.setUniformValue(m_locPt2.m_HasUniColor, 0);
         }
-        m_shadPoint.release();
+        m_shadPoint2.release();
 
-        paintPoints(m_vboRoots, 1.0, 0, false, Qt::white, 4);
+        glDisable(GL_BLEND);
+        paintPoints2(m_vboRoots, 35.0);
     }
 
     m_plabScale->setText(QString::asprintf("Scale = %g", m_fScale));
@@ -391,7 +411,7 @@ void gl2dNewton::mousePressEvent(QMouseEvent *pEvent)
         if(pt.distanceToPoint(m_Root[i])<0.025/m_fScale)
         {
             m_Timer.stop();
-//            m_pchAnimateRoots->setChecked(false);
+            //            m_pchAnimateRoots->setChecked(false);
             m_iSelectedRoot  = i;
             return;
         }

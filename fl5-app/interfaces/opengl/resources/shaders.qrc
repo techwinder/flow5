@@ -15,7 +15,7 @@
         <file>shaders/lorenz2/lorenz2_CS.glsl</file>
         <file>shaders/flow/flow3d_CS.glsl</file>
         <file>shaders/boids2/boids2_CS.glsl</file>
-        <file>shaders/shaders2d/fractal_VS.glsl</file>
+        <file>shaders/shaders2d/gl2dview_VS.glsl</file>
         <file>shaders/shaders2d/julia_FS.glsl</file>
         <file>shaders/shaders2d/newton_FS.glsl</file>
         <file>shaders/shaders2d/quat_FS.glsl</file>

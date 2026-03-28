@@ -42,7 +42,7 @@ gl2dView::gl2dView(QWidget *pParent) : QOpenGLWidget(pParent)
 {
     setFocusPolicy(Qt::WheelFocus);
     setCursor(Qt::CrossCursor);
-//    setMouseTracking(true);
+    //    setMouseTracking(true);
 
 
     m_locViewTrans = -1;
@@ -60,7 +60,7 @@ gl2dView::gl2dView(QWidget *pParent) : QOpenGLWidget(pParent)
     connect(m_ppbSaveImg, &QPushButton::clicked, this, &gl2dView::onSaveImage);
 
     m_pieWidth = new IntEdit(s_ImageSize.width());
-//    m_pieWidth->setToolTip("<p>The target image's height will be adjusted to maintain the aspect ratio of this window.</p>");
+    //    m_pieWidth->setToolTip("<p>The target image's height will be adjusted to maintain the aspect ratio of this window.</p>");
     m_pieHeight = new IntEdit(s_ImageSize.height());
 
     m_plabInfoOutput = new QLabel(this);
@@ -88,7 +88,7 @@ gl2dView::gl2dView(QWidget *pParent) : QOpenGLWidget(pParent)
 
 
 gl2dView::~gl2dView()
-{    
+{
 }
 
 
@@ -245,21 +245,21 @@ void gl2dView::stopDynamicTimer()
 
 void gl2dView::keyPressEvent(QKeyEvent *pEvent)
 {
-//    bool bCtrl = (pEvent->modifiers() & Qt::ControlModifier);
+    //    bool bCtrl = (pEvent->modifiers() & Qt::ControlModifier);
     bool bAlt  = (pEvent->modifiers() & Qt::AltModifier);
     switch (pEvent->key())
     {
-        case Qt::Key_R:
-        {
-            on2dReset();
-            break;
-        }
-        case Qt::Key_I:
-        {
-            if(bAlt)
-                onSaveImage();
-            break;
-        }
+    case Qt::Key_R:
+    {
+        on2dReset();
+        break;
+    }
+    case Qt::Key_I:
+    {
+        if(bAlt)
+            onSaveImage();
+        break;
+    }
     }
 
     QOpenGLWidget::keyPressEvent(pEvent);
@@ -294,7 +294,7 @@ void gl2dView::leaveEvent(QEvent *pEvent)
 
 void gl2dView::paintGL()
 {
-//    glClearColor(float(DisplayOptions::backgroundColor().redF()), float(DisplayOptions::backgroundColor().greenF()), float(DisplayOptions::backgroundColor().blueF()), 1.0f);
+    //    glClearColor(float(DisplayOptions::backgroundColor().redF()), float(DisplayOptions::backgroundColor().greenF()), float(DisplayOptions::backgroundColor().blueF()), 1.0f);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDisable(GL_BLEND);
@@ -420,7 +420,7 @@ void gl2dView::paintDebugPts()
 {
 #ifdef QT_DEBUG
     for(int i=0; i<m_DebugPts.size(); i++)
-         paintDisk(m_DebugPts.at(i), 0.1f, Qt::darkRed);
+        paintDisk(m_DebugPts.at(i), 0.1f, Qt::darkRed);
 
 /*    for(int i=0; i<m_DebugVecs.size(); i++)
     {
@@ -519,6 +519,7 @@ QPoint gl2dView::worldToScreen(float xf, float yf) const
 }
 
 
+// Avoid: issues with Zink apparently not handling GL_POINTS in the geoemtry shader
 void gl2dView::paintPoints(QOpenGLBuffer &vbo, float width, int iShape, bool bLight, QColor const &clr, int stride)
 {
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
@@ -555,7 +556,7 @@ void gl2dView::paintPoints2(QOpenGLBuffer &vbo, float w)
     {
         int stride = 8;
 
-        m_shadPoint2.setUniformValue(m_locPt2.m_Shape, w);
+        m_shadPoint2.setUniformValue(m_locPt2.m_Shape,     w); // using this location for point size
         m_shadPoint2.setUniformValue(m_locPt2.m_ClipPlane, 500.0f);
 
         vbo.bind();
@@ -566,11 +567,10 @@ void gl2dView::paintPoints2(QOpenGLBuffer &vbo, float w)
             m_shadPoint2.setAttributeBuffer(m_locPt2.m_attrVertex, GL_FLOAT, 0,                  4, stride * sizeof(GLfloat));
             m_shadPoint2.setAttributeBuffer(m_locPt2.m_attrColor,  GL_FLOAT, 4* sizeof(GLfloat), 4, stride * sizeof(GLfloat));
 
-//               glPointSize(5.0f);
+            //               glPointSize(5.0f); // using instead GL_PROGRAM_POINT_SIZE
 
             glEnable(GL_POINT_SPRITE);
             glEnable(GL_PROGRAM_POINT_SIZE);
-
 
             int npts = vbo.size()/stride/sizeof(GLfloat);
 
@@ -811,7 +811,7 @@ void gl2dView::glRenderText(float x, float y, QString const& str, const QColor &
     if(bBackground)
     {
         QBrush backbrush(DisplayOptions::backgroundColor());
-//        paint.setBrush(backbrush);
+        //        paint.setBrush(backbrush);
         painter.setBackground(backbrush);
         painter.setBackgroundMode(Qt::OpaqueMode);
     }
@@ -897,8 +897,8 @@ void gl2dView::resizeGL(int width, int height)
 {
     QOpenGLWidget::resizeGL(width, height);
 
-//    int side = std::min(width, height);
-//    glViewport((width - side) / 2, (height - side) / 2, side, side);
+    //    int side = std::min(width, height);
+    //    glViewport((width - side) / 2, (height - side) / 2, side, side);
 
     double w = double(width);
     double h = double(height);
@@ -1218,7 +1218,7 @@ void gl2dView::drawXScale(QPainter &painter, float scale, QPoint const &origin)
     offy = std::max(offy,0); //pixels
     offy = std::min(offy, rect().height()-(dD*7/4)-2); //pixels
 
-//    painter.translate(origin.x(), offy);
+    //    painter.translate(origin.x(), offy);
 
     QPen AxisPen(m_Grid.xAxisColor());
     AxisPen.setStyle(xfl::getStyle(m_Grid.xAxisStipple()));
@@ -1357,7 +1357,7 @@ void gl2dView::setAutoUnits()
 
     Vector2d tl = screenToWorld(r.topLeft());
     Vector2d br = screenToWorld(r.bottomRight());
-//    QVector2D pt1 = screenToViewport(r.topLeft());
+    //    QVector2D pt1 = screenToViewport(r.topLeft());
 
     float width =  br.x-tl.x;
 
@@ -1403,7 +1403,7 @@ void gl2dView::paintOverlay()
     painter.save();
     if(m_bAxes)
     {
-/*        QPoint point;
+        /*        QPoint point;
         point = worldToScreen(0.0f, 0.0f);
         point *= devicePixelRatio();
 

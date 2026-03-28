@@ -96,7 +96,8 @@ void main(void)
 
             if (abs(difference.x)<tolerance && abs(difference.y)<tolerance)
             {
-                FragmentColor = colors[i] * min(16.0, float(iteration))/16.0;
+                float coef = min(16.0, float(iteration))/16.0;
+                FragmentColor = vec4(colors[i].x*coef, colors[i].y*coef, colors[i].z*coef, 1.0);
                 return;
             }
         }

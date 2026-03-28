@@ -2,7 +2,7 @@
 
     flow5 application
     Copyright © 2025 André Deperrois
-    
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -124,7 +124,7 @@ void gl2dComplex::hideEvent(QHideEvent *pEvent)
 void gl2dComplex::initializeGL()
 {
     QString strange, vsrc, fsrc;
-    vsrc = ":/shaders/shaders2d/fractal_VS.glsl";
+    vsrc = ":/shaders/shaders2d/gl2dview_VS.glsl";
     m_shadComplex.addShaderFromSourceFile(QOpenGLShader::Vertex, vsrc);
     if(m_shadComplex.log().length())
     {
@@ -177,11 +177,13 @@ void gl2dComplex::glRenderView()
             m_shadComplex.enableAttributeArray(m_attrVertexPosition);
             m_shadComplex.setAttributeBuffer(m_attrVertexPosition, GL_FLOAT, 0, stride, stride*sizeof(GLfloat));
 
+            glEnable(GL_CULL_FACE);
+            glEnable(GL_POLYGON_OFFSET_FILL);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            glDisable(GL_CULL_FACE);
+            glPolygonOffset(DEPTHFACTOR, DEPTHUNITS);
 
             int nvtx = m_vboQuad.size()/stride/int(sizeof(float));
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, nvtx);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, nvtx);
 
             m_shadComplex.disableAttributeArray(m_attrVertexPosition);
         }

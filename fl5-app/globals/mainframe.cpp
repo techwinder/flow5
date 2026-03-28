@@ -1393,9 +1393,33 @@ void MainFrame::keyPressEvent(QKeyEvent *pEvent)
                 }
                 break;
             }
+            case Qt::Key_F1:
+            {
+                gl2dComplex *pTestView = new gl2dComplex;
+                pTestView->setAttribute(Qt::WA_DeleteOnClose);
+                pTestView->show();
+                pTestView->activateWindow();
+                break;
+            }
+            case Qt::Key_F2:
+            {
+                gl2dFractal *pTestView = new gl2dFractal;
+                pTestView->setAttribute(Qt::WA_DeleteOnClose);
+                pTestView->show();
+                pTestView->activateWindow();
+                break;
+            }
             case Qt::Key_F3:
             {
                 gl2dQuat *pTestView = new gl2dQuat;
+                pTestView->setAttribute(Qt::WA_DeleteOnClose);
+                pTestView->show();
+                pTestView->activateWindow();
+                break;
+            }
+            case Qt::Key_F4:
+            {
+                gl2dNewton *pTestView = new gl2dNewton;
                 pTestView->setAttribute(Qt::WA_DeleteOnClose);
                 pTestView->show();
                 pTestView->activateWindow();
