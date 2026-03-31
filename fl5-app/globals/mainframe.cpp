@@ -92,6 +92,7 @@
 #include <interfaces/graphs/globals/graphsvgwriter.h>
 #include <interfaces/graphs/graph/curve.h>
 #include <interfaces/mesh/afmesher.h>
+#include <interfaces/mesh/gmesh_globals.h>
 #include <interfaces/mesh/gmesherwt.h>
 #include <interfaces/mesh/mesherwt.h>
 #include <interfaces/opengl/globals/opengldlg.h>
@@ -383,6 +384,13 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
     gmsh::initialize();
     gmsh::option::setNumber("General.Terminal", 0);  
     gmsh::option::setNumber("Geometry.OCCParallel", 1.0);
+    gmsh::option::setNumber("General.NumThreads", QThread::idealThreadCount());
+//    gmsh::option::setNumber("Mesh.MaxNumThreads2D", QThread::idealThreadCount()); //Default value: 0; 0: use General.NumThreads
+
+
+    std::string list;
+    gmesh::listMainOptions(list);
+    displayMessage(QString::fromStdString(list), false);
 
 }
 

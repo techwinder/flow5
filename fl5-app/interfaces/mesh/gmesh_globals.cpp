@@ -55,16 +55,18 @@
 
 void gmesh::listMainOptions(std::string &list)
 {
-    list  = "gmsh main options:\n";
+    list  = "gmsh main options:";
     list += EOLstr;
     list += "   General:\n";
     list += "      " + getStringOption("General.Version")                      + EOLstr;
     list += "      " + getNumberOption("General.Terminal")                     + EOLstr;
     list += "      " + getNumberOption("General.Verbosity")                    + EOLstr;
     list += "      " + getNumberOption("General.NumThreads")                   + EOLstr;
+    list += "      " + getNumberOption("Mesh.MaxNumThreads1D")                 + EOLstr; // (0: use General.NumThreads)
+    list += "      " + getNumberOption("Mesh.MaxNumThreads2D")                 + EOLstr; // (0: use General.NumThreads)
 
+    list += "   Geometry:";
     list += EOLstr;
-    list += "   Geometry:\n";
     list += "      " + getNumberOption("Geometry.OCCBooleanGlue")              + EOLstr;
     list += "      " + getNumberOption("Geometry.OCCBooleanSimplify")          + EOLstr;
     list += "      " + getNumberOption("Geometry.OCCBoundsUseStl")             + EOLstr;
