@@ -842,6 +842,7 @@ void gl3dXPlaneView::initializeGL()
 {
     gl3dXflView::initializeGL();
 
+
     int oglversion = 10*oglMajor()+oglMinor();
     if(oglversion<43)
     {
@@ -2869,13 +2870,13 @@ void gl3dXPlaneView::glMakeLLTDragStrip(const PlaneXfl *pPlane, const PlanePolar
 
     WingOpp const &wOpp = pPOpp->WOpp(0);
     SpanDistribs const &sd = wOpp.m_SpanDistrib;
-    float cosa =  float(cos(pPOpp->alpha() * PI/180.0));
-    float sina = -float(sin(pPOpp->alpha() * PI/180.0));
-    float cosb =  float(cos(pPOpp->beta()*PI/180.0));
-    float sinb =  float(sin(pPOpp->beta()*PI/180.0));
+//    float cosa =  float(cos(pPOpp->alpha() * PI/180.0));
+//    float sina = -float(sin(pPOpp->alpha() * PI/180.0));
+//    float cosb =  float(cos(pPOpp->beta()*PI/180.0));
+//    float sinb =  float(sin(pPOpp->beta()*PI/180.0));
 
-    cosa = cosb = 1.0;
-    sina = sinb = 0.0;
+    float cosa(1.0f), cosb(1.0f);
+    float sina(1.0f), sinb(1.0f);
 
     int bufferSize = sd.nStations()*6 + (sd.nStations()-1)*6;
     QVector<float> pICdVertexArray(bufferSize);

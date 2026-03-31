@@ -228,7 +228,7 @@ void gl3dShadow::glMake3dObjects()
         gl::makeTriangles3Vtx(triangles, true, m_vboSphere);
         gl::makeTrianglesOutline(triangles, Vector3d(), m_vboSphereEdges);
 
-        gl::makeQuadTex(side, side, m_vboBackgroundQuad);
+        gl::makeQuadTex(side, side, 0.0f, m_vboBackgroundQuad);
 
 //        setReferenceLength(2*side);
         setReferenceLength(1.0);

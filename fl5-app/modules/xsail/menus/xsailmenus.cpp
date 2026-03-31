@@ -63,13 +63,6 @@ void XSailMenus::createMainBarMenus()
         m_pXSailViewMenu->addAction(pActions->m_p3dLightAct);
         m_pXSailViewMenu->addAction(pActions->m_pOpen3dViewInNewWindow);
         m_pXSailViewMenu->addSeparator();
-        QMenu *pBackImageMenu = m_pXSailViewMenu->addMenu(tr("Background image"));
-        {
-            pBackImageMenu->addAction(pActions->m_pBackImageLoad);
-            pBackImageMenu->addAction(pActions->m_pBackImageClear);
-            pBackImageMenu->addAction(pActions->m_pBackImageSettings);
-        }
-        m_pXSailViewMenu->addSeparator();
         m_pXSailViewMenu->addAction(m_pMainFrame->m_pSaveViewToImageFileAct);
 
     }
@@ -274,13 +267,6 @@ void XSailMenus::create3dCtxMenus()
         pMeshMenu->addAction(pActions->m_pShowNormals);
     }
 
-    m_p3dCtxMenu->addSeparator();
-    QMenu *pBackImageMenu = m_p3dCtxMenu->addMenu(tr("Background image"));
-    {
-        pBackImageMenu->addAction(pActions->m_pBackImageLoad);
-        pBackImageMenu->addAction(pActions->m_pBackImageClear);
-        pBackImageMenu->addAction(pActions->m_pBackImageSettings);
-    }
     m_p3dCtxMenu->addSeparator();
     m_p3dCtxMenu->addAction(m_pMainFrame->m_pViewLogFile);
     m_p3dCtxMenu->addAction(m_pMainFrame->m_pSaveViewToImageFileAct);

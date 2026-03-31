@@ -3091,13 +3091,13 @@ void WingXfl::makeTopBotWires(std::vector<std::vector<Node>> &topbotwires) const
             std::vector<Node> leftwire;
             for(uint k=0; k<surf.m_SideA_Bot.size()-1; k++)
                 leftwire.push_back(surf.m_SideA_Bot.at(k));
-            for(int k=surf.m_SideA_Top.size()-1; k>=0; k--)
+            for(int k=int(surf.m_SideA_Top.size())-1; k>=0; k--)
                 leftwire.push_back(surf.m_SideA_Top.at(k));
 
             std::vector<Node> midwire;
             for(uint k=0; k<surf.m_SideB_Bot.size()-1; k++)
                 midwire.push_back(surf.m_SideB_Bot.at(k));
-            for(int k=surf.m_SideB_Top.size()-1; k>=0; k--)
+            for(int k=int(surf.m_SideB_Top.size())-1; k>=0; k--)
                 midwire.push_back(surf.m_SideB_Top.at(k));
 
 

@@ -9,6 +9,9 @@
 #version 330
 // The surface fragment shader
 
+#define PI 3.141592654f
+
+
 in vec3 Position_viewSpace;
 in vec3 Normal_viewSpace;
 in vec2 UV;
@@ -17,7 +20,10 @@ in vec4 VSColor;
 
 uniform int HasUniColor = 0; // otherwise the attribute color will be used
 uniform vec4 UniformColor;
+uniform vec4 UniformColor2; // for gradients
 uniform int HasTexture = 0;
+uniform int HasGradient = 0;
+uniform float GradientAngle = 0.0;
 uniform int HasShadow = 0;
 uniform int TwoSided;
 uniform int LightOn;
@@ -159,8 +165,22 @@ void main()
             fragColor  = fragcolor;
         else
         {
-            fragColor  = vec4(texture(TheSampler, UV).rgb, 1.0);
-//            fragColor  = texture(TheSampler, UV);
+            if(HasGradient==0)
+                fragColor  = vec4(texture(TheSampler, UV).rgb, 1.0);
+            else
+            {
+                float angle = GradientAngle * PI/180.0;
+                vec2 u = vec2(cos(angle), sin(angle));     // unit direction
+                vec2 v = vec2(UV.x-0.5, UV.y-0.5);         // vector from center to texture position
+                // project on line passing through quad center and direction u
+                // and normalize to half-diagonal
+                float tau = (dot(u, v)*sqrt(2.0)+1.0)/2.0;
+                float red   = UniformColor2.x *(1.0-tau) + UniformColor.x *tau;
+                float green = UniformColor2.y *(1.0-tau) + UniformColor.y *tau;
+                float blue  = UniformColor2.z *(1.0-tau) + UniformColor.z *tau;
+
+                fragColor = vec4(red, green, blue, 1.0);
+            }
         }
     }
 }

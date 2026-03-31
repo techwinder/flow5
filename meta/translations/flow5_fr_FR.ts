@@ -353,6 +353,14 @@ Select the analyses to duplicate</source>
     </message>
 </context>
 <context>
+    <name>Attractor2d</name>
+    <message>
+        <location filename="../../fl5-app/test/tests/attractor2d.cpp" line="236"/>
+        <source>Open saved image</source>
+        <translation>Ouvrir l&apos;image sauvegardée</translation>
+    </message>
+</context>
+<context>
     <name>BLGraphCtrls</name>
     <message>
         <location filename="../../fl5-app/modules/xdirect/graphs/blgraphctrls.cpp" line="73"/>
@@ -966,23 +974,18 @@ Uncheck for increased analysis speed.</source>
         <translation>Coques</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="582"/>
-        <source>Background image</source>
-        <translation>Image de fond</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="590"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="573"/>
         <source>3d light options</source>
         <translation>Options d&apos;éclairage 3D</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="694"/>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="1231"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="677"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="1214"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="1597"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/boatdlg.cpp" line="1580"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
@@ -2336,68 +2339,53 @@ Uncheck for increased analysis speed.</source>
         <translation>Triangulation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="91"/>
-        <source>Load</source>
-        <translation>Charger</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="92"/>
-        <source>Clear</source>
-        <translation>Effacer</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="93"/>
-        <source>Settings</source>
-        <translation>Paramètres</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="201"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="193"/>
         <source>Scale</source>
         <translation>Homothétie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="202"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="194"/>
         <source>Translate</source>
         <translation>Translation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="203"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="195"/>
         <source>Rotate</source>
         <translation>Rotation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="207"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="199"/>
         <source>Save as</source>
         <translation>Enregistrer sous</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="225"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="217"/>
         <source>Enter here a short description for the fuselage</source>
         <translation>Entrez ici une courte description pour le fuselage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="282"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="274"/>
         <source>Fuse colour</source>
         <translation>Couleur du fuselage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="378"/>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="388"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="370"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="380"/>
         <source>STL File (*.stl)</source>
         <translation>Fichier STL (*.stl)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="386"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="378"/>
         <source>Export to STL File</source>
         <translation>Exporter dans un fichier STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="461"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="453"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="461"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/fusedlg.cpp" line="453"/>
         <source>Could not open the file for writing</source>
         <translation>Impossible d&apos;ouvrir le fichier en écriture</translation>
     </message>
@@ -2820,22 +2808,17 @@ Uncheck for increased analysis speed.</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="263"/>
-        <source>Background image</source>
-        <translation>Image de fond</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="546"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="539"/>
         <source>Regenerate	(F4)</source>
         <translation>Regénérer	(F4)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="547"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="540"/>
         <source>Actions</source>
         <translation>Actions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="574"/>
+        <location filename="../../fl5-app/interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.cpp" line="567"/>
         <source>Export fuselage definition to xml file</source>
         <translation>Exporter la définition du fuselage vers un fichier XML</translation>
     </message>
@@ -3442,6 +3425,55 @@ Uncheck for increased analysis speed.</source>
     </message>
 </context>
 <context>
+    <name>ImageDlg</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/imagedlg.cpp" line="39"/>
+        <source>Background image</source>
+        <translation>Image de fond</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/imagedlg.cpp" line="51"/>
+        <source>Scale with view</source>
+        <translation>Mettre à l&apos;échelle de la vue</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/imagedlg.cpp" line="54"/>
+        <source>Flip horizontally</source>
+        <translation>Retourner horizontalement</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/imagedlg.cpp" line="56"/>
+        <source>Flip vertically</source>
+        <translation>Retourner verticalement</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/imagedlg.cpp" line="59"/>
+        <source>x-offset=</source>
+        <translation>Position en x =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/imagedlg.cpp" line="62"/>
+        <source>y-offset=</source>
+        <translation>Position en y =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/imagedlg.cpp" line="65"/>
+        <source>x-scale=</source>
+        <translation>Echelle X =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/imagedlg.cpp" line="67"/>
+        <source>y-scale=</source>
+        <translation>Echelle Y =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/imagedlg.cpp" line="61"/>
+        <location filename="../../fl5-app/interfaces/widgets/customdlg/imagedlg.cpp" line="64"/>
+        <source>pixels</source>
+        <translation>pixels</translation>
+    </message>
+</context>
+<context>
     <name>ImportObjectDlg</name>
     <message>
         <location filename="../../fl5-app/interfaces/editors/importobjectdlg.cpp" line="62"/>
@@ -3712,7 +3744,7 @@ ____________Requête d&apos;annulation émise__________
     <message>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="560"/>
         <location filename="../../fl5-app/globals/mainframe.cpp" line="567"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="777"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="778"/>
         <source>Exit</source>
         <translation>Quitter</translation>
     </message>
@@ -3867,316 +3899,316 @@ ____________Requête d&apos;annulation émise__________
         <translation>Définir les préférences par défaut pour cette application</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="711"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="712"/>
         <source>Restore toolbars</source>
         <translation>Restaurer les barres d&apos;outils</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="712"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="713"/>
         <source>Restores the toolbars to their original state</source>
         <translation>Restaure les barres d&apos;outils à leur état initial</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="715"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="716"/>
         <source>Save view to image file</source>
         <translation>Sauvegarder la vue sous forme de fichier d&apos;image</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="717"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="718"/>
         <source>Saves the current view to a file on disk</source>
         <translation>Enregistre la vue actuelle sur un disque dur</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="720"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="721"/>
         <source>Execute script</source>
         <translation>Exécuter le script</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="722"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="723"/>
         <source>Executes a set of foil and plane analysis defined in an xml file</source>
         <translation>Exécute une analyse de profils et d&apos;avions définie dans un fichier XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="725"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="726"/>
         <source>Restore default settings</source>
         <translation>Restaurer les paramètres par défaut</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="726"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="727"/>
         <source>will revert to default settings at the next session</source>
         <translation>restaurera les paramètres par défaut à la prochaine session</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="737"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="738"/>
         <source>to file</source>
         <translation>dans un fichier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="738"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="739"/>
         <source>Export the current graph data to a text file</source>
         <translation>Exporter les données du graphique actuel dans un fichier texte</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="741"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="742"/>
         <source>to SVG file</source>
         <translation>vers un fichier SVG</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="744"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="745"/>
         <source>to clipboard</source>
         <translation>vers le presse-papier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="745"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="746"/>
         <source>Copies the curve data to the clipboard, for pasting in an external editor or a spreadsheet</source>
         <translation>copie les données des courbes dans le presse-papier pour collage dans un éditeur externe ou une feuille de calcul</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="748"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="749"/>
         <source>Reset scales 	R</source>
         <translation>Réinitialiser les échelles 	R</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="749"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="750"/>
         <source>Restores the graph&apos;s x and y scales</source>
         <translation>Réinitialise l&apos;échelle des axes X et Y du graphique</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="752"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="753"/>
         <source>Reset splitter sizes</source>
         <translation>Réinitialiser la taille des séparateurs</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="753"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="754"/>
         <source>Resets the split splizes to their default values</source>
         <translation>Réinitialise les valeurs par défaut des séparateurs</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="757"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="758"/>
         <source>Show legend</source>
         <translation>Afficher la légende</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="759"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="760"/>
         <source>Toggle the in-graph legend display</source>
         <translation>Afficher la légende dans le graphique</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="762"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="763"/>
         <source>Settings	G</source>
         <translation>Paramètres	G</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="765"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="766"/>
         <source>Open in new window</source>
         <translation>Ouvrir dans une nouvelle fenêtre</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="769"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="770"/>
         <source>Fast graph</source>
         <translation>Graphique rapide</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="773"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="774"/>
         <source>Show log window</source>
         <translation>Afficher la fenêtre du journal</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="779"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="780"/>
         <source>Exit the application</source>
         <translation>Quitter l&apos;application</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="782"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="783"/>
         <source>OpenGL settings</source>
         <translation>Paramètres OpenGL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="786"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="787"/>
         <source>View last log file</source>
         <translation>Voir le dernier fichier journal</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="790"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="791"/>
         <source>View trace file</source>
         <translation>Voir le fichier de débogage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="807"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="808"/>
         <source>3d Cp graph</source>
         <translation>Graphique 3D Cp</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="855"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="856"/>
         <source>Boat analysis</source>
         <translation>Analyse de voiles</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="860"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="861"/>
         <source>Sail 3d controls</source>
         <translation>Contrôles 3d de voile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="865"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="866"/>
         <source>Boat object explorer</source>
         <translation>Explorateur de bateaux</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="905"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="906"/>
         <source>Analysis 2d</source>
         <translation>Analyse 2d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="914"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="915"/>
         <source>Operating point</source>
         <translation>Point de fonctionnement</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="923"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="924"/>
         <source>Foil object explorer</source>
         <translation>Explorateur de profils</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="933"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="934"/>
         <source>Foil object table</source>
         <translation>Tableau d&apos;objets profil</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1002"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1003"/>
         <source>Analysis 3d</source>
         <translation>Analyse 3d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1007"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1008"/>
         <source>Plane Explorer</source>
         <translation>Explorateur d&apos;avions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1012"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1013"/>
         <source>Plane 3d view</source>
         <translation>Vue 3d d&apos;avions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1017"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1018"/>
         <source>Graphs</source>
         <translation>Graphiques</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1021"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1022"/>
         <source>Stability time controls</source>
         <translation>Contrôles de paramètres de stabilité</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1032"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1033"/>
         <source>&amp;File</source>
         <translation>&amp;Fichier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1061"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1062"/>
         <source>&amp;Module</source>
         <translation>&amp;Module</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1074"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1075"/>
         <source>&amp;Options</source>
         <translation>&amp;Options</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1086"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1087"/>
         <source>&amp;?</source>
         <translation>&amp;?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1088"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1089"/>
         <source>About flow5</source>
         <translation>A propos de flow5</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1089"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1090"/>
         <source>More information about flow5</source>
         <translation>Plus d&apos;informations sur flow5</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1092"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1093"/>
         <source>About Qt</source>
         <translation>A propos de Qt</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1095"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1096"/>
         <source>Credits</source>
         <translation>Crédits</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1098"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1099"/>
         <source>Online doc.</source>
         <translation>Doc. en ligne</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1101"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1102"/>
         <source>Release notes</source>
         <translation>Notes de version</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1131"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1132"/>
         <source>Ready</source>
         <translation>Prêt</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1142"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1143"/>
         <source>MainToolBar</source>
         <translation>Barre d&apos;outils principale</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1164"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1165"/>
         <source>XSailToolBar</source>
         <translation>Barre d&apos;outils XSail</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1175"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1176"/>
         <source>XDirect</source>
         <translation>XDirect</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1186"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1187"/>
         <source>Foil</source>
         <translation>Profil</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1208"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1209"/>
         <source>PlaneToolBar</source>
         <translation>Barre d&apos;outils avions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1223"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1224"/>
         <source>Deleting current project
 </source>
         <translation>Suppression du projet actuel
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1228"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1229"/>
         <source>   Deleting 2d objects
 </source>
         <translation>   Suppression des objets 2D
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1782"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1815"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1782"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1815"/>
         <source>Save the current project?</source>
         <translation>Sauvegarder le projet actuel ?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1794"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1827"/>
         <source>The project </source>
         <translation>Le projet </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1794"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1827"/>
         <source> has been saved
 
 </source>
@@ -4185,18 +4217,18 @@ ____________Requête d&apos;annulation émise__________
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1840"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1844"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1873"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1877"/>
         <source>Default Settings</source>
         <translation>Paramètres par défaut</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1840"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1873"/>
         <source>Are you sure you want to reset the default settings?</source>
         <translation>Êtes-vous sûr de vouloir réinitialiser les paramètres par défaut?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1844"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1877"/>
         <source>The settings will be reset at the next session</source>
         <translation>Les paramètres seront réinitialisés à la prochaine session</translation>
     </message>
@@ -4296,100 +4328,105 @@ ____________Requête d&apos;annulation émise__________
 <context>
     <name>OpenGlDlg</name>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="102"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="104"/>
         <source>OpenGL context info</source>
         <translation>Informations sur le contexte OpenGL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="115"/>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="144"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="117"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="146"/>
         <source>Close</source>
         <translation>Fermer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="115"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="117"/>
         <source>Discard the changes?</source>
         <translation>Abandonner les changements ?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="143"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="145"/>
         <source>Use these settings as the future default?
 (Application restart required)</source>
         <translation>Utiliser ces paramètres comme futur défaut ? 
 (Redémarrage de l&apos;application requis)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="400"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="402"/>
         <source>View type</source>
         <translation>Type de vue</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="404"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="406"/>
         <source>Newton fractal</source>
         <translation>Fractale de Newton</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="405"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="407"/>
         <source>Mandelbrot</source>
         <translation>Mandelbrot</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="406"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="408"/>
         <source>Quaternion Julia fractal</source>
         <translation>Ensemble de Julia base quaternions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="407"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="409"/>
         <source>Spheres</source>
         <translation>Sphères</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="408"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="410"/>
+        <source>Texture</source>
+        <translation>Texture</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="411"/>
         <source>Horsehoe vortex flow</source>
         <translation>Flux de vortex</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="409"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="412"/>
         <source>Lorenz (CPU)</source>
         <translation>Lorenz (CPU)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="410"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="413"/>
         <source>Lorenz (GPU)</source>
         <translation>Lorenz (GPU)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="411"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="414"/>
         <source>Attractors</source>
         <translation>Attracteurs</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="412"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="415"/>
         <source>Boids (CPU)</source>
         <translation>Boids (CPU)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="413"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="416"/>
         <source>Boids (GPU)</source>
         <translation>Boids (GPU)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="414"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="417"/>
         <source>Hydrogen atom</source>
         <translation>Atome d&apos;hydrogène</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="415"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="418"/>
         <source>Solar system</source>
         <translation>Système solaire</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="416"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="419"/>
         <source>Sagittarius A*</source>
         <translation>Sagittaire A*</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="417"/>
+        <location filename="../../fl5-app/interfaces/opengl/globals/opengldlg.cpp" line="420"/>
         <source>The final frontier</source>
         <translation>La frontière finale</translation>
     </message>
@@ -5567,26 +5604,6 @@ Ctrl+B pour modifier le premier fuselage</translation>
         <source>context menu</source>
         <translation>menu contextuel</translation>
     </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planestldlg.cpp" line="279"/>
-        <source>Load</source>
-        <translation>Charger</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planestldlg.cpp" line="282"/>
-        <source>Clear</source>
-        <translation>Effacer</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planestldlg.cpp" line="285"/>
-        <source>Settings</source>
-        <translation>Paramètres</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planestldlg.cpp" line="289"/>
-        <source>Background image</source>
-        <translation>Image d&apos;arrière-plan</translation>
-    </message>
 </context>
 <context>
     <name>PlaneXfl</name>
@@ -5788,225 +5805,205 @@ Ctrl+B pour modifier le premier fuselage</translation>
         <translation>Maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="577"/>
-        <source>Load</source>
-        <translation>Charger</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="580"/>
-        <source>Clear</source>
-        <translation>Effacer</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="583"/>
-        <source>Settings</source>
-        <translation>Paramètres</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="587"/>
-        <source>Background image</source>
-        <translation>Image de fond</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="650"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="631"/>
         <source>Edit</source>
         <translation>Editer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="652"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="633"/>
         <source>new</source>
         <translation>Nouveau</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="653"/>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="663"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="634"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="644"/>
         <source>from other plane</source>
         <translation>d&apos;un autre avion</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="654"/>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="662"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="635"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="643"/>
         <source>from XML file</source>
         <translation>d&apos;un XML fichier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="655"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="636"/>
         <source>from VSP export</source>
         <translation>d&apos;un export VSP</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="656"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="637"/>
         <source>Elevator</source>
         <translation>Stabilisateur</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="657"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="638"/>
         <source>Fin</source>
         <translation>Dérive</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="658"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="639"/>
         <source>NURBS type</source>
         <translation>Type NURBS</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="659"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="640"/>
         <source>Quad faces</source>
         <translation>Faces quadrilatères</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="660"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="641"/>
         <source>Interpolated (in progress)</source>
         <translation>Interpolé (en cours)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="664"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="645"/>
         <source>from CAD file</source>
         <translation>depuis un fichier CAD</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="665"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="646"/>
         <source>from STL file</source>
         <translation>depuis un fichier STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="666"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="647"/>
         <source>Insert elliptical wing</source>
         <translation>Insérer une aile elliptique</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="667"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="648"/>
         <source>Insert STL sphere fuselage</source>
         <translation>Insérer un fuselage sphérique au format STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="668"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="649"/>
         <source>Insert STL cylinder fuselage</source>
         <translation>Insérer un fuselage cylindrique au format STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="669"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="650"/>
         <source>Insert CAD sphere fuselage</source>
         <translation>Insérer un fuselage sphérique au format CAD</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="670"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="651"/>
         <source>Insert CAD cylinder fuselage</source>
         <translation>Insérer un fuselage cylindrique au format CAD</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="671"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="652"/>
         <source>Insert CAD box fuselage</source>
         <translation>Insérer un fuselage parallélépipédique au format CAD</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="672"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="653"/>
         <source>Remove</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="673"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="654"/>
         <source>Duplicate</source>
         <translation>Dupliquer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="675"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="656"/>
         <source>Restore geometry and mesh</source>
         <translation>Restaurer la géométrie et le maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="676"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="657"/>
         <source>Fuse tessellation</source>
         <translation>Triangulation du fuselage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="678"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="659"/>
         <source>Inertia</source>
         <translation>Inertie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="679"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="660"/>
         <source>Scale</source>
         <translation>Homothétie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="680"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="661"/>
         <source>Move Up</source>
         <translation>Déplacer vers le haut</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="681"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="662"/>
         <source>Move Down</source>
         <translation>Déplacer vers le bas</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="683"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="664"/>
         <source>Export mesh to STL</source>
         <translation>Exporter le maillage au format STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="685"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="666"/>
         <source>Selected Part</source>
         <translation>Composant sélectionné</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1362"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1343"/>
         <source>Root chord:</source>
         <translation>Corde emplanture =</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1362"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1343"/>
         <source>Span:</source>
         <translation>Envergure =</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1362"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1343"/>
         <source>Nbr. of panels:</source>
         <translation>Nombre de panneaux =</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1398"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="1379"/>
         <source>&lt;p&gt;Number of icosahedron splits (0&amp;le;n&amp;le;4)&lt;/p&gt;</source>
         <translation>&lt;p&gt;Nbre de divisions de l&apos;icosahèdre (0&amp;le;n&amp;le;4)&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="2854"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="2835"/>
         <source>Selected part</source>
         <translation>Composant sélectionné</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3103"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3084"/>
         <source>Object List</source>
         <translation>Liste d&apos;objets</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3292"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3273"/>
         <source>Scale factor:</source>
         <translation>Facteur d&apos;échelle :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3316"/>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3352"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3297"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3333"/>
         <source>Length=</source>
         <translation>Longueur =</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3316"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3297"/>
         <source>Radius=</source>
         <translation>Rayon =</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3352"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3333"/>
         <source>Width=</source>
         <translation>Largeur =</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3352"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3333"/>
         <source>Height=</source>
         <translation>Hauteur =</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3472"/>
+        <location filename="../../fl5-app/interfaces/editors/planeedit/planexfldlg.cpp" line="3453"/>
         <source>stack: %1/%2</source>
         <translation>pile : %1 / %2</translation>
     </message>
@@ -6448,7 +6445,7 @@ Ctrl+B pour modifier le premier fuselage</translation>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="167"/>
         <source>&lt;p&gt;Set a dark mode for the application&apos;s buttons, menus, toolbars and other widgets.&lt;br&gt;Customize by editing the text file flow5_dark.css located in the application&apos;s directory.&lt;br&gt;This option should be used together with the UI dark theme activated.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Appliquer un mode sombre pour les boutons, menus et autres widgets.&lt;br&gt;Personnaliser en editant le fichier texte flow5_dark.css dans le répertoire de l&apos;application.&lt;br&gt;Cette option est à utiliser en combinaison avec le mode sombre de l&apos;affichage.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Appliquer un mode sombre pour les boutons, menus et autres widgets.&lt;br&gt;Personnaliser en éditant le fichier texte flow5_dark.css dans le répertoire de l&apos;application.&lt;br&gt;Cette option est à utiliser en combinaison avec le mode sombre de l&apos;affichage.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="173"/>
@@ -6459,6 +6456,11 @@ Ctrl+B pour modifier le premier fuselage</translation>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="175"/>
         <source>pixels; hint only; application restart required</source>
         <translation>pixels; indication seulement; redémarrage de l&apos;application nécessaire</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="190"/>
+        <source>Display theme</source>
+        <translation>Thème d&apos;affichage</translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="196"/>
@@ -6477,13 +6479,13 @@ Ctrl+B pour modifier le premier fuselage</translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="205"/>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="663"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="662"/>
         <source>Background</source>
         <translation>Arrière-plan</translation>
     </message>
     <message>
         <location filename="../../fl5-app/options/prefsdlg.cpp" line="213"/>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="659"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="658"/>
         <source>Fonts</source>
         <translation>Polices</translation>
     </message>
@@ -6616,114 +6618,120 @@ lors de l&apos;utilisation de la roulette</translation>
         <translation>Linux ne propose pas d&apos;option pour la priotarisation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="494"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="493"/>
         <source>Text colour</source>
         <translation>Couleur du texte</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="604"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="603"/>
         <source>Application</source>
         <translation>Application</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="624"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="623"/>
         <source>Save, load, export</source>
         <translation>Enregistrer et exporter</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="628"/>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="689"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="627"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="688"/>
         <source>General</source>
         <translation>Général</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="632"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="631"/>
         <source>Directories</source>
         <translation>Répertoires</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="636"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="635"/>
         <source>Export options</source>
         <translation>Options d&apos;export</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="640"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="639"/>
         <source>Foil to SVG</source>
         <translation>Profil vers SVG</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="644"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="643"/>
         <source>Operating points</source>
         <translation>Points de fonctionnement</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="650"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="649"/>
         <source>Units</source>
         <translation>Unités</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="655"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="654"/>
         <source>Graphs</source>
         <translation>Graphiques</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="667"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="666"/>
         <source>Padding</source>
         <translation>Espacement en bordure</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="675"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="674"/>
         <source>Curves</source>
         <translation>Courbes</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="679"/>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="711"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="678"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="714"/>
         <source>Other</source>
         <translation>Autres</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="685"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="684"/>
         <source>2d views</source>
         <translation>Vues 2d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="693"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="692"/>
         <source>Axes and grids</source>
         <translation>Axes et grilles</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="699"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="698"/>
         <source>3d views</source>
         <translation>Vues 3d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="703"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="702"/>
+        <source>Background image</source>
+        <translation>Image de fond</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="706"/>
         <source>Colours</source>
         <translation>Couleurs</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="707"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="710"/>
         <source>Tessellation</source>
         <translation>Triangulation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="717"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="328"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="720"/>
         <source>Multithreading</source>
         <translation>Multi-threading</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="721"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="724"/>
         <source>Option</source>
         <translation>Option</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="944"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="947"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/prefsdlg.cpp" line="944"/>
+        <location filename="../../fl5-app/options/prefsdlg.cpp" line="947"/>
         <source>The change will take effect after restarting the application.</source>
         <translation>La modification prendra effet après le redémarrage de l&apos;application.</translation>
     </message>
@@ -6833,375 +6841,355 @@ lors de l&apos;utilisation de la roulette</translation>
         <translation>Éditeur de boile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="192"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="188"/>
         <source>Description</source>
         <translation>Description</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="200"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="196"/>
         <source>Enter the sail&apos;s name</source>
         <translation>Entrez le nom de la voile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="211"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="207"/>
         <source>Use this field to enter a short text to describe the sail</source>
         <translation>Utilisez ce champ pour entrer un texte court pour décrire la voile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="218"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="214"/>
         <source>Sail surface</source>
         <translation>Aire de la voile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="226"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="222"/>
         <source>Sail is a</source>
         <translation>La voile est une</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="227"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="223"/>
         <source>surface</source>
         <translation>surface</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="228"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="224"/>
         <source>thin</source>
         <translation>mince</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="229"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="225"/>
         <source>thick</source>
         <translation>épaisse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="241"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="237"/>
         <source>Reference area:</source>
         <translation>Aire de référence:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="243"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="239"/>
         <source>Reference chord:</source>
         <translation>Corde de référence:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="247"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="243"/>
         <source>Set the reference dimension used to calculate lift and drag coefficents</source>
         <translation>Définissez la dimension de référence utilisée pour calculer les coefficients de portance et de trainée</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="278"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="274"/>
         <source>Mesh type</source>
         <translation>Type de maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="282"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="278"/>
         <source>Mesh type:</source>
         <translation>Type de maillage:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="283"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="279"/>
         <source>Ruled</source>
         <translation>Réglé</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="284"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="280"/>
         <source>Free</source>
         <translation>Libre</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="299"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="295"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="300"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="296"/>
         <source>z</source>
         <translation>z</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="301"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="297"/>
         <source>Number of panels=</source>
         <translation>Nombre de panneaux=</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="302"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="298"/>
         <source>Distribution=</source>
         <translation>Répartition =</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="301"/>
         <source>UNIFORM</source>
         <translation>UNIFORME</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="301"/>
         <source>COSINE</source>
         <translation>COSINUS</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="301"/>
         <source>SINE</source>
         <translation>SINUS</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="301"/>
         <source>INV_SINE</source>
         <translation>ARCSINUS</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="301"/>
         <source>TANH</source>
         <translation>TANGENTE HYPERBOLIQUE</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="301"/>
         <source>EXP</source>
         <translation>EXPONENTIEL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="305"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="301"/>
         <source>INV_EXP</source>
         <translation>EXPONENTIEL_INVERSE</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="342"/>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="460"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="338"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="452"/>
         <source>Connect panels</source>
         <translation>Raccorder les panneaux</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="343"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="339"/>
         <source>Max T.E. angle for guesses:</source>
         <translation>Angle maximal deviner les bords de fuite:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="345"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="341"/>
         <source>&lt;p&gt;&amp;deg;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&amp;deg;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="347"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="343"/>
         <source>Automatic detection:</source>
         <translation>Détection automatique:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="348"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="344"/>
         <source>Guess T.E.</source>
         <translation>Rechercher le B.F.</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="350"/>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="465"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="346"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="457"/>
         <source>Clear T.E. panels</source>
         <translation>Effacer les panneaux de B.F.</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="352"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="348"/>
         <source>Manual selection:</source>
         <translation>Sélection manuelle:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="353"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="349"/>
         <source>Mid. panels</source>
         <translation>Panels sur courbure moyenne</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="355"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="351"/>
         <source>Top panels</source>
         <translation>Panneaux d&apos;extrados</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="357"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="353"/>
         <source>Guess opposite</source>
         <translation>Rechercher opposé</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="359"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="355"/>
         <source>Verification</source>
         <translation>Vérification</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="360"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="356"/>
         <source>Check T.E.</source>
         <translation>Vérifier le B.F.</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="391"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="387"/>
         <source>Undo</source>
         <translation>Défaire</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="393"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="389"/>
         <source>Cancels the last modifiction made to the splines</source>
         <translation>Annule la dernière modification effectuée sur les splines</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="395"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="391"/>
         <source>Redo</source>
         <translation>Refaire</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="397"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="393"/>
         <source>Restores the last cancelled modifiction made to the splines</source>
         <translation>Récupère la dernière annulation effectuée sur les splines</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="399"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="395"/>
         <source>Fill selected</source>
         <translation>Remplir sélectionné</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="440"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="436"/>
         <source>Light settings	(Alt+L)</source>
         <translation>Paramètres de lumière (Alt + L)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="442"/>
-        <source>Load</source>
-        <translation>Charger</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="443"/>
-        <source>Clear</source>
-        <translation>Effacer</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="444"/>
-        <source>Settings</source>
-        <translation>Réglages</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="454"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="446"/>
         <source>Mesh actions</source>
         <translation>Actions maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="456"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="448"/>
         <source>Mesh</source>
         <translation>Maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="458"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="450"/>
         <source>Check free edges</source>
         <translation>Vérifier les arêtes libres</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="462"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="454"/>
         <source>Clear highlighted</source>
         <translation>Effacer le surligné</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="477"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="469"/>
         <source>Sail actions</source>
         <translation>Actions voile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="479"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="471"/>
         <source>Sail</source>
         <translation>Voile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="481"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="473"/>
         <source>Definitions</source>
         <translation>Définitions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="484"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="476"/>
         <source>Translate</source>
         <translation>Translation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="487"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="479"/>
         <source>Rotate</source>
         <translation>Rotation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="489"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="481"/>
         <source>Scale size</source>
         <translation>Homothétie des dimensions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="493"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="485"/>
         <source>Scale shape</source>
         <translation>Homothétie de forme</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="498"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="490"/>
         <source>Flip XZ</source>
         <translation>Inverser XZ</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="501"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="493"/>
         <source>Align luff points</source>
         <translation>Aligner les points de bord d&apos;attaque</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="502"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="494"/>
         <source>&lt;p&gt;Translates the intermediate sections to align the leading points between the top and bottom sections&lt;/p&gt;</source>
         <translation>&lt;p&gt;Translate les sections intermediaires pour aligner les points de bord d&apos;attaque entre les sections inférieure et supérieure&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="518"/>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="917"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="510"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="909"/>
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="520"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="512"/>
         <source>to XML</source>
         <translation>vers XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="524"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="516"/>
         <source>to STEP</source>
         <translation>vers STEP</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="528"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="520"/>
         <source>mesh to STL</source>
         <translation>maillage vers STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="532"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="524"/>
         <source>triangulation to STL</source>
         <translation>triangulation vers STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="703"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="695"/>
         <source>Sail definition</source>
         <translation>Définition de voile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="714"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="706"/>
         <source>Point coordinates</source>
         <translation>Coordonnées des points</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="738"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="730"/>
         <source>Sections</source>
         <translation>Sections</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="748"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="740"/>
         <source>Section points coordinates</source>
         <translation>Coordonnées des points de section</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="905"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="897"/>
         <source>GraphMenu</source>
         <translation>Menu  du graphique</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="927"/>
-        <source>Background image</source>
-        <translation>Image d&apos;arrière-plan</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="1390"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="1374"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="1390"/>
+        <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="1374"/>
         <source>Could not open the file for writing</source>
         <translation>Impossible d&apos;ouvrir le fichier en écriture</translation>
     </message>
@@ -7302,179 +7290,179 @@ lors de l&apos;utilisation de la roulette</translation>
         <translation>Utiliser un répertoire fixe</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="191"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="197"/>
         <source>Foil files:</source>
         <translation>Fichiers profils :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="192"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="198"/>
         <source>Foil polar files:</source>
         <translation>Fichiers de polaires 2d :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="193"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="199"/>
         <source>XML foil analysis files:</source>
         <translation>Fichiers XML d&apos;analyse 2d :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="194"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="200"/>
         <source>XML plane and boat files:</source>
         <translation>Fichiers XML de définition avions et bateaux :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="195"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="201"/>
         <source>XML plane and boat analysis files:</source>
         <translation>Fichiers XML d&apos;analyse 3d :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="196"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="202"/>
         <source>XML script files:</source>
         <translation>Fichiers XML de scripts :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="197"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="203"/>
         <source>CAD files:</source>
         <translation>Fichiers CAD :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="198"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="204"/>
         <source>STL files:</source>
         <translation>Fichiers STL :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="199"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="205"/>
         <source>Temporary files:</source>
         <translation>Fichiers temporaires :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="200"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="206"/>
         <source>Application directory:</source>
         <translation>Répertoire de l&apos;application :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="204"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="209"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="214"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="219"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="224"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="229"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="234"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="239"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="244"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="249"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="210"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="215"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="220"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="225"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="230"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="235"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="240"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="245"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="250"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="255"/>
         <source>Set directory</source>
         <translation>Choisir le répertoire</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="294"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="300"/>
         <source>Export options</source>
         <translation>Options d&apos;export</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="298"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="304"/>
         <source>To text files</source>
         <translation>En fichier texte</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="304"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="310"/>
         <source>CSV field separator</source>
         <translation>Séparateur CSV</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="320"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="326"/>
         <source>To Xml files</source>
         <translation>En fichier XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="324"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="330"/>
         <source>Include airfoil .dat files when exporting wings</source>
         <translation>Inclure les fichiers .dat de profils lors de l&apos;export des ailes</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="336"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="342"/>
         <source>SVG foil export</source>
         <translation>Export proils en SVG</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="340"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="346"/>
         <source>Close foil TE</source>
         <translation>Fermer le bord de fuite du profil</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="341"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="347"/>
         <source>Fill foil</source>
         <translation>Remplir le profil</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="343"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="349"/>
         <source>&lt;p&gt;Recommendation: Scale factor&gt;=10000 for a smooth foil shape&lt;/p&gt;</source>
         <translation>&lt;p&gt;Recommandation: facteur d&apos;échelle &amp;ge; 10000 pour un profil lisse&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="344"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="350"/>
         <source>Export style</source>
         <translation>Style d&apos;export</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="351"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="357"/>
         <source>Margin</source>
         <translation>Marge</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="353"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="359"/>
         <source>(Foil units)</source>
         <translation>(Unités de profil)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="354"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="360"/>
         <source>Scale factor</source>
         <translation>Facteur d&apos;échelle</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="364"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="370"/>
         <source>Operating points</source>
         <translation>Points de fonctionnement</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="368"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="374"/>
         <source>Save operating points for:</source>
         <translation>Enregistrer les points de fonctionnement pour les :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="370"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="376"/>
         <source>Foils</source>
         <translation>Profils</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="371"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="377"/>
         <source>Planes</source>
         <translation>Avions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="372"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="378"/>
         <source>Boats</source>
         <translation>Bateaux</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="535"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="548"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="576"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="590"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="604"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="618"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="632"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="646"/>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="661"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="540"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="553"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="581"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="595"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="609"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="623"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="637"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="651"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="666"/>
         <source>Select directory</source>
         <translation>Sélectionner un répertoire</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="683"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="688"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="683"/>
+        <location filename="../../fl5-app/options/saveoptionswt.cpp" line="688"/>
         <source>Please select an existing directory with write permission for the temp files.</source>
         <translation>Veuillez sélectionner un répertoire existant avec les droits d&apos;écriture pour les fichiers temporaires.</translation>
     </message>
@@ -8843,12 +8831,12 @@ Import depuis un fichier binaire
         <translation>Inertie:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="324"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="308"/>
         <source>Density:             </source>
         <translation>Densité:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/options/unitswt.cpp" line="325"/>
+        <location filename="../../fl5-app/options/unitswt.cpp" line="309"/>
         <source>Kinematic viscosity: </source>
         <translation>Viscosité cinématique:</translation>
     </message>
@@ -8856,348 +8844,419 @@ Import depuis un fichier binaire
 <context>
     <name>W3dPrefs</name>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="116"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="130"/>
         <source>3d Styles</source>
         <translation>Styles 3d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="272"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="235"/>
+        <source>Select an image from a file:</source>
+        <translation>Choisir un fichier d&apos;image:</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="325"/>
+        <source>Background image</source>
+        <translation>Image de fond</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="396"/>
         <source>Colour settings</source>
         <translation>Paramètres de couleur</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="278"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="402"/>
         <source>Geometry</source>
         <translation>Géométrie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="279"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="403"/>
         <source>Mesh</source>
         <translation>Maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="280"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="404"/>
         <source>Vortons</source>
         <translation>Vortons</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="285"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="409"/>
         <source>Results</source>
         <translation>Résultats</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="286"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="410"/>
         <source>Selected</source>
         <translation>Sélection</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="287"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="411"/>
         <source>Highlighted</source>
         <translation>Surlignage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="288"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="412"/>
         <source>Axes</source>
         <translation>Axes</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="289"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="413"/>
         <source>Wind</source>
         <translation>Vent</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="290"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="414"/>
         <source>Geometry outline</source>
         <translation>Contour géométrique</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="291"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="415"/>
         <source>Transitions</source>
         <translation>Transitions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="292"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="416"/>
         <source>Lift and forces</source>
         <translation>Portance et forces</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="293"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="417"/>
         <source>Moments</source>
         <translation>Moments</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="294"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="418"/>
         <source>Induced drag</source>
         <translation>Traînée induite</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="295"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="419"/>
         <source>Viscous drag</source>
         <translation>Traînée visqueuse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="296"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="420"/>
         <source>Velocity vectors</source>
         <translation>Vecteurs de vitesse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="297"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="421"/>
         <source>Streamlines</source>
         <translation>Lignes de courant</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="298"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="422"/>
         <source>Flow lines</source>
         <translation>Lignes de flux</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="299"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="423"/>
         <source>Masses</source>
         <translation>Masses</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="300"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="424"/>
         <source>Panel outline</source>
         <translation>Contour de panneaux</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="301"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="425"/>
         <source>Fuse panels:</source>
         <translation>Panneaux de fuselage :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="302"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="426"/>
         <source>Wing panels:</source>
         <translation>Panneaux d&apos;aile :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="303"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="427"/>
         <source>Flap panels:</source>
         <translation>Panneaux des volets :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="304"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="428"/>
         <source>Wake panels:</source>
         <translation>Panneaux de sillage :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="321"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="445"/>
         <source>Use wing colour</source>
         <translation>Utiliser la couleur des ailes</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="325"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="449"/>
         <source>Use background color for mesh panels</source>
         <translation>Utiliser la couleur du fond pour les panneaux du maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="410"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="534"/>
         <source>Colour:</source>
         <translation>Couleur :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="412"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="536"/>
         <source>Radius:</source>
         <translation>Rayon :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="414"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="538"/>
         <source>% viewport width</source>
         <translation>% largeur de la vue</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="418"/>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="430"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="542"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="554"/>
         <source>Ground/Water</source>
         <translation>Sol/eau</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="426"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="550"/>
         <source>Show ground surface</source>
         <translation>Afficher la surface du sol</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="434"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="558"/>
         <source>x-length</source>
         <translation>Longueur suvant X :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="435"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="559"/>
         <source>y-width</source>
         <translation>Longueur suvant Z :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="458"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="582"/>
         <source>&lt;p&gt;Note: This is only a visual help feature.&lt;br&gt;The actual ground surface used in the analysis extends to infinity.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Note: Aide visuelle seulement.&lt;br&gt;La surface prise en compte dans le calcul s&apos;étend à l&apos;infini.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="465"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="589"/>
         <source>Colour map</source>
         <translation>Coloriage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="471"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="595"/>
         <source>Gradient colours:</source>
         <translation>Couleurs du gradient :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="485"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="609"/>
         <source>Nbr. of isobars (trilinear only):</source>
         <translation>Nbre d&apos;isobars (tri-linéaire seulement) :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="503"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="627"/>
         <source>Tessellation</source>
         <translation>Triangulation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="516"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="640"/>
         <source>&lt;p&gt;Increase the number of points to improve the tessellation of the surfaces.&lt;br&gt;This may increase the loading times and also slow down the display on low-end graphic cards.&lt;br&gt;Reload required to take effect.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Augmenter le nombre de points pour améliorer la triangulation des surfaces.&lt;br&gt;Ceci peut rendre les temps de chargement plus long, et décroître la performance d&apos;affichage.&lt;br&gt;Recharger le projet pour prise d&apos;effet.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="541"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="665"/>
         <source>Gmsh tessellation defaults for fuselages and sails</source>
         <translation>Paramètres Gmsh de triangulation pour fuselages et voiles</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="545"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="669"/>
         <source>&lt;p&gt;The defaults will apply to new parts only.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Les paramètres s&apos;appliqueront aux nouveaux composants seulement.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="512"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="1377"/>
+        <source>Open image file</source>
+        <translation>Ouvrir un fichier image</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="1398"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="1407"/>
+        <source>Colour</source>
+        <translation>Couleur</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="636"/>
         <source>Ruled surfaces</source>
         <translation>Surfaces réglées</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="528"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="313"/>
+        <source>Background</source>
+        <translation>Arrière-plan</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="321"/>
+        <source>Uniform colour</source>
+        <translation>Couleur uniforme</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="322"/>
+        <source>&lt;p&gt;Uses the background color defined for the application&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Utilise la couleur de fond définie pour l&apos;application&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="323"/>
+        <source>Gradient</source>
+        <translation>Gradient</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="324"/>
+        <source>&lt;p&gt;Fills the background with a 2-colours gradient&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Remplit l&apos;arrière-plan avec un gradient entre deux couleurs&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="326"/>
+        <source>&lt;p&gt;Fills the background with an image loaded from a file;&lt;br&gt;the image is scaled to fill the background&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Remplit l&apos;arrière-plan avec une image chargée depuis un fichier;&lt;p&gt;L&apos;image est redimensionnée pour remplir l&apos;arrière-plan&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="344"/>
+        <source>Start:</source>
+        <translation>Début :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="345"/>
+        <source>End:</source>
+        <translation>Fin :</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="351"/>
+        <source>Angle =</source>
+        <translation>Angle =</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="374"/>
+        <source>Select file</source>
+        <translation>Choisir un fichier</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="652"/>
         <source>Wing chordwise direction:</source>
         <translation>Discrétisation suivant corde des ailes :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="529"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="653"/>
         <source>Body axial direction:</source>
         <translation>Discrétisation des fuselages sens longitudinal :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="530"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="654"/>
         <source>Body hoop direction:</source>
         <translation>Discrétisation des fuselages selon circonférence :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="531"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="655"/>
         <source>Sail x-direction:</source>
         <translation>Discrétisation voiles selon x :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="532"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="656"/>
         <source>Sail z-direction:</source>
         <translation>Discrétisation voiles selon z :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="560"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="684"/>
         <source>Other</source>
         <translation>Autres</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="566"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="690"/>
         <source>Enable mouse animations</source>
         <translation>Activer les animations de la souris</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="568"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="692"/>
         <source>&lt;p&gt;Defines the damping of the animation at each frame update.&lt;br&gt;Set to 0 for perpetual movement.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Définit l&apos;amortissement appliqué à chaque rafraîchissement d&apos;écran.&lt;br&gt;Mettre à 0 pour un mouvement perpétuel.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="575"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="699"/>
         <source>Animate view transitions</source>
         <translation>Animer les transitions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="577"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="701"/>
         <source>&lt;p&gt;Defines the duration of animations in ms&lt;/p&gt;</source>
         <translation>&lt;p&gt;Définit la durée des animations en ms&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="584"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="708"/>
         <source>Arcball radius:</source>
         <translation>Rayon de la boule de rotation :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="585"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="709"/>
         <source>% view width</source>
         <translation>% largeur de la vue</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="587"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="711"/>
         <source>&lt;p&gt;The radius of the arcball as a percentage of the view&apos;s width&lt;/p&gt;</source>
         <translation>&lt;p&gt;Le rayon de la boule de commande enpourcentage de la largeur de la vue&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="593"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="717"/>
         <source>Auto z-rotation incremental angle:</source>
         <translation>Incrément d&apos;angle pour la rotation automatique autour de Z :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="601"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="725"/>
         <source>Auto adjust 3d scale</source>
         <translation>Ajustement auto. de l&apos;échelle 3d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="602"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="726"/>
         <source>&lt;p&gt;Automatically adjust the 3d scale to fit the plane in the display when switching between planes&lt;/p&gt;</source>
         <translation>&lt;p&gt;Ajuste automatiquement l&apos;échelle 3d à l&apos;avion sélectionné&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="603"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="727"/>
         <source>Enable clip plane</source>
         <translation>Activer le plan de coupe vertical</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="604"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="728"/>
         <source>Display reference length</source>
         <translation>Afficher la longueur de référence</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="605"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="729"/>
         <source>Save viewpoints when exiting 3d views</source>
         <translation>Sauvegarder les points de vue en sortant des éditeurs</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="797"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="921"/>
         <source>Mass colour</source>
         <translation>Couleur des masses</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="809"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="933"/>
         <source>Water colour</source>
         <translation>Couleur de l&apos;eau</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="842"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="966"/>
         <source>Fuse colour</source>
         <translation>Couleur du fuselage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="854"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="978"/>
         <source>Wing colour</source>
         <translation>Couleur des ailes</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="866"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="990"/>
         <source>Flap colour</source>
         <translation>Couleur des volets</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="878"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="1002"/>
         <source>Wake colour</source>
         <translation>Couleur du sillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="890"/>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="1014"/>
         <source>Vorton colour</source>
         <translation>Couleur des vortons</translation>
     </message>
@@ -9387,163 +9446,143 @@ Import depuis un fichier binaire
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="114"/>
-        <source>Load</source>
-        <translation>Charger</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="115"/>
-        <source>Clear</source>
-        <translation>Effacer</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="116"/>
-        <source>Settings</source>
-        <translation>Paramètres</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="118"/>
         <source>Reset mesh</source>
         <translation>Réinitialiser le maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="119"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="115"/>
         <source>Translate</source>
         <translation>Translation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="120"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="116"/>
         <source>Scale</source>
         <translation>Homothétie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="121"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="117"/>
         <source>Inertia</source>
         <translation>Inertie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="122"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="118"/>
         <source>to XML file</source>
         <translation>vers XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="123"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="119"/>
         <source>to CAD file</source>
         <translation>vers CAD</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="124"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="120"/>
         <source>to STL file</source>
         <translation>vers  STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="262"/>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="270"/>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="280"/>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="293"/>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="301"/>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="457"/>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="464"/>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="511"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="251"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="259"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="269"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="282"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="290"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="442"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="449"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="496"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="262"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="251"/>
         <source>Please enter a name for the wing</source>
         <translation>Veuillez entrer un nom pour l&apos;aile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="270"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="259"/>
         <source>&lt;p&gt;The panel sequence is inconsistent. The sections should be ordered from root to tip.&lt;/p&gt;</source>
         <translation>&lt;p&gt;La séquence des sections est incohérente. Elles doivent être définies depuis l&apos;emplanture jusqu&apos;au saumon.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="280"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="269"/>
         <source>Zero length chords will cause a division by zero and should be avoided.</source>
         <translation>&lt;p&gt;Des cordes de longueur nulle entraîneront une division par zéro et doivent être évitées.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="293"/>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="301"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="282"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="290"/>
         <source>Zero length flaps will cause a division by zero and should be avoided.</source>
         <translation>&lt;p&gt;Des volets de longueur nulle entraîneront une division par zéro et doivent être évités.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="457"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="442"/>
         <source>The first section cannot be deleted</source>
         <translation>La première section ne peut être supprimée</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="464"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="449"/>
         <source>The number of sections cannot be less than two</source>
         <translation>Le nombre minimum de section est 2</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="511"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="496"/>
         <source>Insertion not possible before the first section</source>
         <translation>Insertoin impossible avant la première section</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="522"/>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="547"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="507"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="532"/>
         <source>Number of sections to insert:</source>
         <translation>Nombre de sections à insérer :</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="753"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="738"/>
         <source>Discard the changes?</source>
         <translation>Abandonner les changements ?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="754"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="739"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="144"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="140"/>
         <source>Enter here a short description for the wing</source>
         <translation>Entrez ici une courte description pour l&apos;aile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="151"/>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="153"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="147"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="149"/>
         <source>Actions</source>
         <translation>Actions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="156"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="152"/>
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="166"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="162"/>
         <source>Save as</source>
         <translation>Enregistrer sous</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="175"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="171"/>
         <source>Surface colour</source>
         <translation>Couleur de surface</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="219"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="215"/>
         <source>GraphMenu</source>
         <translation>Menu Graphique</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="220"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="216"/>
         <source>Selected section</source>
         <translation>Section sélectionnée</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="230"/>
+        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="226"/>
         <source>Wing</source>
         <translation>Aile</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/editors/wingedit/wingdlg.cpp" line="240"/>
-        <source>Background image</source>
-        <translation>Image d&apos;arrière-plan</translation>
     </message>
 </context>
 <context>
@@ -10279,48 +10318,48 @@ Import depuis un fichier binaire
 <context>
     <name>XPlane</name>
     <message>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2354"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2355"/>
         <source>Are you sure you want to delete the plane :
 </source>
         <translation>Êtes-vous sûr de vouloir supprimer l&apos;avion :
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2355"/>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2474"/>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2503"/>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="3934"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2356"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2475"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2504"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="3935"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2473"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2474"/>
         <source>Are you sure you want to delete the polars associated to :
 </source>
         <translation>Êtes-vous sûr de vouloir supprimer les polaires associées à :
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2502"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2503"/>
         <source>Are you sure you want to delete the polar:
 </source>
         <translation>Êtes-vous sûr de vouloir supprimer la polaire :
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2786"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="2787"/>
         <source>&lt;p&gt;The modification will erase all results associated to this plane.&lt;br&gt;Continue?&lt;/p&gt;</source>
         <translation>&lt;p&gt;La modification effacera tous les résusltas associés à cet avion.&lt;br&gt;Continuer ?&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="3933"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="3934"/>
         <source>Are you sure you want to reset the content of the polar :
 </source>
         <translation>Etes-vous sûr de vouloir réinitialiser la polaire :
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="5726"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="5727"/>
         <source>Export plane definition to xml file</source>
         <translation>Exporter la définition de l&apos;avion vers un fichier XML</translation>
     </message>
@@ -10399,673 +10438,658 @@ Import depuis un fichier binaire
     </message>
     <message>
         <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="93"/>
-        <source>Load</source>
-        <translation>Charger</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="96"/>
-        <source>Clear</source>
-        <translation>Effacer</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="99"/>
-        <source>Settings</source>
-        <translation>Réglages</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="102"/>
         <source>Reset view	R</source>
         <translation>Réinitialiser la vue	R</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="105"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="96"/>
         <source>Define a new plane</source>
         <translation>Définir un nouvel avion</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="106"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="97"/>
         <source>Shows a dialogbox to create a new plane definition</source>
         <translation>&lt;p&gt;Affiche une boîte de dialogue pour créer un nouvel avion&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="110"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="101"/>
         <source>From an STL file</source>
         <translation>depuis un fichier STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="111"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="102"/>
         <source>Import a complete plane geometry from an STL file</source>
         <translation>&lt;p&gt;Importe une géométrie complète d&apos;avion à partir d&apos;un fichier STL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="115"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="218"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="224"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="229"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="235"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="388"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="106"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="209"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="215"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="220"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="226"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="379"/>
         <source>Edit</source>
         <translation>Edition</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="116"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="129"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="107"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="120"/>
         <source>Shows a form to edit the active plane</source>
         <translation>&lt;p&gt;Affiche un formulaire pour modifier l&apos;avion actif&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="120"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="111"/>
         <source>Edit description</source>
         <translation>Edition de la description</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="123"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="114"/>
         <source>Optimize</source>
         <translation>Optimisation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="124"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="115"/>
         <source>Opens the module to optimize the active plane</source>
         <translation>&lt;p&gt;Ouvre le module d&apos;optimisation de l&apos;avion actif&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="128"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="244"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="249"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="254"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="259"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="119"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="235"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="240"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="245"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="250"/>
         <source>Scale</source>
         <translation>Homothétie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="132"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="263"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="267"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="271"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="275"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="123"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="254"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="258"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="262"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="266"/>
         <source>Translate</source>
         <translation>Translation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="135"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="126"/>
         <source>Select wing curves to display</source>
         <translation>Sélection des courbes des ailes à afficher</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="138"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="129"/>
         <source>Mesh information</source>
         <translation>Informations sur le maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="141"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="132"/>
         <source>Connect triangles</source>
         <translation>Connection des triangles</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="145"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="136"/>
         <source>Check panels</source>
         <translation>Vérification des panneaux</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="148"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="139"/>
         <source>Check free edges</source>
         <translation>Vérification des arêtes libres</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="152"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="143"/>
         <source>Clear highlighted</source>
         <translation>Effaçage du surlignage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="156"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="147"/>
         <source>Center on panel</source>
         <translation>Centrer sur le panneau</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="157"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="148"/>
         <source>Centers the 3d view on the panel with the selected index</source>
         <translation>Centre la vue 3d sur le panneau d&apos;index indiqué</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="160"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="151"/>
         <source>Show panel normals</source>
         <translation>Affichez les normales des panneaux</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="164"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="155"/>
         <source>Show node normals</source>
         <translation>Affichez les normales des noeuds</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="168"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="159"/>
         <source>Show vortices and ctrl points</source>
         <translation>Affichez les vortex et les points de contrôle</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="172"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="163"/>
         <source>Rename	F2</source>
         <translation>Renommer	F2</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="173"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="164"/>
         <source>Rename the active object</source>
         <translation>Renommer l&apos;objet actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="176"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="167"/>
         <source>to AVL</source>
         <translation>vers AVL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="177"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="168"/>
         <source>Export the active plane or wing to a text file in the format required by AVL</source>
         <translation>&lt;p&gt;Exporter le plan ou l&apos;aile active dans un fichier texte au format requis par AVL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="180"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="171"/>
         <source>tessellation to STL</source>
         <translation>triangulation vers STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="181"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="172"/>
         <source>Export the plane&apos;s tessellation to a file in the STL format</source>
         <translation>&lt;p&gt;Exporter la tesselation du plan dans un fichier au format STL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="184"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="175"/>
         <source>mesh to STL</source>
         <translation>maillage vers STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="185"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="176"/>
         <source>Export the plane&apos;s mesh to a file in the STL format</source>
         <translation>&lt;p&gt;Exporter le maillage du plan dans un fichier au format STL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="188"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="179"/>
         <source>to XML</source>
         <translation>vers XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="191"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="182"/>
         <source>to a text file</source>
         <translation>vers un fichier texte</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="192"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="183"/>
         <source>Export the current operating point to a text or csv file</source>
         <translation>&lt;p&gt;Exporter le point de fonctionnement actuel vers un fichier texte ou CSV&lt;/p&lt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="195"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="475"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="186"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="466"/>
         <source>to clipboard</source>
         <translation>vers le presse-papier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="219"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="210"/>
         <source>Shows a form to edit the wing of the active plane</source>
         <translation>&lt;p&gt;Affiche une fenêtre pour modifier l&apos;aile du plan actif&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="236"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="227"/>
         <source>Shows a form to edit the body of the active plane</source>
         <translation>&lt;p&gt;Affiche une fenêtre pour modifier le corps de l&apos;avion actif&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="240"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="231"/>
         <source>Edit (Advanced)</source>
         <translation>Edition (Avancé)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="245"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="236"/>
         <source>Scale the dimensions of the main wing</source>
         <translation>Redimensionner l&apos;aile principale</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="250"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="241"/>
         <source>Scale the dimensions of the elevator</source>
         <translation>Redimensionner le stabilisateur</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="255"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="246"/>
         <source>Scale the dimensions of the fin</source>
         <translation>Redimensionner la dérive</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="260"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="251"/>
         <source>Scale the dimensions of the active fuse</source>
         <translation>Redimensionner le fuselage actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="276"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="267"/>
         <source>Translate the dimensions of the active fuse</source>
         <translation>Translation du fuselage actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="279"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="283"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="287"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="291"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="270"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="274"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="278"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="282"/>
         <source>Inertia</source>
         <translation>Inertie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="294"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="298"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="302"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="306"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="502"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="507"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="285"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="289"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="293"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="297"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="493"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="498"/>
         <source>Properties</source>
         <translation>Propriétés</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="309"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="300"/>
         <source>Fuse mesher</source>
         <translation>Maillage du fuselage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="313"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="304"/>
         <source>Reset triangular mesh</source>
         <translation>Réinitialise le maillage du fuselage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="314"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="305"/>
         <source>Resets the triangular mesh based on the uncut fuse</source>
         <translation>Réinitialise le maillage du fuselage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="317"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="308"/>
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="318"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="309"/>
         <source>Export all available polars to text files</source>
         <translation>Toutes les polaires disponibles en fichiers texte</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="321"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="312"/>
         <source>Inertia	F12</source>
         <translation>Inertie	F12</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="322"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="313"/>
         <source>Define the inertia for the active plane</source>
         <translation>Définir l&apos;inertie pour l&apos;avion actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="325"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="316"/>
         <source>Show active only</source>
         <translation>Afficher uniquement l&apos;objet sélectionné</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="326"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="317"/>
         <source>Hide all the curves except for the one corresponding to the active operating point</source>
         <translation>Masquer toutes les courbes sauf celle du point de fonctionnement actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="330"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="321"/>
         <source>Show all</source>
         <translation>Afficher tout</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="331"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="322"/>
         <source>Show the graph curves of all operating points</source>
         <translation>Afficher toutes les courbes de tous les points de fonctionnement</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="334"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="325"/>
         <source>Hide all</source>
         <translation>Masquer tout</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="335"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="326"/>
         <source>Hide the graph curves of all operating points</source>
         <translation>Masquer toutes les courbes de tous les points de fonctionnement</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="338"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="329"/>
         <source>Delete all</source>
         <translation>Supprimer tout</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="339"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="330"/>
         <source>Delete all the operating points of all planes and polars</source>
         <translation>Supprimer tous les points de fonctionnement de tous les avions et polaires</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="342"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="417"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="433"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="441"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="333"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="408"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="424"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="432"/>
         <source>Show</source>
         <translation>Afficher</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="343"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="334"/>
         <source>Show the curves of all the operating points of the active polar</source>
         <translation>Afficher les courbes de tous les points de fonctionnement de la polaire active</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="346"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="413"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="429"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="437"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="337"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="404"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="420"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="428"/>
         <source>Hide</source>
         <translation>Masquer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="347"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="338"/>
         <source>Hide the curves of all the operating points of the active polar</source>
         <translation>Masquer les courbes de tous les points de fonctionnement de la polaire active</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="350"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="421"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="445"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="449"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="487"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="491"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="341"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="412"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="436"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="440"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="478"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="482"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="351"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="342"/>
         <source>Delete all the operating points of the active polar</source>
         <translation>Supprimer tous les points de fonctionnement de la polaire active</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="354"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="345"/>
         <source>Show only the polar&apos;s operating points</source>
         <translation>Afficher uniquement les points de fonctionnement de la polaire</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="357"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="348"/>
         <source>Show target curve</source>
         <translation>Afficher la courbe cible</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="361"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="352"/>
         <source>Define an analysis</source>
         <translation>Définir une analyse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="363"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="354"/>
         <source>Define an analysis for the active plane</source>
         <translation>Définir une analyse pour l&apos;avion actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="366"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="357"/>
         <source>Define a control analysis</source>
         <translation>Définir une analyse de contrôle</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="368"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="359"/>
         <source>Shows a form to edit a new control analysis</source>
         <translation>Montrer un formulaire pour créer une analyse de contrôle</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="371"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="362"/>
         <source>Define a stability analysis</source>
         <translation>Définir une analyse de stabilité</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="373"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="364"/>
         <source>Define a stability analysis for the current wing or plane</source>
         <translation>Définir une analyse de stabilité pour l&apos;avion actuel</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="376"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="367"/>
         <source>Duplicate existing analyses</source>
         <translation>Dupliquer les analyses existantes</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="380"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="371"/>
         <source>Batch analysis (1)</source>
         <translation>Analyse par lots (1)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="384"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="375"/>
         <source>Batch analysis (2)</source>
         <translation>Analyse par lots (2)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="389"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="380"/>
         <source>Modify the analysis parameters of this polar</source>
         <translation>Modifier les paramètres de cette polaire</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="393"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="384"/>
         <source>Edit extra drag</source>
         <translation>Modifier le traînée supplémentaire</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="394"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="385"/>
         <source>Modify the extra drag parameters and the AVL-type parabolic drag without recalculating the polar.</source>
         <translation>&lt;p&gt;Modifier les paramètres de trainée supplémentaire et du trainée parabolique type AVL sans recalculer la polaire.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="397"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="388"/>
         <source>Edit data points</source>
         <translation>Modifier les points de données</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="398"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="389"/>
         <source>Modify the data points of this polar</source>
         <translation>&lt;p&gt;Modifier les points de données de la polaire&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="401"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="392"/>
         <source>Import analyses from xml</source>
         <translation>Importer des analyses à partir d&apos;un fichier XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="402"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="393"/>
         <source>Import one or more analyses defined by xml files.</source>
         <translation>Importer une ou plusieurs analyses définies dans des fichiers xml.</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="405"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="396"/>
         <source>Import external polar</source>
         <translation>Importer une polaire externe</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="406"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="397"/>
         <source>Create a polar and import its data from an external source.</source>
         <translation>Créer une polaire et importer ses données depuis une source externe.</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="409"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="400"/>
         <source>Analysis auto name options</source>
         <translation>Options de nom d&apos;analyse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="410"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="401"/>
         <source>Set the default options for automatic naming of polars</source>
         <translation>Définir les options pour le nom automatique des polaires</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="414"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="405"/>
         <source>Hide all the polar curves associated to the active wing or plane</source>
         <translation>Masquer toutes les polaires associées à l&apos;avion actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="418"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="409"/>
         <source>Show all the polar curves associated to the active wing or plane</source>
         <translation>Afficher toutes les polaires associées à l&apos;avion actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="422"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="413"/>
         <source>Delete all the polars associated to the active wing or plane</source>
         <translation>Supprimer toutes les polaires associées à l&apos;avion actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="425"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="416"/>
         <source>Show only plane polars</source>
         <translation>Afficher uniquement les polaires associées à l&apos;avion actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="430"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="421"/>
         <source>Hide all the polar curves of all wings and planes</source>
         <translation>Maqsuer toutes les polaires</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="434"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="425"/>
         <source>&lt;p&gt;Show all the polar curves of all wings and planes&lt;/p&gt;</source>
         <translation>&lt;p&gt;Afficher toutes les polaires&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="438"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="429"/>
         <source>&lt;p&gt;Hide all the operating point curves of the active wing or plane&lt;/p&gt;</source>
         <translation>&lt;p&gt;Masquer tous les points de fonctionnement associés à l&apos;avion actif&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="442"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="433"/>
         <source>Show all the operating point curves of the active wing or plane</source>
         <translation>&lt;p&gt;Afficher tous les points de fonctionnement associés à l&apos;avion actif&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="446"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="437"/>
         <source>&lt;p&gt;Delete all the operating points of the active wing or plane&lt;/p&gt;</source>
         <translation>&lt;p&gt;Supprimer tous les points de fonctionnement associés à l&apos;avion actif&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="451"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="442"/>
         <source>&lt;p&gt;Delete the active wing or plane&lt;/p&gt;</source>
         <translation>&lt;p&gt;Supprimer l&apos;avion actif&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="454"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="467"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="445"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="458"/>
         <source>Duplicate</source>
         <translation>Dupliquer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="456"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="447"/>
         <source>Duplicate the active wing or plane</source>
         <translation>Dupliquer l&apos;avion actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="459"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="450"/>
         <source>Save as project</source>
         <translation>Enregistrer en tant que projet</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="460"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="451"/>
         <source>Save the active wing or plane as a new separate project</source>
         <translation>L&apos;enregistrer l&apos;avion actif en tant que projet séparé</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="463"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="454"/>
         <source>Rename	Shift+F2</source>
         <translation>Renommer 	Shift+F2</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="464"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="455"/>
         <source>Rename the active polar</source>
         <translation>Renommer la polaire active</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="471"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="462"/>
         <source>to file</source>
         <translation>vers un fichier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="472"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="463"/>
         <source>Export the active polar to a text or csv file</source>
         <translation>Exporter la polaire active dans un fichier texte ou CSV</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="479"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="470"/>
         <source>Reset</source>
         <translation>Réinitialiser</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="480"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="471"/>
         <source>Delete all the points of the active polar, but keep the analysis settings</source>
         <translation>Supprimer tous les points de la polaire active, mais conserver les paramètres d&apos;analyse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="483"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="474"/>
         <source>Show only active polar</source>
         <translation>Afficher uniquement la polaire active</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="488"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="479"/>
         <source>Delete the active polar</source>
         <translation>Supprimer la polaire active</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="492"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="483"/>
         <source>Delete the active operating point</source>
         <translation>Supprimer le point de fonctionnement actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="495"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="486"/>
         <source>Open the analysis window</source>
         <translation>Ouvrir la fenêtre d&apos;analyse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="499"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="490"/>
         <source>3d analysis settings</source>
         <translation>Paramètres d&apos;analyse 3d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="503"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="494"/>
         <source>Show the properties of the active polar</source>
         <translation>Afficher les propriétés de la polaire active</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="508"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="499"/>
         <source>Show the properties of the active operating point</source>
         <translation>Afficher les propriétés du point de fonctionnement actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="512"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="503"/>
         <source>From an xml file</source>
         <translation>à partir d&apos;un fichier XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="515"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="506"/>
         <source>Export analysis to xml file</source>
         <translation>Exporter l&apos;analyse vers un fichier XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="518"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="509"/>
         <source>Open 3d view in new window</source>
         <translation>Ouvrir la vue 3d dans une nouvelle fenêtre</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="526"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="543"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="556"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="569"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="517"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="534"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="547"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="560"/>
         <source>to XML file</source>
         <translation>vers un fichier XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="530"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="546"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="559"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="571"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="521"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="537"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="550"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="562"/>
         <source>to STEP file</source>
         <translation>vers un fichier STEP</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="535"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="549"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="562"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="573"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="526"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="540"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="553"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="564"/>
         <source>tessellation to STL file</source>
         <translation>triangulation vers un fichier STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="539"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="552"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="565"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="575"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="530"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="543"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="556"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplaneactions.cpp" line="566"/>
         <source>mesh to STL file</source>
         <translation>maillage vers un fichier STL</translation>
     </message>
@@ -11074,156 +11098,151 @@ Import depuis un fichier binaire
     <name>XPlaneMenus</name>
     <message>
         <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="66"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="112"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="151"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="302"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="333"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="105"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="144"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="295"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="326"/>
         <source>Context Menu</source>
         <translation>Menu contextuel</translation>
     </message>
     <message>
         <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="74"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="632"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="625"/>
         <source>Mesh</source>
         <translation>Maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="96"/>
-        <source>Background Image</source>
-        <translation>Image de fond</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="118"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="577"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="111"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="570"/>
         <source>All polars</source>
         <translation>Toutes les polaires</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="124"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="276"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="311"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="341"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="117"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="269"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="304"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="334"/>
         <source>Graph</source>
         <translation>Graphique</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="130"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="176"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="286"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="317"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="347"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="376"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="395"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="414"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="433"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="495"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="123"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="169"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="279"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="310"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="340"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="369"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="388"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="407"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="426"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="488"/>
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="153"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="473"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="146"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="466"/>
         <source>Active plane</source>
         <translation>Avion actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="185"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="504"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="178"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="497"/>
         <source>Analyses</source>
         <translation>Analyses</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="200"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="519"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="193"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="512"/>
         <source>Associated polars</source>
         <translation>Polaires associées</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="210"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="233"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="528"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="557"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="203"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="226"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="521"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="550"/>
         <source>Associated operating points</source>
         <translation>Points de fonctionnement associés</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="219"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="221"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="212"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="214"/>
         <source>Active Polar</source>
         <translation>Polaire active</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="242"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="257"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="566"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="593"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="235"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="250"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="559"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="586"/>
         <source>Export data</source>
         <translation>Exporter les données</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="254"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="590"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="247"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="583"/>
         <source>Active operating point</source>
         <translation>Point de fonctionnement actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="267"/>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="601"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="260"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="594"/>
         <source>Operating points</source>
         <translation>Points de fonctionnement</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="368"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="361"/>
         <source>Wing</source>
         <translation>Aile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="387"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="380"/>
         <source>Elevator</source>
         <translation>Stabilisateur</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="406"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="399"/>
         <source>Fin</source>
         <translation>Dérive</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="425"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="418"/>
         <source>Fuselage</source>
         <translation>Fuselage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="454"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="447"/>
         <source>&amp;View</source>
         <translation>&amp;Vue</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="470"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="463"/>
         <source>&amp;Plane</source>
         <translation>&amp;Avion</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="536"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="529"/>
         <source>Import</source>
         <translation>Importer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="543"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="536"/>
         <source>&amp;Polars</source>
         <translation>&amp;Polaires</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="545"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="538"/>
         <source>Active polar</source>
         <translation>Polaire active</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="588"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="581"/>
         <source>&amp;Operating point</source>
         <translation>&amp;Point de fonctionnement</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="614"/>
+        <location filename="../../fl5-app/modules/xplane/menus/xplanemenus.cpp" line="607"/>
         <source>&amp;Analysis</source>
         <translation>&amp;Analyse</translation>
     </message>
@@ -11323,255 +11342,240 @@ Import depuis un fichier binaire
     </message>
     <message>
         <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="70"/>
-        <source>Load</source>
-        <translation>Charger</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="73"/>
-        <source>Clear</source>
-        <translation>Effacer</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="76"/>
-        <source>Settings</source>
-        <translation>Paramètres</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="80"/>
         <source>Open 3d view in new window</source>
         <translation>Ouvrir la vue 3d dans une nouvelle fenêtre</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="85"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="75"/>
         <source>Import from xml</source>
         <translation>Importer depuis un fichier XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="88"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="78"/>
         <source>Open the analysis window</source>
         <translation>Ouvrir la fenêtre d&apos;analyse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="92"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="82"/>
         <source>3d analysis settings</source>
         <translation>Paramètres de l&apos;analyse 3d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="95"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="85"/>
         <source>Mesh information</source>
         <translation>Informations sur le maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="98"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="88"/>
         <source>Make triangle connections</source>
         <translation>Connecter les triangles</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="102"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="92"/>
         <source>Check panels</source>
         <translation>Vérifier les panneaux</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="105"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="95"/>
         <source>Show panel normals</source>
         <translation>Afficher les normales des panneaux</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="117"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="107"/>
         <source>Define a new boat</source>
         <translation>Définir un nouveau bateau</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="118"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="108"/>
         <source>Shows a dialogbox to create a new boat definition</source>
         <translation>Montre une boîte de dialogue pour créer un nouveau bateau</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="122"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="189"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="263"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="287"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="315"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="112"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="179"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="253"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="277"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="305"/>
         <source>Edit</source>
         <translation>Editer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="123"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="113"/>
         <source>Shows a form to edit the currently selected boat</source>
         <translation>Affiche un formulaire pour modifier le bateau actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="127"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="198"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="117"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="188"/>
         <source>Rename</source>
         <translation>Renommer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="131"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="181"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="121"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="171"/>
         <source>Duplicate</source>
         <translation>Dupliquer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="135"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="156"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="213"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="256"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="125"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="146"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="203"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="246"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="138"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="128"/>
         <source>Save as project</source>
         <translation>Enregistrer en tant que projet</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="141"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="278"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="300"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="131"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="268"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="290"/>
         <source>to XML</source>
         <translation>vers XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="144"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="134"/>
         <source>Manage</source>
         <translation>Gérer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="147"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="137"/>
         <source>Import from XML</source>
         <translation>Importer depuis XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="150"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="163"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="201"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="219"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="140"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="153"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="191"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="209"/>
         <source>Show</source>
         <translation>Afficher</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="153"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="166"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="204"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="222"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="143"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="156"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="194"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="212"/>
         <source>Hide</source>
         <translation>Masquer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="159"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="228"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="149"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="218"/>
         <source>Show only</source>
         <translation>Afficher uniquement</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="169"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="225"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="159"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="215"/>
         <source>Delete all</source>
         <translation>Tout supprimer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="176"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="166"/>
         <source>Define an analysis</source>
         <translation>Définir une analyse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="178"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="168"/>
         <source>Define an analysis for the current boat</source>
         <translation>Définir une analyse pour le bateau actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="185"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="175"/>
         <source>Duplicate an existing analysis</source>
         <translation>Dupliquer une analyse existante</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="190"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="180"/>
         <source>Modify the analysis parameters of this polar</source>
         <translation>Modifier les paramètres de la polaire</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="194"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="184"/>
         <source>Rename current</source>
         <translation>Renommer actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="207"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="197"/>
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="210"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="200"/>
         <source>Edit points</source>
         <translation>Editer les points</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="216"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="206"/>
         <source>Reset</source>
         <translation>Réinitialiser</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="231"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="250"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="221"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="240"/>
         <source>to file</source>
         <translation>vers un fichier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="234"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="253"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="224"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="243"/>
         <source>to clipboard</source>
         <translation>vers le presse-papier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="237"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="227"/>
         <source>Export analysis to xml file</source>
         <translation>Exporter l&apos;analyse au format XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="240"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="247"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="230"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="237"/>
         <source>Properties</source>
         <translation>Propriétés</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="267"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="257"/>
         <source>Scale shape</source>
         <translation>Homothétie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="271"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="294"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="261"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="284"/>
         <source>Scale size</source>
         <translation>Homothétie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="275"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="297"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="322"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="265"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="287"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="312"/>
         <source>Translate</source>
         <translation>Translation</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="281"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="303"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="271"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="293"/>
         <source>mesh to STL</source>
         <translation>maillage vers STL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="284"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="306"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="274"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="296"/>
         <source>to STEP</source>
         <translation>en STEP</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="291"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="319"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="281"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="309"/>
         <source>Scale</source>
         <translation>Homothétie</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="309"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="312"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="299"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailactions.cpp" line="302"/>
         <source>Convert to NURBS type</source>
         <translation>Convertir au format NURBS</translation>
     </message>
@@ -11694,117 +11698,111 @@ over the Cp or Forces color plot. (Shift+H)&lt;/p&gt;</source>
         <translation>&amp;Vue</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="66"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="278"/>
-        <source>Background image</source>
-        <translation>Image de fond</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="77"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="70"/>
         <source>&amp;Boat</source>
         <translation>&amp;Bateau</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="81"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="74"/>
         <source>Active boat</source>
         <translation>Bateau actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="95"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="225"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="241"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="311"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="88"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="218"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="234"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="297"/>
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="100"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="93"/>
         <source>Analysis</source>
         <translation>Analyse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="111"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="204"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="269"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="104"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="197"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="262"/>
         <source>Mesh</source>
         <translation>Maillage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="120"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="113"/>
         <source>Associated polars</source>
         <translation>Polaires associées</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="129"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="148"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="122"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="141"/>
         <source>Associated operating points</source>
         <translation>Points de fonctionnement associés</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="137"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="130"/>
         <source>Polars</source>
         <translation>Polaires</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="139"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="132"/>
         <source>Active polar</source>
         <translation>Polaire active</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="153"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="178"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="146"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="171"/>
         <source>Export data</source>
         <translation>Exporter les données</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="165"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="299"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="158"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="285"/>
         <source>All polars</source>
         <translation>Toutes les polaires</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="173"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="166"/>
         <source>Operating point</source>
         <translation>Point de fonctionnement</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="175"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="168"/>
         <source>Active operating point</source>
         <translation>Point de fonctionnement actif</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="186"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="179"/>
         <source>Operating points</source>
         <translation>Points de fonctionnement</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="193"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="186"/>
         <source>&amp;Analysis</source>
         <translation>&amp;Analyse</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="218"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="211"/>
         <source>Main sail</source>
         <translation>Voile principale</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="234"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="227"/>
         <source>Jib</source>
         <translation>Foc</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="250"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="243"/>
         <source>Hull</source>
         <translation>Coque</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="262"/>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="293"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="255"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="279"/>
         <source>Context Menu</source>
         <translation>Menu contextuel</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="305"/>
+        <location filename="../../fl5-app/modules/xsail/menus/xsailmenus.cpp" line="291"/>
         <source>Graph</source>
         <translation>Graphique</translation>
     </message>
@@ -11830,7 +11828,7 @@ over the Cp or Forces color plot. (Shift+H)&lt;/p&gt;</source>
         <translation>Inspiré par &lt;a href=https://youtu.be/LqbZpur38nw&gt;la vidéo YouTube de 3Blue1Brown&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/opengl/testgl/gl2dfractal.cpp" line="390"/>
+        <location filename="../../fl5-app/interfaces/opengl/testgl/gl2dfractal.cpp" line="396"/>
         <source>Scale = %1</source>
         <translation>Echelle = %1</translation>
     </message>
@@ -12116,6 +12114,11 @@ over the Cp or Forces color plot. (Shift+H)&lt;/p&gt;</source>
 <context>
     <name>gl3dTexture</name>
     <message>
+        <location filename="../../fl5-app/interfaces/opengl/testgl/gl3dtexture.cpp" line="231"/>
+        <source>Open saved image</source>
+        <translation>Ouvrir l&apos;image sauvegardée</translation>
+    </message>
+    <message>
         <location filename="../../fl5-app/interfaces/opengl/testgl/gl3dtexture.cpp" line="294"/>
         <source>Start/continue</source>
         <translation>Démarrer/Continuer</translation>
@@ -12139,17 +12142,17 @@ over the Cp or Forces color plot. (Shift+H)&lt;/p&gt;</source>
 <context>
     <name>gl3dXPlaneView</name>
     <message>
-        <location filename="../../fl5-app/modules/xplane/glview/gl3dxplaneview.cpp" line="2224"/>
+        <location filename="../../fl5-app/modules/xplane/glview/gl3dxplaneview.cpp" line="2225"/>
         <source>Cp</source>
         <translation>Cp</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/glview/gl3dxplaneview.cpp" line="2277"/>
+        <location filename="../../fl5-app/modules/xplane/glview/gl3dxplaneview.cpp" line="2278"/>
         <source>Gamma x1000</source>
         <translation>Gamma x1000</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/glview/gl3dxplaneview.cpp" line="2432"/>
+        <location filename="../../fl5-app/modules/xplane/glview/gl3dxplaneview.cpp" line="2433"/>
         <source>Omega x1000.0</source>
         <translation>Omega x1000.0</translation>
     </message>

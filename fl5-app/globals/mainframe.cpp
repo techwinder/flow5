@@ -293,6 +293,7 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
     m_bManualCheck = false;
 
     loadSettings();
+
     updateRecentFileActions();
 
     QString strange;
@@ -391,7 +392,6 @@ void MainFrame::testOpenGL()
     if(QSurfaceFormat::defaultFormat().majorVersion()<3)
     {
         displayMessage("The application requires OpenGL 3.1 or greater.\n", false);
-
     }
 }
 
@@ -706,6 +706,7 @@ void MainFrame::createMainFrameActions()
 
     m_pPreferencesAct = new QAction(tr("Preferences"), this);
     m_pPreferencesAct->setStatusTip(tr("Set default preferences for this application"));
+    m_pPreferencesAct->setShortcut(QKeySequence(Qt::CTRL | Qt::ALT | Qt::Key_P));
     connect(m_pPreferencesAct, SIGNAL(triggered(bool)), SLOT(onPreferences()));
 
     m_pRestoreToolbarsAct     = new QAction(tr("Restore toolbars"), this);
@@ -742,7 +743,7 @@ void MainFrame::createMainFrameActions()
     connect(m_pExportGraphToSvgFile, SIGNAL(triggered()), SLOT(onExportCurGraphToSVG()));
 
     m_pCopyCurGraphDataAct = new QAction(tr("to clipboard"), this);
-    m_pCopyCurGraphDataAct->setStatusTip(tr("Copies the curve data to the clipboard, for pasting in an external editor or a spreadsheet"));
+    m_pCopyCurGraphDataAct->setStatusTip("<p>"+tr("Copies the curve data to the clipboard, for pasting in an external editor or a spreadsheet") + "</p>");
     connect(m_pCopyCurGraphDataAct, SIGNAL(triggered()), SLOT(onCopyCurGraphData()));
 
     m_pResetCurGraphScales = new QAction(QIcon(":/icons/OnResetGraphScale.png"), tr("Reset scales \tR"), this);
@@ -1425,6 +1426,14 @@ void MainFrame::keyPressEvent(QKeyEvent *pEvent)
                 pTestView->activateWindow();
                 break;
             }
+            case Qt::Key_F5:
+            {
+                gl3dTexture *pTestView = new gl3dTexture;
+                pTestView->setAttribute(Qt::WA_DeleteOnClose);
+                pTestView->show();
+                pTestView->activateWindow();
+                break;
+            }
             default:
                 pEvent->ignore();
                 return;
@@ -1558,7 +1567,7 @@ void MainFrame::showStabTimeCtrls(bool bVisible)
 
 void MainFrame::onLoadFoilFile()
 {
-    QStringList PathNames = QFileDialog::getOpenFileNames(this, "Open file",
+    QStringList const PathNames = QFileDialog::getOpenFileNames(this, "Open file",
                                                           SaveOptions::datFoilDirName(),
                                                           "Foil file (*.dat)");
     if(!PathNames.size()) return;
@@ -2375,20 +2384,23 @@ void MainFrame::onXPlane()
         Objects2d::cancelTEFlapAngles();
     }
 
-    displayMessage("Setting planes, polars and operating points...", false);
-    m_pXPlane->cancelStreamLines();
-    m_pXPlane->setPlane();
-//    m_pXPlane->setPolar();
-//    m_pXPlane->setPlaneOpp(nullptr);
-    displayMessage(" done\n\n", false);
+    if(m_pXPlane) // keeping CLang quiet
+    {
+        displayMessage("Setting planes, polars and operating points...", false);
+        m_pXPlane->cancelStreamLines();
+        m_pXPlane->setPlane();
+    //    m_pXPlane->setPolar();
+    //    m_pXPlane->setPlaneOpp(nullptr);
+        displayMessage(" done\n\n", false);
 
-    m_pXPlane->updateTreeView();
-    m_pXPlane->m_pPlaneExplorer->selectObjects();
-    m_pXPlane->m_pPlaneExplorer->setObjectProperties();
-    m_pXPlane->resetCurves();
-    m_pXPlane->m_pgl3dXPlaneView->resetglPOpp();
-    m_pXPlane->m_pgl3dXPlaneView->resetglColorMap();
-    m_pXPlane->setControls();
+        m_pXPlane->updateTreeView();
+        m_pXPlane->m_pPlaneExplorer->selectObjects();
+        m_pXPlane->m_pPlaneExplorer->setObjectProperties();
+        m_pXPlane->resetCurves();
+        m_pXPlane->m_pgl3dXPlaneView->resetglPOpp();
+        m_pXPlane->m_pgl3dXPlaneView->resetglColorMap();
+        m_pXPlane->setControls();
+    }
 
     updateView();
 }
@@ -3135,29 +3147,38 @@ void MainFrame::setMenus()
         }
         case xfl::XDIRECT:
         {
-            menuBar()->addMenu(m_pXDirect->m_pMenus->m_pXDirectViewMenu);
-            menuBar()->addMenu(m_pXDirect->m_pMenus->m_pXDirectFoilMenu);
-            menuBar()->addMenu(m_pXDirect->m_pMenus->m_pXFoilAnalysisMenu);
-            menuBar()->addMenu(m_pXDirect->m_pMenus->m_pPolarMenu);
-            menuBar()->addMenu(m_pXDirect->m_pMenus->m_pOpPointMenu);
+            if(m_pXDirect && m_pXDirect->m_pMenus)  // Keep CLang quiet and happy
+            {
+                menuBar()->addMenu(m_pXDirect->m_pMenus->m_pXDirectViewMenu);
+                menuBar()->addMenu(m_pXDirect->m_pMenus->m_pXDirectFoilMenu);
+                menuBar()->addMenu(m_pXDirect->m_pMenus->m_pXFoilAnalysisMenu);
+                menuBar()->addMenu(m_pXDirect->m_pMenus->m_pPolarMenu);
+                menuBar()->addMenu(m_pXDirect->m_pMenus->m_pOpPointMenu);
+            }
             break;
         }
         case xfl::XPLANE:
         {
-            menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlaneViewMenu);
-            menuBar()->addMenu(m_pXPlane->m_pMenus->m_pPlaneMenu);
-            menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlaneWPlrMenu);
-            menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlaneWOppMenu);
-            menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlaneAnalysisMenu);
+            if(m_pXPlane && m_pXPlane->m_pMenus)  // Keep CLang quiet and happy
+            {
+                menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlaneViewMenu);
+                menuBar()->addMenu(m_pXPlane->m_pMenus->m_pPlaneMenu);
+                menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlaneWPlrMenu);
+                menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlaneWOppMenu);
+                menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlaneAnalysisMenu);
+            }
             break;
         }
         case xfl::XSAIL:
         {
-            menuBar()->addMenu(m_pXSail->m_pMenus->m_pXSailViewMenu);
-            menuBar()->addMenu(m_pXSail->m_pMenus->m_pBoatMenu);
-            menuBar()->addMenu(m_pXSail->m_pMenus->m_pXSailWBtPlrMenu);
-            menuBar()->addMenu(m_pXSail->m_pMenus->m_pXSailBtOppMenu);
-            menuBar()->addMenu(m_pXSail->m_pMenus->m_pXSailAnalysisMenu);
+            if(m_pXSail && m_pXSail->m_pMenus)  // Keep CLang quiet and happy
+            {
+                menuBar()->addMenu(m_pXSail->m_pMenus->m_pXSailViewMenu);
+                menuBar()->addMenu(m_pXSail->m_pMenus->m_pBoatMenu);
+                menuBar()->addMenu(m_pXSail->m_pMenus->m_pXSailWBtPlrMenu);
+                menuBar()->addMenu(m_pXSail->m_pMenus->m_pXSailBtOppMenu);
+                menuBar()->addMenu(m_pXSail->m_pMenus->m_pXSailAnalysisMenu);
+            }
             break;
         }
     }
@@ -3955,10 +3976,12 @@ void MainFrame::onPreferences()
 
     m_pXPlane->resetPrefs();
     m_pXPlane->updateUnits();
+    m_pXPlane->m_pgl3dXPlaneView->setBackground();
 
 
     m_pXSail->resetPrefs();
-    m_pXSail->updateUnits();
+    m_pXSail->updateUnits();    
+    m_pXSail->m_pgl3dXSailView->setBackground();
 
     QPalette palette;
     palette.setColor(QPalette::WindowText, DisplayOptions::textColor());

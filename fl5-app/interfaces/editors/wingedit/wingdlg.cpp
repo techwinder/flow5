@@ -111,10 +111,6 @@ WingDlg::WingDlg(QWidget *pParent) : XflDialog(pParent)
     m_pPasteAction      = new QAction(tr("Paste"), this);
     m_pPasteAction->setShortcut(Qt::Key_Paste);
 
-    m_pBackImageLoad     = new QAction(tr("Load"),  this);
-    m_pBackImageClear    = new QAction(tr("Clear"), this);
-    m_pBackImageSettings = new QAction(tr("Settings"),  this);
-
     m_pResetMesh            = new QAction(tr("Reset mesh"),  this);
     m_pTranslateWing        = new QAction(tr("Translate"),   this);
     m_pScaleWing            = new QAction(tr("Scale"),       this);
@@ -236,13 +232,6 @@ void WingDlg::contextMenuEvent(QContextMenuEvent *pEvent)
             pWingMenu->addAction(m_pExportToCADFile);
             pWingMenu->addAction(m_pExportToStl);
         }
-        pContextMenu->addSeparator();
-        QMenu *pBackImageMenu = pContextMenu->addMenu(tr("Background image"));
-        {
-            pBackImageMenu->addAction(m_pBackImageLoad);
-            pBackImageMenu->addAction(m_pBackImageClear);
-            pBackImageMenu->addAction(m_pBackImageSettings);
-        }
         pContextMenu->exec(QCursor::pos());
     }
     update();
@@ -304,11 +293,11 @@ bool WingDlg::checkWing()
         }
     }
 
-    int NYPanels = 0;
+/*    int NYPanels = 0;
     for(int j=0; j<m_pWing->nSections()-1; j++)
     {
         NYPanels += m_pWing->nYPanels(j);
-    }
+    }*/
 
     return true;
 }
@@ -348,10 +337,6 @@ void WingDlg::connectWingSignals()
 
     connect(m_pglWingView,           SIGNAL(pickedNodePair(QPair<int,int>)), SLOT(onPickedNodePair(QPair<int,int>)));
     connect(m_pglControls->m_ptbDistance, SIGNAL(clicked()), SLOT(onNodeDistance()));
-
-    connect(m_pBackImageLoad,        SIGNAL(triggered()), m_pglWingView, SLOT(onLoadBackImage()));
-    connect(m_pBackImageClear,       SIGNAL(triggered()), m_pglWingView, SLOT(onClearBackImage()));
-    connect(m_pBackImageSettings,    SIGNAL(triggered()), m_pglWingView, SLOT(onBackImageSettings()));
 }
 
 

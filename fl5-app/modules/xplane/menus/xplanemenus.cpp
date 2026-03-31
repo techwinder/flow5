@@ -93,13 +93,6 @@ void XPlaneMenus::create3dCtxMenus()
         m_p3dCtxMenu->addSeparator();
         m_p3dCtxMenu->addAction(m_pMainFrame->m_pViewLogFile);
         m_p3dCtxMenu->addSeparator();
-        QMenu *pImageMenu = m_p3dCtxMenu->addMenu(tr("Background Image"));
-        {
-            pImageMenu->addAction(pActions->m_pBackImageLoad);
-            pImageMenu->addAction(pActions->m_pBackImageClear);
-            pImageMenu->addAction(pActions->m_pBackImageSettings);
-        }
-        m_p3dCtxMenu->addSeparator();
         m_p3dCtxMenu->addAction(m_pMainFrame->m_pSaveViewToImageFileAct);
     }
 }

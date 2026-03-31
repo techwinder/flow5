@@ -32,6 +32,9 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
+#include <QToolButton>
+#include <QStackedLayout>
+
 
 #include <api/linestyle.h>
 #include <core/fontstruct.h>
@@ -48,6 +51,8 @@ class W3dPrefs : public QWidget
     Q_OBJECT
 
     public:
+        enum eBackground {UNIFORM, GRADIENT, IMAGE};
+
         W3dPrefs(QWidget *pParent=nullptr);
 
         void initWidgets();
@@ -127,6 +132,10 @@ class W3dPrefs : public QWidget
 
         void onColorGradient();
 
+        void onBackground();
+        void onImagePath();
+        void onGradientColour();
+
     private:
         void setupLayout();
         void connectSignals();
@@ -163,9 +172,6 @@ class W3dPrefs : public QWidget
         IntEdit *m_pieChordwiseRes, *m_pieBodyAxialRes, *m_pieBodyHoopRes;
         IntEdit *m_pieSailXRes, *m_pieSailZRes;
 
-//        FloatEdit *m_pfeGmshMin,  *m_pfeGmshMax;
-//        IntEdit   *m_pieGmshNCurv;
-
         GmshCtrlsWt *m_pGmshCtrlsWt;
 
         FloatEdit *m_pfeArcballRadius;
@@ -180,7 +186,21 @@ class W3dPrefs : public QWidget
         IntEdit *m_pieNContourLines;
         LineBtn *m_plbContourLines;
 
+        QStackedLayout *m_pBackOptionLayout;
+        QRadioButton *m_prbUniColor, *m_prbGradient, *m_prbBackImage;
+        QLabel *m_plabImagePath;
+        QToolButton *m_ptbImagePath;
+        ColorBtn *m_pcbGrad1, *m_pcbGrad2;
+        FloatEdit *m_pfeGradAngle;
+
+
     public:
+
+        static eBackground s_eBackground; /**< 0: uniform color, 1: gradient, 2: image >*/
+        static QString s_ImagePath;
+        static QColor s_ColourGrad1, s_ColourGrad2;
+        static float s_GradientAngle;
+
 
         static double s_MassRadius;
         static QColor s_MassColor;

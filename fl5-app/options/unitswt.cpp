@@ -49,38 +49,38 @@ void UnitsWt::setupLayout()
         {
             QGridLayout *pConversionLayout = new QGridLayout;
             {
-                QLabel *pLab1 = new QLabel(tr("Length:"));
-                QLabel *pLab2 = new QLabel(tr("Area:"));
-                QLabel *pLab3 = new QLabel(tr("Velocity:"));
-                QLabel *pLab4 = new QLabel(tr("Mass:"));
-                QLabel *pLab5 = new QLabel(tr("Force:"));
-                QLabel *pLab6 = new QLabel(tr("Moment:"));
-                QLabel *pLab7 = new QLabel(tr("Pressure:"));
-                QLabel *pLab8 = new QLabel(tr("Inertia:"));
-                pLab1->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                pLab2->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                pLab3->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                pLab4->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                pLab5->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                pLab6->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                pLab7->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                pLab8->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                pLab1->setFont(fixedfnt);
-                pLab2->setFont(fixedfnt);
-                pLab3->setFont(fixedfnt);
-                pLab4->setFont(fixedfnt);
-                pLab5->setFont(fixedfnt);
-                pLab6->setFont(fixedfnt);
-                pLab7->setFont(fixedfnt);
-                pLab8->setFont(fixedfnt);
-                pConversionLayout->addWidget(pLab1, 1,1);
-                pConversionLayout->addWidget(pLab2, 2,1);
-                pConversionLayout->addWidget(pLab3, 3,1);
-                pConversionLayout->addWidget(pLab4, 4,1);
-                pConversionLayout->addWidget(pLab5, 5,1);
-                pConversionLayout->addWidget(pLab6, 6,1);
-                pConversionLayout->addWidget(pLab7, 7,1);
-                pConversionLayout->addWidget(pLab8, 8,1);
+                QLabel *plab1 = new QLabel(tr("Length:"));
+                QLabel *plab2 = new QLabel(tr("Area:"));
+                QLabel *plab3 = new QLabel(tr("Velocity:"));
+                QLabel *plab4 = new QLabel(tr("Mass:"));
+                QLabel *plab5 = new QLabel(tr("Force:"));
+                QLabel *plab6 = new QLabel(tr("Moment:"));
+                QLabel *plab7 = new QLabel(tr("Pressure:"));
+                QLabel *plab8 = new QLabel(tr("Inertia:"));
+                plab1->setAlignment(Qt::AlignRight | Qt::AlignCenter);
+                plab2->setAlignment(Qt::AlignRight | Qt::AlignCenter);
+                plab3->setAlignment(Qt::AlignRight | Qt::AlignCenter);
+                plab4->setAlignment(Qt::AlignRight | Qt::AlignCenter);
+                plab5->setAlignment(Qt::AlignRight | Qt::AlignCenter);
+                plab6->setAlignment(Qt::AlignRight | Qt::AlignCenter);
+                plab7->setAlignment(Qt::AlignRight | Qt::AlignCenter);
+                plab8->setAlignment(Qt::AlignRight | Qt::AlignCenter);
+                plab1->setFont(fixedfnt);
+                plab2->setFont(fixedfnt);
+                plab3->setFont(fixedfnt);
+                plab4->setFont(fixedfnt);
+                plab5->setFont(fixedfnt);
+                plab6->setFont(fixedfnt);
+                plab7->setFont(fixedfnt);
+                plab8->setFont(fixedfnt);
+                pConversionLayout->addWidget(plab1, 1,1);
+                pConversionLayout->addWidget(plab2, 2,1);
+                pConversionLayout->addWidget(plab3, 3,1);
+                pConversionLayout->addWidget(plab4, 4,1);
+                pConversionLayout->addWidget(plab5, 5,1);
+                pConversionLayout->addWidget(plab6, 6,1);
+                pConversionLayout->addWidget(plab7, 7,1);
+                pConversionLayout->addWidget(plab8, 8,1);
 
 
                 m_plabLengthFactor   = new QLabel;
@@ -100,23 +100,15 @@ void UnitsWt::setupLayout()
                 m_plabMomentFactor->setFont(fixedfnt);
                 m_plabPressureFactor->setFont(fixedfnt);
                 m_plabInertiaFactor->setFont(fixedfnt);
-                m_plabLengthFactor->setAlignment(  Qt::AlignRight | Qt::AlignCenter);
-                m_plabSurfaceFactor->setAlignment( Qt::AlignRight | Qt::AlignCenter);
-                m_plabWeightFactor->setAlignment(  Qt::AlignRight | Qt::AlignCenter);
-                m_plabSpeedFactor->setAlignment(   Qt::AlignRight | Qt::AlignCenter);
-                m_plabForceFactor->setAlignment(   Qt::AlignRight | Qt::AlignCenter);
-                m_plabMomentFactor->setAlignment(  Qt::AlignRight | Qt::AlignCenter);
-                m_plabPressureFactor->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                m_plabInertiaFactor->setAlignment( Qt::AlignRight | Qt::AlignCenter);
 
-                pConversionLayout->addWidget(m_plabLengthFactor,   1,2);
-                pConversionLayout->addWidget(m_plabSurfaceFactor,  2,2);
-                pConversionLayout->addWidget(m_plabSpeedFactor,    3,2);
-                pConversionLayout->addWidget(m_plabWeightFactor,   4,2);
-                pConversionLayout->addWidget(m_plabForceFactor,    5,2);
-                pConversionLayout->addWidget(m_plabMomentFactor,   6,2);
-                pConversionLayout->addWidget(m_plabPressureFactor, 7,2);
-                pConversionLayout->addWidget(m_plabInertiaFactor,  8,2);
+                pConversionLayout->addWidget(m_plabLengthFactor,   1,2, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabSurfaceFactor,  2,2, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabSpeedFactor,    3,2, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabWeightFactor,   4,2, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabForceFactor,    5,2, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabMomentFactor,   6,2, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabPressureFactor, 7,2, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabInertiaFactor,  8,2, Qt::AlignRight);
 
                 m_pcbLength    = new QComboBox;
                 m_pcbSurface   = new QComboBox;
@@ -133,7 +125,7 @@ void UnitsWt::setupLayout()
                 pConversionLayout->addWidget(m_pcbForce,    5,3);
                 pConversionLayout->addWidget(m_pcbMoment,   6,3);
                 pConversionLayout->addWidget(m_pcbPressure, 7,3);
-                pConversionLayout->addWidget(m_pcbInertia, 8,3);
+                pConversionLayout->addWidget(m_pcbInertia,  8,3);
 
 
                 m_plabLengthInvFactor   = new QLabel;
@@ -153,22 +145,14 @@ void UnitsWt::setupLayout()
                 m_plabPressureInvFactor->setFont(fixedfnt);
                 m_plabInertiaInvFactor->setFont(fixedfnt);
 
-                m_plabLengthInvFactor->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                m_plabSurfaceInvFactor->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                m_plabWeightInvFactor->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                m_plabSpeedInvFactor->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                m_plabForceInvFactor->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                m_plabMomentInvFactor->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                m_plabPressureInvFactor->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                m_plabInertiaInvFactor->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                pConversionLayout->addWidget(m_plabLengthInvFactor,   1,4);
-                pConversionLayout->addWidget(m_plabSurfaceInvFactor,  2,4);
-                pConversionLayout->addWidget(m_plabSpeedInvFactor,    3,4);
-                pConversionLayout->addWidget(m_plabWeightInvFactor,   4,4);
-                pConversionLayout->addWidget(m_plabForceInvFactor,    5,4);
-                pConversionLayout->addWidget(m_plabMomentInvFactor,   6,4);
-                pConversionLayout->addWidget(m_plabPressureInvFactor, 7,4);
-                pConversionLayout->addWidget(m_plabInertiaInvFactor,  8,4);
+                pConversionLayout->addWidget(m_plabLengthInvFactor,   1,4, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabSurfaceInvFactor,  2,4, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabSpeedInvFactor,    3,4, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabWeightInvFactor,   4,4, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabForceInvFactor,    5,4, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabMomentInvFactor,   6,4, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabPressureInvFactor, 7,4, Qt::AlignRight);
+                pConversionLayout->addWidget(m_plabInertiaInvFactor,  8,4, Qt::AlignRight);
                 pConversionLayout->setColumnStretch(4,2);
             }
             pgbConversion->setLayout(pConversionLayout);

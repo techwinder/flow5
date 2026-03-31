@@ -154,8 +154,6 @@ class WingDlg: public XflDialog
         QAction *m_pDeleteSection, *m_pResetSection, *m_pDuplicateSection;
         QAction *m_pCopyAction, *m_pPasteAction;
 
-        QAction *m_pBackImageLoad, *m_pBackImageClear, *m_pBackImageSettings;
-
         WingXfl *m_pWing;
 
         bool m_bRightSide;

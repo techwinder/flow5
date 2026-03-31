@@ -61,7 +61,7 @@ namespace gl
 
     void makeQuad(const Quad3d &quad, QOpenGLBuffer &vbo);
     void makeQuad(const Node &V0, const Node &V1, const Node &V2, const Node &V3, QOpenGLBuffer &vbo);
-    void makeQuadTex(double xside, double yside, QOpenGLBuffer &vbo);
+    void makeQuadTex(double xside, double yside, double zOffset, QOpenGLBuffer &vbo);
     void makeQuad2d(const QRectF &rect, QOpenGLBuffer &vbo);
 
     void makeSegments(std::vector<Segment3d> const &segments, const Vector3d &pos, QOpenGLBuffer &vbo);

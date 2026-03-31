@@ -137,6 +137,7 @@ void SaveOptionsWt::setupLayout()
                 pComp->setModel(pDirModel);
                 m_pleXmlPolarDir->setCompleter(pComp);
             }
+
             m_pleXmlPlaneDir    = new QLineEdit;
             {
                 QCompleter *pComp = new QCompleter;
@@ -145,6 +146,7 @@ void SaveOptionsWt::setupLayout()
                 pComp->setModel(pDirModel);
                 m_pleXmlPlaneDir->setCompleter(pComp);
             }
+
             m_pleXmlWPolarDir   = new QLineEdit;
             {
                 QCompleter *pComp = new QCompleter;
@@ -153,6 +155,7 @@ void SaveOptionsWt::setupLayout()
                 pComp->setModel(pDirModel);
                 m_pleXmlWPolarDir->setCompleter(pComp);
             }
+
             m_pleXmlScriptDir   = new QLineEdit;
             {
                 QCompleter *pComp = new QCompleter;
@@ -161,6 +164,7 @@ void SaveOptionsWt::setupLayout()
                 pComp->setModel(pDirModel);
                 m_pleXmlScriptDir->setCompleter(pComp);
             }
+
             m_pleCADDir         = new QLineEdit;
             {
                 QCompleter *pComp = new QCompleter;
@@ -178,6 +182,7 @@ void SaveOptionsWt::setupLayout()
                 pComp->setModel(pDirModel);
                 m_pleSTLDir->setCompleter(pComp);
             }
+
             m_pleTempDir        = new QLineEdit;
             {
                 QCompleter *pComp = new QCompleter;
@@ -186,6 +191,7 @@ void SaveOptionsWt::setupLayout()
                 pComp->setModel(pDirModel);
                 m_pleTempDir->setCompleter(pComp);
             }
+
             connect(m_pleTempDir, SIGNAL(editingFinished()), SLOT(onCheckTempDir()));
             m_pleApplicationDir = new QLineEdit;
             QLabel *plabDatDir         = new QLabel(tr("Foil files:"));
@@ -527,7 +533,6 @@ void SaveOptionsWt::onLastUsedDir()
     SaveOptions::s_bUseLastDir = m_prbUseLastDir->isChecked();
     m_pleLastDir->setEnabled(!SaveOptions::s_bUseLastDir);
 }
-
 
 
 void SaveOptionsWt::onActiveDir()

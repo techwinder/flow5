@@ -246,8 +246,6 @@ class SailDlg : public XflDialog
         QAction *m_pExportXML, *m_pExportStep, *m_pExportMeshToSTL, *m_pExportTrianglesToSTL;
         QAction *m_pDefinitions;
 
-        QAction *m_pBackImageLoad, *m_pBackImageClear, *m_pBackImageSettings;
-
         PlainTextOutput *m_ppto;
 
         QPushButton *m_ppbMeshOps;

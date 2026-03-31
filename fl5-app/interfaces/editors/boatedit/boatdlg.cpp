@@ -569,23 +569,6 @@ void BoatDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         pContextMenu->addAction(pEditMain);
         pContextMenu->addAction(pEditJib);
 
-        QAction *m_pBackImageLoad = new QAction("Load", this);
-        connect(m_pBackImageLoad, SIGNAL(triggered()), m_pglBoatView, SLOT(onLoadBackImage()));
-
-        QAction *m_pBackImageClear = new QAction("Clear", this);
-        connect(m_pBackImageClear, SIGNAL(triggered()), m_pglBoatView, SLOT(onClearBackImage()));
-
-        QAction *m_pBackImageSettings = new QAction("Settings", this);
-        connect(m_pBackImageSettings, SIGNAL(triggered()), m_pglBoatView, SLOT(onBackImageSettings()));
-
-        pContextMenu->addSeparator();
-        QMenu *pBackImageMenu = pContextMenu->addMenu(tr("Background image"));
-        {
-            pBackImageMenu->addAction(m_pBackImageLoad);
-            pBackImageMenu->addAction(m_pBackImageClear);
-            pBackImageMenu->addAction(m_pBackImageSettings);
-        }
-
         /** @todo issue with dialog modality */
         QAction *p3dLightAct = new  QAction(QIcon(":/icons/light.png"), tr("3d light options"), this);
         connect(p3dLightAct, SIGNAL(triggered()), m_pglBoatView, SLOT(onSetupLight()));

@@ -228,7 +228,7 @@ gl3dTexture::gl3dTexture(QWidget *pParent) : gl3dTestGLView (pParent)
                         m_ppbSaveImg = new QPushButton(QString::asprintf("Save 2d image %dx%d", s_ImgSize.width(), s_ImgSize.height()));
                         connect(m_ppbSaveImg, &QPushButton::clicked, this, &gl3dTexture::onSaveImg);
 
-                        QPushButton *ppbOpenImg = new QPushButton("Open saved image");
+                        QPushButton *ppbOpenImg = new QPushButton(tr("Open saved image"));
                         connect(ppbOpenImg, &QPushButton::clicked, this, &gl3dTexture::onOpenImg);
 
                         pColorLayout->addWidget(plabMaxOcc,      5, 1);
@@ -562,7 +562,7 @@ void gl3dTexture::saveSettings(QSettings &settings)
 
 void gl3dTexture::glMakeTexSphere(int nLong, int nLat)
 {
-    //  contruction that creates triangles with edges along meridians and avoids the texture seam
+    //  construction that creates triangles with edges along meridians and avoids the texture seam
 
     float start_lon = 0.0f;
     float start_lat = -PIf/2.0f;
@@ -800,7 +800,7 @@ void gl3dTexture::glRenderView()
     QMatrix4x4 vmMat(m_matView*m_matModel);
     QMatrix4x4 pvmMat(m_matProj*vmMat);
 
-    int stride = 8;
+    int stride = 8; // 3 coordinates, 3 normal components, 2 texture coordinates
 
     m_shadSurf.bind();
     {
@@ -820,50 +820,27 @@ void gl3dTexture::glRenderView()
 
         m_vboTexSphere.bind();
         {
-            int nTriangles = m_vboTexSphere.size()/3/stride/int(sizeof(float)); // three vertices and (3 position components+3 normal components)
+            int nTriangles = m_vboTexSphere.size()/3/stride/int(sizeof(float));
 
             m_shadSurf.setAttributeBuffer(m_locSurf.m_attrVertex, GL_FLOAT, 0,                 3, stride*sizeof(GLfloat));
             m_shadSurf.setAttributeBuffer(m_locSurf.m_attrNormal, GL_FLOAT, 3*sizeof(GLfloat), 3, stride*sizeof(GLfloat));
             m_shadSurf.setAttributeBuffer(m_locSurf.m_attrUV,     GL_FLOAT, 6*sizeof(GLfloat), 2, stride*sizeof(GLfloat));
 
             m_pglTexture->bind();
-            glDrawArrays(GL_TRIANGLES, 0, nTriangles*3); // 4 vertices defined but only 3 are used
+            glDrawArrays(GL_TRIANGLES, 0, nTriangles*3);
         }
         m_vboTexSphere.release();
         glDisable(GL_POLYGON_OFFSET_FILL);
 
+         // leave things as they were
         m_shadSurf.disableAttributeArray(m_locSurf.m_attrVertex);
         m_shadSurf.disableAttributeArray(m_locSurf.m_attrNormal);
         m_shadSurf.disableAttributeArray(m_locSurf.m_attrUV);
-        m_shadSurf.setUniformValue(m_locSurf.m_TwoSided, 0); // leave things as they were
-        glEnable(GL_CULL_FACE);
+        m_shadSurf.setUniformValue(m_locSurf.m_TwoSided,   0);
+        m_shadSurf.setUniformValue(m_locSurf.m_HasTexture, 0);
+
     }
     m_shadSurf.release();
-
-/*
-    m_shadLine.bind();
-    {
-        m_shadLine.setUniformValue(m_locLine.m_vmMatrix,  vmMat);
-        m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, pvmMat);
-        m_vboTexSphere.bind();
-        {
-            m_shadLine.enableAttributeArray(m_locLine.m_attrVertex);
-            m_shadLine.setAttributeBuffer(m_locLine.m_attrVertex, GL_FLOAT, 0, 3, stride*sizeof(GLfloat));
-
-            int nSegs = m_vboTexSphere.size()/2/stride/int(sizeof(float)); // 2 vertices and (3 position components)
-
-            m_shadLine.setUniformValue(m_locLine.m_Pattern, gl::stipple(Line::SOLID));
-            m_shadLine.setUniformValue(m_locLine.m_UniColor, Qt::white);
-            m_shadLine.setUniformValue(m_locLine.m_Thickness, 1.0f);
-
-            glDrawArrays(GL_LINES, 0, nSegs*2);
-            glDisable(GL_LINE_STIPPLE);
-        }
-        m_vboTexSphere.release();
-
-        m_shadLine.disableAttributeArray(m_locLine.m_attrVertex);
-    }
-    m_shadLine.release();*/
 
 
     if (!m_bInitialized)

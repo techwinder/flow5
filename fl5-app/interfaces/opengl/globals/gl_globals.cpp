@@ -2485,22 +2485,23 @@ void gl::makeQuadContour(double threshold, int nrows,
 }
 
 
-void gl::makeQuadTex(double xside, double yside, QOpenGLBuffer &vbo)
+void gl::makeQuadTex(double xhalfside, double yhalfside, double zOffset, QOpenGLBuffer &vbo)
 {
     Node vtx[4];
 
-    vtx[0].set(-xside,-yside, 0);  vtx[0].setNormal(0,0,1);
-    vtx[1].set( xside,-yside, 0);  vtx[2].setNormal(0,0,1);
-    vtx[2].set( xside, yside, 0);  vtx[1].setNormal(0,0,1);
-    vtx[3].set(-xside, yside, 0);  vtx[3].setNormal(0,0,1);
+    vtx[0].set(-xhalfside,-yhalfside, zOffset);  vtx[0].setNormal(0,0,1);
+    vtx[1].set( xhalfside,-yhalfside, zOffset);  vtx[2].setNormal(0,0,1);
+    vtx[2].set( xhalfside, yhalfside, zOffset);  vtx[1].setNormal(0,0,1);
+    vtx[3].set(-xhalfside, yhalfside, zOffset);  vtx[3].setNormal(0,0,1);
     QVector<Triangle3d> triangles(2);
     triangles.front().setTriangle(vtx[0], vtx[1], vtx[2]);
     triangles.back().setTriangle(vtx[0], vtx[2], vtx[3]);
 
     //Make surface triangulation
+    int stride = 8;    // (3 coords+3 normal components+2UVcomponents) for each node
     int bufferSize = triangles.count();
-    bufferSize *= 3;    // 4 vertices for each triangle
-    bufferSize *= 8;    // (3 coords+3 normal components+2UVcomponents) for each node
+    bufferSize *= 3;    // 3 vertices for each triangle
+    bufferSize *= stride;
 
     QVector<float> meshvertexarray(bufferSize);
 
@@ -2531,8 +2532,13 @@ void gl::makeQuadTex(double xside, double yside, QOpenGLBuffer &vbo)
                 meshvertexarray[iv++] = vertex.normal().yf();
                 meshvertexarray[iv++] = vertex.normal().zf();
             }
-            meshvertexarray[iv++] = (xside-vertex.xf())/xside/2.0; // U component, equal to x
-            meshvertexarray[iv++] = (vertex.yf()-yside)/yside/2.0; // V component, equal to y
+
+            // map U and V to [0,1]
+            float U =        (vertex.xf()+xhalfside)/xhalfside/2.0f;
+            float V = 1.0f - (vertex.yf()+yhalfside)/yhalfside/2.0f;
+
+            meshvertexarray[iv++] = U;
+            meshvertexarray[iv++] = V;
         }
     }
 

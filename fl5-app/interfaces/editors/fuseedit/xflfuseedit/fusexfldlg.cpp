@@ -259,13 +259,6 @@ void FuseXflDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         pBodyMenu->addAction(m_pScaleBody);
         pBodyMenu->addSeparator();
         pBodyMenu->addAction(m_pToFlatFace);
-        pBodyMenu->addSeparator();
-        QMenu *pBackImageMenu = pBodyMenu->addMenu(tr("Background image"));
-        {
-            pBackImageMenu->addAction(m_pBackImageLoad);
-            pBackImageMenu->addAction(m_pBackImageClear);
-            pBackImageMenu->addAction(m_pBackImageSettings);
-        }
     }
 
     pBodyMenu->exec(pEvent->globalPos());

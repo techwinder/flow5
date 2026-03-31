@@ -87,10 +87,6 @@ void FuseDlg::createBaseActions()
     m_pFuseInertia->setShortcut(Qt::Key_F12);
     m_pTessSettings         = new QAction(tr("Tessellation"), this);
     m_pTessSettings->setShortcut(QKeySequence(Qt::ALT | Qt::Key_T));
-
-    m_pBackImageLoad     = new QAction(tr("Load"),     this);
-    m_pBackImageClear    = new QAction(tr("Clear"),    this);
-    m_pBackImageSettings = new QAction(tr("Settings"), this);
 }
 
 
@@ -112,10 +108,6 @@ void FuseDlg::connectBaseSignals()
 
     connect(m_pglControls->m_ptbDistance, SIGNAL(clicked()), SLOT(onNodeDistance()));
     connect(m_pglFuseView,   SIGNAL(pickedNodePair(QPair<int,int>)), SLOT(onPickedNodePair(QPair<int,int>)));
-
-    connect(m_pBackImageLoad,        SIGNAL(triggered()), m_pglFuseView, SLOT(onLoadBackImage()));
-    connect(m_pBackImageClear,       SIGNAL(triggered()), m_pglFuseView, SLOT(onClearBackImage()));
-    connect(m_pBackImageSettings,    SIGNAL(triggered()), m_pglFuseView, SLOT(onBackImageSettings()));
 }
 
 

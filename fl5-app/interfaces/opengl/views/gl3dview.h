@@ -110,6 +110,8 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
 
         void printFormat(QSurfaceFormat const & fmt, QString &log, QString prefix="   " );
 
+        void setBackground();
+
         static void setXflSurfaceFormat(QSurfaceFormat const &fmt) {s_GlSurfaceFormat = fmt;}
         static QSurfaceFormat const& defaultXflSurfaceFormat() {return s_GlSurfaceFormat;}
 
@@ -188,7 +190,6 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
         void onClipPlane(int pos);
         void onClipScreenPlane(bool bClip);
         void onZAnimate(bool bZAnimate);
-        void onBackImageSettings();
         void onResetIncrement();
         void onRotationIncrement();
         void onTranslationIncrement();
@@ -196,10 +197,6 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
 
         void onSetupLight();
         void onLight(bool bOn);
-
-        void onClearBackImage();
-        void onLoadBackImage();
-        void onUpdateImageSettings(bool bScaleWithView, bool bFlipH, bool bFlipV, QPointF const& offset, double xscale, double yscale);
 
         void onOglLogMsg(QOpenGLDebugMessage const & logmsg);
 
@@ -277,6 +274,8 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
         void paintPoints(QOpenGLBuffer &vbo, float width, int iShape, bool bLight, const fl5Color &clr, int stride);
         void paintPoints(QOpenGLBuffer &vbo, float width, int iShape, bool bLight, const QColor &clr, int stride);
 
+        void paintBackImage();
+
         void set3dRotationCenter(const QPoint &point);
 
         void startResetTimer();
@@ -343,6 +342,9 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
         QOpenGLBuffer m_vboCone, m_vboConeContour;
         QOpenGLBuffer m_vboThinArrow;
 
+        QOpenGLBuffer m_vboBackImage;
+        QOpenGLTexture *m_pglTexture; // holds the background image
+
         bool m_bArcball;			//true if the arcball is to be displayed
         bool m_bCrossPoint;			//true if the control point on the arcball is to be displayed
         ArcBall m_ArcBall;
@@ -370,14 +372,6 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
         Vector3d m_glRotCenter;    // the center of rotation in object coordinates... is also the opposite of the translation vector
 
         QPixmap m_PixOverlay;
-
-        QString m_ImagePath;
-        bool m_bIsImageLoaded;      /**< true if a background image is loaded */
-        bool m_bScaleImageWithView;
-        bool m_bFlipH, m_bFlipV;
-        QPixmap m_BackImage;        /**< the QPixmap object with the background image */
-        QPointF m_ImageOffset;
-        double m_ImageScaleX, m_ImageScaleY;
 
         Quaternion m_QuatStart, m_QuatEnd;
 
@@ -410,6 +404,8 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
         float m_ZoomFactor;
 
         GLLightDlg *m_pglLightDlg;
+
+        QImage m_BackImage;
 
 
         static int s_AnimationTime;

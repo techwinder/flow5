@@ -105,8 +105,6 @@ class FuseDlg : public XflDialog
         QAction *m_pExportMeshToSTL, *m_pExportTrianglesToSTL, *m_pExportToCADFile;
         QAction *m_pTessSettings;
 
-        QAction *m_pBackImageLoad, *m_pBackImageClear, *m_pBackImageSettings;
-
         QFrame *m_pMetaFrame;
 
         QPushButton *m_ppbSaveAsNew;

@@ -40,12 +40,16 @@ struct ShaderLocations
 
     int m_Light{-1};
     int m_UniColor{-1};
+    int m_UniColor2{-1}; // for gradients
     int m_ClipPlane{-1};
 
     int m_TwoSided{-1};
 
     int m_HasUniColor{-1};
     int m_HasTexture{-1};    // uniform defining whether a texture is enabled or not
+    int m_HasGradient{-1};   // colour gradient
+    int m_GradientAngle{-1};
+
     int m_IsInstanced{-1};
 
     int m_Pattern{-1}, m_nPatterns{-1};

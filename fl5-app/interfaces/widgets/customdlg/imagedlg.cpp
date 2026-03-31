@@ -32,11 +32,11 @@
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/view/section2dwt.h>
-//#include <interfaces/opengl/views/gl3dview.h>
 
 
 ImageDlg::ImageDlg(QWidget *pParent, QVector<double> values, bool bScale, bool bFlipH, bool bFlipV) : QDialog(pParent)
 {
+    setWindowTitle(tr("Background image"));
     m_pParent = pParent;
 
     m_bChanged = false;
@@ -48,27 +48,27 @@ ImageDlg::ImageDlg(QWidget *pParent, QVector<double> values, bool bScale, bool b
             m_pieYOffset = new IntEdit(-int(values.at(1)));
             m_pfeXScale = new FloatEdit(values.at(2));
             m_pfeYScale = new FloatEdit(values.at(3));
-            m_pchScaleWithView = new QCheckBox("Scale with view");
+            m_pchScaleWithView = new QCheckBox(tr("Scale with view"));
             m_pchScaleWithView->setChecked(bScale);
 
-            m_pchFlipH = new QCheckBox("Flip horizontally");
+            m_pchFlipH = new QCheckBox(tr("Flip horizontally"));
             m_pchFlipH->setChecked(bFlipH);
-            m_pchFlipV = new QCheckBox("Flip vertically");
+            m_pchFlipV = new QCheckBox(tr("Flip vertically"));
             m_pchFlipV->setChecked(bFlipV);
 
-            pIntLayout->addWidget(new QLabel("x-offset"), 1, 1);
-            pIntLayout->addWidget(m_pieXOffset,           1, 2);
-            pIntLayout->addWidget(new QLabel("pixels"),   1, 3);
-            pIntLayout->addWidget(new QLabel("y-offset"), 2, 1);
-            pIntLayout->addWidget(m_pieYOffset,           2, 2);
-            pIntLayout->addWidget(new QLabel("pixels"),   2, 3);
-            pIntLayout->addWidget(new QLabel("x-scale"),  3, 1);
-            pIntLayout->addWidget(m_pfeXScale,            3, 2);
-            pIntLayout->addWidget(new QLabel("y-scale"),  4, 1);
-            pIntLayout->addWidget(m_pfeYScale,            4, 2);
-            pIntLayout->addWidget(m_pchFlipH,             5, 1, 1, 2);
-            pIntLayout->addWidget(m_pchFlipV,             6, 1, 1, 2);
-            pIntLayout->addWidget(m_pchScaleWithView,     7, 1, 1, 2);
+            pIntLayout->addWidget(new QLabel(tr("x-offset=")), 1, 1, Qt::AlignRight);
+            pIntLayout->addWidget(m_pieXOffset,                1, 2);
+            pIntLayout->addWidget(new QLabel(tr("pixels")),    1, 3);
+            pIntLayout->addWidget(new QLabel(tr("y-offset=")), 2, 1, Qt::AlignRight);
+            pIntLayout->addWidget(m_pieYOffset,                2, 2);
+            pIntLayout->addWidget(new QLabel(tr("pixels")),    2, 3);
+            pIntLayout->addWidget(new QLabel(tr("x-scale=")),  3, 1, Qt::AlignRight);
+            pIntLayout->addWidget(m_pfeXScale,                 3, 2);
+            pIntLayout->addWidget(new QLabel(tr("y-scale=")),  4, 1, Qt::AlignRight);
+            pIntLayout->addWidget(m_pfeYScale,                 4, 2);
+            pIntLayout->addWidget(m_pchFlipH,                  5, 1, 1, 2);
+            pIntLayout->addWidget(m_pchFlipV,                  6, 1, 1, 2);
+            pIntLayout->addWidget(m_pchScaleWithView,          7, 1, 1, 2);
         }
 
         m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close | QDialogButtonBox::Apply, this);

@@ -1106,6 +1106,7 @@ void gl2dView::initializeGL()
         m_locSurf.m_vmMatrix     = m_shadSurf.uniformLocation("vmMatrix");
         m_locSurf.m_HasUniColor  = m_shadSurf.uniformLocation("HasUniColor");
         m_locSurf.m_UniColor     = m_shadSurf.uniformLocation("UniformColor");
+        m_locSurf.m_UniColor2    = m_shadSurf.uniformLocation("UniformColor2");
         m_locSurf.m_Light        = m_shadSurf.uniformLocation("LightOn");
         m_locSurf.m_TwoSided     = m_shadSurf.uniformLocation("TwoSided");
         m_locSurf.m_HasTexture   = m_shadSurf.uniformLocation("HasTexture");

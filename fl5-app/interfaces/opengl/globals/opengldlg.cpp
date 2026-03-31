@@ -50,6 +50,7 @@
 #include <interfaces/opengl/testgl/gl2dquat.h>
 #include <interfaces/opengl/testgl/gl2dnewton.h>
 #include <interfaces/opengl/testgl/gl3dtestglview.h>
+#include <interfaces/opengl/testgl/gl3dtexture.h>
 #include <interfaces/opengl/testgl/gl3dflowvtx.h>
 #include <interfaces/opengl/testgl/gl3dlorenz.h>
 #include <interfaces/opengl/testgl/gl3dlorenz2.h>
@@ -60,6 +61,7 @@
 #include <interfaces/opengl/testgl/gl3dsolarsys.h>
 #include <interfaces/opengl/testgl/gl3dsagittarius.h>
 #include <interfaces/opengl/testgl/gl3dspace.h>
+
 #include <api/trace.h>
 
 QByteArray OpenGlDlg::s_Geometry;
@@ -405,6 +407,7 @@ void OpenGlDlg::setupLayout()
                 QAction *pMandelbrotAct  = new QAction(tr("Mandelbrot"),               this);
                 QAction *pQuatAct        = new QAction(tr("Quaternion Julia fractal"), this);
                 QAction *pSphereAct      = new QAction(tr("Spheres"),                  this);
+                QAction *pTextureAct     = new QAction(tr("Texture"),                  this);
                 QAction *pFlowAct        = new QAction(tr("Horsehoe vortex flow"),     this);
                 QAction *pLorenzAct      = new QAction(tr("Lorenz (CPU)"),             this);
                 QAction *pLorenz2Act     = new QAction(tr("Lorenz (GPU)"),             this);
@@ -425,21 +428,23 @@ void OpenGlDlg::setupLayout()
                 pMandelbrotAct->setData(  1);
                 pQuatAct->setData(        2);
                 pSphereAct->setData(      3);
-                pFlowAct->setData(        4);
-                pLorenzAct->setData(      5);
-                pLorenz2Act->setData(     6);
-                pAttractorsAct->setData(  7);
-                pBoidsAct->setData(       8);
-                pBoids2Act->setData(      9);
-                pHydrogenAct->setData(   10);
-                pSolarSysAct->setData(   11);
-                pSagittariusAct->setData(12);
-                pSpaceAct->setData(      13);
+                pTextureAct->setData(     4);
+                pFlowAct->setData(        5);
+                pLorenzAct->setData(      6);
+                pLorenz2Act->setData(     7);
+                pAttractorsAct->setData(  8);
+                pBoidsAct->setData(       9);
+                pBoids2Act->setData(     10);
+                pHydrogenAct->setData(   11);
+                pSolarSysAct->setData(   12);
+                pSagittariusAct->setData(13);
+                pSpaceAct->setData(      14);
 
                 connect(pNewtonAct,      SIGNAL(triggered()), SLOT(onViewType()));
                 connect(pMandelbrotAct,  SIGNAL(triggered()), SLOT(onViewType()));
                 connect(pQuatAct,        SIGNAL(triggered()), SLOT(onViewType()));
                 connect(pSphereAct,      SIGNAL(triggered()), SLOT(onViewType()));
+                connect(pTextureAct,     SIGNAL(triggered()), SLOT(onViewType()));
                 connect(pFlowAct,        SIGNAL(triggered()), SLOT(onViewType()));
                 connect(pLorenzAct,      SIGNAL(triggered()), SLOT(onViewType()));
                 connect(pLorenz2Act,     SIGNAL(triggered()), SLOT(onViewType()));
@@ -455,6 +460,7 @@ void OpenGlDlg::setupLayout()
                 pViewSelMenu->addAction(pMandelbrotAct);
                 pViewSelMenu->addAction(pQuatAct);
                 pViewSelMenu->addAction(pSphereAct);
+                pViewSelMenu->addAction(pTextureAct);
                 pViewSelMenu->addAction(pFlowAct);
                 pViewSelMenu->addAction(pLorenzAct);
                 pViewSelMenu->addAction(pLorenz2Act);
@@ -532,20 +538,21 @@ QOpenGLWidget *OpenGlDlg::getView(int iView)
     switch(iView)
     {
         default:
-        case 0:  return new gl2dNewton;
-        case 1:  return new gl2dFractal;
-        case 2:  return new gl2dQuat;
-        case 3:  return new gl3dTestGLView;
-        case 4:  return new gl3dFlowVtx;
-        case 5:  return new gl3dLorenz;
-        case 6:  return new gl3dLorenz2;
-        case 7:  return new gl3dAttractors;
-        case 8:  return new gl3dBoids;
-        case 9:  return new gl3dBoids2;
-        case 10: return new gl3dHydrogen;
-        case 11: return new gl3dSolarSys;
-        case 12: return new gl3dSagittarius;
-        case 13: return new gl3dSpace;
+        case  0: return new gl2dNewton;
+        case  1: return new gl2dFractal;
+        case  2: return new gl2dQuat;
+        case  3: return new gl3dTestGLView;
+        case  4: return new gl3dTexture;
+        case  5: return new gl3dFlowVtx;
+        case  6: return new gl3dLorenz;
+        case  7: return new gl3dLorenz2;
+        case  8: return new gl3dAttractors;
+        case  9: return new gl3dBoids;
+        case 10: return new gl3dBoids2;
+        case 11: return new gl3dHydrogen;
+        case 12: return new gl3dSolarSys;
+        case 13: return new gl3dSagittarius;
+        case 14: return new gl3dSpace;
     }
     return nullptr;
 }

@@ -339,7 +339,7 @@ void gl3dFlightView::glMake3dObjects()
         gl::makeTriangles3Vtx(m_Triangles, true, m_vboStlTriangulation);
         gl::makeTrianglesOutline(m_Triangles, Vector3d(), m_vboStlOutline);
 
-        gl::makeQuadTex(SIDE, SIDE, m_vboBackgroundQuad);
+        gl::makeQuadTex(SIDE, SIDE, 0.0f, m_vboBackgroundQuad);
 
 /*        QVector<Triangle3d> triangles;
         makeSphere(side/8.0, 2, triangles);

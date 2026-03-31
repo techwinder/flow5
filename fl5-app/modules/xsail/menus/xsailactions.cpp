@@ -67,16 +67,6 @@ void XSailActions::makeActions()
     m_p3dLightAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_L));
     connect(m_p3dLightAct, SIGNAL(triggered()), m_pXSail->m_pgl3dXSailView, SLOT(onSetupLight()));
 
-    m_pBackImageLoad = new QAction(tr("Load"), this);
-    connect(m_pBackImageLoad, SIGNAL(triggered()), m_pXSail->m_pgl3dXSailView, SLOT(onLoadBackImage()));
-
-    m_pBackImageClear = new QAction(tr("Clear"), this);
-    connect(m_pBackImageClear, SIGNAL(triggered()), m_pXSail->m_pgl3dXSailView, SLOT(onClearBackImage()));
-
-    m_pBackImageSettings = new QAction(tr("Settings"), this);
-    connect(m_pBackImageSettings, SIGNAL(triggered()), m_pXSail->m_pgl3dXSailView, SLOT(onBackImageSettings()));
-
-
     m_pOpen3dViewInNewWindow= new QAction(tr("Open 3d view in new window"), m_pXSail);
     m_pOpen3dViewInNewWindow->setCheckable(true);
     m_pOpen3dViewInNewWindow->setShortcut(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_V));

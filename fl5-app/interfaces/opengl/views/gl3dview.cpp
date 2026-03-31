@@ -35,6 +35,9 @@
 #include <QVector4D>
 #include <QQuaternion>
 
+#include "gl3dview.h"
+
+
 #include <api/geom_global.h>
 #include <api/node.h>
 #include <api/trace.h>
@@ -47,7 +50,6 @@
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/controls/gllightdlg.h>
 #include <interfaces/opengl/globals/gl_globals.h>
-#include <interfaces/opengl/views/gl3dview.h>
 #include <interfaces/widgets/customdlg/imagedlg.h>
 
 #define ZANIMINTERVAL 15
@@ -81,10 +83,7 @@ gl3dView::gl3dView(QWidget *pParent) : QOpenGLWidget(pParent)
 
     connect(&m_DynTimer, SIGNAL(timeout()), SLOT(onDynamicIncrement()));
 
-    m_bIsImageLoaded = false;
-    m_bScaleImageWithView = false;
-    m_bFlipH = m_bFlipV = false;
-    m_ImageScaleX = m_ImageScaleY = 1.0;
+    m_pglTexture = nullptr;
 
     m_ZoomFactor = 1.0;
 
@@ -289,20 +288,23 @@ void gl3dView::initializeGL()
         m_locSurf.m_attrColor  = m_shadSurf.attributeLocation("vertexColor");
         m_locSurf.m_attrOffset = m_shadSurf.attributeLocation("vertexOffset");
 
-        m_locSurf.m_ClipPlane    = m_shadSurf.uniformLocation("clipPlane0");
-        m_locSurf.m_pvmMatrix    = m_shadSurf.uniformLocation("pvmMatrix");
-        m_locSurf.m_vmMatrix     = m_shadSurf.uniformLocation("vmMatrix");
-        m_locSurf.m_HasUniColor  = m_shadSurf.uniformLocation("HasUniColor");
-        m_locSurf.m_UniColor     = m_shadSurf.uniformLocation("UniformColor");
-        m_locSurf.m_Light        = m_shadSurf.uniformLocation("LightOn");
-        m_locSurf.m_TwoSided     = m_shadSurf.uniformLocation("TwoSided");
-        m_locSurf.m_HasTexture   = m_shadSurf.uniformLocation("HasTexture");
-        m_locSurf.m_TexSampler   = m_shadSurf.uniformLocation("TheSampler");
-        m_locSurf.m_IsInstanced  = m_shadSurf.uniformLocation("Instanced");
-        m_locSurf.m_Scale      = m_shadSurf.uniformLocation("uScale");
+        m_locSurf.m_ClipPlane     = m_shadSurf.uniformLocation("clipPlane0");
+        m_locSurf.m_pvmMatrix     = m_shadSurf.uniformLocation("pvmMatrix");
+        m_locSurf.m_vmMatrix      = m_shadSurf.uniformLocation("vmMatrix");
+        m_locSurf.m_HasUniColor   = m_shadSurf.uniformLocation("HasUniColor");
+        m_locSurf.m_UniColor      = m_shadSurf.uniformLocation("UniformColor");
+        m_locSurf.m_UniColor2     = m_shadSurf.uniformLocation("UniformColor2");
+        m_locSurf.m_Light         = m_shadSurf.uniformLocation("LightOn");
+        m_locSurf.m_TwoSided      = m_shadSurf.uniformLocation("TwoSided");
+        m_locSurf.m_HasTexture    = m_shadSurf.uniformLocation("HasTexture");
+        m_locSurf.m_HasGradient   = m_shadSurf.uniformLocation("HasGradient");
+        m_locSurf.m_GradientAngle = m_shadSurf.uniformLocation("GradientAngle");
+        m_locSurf.m_TexSampler    = m_shadSurf.uniformLocation("TheSampler");
+        m_locSurf.m_IsInstanced   = m_shadSurf.uniformLocation("Instanced");
+        m_locSurf.m_Scale         = m_shadSurf.uniformLocation("uScale");
 
-        m_uHasShadow             = m_shadSurf.uniformLocation("HasShadow");
-        m_uShadowLightViewMatrix = m_shadSurf.uniformLocation("LightViewMatrix");
+        m_uHasShadow              = m_shadSurf.uniformLocation("HasShadow");
+        m_uShadowLightViewMatrix  = m_shadSurf.uniformLocation("LightViewMatrix");
     }
     m_shadSurf.release();
 
@@ -425,6 +427,8 @@ void gl3dView::initDepthMap()
     glGenTextures(1, &m_texDepthMap);
     glBindTexture(GL_TEXTURE_2D, m_texDepthMap);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+                 SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0,  GL_RGBA16 ,
                  SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -1027,18 +1031,7 @@ void gl3dView::keyPressEvent(QKeyEvent *pEvent)
         }
         case Qt::Key_I:
         {
-            if (pEvent->modifiers().testFlag(Qt::ControlModifier) && pEvent->modifiers().testFlag(Qt::AltModifier))
-            {
-                if(!m_bIsImageLoaded)
-                {
-                    onLoadBackImage();
-                }
-                else
-                {
-                    onClearBackImage();
-                }
-            }
-            else if(pEvent->modifiers().testFlag(Qt::AltModifier))
+            if(pEvent->modifiers().testFlag(Qt::AltModifier))
             {
                 onSaveImage();
             }
@@ -1102,8 +1095,8 @@ void gl3dView::keyReleaseEvent(QKeyEvent *pEvent)
 
 void gl3dView::hideEvent(QHideEvent *pEvent)
 {
+    QOpenGLWidget::hideEvent(pEvent);
     stopDynamicTimer();
-    pEvent->ignore();
 }
 
 
@@ -1125,6 +1118,9 @@ void gl3dView::resizeGL(int width, int height)
         m_PixOverlay = m_PixOverlay.scaled(r.size()*devicePixelRatio());
         m_PixOverlay.fill(Qt::transparent);
     }
+
+    setBackground(); // to resize background texture
+    update();
 }
 
 
@@ -1259,37 +1255,26 @@ void gl3dView::paintGL()
     //    QPainter painter(&device);
     QPainter painter(this);
 
-    if(m_bIsImageLoaded && !m_BackImage.isNull())
+//    if(m_BackImage.isNull())
     {
-        painter.save();
-
-        double xscale = m_ImageScaleX;
-        double yscale = m_ImageScaleY;
-        if(m_bScaleImageWithView)
-        {
-            xscale *= m_glScalef;
-            yscale *= m_glScalef;
-        }
-
-        //scale from the center of the viewport
-        QPoint VCenter = rect().center();
-
-        int w = int(double(m_BackImage.width())* xscale);
-        int h = int(double(m_BackImage.height())* yscale);
-        //the coordinates of the top left corner are measured from the center of the viewport
-
-        int xtop = VCenter.x() + int( - double(m_BackImage.width())  /2.*xscale);
-        int ytop = VCenter.y() + int( - double(m_BackImage.height()) /2.*yscale);
-
-        painter.drawPixmap(xtop+m_ImageOffset.x(), ytop+m_ImageOffset.y(), w, h, m_BackImage);
-        painter.restore();
+        glClearColor(float(DisplayOptions::backgroundColor().redF()), float(DisplayOptions::backgroundColor().greenF()), float(DisplayOptions::backgroundColor().blueF()), 1.0f);
+        // clear the depth buffer before starting the rendering
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-
     painter.beginNativePainting();
+    if(m_pglTexture)
+    {
+        m_shadSurf.bind();
+        {
+            m_shadSurf.setUniformValue(m_locSurf.m_ClipPlane, m_ClipPlanePos);
+        }
+        m_shadSurf.release();
+        paintBackImage();
+    }
+
     paintGl3();
     painter.endNativePainting();
-
 
     paintOverlay();
 
@@ -1319,18 +1304,6 @@ void gl3dView::paintGl3()
     //    makeCurrent();
     if(W3dPrefs::s_bMultiSample) glEnable(GL_MULTISAMPLE);
     else                         glDisable(GL_MULTISAMPLE);
-
-    if(!m_bIsImageLoaded)
-    {
-        glClearColor(float(DisplayOptions::backgroundColor().redF()), float(DisplayOptions::backgroundColor().greenF()), float(DisplayOptions::backgroundColor().blueF()), 1.0f);
-        // clear the depth buffer before starting the rendering
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
-
-    float s = 1.0;
-
-    int width  = geometry().width();
-    int height = geometry().height();
 
     // Enable blending
     glEnable(GL_BLEND);
@@ -1386,7 +1359,10 @@ void gl3dView::paintGl3()
                            float(m[8]),  float(m[9]),  float(m[10]), float(m[11]),
                            float(m[12]), float(m[13]), float(m[14]), float(m[15]));
 
-    m_matProj.ortho(-s,s,-(height*s)/width,(height*s)/width,-1.0e3*s,1.0e3*s);
+    float s = 1.0;
+    float width  = float(geometry().width());
+    float height = float(geometry().height());
+    m_matProj.ortho(-s, s, -(height*s)/width, (height*s)/width, -1.0e3*s, 1.0e3*s);
 
     if(m_bArcball)   paintArcBall();
 
@@ -1906,8 +1882,11 @@ void gl3dView::paintQuad(QColor const &clrBack, bool bContour, float thickness, 
                 glPolygonOffset(DEPTHFACTOR, DEPTHUNITS);
                 glDisable(GL_CULL_FACE);
 
-                glDrawArrays(GL_TRIANGLES, 0, 3); // nodes 0,1,2
-                glDrawArrays(GL_TRIANGLES, 2, 3); // nodes 2,3,4
+//                glDrawArrays(GL_TRIANGLES, 0, 3); // nodes 0,1,2
+//                glDrawArrays(GL_TRIANGLES, 2, 3); // nodes 2,3,4
+
+                glDrawArrays(GL_TRIANGLE_FAN, 0, 4),
+
                 glDisable(GL_POLYGON_OFFSET_FILL);
                 glEnable(GL_CULL_FACE);
 
@@ -2617,6 +2596,8 @@ void gl3dView::paintTriangleFan(QOpenGLBuffer &vbo, QColor const &clr, bool bLig
 
     if(!bCullFaces) glDisable(GL_CULL_FACE);
 
+    const int stride = 6; // 3 position components + 3 normal components
+
     m_shadSurf.bind();
     {
         vbo.bind();
@@ -2625,13 +2606,13 @@ void gl3dView::paintTriangleFan(QOpenGLBuffer &vbo, QColor const &clr, bool bLig
 
             m_shadSurf.enableAttributeArray(m_locSurf.m_attrVertex);
             m_shadSurf.enableAttributeArray(m_locSurf.m_attrNormal);
-            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrVertex, GL_FLOAT, 0,                  3, 6 * sizeof(GLfloat));
-            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrNormal, GL_FLOAT, 3* sizeof(GLfloat), 3, 6 * sizeof(GLfloat));
+            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrVertex, GL_FLOAT, 0,                  3, stride * sizeof(GLfloat));
+            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrNormal, GL_FLOAT, 3* sizeof(GLfloat), 3, stride * sizeof(GLfloat));
 
             if(bLight) m_shadSurf.setUniformValue(m_locSurf.m_Light, 1);
             else       m_shadSurf.setUniformValue(m_locSurf.m_Light, 0);
 
-            int nVertices = vbo.size()/6/int(sizeof(float)); //(3 position components + 3 normal components)
+            int nVertices = vbo.size()/stride/int(sizeof(float));
 
             glPolygonMode(GL_FRONT, GL_FILL);
             glDrawArrays(GL_TRIANGLE_FAN, 0, nVertices);
@@ -2646,81 +2627,172 @@ void gl3dView::paintTriangleFan(QOpenGLBuffer &vbo, QColor const &clr, bool bLig
 }
 
 
-void gl3dView::onLoadBackImage()
+void gl3dView::setBackground()
 {
-    m_ImagePath = QFileDialog::getOpenFileName(this, "Open Image File",
-                                               SaveOptions::lastDirName(),
-                                               "Image files (*.png *.jpg *.bmp)");
+    if(W3dPrefs::s_eBackground==W3dPrefs::IMAGE and W3dPrefs::s_ImagePath.isEmpty()) W3dPrefs::s_eBackground=W3dPrefs::UNIFORM;
 
-    QFileInfo fi(m_ImagePath);
-    if(fi.exists())
-        SaveOptions::setLastDirName(fi.canonicalPath());
-    else return;
+    switch(W3dPrefs::s_eBackground)
+    {
+        default:
+        {
+            //uniform colour
+            if(m_pglTexture) delete m_pglTexture;
+            m_pglTexture = nullptr;
+            m_BackImage = QImage(); // Null image
+            break;
+        }
+        case W3dPrefs::GRADIENT:
+        {
+            // gradient
+            // create a quad with same aspect ratio than viewport
+            QImage img(geometry().width(), geometry().height(), QImage::Format_ARGB32);
 
-    QImage img(m_ImagePath);
+            // fit the image
 
+            float w = float(geometry().width());
+            float h = float(geometry().height());
 
-#if (QT_VERSION < QT_VERSION_CHECK(6, 9, 0))
-    if(m_bFlipH||m_bFlipV)
-        img = img.mirrored(m_bFlipH, m_bFlipV);
-#else
-    if(m_bFlipV)
-        img = img.flipped(Qt::Vertical);
+            float w2(1.0); // Half viewport width is 1.0 by construction
+            float h2 = h/w;
 
-    if(m_bFlipH)
-        img = img.flipped(Qt::Horizontal);
-#endif
-    m_bIsImageLoaded = m_BackImage.convertFromImage(img);
-    update();
+            // push to background
+            float z = -50.0f;
+            // make the quad supporting the texture
+            gl::makeQuadTex(w2, h2, z, m_vboBackImage);
 
-    onBackImageSettings();
+            if(m_pglTexture) delete m_pglTexture;
+            if(!img.isNull())
+                m_pglTexture = new QOpenGLTexture(img);
+
+            break;
+        }
+        case W3dPrefs::IMAGE:
+        {
+            QImage img;
+            if(!W3dPrefs::s_ImagePath.isEmpty())
+            {
+                // from global settings
+                m_BackImage.load(W3dPrefs::s_ImagePath);
+            }
+
+            if(m_BackImage.isNull())
+            {
+                m_pglTexture = nullptr;
+                return;
+            }
+
+            // fit the image
+        //    float viewportratio = float(width())/2.0f; // since viewport width extends from -1.0f to 1.0f
+
+            float w = float(geometry().width());
+            float h = float(geometry().height());
+
+            float AR_viewport = w/h; // viewport aspect ratio
+            float AR_image    = float(m_BackImage.width())/float(m_BackImage.height()); // iage aspect ratio
+
+            float w2(1.0), h2(1.0); // Half viewport width
+
+            if(AR_image>AR_viewport)
+            {
+                // fit height
+                h2 = 1.0 * h/w;
+                // adjust width to keep image aspect ratio
+                w2 = h2 * AR_image;
+            }
+            else
+            {
+                // fit width
+                w2 = 1.0;
+                // adjust height to keep image aspect ratio
+                h2 = 1.0 / AR_image;
+            }
+
+            // push to background
+            float z = -50.0f;
+            // make the quad supporting the texture
+            gl::makeQuadTex(w2, h2, z, m_vboBackImage);
+
+            if(m_pglTexture) delete m_pglTexture;
+            if(!m_BackImage.isNull())
+                m_pglTexture = new QOpenGLTexture(m_BackImage);
+
+            break;
+        }
+    }
 }
 
 
-void gl3dView::onClearBackImage()
+void gl3dView::paintBackImage()
 {
-    m_bIsImageLoaded = false;
-    update();
-}
+    if(!m_pglTexture) return;
 
+    QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
 
-void gl3dView::onBackImageSettings()
-{
-    QVector<double> values;
-    values << m_ImageOffset.x() << m_ImageOffset.y() << m_ImageScaleX << m_ImageScaleY;
-    ImageDlg dlg(this, values, m_bScaleImageWithView, m_bFlipH, m_bFlipV);
-    connect(&dlg, SIGNAL(imageChanged(bool,bool,bool,QPointF,double,double)), SLOT(onUpdateImageSettings(bool,bool,bool,QPointF,double,double)));
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 
-    dlg.exec();
-    update();
-}
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(DEPTHFACTOR, DEPTHUNITS);
 
+    QMatrix4x4 vmMat;   // identity matrix
+/*    vmMat.scale(m_ImageScaleX, m_ImageScaleY, 1.0f);
+    if(m_bScaleImageWithView)
+    {
+        vmMat.scale(m_glScalef, m_glScalef, m_glScalef);
+        vmMat.translate(m_glViewportTrans.xf(), -m_glViewportTrans.yf(), 0.0f);
+    }*/
+    QMatrix4x4 pvmMat = m_matProj * vmMat;
 
-void gl3dView::onUpdateImageSettings(bool bScaleWithView, bool bFlipH, bool bFlipV, QPointF const& offset, double xscale, double yscale)
-{
-    m_bScaleImageWithView = bScaleWithView;
-    m_bFlipH              = bFlipH;
-    m_bFlipV              = bFlipV;
-    m_ImageOffset         = offset;
-    m_ImageScaleX         = xscale;
-    m_ImageScaleY         = yscale;
+    int const stride = 8; // 3 coordinates, 3 normal components, 2 texture coordinates
 
-    QImage img(m_ImagePath);
+    m_shadSurf.bind();
+    {
+        m_shadSurf.setUniformValue(m_locSurf.m_vmMatrix,  vmMat);
+        m_shadSurf.setUniformValue(m_locSurf.m_pvmMatrix, pvmMat);
 
-#if (QT_VERSION < QT_VERSION_CHECK(6, 9, 0))
-    if(m_bFlipH||m_bFlipV)
-        img = img.mirrored(m_bFlipH, m_bFlipV);
-#else
-    if(m_bFlipV)
-        img = img.flipped(Qt::Vertical);
+        m_shadSurf.setUniformValue(m_locSurf.m_Light, 0);
 
-    if(m_bFlipH)
-        img = img.flipped(Qt::Horizontal);
-#endif
+        m_shadSurf.setUniformValue(m_locSurf.m_TwoSided, 0); // doesn't matter, textures are one-sided in OpenGL
 
-    m_bIsImageLoaded = m_BackImage.convertFromImage(img);
+        m_shadSurf.setUniformValue(m_locSurf.m_HasUniColor, 0);
+        m_shadSurf.setUniformValue(m_locSurf.m_HasTexture, 1);
+        if(W3dPrefs::s_eBackground==W3dPrefs::GRADIENT)
+        {
+            m_shadSurf.setUniformValue(m_locSurf.m_HasGradient, 1);
+            m_shadSurf.setUniformValue(m_locSurf.m_UniColor,      W3dPrefs::s_ColourGrad1); // converts implicitely to [0, 1]
+            m_shadSurf.setUniformValue(m_locSurf.m_UniColor2,     W3dPrefs::s_ColourGrad2);
+            m_shadSurf.setUniformValue(m_locSurf.m_GradientAngle, W3dPrefs::s_GradientAngle);
+        }
+        else
+            m_shadSurf.setUniformValue(m_locSurf.m_HasGradient, 0);
 
-    update();
+        m_shadSurf.enableAttributeArray(m_locSurf.m_attrVertex);
+        m_shadSurf.enableAttributeArray(m_locSurf.m_attrNormal);
+        m_shadSurf.enableAttributeArray(m_locSurf.m_attrUV);
+
+        m_vboBackImage.bind();
+        {
+            int nTriangles = m_vboBackImage.size()/3/stride/int(sizeof(float));
+
+            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrVertex, GL_FLOAT, 0,                 3, stride*sizeof(GLfloat));
+            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrNormal, GL_FLOAT, 3*sizeof(GLfloat), 3, stride*sizeof(GLfloat));
+            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrUV,     GL_FLOAT, 6*sizeof(GLfloat), 2, stride*sizeof(GLfloat));
+
+            m_pglTexture->bind();
+            glDrawArrays(GL_TRIANGLES, 0, nTriangles*3);
+        }
+        m_vboBackImage.release();
+        glDisable(GL_POLYGON_OFFSET_FILL);
+
+        // leave things as they were
+        m_shadSurf.disableAttributeArray(m_locSurf.m_attrVertex);
+        m_shadSurf.disableAttributeArray(m_locSurf.m_attrNormal);
+        m_shadSurf.disableAttributeArray(m_locSurf.m_attrUV);
+        m_shadSurf.setUniformValue(m_locSurf.m_TwoSided,   0);
+        m_shadSurf.setUniformValue(m_locSurf.m_HasTexture, 0);
+
+    }
+    m_shadSurf.release();
 }
 
 

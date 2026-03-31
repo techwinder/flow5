@@ -233,7 +233,7 @@ Attractor2d::Attractor2d(QWidget *parent) : QWidget{parent}
                         m_ppbSaveImg = new QPushButton(QString::asprintf("Save 2d image %dx%d", s_ImgSize.width(), s_ImgSize.height()));
                         connect(m_ppbSaveImg, &QPushButton::clicked, this, &Attractor2d::onSaveImg);
 
-                        QPushButton *ppbOpenImg = new QPushButton("Open saved image");
+                        QPushButton *ppbOpenImg = new QPushButton(tr("Open saved image"));
                         connect(ppbOpenImg, SIGNAL(clicked()), SLOT(onOpenImg()));
 
                         pColorLayout->addWidget(plabMaxOcc,      5, 1);

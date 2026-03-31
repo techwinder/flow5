@@ -274,24 +274,6 @@ void PlaneSTLDlg::contextMenuEvent(QContextMenuEvent *pEvent)
 //            pMeshMenu->addSeparator();
             pMeshMenu->addAction(m_pCenterOnPanel);
         }
-        pPlaneCtxMenu->addSeparator();
-
-        QAction *m_pBackImageLoad = new QAction(tr("Load"), this);
-        connect(m_pBackImageLoad, SIGNAL(triggered()), m_pglPlaneView, SLOT(onLoadBackImage()));
-
-        QAction *m_pBackImageClear = new QAction(tr("Clear"), this);
-        connect(m_pBackImageClear, SIGNAL(triggered()), m_pglPlaneView, SLOT(onClearBackImage()));
-
-        QAction *m_pBackImageSettings = new QAction(tr("Settings"), this);
-        connect(m_pBackImageSettings, SIGNAL(triggered()), m_pglPlaneView, SLOT(onBackImageSettings()));
-
-        pPlaneCtxMenu->addSeparator();
-        QMenu *pBackImageMenu = pPlaneCtxMenu->addMenu(tr("Background image"));
-        {
-            pBackImageMenu->addAction(m_pBackImageLoad);
-            pBackImageMenu->addAction(m_pBackImageClear);
-            pBackImageMenu->addAction(m_pBackImageSettings);
-        }
     }
     pPlaneCtxMenu->exec(pEvent->globalPos());
 }

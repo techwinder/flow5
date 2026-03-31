@@ -155,10 +155,6 @@ void SailDlg::connectBaseSignals()
     connect(m_pglSailControls->m_ptbDistance, SIGNAL(clicked()), SLOT(onNodeDistance()));
 
     connect(m_p3dLightAct,          SIGNAL(triggered()), m_pglSailView, SLOT(onSetupLight()));
-    connect(m_pBackImageLoad,       SIGNAL(triggered()), m_pglSailView, SLOT(onLoadBackImage()));
-    connect(m_pBackImageClear,      SIGNAL(triggered()), m_pglSailView, SLOT(onClearBackImage()));
-    connect(m_pBackImageSettings,   SIGNAL(triggered()), m_pglSailView, SLOT(onBackImageSettings()));
-
 
     connect(m_prbRuledMesh,         SIGNAL(clicked()),            SLOT(onRuledMesh()));
     connect(m_prbFreeMesh,          SIGNAL(clicked()),            SLOT(onRuledMesh()));
@@ -438,10 +434,6 @@ void SailDlg::makeCommonWts()
             m_pglSailControls = new gl3dGeomControls(m_pglSailView, SailLayout, false);
 
             m_p3dLightAct        = new  QAction(QIcon(":/icons/light.png"), tr("Light settings\t(Alt+L)"), this);
-
-            m_pBackImageLoad     = new QAction(tr("Load"), this);
-            m_pBackImageClear    = new QAction(tr("Clear"), this);
-            m_pBackImageSettings = new QAction(tr("Settings"), this);
 
             pViewLayout->addWidget(m_pglSailView);
             pViewLayout->addWidget(m_pglSailControls);
@@ -922,14 +914,6 @@ void SailDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         }
         pContextMenu->addSeparator();
         pContextMenu->addAction(m_p3dLightAct);
-        pContextMenu->addSeparator();
-
-        QMenu *pBackImageMenu = pContextMenu->addMenu(tr("Background image"));
-        {
-            pBackImageMenu->addAction(m_pBackImageLoad);
-            pBackImageMenu->addAction(m_pBackImageClear);
-            pBackImageMenu->addAction(m_pBackImageSettings);
-        }
     }
 
     pContextMenu->exec(QCursor::pos());
@@ -1849,7 +1833,6 @@ bool SailDlg::guessThickTE()
 
     TriMesh &mesh3 = m_pSail->triMesh();
 
-    int iTE=0;
     m_pSail->clearTEIndexes();
 
     double ycrit = 0.1;
@@ -1891,7 +1874,6 @@ bool SailDlg::guessThickTE()
                     {
                         //anything
                     }
-                    iTE++;
                     break;
                 }
             }

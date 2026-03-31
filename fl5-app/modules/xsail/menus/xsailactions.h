@@ -72,8 +72,6 @@ private:
 
     QAction *m_pConvertMainSailToNURBS, *m_pConvertJibToNURBS;
 
-    QAction *m_pBackImageLoad, *m_pBackImageClear, *m_pBackImageSettings;
-
     QAction *m_pEditHull,*m_pScaleHull,*m_pTranslateHull;
 
     QAction *m_pManageBoats, *m_pImportBoatFromXml;

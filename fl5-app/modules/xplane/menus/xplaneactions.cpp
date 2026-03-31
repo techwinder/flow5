@@ -90,15 +90,6 @@ void XPlaneActions::makeActions()
     m_p3dLightAct->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_L));
     connect(m_p3dLightAct, SIGNAL(triggered()), m_pXPlane->m_pgl3dXPlaneView, SLOT(onSetupLight()));
 
-    m_pBackImageLoad = new QAction(tr("Load"), this);
-    connect(m_pBackImageLoad, SIGNAL(triggered()), m_pXPlane->m_pgl3dXPlaneView, SLOT(onLoadBackImage()));
-
-    m_pBackImageClear = new QAction(tr("Clear"), this);
-    connect(m_pBackImageClear, SIGNAL(triggered()), m_pXPlane->m_pgl3dXPlaneView, SLOT(onClearBackImage()));
-
-    m_pBackImageSettings = new QAction(tr("Settings"), this);
-    connect(m_pBackImageSettings, SIGNAL(triggered()), m_pXPlane->m_pgl3dXPlaneView, SLOT(onBackImageSettings()));
-
     m_pResetScale = new QAction(tr("Reset view\tR"), this);
     connect(m_pResetScale, SIGNAL(triggered()), m_pXPlane->m_pgl3dXPlaneView, SLOT(on3dReset()));
 

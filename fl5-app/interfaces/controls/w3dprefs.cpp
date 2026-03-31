@@ -26,13 +26,20 @@
 
 
 
-#include <QGroupBox>
-#include <QFormLayout>
-#include <QLabel>
+#include <QApplication>
 #include <QCheckBox>
-#include <QGridLayout>
 #include <QColorDialog>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QFormLayout>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QLabel>
 #include <QPushButton>
+#include <QStandardPaths>
+#include <QStyle>
+#include <QToolButton>
+#include <QButtonGroup>
 
 #include "w3dprefs.h"
 
@@ -54,6 +61,13 @@
 #include <interfaces/widgets/line/linebtn.h>
 #include <interfaces/widgets/line/linemenu.h>
 
+
+W3dPrefs::eBackground W3dPrefs::s_eBackground(UNIFORM);
+QString W3dPrefs::s_ImagePath;
+
+QColor W3dPrefs::s_ColourGrad1 = QColor(61,79,91);
+QColor W3dPrefs::s_ColourGrad2 = Qt::black;
+float W3dPrefs::s_GradientAngle = 90.0; // degrees
 
 bool W3dPrefs::s_bSaveViewPoints(true);
 bool W3dPrefs::s_bShowRefLength(false);
@@ -121,7 +135,12 @@ W3dPrefs::W3dPrefs(QWidget *pParent) : QWidget(pParent)
 
 void W3dPrefs::connectSignals()
 {
-
+    connect(m_prbUniColor,           SIGNAL(clicked(bool)),         SLOT(onBackground()));
+    connect(m_prbGradient,           SIGNAL(clicked(bool)),         SLOT(onBackground()));
+    connect(m_prbBackImage,          SIGNAL(clicked(bool)),         SLOT(onBackground()));
+    connect(m_pcbGrad1,              SIGNAL(clicked(bool)),         SLOT(onGradientColour()));
+    connect(m_pcbGrad2,              SIGNAL(clicked(bool)),         SLOT(onGradientColour()));
+    connect(m_pfeGradAngle,          SIGNAL(floatChanged(float)),   SLOT(onGradientColour()));
 
     connect(m_pchAnimateTransitions, SIGNAL(clicked(bool)),         SLOT(onOther3dChanged()));
     connect(m_pchBackPanelClr,       SIGNAL(clicked(bool)),         SLOT(onBackPanelClr()));
@@ -155,6 +174,15 @@ void W3dPrefs::connectSignals()
 
 void W3dPrefs::readData()
 {
+    if     (m_prbUniColor->isChecked())  s_eBackground = UNIFORM;
+    else if(m_prbGradient->isChecked())  s_eBackground = GRADIENT;
+    else if(m_prbBackImage->isChecked()) s_eBackground = IMAGE;
+
+    s_ImagePath     = m_plabImagePath->text();
+    s_ColourGrad1   = m_pcbGrad1->color();
+    s_ColourGrad2   = m_pcbGrad2->color();
+    s_GradientAngle = m_pfeGradAngle->valuef();
+
     s_bUseWingColour = m_pchUseWingColour->isChecked();
 
     s_bAutoAdjustScale = m_pchAutoAdjustScale->isChecked();
@@ -196,6 +224,19 @@ void W3dPrefs::readData()
 
 void W3dPrefs::initWidgets()
 {
+    m_prbUniColor->setChecked(s_eBackground==UNIFORM);
+    m_prbGradient->setChecked(s_eBackground==GRADIENT);
+    m_prbBackImage->setChecked(s_eBackground==IMAGE);
+
+    m_pcbGrad1->setColor(s_ColourGrad1);
+    m_pcbGrad2->setColor(s_ColourGrad2);
+    m_pfeGradAngle->setValuef(s_GradientAngle);
+
+    if(s_ImagePath.isEmpty()) m_plabImagePath->setText(tr("Select an image from a file:"));
+    else                      m_plabImagePath->setText(s_ImagePath);
+
+    onBackground();
+
     m_plbHighlight->setTheStyle(s_HighStyle);
     m_plbSelect->setTheStyle(s_SelectStyle);
 
@@ -269,39 +310,122 @@ void W3dPrefs::initWidgets()
 
 void W3dPrefs::setupLayout()
 {
+    m_pGroupBox.push_back(new QGroupBox(tr("Background")));
+    {
+        QVBoxLayout *pBackImageLayout = new QVBoxLayout;
+        {
+            QHBoxLayout *pBackTypeLayout = new QHBoxLayout;
+            {
+                QButtonGroup *pGroup = new QButtonGroup(this);
+                {
+                    m_prbUniColor  = new QRadioButton(tr("Uniform colour"));
+                    m_prbUniColor->setToolTip(tr("<p>Uses the background color defined for the application</p>"));
+                    m_prbGradient  = new QRadioButton(tr("Gradient"));
+                    m_prbGradient->setToolTip(tr("<p>Fills the background with a 2-colours gradient</p>"));
+                    m_prbBackImage = new QRadioButton(tr("Background image"));
+                    m_prbBackImage->setToolTip(tr("<p>Fills the background with an image loaded from a file;<br>"
+                                                  "the image is scaled to fill the background</p>"));
+                    pGroup->addButton(m_prbUniColor);
+                    pGroup->addButton(m_prbGradient);
+                    pGroup->addButton(m_prbBackImage);
+                }
+                pBackTypeLayout->addWidget(m_prbUniColor);
+                pBackTypeLayout->addWidget(m_prbGradient);
+                pBackTypeLayout->addWidget(m_prbBackImage);
+                pBackTypeLayout->addStretch();
+            }
+
+            m_pBackOptionLayout = new QStackedLayout;
+            {
+                QFrame *pfrGradient = new QFrame;
+                {
+                    QHBoxLayout *pGradientLayout = new QHBoxLayout;
+                    {
+                        QLabel *plabGrad1 = new QLabel(tr("Start:"));
+                        QLabel *plabGrad2 = new QLabel(tr("End:"));
+                        m_pcbGrad1        = new ColorBtn(s_ColourGrad1);
+                        m_pcbGrad2        = new ColorBtn(s_ColourGrad2);
+                        m_pcbGrad1->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+                        m_pcbGrad2->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+
+                        QLabel *plabAngle = new QLabel(tr("Angle ="));
+                        QLabel *plabDeg   = new QLabel(("<p>&deg;</p>"));
+                        m_pfeGradAngle    = new FloatEdit(s_GradientAngle);
+
+                        pGradientLayout->addWidget(plabGrad1);
+                        pGradientLayout->addWidget(m_pcbGrad1);
+                        pGradientLayout->addWidget(plabGrad2);
+                        pGradientLayout->addWidget(m_pcbGrad2);
+                        pGradientLayout->addStretch();
+                        pGradientLayout->addWidget(plabAngle);
+                        pGradientLayout->addWidget(m_pfeGradAngle);
+                        pGradientLayout->addWidget(plabDeg);
+                    }
+                    pfrGradient->setLayout(pGradientLayout);
+                }
+
+                QFrame *pfrImage = new QFrame;
+                {
+                    QHBoxLayout *pPathLayout = new QHBoxLayout;
+                    {
+                        m_plabImagePath = new QLabel(s_ImagePath);
+
+                        m_ptbImagePath = new QToolButton();
+                        QAction *pImagePathAction = new QAction(QApplication::style()->standardIcon(QStyle::SP_DialogOpenButton), tr("Select file"), this);
+                        m_ptbImagePath->setDefaultAction(pImagePathAction);
+                        connect(pImagePathAction, SIGNAL(triggered(bool)), SLOT(onImagePath()));
+                        pPathLayout->addWidget(m_plabImagePath);
+                        pPathLayout->addWidget(m_ptbImagePath);
+                        pPathLayout->addStretch();
+                    }
+                    pfrImage->setLayout(pPathLayout);
+                }
+
+                m_pBackOptionLayout->addWidget(new QFrame());
+                m_pBackOptionLayout->addWidget(pfrGradient);
+                m_pBackOptionLayout->addWidget(pfrImage);
+            }
+
+            pBackImageLayout->addLayout(pBackTypeLayout);
+            pBackImageLayout->addLayout(m_pBackOptionLayout);
+        }
+        m_pGroupBox.back()->setLayout(pBackImageLayout);
+    }
+
+
     m_pGroupBox.push_back(new QGroupBox(tr("Colour settings")));
     {
-        QVBoxLayout *pColorPrefs = new QVBoxLayout;
+        QVBoxLayout *pColorPrefsLayout = new QVBoxLayout;
         {
             QGridLayout *pColorGridLayout = new QGridLayout;
             {
-                QLabel *pLabGeom        = new QLabel(tr("Geometry"));
-                QLabel *pLabMesh        = new QLabel(tr("Mesh"));
-                QLabel *pLabVortons     = new QLabel(tr("Vortons"));
-                pLabGeom->setStyleSheet("font: bold");
-                pLabMesh->setStyleSheet("font: bold");
-                pLabVortons->setStyleSheet("font: bold");
+                QLabel *plabGeom        = new QLabel(tr("Geometry"));
+                QLabel *plabMesh        = new QLabel(tr("Mesh"));
+                QLabel *plabVortons     = new QLabel(tr("Vortons"));
+                plabGeom->setStyleSheet("font: bold");
+                plabMesh->setStyleSheet("font: bold");
+                plabVortons->setStyleSheet("font: bold");
 
-                QLabel *pLabResults     = new QLabel(tr("Results"));
-                QLabel *pLabSel         = new QLabel(tr("Selected"));
-                QLabel *pLabHigh        = new QLabel(tr("Highlighted"));
-                QLabel *pLabAxis        = new QLabel(tr("Axes"));
-                QLabel *pLabWind        = new QLabel(tr("Wind"));
-                QLabel *pLabOutline     = new QLabel(tr("Geometry outline"));
-                QLabel *pLabTopTr       = new QLabel(tr("Transitions"));
-                QLabel *pLabLift        = new QLabel(tr("Lift and forces"));
-                QLabel *pLabMoments     = new QLabel(tr("Moments"));
-                QLabel *pLabInducedDrag = new QLabel(tr("Induced drag"));
-                QLabel *pLabViscousDrag = new QLabel(tr("Viscous drag"));
-                QLabel *pLabVelocity    = new QLabel(tr("Velocity vectors"));
-                QLabel *pLabStream      = new QLabel(tr("Streamlines"));
-                QLabel *pLabFlow        = new QLabel(tr("Flow lines"));
-                QLabel *pLabMasses      = new QLabel(tr("Masses"));
-                QLabel *pLabVLM         = new QLabel(tr("Panel outline"));
-                QLabel *pLabFuse        = new QLabel(tr("Fuse panels:"));
-                QLabel *pLabWing        = new QLabel(tr("Wing panels:"));
-                QLabel *pLabFlap        = new QLabel(tr("Flap panels:"));
-                QLabel *pLabWake        = new QLabel(tr("Wake panels:"));
+                QLabel *plabResults     = new QLabel(tr("Results"));
+                QLabel *plabSel         = new QLabel(tr("Selected"));
+                QLabel *plabHigh        = new QLabel(tr("Highlighted"));
+                QLabel *plabAxis        = new QLabel(tr("Axes"));
+                QLabel *plabWind        = new QLabel(tr("Wind"));
+                QLabel *plabOutline     = new QLabel(tr("Geometry outline"));
+                QLabel *plabTopTr       = new QLabel(tr("Transitions"));
+                QLabel *plabLift        = new QLabel(tr("Lift and forces"));
+                QLabel *plabMoments     = new QLabel(tr("Moments"));
+                QLabel *plabInducedDrag = new QLabel(tr("Induced drag"));
+                QLabel *plabViscousDrag = new QLabel(tr("Viscous drag"));
+                QLabel *plabVelocity    = new QLabel(tr("Velocity vectors"));
+                QLabel *plabStream      = new QLabel(tr("Streamlines"));
+                QLabel *plabFlow        = new QLabel(tr("Flow lines"));
+                QLabel *plabMasses      = new QLabel(tr("Masses"));
+                QLabel *plabVLM         = new QLabel(tr("Panel outline"));
+                QLabel *plabFuse        = new QLabel(tr("Fuse panels:"));
+                QLabel *plabWing        = new QLabel(tr("Wing panels:"));
+                QLabel *plabFlap        = new QLabel(tr("Flap panels:"));
+                QLabel *plabWake        = new QLabel(tr("Wake panels:"));
 
                 m_plbHighlight    = new LineBtn(this);
                 m_plbSelect       = new LineBtn(this);
@@ -354,59 +478,59 @@ void W3dPrefs::setupLayout()
                 pColorGridLayout->setColumnStretch(3,1);
                 pColorGridLayout->setColumnStretch(4,2);
 
-                pColorGridLayout->addWidget(pLabSel,             1,1, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabSel,             1,1, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbSelect,         1,2);
-                pColorGridLayout->addWidget(pLabHigh,            1,3, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabHigh,            1,3, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbHighlight,      1,4);
 
-                pColorGridLayout->addWidget(pLabAxis,            2,1, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabAxis,            2,1, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbAxis,           2,2);
 
-                pColorGridLayout->addWidget(pLabWind,            2,3, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabWind,            2,3, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbWind,           2,4);
 
-                pColorGridLayout->addWidget(pLabGeom,            4,1,1,4, Qt::AlignCenter);
-                pColorGridLayout->addWidget(pLabOutline,         5,1, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(pLabMasses,          5,3, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabGeom,            4,1,1,4, Qt::AlignCenter);
+                pColorGridLayout->addWidget(plabOutline,         5,1, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabMasses,          5,3, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbOutline,        5,2);
                 pColorGridLayout->addWidget(m_pcbMassColor,     5,4);
 
-                pColorGridLayout->addWidget(pLabMesh,            6,1,1,4, Qt::AlignCenter);
-                pColorGridLayout->addWidget(pLabVLM,             7,1, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabMesh,            6,1,1,4, Qt::AlignCenter);
+                pColorGridLayout->addWidget(plabVLM,             7,1, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbMeshOutline,    7,2);
 
                 pColorGridLayout->addWidget(m_pchBackPanelClr,    8,1,1,4, Qt::AlignCenter);
-                pColorGridLayout->addWidget(pLabFuse,             9,1, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabFuse,             9,1, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_pcbFusePanelClr,   9,2);
-                pColorGridLayout->addWidget(pLabWing,             9,3, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabWing,             9,3, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_pcbWingPanelClr,   9,4);
-                pColorGridLayout->addWidget(pLabFlap,             10,1, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabFlap,             10,1, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_pcbFlapPanelClr,   10,2);
-                pColorGridLayout->addWidget(pLabWake,             10,3, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabWake,             10,3, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_pcbWakePanelClr,   10,4);
 
-                pColorGridLayout->addWidget(pLabResults,            11,1,1,4, Qt::AlignCenter);
-                pColorGridLayout->addWidget(pLabLift,               12,1, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabResults,            11,1,1,4, Qt::AlignCenter);
+                pColorGridLayout->addWidget(plabLift,               12,1, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbLift,              12,2);
-                pColorGridLayout->addWidget(pLabMoments,            12,3, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabMoments,            12,3, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbMoments,           12,4);
-                pColorGridLayout->addWidget(pLabInducedDrag,        13,1, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabInducedDrag,        13,1, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbInducedDrag,       13,2);
-                pColorGridLayout->addWidget(pLabViscousDrag,        13,3, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabViscousDrag,        13,3, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbViscousDrag,       13,4);
-                pColorGridLayout->addWidget(pLabTopTr,              14,1, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabTopTr,              14,1, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbTrans,             14,2);
-                pColorGridLayout->addWidget(pLabVelocity,           14,3, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabVelocity,           14,3, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbVelocity,          14,4);
 
-                pColorGridLayout->addWidget(pLabStream,             15,1, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabStream,             15,1, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbStreamLines,       15,2);
                 pColorGridLayout->addWidget(m_pchUseWingColour,     15, 3, 1, 2);
 
-                pColorGridLayout->addWidget(pLabFlow,               16,1, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabFlow,               16,1, Qt::AlignVCenter|Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbFlowLines,         16,2);
 
-                pColorGridLayout->addWidget(pLabVortons,                         17,1,1,4, Qt::AlignCenter);
+                pColorGridLayout->addWidget(plabVortons,                         17,1,1,4, Qt::AlignCenter);
                 pColorGridLayout->addWidget(new QLabel(tr("Colour:")),           18,1, Qt::AlignVCenter | Qt::AlignRight);
                 pColorGridLayout->addWidget(m_pcbVortonColor,                    18,2);
                 pColorGridLayout->addWidget(new QLabel(tr("Radius:")),           18,3, Qt::AlignVCenter | Qt::AlignRight);
@@ -431,18 +555,18 @@ void W3dPrefs::setupLayout()
                         }
                         QGridLayout *pBoxSizeLayout = new QGridLayout;
                         {
-                            QLabel *pLabX = new QLabel(tr("x-length"));
-                            QLabel *pLabY = new QLabel(tr("y-width"));
+                            QLabel *plabX = new QLabel(tr("x-length"));
+                            QLabel *plabY = new QLabel(tr("y-width"));
 
                             m_plabXUnit = new QLabel(Units::lengthUnitQLabel());
                             m_plabYUnit = new QLabel(Units::lengthUnitQLabel());
                             m_pfeBoxX = new FloatEdit;
                             m_pfeBoxY = new FloatEdit;
 
-                            pBoxSizeLayout->addWidget(pLabX,       1, 1, Qt::AlignVCenter|Qt::AlignRight);
+                            pBoxSizeLayout->addWidget(plabX,       1, 1, Qt::AlignVCenter|Qt::AlignRight);
                             pBoxSizeLayout->addWidget(m_pfeBoxX,   1, 2);
                             pBoxSizeLayout->addWidget(m_plabXUnit, 1, 3, Qt::AlignVCenter|Qt::AlignLeft);
-                            pBoxSizeLayout->addWidget(pLabY,       2, 1, Qt::AlignVCenter|Qt::AlignRight);
+                            pBoxSizeLayout->addWidget(plabY,       2, 1, Qt::AlignVCenter|Qt::AlignRight);
                             pBoxSizeLayout->addWidget(m_pfeBoxY,   2, 2);
                             pBoxSizeLayout->addWidget(m_plabYUnit, 2, 3, Qt::AlignVCenter|Qt::AlignLeft);
                             pBoxSizeLayout->setColumnStretch(3,1);
@@ -468,13 +592,13 @@ void W3dPrefs::setupLayout()
                 {
                     QHBoxLayout *pColourGradLayout = new QHBoxLayout;
                     {
-                        QLabel *pLabGrad = new QLabel(tr("Gradient colours:"));
+                        QLabel *plabGrad = new QLabel(tr("Gradient colours:"));
                         m_ppbGradientBtn = new QPushButton;
                         m_ppbGradientBtn->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
                         connect(m_ppbGradientBtn, SIGNAL(clicked()), SLOT(onColorGradient()));
-                        pColourGradLayout->addWidget(pLabGrad);
+                        pColourGradLayout->addWidget(plabGrad);
                         pColourGradLayout->addWidget(m_ppbGradientBtn);
-                        pContoursLayout->setStretchFactor(pLabGrad, 1);
+                        pContoursLayout->setStretchFactor(plabGrad, 1);
                         pContoursLayout->setStretchFactor(m_ppbGradientBtn, 7);
                     }
                     QHBoxLayout *pClrMapContoursLayout = new QHBoxLayout;
@@ -493,11 +617,11 @@ void W3dPrefs::setupLayout()
                 pColourMapBox->setLayout(pContoursLayout);
             }
 
-            pColorPrefs->addLayout(pColorGridLayout);
-            pColorPrefs->addWidget(pColourMapBox);
-            pColorPrefs->addWidget(pGroundBox);
+            pColorPrefsLayout->addLayout(pColorGridLayout);
+            pColorPrefsLayout->addWidget(pColourMapBox);
+            pColorPrefsLayout->addWidget(pGroundBox);
         }
-        m_pGroupBox.back()->setLayout(pColorPrefs);
+        m_pGroupBox.back()->setLayout(pColorPrefsLayout);
     }
 
     m_pGroupBox.push_back(new QGroupBox(tr("Tessellation")));
@@ -913,6 +1037,12 @@ void W3dPrefs::saveSettings(QSettings &settings)
 {
     settings.beginGroup("3DPrefs");
     {
+        settings.setValue("Background",    s_eBackground); // implicit conversion from enum to int
+        settings.setValue("ImagePath",     s_ImagePath);
+        settings.setValue("ClrGrad1",      s_ColourGrad1);
+        settings.setValue("ClrGrad2",      s_ColourGrad2);
+        settings.setValue("GradientAngle", s_GradientAngle);
+
         xfl::saveLineSettings(settings, s_AxisStyle, "AxisStyle");
         xfl::saveLineSettings(settings, s_HighStyle,      "HighlightStyle");
         xfl::saveLineSettings(settings, s_SelectStyle,    "SelectionStyle");
@@ -990,6 +1120,18 @@ void W3dPrefs::loadSettings(QSettings &settings)
     resetDefaults();
     settings.beginGroup("3DPrefs");
     {
+        int iback    = settings.value("Background",    s_eBackground).toInt();
+        switch(iback)
+        {
+            default: s_eBackground = UNIFORM;    break;
+            case 1:  s_eBackground = GRADIENT;   break;
+            case 2:  s_eBackground = IMAGE;      break;
+        }
+
+        s_ImagePath      = settings.value("ImagePath",     s_ImagePath).toString();
+        s_ColourGrad1    = settings.value("ClrGrad1",      s_ColourGrad1).value<QColor>();
+        s_ColourGrad2    = settings.value("ClrGrad2",      s_ColourGrad2).value<QColor>();
+        s_GradientAngle  = settings.value("GradientAngle", s_GradientAngle).toFloat();
         xfl::loadLineSettings(settings, s_AxisStyle,     "AxisStyle");
         xfl::loadLineSettings(settings, s_HighStyle,     "HighlightStyle");
         xfl::loadLineSettings(settings, s_SelectStyle,   "SelectionStyle");
@@ -1214,8 +1356,70 @@ QColor W3dPrefs::selectColor()    {return xfl::fromfl5Clr(s_SelectStyle.m_Color)
 
 
 
+void W3dPrefs::onBackground()
+{
+    if     (m_prbUniColor->isChecked())  s_eBackground = UNIFORM;
+    else if(m_prbGradient->isChecked())  s_eBackground = GRADIENT;
+    else if(m_prbBackImage->isChecked()) s_eBackground = IMAGE;
+
+    m_pBackOptionLayout->setCurrentIndex(s_eBackground);
+
+//    m_plabImagePath->setEnabled(s_iBackground==2);
+//    m_ptbImagePath->setEnabled(s_iBackground==2);
+}
 
 
+void W3dPrefs::onImagePath()
+{
+    QStringList loc = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
+    QString location;
+    if(!loc.isEmpty()) location = loc.front();
+    s_ImagePath = QFileDialog::getOpenFileName(this, tr("Open image file"),
+                                               location,
+                                               "Image files (*.png *.jpg *.bmp)");
+
+    QFileInfo fi(s_ImagePath);
+    if(fi.exists())
+        m_plabImagePath->setText(fi.filePath());
+    else
+    {
+        s_ImagePath.clear();
+    }
+}
+
+
+void W3dPrefs::onGradientColour()
+{
+    ColorBtn *pClrBtn = qobject_cast<ColorBtn*>(sender());
+    if(!pClrBtn) return;
+
+    if(pClrBtn==m_pcbGrad1)
+    {
+        QColor clr = QColorDialog::getColor(s_ColourGrad1, this, tr("Colour"), QColorDialog::ShowAlphaChannel);
+        if(clr.isValid())
+        {
+            s_ColourGrad1 = clr;
+            pClrBtn->setColor(clr);
+        }
+    }
+    else if(pClrBtn==m_pcbGrad2)
+    {
+        QColor clr = QColorDialog::getColor(s_ColourGrad2, this, tr("Colour"), QColorDialog::ShowAlphaChannel);
+        if(clr.isValid())
+        {
+            s_ColourGrad2 = clr;
+            pClrBtn->setColor(clr);
+        }
+    }
+
+    FloatEdit *pfeGradAngle = qobject_cast<FloatEdit*>(sender());
+    if(pfeGradAngle)
+    {
+        s_GradientAngle = m_pfeGradAngle->valuef();
+    }
+
+    update();
+}
 
 
 

@@ -187,7 +187,7 @@ void PrefsDlg::setupLayout()
                 m_pStyleWidgets.push_back(pAppStyle);
             }
 
-            QGroupBox *pThemeBox = new QGroupBox("Display theme");
+            QGroupBox *pThemeBox = new QGroupBox(tr("Display theme"));
             {
                 QVBoxLayout *pThemeLayout = new QVBoxLayout;
                 {
@@ -325,7 +325,7 @@ void PrefsDlg::setupLayout()
         m_pStyleOptions->setLayout(pWidgetStyleLayout);
     }
 
-    m_pMultiThreadOptions = new QGroupBox("Multithreading");
+    m_pMultiThreadOptions = new QGroupBox(tr("Multithreading"));
     {
         QVBoxLayout *pAllLayout = new QVBoxLayout;
         {
@@ -466,7 +466,6 @@ void PrefsDlg::initWidgets()
     m_pUnitsWt->initWidget();
     m_pGraphOptionsWt->initWidget();
 
-//    m_pOptionsTree->expandAll();
     m_ptwOptionsTree->header()->hide();
 
     m_pSaveOptionsWt->initWidget();
@@ -698,6 +697,10 @@ void PrefsDlg::fillTreeWidget()
     {
         m_p3dItem->setText(0, tr("3d views"));
         QTreeWidgetItem *pSub2;
+
+        pSub2 = new QTreeWidgetItem(m_p3dItem);
+        pSub2->setText(0, tr("Background image"));
+        m_p3dItem->addChild(pSub2);
 
         pSub2 = new QTreeWidgetItem(m_p3dItem);
         pSub2->setText(0, tr("Colours"));

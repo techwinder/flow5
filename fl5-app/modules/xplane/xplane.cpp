@@ -35,6 +35,7 @@
 #include <QClipboard>
 #include <QApplication>
 #include <QToolBar>
+#include <QProgressDialog>
 
 #include "xplane.h"
 
@@ -5084,8 +5085,6 @@ void XPlane::updateView()
 
     if(m_pXPlaneWt && m_pXPlaneWt->isVisible())
         m_pXPlaneWt->updateView();
-
-//    s_pMainFrame->update();
 }
 
 
