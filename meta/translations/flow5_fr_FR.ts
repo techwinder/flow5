@@ -326,6 +326,74 @@
     </message>
 </context>
 <context>
+    <name>AnalysisRangeTable</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="63"/>
+        <source>&lt;p&gt;Use this table to define one or more ranges for &amp;alpha; or the control parameter.&lt;br&gt;Click on the first column to activate/deactivate a range.&lt;br&gt;Use the context menu to add or remove ranges.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Utuliser ce tableau pour définir des plages de points de fonctionnement pour &amp;alpha; ou d&apos;autres paramètres de contrôle.&lt;br&gt;Cliquer dans la première colonne pour activer ou déactiver une plage.&lt;br&gt;Utiliser le menu contextuel pour ajouter ou supprimer des plages.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="82"/>
+        <source>Min.</source>
+        <translation>Min.</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="83"/>
+        <source>Max.</source>
+        <translation>Max.</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="161"/>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="164"/>
+        <source>Paste</source>
+        <translation>Coller</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="168"/>
+        <source>Activate/de-activate</source>
+        <translation>Activer/Déactiver</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="170"/>
+        <source>De-activate all</source>
+        <translation>Déactiver tout</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="171"/>
+        <source>Move up</source>
+        <translation>Déplacer vers le haut</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="172"/>
+        <source>Move down</source>
+        <translation>Déplacer vers le bas</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="173"/>
+        <source>Duplicate</source>
+        <translation>Dupliquer</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="174"/>
+        <source>Delete</source>
+        <translation>Supprimer</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="175"/>
+        <source>Insert before</source>
+        <translation>Insérer avant</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="176"/>
+        <source>Insert after</source>
+        <translation>Insérer après</translation>
+    </message>
+</context>
+<context>
     <name>AnalysisSelDlg</name>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysisseldlg.cpp" line="64"/>
@@ -3303,62 +3371,67 @@ Uncheck for increased analysis speed.</source>
         <translation>Ensembles de variables</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="87"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="83"/>
+        <source>&lt;p&gt;Each entry defines a set of variables for the graphs in this view.&lt;br&gt;To define a set, select a line, then modify the variables in the graphs. The set will be saved automatically.&lt;br&gt;Clicking on an entry will restore the set and the variables of all the graphs.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Chaque ligne définit un ensemble de variables pour les graphiques de la vue.&lt;br&gt;Pour définir un ensemble, sélectionner une ligne et modifier les variables des graphiques. L&apos;ensemble sera sauvegardé automatiquement.&lt;br&gt;Cliquer sur une ligne pour restaurer l&apos;ensemble des variables des graphique.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="92"/>
         <source>Variable set</source>
         <translation>Ensemble de variables</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="88"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="93"/>
         <source>Actions</source>
         <translation>Actions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="110"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="115"/>
         <source>Graph %1</source>
         <translation>Graphique %1</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="116"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="121"/>
         <source>2 graphs</source>
         <translation>2 graphiques</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="118"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="123"/>
         <source>4 graphs</source>
         <translation>4 graphiques</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="120"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="125"/>
         <source>All graphs</source>
         <translation>Tous les graphiques</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="244"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="249"/>
         <source>Section</source>
         <translation>Section</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="246"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="251"/>
         <source>Move up</source>
         <translation>Déplacer vers le haut</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="247"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="252"/>
         <source>Move down</source>
         <translation>Déplacer vers le bas</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="248"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="253"/>
         <source>Delete</source>
         <translation>Supprimer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="249"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="254"/>
         <source>Insert before</source>
         <translation>Insérer avant</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="250"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="255"/>
         <source>Insert after</source>
         <translation>Insérer après</translation>
     </message>
@@ -3677,538 +3750,538 @@ ____________Requête d&apos;annulation émise__________
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="259"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="260"/>
         <source>flow5 requires OpenGL 3.3 or greater.</source>
         <translation>flow5 nécessite OpenGL 3.3 ou plus récent</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="260"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="261"/>
         <source>Your system provides by default OpenGL %1.%2</source>
         <translation>Votre système fournit par défaut OpenGL %1.%2</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="263"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="264"/>
         <source>Warning</source>
         <translation>Attention</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="315"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="317"/>
         <source>Directories:</source>
         <translation>Dossiers:</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="316"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="318"/>
         <source>   Last used :       </source>
         <translation>   Dernier utilisé :       </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="317"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="319"/>
         <source>   Foil .dat files:  </source>
         <translation>   Fichiers .dat de profils:  </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="318"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="320"/>
         <source>   Polar .plr files: </source>
         <translation>   Fichiers .plr de polaires: </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="319"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="321"/>
         <source>   Plane .xml files: </source>
         <translation>   Fichiers .xml d&apos;avions: </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="320"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="322"/>
         <source>   Polar .xml files: </source>
         <translation>   Fichiers .xml de polaires: </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="321"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="323"/>
         <source>   CAD files:        </source>
         <translation>   Fichiers CAD :        </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="322"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="324"/>
         <source>   STL files:        </source>
         <translation>   Fichiers STL :        </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="323"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="325"/>
         <source>   Temporary files:  </source>
         <translation>   Fichiers temporaires:  </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="324"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="326"/>
         <source>   File exports:     </source>
         <translation>   Exports de fichiers:     </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="560"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="567"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="778"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="568"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="575"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="786"/>
         <source>Exit</source>
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="560"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="568"/>
         <source>Please wait for the analysis to finish before closing</source>
         <translation>Veuillez attendre la fin de l&apos;analyse avant de fermer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="567"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="575"/>
         <source>Save the project before closing?</source>
         <translation>Enregistrer le projet avant de fermer?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="644"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="652"/>
         <source>New project</source>
         <translation>Nouveau projet</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="646"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="654"/>
         <source>Save and close the current project, create a new project</source>
         <translation>Enregistrer et fermer le projet actuel, créer un nouveau projet</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="649"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="657"/>
         <source>Close the project</source>
         <translation>Fermer le projet</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="650"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="658"/>
         <source>Save and close the current project</source>
         <translation>Enregistrer et fermer le projet actuel</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="653"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="661"/>
         <source>Open a project</source>
         <translation>Ouvrir un projet</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="655"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="663"/>
         <source>Open an existing project file</source>
         <translation>Ouvrir un fichier projet existant</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="658"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="666"/>
         <source>Save</source>
         <translation>Enregistrer</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="660"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="668"/>
         <source>Save the project to disk</source>
         <translation>Enregistrer le projet</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="663"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="671"/>
         <source>Load foil(s)</source>
         <translation>Charger des profils</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="665"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="673"/>
         <source>Load foil(s) from .dat file</source>
         <translation>Charger des profils à partir de fichiers .dat</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="668"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="676"/>
         <source>Load polar file(s)</source>
         <translation>Charger un fichier de polaires</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="669"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="677"/>
         <source>Load a .plr file</source>
         <translation>Charger un fichier .plr</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="672"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="680"/>
         <source>Insert project</source>
         <translation>Insérer un projet</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="673"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="681"/>
         <source>&lt;p&gt;Insert an existing project in the current project&lt;/p&gt;</source>
         <translation>&lt;p&gt;Insérer un projet existant dans le projet actuel&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="677"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="685"/>
         <source>Close all</source>
         <translation>Fermer tout</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="679"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="687"/>
         <source>&lt;p&gt;Close all modules, but do not unload the active project&lt;/p&gt;</source>
         <translation>&lt;p&gt;Fermer tous les modules, mais ne pas décharger le projet actif&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="682"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="690"/>
         <source>Foil design</source>
         <translation>Conception de profils</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="684"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="692"/>
         <source>&lt;p&gt;Open the Foil direct analysis module&lt;/p&gt;</source>
         <translation>&lt;p&gt;Ouvrir le module d&apos;analyse directe de profils&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="687"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="695"/>
         <source>Plane design</source>
         <translation>Conception d&apos;avions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="689"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="697"/>
         <source>&lt;p&gt;Open the Wing/plane design and analysis module&lt;/p&gt;</source>
         <translation>&lt;p&gt;Ouvrir le module de conception et d&apos;analyse des avions&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="692"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="700"/>
         <source>Sail design</source>
         <translation>Conception de voile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="694"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="702"/>
         <source>Open the sail design and analysis module</source>
         <translation>Ouvrir le module de conception et d&apos;analyse des voiles</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="697"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="705"/>
         <source>Load last project</source>
         <translation>Charger le dernier projet</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="699"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="707"/>
         <source>Loads the last saved project</source>
         <translation>Charge le dernier projet sauvegardé</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="702"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="710"/>
         <source>Save project as</source>
         <translation>Enregistrer le projet sous</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="704"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="712"/>
         <source>Save the current project under a new name</source>
         <translation>Enregistrer le projet actuel sous un nouveau nom</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="707"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="715"/>
         <source>Preferences</source>
         <translation>Préférences</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="708"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="716"/>
         <source>Set default preferences for this application</source>
         <translation>Définir les préférences par défaut pour cette application</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="712"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="720"/>
         <source>Restore toolbars</source>
         <translation>Restaurer les barres d&apos;outils</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="713"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="721"/>
         <source>Restores the toolbars to their original state</source>
         <translation>Restaure les barres d&apos;outils à leur état initial</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="716"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="724"/>
         <source>Save view to image file</source>
         <translation>Sauvegarder la vue sous forme de fichier d&apos;image</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="718"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="726"/>
         <source>Saves the current view to a file on disk</source>
         <translation>Enregistre la vue actuelle sur un disque dur</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="721"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="729"/>
         <source>Execute script</source>
         <translation>Exécuter le script</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="723"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="731"/>
         <source>Executes a set of foil and plane analysis defined in an xml file</source>
         <translation>Exécute une analyse de profils et d&apos;avions définie dans un fichier XML</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="726"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="734"/>
         <source>Restore default settings</source>
         <translation>Restaurer les paramètres par défaut</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="727"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="735"/>
         <source>will revert to default settings at the next session</source>
         <translation>restaurera les paramètres par défaut à la prochaine session</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="738"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="746"/>
         <source>to file</source>
         <translation>dans un fichier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="739"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="747"/>
         <source>Export the current graph data to a text file</source>
         <translation>Exporter les données du graphique actuel dans un fichier texte</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="742"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="750"/>
         <source>to SVG file</source>
         <translation>vers un fichier SVG</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="745"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="753"/>
         <source>to clipboard</source>
         <translation>vers le presse-papier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="746"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="754"/>
         <source>Copies the curve data to the clipboard, for pasting in an external editor or a spreadsheet</source>
         <translation>copie les données des courbes dans le presse-papier pour collage dans un éditeur externe ou une feuille de calcul</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="749"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="757"/>
         <source>Reset scales 	R</source>
         <translation>Réinitialiser les échelles 	R</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="750"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="758"/>
         <source>Restores the graph&apos;s x and y scales</source>
         <translation>Réinitialise l&apos;échelle des axes X et Y du graphique</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="753"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="761"/>
         <source>Reset splitter sizes</source>
         <translation>Réinitialiser la taille des séparateurs</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="754"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="762"/>
         <source>Resets the split splizes to their default values</source>
         <translation>Réinitialise les valeurs par défaut des séparateurs</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="758"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="766"/>
         <source>Show legend</source>
         <translation>Afficher la légende</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="760"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="768"/>
         <source>Toggle the in-graph legend display</source>
         <translation>Afficher la légende dans le graphique</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="763"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="771"/>
         <source>Settings	G</source>
         <translation>Paramètres	G</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="766"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="774"/>
         <source>Open in new window</source>
         <translation>Ouvrir dans une nouvelle fenêtre</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="770"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="778"/>
         <source>Fast graph</source>
         <translation>Graphique rapide</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="774"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="782"/>
         <source>Show log window</source>
         <translation>Afficher la fenêtre du journal</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="780"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="788"/>
         <source>Exit the application</source>
         <translation>Quitter l&apos;application</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="783"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="791"/>
         <source>OpenGL settings</source>
         <translation>Paramètres OpenGL</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="787"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="795"/>
         <source>View last log file</source>
         <translation>Voir le dernier fichier journal</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="791"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="799"/>
         <source>View trace file</source>
         <translation>Voir le fichier de débogage</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="808"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="816"/>
         <source>3d Cp graph</source>
         <translation>Graphique 3D Cp</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="856"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="864"/>
         <source>Boat analysis</source>
         <translation>Analyse de voiles</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="861"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="869"/>
         <source>Sail 3d controls</source>
         <translation>Contrôles 3d de voile</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="866"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="874"/>
         <source>Boat object explorer</source>
         <translation>Explorateur de bateaux</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="906"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="914"/>
         <source>Analysis 2d</source>
         <translation>Analyse 2d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="915"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="923"/>
         <source>Operating point</source>
         <translation>Point de fonctionnement</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="924"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="932"/>
         <source>Foil object explorer</source>
         <translation>Explorateur de profils</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="934"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="942"/>
         <source>Foil object table</source>
         <translation>Tableau d&apos;objets profil</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1003"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1011"/>
         <source>Analysis 3d</source>
         <translation>Analyse 3d</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1008"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1016"/>
         <source>Plane Explorer</source>
         <translation>Explorateur d&apos;avions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1013"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1021"/>
         <source>Plane 3d view</source>
         <translation>Vue 3d d&apos;avions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1018"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1026"/>
         <source>Graphs</source>
         <translation>Graphiques</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1022"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1030"/>
         <source>Stability time controls</source>
         <translation>Contrôles de paramètres de stabilité</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1033"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1041"/>
         <source>&amp;File</source>
         <translation>&amp;Fichier</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1062"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1070"/>
         <source>&amp;Module</source>
         <translation>&amp;Module</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1075"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1083"/>
         <source>&amp;Options</source>
         <translation>&amp;Options</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1087"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1095"/>
         <source>&amp;?</source>
         <translation>&amp;?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1089"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1097"/>
         <source>About flow5</source>
         <translation>A propos de flow5</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1090"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1098"/>
         <source>More information about flow5</source>
         <translation>Plus d&apos;informations sur flow5</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1093"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1101"/>
         <source>About Qt</source>
         <translation>A propos de Qt</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1096"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1104"/>
         <source>Credits</source>
         <translation>Crédits</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1099"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1107"/>
         <source>Online doc.</source>
         <translation>Doc. en ligne</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1102"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1110"/>
         <source>Release notes</source>
         <translation>Notes de version</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1132"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1140"/>
         <source>Ready</source>
         <translation>Prêt</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1143"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1151"/>
         <source>MainToolBar</source>
         <translation>Barre d&apos;outils principale</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1165"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1173"/>
         <source>XSailToolBar</source>
         <translation>Barre d&apos;outils XSail</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1176"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1184"/>
         <source>XDirect</source>
         <translation>XDirect</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1187"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1195"/>
         <source>Foil</source>
         <translation>Profil</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1209"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1217"/>
         <source>PlaneToolBar</source>
         <translation>Barre d&apos;outils avions</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1224"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1232"/>
         <source>Deleting current project
 </source>
         <translation>Suppression du projet actuel
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1229"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1237"/>
         <source>   Deleting 2d objects
 </source>
         <translation>   Suppression des objets 2D
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1815"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1823"/>
         <source>Question</source>
         <translation>Question</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1815"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1823"/>
         <source>Save the current project?</source>
         <translation>Sauvegarder le projet actuel ?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1827"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1835"/>
         <source>The project </source>
         <translation>Le projet </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1827"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1835"/>
         <source> has been saved
 
 </source>
@@ -4217,18 +4290,18 @@ ____________Requête d&apos;annulation émise__________
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1873"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1877"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1881"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1885"/>
         <source>Default Settings</source>
         <translation>Paramètres par défaut</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1873"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1881"/>
         <source>Are you sure you want to reset the default settings?</source>
         <translation>Êtes-vous sûr de vouloir réinitialiser les paramètres par défaut?</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1877"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1885"/>
         <source>The settings will be reset at the next session</source>
         <translation>Les paramètres seront réinitialisés à la prochaine session</translation>
     </message>
@@ -5542,7 +5615,7 @@ Ctrl+B pour modifier le premier fuselage</translation>
     <message>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planestldlg.cpp" line="180"/>
         <source>Max. T.E. angle for guesses:</source>
-        <translation>Angle maximal de bord de fuite pour les recherches:</translation>
+        <translation>Angle max. de bord de fuite:</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/planeedit/planestldlg.cpp" line="181"/>
@@ -6979,7 +7052,7 @@ lors de l&apos;utilisation de la roulette</translation>
     <message>
         <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="339"/>
         <source>Max T.E. angle for guesses:</source>
-        <translation>Angle maximal deviner les bords de fuite:</translation>
+        <translation>Angle max. de bord de fuite:</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/editors/boatedit/saildlg.cpp" line="341"/>
@@ -10359,7 +10432,7 @@ Import depuis un fichier binaire
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="5727"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="5725"/>
         <source>Export plane definition to xml file</source>
         <translation>Exporter la définition de l&apos;avion vers un fichier XML</translation>
     </message>

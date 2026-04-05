@@ -282,8 +282,8 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
             for(uint iv=0; iv<pPOpp->m_VortexNeg.size(); iv++)
             {
                 Vortex const &vtx = pPOpp->m_VortexNeg.at(iv);
-                paintBox(vtx.vertexAt(0).x, vtx.vertexAt(0).y, vtx.vertexAt(0).z,
-                         0.015/m_glScalef, 0.015/m_glScalef, 0.015/m_glScalef, QColor(255,35,75), true);
+                paintBox(vtx.vertexAt(0).xf(), vtx.vertexAt(0).yf(), vtx.vertexAt(0).zf(),
+                         0.015f/m_glScalef, 0.015f/m_glScalef, 0.015f/m_glScalef, QColor(255,35,75), true);
                 paintThinArrow(vtx.vertexAt(0), vtx.segment()*vtx.circulation()*coef, QColor(255,35,75), 2.0f, Line::SOLID, m_matModel);
             }
         }
@@ -412,7 +412,8 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
 
         if(m_pPOpp3dControls->m_bMoments)
         {
-            paintMoments();
+//           paintMoments();
+            paintSegments(m_pglXPlaneBuffers->m_vboMoments, W3dPrefs::s_MomentStyle);
         }
     }
 
@@ -1457,34 +1458,6 @@ void gl3dXPlaneView::makeTriVelocityBlock(int iBlock, QVector<Vector3d> const &C
 }
 
 
-void gl3dXPlaneView::paintMoments()
-{
-    QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
-
-    m_shadLine.bind();
-    {
-        m_shadLine.enableAttributeArray(m_locLine.m_attrVertex);
-        m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView*m_matModel);
-        m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
-        m_shadLine.setUniformValue(m_locLine.m_UniColor, xfl::fromfl5Clr(W3dPrefs::s_MomentStyle.m_Color));
-        m_shadLine.setUniformValue(m_locLine.m_Pattern, gl::stipple(W3dPrefs::s_MomentStyle.m_Stipple));
-        m_shadLine.setUniformValue(m_locLine.m_Thickness, float(W3dPrefs::s_MomentStyle.m_Width));
-
-        m_pglXPlaneBuffers->m_vboMoments.bind();
-
-        m_shadLine.setAttributeBuffer(m_locLine.m_attrVertex, GL_FLOAT, 0, 3);
-
-        int nLines = m_pglXPlaneBuffers->m_vboMoments.size()/int(sizeof(float))/3;
-
-        glDrawArrays(GL_LINES, 0, nLines);
-        m_pglXPlaneBuffers->m_vboMoments.release();
-
-        m_shadLine.disableAttributeArray(m_locLine.m_attrVertex);
-    }
-    m_shadLine.release();
-}
-
-
 bool gl3dXPlaneView::intersectTheObject(Vector3d const &AA, Vector3d const &BB, Vector3d &I)
 {
     Plane const *pPlane = s_pXPlane->m_pCurPlane;
@@ -1493,7 +1466,7 @@ bool gl3dXPlaneView::intersectTheObject(Vector3d const &AA, Vector3d const &BB, 
     Vector3d U = (BB-AA).normalized();
 
     QVector4D v4d;
-    float zmax = +1.e10;
+    float zmax = LARGEVALUE;
     Vector3d INear, ITmp;
     bool bIntersect = false;
     for(int i3=0; i3<pPlane->nPanel3(); i3++)
@@ -1834,7 +1807,7 @@ bool gl3dXPlaneView::pickQuadPanel(QPoint const &point)
     m_PickedPanelIndex = -1;
 
     PlaneOpp const *pPOpp = s_pXPlane->m_pCurPOpp;
-    float zmax = +1.e10;
+    float zmax = LARGEVALUE;
     //    double dcrit = 0.05/m_glScaled;
     if(pPOpp && (m_pPOpp3dControls->m_b3dCp || m_pPOpp3dControls->m_bGamma || m_pPOpp3dControls->m_bPanelForce))
     {
@@ -2995,7 +2968,7 @@ void gl3dXPlaneView::glMakeMoments(double planformspan, PlanePolar const *pWPola
     }
 
     float angle=0.0;//radian
-    float endx, endy, endz, dx, dy, dz,xae, yae, zae;
+    float endx(0), endy(0), endz(0), dx(0), dy(0), dz(0), xae(0), yae(0), zae(0);
     float factor = 1.0;
     float radius= float(planformspan)/4.0f;
     float frac=0;
@@ -3010,8 +2983,8 @@ void gl3dXPlaneView::glMakeMoments(double planformspan, PlanePolar const *pWPola
     float tiplength = 0.015f*reflength;
     int nMomentPoints = 1000;
 
-    int nLines = (nMomentPoints+2)*2*3;// x2 end points x3 coords
-    QVector<float> momentVertexArray(nLines*3); //  x3 moments
+    int nLines = (nMomentPoints+2)*3;//  (+2 end points)  x3 moments
+    QVector<float> momentVertexArray(nLines*2*3); //  x2 vertices x 3 components
     int iv = 0;
     //ROLLING MOMENT
     float sign=1.0;

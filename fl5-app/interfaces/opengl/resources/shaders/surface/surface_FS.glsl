@@ -87,9 +87,9 @@ void main()
         return;
     }
 
-    vec4 fragcolor;
-    if(HasUniColor==1) fragcolor = UniformColor;
-    else               fragcolor = VSColor; // incoming from the Vertex Shader
+    vec4 vertexcolor;
+    if(HasUniColor==1) vertexcolor = UniformColor;
+    else               vertexcolor = VSColor; // incoming from the Vertex or Geometry Shaders
 
 
     if(LightOn==1)
@@ -106,8 +106,8 @@ void main()
         }
         else
         {
-            MaterialAmbientColor  = vec4(fragcolor.rgb * LightAmbient, fragcolor.a);
-            MaterialDiffuseColor  = vec4(fragcolor.rgb * LightDiffuse, fragcolor.a);
+            MaterialAmbientColor  = vec4(vertexcolor.rgb * LightAmbient, vertexcolor.a);
+            MaterialDiffuseColor  = vec4(vertexcolor.rgb * LightDiffuse, vertexcolor.a);
             MaterialSpecularColor = vec4(1.0, 1.0, 1.0, 1.0);
         }
 
@@ -162,7 +162,7 @@ void main()
     else
     {
         if(HasTexture==0)
-            fragColor  = fragcolor;
+            fragColor  = vertexcolor;
         else
         {
             if(HasGradient==0)

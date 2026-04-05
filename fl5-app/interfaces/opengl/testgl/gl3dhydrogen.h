@@ -55,8 +55,6 @@ class gl3dHydrogen : public gl3dTestGLView
         void hideEvent(QHideEvent *pEvent) override;
         void closeEvent(QCloseEvent *pEvent) override;
 
-        void paintElectronInstances(QOpenGLBuffer &vboPosInstances, float radius, QColor const &clr, bool bTwoSided, bool bLight);
-
         double psi(double r, double theta, double phi) const;
         double psi_1s(double r, double, double);
 

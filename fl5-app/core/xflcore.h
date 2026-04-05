@@ -71,7 +71,7 @@ namespace xfl
     QColor fromfl5Clr(const fl5Color &clr);
     fl5Color tofl5Clr(const QColor &clr);
 
-    inline QString colorNameARGB(QColor const &colour) {return QString::asprintf("rgba(%d,%d,%3d,%g)", colour.red(), colour.green(), colour.blue(), colour.alphaF());}
+    inline QString colorNameARGB(QColor const &colour) {return QString::asprintf("rgba(%d,%d,%d,%g)", colour.red(), colour.green(), colour.blue(), colour.alphaF());}
 
     void expFormat(double &f, int &exp);
 

@@ -113,6 +113,7 @@
 #include <interfaces/opengl/testgl/gl3dsolarsys.h>
 #include <interfaces/opengl/testgl/gl3dspace.h>
 #include <interfaces/opengl/testgl/gl3dsurface.h>
+#include <interfaces/opengl/testgl/gl3dtestpoints.h>
 #include <interfaces/opengl/testgl/gl3dtexture.h>
 #include <interfaces/script/xflscriptexec.h>
 #include <interfaces/script/xflscriptreader.h>
@@ -523,6 +524,7 @@ MainFrame::~MainFrame()
 
     m_pLogMessageDlg->close();
     delete m_pLogMessageDlg;
+
 }
 
 
@@ -1404,31 +1406,7 @@ void MainFrame::keyPressEvent(QKeyEvent *pEvent)
             }
             case Qt::Key_F1:
             {
-                gl2dComplex *pTestView = new gl2dComplex;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F2:
-            {
-                gl2dFractal *pTestView = new gl2dFractal;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F3:
-            {
-                gl2dQuat *pTestView = new gl2dQuat;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F4:
-            {
-                gl2dNewton *pTestView = new gl2dNewton;
+                gl3dTestGLView *pTestView = new gl3dTestPoints;
                 pTestView->setAttribute(Qt::WA_DeleteOnClose);
                 pTestView->show();
                 pTestView->activateWindow();
@@ -1436,7 +1414,7 @@ void MainFrame::keyPressEvent(QKeyEvent *pEvent)
             }
             case Qt::Key_F5:
             {
-                gl3dTexture *pTestView = new gl3dTexture;
+                gl3dTestGLView *pTestView = new gl3dHydrogen;
                 pTestView->setAttribute(Qt::WA_DeleteOnClose);
                 pTestView->show();
                 pTestView->activateWindow();
@@ -2397,8 +2375,7 @@ void MainFrame::onXPlane()
         displayMessage("Setting planes, polars and operating points...", false);
         m_pXPlane->cancelStreamLines();
         m_pXPlane->setPlane();
-    //    m_pXPlane->setPolar();
-    //    m_pXPlane->setPlaneOpp(nullptr);
+
         displayMessage(" done\n\n", false);
 
         m_pXPlane->updateTreeView();
@@ -2407,6 +2384,8 @@ void MainFrame::onXPlane()
         m_pXPlane->resetCurves();
         m_pXPlane->m_pgl3dXPlaneView->resetglPOpp();
         m_pXPlane->m_pgl3dXPlaneView->resetglColorMap();
+
+        m_pXPlane->m_pgl3dXPlaneView->reset3dScale();
         m_pXPlane->setControls();
     }
 
@@ -2432,8 +2411,7 @@ void MainFrame::onXSail()
     }
 
     m_pXSail->setBoat();
-//    m_pXSail->setBtPolar();
-//    m_pXSail->setBtOpp();
+
     m_pXSail->m_pgl3dXSailView->reset3dScale();
 
     m_pXSail->updateObjectView();
@@ -2444,8 +2422,8 @@ void MainFrame::onXSail()
     m_pXSail->setControls();
     m_pXSail->updateView();
     m_pXSail->m_pgl3dXSailView->resetglBtOpp();
-    m_pXSail->m_pgl3dXSailView->resetglColorMap();
-    }
+    m_pXSail->m_pgl3dXSailView->resetglColorMap();    
+}
 
 
 bool MainFrame::saveProject(const QString &filepath)

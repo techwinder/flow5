@@ -218,7 +218,6 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
 
         void getGLError();
 
-        void paintPoints2(QOpenGLBuffer &vbo, float width, bool bUniformColor, const QColor &clr, int stride);
 
         void paintDebugPts();
         double drawReferenceLength();
@@ -235,8 +234,8 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
         void paintXYCircle(QOpenGLBuffer &vbo, const Vector2d &place, double radius, const QColor &circleColor);
         void paintIcoSphere(const Vector3d &place, double radius, const fl5Color &color, bool bTriangles, bool bOutline);
         void paintIcoSphere(const Vector3d &place, double radius, const QColor &color, bool bTriangles, bool bOutline);
-        void paintCube(double x, double y, double z, double side, QColor const &clr, bool bLight);
-        void paintBox(double x, double y, double z, double dx, double dy, double dz, QColor const &clr, bool bLight);
+        void paintCube(float x, float y, float z, float side, QColor const &clr, bool bLight);
+        void paintBox(float x, float y, float z, float dx, float dy, float dz, QColor const &clr, bool bLight);
         void paintSphere(float xs, float ys, float zs, float radius, const QColor &color, bool bLight=true);
         void paintSphere(const Vector3d &place, float radius, const QColor &sphereColor, bool bLight=true);
         void paintSphereInstances(QOpenGLBuffer &vboPosInstances, float radius, QColor const &clr, bool bTwoSided, bool bLight);
@@ -273,6 +272,8 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
 
         void paintPoints(QOpenGLBuffer &vbo, float width, int iShape, bool bLight, const fl5Color &clr, int stride);
         void paintPoints(QOpenGLBuffer &vbo, float width, int iShape, bool bLight, const QColor &clr, int stride);
+        void paintPoints2(QOpenGLBuffer &vbo, float width, bool bUniformColor, const QColor &clr, int stride);
+        void paintPointInstances(QOpenGLBuffer &vboPosInstances, float radius, QColor const &clr, bool bTwoSided, bool bLight);
 
         void paintBackImage();
 

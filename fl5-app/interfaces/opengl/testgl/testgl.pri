@@ -17,6 +17,7 @@ HEADERS += \
     $$PWD/gl3dspace.h \
     $$PWD/gl3dsurface.h \
     $$PWD/gl3dtestglview.h \
+    $$PWD/gl3dtestpoints.h \
     $$PWD/gl3dtexture.h \
     $$PWD/spaceobject.h \
 
@@ -40,6 +41,7 @@ SOURCES += \
     $$PWD/gl3dspace.cpp \
     $$PWD/gl3dsurface.cpp \
     $$PWD/gl3dtestglview.cpp \
+    $$PWD/gl3dtestpoints.cpp \
     $$PWD/gl3dtexture.cpp \
     $$PWD/spaceobject.cpp \
 

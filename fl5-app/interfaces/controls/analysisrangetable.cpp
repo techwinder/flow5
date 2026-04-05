@@ -60,10 +60,9 @@ AnalysisRangeTable::AnalysisRangeTable(QWidget *pParent) : CPTableView(pParent)
     m_eRangeType = AnalysisRange::ALPHA;
 
     QString tip(
-            "<p>Use this table to define one or more ranges for &alpha; or the control parameter.<br>"
+            tr("<p>Use this table to define one or more ranges for &alpha; or the control parameter.<br>"
             "Click on the first column to activate/deactivate a range.<br>"
-            "Use the context menu to add or remove ranges.<br>"
-            "Duplicate requests will be removed before running the analysis.</p>");
+            "Use the context menu to add or remove ranges.</p>"));
     setToolTip(tip);
 
     setCharSize(3,5);
@@ -80,8 +79,8 @@ AnalysisRangeTable::AnalysisRangeTable(QWidget *pParent) : CPTableView(pParent)
     m_pRangeModel->setRowCount(1);//temporary
     m_pRangeModel->setColumnCount(4);
     m_pRangeModel->setHeaderData(0, Qt::Horizontal, QString());
-    m_pRangeModel->setHeaderData(1, Qt::Horizontal, "Min.");
-    m_pRangeModel->setHeaderData(2, Qt::Horizontal, "Max.");
+    m_pRangeModel->setHeaderData(1, Qt::Horizontal, tr("Min."));
+    m_pRangeModel->setHeaderData(2, Qt::Horizontal, tr("Max."));
     m_pRangeModel->setHeaderData(3, Qt::Horizontal, DELTACAPch);
     setModel(m_pRangeModel);
 
@@ -159,22 +158,22 @@ void AnalysisRangeTable::keyPressEvent(QKeyEvent *pEvent)
 
 void AnalysisRangeTable::contextMenuEvent(QContextMenuEvent *pEvent)
 {
-    QAction *pCopyAction = new QAction("Copy", this);
+    QAction *pCopyAction = new QAction(tr("Copy"), this);
     pCopyAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_C));
 
-    QAction *pPasteAction = new QAction("Paste", this);
+    QAction *pPasteAction = new QAction(tr("Paste"), this);
     pPasteAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_V));
     pPasteAction->setEnabled(m_bIsEditable);
 
-    QAction *pActivate      = new QAction("Activate/de-activate", this);
+    QAction *pActivate      = new QAction(tr("Activate/de-activate"), this);
     pActivate->setShortcut(Qt::Key_Space);
-    QAction *pDeActivateAll = new QAction("De-activate all", this);
-    QAction *pMoveUp        = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowUp),   "Move up", this);
-    QAction *pMoveDown      = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowDown), "Move down", this);
-    QAction *pDuplicate     = new QAction("Duplicate", this);
-    QAction *pDelete        = new QAction("Delete", this);
-    QAction *pInsertBefore  = new QAction("Insert before", this);
-    QAction *pInsertAfter   = new QAction("Insert after", this);
+    QAction *pDeActivateAll = new QAction(tr("De-activate all"), this);
+    QAction *pMoveUp        = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowUp),   tr("Move up"), this);
+    QAction *pMoveDown      = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowDown), tr("Move down"), this);
+    QAction *pDuplicate     = new QAction(tr("Duplicate"), this);
+    QAction *pDelete        = new QAction(tr("Delete"), this);
+    QAction *pInsertBefore  = new QAction(tr("Insert before"), this);
+    QAction *pInsertAfter   = new QAction(tr("Insert after"), this);
 
     connect(pActivate,      SIGNAL(triggered(bool)), SLOT(onActivate()));
     connect(pDeActivateAll, SIGNAL(triggered(bool)), SLOT(onDeActivateAll()));
@@ -633,8 +632,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             {
                 s_AlphaRange[i].setActive(settings.value(QString::asprintf("RangeAlpha_%d_bActive", i), true).toBool());
                 s_AlphaRange[i].m_vStart = settings.value(QString::asprintf("RangeAlpha_%d_min", i), s_AlphaRange.at(i).m_vStart).toDouble();
-                s_AlphaRange[i].m_vEnd = settings.value(QString::asprintf("RangeAlpha_%d_max", i), s_AlphaRange.at(i).m_vEnd).toDouble();
-                s_AlphaRange[i].m_vInc = settings.value(QString::asprintf("RangeAlpha_%d_inc", i), s_AlphaRange.at(i).m_vInc).toDouble();
+                s_AlphaRange[i].m_vEnd   = settings.value(QString::asprintf("RangeAlpha_%d_max", i), s_AlphaRange.at(i).m_vEnd).toDouble();
+                s_AlphaRange[i].m_vInc   = settings.value(QString::asprintf("RangeAlpha_%d_inc", i), s_AlphaRange.at(i).m_vInc).toDouble();
             }
         }
         else
@@ -652,8 +651,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             {
                 s_ClRange[i].setActive(settings.value(QString::asprintf("RangeCl_%d_bActive", i), true).toBool());
                 s_ClRange[i].m_vStart = settings.value(QString::asprintf("RangeCl_%d_min", i), s_ClRange.at(i).m_vStart).toDouble();
-                s_ClRange[i].m_vEnd = settings.value(QString::asprintf("RangeCl_%d_max", i), s_ClRange.at(i).m_vEnd).toDouble();
-                s_ClRange[i].m_vInc = settings.value(QString::asprintf("RangeCl_%d_inc", i), s_ClRange.at(i).m_vInc).toDouble();
+                s_ClRange[i].m_vEnd   = settings.value(QString::asprintf("RangeCl_%d_max", i), s_ClRange.at(i).m_vEnd).toDouble();
+                s_ClRange[i].m_vInc   = settings.value(QString::asprintf("RangeCl_%d_inc", i), s_ClRange.at(i).m_vInc).toDouble();
             }
         }
         else
@@ -671,8 +670,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             {
                 s_ReRange[i].setActive(settings.value(QString::asprintf("RangeReynolds_%d_bActive", i), true).toBool());
                 s_ReRange[i].m_vStart = settings.value(QString::asprintf("RangeReynolds_%d_min", i), s_ReRange.at(i).m_vStart).toDouble();
-                s_ReRange[i].m_vEnd = settings.value(QString::asprintf("RangeReynolds_%d_max", i), s_ReRange.at(i).m_vEnd).toDouble();
-                s_ReRange[i].m_vInc = settings.value(QString::asprintf("RangeReynolds_%d_inc", i), s_ReRange.at(i).m_vInc).toDouble();
+                s_ReRange[i].m_vEnd   = settings.value(QString::asprintf("RangeReynolds_%d_max", i), s_ReRange.at(i).m_vEnd).toDouble();
+                s_ReRange[i].m_vInc   = settings.value(QString::asprintf("RangeReynolds_%d_inc", i), s_ReRange.at(i).m_vInc).toDouble();
             }
         }
         else
@@ -690,8 +689,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             {
                 s_ThetaRange[i].setActive(settings.value(QString::asprintf("RangeTheta_%d_bActive", i), true).toBool());
                 s_ThetaRange[i].m_vStart = settings.value(QString::asprintf("RangeTheta_%d_min", i), s_ThetaRange.at(i).m_vStart).toDouble();
-                s_ThetaRange[i].m_vEnd = settings.value(QString::asprintf("RangeTheta_%d_max", i), s_ThetaRange.at(i).m_vEnd).toDouble();
-                s_ThetaRange[i].m_vInc = settings.value(QString::asprintf("RangeTheta_%d_inc", i), s_ThetaRange.at(i).m_vInc).toDouble();
+                s_ThetaRange[i].m_vEnd   = settings.value(QString::asprintf("RangeTheta_%d_max", i), s_ThetaRange.at(i).m_vEnd).toDouble();
+                s_ThetaRange[i].m_vInc   = settings.value(QString::asprintf("RangeTheta_%d_inc", i), s_ThetaRange.at(i).m_vInc).toDouble();
             }
         }
         else
@@ -710,8 +709,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             {
                 s_T12Range[i].setActive(settings.value(QString::asprintf("RangeT12_%d_bActive", i), true).toBool());
                 s_T12Range[i].m_vStart = settings.value(QString::asprintf("RangeT12_%d_min", i), s_T12Range.at(i).m_vStart).toDouble();
-                s_T12Range[i].m_vEnd = settings.value(QString::asprintf("RangeT12_%d_max", i), s_T12Range.at(i).m_vEnd).toDouble();
-                s_T12Range[i].m_vInc = settings.value(QString::asprintf("RangeT12_%d_inc", i), s_T12Range.at(i).m_vInc).toDouble();
+                s_T12Range[i].m_vEnd   = settings.value(QString::asprintf("RangeT12_%d_max", i), s_T12Range.at(i).m_vEnd).toDouble();
+                s_T12Range[i].m_vInc   = settings.value(QString::asprintf("RangeT12_%d_inc", i), s_T12Range.at(i).m_vInc).toDouble();
             }
         }
         else
@@ -729,8 +728,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             {
                 s_T3Range[i].setActive(settings.value(QString::asprintf("RangeT3_%d_bActive", i), true).toBool());
                 s_T3Range[i].m_vStart = settings.value(QString::asprintf("RangeT3_%d_min", i), s_T3Range.at(i).m_vStart).toDouble();
-                s_T3Range[i].m_vEnd = settings.value(QString::asprintf("RangeT3_%d_max", i), s_T3Range.at(i).m_vEnd).toDouble();
-                s_T3Range[i].m_vInc = settings.value(QString::asprintf("RangeT3_%d_inc", i), s_T3Range.at(i).m_vInc).toDouble();
+                s_T3Range[i].m_vEnd   = settings.value(QString::asprintf("RangeT3_%d_max", i), s_T3Range.at(i).m_vEnd).toDouble();
+                s_T3Range[i].m_vInc   = settings.value(QString::asprintf("RangeT3_%d_inc", i), s_T3Range.at(i).m_vInc).toDouble();
             }
         }
         else
@@ -748,8 +747,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             {
                 s_T4Range[i].setActive(settings.value(QString::asprintf("RangeT4_%d_bActive", i), true).toBool());
                 s_T4Range[i].m_vStart = settings.value(QString::asprintf("RangeT4_%d_min", i), s_T4Range.at(i).m_vStart).toDouble();
-                s_T4Range[i].m_vEnd = settings.value(QString::asprintf("RangeT4_%d_max", i), s_T4Range.at(i).m_vEnd).toDouble();
-                s_T4Range[i].m_vInc = settings.value(QString::asprintf("RangeT4_%d_inc", i), s_T4Range.at(i).m_vInc).toDouble();
+                s_T4Range[i].m_vEnd   = settings.value(QString::asprintf("RangeT4_%d_max", i), s_T4Range.at(i).m_vEnd).toDouble();
+                s_T4Range[i].m_vInc   = settings.value(QString::asprintf("RangeT4_%d_inc", i), s_T4Range.at(i).m_vInc).toDouble();
             }
         }
         else
@@ -767,8 +766,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             {
                 s_T5Range[i].setActive(settings.value(QString::asprintf("RangeT5_%d_bActive", i), true).toBool());
                 s_T5Range[i].m_vStart = settings.value(QString::asprintf("RangeT5_%d_min", i), s_T5Range.at(i).m_vStart).toDouble();
-                s_T5Range[i].m_vEnd = settings.value(QString::asprintf("RangeT5_%d_max", i), s_T5Range.at(i).m_vEnd).toDouble();
-                s_T5Range[i].m_vInc = settings.value(QString::asprintf("RangeT5_%d_inc", i), s_T5Range.at(i).m_vInc).toDouble();
+                s_T5Range[i].m_vEnd   = settings.value(QString::asprintf("RangeT5_%d_max", i), s_T5Range.at(i).m_vEnd).toDouble();
+                s_T5Range[i].m_vInc   = settings.value(QString::asprintf("RangeT5_%d_inc", i), s_T5Range.at(i).m_vInc).toDouble();
             }
         }
         else
@@ -786,8 +785,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             {
                 s_T6Range[i].setActive(settings.value(QString::asprintf("RangeT6_%d_bActive", i), true).toBool());
                 s_T6Range[i].m_vStart = settings.value(QString::asprintf("RangeT6_%d_min", i), s_T6Range.at(i).m_vStart).toDouble();
-                s_T6Range[i].m_vEnd = settings.value(QString::asprintf("RangeT6_%d_max", i), s_T6Range.at(i).m_vEnd).toDouble();
-                s_T6Range[i].m_vInc = settings.value(QString::asprintf("RangeT6_%d_inc", i), s_T6Range.at(i).m_vInc).toDouble();
+                s_T6Range[i].m_vEnd   = settings.value(QString::asprintf("RangeT6_%d_max", i), s_T6Range.at(i).m_vEnd).toDouble();
+                s_T6Range[i].m_vInc   = settings.value(QString::asprintf("RangeT6_%d_inc", i), s_T6Range.at(i).m_vInc).toDouble();
             }
         }
         else
@@ -824,8 +823,8 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             {
                 s_BtRange[i].setActive(settings.value(QString::asprintf("RangeBt_%d_bActive", i), true).toBool());
                 s_BtRange[i].m_vStart = settings.value(QString::asprintf("RangeBt_%d_min", i), s_BtRange.at(i).m_vStart).toDouble();
-                s_BtRange[i].m_vEnd = settings.value(QString::asprintf("RangeBt_%d_max", i), s_BtRange.at(i).m_vEnd).toDouble();
-                s_BtRange[i].m_vInc = settings.value(QString::asprintf("RangeBt_%d_inc", i), s_BtRange.at(i).m_vInc).toDouble();
+                s_BtRange[i].m_vEnd   = settings.value(QString::asprintf("RangeBt_%d_max", i), s_BtRange.at(i).m_vEnd).toDouble();
+                s_BtRange[i].m_vInc   = settings.value(QString::asprintf("RangeBt_%d_inc", i), s_BtRange.at(i).m_vInc).toDouble();
             }
         }
         else

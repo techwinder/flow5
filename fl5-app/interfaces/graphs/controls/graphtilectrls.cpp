@@ -80,6 +80,11 @@ void GraphTileCtrls::makeCommonWts()
     m_pcptVariableSet->setWindowTitle(tr("Variable sets"));
     m_pcptVariableSet->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
+    m_pcptVariableSet->setToolTip(tr("<p>Each entry defines a set of variables for the graphs in this view.<br>"
+                                     "To define a set, select a line, then modify the variables in the graphs. "
+                                     "The set will be saved automatically.<br>"
+                                     "Clicking on an entry will restore the set and the variables of all the graphs.</p>"));
+
     m_pVariableSetModel = new ActionItemModel(this);
     m_pVariableSetModel->setRowCount(1);//temporary
     m_pVariableSetModel->setColumnCount(2);

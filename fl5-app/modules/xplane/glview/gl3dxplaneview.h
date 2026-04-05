@@ -124,8 +124,6 @@ class gl3dXPlaneView : public gl3dXflView
         bool pickTriUniPanel(QPoint const &point);
         bool pickQuadPanel(QPoint const &point);
 
-        void paintMoments();
-
         bool glMakeStreamLines(const std::vector<Panel4> &panel4list, const PlaneOpp *pPOpp);
         bool glMakeStreamLines(const std::vector<Panel3> &panel3list, const std::vector<Node> &nodelist, const PlaneOpp *pPOpp);
 

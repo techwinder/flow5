@@ -32,7 +32,6 @@
 #include <QRadioButton>
 #include <QSlider>
 
-#include <interfaces/opengl/testgl/gl3dtexture.h>
 
 class IntEdit;
 class FloatEdit;

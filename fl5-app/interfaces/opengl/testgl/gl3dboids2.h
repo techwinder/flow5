@@ -96,7 +96,6 @@ class gl3dBoids2 : public gl3dTestGLView
 
         QLabel *m_plabCohesion, *m_plabAlignment, *m_plabSeparation, *m_plabPredator, *m_plabMaxSpeed;
 
-//        QRadioButton *m_prbBox, *m_prbSphere;
         QSlider *m_pslBoxOpacity;
 
         QOpenGLBuffer m_vboBoids, m_vboTraces;

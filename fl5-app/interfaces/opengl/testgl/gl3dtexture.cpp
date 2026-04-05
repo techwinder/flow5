@@ -827,7 +827,10 @@ void gl3dTexture::glRenderView()
             m_shadSurf.setAttributeBuffer(m_locSurf.m_attrUV,     GL_FLOAT, 6*sizeof(GLfloat), 2, stride*sizeof(GLfloat));
 
             m_pglTexture->bind();
-            glDrawArrays(GL_TRIANGLES, 0, nTriangles*3);
+            {
+                glDrawArrays(GL_TRIANGLES, 0, nTriangles*3);
+            }
+            m_pglTexture->release();
         }
         m_vboTexSphere.release();
         glDisable(GL_POLYGON_OFFSET_FILL);

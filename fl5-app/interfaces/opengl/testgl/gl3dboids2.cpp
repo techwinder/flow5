@@ -173,15 +173,6 @@ gl3dBoids2::gl3dBoids2(QWidget *pParent) : gl3dTestGLView(pParent)
 
             QLabel *plabDisplay = new QLabel("<b>Display settings:</b>");
 
-/*            QButtonGroup *pGroup = new QButtonGroup;
-            {
-                m_prbBox    = new QRadioButton("Box");
-                m_prbSphere = new QRadioButton("Sphere");
-                m_prbBox->setChecked(true);
-                pGroup->addButton(m_prbBox);
-                pGroup->addButton(m_prbSphere);
-            }*/
-
             QLabel *plabRatio = new QLabel("Volume size:");
             m_pslRatio = new QSlider(Qt::Horizontal);
             m_pslRatio->setMinimum(0);
@@ -246,9 +237,6 @@ gl3dBoids2::gl3dBoids2(QWidget *pParent) : gl3dTestGLView(pParent)
 
 
             pMainLayout->addWidget(plabDisplay,       13, 1, 1, 2);
-
-//            pMainLayout->addWidget(m_prbBox,          14, 1);
-//            pMainLayout->addWidget(m_prbSphere,       14, 2);
 
             pMainLayout->addWidget(plabRatio,         15, 1);
             pMainLayout->addWidget(m_pslRatio,        15, 2);
@@ -324,7 +312,7 @@ void gl3dBoids2::saveSettings(QSettings &settings)
         settings.setValue("Separation", s_Separation);
         settings.setValue("Alignment",  s_Alignment);
         settings.setValue("Predator",   s_Predator);
-        settings.setValue("MaxSpee",    s_MaxSpeed);
+        settings.setValue("MaxSpeed",   s_MaxSpeed);
         settings.setValue("Ratio",      s_Ratio);
     }
     settings.endGroup();
@@ -511,24 +499,20 @@ void gl3dBoids2::glRenderView()
 {
 #ifndef Q_OS_MAC
     m_matModel.setToIdentity();
-    QMatrix4x4 vmMat(m_matView*m_matModel);
-    QMatrix4x4 pvmMat(m_matProj*vmMat);
 
     // move the flock at each frame update
     int stride = 12;
     int buffersize = GROUP_SIZE * s_NGroups * stride;
     m_shadBoids.bind();
     {
-//        if(m_prbBox->isChecked())
-            m_shadBoids.setUniformValue(m_locCube, 1);
-//        else          m_shadBoids.setUniformValue(m_locCube, 0);
+        m_shadBoids.setUniformValue(m_locCube, 1);
 
         m_shadBoids.setUniformValue(m_locWidth,      m_BoxWidth);
         m_shadBoids.setUniformValue(m_locHeight,     m_BoxWidth*s_Ratio);
         m_shadBoids.setUniformValue(m_locMaxSpeed,   s_MaxSpeed);
         m_shadBoids.setUniformValue(m_locCohesion,   s_Cohesion);
         m_shadBoids.setUniformValue(m_locSeparation, s_Separation);
-        m_shadBoids.setUniformValue(m_locAlignment,  s_Alignment);
+        m_shadBoids.setUniformValue(m_locAlignment,  s_Alignment/3.0f);
         m_shadBoids.setUniformValue(m_locPredator,   s_Predator);
         if(m_pchPredator->isChecked()) m_shadBoids.setUniformValue(m_locHasPredator,  1);
         else                           m_shadBoids.setUniformValue(m_locHasPredator,  0);
@@ -548,14 +532,14 @@ void gl3dBoids2::glRenderView()
     }
     m_shadBoids.release();
 
+    QMatrix4x4 vmMat(m_matView*m_matModel);
+    QMatrix4x4 pvmMat(m_matProj*vmMat);
+
     m_vao.bind();
     {
-        QMatrix4x4 vmMat(m_matView*m_matModel);
-        QMatrix4x4 pvmMat(m_matProj*vmMat);
 
         m_shadPoint2.bind();
         {
-
             m_shadPoint2.setUniformValue(m_locPt2.m_vmMatrix,  vmMat);
             m_shadPoint2.setUniformValue(m_locPt2.m_pvmMatrix, pvmMat);
 
@@ -578,7 +562,7 @@ void gl3dBoids2::glRenderView()
                 else
                 {
                     glDrawArrays(GL_POINTS, 0, nPts-1);
-                    glPointSize(31.0f);
+                    glPointSize(31.0f); // the predator
                     glDrawArrays(GL_POINTS, nPts-1, 1);
                 }
 
@@ -589,25 +573,34 @@ void gl3dBoids2::glRenderView()
         }
         m_shadPoint2.release();
 
+
+
         if(m_pchTrace->isChecked())
         {
-            m_shadLine.setUniformValue(m_locPt2.m_vmMatrix,  vmMat);
-            m_shadLine.setUniformValue(m_locPt2.m_pvmMatrix, pvmMat);
+
+            m_shadLine.bind();
+            {
+                m_shadLine.setUniformValue(m_locLine.m_vmMatrix,  vmMat);
+                m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, pvmMat);
+            }
+            m_shadLine.release();
             paintColourSegments8(m_vboTraces, float(W3dPrefs::s_FlowStyle.m_Width), W3dPrefs::s_FlowStyle.m_Stipple);
         }
+
+
+        m_shadSurf.bind();
+        {
+            m_shadSurf.setUniformValue(m_locSurf.m_vmMatrix, vmMat);
+            m_shadSurf.setUniformValue(m_locSurf.m_pvmMatrix, pvmMat);
+            m_shadSurf.setUniformValue(m_locSurf.m_IsInstanced, 0);
+        }
+        m_shadSurf.release();
+        float opacity = float(m_pslBoxOpacity->value())/100.0f;
+        paintBox(0.0f, 0.0f, 0.0f, 2.0f*m_BoxWidth, 2.0f*m_BoxWidth, 2.0f*m_BoxWidth*s_Ratio, QColor(91,91,91, int(opacity*255.0)), false);
+
     }
     m_vao.release();
 
-    m_shadSurf.bind();
-    {
-        m_shadSurf.setUniformValue(m_locSurf.m_vmMatrix, vmMat);
-        m_shadSurf.setUniformValue(m_locSurf.m_pvmMatrix, pvmMat);
-        m_shadSurf.setUniformValue(m_locSurf.m_IsInstanced, 0);
-    }
-    m_shadSurf.release();
-//    if(m_prbBox->isChecked())
-        paintBox(0, 0, 0, 2.0*m_BoxWidth, 2.0*m_BoxWidth, 2.0*m_BoxWidth*s_Ratio, QColor(91,91,91, double(m_pslBoxOpacity->value())/100.0*255.0), false);
-//    else        paintSphere(Vector3d(), m_BoxWidth, QColor(91,91,91, double(m_pslBoxOpacity->value())/100.0*255.0), true);
 
     m_stackInterval.push_back(QTime::currentTime().msecsSinceStartOfDay());
     double average = 0.0;

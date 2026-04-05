@@ -37,6 +37,7 @@
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/opengl/globals/gl_globals.h>
+#include <interfaces/opengl/testgl/gl3dtexture.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/globals/wt_globals.h>

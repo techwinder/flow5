@@ -326,6 +326,74 @@
     </message>
 </context>
 <context>
+    <name>AnalysisRangeTable</name>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="63"/>
+        <source>&lt;p&gt;Use this table to define one or more ranges for &amp;alpha; or the control parameter.&lt;br&gt;Click on the first column to activate/deactivate a range.&lt;br&gt;Use the context menu to add or remove ranges.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="82"/>
+        <source>Min.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="83"/>
+        <source>Max.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="161"/>
+        <source>Copy</source>
+        <translation type="unfinished">复制</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="164"/>
+        <source>Paste</source>
+        <translation type="unfinished">粘贴</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="168"/>
+        <source>Activate/de-activate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="170"/>
+        <source>De-activate all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="171"/>
+        <source>Move up</source>
+        <translation type="unfinished">上移</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="172"/>
+        <source>Move down</source>
+        <translation type="unfinished">下移</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="173"/>
+        <source>Duplicate</source>
+        <translation type="unfinished">复制</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="174"/>
+        <source>Delete</source>
+        <translation type="unfinished">删除</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="175"/>
+        <source>Insert before</source>
+        <translation type="unfinished">在前插入</translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/controls/analysisrangetable.cpp" line="176"/>
+        <source>Insert after</source>
+        <translation type="unfinished">在后插入</translation>
+    </message>
+</context>
+<context>
     <name>AnalysisSelDlg</name>
     <message>
         <location filename="../../fl5-app/interfaces/editors/analysisseldlg.cpp" line="64"/>
@@ -3303,62 +3371,67 @@ Uncheck for increased analysis speed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="87"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="83"/>
+        <source>&lt;p&gt;Each entry defines a set of variables for the graphs in this view.&lt;br&gt;To define a set, select a line, then modify the variables in the graphs. The set will be saved automatically.&lt;br&gt;Clicking on an entry will restore the set and the variables of all the graphs.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="92"/>
         <source>Variable set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="88"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="93"/>
         <source>Actions</source>
         <translation type="unfinished">操作</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="110"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="115"/>
         <source>Graph %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="116"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="121"/>
         <source>2 graphs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="118"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="123"/>
         <source>4 graphs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="120"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="125"/>
         <source>All graphs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="244"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="249"/>
         <source>Section</source>
         <translation type="unfinished">截面</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="246"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="251"/>
         <source>Move up</source>
         <translation type="unfinished">上移</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="247"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="252"/>
         <source>Move down</source>
         <translation type="unfinished">下移</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="248"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="253"/>
         <source>Delete</source>
         <translation type="unfinished">删除</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="249"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="254"/>
         <source>Insert before</source>
         <translation type="unfinished">在前插入</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="250"/>
+        <location filename="../../fl5-app/interfaces/graphs/controls/graphtilectrls.cpp" line="255"/>
         <source>Insert after</source>
         <translation type="unfinished">在后插入</translation>
     </message>
@@ -3677,538 +3750,538 @@ _____________已发出取消请求_____________
 <context>
     <name>MainFrame</name>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="259"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="260"/>
         <source>flow5 requires OpenGL 3.3 or greater.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="260"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="261"/>
         <source>Your system provides by default OpenGL %1.%2</source>
         <translation>您的系统默认提供 OpenGL %1.%2</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="263"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="264"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="315"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="317"/>
         <source>Directories:</source>
         <translation>目录：</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="316"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="318"/>
         <source>   Last used :       </source>
         <translation>   上次使用：       </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="317"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="319"/>
         <source>   Foil .dat files:  </source>
         <translation>   翼型 .dat 文件：  </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="318"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="320"/>
         <source>   Polar .plr files: </source>
         <translation>   极曲线 .plr 文件： </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="319"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="321"/>
         <source>   Plane .xml files: </source>
         <translation>   飞机 .xml 文件： </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="320"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="322"/>
         <source>   Polar .xml files: </source>
         <translation>   极曲线 .xml 文件： </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="321"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="323"/>
         <source>   CAD files:        </source>
         <translation>   CAD 文件：        </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="322"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="324"/>
         <source>   STL files:        </source>
         <translation>   STL 文件：        </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="323"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="325"/>
         <source>   Temporary files:  </source>
         <translation>   临时文件：  </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="324"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="326"/>
         <source>   File exports:     </source>
         <translation>   文件导出：     </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="560"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="567"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="778"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="568"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="575"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="786"/>
         <source>Exit</source>
         <translation>退出</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="560"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="568"/>
         <source>Please wait for the analysis to finish before closing</source>
         <translation>请等待分析完成后再关闭</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="567"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="575"/>
         <source>Save the project before closing?</source>
         <translation>关闭前保存项目吗？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="644"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="652"/>
         <source>New project</source>
         <translation>新建项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="646"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="654"/>
         <source>Save and close the current project, create a new project</source>
         <translation>保存并关闭当前项目，创建一个新项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="649"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="657"/>
         <source>Close the project</source>
         <translation>关闭项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="650"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="658"/>
         <source>Save and close the current project</source>
         <translation>保存并关闭当前项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="653"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="661"/>
         <source>Open a project</source>
         <translation>打开项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="655"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="663"/>
         <source>Open an existing project file</source>
         <translation>打开现有的项目文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="658"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="666"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="660"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="668"/>
         <source>Save the project to disk</source>
         <translation>将项目保存到磁盘</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="663"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="671"/>
         <source>Load foil(s)</source>
         <translation>加载翼型</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="665"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="673"/>
         <source>Load foil(s) from .dat file</source>
         <translation>从 .dat 文件加载翼型</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="668"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="676"/>
         <source>Load polar file(s)</source>
         <translation>加载极曲线文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="669"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="677"/>
         <source>Load a .plr file</source>
         <translation>加载 .plr 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="672"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="680"/>
         <source>Insert project</source>
         <translation>插入项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="673"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="681"/>
         <source>&lt;p&gt;Insert an existing project in the current project&lt;/p&gt;</source>
         <translation>&lt;p&gt;在当前项目中插入现有项目&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="677"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="685"/>
         <source>Close all</source>
         <translation>全部关闭</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="679"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="687"/>
         <source>&lt;p&gt;Close all modules, but do not unload the active project&lt;/p&gt;</source>
         <translation>&lt;p&gt;关闭所有模块，但不卸载活动项目&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="682"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="690"/>
         <source>Foil design</source>
         <translation>翼型设计</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="684"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="692"/>
         <source>&lt;p&gt;Open the Foil direct analysis module&lt;/p&gt;</source>
         <translation>&lt;p&gt;打开翼型直接分析模块&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="687"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="695"/>
         <source>Plane design</source>
         <translation>飞机设计</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="689"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="697"/>
         <source>&lt;p&gt;Open the Wing/plane design and analysis module&lt;/p&gt;</source>
         <translation>&lt;p&gt;打开机翼/飞机设计与分析模块&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="692"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="700"/>
         <source>Sail design</source>
         <translation>帆船设计</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="694"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="702"/>
         <source>Open the sail design and analysis module</source>
         <translation>打开帆船设计与分析模块</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="697"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="705"/>
         <source>Load last project</source>
         <translation>加载上一个项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="699"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="707"/>
         <source>Loads the last saved project</source>
         <translation>加载上一次保存的项目</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="702"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="710"/>
         <source>Save project as</source>
         <translation>项目另存为</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="704"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="712"/>
         <source>Save the current project under a new name</source>
         <translation>将当前项目另存为新名称</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="707"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="715"/>
         <source>Preferences</source>
         <translation>首选项</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="708"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="716"/>
         <source>Set default preferences for this application</source>
         <translation>设置此应用程序的默认首选项</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="712"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="720"/>
         <source>Restore toolbars</source>
         <translation>恢复工具栏</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="713"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="721"/>
         <source>Restores the toolbars to their original state</source>
         <translation>将工具栏恢复到原始状态</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="716"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="724"/>
         <source>Save view to image file</source>
         <translation>将视图保存为图像文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="718"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="726"/>
         <source>Saves the current view to a file on disk</source>
         <translation>将当前视图保存到磁盘上的文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="721"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="729"/>
         <source>Execute script</source>
         <translation>执行脚本</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="723"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="731"/>
         <source>Executes a set of foil and plane analysis defined in an xml file</source>
         <translation>执行 xml 文件中定义的一组翼型和飞机分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="726"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="734"/>
         <source>Restore default settings</source>
         <translation>恢复默认设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="727"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="735"/>
         <source>will revert to default settings at the next session</source>
         <translation>将在下次会话时恢复默认设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="738"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="746"/>
         <source>to file</source>
         <translation>导出到文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="739"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="747"/>
         <source>Export the current graph data to a text file</source>
         <translation>将当前图表数据导出为文本文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="742"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="750"/>
         <source>to SVG file</source>
         <translation>导出到 SVG 文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="745"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="753"/>
         <source>to clipboard</source>
         <translation>复制到剪贴板</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="746"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="754"/>
         <source>Copies the curve data to the clipboard, for pasting in an external editor or a spreadsheet</source>
         <translation>将曲线数据复制到剪贴板，以便粘贴到外部编辑器或电子表格中</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="749"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="757"/>
         <source>Reset scales 	R</source>
         <translation>重置比例 	R</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="750"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="758"/>
         <source>Restores the graph&apos;s x and y scales</source>
         <translation>恢复图表的 x 和 y 比例</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="753"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="761"/>
         <source>Reset splitter sizes</source>
         <translation>重置分割器大小</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="754"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="762"/>
         <source>Resets the split splizes to their default values</source>
         <translation>将分割器大小恢复为默认值</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="758"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="766"/>
         <source>Show legend</source>
         <translation>显示图例</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="760"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="768"/>
         <source>Toggle the in-graph legend display</source>
         <translation>切换图形内图例显示</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="763"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="771"/>
         <source>Settings	G</source>
         <translation>设置	G</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="766"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="774"/>
         <source>Open in new window</source>
         <translation>在新窗口中打开</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="770"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="778"/>
         <source>Fast graph</source>
         <translation>快速绘图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="774"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="782"/>
         <source>Show log window</source>
         <translation>显示日志窗口</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="780"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="788"/>
         <source>Exit the application</source>
         <translation>退出应用程序</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="783"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="791"/>
         <source>OpenGL settings</source>
         <translation>OpenGL 设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="787"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="795"/>
         <source>View last log file</source>
         <translation>查看上次日志文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="791"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="799"/>
         <source>View trace file</source>
         <translation>查看跟踪文件</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="808"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="816"/>
         <source>3d Cp graph</source>
         <translation>3D Cp 图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="856"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="864"/>
         <source>Boat analysis</source>
         <translation>船体分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="861"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="869"/>
         <source>Sail 3d controls</source>
         <translation>帆 3D 控制</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="866"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="874"/>
         <source>Boat object explorer</source>
         <translation>船体对象浏览器</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="906"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="914"/>
         <source>Analysis 2d</source>
         <translation>2D 分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="915"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="923"/>
         <source>Operating point</source>
         <translation>操作点</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="924"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="932"/>
         <source>Foil object explorer</source>
         <translation>翼型对象浏览器</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="934"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="942"/>
         <source>Foil object table</source>
         <translation>翼型对象表</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1003"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1011"/>
         <source>Analysis 3d</source>
         <translation>3D 分析</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1008"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1016"/>
         <source>Plane Explorer</source>
         <translation>飞机浏览器</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1013"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1021"/>
         <source>Plane 3d view</source>
         <translation>飞机 3D 视图</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1018"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1026"/>
         <source>Graphs</source>
         <translation>图表</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1022"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1030"/>
         <source>Stability time controls</source>
         <translation>稳定性时间控制</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1033"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1041"/>
         <source>&amp;File</source>
         <translation>文件(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1062"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1070"/>
         <source>&amp;Module</source>
         <translation>模块(&amp;M)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1075"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1083"/>
         <source>&amp;Options</source>
         <translation>选项(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1087"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1095"/>
         <source>&amp;?</source>
         <translation>帮助(&amp;?)</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1089"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1097"/>
         <source>About flow5</source>
         <translation>关于 flow5</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1090"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1098"/>
         <source>More information about flow5</source>
         <translation>关于 flow5 的更多信息</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1093"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1101"/>
         <source>About Qt</source>
         <translation>关于 Qt</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1096"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1104"/>
         <source>Credits</source>
         <translation>鸣谢</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1099"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1107"/>
         <source>Online doc.</source>
         <translation>在线文档</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1102"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1110"/>
         <source>Release notes</source>
         <translation>发行说明</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1132"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1140"/>
         <source>Ready</source>
         <translation>就绪</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1143"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1151"/>
         <source>MainToolBar</source>
         <translation>主工具栏</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1165"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1173"/>
         <source>XSailToolBar</source>
         <translation>XSail 工具栏</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1176"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1184"/>
         <source>XDirect</source>
         <translation>XDirect</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1187"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1195"/>
         <source>Foil</source>
         <translation>翼型</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1209"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1217"/>
         <source>PlaneToolBar</source>
         <translation>飞机工具栏</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1224"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1232"/>
         <source>Deleting current project
 </source>
         <translation>正在删除当前项目
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1229"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1237"/>
         <source>   Deleting 2d objects
 </source>
         <translation>   正在删除 2D 对象
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1815"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1823"/>
         <source>Question</source>
         <translation>问题</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1815"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1823"/>
         <source>Save the current project?</source>
         <translation>保存当前项目？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1827"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1835"/>
         <source>The project </source>
         <translation>项目 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1827"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1835"/>
         <source> has been saved
 
 </source>
@@ -4217,18 +4290,18 @@ _____________已发出取消请求_____________
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1873"/>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1877"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1881"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1885"/>
         <source>Default Settings</source>
         <translation>默认设置</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1873"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1881"/>
         <source>Are you sure you want to reset the default settings?</source>
         <translation>您确定要重置默认设置吗？</translation>
     </message>
     <message>
-        <location filename="../../fl5-app/globals/mainframe.cpp" line="1877"/>
+        <location filename="../../fl5-app/globals/mainframe.cpp" line="1885"/>
         <source>The settings will be reset at the next session</source>
         <translation>设置将在下次会话时重置</translation>
     </message>
@@ -10360,7 +10433,7 @@ Importing from a binary file
 </translation>
     </message>
     <message>
-        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="5727"/>
+        <location filename="../../fl5-app/modules/xplane/xplane.cpp" line="5725"/>
         <source>Export plane definition to xml file</source>
         <translation type="unfinished"></translation>
     </message>

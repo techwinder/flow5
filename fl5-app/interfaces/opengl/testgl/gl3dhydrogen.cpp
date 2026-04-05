@@ -407,7 +407,7 @@ void gl3dHydrogen::glRenderView()
             m_shadSurf.setUniformValue(m_locSurf.m_pvmMatrix, pvmMat);
         }
         m_shadSurf.release();
-        paintElectronInstances(m_vboObservations, float(s_ElectronSize)/5000.f/m_glScalef, Qt::cyan, false, true);
+        paintPointInstances(m_vboObservations, float(s_ElectronSize)/5000.f/m_glScalef, Qt::cyan, false, true);
     }
     else
     {
@@ -453,63 +453,6 @@ void gl3dHydrogen::glRenderView()
     }
 }
 
-
-void gl3dHydrogen::paintElectronInstances(QOpenGLBuffer &vboPosInstances, float radius, QColor const &clr, bool bTwoSided, bool bLight)
-{
-    QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
-
-    int stride(8);
-    int nTriangles(0);
-    int nObjects(0);
-
-    m_shadSurf.bind();
-    {
-        m_shadSurf.setUniformValue(m_locSurf.m_Scale, radius);
-        m_shadSurf.setUniformValue(m_locSurf.m_HasTexture, 0);
-        m_shadSurf.setUniformValue(m_locSurf.m_IsInstanced, 1);
-        if(bTwoSided) m_shadSurf.setUniformValue(m_locSurf.m_TwoSided, 1);
-        else          m_shadSurf.setUniformValue(m_locSurf.m_TwoSided, 0);
-        if(bLight) m_shadSurf.setUniformValue(m_locSurf.m_Light, 1);
-        else       m_shadSurf.setUniformValue(m_locSurf.m_Light, 0);
-        m_shadSurf.setUniformValue(m_locSurf.m_UniColor, clr);
-        m_shadSurf.setUniformValue(m_locSurf.m_HasUniColor, 1); // using color attribute instead
-
-        m_vboIcoSphere.bind();
-        {
-            m_shadSurf.enableAttributeArray(m_locSurf.m_attrVertex);
-            m_shadSurf.enableAttributeArray(m_locSurf.m_attrNormal);
-
-            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrVertex, GL_FLOAT, 0,                 3, 6*sizeof(GLfloat));
-            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrNormal, GL_FLOAT, 3*sizeof(GLfloat), 3, 6*sizeof(GLfloat));
-
-            nTriangles = m_vboIcoSphere.size()/3/6/int(sizeof(float));
-            glDrawArrays(GL_TRIANGLES, 0, nTriangles*3);
-        }
-        m_vboIcoSphere.release();
-
-        m_shadSurf.setUniformValue(m_locSurf.m_HasUniColor, 0); // using color attribute instead
-        vboPosInstances.bind();
-        {
-            m_shadSurf.enableAttributeArray(m_locSurf.m_attrOffset);
-            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrOffset, GL_FLOAT, 0*sizeof(GLfloat), 3, stride*sizeof(GLfloat));
-            glVertexAttribDivisor(m_locSurf.m_attrOffset, 1);
-
-            m_shadSurf.enableAttributeArray(m_locSurf.m_attrColor);
-            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrColor,  GL_FLOAT, 4*sizeof(GLfloat), 4, stride*sizeof(GLfloat));
-            glVertexAttribDivisor(m_locSurf.m_attrColor, 1);
-
-            nObjects = vboPosInstances.size()/stride/int(sizeof(float));
-            glDrawArraysInstanced(GL_TRIANGLES, 0, nTriangles*3, nObjects);
-
-            glVertexAttribDivisor(m_locSurf.m_attrOffset, 0);
-            glVertexAttribDivisor(m_locSurf.m_attrColor, 0);
-            m_shadSurf.disableAttributeArray(m_locSurf.m_attrOffset);
-            m_shadSurf.setUniformValue(m_locSurf.m_IsInstanced, 0);
-        }
-        vboPosInstances.release();
-    }
-    m_shadSurf.release();
-}
 
 
 #define NLAT  30
