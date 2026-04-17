@@ -1132,6 +1132,7 @@ void W3dPrefs::loadSettings(QSettings &settings)
         s_ColourGrad1    = settings.value("ClrGrad1",      s_ColourGrad1).value<QColor>();
         s_ColourGrad2    = settings.value("ClrGrad2",      s_ColourGrad2).value<QColor>();
         s_GradientAngle  = settings.value("GradientAngle", s_GradientAngle).toFloat();
+
         xfl::loadLineSettings(settings, s_AxisStyle,     "AxisStyle");
         xfl::loadLineSettings(settings, s_HighStyle,     "HighlightStyle");
         xfl::loadLineSettings(settings, s_SelectStyle,   "SelectionStyle");

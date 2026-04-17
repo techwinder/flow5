@@ -1404,22 +1404,6 @@ void MainFrame::keyPressEvent(QKeyEvent *pEvent)
                 }
                 break;
             }
-            case Qt::Key_F1:
-            {
-                gl3dTestGLView *pTestView = new gl3dTestPoints;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
-            case Qt::Key_F5:
-            {
-                gl3dTestGLView *pTestView = new gl3dHydrogen;
-                pTestView->setAttribute(Qt::WA_DeleteOnClose);
-                pTestView->show();
-                pTestView->activateWindow();
-                break;
-            }
             default:
                 pEvent->ignore();
                 return;

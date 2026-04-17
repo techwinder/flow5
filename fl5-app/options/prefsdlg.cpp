@@ -699,7 +699,7 @@ void PrefsDlg::fillTreeWidget()
         QTreeWidgetItem *pSub2;
 
         pSub2 = new QTreeWidgetItem(m_p3dItem);
-        pSub2->setText(0, tr("Background image"));
+        pSub2->setText(0, tr("Background"));
         m_p3dItem->addChild(pSub2);
 
         pSub2 = new QTreeWidgetItem(m_p3dItem);

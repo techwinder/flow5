@@ -312,6 +312,11 @@ void PlaneXflDlg::setupLayout()
                             QVBoxLayout *pThinThickLayout = new QVBoxLayout;
                             {
 
+                                QLabel *pFlow5Link = new QLabel;
+                                pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Modelling/Assembly.html>https://flow5.tech/docs/flow5_doc/Modelling/Assembly.html</a>");
+                                pFlow5Link->setOpenExternalLinks(true);
+                                pFlow5Link->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
+
                                 QHBoxLayout *pSelLayout = new QHBoxLayout;
                                 {
                                     QLabel *plabAssyType = new QLabel(tr("Target assembly:"));
@@ -339,6 +344,7 @@ void PlaneXflDlg::setupLayout()
                                 m_plwWings = new QListWidget;
                                 m_plwWings->setSelectionMode(QAbstractItemView::MultiSelection);
 
+                                pThinThickLayout->addWidget(pFlow5Link);
                                 pThinThickLayout->addLayout(pSelLayout);
                                 pThinThickLayout->addWidget(plabConnectedWings);
                                 pThinThickLayout->addWidget(m_plwWings);

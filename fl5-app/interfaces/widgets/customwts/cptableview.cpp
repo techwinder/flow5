@@ -100,8 +100,7 @@ void CPTableView::keyPressEvent(QKeyEvent *pEvent)
         {
             if(!m_bIsEditable) return;
             model()->blockSignals(true);
-            QModelIndexList selected = selectionModel()->selectedIndexes();
-            for(QModelIndex const&ind : selected)
+            for(QModelIndex const&ind : selectionModel()->selectedIndexes())
             {
                 if(ind.isValid())
                     model()->setData(ind, QVariant());
@@ -113,12 +112,6 @@ void CPTableView::keyPressEvent(QKeyEvent *pEvent)
         case Qt::Key_Copy:
         {
             copySelection();
-            pEvent->accept();
-            return;
-        }
-        case Qt::Key_Paste:
-        {
-            pasteClipboard();
             pEvent->accept();
             return;
         }
@@ -276,7 +269,8 @@ void CPTableView::contextMenuEvent(QContextMenuEvent *pEvent)
     pCopyAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_C));
 
     QAction *pPasteAction = new QAction(tr("Paste"), this);
-    pPasteAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_V));
+//    pPasteAction->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_V)); // inoperant
+//    pPasteAction->setShortcut(Qt::Key_Paste);                      // inoperant
     pPasteAction->setEnabled(m_bIsEditable);
 
     connect(pCopyAction,  SIGNAL(triggered(bool)), this, SLOT(onCopySelection()));

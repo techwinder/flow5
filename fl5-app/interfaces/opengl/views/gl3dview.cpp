@@ -2492,6 +2492,9 @@ void gl3dView::paintSphereInstances(QOpenGLBuffer &vboPosInstances, float radius
 {
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
 
+    const int stride = 6;
+    const int stride_instances = 3;
+
     int nTriangles(0);
     int nObjects(0);
 
@@ -2515,10 +2518,10 @@ void gl3dView::paintSphereInstances(QOpenGLBuffer &vboPosInstances, float radius
             m_shadSurf.enableAttributeArray(m_locSurf.m_attrVertex);
             m_shadSurf.enableAttributeArray(m_locSurf.m_attrNormal);
 
-            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrVertex, GL_FLOAT, 0,                 3, 6*sizeof(GLfloat));
-            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrNormal, GL_FLOAT, 3*sizeof(GLfloat), 3, 6*sizeof(GLfloat));
+            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrVertex, GL_FLOAT, 0,                 3, stride*sizeof(GLfloat));
+            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrNormal, GL_FLOAT, 3*sizeof(GLfloat), 3, stride*sizeof(GLfloat));
 
-            nTriangles = m_vboIcoSphere.size()/3/6/int(sizeof(float));
+            nTriangles = m_vboIcoSphere.size()/3/stride/int(sizeof(float));
             //            glDrawArrays(GL_TRIANGLES, 0, nTriangles*3); // 4 vertices defined but only 3 are used
         }
         m_vboIcoSphere.release();
@@ -2526,10 +2529,10 @@ void gl3dView::paintSphereInstances(QOpenGLBuffer &vboPosInstances, float radius
         vboPosInstances.bind();
         {
             m_shadSurf.enableAttributeArray(m_locSurf.m_attrOffset);
-            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrOffset, GL_FLOAT, 0, 3, 3*sizeof(float));
+            m_shadSurf.setAttributeBuffer(m_locSurf.m_attrOffset, GL_FLOAT, 0, 3, stride_instances*sizeof(float));
             glVertexAttribDivisor(m_locSurf.m_attrOffset, 1);
 
-            nObjects = vboPosInstances.size()/3/int(sizeof(float));
+            nObjects = vboPosInstances.size()/stride_instances/int(sizeof(float));
 
             glDrawArraysInstanced(GL_TRIANGLES, 0, nTriangles*3, nObjects);
             glVertexAttribDivisor(m_locSurf.m_attrOffset, 0);
@@ -2776,8 +2779,9 @@ void gl3dView::paintBackImage()
         m_shadSurf.disableAttributeArray(m_locSurf.m_attrVertex);
         m_shadSurf.disableAttributeArray(m_locSurf.m_attrNormal);
         m_shadSurf.disableAttributeArray(m_locSurf.m_attrUV);
-        m_shadSurf.setUniformValue(m_locSurf.m_TwoSided,   0);
-        m_shadSurf.setUniformValue(m_locSurf.m_HasTexture, 0);
+        m_shadSurf.setUniformValue(m_locSurf.m_TwoSided,    0);
+        m_shadSurf.setUniformValue(m_locSurf.m_HasGradient, 0);
+        m_shadSurf.setUniformValue(m_locSurf.m_HasTexture,  0);
 
     }
     m_shadSurf.release();
@@ -3003,7 +3007,6 @@ void gl3dView::paintPoints2(QOpenGLBuffer &vbo, float width, bool bUniformColor,
 }
 
 
-
 void gl3dView::paintPointInstances(QOpenGLBuffer &vboPosInstances, float radius, QColor const &clr, bool bTwoSided, bool bLight)
 {
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
@@ -3033,7 +3036,7 @@ void gl3dView::paintPointInstances(QOpenGLBuffer &vboPosInstances, float radius,
             m_shadSurf.setAttributeBuffer(m_locSurf.m_attrNormal, GL_FLOAT, 3*sizeof(GLfloat), 3, 6*sizeof(GLfloat));
 
             nTriangles = m_vboIcoSphere.size()/3/6/int(sizeof(float));
-            glDrawArrays(GL_TRIANGLES, 0, nTriangles*3);
+//            glDrawArrays(GL_TRIANGLES, 0, nTriangles*3); // draw instanced instead
         }
         m_vboIcoSphere.release();
 
