@@ -793,10 +793,10 @@ std::string Panel4::properties(bool bLong) const
     strong = QString::asprintf("  Area = %.3g ", m_Area*Units::m2toUnit());
     props += strong + Units::areaUnitQLabel() + "\n";
 
-    strong = QString::asprintf("  Warp angle = %2f ", warpAngle());
+    strong = QString::asprintf("  Warp angle = %2f", warpAngle());
     props += strong + DEGch + "\n";
 
-    strong = QString::asprintf("  Min. internal angle = %2f ", minAngle());
+    strong = QString::asprintf("  Min. internal angle = %2f", minAngle());
     props += strong + DEGch + "\n";
 
     props += QString::asprintf("  Width  = %5g ", width() *Units::mtoUnit()) + Units::lengthUnitQLabel() + "\n";

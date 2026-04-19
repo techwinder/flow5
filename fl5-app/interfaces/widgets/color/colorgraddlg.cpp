@@ -37,7 +37,7 @@
 
 ColorGradDlg::ColorGradDlg(QVector<QColor>const &clrs, QWidget *parent) : QDialog(parent)
 {
-    setWindowTitle("Colour gradients");
+    setWindowTitle(tr("Colour maps"));
 
     m_Clr=clrs;
 
@@ -59,17 +59,22 @@ void ColorGradDlg::setupLayout()
 {
     QVBoxLayout *pMainLayout = new QVBoxLayout;
     {
-        m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Discard, this);
+        QHBoxLayout * pNLayout = new QHBoxLayout;
         {
-             m_prb2Colors = new QRadioButton("2 colors");
-             m_prb3Colors = new QRadioButton("3 colors");
-             connect(m_prb2Colors, SIGNAL(clicked(bool)), SLOT(onNColors()));
-             connect(m_prb3Colors, SIGNAL(clicked(bool)), SLOT(onNColors()));
+            m_prb2Colors = new QRadioButton(tr("2 colours"));
+            m_prb3Colors = new QRadioButton(tr("3 colours"));
+            connect(m_prb2Colors, SIGNAL(clicked(bool)), SLOT(onNColors()));
+            connect(m_prb3Colors, SIGNAL(clicked(bool)), SLOT(onNColors()));
 
+            pNLayout->addStretch();
+            pNLayout->addWidget(m_prb2Colors);
+            pNLayout->addWidget(m_prb3Colors);
+            pNLayout->addStretch();
+        }
+
+        m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Discard | QDialogButtonBox::RestoreDefaults, this);
+        {
              connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), this, SLOT(onButton(QAbstractButton*)));
-             m_pButtonBox->addButton(m_prb2Colors, QDialogButtonBox::ActionRole);
-             m_pButtonBox->addButton(m_prb3Colors, QDialogButtonBox::ActionRole);
-
              m_pButtonBox->setAutoFillBackground(true);
         }
 
@@ -83,6 +88,7 @@ void ColorGradDlg::setupLayout()
             pClrLayout->addWidget(m_pTestClrFrame);
             pClrLayout->setStretchFactor(m_pTestClrFrame, 1);
         }
+        pMainLayout->addLayout(pNLayout);
         pMainLayout->addLayout(pClrLayout);
         pMainLayout->addWidget(m_pButtonBox);
     }
@@ -142,8 +148,24 @@ void ColorGradDlg::onNColors()
 
 void ColorGradDlg::onButton(QAbstractButton *pButton)
 {
-    if      (m_pButtonBox->button(QDialogButtonBox::Ok) == pButton)       accept();
-    else if (m_pButtonBox->button(QDialogButtonBox::Discard) == pButton)  reject();
+    if      (m_pButtonBox->button(QDialogButtonBox::Ok) == pButton)               accept();
+    else if (m_pButtonBox->button(QDialogButtonBox::Discard) == pButton)          reject();
+    else if (m_pButtonBox->button(QDialogButtonBox::RestoreDefaults) == pButton)  onRestoreDefaults();
+}
+
+
+void ColorGradDlg::onRestoreDefaults()
+{
+    m_Clr.resize(3);
+    m_Clr[2] = Qt::red;
+    m_Clr[1] = Qt::green;
+    m_Clr[0] = Qt::blue;
+
+    m_prb3Colors->setChecked(true);
+
+    makeCtrlFrameLayout();
+    updateColouredFrame();
+    update();
 }
 
 

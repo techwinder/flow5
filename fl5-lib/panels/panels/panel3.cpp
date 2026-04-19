@@ -461,7 +461,7 @@ std::string Panel3::properties(bool bLong) const
     strange = QString::asprintf("  Area    = %.5g ", m_SignedArea*Units::m2toUnit());
     props += strange + Units::areaUnitQLabel() + "\n";
 
-    strange = QString::asprintf("  Angles  = (%5.1f, %5.1f, %5.1f) ", m_Angle[0], m_Angle[1], m_Angle[2]);
+    strange = QString::asprintf("  Angles  = (%5.1f, %5.1f, %5.1f)", m_Angle[0], m_Angle[1], m_Angle[2]);
     props += strange + DEGch + "\n";
 
     strange = QString::asprintf("  Edges   = (%9.3f, %9.3f, %9.3f) ",

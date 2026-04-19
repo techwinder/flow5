@@ -40,8 +40,9 @@ class ColorGradDlg : public QDialog
     public slots:
         void onColorBtn();
         void onNColors();
+        void onRestoreDefaults();
         void onButton(QAbstractButton *pButton);
-        QVector<QColor> &colours() {return  m_Clr;}
+        QVector<QColor> &colours() {return m_Clr;}
 
     protected:
         QSize sizeHint() const override {return QSize(350,550);}

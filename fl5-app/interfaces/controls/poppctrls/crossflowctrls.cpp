@@ -109,8 +109,8 @@ void CrossFlowCtrls::connectSignals()
     connect(m_pchAutoOmegaScale,    SIGNAL(clicked(bool)),         SLOT(onOmegaScale()));
     connect(m_pcbOmegaDir,          SIGNAL(activated(int)),        SLOT(onMakeCrossFlowPlane()));
     connect(m_pdeHeight,            SIGNAL(floatChanged(float)),   SLOT(onMakeCrossFlowPlane()));
-    connect(m_pdeOmegaMax,          SIGNAL(floatChanged(float)),   SLOT(onOmegaScale()));
-    connect(m_pdeOmegaMin,          SIGNAL(floatChanged(float)),   SLOT(onOmegaScale()));
+    connect(m_pfeOmegaMax,          SIGNAL(floatChanged(float)),   SLOT(onOmegaScale()));
+    connect(m_pfeOmegaMin,          SIGNAL(floatChanged(float)),   SLOT(onOmegaScale()));
     connect(m_pdeWidth,             SIGNAL(floatChanged(float)),   SLOT(onMakeCrossFlowPlane()));
     connect(m_pslPlanePos,          SIGNAL(sliderMoved(int)),      SLOT(onMakeCrossFlowPlane()));
     connect(m_pieVorticitySamples,  SIGNAL(intChanged(int)),       SLOT(onMakeCrossFlowPlane()));
@@ -135,7 +135,7 @@ void CrossFlowCtrls::set3dXSailView(gl3dXSailView *pView)
 void CrossFlowCtrls::updateUnits()
 {
     //wake
-    m_pLabLen2->setText(Units::lengthUnitQLabel());
+    m_plabLength2->setText(Units::lengthUnitQLabel());
 }
 
 
@@ -156,16 +156,16 @@ void CrossFlowCtrls::setupLayout()
                     m_pslPlanePos->setTickPosition(QSlider::TicksBelow);
                     m_pslPlanePos->setValue(0);
                     m_pslPlanePos->setSingleStep(1);
-                    m_pLabLen1 = new QLabel(Units::lengthUnitQLabel());
+                    m_plabLength1 = new QLabel(Units::lengthUnitQLabel());
 
                     pXPosLayout->addWidget(pLabXPos);
                     pXPosLayout->addWidget(m_pslPlanePos);
-                    pXPosLayout->addWidget(m_pLabLen1);
+                    pXPosLayout->addWidget(m_plabLength1);
                 }
 
                 QGridLayout *pPlaneParamsLayout = new QGridLayout;
                 {
-                    m_pLabLen2  = new QLabel(Units::lengthUnitQLabel());
+                    m_plabLength2  = new QLabel(Units::lengthUnitQLabel());
                     m_pdeWidth  = new FloatEdit;
                     m_pdeHeight = new FloatEdit;
 
@@ -174,7 +174,7 @@ void CrossFlowCtrls::setupLayout()
                     pPlaneParamsLayout->addWidget(new QLabel(tr("Size:")), 2, 1, Qt::AlignRight | Qt::AlignVCenter);
                     pPlaneParamsLayout->addWidget(m_pdeWidth,          2, 2);
                     pPlaneParamsLayout->addWidget(m_pdeHeight,         2, 3);
-                    pPlaneParamsLayout->addWidget(m_pLabLen2,          2, 4);
+                    pPlaneParamsLayout->addWidget(m_plabLength2,          2, 4);
                     pPlaneParamsLayout->setColumnStretch(4,1);
                 }
                 pPlaneGeomLayout->addLayout(pXPosLayout);
@@ -226,8 +226,8 @@ void CrossFlowCtrls::setupLayout()
                 QGridLayout *pParamLayout = new QGridLayout;
                 {
                     m_pchAutoOmegaScale = new QCheckBox(tr("Auto scale"));
-                    m_pdeOmegaMin = new FloatEdit(s_OmegaMin);
-                    m_pdeOmegaMax = new FloatEdit(s_OmegaMax);
+                    m_pfeOmegaMin = new FloatEdit(s_OmegaMin);
+                    m_pfeOmegaMax = new FloatEdit(s_OmegaMax);
 
                     m_pieVorticitySamples = new IntEdit;
                     m_pieVorticitySamples->setToolTip(tr("<p>Number of colour samples in the y and z directions.<br>"
@@ -236,8 +236,8 @@ void CrossFlowCtrls::setupLayout()
                     pParamLayout->addWidget(new QLabel(tr("Min.")),       3, 2, Qt::AlignCenter);
                     pParamLayout->addWidget(new QLabel(tr("Max.")),       3, 3, Qt::AlignCenter);
                     pParamLayout->addWidget(m_pchAutoOmegaScale,      4, 1, Qt::AlignRight | Qt::AlignVCenter);
-                    pParamLayout->addWidget(m_pdeOmegaMin,            4, 2);
-                    pParamLayout->addWidget(m_pdeOmegaMax,            4, 3);
+                    pParamLayout->addWidget(m_pfeOmegaMin,            4, 2);
+                    pParamLayout->addWidget(m_pfeOmegaMax,            4, 3);
 
                     pParamLayout->addWidget(new QLabel(tr("Samples:")),   5, 1, Qt::AlignRight | Qt::AlignVCenter);
                     pParamLayout->addWidget(m_pieVorticitySamples,    5, 2, Qt::AlignRight | Qt::AlignVCenter);
@@ -283,10 +283,10 @@ void CrossFlowCtrls::setWakeData()
     m_pieVorticitySamples->setValue(s_nVorticitySamples);
 
     m_pchAutoOmegaScale->setChecked(s_bAutoOmegaScale);
-    m_pdeOmegaMin->setValue(s_OmegaMin);
-    m_pdeOmegaMax->setValue(s_OmegaMax);
-    m_pdeOmegaMin->setEnabled(!s_bAutoOmegaScale);
-    m_pdeOmegaMax->setEnabled(!s_bAutoOmegaScale);
+    m_pfeOmegaMin->setValue(s_OmegaMin);
+    m_pfeOmegaMax->setValue(s_OmegaMax);
+    m_pfeOmegaMin->setEnabled(!s_bAutoOmegaScale);
+    m_pfeOmegaMax->setEnabled(!s_bAutoOmegaScale);
 //    m_pgl3dXPlaneView->m_LegendOverlay.setManualRange(s_OmegaMin*s_OmegaCoef, s_OmegaMax*s_OmegaCoef);
 
     m_pcbOmegaDir->setCurrentIndex(s_OmegaDir);
@@ -300,8 +300,8 @@ void CrossFlowCtrls::enableWakeControls()
 
     m_pcbOmegaDir->setEnabled(m_bVorticityMap);
     m_pchAutoOmegaScale->setEnabled(m_bVorticityMap);
-    m_pdeOmegaMin->setEnabled(!s_bAutoOmegaScale && m_bVorticityMap);
-    m_pdeOmegaMax->setEnabled(!s_bAutoOmegaScale && m_bVorticityMap);
+    m_pfeOmegaMin->setEnabled(!s_bAutoOmegaScale && m_bVorticityMap);
+    m_pfeOmegaMax->setEnabled(!s_bAutoOmegaScale && m_bVorticityMap);
     m_pieVorticitySamples->setEnabled(m_bVorticityMap);
 }
 
@@ -420,7 +420,7 @@ void CrossFlowCtrls::makeXPlaneVelocityVectors()
     double xmax(0.0);
     if(pOpp3d && pOpp3d->m_Vorton.size()) xmax = pOpp3d->m_Vorton.back().front().position().x;
     else                                  xmax = pPolar3d->wakeLength();
-    m_pLabLen1->setText(QString::asprintf("%.2f", xmax*Units::mtoUnit()*1.1)+Units::lengthUnitQLabel());
+    m_plabLength1->setText(QString::asprintf("%.2f", xmax*Units::mtoUnit()*1.1)+Units::lengthUnitQLabel());
 
     double xpos = xmax*(s_XPos*1.2-0.1);
 
@@ -463,7 +463,7 @@ void CrossFlowCtrls::makeXSailVelocityVectors()
 
     if(pOpp3d && pOpp3d->m_Vorton.size()) xmax = pOpp3d->m_Vorton.back().front().position().x;
     else                                  xmax = pPolar3d->wakeLength();
-    m_pLabLen1->setText(QString::asprintf("%.2f", xmax*Units::mtoUnit()*1.1)+Units::lengthUnitQLabel());
+    m_plabLength1->setText(QString::asprintf("%.2f", xmax*Units::mtoUnit()*1.1)+Units::lengthUnitQLabel());
 
     double xpos = xmax*(s_XPos*1.2-0.1);
 
@@ -505,7 +505,7 @@ void CrossFlowCtrls::makeOmegaMap()
     if(pPOpp && pPOpp->m_Vorton.size())
     {
         xmax = pPOpp->m_Vorton.back().front().position().x;
-        m_pLabLen1->setText(QString::asprintf("%.2f", xmax*Units::mtoUnit()*1.1)+Units::lengthUnitQLabel());
+        m_plabLength1->setText(QString::asprintf("%.2f", xmax*Units::mtoUnit()*1.1)+Units::lengthUnitQLabel());
     }
 
     double xpos = xmax*(s_XPos*1.2-0.1);
@@ -557,8 +557,8 @@ void CrossFlowCtrls::makeOmegaMap()
             s_OmegaMax = std::max(s_OmegaMax, m_OmegaField[idx]);
         }
 
-        m_pdeOmegaMin->setValue(s_OmegaMin);
-        m_pdeOmegaMax->setValue(s_OmegaMax);
+        m_pfeOmegaMin->setValue(s_OmegaMin);
+        m_pfeOmegaMax->setValue(s_OmegaMax);
         m_pgl3dXPlaneView->m_ColourLegend.setRange(s_OmegaMin*s_OmegaCoef, s_OmegaMax*s_OmegaCoef);
     }
 }
@@ -630,11 +630,11 @@ void CrossFlowCtrls::makeVorticityRow(int irow, double x, double z, Opp3d const 
 void CrossFlowCtrls::onOmegaScale()
 {
     s_bAutoOmegaScale = m_pchAutoOmegaScale->isChecked();
-    s_OmegaMin = m_pdeOmegaMin->value();
-    s_OmegaMax = m_pdeOmegaMax->value();
+    s_OmegaMin = m_pfeOmegaMin->value();
+    s_OmegaMax = m_pfeOmegaMax->value();
 
-    m_pdeOmegaMin->setEnabled(!s_bAutoOmegaScale);
-    m_pdeOmegaMax->setEnabled(!s_bAutoOmegaScale);
+    m_pfeOmegaMin->setEnabled(!s_bAutoOmegaScale);
+    m_pfeOmegaMax->setEnabled(!s_bAutoOmegaScale);
 
     m_pgl3dXPlaneView->m_ColourLegend.setRange(s_OmegaMin*s_OmegaCoef, s_OmegaMax*s_OmegaCoef);
     onMakeCrossFlowPlane();

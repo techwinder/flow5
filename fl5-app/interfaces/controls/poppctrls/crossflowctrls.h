@@ -123,9 +123,9 @@ class CrossFlowCtrls : public QWidget
         FloatEdit *m_pdeHeight;
         IntEdit *m_pieVelocitySamples;
         IntEdit *m_pieVorticitySamples;
-        QLabel *m_pLabLen1, *m_pLabLen2;
+        QLabel *m_plabLength1, *m_plabLength2;
         QCheckBox *m_pchAutoOmegaScale;
-        FloatEdit *m_pdeOmegaMin, *m_pdeOmegaMax;
+        FloatEdit *m_pfeOmegaMin, *m_pfeOmegaMax;
         QComboBox *m_pcbOmegaDir;
 
 

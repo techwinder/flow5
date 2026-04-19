@@ -1372,23 +1372,27 @@ void gl3dXPlaneView::computeP4VelocityVectors(Opp3d const *pPOpp, QVector<Vector
 }
 
 
-void gl3dXPlaneView::computeP3VelocityVectors(Opp3d const *pPOpp, QVector<Vector3d> const&points,  QVector<Vector3d> &velvectors, bool bMultithread)
+void gl3dXPlaneView::computeP3VelocityVectors(Opp3d const *pPOpp, QVector<Vector3d> const&points, QVector<Vector3d> &velvectors, bool bMultithread)
 {
     int nPoints = points.size();
     velvectors.resize(nPoints);
 
-    Plane *pPlane = s_pXPlane->curPlane();
+    Plane const *pPlane = s_pXPlane->curPlane();
+    PlanePolar const *pWPolar = s_pXPlane->curPlPolar();
+
     if(s_pXPlane->curPlPolar()->isTriUniformMethod())
     {
         m_pP3UniAnalysis->setTriMesh(pPlane->triMesh());
-        m_pP3UniAnalysis->initializeAnalysis(s_pXPlane->curPlPolar(),0);
+        m_pP3UniAnalysis->initializeAnalysis(s_pXPlane->curPlPolar(), 0);
         m_pP3UniAnalysis->setVortons(pPOpp->m_Vorton);
+        m_pP3UniAnalysis->makeWakePanels(Vector3d(1.0,0,0), pWPolar->bVortonWake());
     }
     else if(s_pXPlane->curPlPolar()->isTriLinearMethod())
     {
         m_pP3LinAnalysis->setTriMesh(pPlane->triMesh());
-        m_pP3LinAnalysis->initializeAnalysis(s_pXPlane->curPlPolar(),0);
+        m_pP3LinAnalysis->initializeAnalysis(s_pXPlane->curPlPolar(), 0);
         m_pP3LinAnalysis->setVortons(pPOpp->m_Vorton);
+        m_pP3LinAnalysis->makeWakePanels(Vector3d(1.0,0,0), pWPolar->bVortonWake());
     }
 
     if(bMultithread)

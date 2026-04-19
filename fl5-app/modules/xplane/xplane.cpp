@@ -6958,6 +6958,7 @@ void XPlane::exportMainDataToString(PlaneOpp const *pPOpp, Plane const*pPlane, Q
               + QString("Cn_viscous").rightJustified(17, ' ') + "\n";
     poppdata += strange;
 
+
     strange = QString::asprintf("%17g", pPOpp->m_AF.CL());     poppdata += strange+sep;
     strange = QString::asprintf("%17g", pPOpp->m_AF.CD());     poppdata += strange+sep;
     strange = QString::asprintf("%17g", pPOpp->m_AF.Cy());     poppdata += strange+sep;
@@ -6970,6 +6971,7 @@ void XPlane::exportMainDataToString(PlaneOpp const *pPOpp, Plane const*pPlane, Q
     strange = QString::asprintf("%17g", pPOpp->m_AF.Cnv());    poppdata += strange;
 
     poppdata += "\n\n";
+
 
     strange = QString("CP.x("+len+")").rightJustified(17, ' ');         poppdata += strange+sep;
     strange = QString("CP.y("+len+")").rightJustified(17, ' ');         poppdata += strange+sep;
@@ -7002,73 +7004,79 @@ void XPlane::exportMainDataToString(PlaneOpp const *pPOpp, Plane const*pPlane, Q
     strange = QString::asprintf("%17g", pPOpp->m_Inertia[2]*Units::kgm2toUnit());    poppdata += strange+sep;
     strange = QString::asprintf("%17g", pPOpp->m_Inertia[3]*Units::kgm2toUnit());    poppdata += strange + "\n\n";
 
-    if(pPOpp->isType7() || pPOpp->isType8())
+
+    if(pPOpp->isType12358() || pPOpp->isType7())
     {
-        //non dimensional stability derivatives
-        strange  = QString("CXu").rightJustified(17, ' ') + sep;
-        strange += QString("CZu").rightJustified(17, ' ') + sep;
-        strange += QString("Cmu").rightJustified(17, ' ') + sep;
-        strange += QString("CXa").rightJustified(17, ' ') + sep;
-        strange += QString("CLa").rightJustified(17, ' ') + sep;
-        strange += QString("Cma").rightJustified(17, ' ') + sep;
-        strange += QString("CXq").rightJustified(17, ' ') + sep;
-        strange += QString("CLq").rightJustified(17, ' ') + sep;
-        strange += QString("Cmq").rightJustified(17, ' ') + sep;
-        strange += QString("CYb").rightJustified(17, ' ') + sep;
-        strange += QString("CYp").rightJustified(17, ' ') + sep;
-        strange += QString("CYr").rightJustified(17, ' ') + sep;
-        strange += QString("Clb").rightJustified(17, ' ') + sep;
-        strange += QString("Clp").rightJustified(17, ' ') + sep;
-        strange += QString("Clr").rightJustified(17, ' ') + sep;
-        strange += QString("Cnb").rightJustified(17, ' ') + sep;
-        strange += QString("Cnp").rightJustified(17, ' ') + sep;
-        strange += QString("Cnr").rightJustified(17, ' ') + "\n";
-        poppdata += strange;
+        StabDerivatives const &SD = pPOpp->m_SD;
+        QString props;
 
-        strange = QString::asprintf("%17g", pPOpp->m_SD.CXu);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.CZu);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.Cmu);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.CXa);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.CZa);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.Cma);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.CXq);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.CZq);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.Cmq);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.CYb);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.CYp);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.CYr);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.Clb);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.Clp);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.Clr);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.Cnb);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.Cnp);            poppdata += strange+sep;
-        strange = QString::asprintf("%17g", pPOpp->m_SD.Cnr);            poppdata += strange;
-        poppdata += "\n";
+        props += QString("CXu").rightJustified(17, ' ') + sep;
+        props += QString("CZu").rightJustified(17, ' ') + sep;
+        props += QString("Cmu").rightJustified(17, ' ') + sep;
+        props += QString("CXa").rightJustified(17, ' ') + sep;
+        props += QString("CZa").rightJustified(17, ' ') + sep;
+        props += QString("Cma").rightJustified(17, ' ') + sep;
+        props += QString("CXq").rightJustified(17, ' ') + sep;
+        props += QString("CZq").rightJustified(17, ' ') + sep;
+        props += QString("Cmq").rightJustified(17, ' ') + sep;
+        props += EOLch;
+        props += QString::asprintf("%17g", SD.CXu) + sep;
+        props += QString::asprintf("%17g", SD.CZu) + sep;
+        props += QString::asprintf("%17g", SD.Cmu) + sep;
+        props += QString::asprintf("%17g", SD.CXa) + sep;
+        props += QString::asprintf("%17g", SD.CZa) + sep;
+        props += QString::asprintf("%17g", SD.Cma) + sep;
+        props += QString::asprintf("%17g", SD.CXq) + sep;
+        props += QString::asprintf("%17g", SD.CZq) + sep;
+        props += QString::asprintf("%17g", SD.Cmq) + sep;
+        props += EOLch + EOLch;
 
-        //non-dimensional control derivatives
-        if(pPOpp->m_SD.ControlNames.size())
-        {
-            strange  = QString("CXe").rightJustified(17, ' ') + sep;
-            strange += QString("CYe").rightJustified(17, ' ') + sep;
-            strange += QString("CZe").rightJustified(17, ' ') + sep;
-            strange += QString("CLe").rightJustified(17, ' ') + sep;
-            strange += QString("CMe").rightJustified(17, ' ') + sep;
-            strange += QString("CNe").rightJustified(17, ' ') +"\n";
-            poppdata += strange;
+        props += QString("Cyb").rightJustified(17, ' ') + sep;
+        props += QString("Clb").rightJustified(17, ' ') + sep;
+        props += QString("Cnb").rightJustified(17, ' ') + sep;
+        props += QString("Cyp").rightJustified(17, ' ') + sep;
+        props += QString("Clp").rightJustified(17, ' ') + sep;
+        props += QString("Cnp").rightJustified(17, ' ') + sep;
+        props += QString("Cyr").rightJustified(17, ' ') + sep;
+        props += QString("Clr").rightJustified(17, ' ') + sep;
+        props += QString("Cnr").rightJustified(17, ' ') + sep;
+        props += EOLch;
+        props += QString::asprintf("%17g", SD.CYb) + sep;
+        props += QString::asprintf("%17g", SD.Clb) + sep;
+        props += QString::asprintf("%17g", SD.Cnb) + sep;
+        props += QString::asprintf("%17g", SD.CYp) + sep;
+        props += QString::asprintf("%17g", SD.Clp) + sep;
+        props += QString::asprintf("%17g", SD.Cnp) + sep;
+        props += QString::asprintf("%17g", SD.CYr) + sep;
+        props += QString::asprintf("%17g", SD.Clr) + sep;
+        props += QString::asprintf("%17g", SD.Cnr) + sep;
+        props += EOLch + EOLch;
 
-            for(uint i=0; i<pPOpp->m_SD.ControlNames.size(); i++)
+        for(uint i=0; i<SD.ControlNames.size(); i++)
             {
-                poppdata += QString::fromStdString(pPOpp->m_SD.ControlNames.at(i)) + "\n";
-                strange = QString::asprintf("%17g", pPOpp->m_SD.CXe.at(i));            poppdata += strange+sep;
-                strange = QString::asprintf("%17g", pPOpp->m_SD.CYe.at(i));            poppdata += strange+sep;
-                strange = QString::asprintf("%17g", pPOpp->m_SD.CZe.at(i));            poppdata += strange+sep;
-                strange = QString::asprintf("%17g", pPOpp->m_SD.CLe.at(i));            poppdata += strange+sep;
-                strange = QString::asprintf("%17g", pPOpp->m_SD.CMe.at(i));            poppdata += strange+sep;
-                strange = QString::asprintf("%17g", pPOpp->m_SD.CNe.at(i));            poppdata += strange;
+                props += "  " + QString::fromStdString(SD.ControlNames.at(i)) + EOLch;
+
+                props += QString("CXd").rightJustified(17, ' ') + sep;
+                props += QString("CYd").rightJustified(17, ' ') + sep;
+                props += QString("CZd").rightJustified(17, ' ') + sep;
+                props += QString("Cld").rightJustified(17, ' ') + sep;
+                props += QString("Cmd").rightJustified(17, ' ') + sep;
+                props += QString("Cnd").rightJustified(17, ' ') + sep;
+                props += EOLch;
+                props += QString::asprintf("%17g", SD.CXe.at(i)) + sep;
+                props += QString::asprintf("%17g", SD.CYe.at(i)) + sep;
+                props += QString::asprintf("%17g", SD.CZe.at(i)) + sep;
+                props += QString::asprintf("%17g", SD.CLe.at(i)) + sep;
+                props += QString::asprintf("%17g", SD.CMe.at(i)) + sep;
+                props += QString::asprintf("%17g", SD.CNe.at(i)) + sep;
+                props += EOLch + EOLch;
             }
-        }
+
+
+        poppdata += props;
     }
     poppdata += "\n\n";
+
 
     if(pPlane->isXflType())
     {
@@ -7081,19 +7089,25 @@ void XPlane::exportMainDataToString(PlaneOpp const *pPOpp, Plane const*pPlane, Q
                 //if there are any flaps
                 if(pPOpp->WOpp(iw).m_FlapMoment.size())
                 {
-                    poppdata += QString::fromStdString(pPlaneXfl->wingAt(iw)->name()) +"\n";
+                    poppdata += QString::fromStdString(pPlaneXfl->wingAt(iw)->name()) +" - flap moments ("+ Units::momentUnitQLabel() +")\n";
                     for (int l=0; l<pPOpp->WOpp(iw).m_nFlaps; l++)
                     {
-                        strange = QString::asprintf("Flap_%d_moment=%11.5g ", l+1, pPOpp->WOpp(iw).m_FlapMoment.at(l)*Units::NmtoUnit());
-                        strange += Units::momentUnitQLabel();
-                        poppdata += strange +"\n";
+                        strange = QString::asprintf("Flap_%d", l+1).rightJustified(17, ' ') + sep;
+                        poppdata += strange;
                     }
-                    poppdata += "\n";
+                    poppdata += EOLch;
+                    for (int l=0; l<pPOpp->WOpp(iw).m_nFlaps; l++)
+                    {
+                        strange = QString::asprintf("%17g", pPOpp->WOpp(iw).m_FlapMoment.at(l)*Units::NmtoUnit()) + sep;
+                        poppdata += strange;
+                    }
+                    poppdata += EOLch;
                 }
             }
         }
     }
     poppdata += "\n\n";
+
 
     title  = QString("y("+Units::lengthUnitQLabel()+")").rightJustified(17, ' ') + sep;
     title += QString("Re").rightJustified(17, ' ') + sep;
