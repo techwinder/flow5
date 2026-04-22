@@ -683,16 +683,18 @@ void P4Analysis::getSourceVelocity(Vector3d const &C, bool bSelf, Panel4 const &
 }
 
 
+
 void P4Analysis::getVelocityVector(Vector3d const &C,
                                    double const *Mu, double const *Sigma, Vector3d &VT, double coreradius,
                                    bool bWakeOnly, bool bMultiThread) const
 {
     if(isCancelled()) return;
-    // only 5 parameters max are allowed in the sub call to the parallized process, so make the others global
-    tmp_coreradius = coreradius;
-    tmp_bWakeOnly = bWakeOnly;
-    tmp_Mu = Mu;
-    tmp_Sigma = Sigma;
+
+    VelBlockData data;
+    data.coreradius = coreradius;
+    data.bWakeOnly = bWakeOnly;
+    data.Mu = Mu;
+    data.Sigma = Sigma;
 
     std::vector<Vector3d> VBlock(m_nBlocks);
 
@@ -703,7 +705,7 @@ void P4Analysis::getVelocityVector(Vector3d const &C,
         for(int iBlock=0; iBlock<m_nBlocks; iBlock++)
         {
 //            futureSync.addFuture(QtConcurrent::run(&P4Analysis::velocityVectorBlock, this, iBlock, C, &VBlock[iBlock]));
-            threads.push_back(std::thread(&P4Analysis::velocityVectorBlock, this, iBlock, C, &VBlock[iBlock]));
+            threads.push_back(std::thread(&P4Analysis::velocityVectorBlock, this, iBlock, C, &VBlock[iBlock], data));
         }
 
         for(int iBlock=0; iBlock<m_nBlocks; iBlock++)
@@ -715,7 +717,7 @@ void P4Analysis::getVelocityVector(Vector3d const &C,
     {
         for(int iBlock=0; iBlock<m_nBlocks; iBlock++)
         {
-            velocityVectorBlock(iBlock, C, &VBlock[iBlock]);
+            velocityVectorBlock(iBlock, C, &VBlock[iBlock], data);
         }
     }
 
@@ -733,7 +735,7 @@ void P4Analysis::getVelocityVector(Vector3d const &C,
 }
 
 
-void P4Analysis::velocityVectorBlock(int iBlock, Vector3d const &C, Vector3d *VT) const
+void P4Analysis::velocityVectorBlock(int iBlock, Vector3d const &C, Vector3d *VT, VelBlockData const &data) const
 {
     // for each panel
     int blocksize = int(double(nPanels())/double(m_nBlocks))+1; // add one to compensate for rounding errors
@@ -751,26 +753,26 @@ void P4Analysis::velocityVectorBlock(int iBlock, Vector3d const &C, Vector3d *VT
 
         if(m_pPolar3d->isVLM())
         {
-            getDoubletVelocity(C, p4, V, tmp_coreradius, true, !tmp_bWakeOnly);
-            VT->x += V.x * tmp_Mu[i4];
-            VT->y += V.y * tmp_Mu[i4];
-            VT->z += V.z * tmp_Mu[i4];
+            getDoubletVelocity(C, p4, V, data.coreradius, true, !data.bWakeOnly);
+            VT->x += V.x * data.Mu[i4];
+            VT->y += V.y * data.Mu[i4];
+            VT->z += V.z * data.Mu[i4];
         }
         else
         {
-            if(!tmp_bWakeOnly)
+            if(!data.bWakeOnly)
             {
                 if(!p4.isMidPanel()) //otherwise Sigma[pp] =0.0, so contribution is zero also
                 {
                     getSourceVelocity(C, false, p4, V);
-                    VT->x += V.x * tmp_Sigma[i4];
-                    VT->y += V.y * tmp_Sigma[i4];
-                    VT->z += V.z * tmp_Sigma[i4];
+                    VT->x += V.x * data.Sigma[i4];
+                    VT->y += V.y * data.Sigma[i4];
+                    VT->z += V.z * data.Sigma[i4];
                 }
-                getDoubletVelocity(C, p4, V, tmp_coreradius, true, true);
-                VT->x += V.x * tmp_Mu[i4];
-                VT->y += V.y * tmp_Mu[i4];
-                VT->z += V.z * tmp_Mu[i4];
+                getDoubletVelocity(C, p4, V, data.coreradius, true, true);
+                VT->x += V.x * data.Mu[i4];
+                VT->y += V.y * data.Mu[i4];
+                VT->z += V.z * data.Mu[i4];
             }
 
             // Is the panel pp shedding a wake?
@@ -785,11 +787,11 @@ void P4Analysis::velocityVectorBlock(int iBlock, Vector3d const &C, Vector3d *VT
                     assert(iw4<nWakePanels());
                     Panel4 const &p4w = m_WakePanel4.at(iw4);
                     // do not use RFF approximation for wake panels
-                    getDoubletVelocity(C, p4w, V, tmp_coreradius, false, true);
+                    getDoubletVelocity(C, p4w, V, data.coreradius, false, true);
 
-                    VT->x += V.x * tmp_Mu[i4]*sign;
-                    VT->y += V.y * tmp_Mu[i4]*sign;
-                    VT->z += V.z * tmp_Mu[i4]*sign;
+                    VT->x += V.x * data.Mu[i4]*sign;
+                    VT->y += V.y * data.Mu[i4]*sign;
+                    VT->z += V.z * data.Mu[i4]*sign;
 
                     iw4 = p4w.m_iPD;
 //                    irow++;

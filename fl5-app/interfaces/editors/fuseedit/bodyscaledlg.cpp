@@ -51,11 +51,11 @@ BodyScaleDlg::BodyScaleDlg(QWidget *pParent ): QDialog(pParent)
 
 void BodyScaleDlg::initDialog(bool bFrameOnly)
 {
-    m_pdeXScaleFactor->setValue(m_XFactor);
-    m_pdeYScaleFactor->setValue(m_YFactor);
-    m_pdeZScaleFactor->setValue(m_ZFactor);
+    m_pfeXScaleFactor->setValue(m_XFactor);
+    m_pfeYScaleFactor->setValue(m_YFactor);
+    m_pfeZScaleFactor->setValue(m_ZFactor);
 
-    m_pdeXScaleFactor->setFocus();
+    m_pfeXScaleFactor->setFocus();
 
     m_pieFrameID->setEnabled(false);
     m_pieFrameID->setValue(m_FrameID+1);
@@ -70,7 +70,7 @@ void BodyScaleDlg::initDialog(bool bFrameOnly)
     {
         m_prbBody->setChecked(false);
         m_prbFrame->setChecked(true);
-        m_pdeXScaleFactor->setEnabled(false);
+        m_pfeXScaleFactor->setEnabled(false);
     }
     m_prbBody->setEnabled(false);
     m_prbFrame->setEnabled(false);
@@ -94,12 +94,12 @@ void BodyScaleDlg::setupLayout()
 
     QGridLayout *pScaleLayout = new QGridLayout;
     {
-        m_pdeXScaleFactor = new FloatEdit(1.0);
-        m_pdeYScaleFactor = new FloatEdit(2.000);
-        m_pdeZScaleFactor = new FloatEdit(3.);
-        m_pdeXScaleFactor->setDigits(3);
-        m_pdeYScaleFactor->setDigits(3);
-        m_pdeZScaleFactor->setDigits(3);
+        m_pfeXScaleFactor = new FloatEdit(1.0);
+        m_pfeYScaleFactor = new FloatEdit(2.000);
+        m_pfeZScaleFactor = new FloatEdit(3.);
+        m_pfeXScaleFactor->setDigits(3);
+        m_pfeYScaleFactor->setDigits(3);
+        m_pfeZScaleFactor->setDigits(3);
         QLabel *lab0 = new QLabel("Scale factor");
         QLabel *lab1 = new QLabel("X scale");
         QLabel *lab2 = new QLabel("Y scale");
@@ -108,9 +108,9 @@ void BodyScaleDlg::setupLayout()
         pScaleLayout->addWidget(lab1,2,1, Qt::AlignRight | Qt::AlignVCenter);
         pScaleLayout->addWidget(lab2,3,1, Qt::AlignRight | Qt::AlignVCenter);
         pScaleLayout->addWidget(lab3,4,1, Qt::AlignRight | Qt::AlignVCenter);
-        pScaleLayout->addWidget(m_pdeXScaleFactor,2,2);
-        pScaleLayout->addWidget(m_pdeYScaleFactor,3,2);
-        pScaleLayout->addWidget(m_pdeZScaleFactor,4,2);
+        pScaleLayout->addWidget(m_pfeXScaleFactor,2,2);
+        pScaleLayout->addWidget(m_pfeYScaleFactor,3,2);
+        pScaleLayout->addWidget(m_pfeZScaleFactor,4,2);
     }
 
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
@@ -186,13 +186,13 @@ void BodyScaleDlg::onRadioBtn()
     if(m_prbBody->isChecked())
     {
         m_pieFrameID->setEnabled(false);
-        m_pdeXScaleFactor->setEnabled(true);
+        m_pfeXScaleFactor->setEnabled(true);
         m_bFrameOnly = false;
     }
     else
     {
         m_pieFrameID->setEnabled(true);
-        m_pdeXScaleFactor->setEnabled(false);
+        m_pfeXScaleFactor->setEnabled(false);
         m_bFrameOnly = true;
     }
 }
@@ -202,9 +202,9 @@ void BodyScaleDlg::onOK()
 {
     m_FrameID = m_pieFrameID->value()-1;
 
-    m_XFactor = m_pdeXScaleFactor->value();
-    m_YFactor = m_pdeYScaleFactor->value();
-    m_ZFactor = m_pdeZScaleFactor->value();
+    m_XFactor = m_pfeXScaleFactor->value();
+    m_YFactor = m_pfeYScaleFactor->value();
+    m_ZFactor = m_pfeZScaleFactor->value();
 
     QDialog::accept();
 }

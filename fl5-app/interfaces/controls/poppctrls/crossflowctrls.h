@@ -119,8 +119,8 @@ class CrossFlowCtrls : public QWidget
         QCheckBox *m_pchCrossFlowVel;
         QCheckBox *m_pchVorticityMap;
         QSlider *m_pslPlanePos;
-        FloatEdit *m_pdeWidth;
-        FloatEdit *m_pdeHeight;
+        FloatEdit *m_pfeWidth;
+        FloatEdit *m_pfeHeight;
         IntEdit *m_pieVelocitySamples;
         IntEdit *m_pieVorticitySamples;
         QLabel *m_plabLength1, *m_plabLength2;

@@ -65,29 +65,29 @@ void ShapeFixerDlg::setupLayout()
 {
     QGridLayout *pFixerLayout = new QGridLayout;
     {
-        QLabel *pLabPrec   = new QLabel(tr("Precision"));
-        QLabel *pLabMinTol = new QLabel(tr("Min. tolerance"));
-        QLabel *pLabMaxTol = new QLabel(tr("Max. tolerance"));
-        pLabPrec->setAlignment(::Qt::AlignRight |Qt::AlignVCenter);
-        pLabMinTol->setAlignment(::Qt::AlignRight |Qt::AlignVCenter);
-        pLabMaxTol->setAlignment(::Qt::AlignRight |Qt::AlignVCenter);
-        m_pdePrecision = new FloatEdit;
+        QLabel *plabPrec   = new QLabel(tr("Precision"));
+        QLabel *plabMinTol = new QLabel(tr("Min. tolerance"));
+        QLabel *plabMaxTol = new QLabel(tr("Max. tolerance"));
+        plabPrec->setAlignment(::Qt::AlignRight |Qt::AlignVCenter);
+        plabMinTol->setAlignment(::Qt::AlignRight |Qt::AlignVCenter);
+        plabMaxTol->setAlignment(::Qt::AlignRight |Qt::AlignVCenter);
+        m_pfePrecision = new FloatEdit;
         QString tip("OCC: the basic precision");
-        m_pdePrecision->setToolTip(tip);
-        m_pdeMinTolerance = new FloatEdit;
-        tip = "OCC: The minimal allowed tolerance. It defines the minimal allowed length of edges. Detected edges having\n"
-                    "length less than the specified minimal tolerance will be removed if ModifyTopologyMode in Repairing tool\n"
-                    "for wires is set to true.";
-        m_pdeMinTolerance->setToolTip(tip);
-        m_pdeMaxTolerance = new FloatEdit;
-        tip = "OCC: The maximum allowed tolerance. All problems will be detected for cases when a dimension of\n"
-        "invalidity is larger than the basic precision or a tolerance of sub-shape on that problem is detected.\n"
-        "The maximum tolerance value limits the increasing tolerance for fixing a problem such as fix of not\n"
-        "connected and self-intersected wires. If a value larger than the maximum allowed tolerance is necessary\n"
-        "for correcting a detected problem the problem can not be fixed. The maximal tolerance is not taking into\n"
-        "account during computation of tolerance of edges in ShapeFix_SameParameter() method and\n"
-        "ShapeFix_Edge::FixVertexTolerance() method.";
-        m_pdeMaxTolerance->setToolTip(tip);
+        m_pfePrecision->setToolTip(tip);
+        m_pfeMinTolerance = new FloatEdit;
+        tip = "<p>OCC: The minimal allowed tolerance. It defines the minimal allowed length of edges. Detected edges having "
+                    "length less than the specified minimal tolerance will be removed if ModifyTopologyMode in Repairing tool "
+                    "for wires is set to true.</p>";
+        m_pfeMinTolerance->setToolTip(tip);
+        m_pfeMaxTolerance = new FloatEdit;
+        tip = "<p>OCC: The maximum allowed tolerance. All problems will be detected for cases when a dimension of "
+        "invalidity is larger than the basic precision or a tolerance of sub-shape on that problem is detected.<br>"
+        "The maximum tolerance value limits the increasing tolerance for fixing a problem such as fix of not "
+        "connected and self-intersected wires. If a value larger than the maximum allowed tolerance is necessary "
+        "for correcting a detected problem the problem can not be fixed. The maximal tolerance is not taking into "
+        "account during computation of tolerance of edges in ShapeFix_SameParameter() method and "
+        "ShapeFix_Edge::FixVertexTolerance() method.</p>";
+        m_pfeMaxTolerance->setToolTip(tip);
 
         QLabel *pLabLen0 = new QLabel(Units::lengthUnitQLabel());
         QLabel *pLabLen1 = new QLabel(Units::lengthUnitQLabel());
@@ -96,14 +96,14 @@ void ShapeFixerDlg::setupLayout()
         pLabLen1->setAlignment(::Qt::AlignLeft|Qt::AlignVCenter);
         pLabLen2->setAlignment(::Qt::AlignLeft|Qt::AlignVCenter);
 
-        pFixerLayout->addWidget(pLabPrec,            1,1);
-        pFixerLayout->addWidget(m_pdePrecision,    1,2);
+        pFixerLayout->addWidget(plabPrec,            1,1);
+        pFixerLayout->addWidget(m_pfePrecision,      1,2);
         pFixerLayout->addWidget(pLabLen0,            1,3);
-        pFixerLayout->addWidget(pLabMinTol,          2,1);
-        pFixerLayout->addWidget(m_pdeMinTolerance, 2,2);
+        pFixerLayout->addWidget(plabMinTol,          2,1);
+        pFixerLayout->addWidget(m_pfeMinTolerance,   2,2);
         pFixerLayout->addWidget(pLabLen1,            2,3);
-        pFixerLayout->addWidget(pLabMaxTol,          3,1);
-        pFixerLayout->addWidget(m_pdeMaxTolerance, 3,2);
+        pFixerLayout->addWidget(plabMaxTol,          3,1);
+        pFixerLayout->addWidget(m_pfeMaxTolerance,   3,2);
         pFixerLayout->addWidget(pLabLen2,            3,3);
     }
     QGridLayout *pActionLayout = new QGridLayout;
@@ -214,17 +214,17 @@ void ShapeFixerDlg::onButton(QAbstractButton*pButton)
 
 void ShapeFixerDlg::onReadParams()
 {
-    s_Precision = m_pdePrecision->value()/Units::mtoUnit();
-    s_MinTolerance = m_pdeMinTolerance->value()/Units::mtoUnit();
-    s_MaxTolerance = m_pdeMaxTolerance->value()/Units::mtoUnit();
+    s_Precision = m_pfePrecision->value()/Units::mtoUnit();
+    s_MinTolerance = m_pfeMinTolerance->value()/Units::mtoUnit();
+    s_MaxTolerance = m_pfeMaxTolerance->value()/Units::mtoUnit();
 }
 
 
 void ShapeFixerDlg::initDialog(const TopoDS_ListOfShape &shapes)
 {
-    m_pdePrecision->setValue(s_Precision*Units::mtoUnit());
-    m_pdeMinTolerance->setValue(s_MinTolerance*Units::mtoUnit());
-    m_pdeMaxTolerance->setValue(s_MaxTolerance*Units::mtoUnit());
+    m_pfePrecision->setValue(s_Precision*Units::mtoUnit());
+    m_pfeMinTolerance->setValue(s_MinTolerance*Units::mtoUnit());
+    m_pfeMaxTolerance->setValue(s_MaxTolerance*Units::mtoUnit());
 
     m_shapes = shapes;
     onListShapes();
@@ -235,7 +235,7 @@ void ShapeFixerDlg::onStitchShapes()
 {
     QString strange;
 
-    s_Precision = m_pdePrecision->value()/Units::mtoUnit();
+    s_Precision = m_pfePrecision->value()/Units::mtoUnit();
 
     BRepBuilderAPI_Sewing stitcher(s_Precision);
     TopoDS_ListIteratorOfListOfShape iterator;

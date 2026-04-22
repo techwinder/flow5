@@ -103,7 +103,7 @@ class BtPolarDlg : public Polar3dDlg
 
         SplinedGraphWt *m_pWindGraphWt;
 
-        FloatEdit *m_pdeXCoG, *m_pdeYCoG, *m_pdeZCoG;
+        FloatEdit *m_pfeXCoG, *m_pfeYCoG, *m_pfeZCoG;
 
         QCheckBox *m_pchUseSailDim;
         FloatEdit *m_pfeRefArea, *m_pfeRefChord;

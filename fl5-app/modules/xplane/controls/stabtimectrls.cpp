@@ -109,7 +109,7 @@ void StabTimeCtrls::connectSignals()
     for(int imode=0; imode<4; imode++)
         connect(m_prbTimeMode[imode], SIGNAL(clicked()), SLOT(onModeSelection()));
 
-    connect(m_pdeDeltat,    SIGNAL(floatChanged(float)), SLOT(onReadData()));
+    connect(m_pfeDeltat,    SIGNAL(floatChanged(float)), SLOT(onReadData()));
 
     connect(m_prbInitCondResponse, SIGNAL(clicked()), SLOT(onResponseType()));
     connect(m_prbForcedResponse,   SIGNAL(clicked()), SLOT(onResponseType()));
@@ -302,7 +302,7 @@ void StabTimeCtrls::onModeSelection()
 
 void StabTimeCtrls::onReadData()
 {
-    m_Deltat = m_pdeDeltat->value();
+    m_Deltat = m_pfeDeltat->value();
 }
 
 
@@ -424,15 +424,15 @@ void StabTimeCtrls::setupLayout()
                 m_plabUnit1->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
                 m_plabUnit2->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
                 m_plabUnit3->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-                m_pdeStabVar1 = new FloatEdit;
-                m_pdeStabVar2 = new FloatEdit;
-                m_pdeStabVar3 = new FloatEdit;
+                m_pfeStabVar1 = new FloatEdit;
+                m_pfeStabVar2 = new FloatEdit;
+                m_pfeStabVar3 = new FloatEdit;
                 pVarParamsLayout->addWidget(m_plabStab1,   1,1);
                 pVarParamsLayout->addWidget(m_plabStab2,   2,1);
                 pVarParamsLayout->addWidget(m_plabStab3,   3,1);
-                pVarParamsLayout->addWidget(m_pdeStabVar1, 1,2);
-                pVarParamsLayout->addWidget(m_pdeStabVar2, 2,2);
-                pVarParamsLayout->addWidget(m_pdeStabVar3, 3,2);
+                pVarParamsLayout->addWidget(m_pfeStabVar1, 1,2);
+                pVarParamsLayout->addWidget(m_pfeStabVar2, 2,2);
+                pVarParamsLayout->addWidget(m_pfeStabVar3, 3,2);
                 pVarParamsLayout->addWidget(m_plabUnit1,   1,3);
                 pVarParamsLayout->addWidget(m_plabUnit2,   2,3);
                 pVarParamsLayout->addWidget(m_plabUnit3,   3,3);
@@ -491,15 +491,15 @@ void StabTimeCtrls::setupLayout()
         QLabel *pTotalTimeLabel = new QLabel(tr("Total Time ="));
         QLabel *pTimeLab1       = new QLabel(tr("s"));
         QLabel *pTimeLab2       = new QLabel(tr("s"));
-        m_pdeTotalTime = new FloatEdit(5.0f);
-        m_pdeTotalTime->setToolTip(tr("<p>Define the total time range for the graphs</p>"));
-        m_pdeDeltat    = new FloatEdit(.01f);
-        m_pdeDeltat->setToolTip(tr("<p>Define the time step for the resolution of the differential equations</p>"));
+        m_pfeTotalTime = new FloatEdit(5.0f);
+        m_pfeTotalTime->setToolTip(tr("<p>Define the total time range for the graphs</p>"));
+        m_pfeDeltat    = new FloatEdit(.01f);
+        m_pfeDeltat->setToolTip(tr("<p>Define the time step for the resolution of the differential equations</p>"));
         pDtLayout->addWidget(pDtLabel,         1,1, Qt::AlignRight);
-        pDtLayout->addWidget(m_pdeDeltat,      1,2);
+        pDtLayout->addWidget(m_pfeDeltat,      1,2);
         pDtLayout->addWidget(pTimeLab1,        1,3);
         pDtLayout->addWidget(pTotalTimeLabel,  2,1, Qt::AlignRight);
-        pDtLayout->addWidget(m_pdeTotalTime,   2,2);
+        pDtLayout->addWidget(m_pfeTotalTime,   2,2);
         pDtLayout->addWidget(pTimeLab2,        2,3);
     }
 
@@ -577,11 +577,11 @@ void StabTimeCtrls::setControls()
         m_plabUnit3->setText(strong);
     }
 
-    m_pdeStabVar1->setValue(m_TimeInput[0]);
-    m_pdeStabVar2->setValue(m_TimeInput[1]);
-    m_pdeStabVar3->setValue(m_TimeInput[2]);
-    m_pdeTotalTime->setValue(m_TotalTime);
-    m_pdeDeltat->setValue(m_Deltat);
+    m_pfeStabVar1->setValue(m_TimeInput[0]);
+    m_pfeStabVar2->setValue(m_TimeInput[1]);
+    m_pfeStabVar3->setValue(m_TimeInput[2]);
+    m_pfeTotalTime->setValue(m_TotalTime);
+    m_pfeDeltat->setValue(m_Deltat);
 
     bool bEnableTimeCtrl = s_pXPlane->m_pCurPOpp && s_pXPlane->m_pCurPOpp->isType7() && s_pXPlane->isStabTimeView();
     m_ppbAddCurve->setEnabled(bEnableTimeCtrl);
@@ -593,11 +593,11 @@ void StabTimeCtrls::setControls()
         m_prbTimeMode[imode]->setEnabled(bEnableTimeCtrl);
     }
 
-    m_pdeStabVar1->setEnabled(bEnableTimeCtrl);
-    m_pdeStabVar2->setEnabled(bEnableTimeCtrl);
-    m_pdeStabVar3->setEnabled(bEnableTimeCtrl);
-    m_pdeDeltat->setEnabled(bEnableTimeCtrl);
-    m_pdeTotalTime->setEnabled(bEnableTimeCtrl);
+    m_pfeStabVar1->setEnabled(bEnableTimeCtrl);
+    m_pfeStabVar2->setEnabled(bEnableTimeCtrl);
+    m_pfeStabVar3->setEnabled(bEnableTimeCtrl);
+    m_pfeDeltat->setEnabled(bEnableTimeCtrl);
+    m_pfeTotalTime->setEnabled(bEnableTimeCtrl);
 
     m_pcbAVLControls->setEnabled(bEnableTimeCtrl && m_prbForcedResponse->isChecked());
     m_pSplGraphWt->initialize();
@@ -687,9 +687,9 @@ void StabTimeCtrls::addCurve()
     QString strong;
     bool bLongitudinal = isStabLongitudinal();
 
-    double val1 = m_pdeStabVar1->value();
-    double val2 = m_pdeStabVar2->value();
-    double val3 = m_pdeStabVar3->value();
+    double val1 = m_pfeStabVar1->value();
+    double val2 = m_pfeStabVar2->value();
+    double val3 = m_pfeStabVar3->value();
     switch(m_ResponseType)
     {
         case INITIALCONDITIONS:
@@ -1042,9 +1042,9 @@ void StabTimeCtrls::fillCurvesPerturbation(PlaneOpp const*pPOpp, Curve **pCurve)
 
     int TotalPoints = std::min(1000, int(m_TotalTime/dt));
     //read the initial state condition
-    m_TimeInput[0] = m_pdeStabVar1->value();
-    m_TimeInput[1] = m_pdeStabVar2->value();
-    m_TimeInput[2] = m_pdeStabVar3->value();
+    m_TimeInput[0] = m_pfeStabVar1->value();
+    m_TimeInput[1] = m_pfeStabVar2->value();
+    m_TimeInput[2] = m_pfeStabVar3->value();
     m_TimeInput[3] = 0.0;//we start with an initial 0.0 value for pitch or bank angles
 
     if(m_ResponseType==INITIALCONDITIONS)

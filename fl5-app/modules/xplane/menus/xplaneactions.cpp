@@ -453,7 +453,7 @@ void XPlaneActions::makeActions()
 
     m_pRenameCurWPolar = new QAction(tr("Rename\tShift+F2"), m_pXPlane);
     m_pRenameCurWPolar->setStatusTip(tr("Rename the active polar"));
-    connect(m_pRenameCurWPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onRenameCurWPolar()));
+    connect(m_pRenameCurWPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onRenameCurPlPolar()));
 
     m_pDuplicateCurWPolar = new QAction(tr("Duplicate"), m_pXPlane);
     m_pDuplicateCurWPolar->setShortcut(QKeySequence(Qt::SHIFT|Qt::Key_D));

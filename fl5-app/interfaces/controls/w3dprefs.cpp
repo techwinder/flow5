@@ -107,7 +107,6 @@ QColor W3dPrefs::s_FusePanelColor(241,241,241);
 QColor W3dPrefs::s_FlapPanelColor(227,227,227);
 QColor W3dPrefs::s_WakePanelColor(215, 215, 215, 105);
 
-bool W3dPrefs::s_bShowGround(true);
 QColor W3dPrefs::s_WaterColor(51,77,89,100);
 double W3dPrefs::s_BoxX=10, W3dPrefs::s_BoxY=10;
 
@@ -199,7 +198,6 @@ void W3dPrefs::readData()
 
     Part::setGmshTessDefault(m_pGmshCtrlsWt->params());
 
-    s_bShowGround = m_pchGround->isChecked();
     s_BoxX        = m_pfeBoxX->value()/Units::mtoUnit();
     s_BoxY        = m_pfeBoxY->value()/Units::mtoUnit();
 
@@ -255,7 +253,6 @@ void W3dPrefs::initWidgets()
     m_plbTrans->setTheStyle(s_TransStyle);
 
     m_pcbWaterColor->setColor(s_WaterColor);
-    m_pchGround->setChecked(s_bShowGround);
     m_pfeBoxX->setValue(s_BoxX*Units::mtoUnit());
     m_pfeBoxY->setValue(s_BoxY*Units::mtoUnit());
 
@@ -318,7 +315,7 @@ void W3dPrefs::setupLayout()
             {
                 QButtonGroup *pGroup = new QButtonGroup(this);
                 {
-                    m_prbUniColor  = new QRadioButton(tr("Uniform colour"));
+                    m_prbUniColor  = new QRadioButton(tr("Default colour"));
                     m_prbUniColor->setToolTip(tr("<p>Uses the background color defined for the application</p>"));
                     m_prbGradient  = new QRadioButton(tr("Gradient"));
                     m_prbGradient->setToolTip(tr("<p>Fills the background with a 2-colours gradient</p>"));
@@ -547,10 +544,9 @@ void W3dPrefs::setupLayout()
                     {
                         QFormLayout *pGroundLayout = new QFormLayout;
                         {
-                            m_pchGround = new QCheckBox(tr("Show ground surface"));
-                            m_pcbWaterColor   = new ColorBtn;
+                            m_pcbWaterColor = new ColorBtn;
+                            m_pcbWaterColor->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
 
-                            pGroundLayout->addRow(m_pchGround);
                             pGroundLayout->addRow(tr("Ground/Water"), m_pcbWaterColor);
                         }
                         QGridLayout *pBoxSizeLayout = new QGridLayout;
@@ -1072,7 +1068,6 @@ void W3dPrefs::saveSettings(QSettings &settings)
         settings.setValue("showWakePanels", s_bWakePanels);
 
         settings.setValue("WaterColor",  s_WaterColor);
-        settings.setValue("bShowGround", s_bShowGround);
         settings.setValue("GroundBoxX",  s_BoxX);
         settings.setValue("GroundBoxY",  s_BoxY);
 
@@ -1154,25 +1149,24 @@ void W3dPrefs::loadSettings(QSettings &settings)
         s_NContourLines = settings.value("NContourLines", s_NContourLines).toInt();
         xfl::loadLineSettings(settings, s_ContourLineStyle, "ContourLineStyle");
 
-        s_VortonColor = settings.value("VortonColour", s_VortonColor).value<QColor>();
-        s_VortonRadius = settings.value("VortonRadius", s_VortonRadius).toDouble();
+        s_VortonColor      = settings.value("VortonColour", s_VortonColor).value<QColor>();
+        s_VortonRadius     = settings.value("VortonRadius", s_VortonRadius).toDouble();
 
-        s_bUseWingColour = settings.value("UseWingColour", false).toBool();
+        s_bUseWingColour   = settings.value("UseWingColour", false).toBool();
 
-        s_WaterColor  = settings.value("WaterColor", s_WaterColor).value<QColor>();
-        s_bShowGround = settings.value("bShowGround", s_bShowGround).toBool();
-        s_BoxX        = settings.value("GroundBoxX",  s_BoxX).toDouble();
-        s_BoxY        = settings.value("GroundBoxY",  s_BoxY).toDouble();
+        s_WaterColor       = settings.value("WaterColor", s_WaterColor).value<QColor>();
+        s_BoxX             = settings.value("GroundBoxX",  s_BoxX).toDouble();
+        s_BoxY             = settings.value("GroundBoxY",  s_BoxY).toDouble();
 
-        s_MassColor      = settings.value("MassColor",  s_MassColor).value<QColor>();
+        s_MassColor        = settings.value("MassColor",  s_MassColor).value<QColor>();
 
-        s_bWakePanels    = settings.value("showWakePanels", true).toBool();
+        s_bWakePanels      = settings.value("showWakePanels", true).toBool();
 
-        s_bUseBackClr    = settings.value("UseBackColor", true).toBool();
-        s_FusePanelColor = settings.value("FusePanelClr", s_FusePanelColor).value<QColor>();
-        s_WingPanelColor = settings.value("WingPanelClr", s_WingPanelColor).value<QColor>();
-        s_FlapPanelColor = settings.value("FlapPanelClr", s_FlapPanelColor).value<QColor>();
-        s_WakePanelColor = settings.value("WakePanelClr", s_WakePanelColor).value<QColor>();
+        s_bUseBackClr      = settings.value("UseBackColor", true).toBool();
+        s_FusePanelColor   = settings.value("FusePanelClr", s_FusePanelColor).value<QColor>();
+        s_WingPanelColor   = settings.value("WingPanelClr", s_WingPanelColor).value<QColor>();
+        s_FlapPanelColor   = settings.value("FlapPanelClr", s_FlapPanelColor).value<QColor>();
+        s_WakePanelColor   = settings.value("WakePanelClr", s_WakePanelColor).value<QColor>();
 
         s_bEnableClipPlane = settings.value("EnableClipPlane",   s_bEnableClipPlane).toBool();
         s_bShowRefLength   = settings.value("ShowRefLength",     s_bShowRefLength).toBool();
@@ -1180,11 +1174,11 @@ void W3dPrefs::loadSettings(QSettings &settings)
         s_bSaveViewPoints  = settings.value("Save3dViewPoints",  s_bSaveViewPoints).toBool();
 
 
-        s_iChordwiseRes = settings.value("ChordwiseRes", s_iChordwiseRes).toInt();
-        s_iBodyAxialRes = settings.value("BodyAxialRes", s_iBodyAxialRes).toInt();
-        s_iBodyHoopRes  = settings.value("BodyHoopRes",  s_iBodyHoopRes).toInt();
-        int iSailXRes     = settings.value("SailXRes",   Sail::iXRes()).toInt();
-        int iSailZRes     = settings.value("SailZRes",   Sail::iZRes()).toInt();
+        s_iChordwiseRes    = settings.value("ChordwiseRes", s_iChordwiseRes).toInt();
+        s_iBodyAxialRes    = settings.value("BodyAxialRes", s_iBodyAxialRes).toInt();
+        s_iBodyHoopRes     = settings.value("BodyHoopRes",  s_iBodyHoopRes).toInt();
+        int iSailXRes      = settings.value("SailXRes",   Sail::iXRes()).toInt();
+        int iSailZRes      = settings.value("SailZRes",   Sail::iZRes()).toInt();
         Sail::setTessellation(iSailXRes, iSailZRes);
 
         GmshParams params;

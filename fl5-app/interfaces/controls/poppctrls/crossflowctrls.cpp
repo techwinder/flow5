@@ -108,10 +108,10 @@ void CrossFlowCtrls::connectSignals()
     connect(m_pchAutoOmegaScale,    SIGNAL(clicked(bool)),         SLOT(onMakeCrossFlowPlane()));
     connect(m_pchAutoOmegaScale,    SIGNAL(clicked(bool)),         SLOT(onOmegaScale()));
     connect(m_pcbOmegaDir,          SIGNAL(activated(int)),        SLOT(onMakeCrossFlowPlane()));
-    connect(m_pdeHeight,            SIGNAL(floatChanged(float)),   SLOT(onMakeCrossFlowPlane()));
+    connect(m_pfeHeight,            SIGNAL(floatChanged(float)),   SLOT(onMakeCrossFlowPlane()));
+    connect(m_pfeWidth,             SIGNAL(floatChanged(float)),   SLOT(onMakeCrossFlowPlane()));
     connect(m_pfeOmegaMax,          SIGNAL(floatChanged(float)),   SLOT(onOmegaScale()));
     connect(m_pfeOmegaMin,          SIGNAL(floatChanged(float)),   SLOT(onOmegaScale()));
-    connect(m_pdeWidth,             SIGNAL(floatChanged(float)),   SLOT(onMakeCrossFlowPlane()));
     connect(m_pslPlanePos,          SIGNAL(sliderMoved(int)),      SLOT(onMakeCrossFlowPlane()));
     connect(m_pieVorticitySamples,  SIGNAL(intChanged(int)),       SLOT(onMakeCrossFlowPlane()));
     connect(m_pieVelocitySamples,   SIGNAL(intChanged(int)),       SLOT(onMakeCrossFlowPlane()));
@@ -166,14 +166,14 @@ void CrossFlowCtrls::setupLayout()
                 QGridLayout *pPlaneParamsLayout = new QGridLayout;
                 {
                     m_plabLength2  = new QLabel(Units::lengthUnitQLabel());
-                    m_pdeWidth  = new FloatEdit;
-                    m_pdeHeight = new FloatEdit;
+                    m_pfeWidth  = new FloatEdit;
+                    m_pfeHeight = new FloatEdit;
 
                     pPlaneParamsLayout->addWidget(new QLabel(tr("Y")),     1, 2, Qt::AlignCenter);
                     pPlaneParamsLayout->addWidget(new QLabel(tr("Z")),     1, 3, Qt::AlignCenter);
                     pPlaneParamsLayout->addWidget(new QLabel(tr("Size:")), 2, 1, Qt::AlignRight | Qt::AlignVCenter);
-                    pPlaneParamsLayout->addWidget(m_pdeWidth,          2, 2);
-                    pPlaneParamsLayout->addWidget(m_pdeHeight,         2, 3);
+                    pPlaneParamsLayout->addWidget(m_pfeWidth,          2, 2);
+                    pPlaneParamsLayout->addWidget(m_pfeHeight,         2, 3);
                     pPlaneParamsLayout->addWidget(m_plabLength2,          2, 4);
                     pPlaneParamsLayout->setColumnStretch(4,1);
                 }
@@ -274,8 +274,8 @@ void CrossFlowCtrls::setWakeData()
     m_pchCrossFlowVel->setChecked(m_bGridVelocity);
     m_pchVorticityMap->setChecked(m_bVorticityMap);
 
-    m_pdeWidth->setValue(s_Width*Units::mtoUnit());
-    m_pdeHeight->setValue(s_Height*Units::mtoUnit());
+    m_pfeWidth->setValue(s_Width*Units::mtoUnit());
+    m_pfeHeight->setValue(s_Height*Units::mtoUnit());
     m_pslPlanePos->setValue(int(s_XPos*1000.0));
 
     m_pieVelocitySamples->setValue(s_nVelocitySamples);
@@ -313,8 +313,8 @@ void CrossFlowCtrls::readWakeData()
 
     m_pgl3dXPlaneView->showColourLegend(m_bVorticityMap);
 
-    s_Width  = m_pdeWidth->value()/Units::mtoUnit();
-    s_Height = m_pdeHeight->value()/Units::mtoUnit();
+    s_Width  = m_pfeWidth->value()/Units::mtoUnit();
+    s_Height = m_pfeHeight->value()/Units::mtoUnit();
     s_XPos   = double(m_pslPlanePos->value()/1000.0);
 
     s_nVelocitySamples  = std::min(m_pieVelocitySamples->value(),  500);
@@ -324,26 +324,9 @@ void CrossFlowCtrls::readWakeData()
 }
 
 
-/** unused */
-/*void CrossFlowCtrls::onApply()
-{
-    s_bAutoGammaScale = m_pchAutoGammaScale->isChecked();
-    s_GammaMax = m_pdeGammaMin->value();
-    s_GammaMax = m_pdeGammaMax->value();
-    s_bAutoCpScale = m_pchAutoCpScale->isChecked();
-    s_CpMax = m_pdeCpMin->value();
-    s_CpMax = m_pdeCpMax->value();
-    s_bAutoPressureScale = m_pchAutoPressureScale->isChecked();
-    s_PressureMin = m_pdePressureMin->value()/Units::PatoUnit();
-    s_PressureMax = m_pdePressureMax->value()/Units::PatoUnit();
-
-    emit update3dScales();
-}*/
-
-
 void CrossFlowCtrls::loadSettings(QSettings &settings)
 {
-    settings.beginGroup("gl3dScales");
+    settings.beginGroup("CrossFlowCtrls");
     {
         //wake
         s_Width      = settings.value("YWidth",          s_Width).toDouble();
@@ -365,7 +348,7 @@ void CrossFlowCtrls::loadSettings(QSettings &settings)
 
 void CrossFlowCtrls::saveSettings(QSettings &settings)
 {
-    settings.beginGroup("gl3dScales");
+    settings.beginGroup("CrossFlowCtrls");
     {
         // wake
         settings.setValue("YWidth",         s_Width);

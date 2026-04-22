@@ -44,8 +44,8 @@ FoilTEGapDlg::FoilTEGapDlg(QWidget *pParent) : FoilDlg(pParent)
 
     setupLayout();
 
-    connect(m_pdeGap,   SIGNAL(floatChanged(float)), SLOT(onChanged()));
-    connect(m_pdeBlend, SIGNAL(floatChanged(float)), SLOT(onChanged()));
+    connect(m_pfeGap,   SIGNAL(floatChanged(float)), SLOT(onChanged()));
+    connect(m_pfeBlend, SIGNAL(floatChanged(float)), SLOT(onChanged()));
 }
 
 
@@ -69,7 +69,7 @@ void FoilTEGapDlg::setupLayout()
             plab2->setPalette(m_Palette);
             plab2->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-            m_pdeGap = new FloatEdit(0,3);
+            m_pfeGap = new FloatEdit(0,3);
 
             QLabel *plab3 = new QLabel(tr("Characteristic blending distance from T.E.="));
             plab3->setPalette(m_Palette);
@@ -80,13 +80,13 @@ void FoilTEGapDlg::setupLayout()
             plab4->setPalette(m_Palette);
             plab4->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-            m_pdeBlend = new FloatEdit;
+            m_pfeBlend = new FloatEdit;
 
             pParamsLayout->addWidget(plab1,      1,1);
-            pParamsLayout->addWidget(m_pdeGap,   1,2);
+            pParamsLayout->addWidget(m_pfeGap,   1,2);
             pParamsLayout->addWidget(plab2,      1,3);
             pParamsLayout->addWidget(plab3,      2,1);
-            pParamsLayout->addWidget(m_pdeBlend, 2,2);
+            pParamsLayout->addWidget(m_pfeBlend, 2,2);
             pParamsLayout->addWidget(plab4,      2,3);
         }
         m_pOverlayFrame->setLayout(pParamsLayout);
@@ -128,12 +128,12 @@ void FoilTEGapDlg::initDialog(Foil *pFoil)
     FoilDlg::initDialog(pFoil);
     m_pFoilWt->addFoil(pFoil);
 
-    m_pdeBlend->setMin(  0.0);
-    m_pdeBlend->setMax(100.0);
+    m_pfeBlend->setMin(  0.0);
+    m_pfeBlend->setMax(100.0);
 
     double gap = m_pRefFoil->TEGap();
-    m_pdeGap->setValue(gap*100.0);
-    m_pdeBlend->setValue(s_BlendLength*100.0);
+    m_pfeGap->setValue(gap*100.0);
+    m_pfeBlend->setValue(s_BlendLength*100.0);
 }
 
 
@@ -142,8 +142,8 @@ void FoilTEGapDlg::onApply()
     //reset everything and retry
     resetFoil();
 
-    double gap = m_pdeGap->value()/100.0;
-    s_BlendLength  = m_pdeBlend->value()/100;
+    double gap = m_pfeGap->value()/100.0;
+    s_BlendLength  = m_pfeBlend->value()/100;
 
     double dg = (gap-m_pRefFoil->TEGap());
     double length = m_pRefFoil->length();

@@ -80,8 +80,8 @@ class ShapeFixerDlg : public QDialog
         QDialogButtonBox *m_pButtonBox;
 
         PlainTextOutput *m_pptoOutput;
-        FloatEdit *m_pdePrecision;
-        FloatEdit *m_pdeMinTolerance, *m_pdeMaxTolerance;
+        FloatEdit *m_pfePrecision;
+        FloatEdit *m_pfeMinTolerance, *m_pfeMaxTolerance;
         QPushButton *m_ppbListShapes;
         QPushButton *m_ppbSmallEdges, *m_ppbFixGaps, *m_ppbFixAll;
         QPushButton *m_ppbReverseShapes, *m_ppbStitch;

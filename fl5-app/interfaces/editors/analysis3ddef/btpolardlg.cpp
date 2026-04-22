@@ -261,9 +261,9 @@ void BtPolarDlg::readData()
 
     s_BtPolar.m_TotalWakeLengthFactor = m_pfeWakeLength->value() /Units::mtoUnit();
 
-    double x     = m_pdeXCoG->value() / Units::mtoUnit();
-    double y     = m_pdeYCoG->value() / Units::mtoUnit();
-    double z     = m_pdeZCoG->value() / Units::mtoUnit();
+    double x     = m_pfeXCoG->value() / Units::mtoUnit();
+    double y     = m_pfeYCoG->value() / Units::mtoUnit();
+    double z     = m_pfeZCoG->value() / Units::mtoUnit();
     s_BtPolar.setCoG(Vector3d(x,y,z));
 
     s_BtPolar.setViscous(false);
@@ -429,9 +429,9 @@ void BtPolarDlg::initDialog(Boat const *pBoat, BoatPolar *pBtPolar)
     }
     m_pchAutoName->setChecked(m_bAutoName);
 
-    m_pdeXCoG->setValue(s_BtPolar.CoG().x*Units::mtoUnit());
-    m_pdeYCoG->setValue(s_BtPolar.CoG().y*Units::mtoUnit());
-    m_pdeZCoG->setValue(s_BtPolar.CoG().z*Units::mtoUnit());
+    m_pfeXCoG->setValue(s_BtPolar.CoG().x*Units::mtoUnit());
+    m_pfeYCoG->setValue(s_BtPolar.CoG().y*Units::mtoUnit());
+    m_pfeZCoG->setValue(s_BtPolar.CoG().z*Units::mtoUnit());
 
     m_pchUseSailDim->setChecked(s_BtPolar.bAutoRefDims());
     m_pfeRefArea->setValue(s_BtPolar.referenceArea()*Units::m2toUnit());
@@ -587,9 +587,9 @@ void BtPolarDlg::setupLayout()
             plab3->setAlignment(Qt::AlignRight | Qt::AlignCenter);
             plab4->setAlignment(Qt::AlignRight | Qt::AlignCenter);
             plab5->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-            m_pdeXCoG  = new FloatEdit(100.00,3);
-            m_pdeYCoG  = new FloatEdit(100.00,3);
-            m_pdeZCoG  = new FloatEdit(100.00,3);
+            m_pfeXCoG  = new FloatEdit(100.00,3);
+            m_pfeYCoG  = new FloatEdit(100.00,3);
+            m_pfeZCoG  = new FloatEdit(100.00,3);
             QLabel *plabLengthUnit1 = new QLabel(Units::lengthUnitQLabel());
             QLabel *plabLengthUnit2 = new QLabel(Units::lengthUnitQLabel());
             QLabel *plabLengthUnit3 = new QLabel(Units::lengthUnitQLabel());
@@ -597,9 +597,9 @@ void BtPolarDlg::setupLayout()
             pInertiaDataLayout->addWidget(plab3,2,1);
             pInertiaDataLayout->addWidget(plab4,3,1);
             pInertiaDataLayout->addWidget(plab5,4,1);
-            pInertiaDataLayout->addWidget(m_pdeXCoG,2,2);
-            pInertiaDataLayout->addWidget(m_pdeYCoG,3,2);
-            pInertiaDataLayout->addWidget(m_pdeZCoG,4,2);
+            pInertiaDataLayout->addWidget(m_pfeXCoG,2,2);
+            pInertiaDataLayout->addWidget(m_pfeYCoG,3,2);
+            pInertiaDataLayout->addWidget(m_pfeZCoG,4,2);
             pInertiaDataLayout->addWidget(plabLengthUnit1,2,3);
             pInertiaDataLayout->addWidget(plabLengthUnit2,3,3);
             pInertiaDataLayout->addWidget(plabLengthUnit3,4,3);

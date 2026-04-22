@@ -281,7 +281,7 @@ class XPlane : public QObject
         void onPlaneOppProperties();
         void onPlaneOppView();
         void onRenameCurPlane();
-        void onRenameCurWPolar();
+        void onRenameCurPlPolar();
         void onResetCurPlPolar();
         void onResetFuseMesh();
         void onResetWPolarCurves();

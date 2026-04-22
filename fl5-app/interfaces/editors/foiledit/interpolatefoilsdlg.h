@@ -75,7 +75,7 @@ class InterpolateFoilsDlg : public FoilDlg
         QComboBox *m_pcbFoil1, *m_pcbFoil2;
         QLabel *m_plabProps1, *m_plabProps2, *m_plabProps3;
         QSlider *m_pslMix;
-        FloatEdit *m_pdeFrac;
+        FloatEdit *m_pfeFrac;
 
     private:
         Foil *m_pFoil1, *m_pFoil2;

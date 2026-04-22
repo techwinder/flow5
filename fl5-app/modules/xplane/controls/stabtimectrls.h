@@ -66,8 +66,8 @@ class StabTimeCtrls : public QFrame
         void fillTimeCurve(PlaneOpp const*pPOpp, Curve **pCurve);
         void setMode(int iMode=-1);
 
-        double deltaT() const {return m_pdeDeltat->value();}
-        double totalTime() const {return m_pdeTotalTime->value();}
+        double deltaT() const {return m_pfeDeltat->value();}
+        double totalTime() const {return m_pfeTotalTime->value();}
 
         void loadSettings(QSettings &settings);
         void saveSettings(QSettings &settings);
@@ -112,8 +112,8 @@ class StabTimeCtrls : public QFrame
         QRadioButton *m_prbTimeMode[4];
 
         QLabel *m_plabStab1, *m_plabStab2, *m_plabStab3;
-        FloatEdit  *m_pdeStabVar1, *m_pdeStabVar2, *m_pdeStabVar3;
-        FloatEdit *m_pdeTotalTime, *m_pdeDeltat;
+        FloatEdit  *m_pfeStabVar1, *m_pfeStabVar2, *m_pfeStabVar3;
+        FloatEdit *m_pfeTotalTime, *m_pfeDeltat;
         QPushButton *m_ppbAddCurve;
 
         CPTableView *m_pcpCurveTable;

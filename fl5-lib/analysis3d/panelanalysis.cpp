@@ -74,11 +74,6 @@ PanelAnalysis::PanelAnalysis()
 
     m_pPolar3d = nullptr;
 
-    tmp_coreradius=0.0;
-    tmp_bWakeOnly=false;
-    tmp_Mu=nullptr;
-    tmp_Sigma=nullptr;
-
 }
 
 

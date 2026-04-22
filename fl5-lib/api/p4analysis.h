@@ -110,7 +110,7 @@ class FL5LIB_EXPORT P4Analysis : public PanelAnalysis
         void releasePanelArrays();
 
         void velocityVectorBlock(int iBlock, Vector3d const &C,
-                                             Vector3d *VT) const;
+                                 Vector3d *VT, const VelBlockData &data) const;
         void getDoubletDerivative(int p, const double *Mu, double &Cp, Vector3d &VTotl, const Vector3d &VInf) const;
 
         Vector3d trailingWakePoint(const Panel4 *pWakePanel) const;

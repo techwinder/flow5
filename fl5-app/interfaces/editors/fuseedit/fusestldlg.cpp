@@ -69,7 +69,7 @@ void FuseStlDlg::initDialog(Fuse *pFuse)
     m_pFuse = pFuseStl;
     m_pglFuseView->setFuse(m_pFuseStl);
 
-    m_pdeMaxEdgeLength->setValue(m_pFuseStl->maxElementSize()*Units::mtoUnit());
+    m_pfeMaxEdgeLength->setValue(m_pFuseStl->maxElementSize()*Units::mtoUnit());
     m_pieMaxPanelCount->setValue(AFMesher::maxPanelCount());
     updateProperties();
 }
@@ -119,11 +119,11 @@ void FuseStlDlg::setupLayout()
                                          "to triangular panels</p>");
                                 m_ppbRestoreDefaultMesh = new QPushButton(tr("Restore default mesh"));
                                 m_ppbRestoreDefaultMesh->setToolTip(tip);
-                                QLabel *pLabMaxEdgeLength = new QLabel(tr("Max. edge length"));
-                                pLabMaxEdgeLength->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+                                QLabel *plabMaxEdgeLength = new QLabel(tr("Max. edge length"));
+                                plabMaxEdgeLength->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
                                 QLabel *pLabUnit = new QLabel(Units::lengthUnitQLabel());
-                                m_pdeMaxEdgeLength = new FloatEdit;
-                                m_pdeMaxEdgeLength->setToolTip(tip);
+                                m_pfeMaxEdgeLength = new FloatEdit;
+                                m_pfeMaxEdgeLength->setToolTip(tip);
 
                                 QLabel *pLabMaxPanelCount = new QLabel(tr("Max. panel count"));
                                 pLabMaxPanelCount->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -131,8 +131,8 @@ void FuseStlDlg::setupLayout()
                                 m_pieMaxPanelCount = new IntEdit;
                                 m_pieMaxPanelCount->setToolTip(tip);
 
-                                pSplitLayout->addWidget(pLabMaxEdgeLength,1,1);
-                                pSplitLayout->addWidget(m_pdeMaxEdgeLength,1,2);
+                                pSplitLayout->addWidget(plabMaxEdgeLength,1,1);
+                                pSplitLayout->addWidget(m_pfeMaxEdgeLength,1,2);
                                 pSplitLayout->addWidget(pLabUnit,1,3);
                                 pSplitLayout->addWidget(pLabMaxPanelCount,2,1);
                                 pSplitLayout->addWidget(m_pieMaxPanelCount,2,2);
@@ -235,7 +235,7 @@ void FuseStlDlg::enableControls(bool )
 void FuseStlDlg::onSplitMeshPanels()
 {
     int maxpanels = m_pieMaxPanelCount->value();
-    double maxsize = m_pdeMaxEdgeLength->value()/Units::mtoUnit();
+    double maxsize = m_pfeMaxEdgeLength->value()/Units::mtoUnit();
 
     AFMesher::setMaxPanelCount(maxpanels);
     m_pFuseStl->setMaxElementSize(maxsize);

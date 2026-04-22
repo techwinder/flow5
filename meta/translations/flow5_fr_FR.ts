@@ -8941,6 +8941,11 @@ Import depuis un fichier binaire
         <translation>Choisir un fichier d&apos;image:</translation>
     </message>
     <message>
+        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="321"/>
+        <source>Default colour</source>
+        <translation>Couleur par défaut</translation>
+    </message>
+    <message>
         <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="325"/>
         <source>Background image</source>
         <translation>Image de fond</translation>
@@ -9171,11 +9176,6 @@ Import depuis un fichier binaire
         <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="313"/>
         <source>Background</source>
         <translation>Arrière-plan</translation>
-    </message>
-    <message>
-        <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="321"/>
-        <source>Uniform colour</source>
-        <translation>Couleur uniforme</translation>
     </message>
     <message>
         <location filename="../../fl5-app/interfaces/controls/w3dprefs.cpp" line="322"/>

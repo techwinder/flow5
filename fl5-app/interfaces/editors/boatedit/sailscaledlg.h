@@ -57,7 +57,7 @@ class SailScaleDlg : public QDialog
         QDialogButtonBox *m_pButtonBox;
 
         QCheckBox *m_pchScaleArea, *m_pchScaleAR, *m_pchTwist;
-        FloatEdit *m_pdeNewTwist, *m_pdeNewArea, *m_pdeNewAR;
+        FloatEdit *m_pfeNewTwist, *m_pfeNewArea, *m_pfeNewAR;
 
         QLabel *m_plabRefArea, *m_plabRefAR, *m_plabRefTwist;
         QLabel *m_plabAreaRatio,*m_plabARRatio, *m_plabTwistRatio;

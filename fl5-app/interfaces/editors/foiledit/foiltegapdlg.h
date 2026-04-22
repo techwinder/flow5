@@ -53,7 +53,7 @@ class FoilTEGapDlg : public FoilDlg
 
     private:
         QFrame * m_pOverlayFrame;
-        FloatEdit *m_pdeBlend, *m_pdeGap;
+        FloatEdit *m_pfeBlend, *m_pfeGap;
 
         static double s_BlendLength;
 };

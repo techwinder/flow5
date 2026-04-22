@@ -65,9 +65,9 @@ void SailScaleDlg::setupLayout()
         m_pchScaleAR   = new QCheckBox("Aspect ratio");
         m_pchTwist = new QCheckBox("Twist");
 
-        m_pdeNewArea  = new FloatEdit;
-        m_pdeNewAR    = new FloatEdit;
-        m_pdeNewTwist = new FloatEdit;
+        m_pfeNewArea  = new FloatEdit;
+        m_pfeNewAR    = new FloatEdit;
+        m_pfeNewTwist = new FloatEdit;
 
         m_plabRefArea  = new QLabel("0.000");
         m_plabRefAR    = new QLabel("0.000");
@@ -94,18 +94,18 @@ void SailScaleDlg::setupLayout()
 
         pScaleLayout->addWidget(m_pchScaleArea,  2,1);
         pScaleLayout->addWidget(m_plabRefArea,   2,2);
-        pScaleLayout->addWidget(m_pdeNewArea,    2,3);
+        pScaleLayout->addWidget(m_pfeNewArea,    2,3);
         pScaleLayout->addWidget(pAreaUnit,       2,4);
         pScaleLayout->addWidget(m_plabAreaRatio, 2,5);
 
         pScaleLayout->addWidget(m_pchScaleAR,    3,1);
         pScaleLayout->addWidget(m_plabRefAR,     3,2);
-        pScaleLayout->addWidget(m_pdeNewAR,      3,3);
+        pScaleLayout->addWidget(m_pfeNewAR,      3,3);
         pScaleLayout->addWidget(m_plabARRatio,   3,5);
 
         pScaleLayout->addWidget(m_pchTwist,      4,1);
         pScaleLayout->addWidget(m_plabRefTwist,  4,2);
-        pScaleLayout->addWidget(m_pdeNewTwist,   4,3);
+        pScaleLayout->addWidget(m_pfeNewTwist,   4,3);
         pScaleLayout->addWidget(plabDegree,      4,4);
         pScaleLayout->addWidget(m_plabTwistRatio,4,5);
 
@@ -131,9 +131,9 @@ void SailScaleDlg::setupLayout()
     connect(m_pchScaleArea, SIGNAL(clicked()),         SLOT(onClickedCheckBox()));
     connect(m_pchScaleAR,   SIGNAL(clicked()),         SLOT(onClickedCheckBox()));
 
-    connect(m_pdeNewArea,   SIGNAL(editingFinished()), SLOT(onEditingFinished()));
-    connect(m_pdeNewAR,     SIGNAL(editingFinished()), SLOT(onEditingFinished()));
-    connect(m_pdeNewTwist,  SIGNAL(editingFinished()), SLOT(onEditingFinished()));
+    connect(m_pfeNewArea,   SIGNAL(editingFinished()), SLOT(onEditingFinished()));
+    connect(m_pfeNewAR,     SIGNAL(editingFinished()), SLOT(onEditingFinished()));
+    connect(m_pfeNewTwist,  SIGNAL(editingFinished()), SLOT(onEditingFinished()));
 }
 
 
@@ -198,9 +198,9 @@ void SailScaleDlg::initDialog(Sail *pSail)
     strong = QString ("%1").arg(m_RefAR , 8,'f',3);
     m_plabRefAR->setText(strong);
 
-    m_pdeNewArea->setValue(m_NewArea*Units::m2toUnit());
-    m_pdeNewAR->setValue(m_NewAR);
-    m_pdeNewTwist->setValue(m_NewTwist);
+    m_pfeNewArea->setValue(m_NewArea*Units::m2toUnit());
+    m_pfeNewAR->setValue(m_NewAR);
+    m_pfeNewTwist->setValue(m_NewTwist);
 
     setResults();
     enableControls();
@@ -230,9 +230,9 @@ void SailScaleDlg::onEditingFinished()
 
 void SailScaleDlg::enableControls()
 {
-    m_pdeNewArea->setEnabled(m_bArea);
-    m_pdeNewAR->setEnabled(m_bAR);
-    m_pdeNewTwist->setEnabled(m_bTwist);
+    m_pfeNewArea->setEnabled(m_bArea);
+    m_pfeNewAR->setEnabled(m_bAR);
+    m_pfeNewTwist->setEnabled(m_bTwist);
 }
 
 
@@ -242,9 +242,9 @@ void SailScaleDlg::readData()
     m_bArea  = m_pchScaleArea->isChecked();
     m_bAR    = m_pchScaleAR->isChecked();
 
-    m_NewTwist = m_pdeNewTwist->value();
-    m_NewArea  = m_pdeNewArea->value() /Units::m2toUnit();
-    m_NewAR    = m_pdeNewAR->value();
+    m_NewTwist = m_pfeNewTwist->value();
+    m_NewArea  = m_pfeNewArea->value() /Units::m2toUnit();
+    m_NewAR    = m_pfeNewAR->value();
 }
 
 

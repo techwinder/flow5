@@ -176,7 +176,6 @@ class W3dPrefs : public QWidget
 
         FloatEdit *m_pfeArcballRadius;
 
-        QCheckBox *m_pchGround;
         ColorBtn *m_pcbWaterColor;
         FloatEdit *m_pfeBoxX, *m_pfeBoxY;
         QLabel *m_plabXUnit, *m_plabYUnit;
@@ -241,7 +240,6 @@ class W3dPrefs : public QWidget
         static int s_iBodyAxialRes;
         static int s_iBodyHoopRes;
 
-        static bool s_bShowGround;
         static QColor s_WaterColor;
         static double s_BoxX, s_BoxY;
 

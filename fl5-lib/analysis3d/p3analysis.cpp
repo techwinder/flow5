@@ -224,10 +224,12 @@ void P3Analysis::getVelocityVector(Vector3d const &C,
                                    double const *Mu, double const *Sigma,
                                    Vector3d &VT, double coreradius, bool bWakeOnly, bool bMultiThread) const
 {
-    tmp_coreradius = coreradius;
-    tmp_bWakeOnly = bWakeOnly;
-    tmp_Mu = Mu;
-    tmp_Sigma = Sigma;
+    VelBlockData data;
+    data.coreradius = coreradius;
+    data.bWakeOnly = bWakeOnly;
+    data.Mu = Mu;
+    data.Sigma = Sigma;
+
 
     std::vector<Vector3d> VBlock(m_nBlocks);
 
@@ -237,7 +239,7 @@ void P3Analysis::getVelocityVector(Vector3d const &C,
 
         for(int iBlock=0; iBlock<m_nBlocks; iBlock++)
         {
-            threads.push_back(std::thread(&P3Analysis::velocityVectorBlock, this, iBlock, C, &VBlock[iBlock]));
+            threads.push_back(std::thread(&P3Analysis::velocityVectorBlock, this, iBlock, C, &VBlock[iBlock], data));
         }
 
         for(int iBlock=0; iBlock<m_nBlocks; iBlock++)
@@ -250,7 +252,7 @@ void P3Analysis::getVelocityVector(Vector3d const &C,
     {
         for(int iBlock=0; iBlock<m_nBlocks; iBlock++)
         {
-            velocityVectorBlock(iBlock, C, &VBlock[iBlock]);
+            velocityVectorBlock(iBlock, C, &VBlock[iBlock], data);
         }
     }
 
@@ -268,7 +270,7 @@ void P3Analysis::getVelocityVector(Vector3d const &C,
 }
 
 
-void P3Analysis::velocityVectorBlock(int iBlock, Vector3d const &C, Vector3d *VT) const
+void P3Analysis::velocityVectorBlock(int iBlock, Vector3d const &C, Vector3d *VT, VelBlockData const &data) const
 {
     int blockSize = int(nPanels()/m_nBlocks) +1;
     int iStart = iBlock*blockSize;
@@ -282,18 +284,18 @@ void P3Analysis::velocityVectorBlock(int iBlock, Vector3d const &C, Vector3d *VT
     {
         Panel3 const &p3 = m_Panel3.at(i3);
 
-        if(!tmp_bWakeOnly)
+        if(!data.bWakeOnly)
         {
-            if(tmp_Sigma && fabs(tmp_Sigma[i3])>0.0)
+            if(data.Sigma && fabs(data.Sigma[i3])>0.0)
             {
                 getSourceInfluence(m_pPolar3d, C, p3, C.isSame(p3.CoG()), &Vs, nullptr);
-                *VT += Vs * tmp_Sigma[i3];
+                *VT += Vs * data.Sigma[i3];
             }
 
-            getDoubletInfluence(C, p3, Vd, nullptr, tmp_coreradius, true);
-            VT->x += Vd[0].x*tmp_Mu[3*i3+0] + Vd[1].x*tmp_Mu[3*i3+1] + Vd[2].x*tmp_Mu[3*i3+2];
-            VT->y += Vd[0].y*tmp_Mu[3*i3+0] + Vd[1].y*tmp_Mu[3*i3+1] + Vd[2].y*tmp_Mu[3*i3+2];
-            VT->z += Vd[0].z*tmp_Mu[3*i3+0] + Vd[1].z*tmp_Mu[3*i3+1] + Vd[2].z*tmp_Mu[3*i3+2];
+            getDoubletInfluence(C, p3, Vd, nullptr, data.coreradius, true);
+            VT->x += Vd[0].x*data.Mu[3*i3+0] + Vd[1].x*data.Mu[3*i3+1] + Vd[2].x*data.Mu[3*i3+2];
+            VT->y += Vd[0].y*data.Mu[3*i3+0] + Vd[1].y*data.Mu[3*i3+1] + Vd[2].y*data.Mu[3*i3+2];
+            VT->z += Vd[0].z*data.Mu[3*i3+0] + Vd[1].z*data.Mu[3*i3+1] + Vd[2].z*data.Mu[3*i3+2];
 
         }
 
@@ -310,13 +312,13 @@ void P3Analysis::velocityVectorBlock(int iBlock, Vector3d const &C, Vector3d *VT
 
             // whether p3 is on the left or right wing, node 1 is its left trailing node and node 2 is its right trailing node
             //Mu3[3*i3+1] is the doublet density at the wing's panel left trailing node, and Mu3[3*i3+3] at the right trailing node
-            double mu3left  = tmp_Mu[3*i3+1];
-            double mu3right = tmp_Mu[3*i3+2];
+            double mu3left  = data.Mu[3*i3+1];
+            double mu3right = data.Mu[3*i3+2];
 
             while(p3w)
             {
                 // do not use RFF approximation for wake panels?
-                getDoubletInfluence(C, *p3w, Vd, nullptr, tmp_coreradius, false);
+                getDoubletInfluence(C, *p3w, Vd, nullptr, data.coreradius, false);
 
                 if(p3w->isLeftSidePanel())
                 {

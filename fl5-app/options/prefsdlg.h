@@ -138,7 +138,7 @@ class PrefsDlg : public QDialog
         QLabel *m_plabLocalOutput;
         QComboBox *m_pcbLanguage;
 
-        FloatEdit *m_pdeScaleFactor;
+        FloatEdit *m_pfeScaleFactor;
         IntEdit *m_pieIconSize;
 
         QComboBox *m_pcbStyles;

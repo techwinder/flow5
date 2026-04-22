@@ -67,7 +67,7 @@ class FuseStlDlg : public FuseDlg
     private:
         QPushButton *m_ppbSplitTriangles, *m_ppbRestoreDefaultMesh;
 
-        FloatEdit *m_pdeMaxEdgeLength;
+        FloatEdit *m_pfeMaxEdgeLength;
         IntEdit *m_pieMaxPanelCount;
 
         PlainTextOutput *m_pptoOutput;

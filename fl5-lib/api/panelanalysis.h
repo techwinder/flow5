@@ -38,6 +38,16 @@ class Panel;
 class StabDerivatives;
 class Vortex;
 
+
+struct VelBlockData
+{
+    double coreradius = 0.0;
+    bool bWakeOnly = false;
+    double const *Mu = nullptr;
+    double const *Sigma = nullptr;
+};
+
+
 class FL5LIB_EXPORT PanelAnalysis
 {
     friend class  Task3d;
@@ -188,10 +198,6 @@ class FL5LIB_EXPORT PanelAnalysis
         static bool s_bMultiThread;
         static int s_MaxThreads;
 
-        mutable double const *tmp_Mu;
-        mutable double const *tmp_Sigma;
-        mutable double tmp_coreradius;
-        mutable bool tmp_bWakeOnly;
 
     public:
         static std::vector<Vector3d> s_DebugPts;

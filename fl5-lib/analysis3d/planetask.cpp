@@ -40,7 +40,7 @@
 #elif defined INTEL_MKL
     #include <mkl.h>
 #elif defined OPENBLAS
-#include <openblas/lapack.h>
+    #include <openblas/lapack.h>
 #endif
 
 
@@ -275,7 +275,7 @@ bool PlaneTask::initializeTask()
         }
         case xfl::EXTERNALPOLAR:
         {
-            traceStdLog("External polars are not available for analysis\n");
+            traceStdLog("External polars are not available for calculation\n");
             return false;
         }
         case xfl::T1POLAR:
@@ -295,21 +295,24 @@ bool PlaneTask::initializeTask()
 
             auto start = std::chrono::system_clock::now();
 
-            traceStdLog("Connecting triangular panels...");
-
-            if(!m_pPlane->connectTriMesh(true, false, true))
+            if(m_pPlPolar->isTriangleMethod())
             {
-                strange = "\n   Error making trailing edge connections -- aborting.\n\n";
+
+                traceStdLog("Connecting triangular panels...");
+
+                if(!m_pPlane->connectTriMesh(true, false, true))
+                {
+                    strange = "\n   Error making trailing edge connections -- aborting.\n\n";
+                    traceLog(strange);
+                    m_bError = true;
+                    return false;
+                }
+
+                auto end = std::chrono::system_clock::now();
+                int duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+                strange = QString::asprintf("   done in %.3f s\n", double(duration)/1000.0);
                 traceLog(strange);
-                m_bError = true;
-                return false;
             }
-
-            auto end = std::chrono::system_clock::now();
-            int duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-            strange = QString::asprintf("   done in %.3f s\n", double(duration)/1000.0);
-            traceLog(strange);
-
 
             if(fabs(m_pPlPolar->phi())>AOAPRECISION)
             {
@@ -1355,15 +1358,15 @@ PlaneOpp* PlaneTask::computePlane(double ctrl, double alpha, double beta, double
 
         if(s_bCancel) return nullptr;
 
-        if(m_pPlPolar->isViscInterpolated())
-            traceStdLog("          Adding interpolated viscous drag...\n");
-        else
-            traceStdLog("          Calculating XFoil viscous drag on the fly...\n");
-
         iStation = 0;
 
         if(m_pPlPolar->isViscous())
         {
+            if(m_pPlPolar->isViscInterpolated())
+                traceStdLog("          Adding interpolated viscous drag...\n");
+            else
+                traceStdLog("          Calculating XFoil viscous drag on the fly...\n");
+
             for(int iw=0; iw<nWings; iw++)
             {
                 WingXfl *pWing = pPlaneXfl->wing(iw);
@@ -2112,16 +2115,26 @@ bool PlaneTask::T123458Loop()
 
         traceLog(outstring);
 
-        traceStdLog("       Creating source strengths...\n");
-        m_pPA->makeSourceStrengths(objects::windDirection(m_Alpha, m_Beta));
+        if(!m_pPlPolar->isVLM())
+        {
+            traceStdLog("       Creating source strengths...\n");
+            m_pPA->makeSourceStrengths(objects::windDirection(m_Alpha, m_Beta));
+        }
 
-        traceStdLog("       Calculating doublet strengths...\n");
+        if(m_pPlPolar->isVLM())
+            traceStdLog("       Calculating vortex circulations...\n");
+        else
+            traceStdLog("       Calculating doublet strengths...\n");
+
         m_pPA->makeUnitDoubletStrengths(m_Alpha, m_Beta);
+
 
         traceStdLog("       Calculating far field forces...\n");
 
         computeInducedForces(m_Alpha, m_Beta, 1.0);
+
         computeInducedDrag(  m_Alpha, m_Beta, 1.0);
+
 
         if(m_pPlPolar->isType1() || m_pPlPolar->isType5())
         {

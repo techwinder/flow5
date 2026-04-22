@@ -50,7 +50,7 @@ InterpolateFoilsDlg::InterpolateFoilsDlg(QWidget *pParent) : FoilDlg(pParent)
 
     connect(m_pcbFoil1,     SIGNAL(activated(int)),       SLOT(onSelChangeFoil1(int)));
     connect(m_pcbFoil2,     SIGNAL(activated(int)),       SLOT(onSelChangeFoil2(int)));
-    connect(m_pdeFrac,      SIGNAL(floatChanged(float)),  SLOT(onFrac()));
+    connect(m_pfeFrac,      SIGNAL(floatChanged(float)),  SLOT(onFrac()));
     connect(m_pslMix,       SIGNAL(sliderMoved(int)),     SLOT(onSlider(int)));
 }
 
@@ -119,7 +119,7 @@ void InterpolateFoilsDlg::setupLayout()
 
             QHBoxLayout *pSliderLayout = new QHBoxLayout;
             {
-                m_pdeFrac = new FloatEdit;
+                m_pfeFrac = new FloatEdit;
                 QLabel *pLab = new QLabel("%");
                 m_pslMix = new QSlider(Qt::Horizontal);
                 m_pslMix->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum));
@@ -127,7 +127,7 @@ void InterpolateFoilsDlg::setupLayout()
                 m_pslMix->setMaximum(SLIDERSCALE);
                 m_pslMix->setTickInterval(SLIDERSCALE/10);
                 m_pslMix->setTickPosition(QSlider::TicksBelow);
-                pSliderLayout->addWidget(m_pdeFrac);
+                pSliderLayout->addWidget(m_pfeFrac);
                 pSliderLayout->addWidget(pLab);
                 pSliderLayout->addWidget(m_pslMix);
             }
@@ -163,7 +163,7 @@ void InterpolateFoilsDlg::initDialogFoils()
     m_pcbFoil2->setCurrentIndex(1);
 
     m_Frac = 50.0;
-    m_pdeFrac->setValue(50);
+    m_pfeFrac->setValue(50);
     m_pslMix->setSliderPosition(SLIDERSCALE/2);
 
     m_pcbFoil1->setCurrentIndex(0);
@@ -243,7 +243,7 @@ void InterpolateFoilsDlg::showSelectedFoils()
 
 void InterpolateFoilsDlg::onFrac()
 {
-    m_Frac = m_pdeFrac->value();
+    m_Frac = m_pfeFrac->value();
     m_pslMix->setSliderPosition(int(m_Frac/100.0*SLIDERSCALE));
     m_Frac = 100.0 - m_Frac;
 
@@ -255,7 +255,7 @@ void InterpolateFoilsDlg::onSlider(int val)
 {
     val = m_pslMix->sliderPosition();
     m_Frac = double(val)/SLIDERSCALE*100.0;
-    m_pdeFrac->setValue(m_Frac);
+    m_pfeFrac->setValue(m_Frac);
     onApply();
 }
 

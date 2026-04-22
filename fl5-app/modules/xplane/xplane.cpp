@@ -587,6 +587,8 @@ void XPlane::setControls(bool bVisibilityOnly)
     if(bVisibilityOnly) return;
 
     if(isStabTimeView()) m_pStabTimeControls->setControls(); // lengthy
+
+    m_pAnalysisControls->setAnalysisRange();
     m_pAnalysisControls->onSetControls();
     m_pPOpp3dCtrls->setControls();
 
@@ -1457,7 +1459,7 @@ void XPlane::keyPressEvent(QKeyEvent *pEvent)
         {
             if(bShift)
             {
-                onRenameCurWPolar();
+                onRenameCurPlPolar();
             }
             else if(bCtrl)
             {
@@ -1465,7 +1467,7 @@ void XPlane::keyPressEvent(QKeyEvent *pEvent)
             else
             {
                 if     (m_pPlaneExplorer->isPlaneSelected())  onRenameCurPlane();
-                else if(m_pPlaneExplorer->isWPolarSelected()) onRenameCurWPolar();
+                else if(m_pPlaneExplorer->isWPolarSelected()) onRenameCurPlPolar();
             }
             break;
         }
@@ -3893,7 +3895,7 @@ void XPlane::onEditCurPlPolar()
 
 
 
-void XPlane::onRenameCurWPolar()
+void XPlane::onRenameCurPlPolar()
 {
     if(!m_pCurPlPolar) return;
     if(!m_pCurPlane) return;
@@ -4966,7 +4968,6 @@ void XPlane::setPolar(PlanePolar *pPlPolar)
 
     m_pgl3dXPlaneView->resetglMesh();
     m_bResetCurves = true;
-
 }
 
 

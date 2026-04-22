@@ -175,6 +175,11 @@ void Polar3dDlg::makeBaseCommonControls()
                     QLabel*plabVLM2   = new QLabel(tr("(VLM2) (Fuselage panels will be ignored)"));
                     QLabel*plabTriUni = new QLabel(tr("(Recommended method)"));
 
+                    QLabel *pFlow5Link = new QLabel;
+                    pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Analysis/Methods.html>https://flow5.tech/docs/flow5_doc/Analysis/Methods.html</a>");
+                    pFlow5Link->setOpenExternalLinks(true);
+                    pFlow5Link->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
+                    pFlow5Link->setAlignment(Qt::AlignVCenter| Qt::AlignLeft);
 
                     pPanelMethodLayout->addWidget(m_prbLLTMethod,     1, 1);
                     pPanelMethodLayout->addWidget(m_prbVLM1Method,    2, 1);
@@ -187,6 +192,10 @@ void Polar3dDlg::makeBaseCommonControls()
                     pPanelMethodLayout->addWidget(plabVLM1,           2, 2);
                     pPanelMethodLayout->addWidget(plabVLM2,           3, 2);
                     pPanelMethodLayout->addWidget(plabTriUni,         5, 2);
+
+                    pPanelMethodLayout->addWidget(pFlow5Link,         7, 1, 1, 2);
+
+
                     pPanelMethodLayout->setColumnStretch(1,1);
                     pPanelMethodLayout->setColumnStretch(2,1);
                     pPanelMethodLayout->setColumnStretch(3,2);

@@ -70,9 +70,9 @@ class BodyScaleDlg : public QDialog
 
 
         QRadioButton *m_prbBody, *m_prbFrame;
-        FloatEdit *m_pdeXScaleFactor;
-        FloatEdit *m_pdeYScaleFactor;
-        FloatEdit *m_pdeZScaleFactor;
+        FloatEdit *m_pfeXScaleFactor;
+        FloatEdit *m_pfeYScaleFactor;
+        FloatEdit *m_pfeZScaleFactor;
         IntEdit *m_pieFrameID;
 
 

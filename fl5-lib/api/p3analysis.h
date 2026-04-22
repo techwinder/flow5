@@ -96,7 +96,7 @@ class FL5LIB_EXPORT P3Analysis : public PanelAnalysis
 
         void getVelocityVector(Vector3d const &C, double const *Mu, double const *Sigma, Vector3d &VT, double coreradius, bool bWakeOnly, bool bMultiThread) const override;
 
-        void velocityVectorBlock(int iBlock, Vector3d const &C, Vector3d *VT) const;
+        void velocityVectorBlock(int iBlock, Vector3d const &C, Vector3d *VT, const VelBlockData &data) const;
         void getFarFieldVelocity(const Vector3d &C, const std::vector<Panel3> &panel3, const double *Mu, Vector3d &VT, double coreradius) const;
         void getDebugPotential(Vector3d const &C, bool bSelf, const double *Mu, const double *Sigma, double &phi, bool bSource=true, bool bDoublet=true, bool bWake=true) const;
 

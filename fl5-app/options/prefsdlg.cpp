@@ -270,15 +270,15 @@ void PrefsDlg::setupLayout()
 #endif
                     QHBoxLayout *pScaleLayout = new QHBoxLayout;
                     {
-                        QLabel *pLabMouseWheel = new QLabel(tr("Mouse wheel scale factor:"));
-                        m_pdeScaleFactor = new FloatEdit;
-                        m_pdeScaleFactor->setToolTip(tr("Define the percentage increase by which the views should be zoomed in or out\n"
+                        QLabel *plabMouseWheel = new QLabel(tr("Mouse wheel scale factor:"));
+                        m_pfeScaleFactor = new FloatEdit;
+                        m_pfeScaleFactor->setToolTip(tr("Define the percentage increase by which the views should be zoomed in or out\n"
                                                      "when using the mouse wheel."));
-                        QLabel *pLabComment = new QLabel(tr("%; Set a negative value to reverse the direction"));
+                        QLabel *plabComment = new QLabel(tr("%; Set a negative value to reverse the direction"));
 
-                        pScaleLayout->addWidget(pLabMouseWheel);
-                        pScaleLayout->addWidget(m_pdeScaleFactor);
-                        pScaleLayout->addWidget(pLabComment);
+                        pScaleLayout->addWidget(plabMouseWheel);
+                        pScaleLayout->addWidget(m_pfeScaleFactor);
+                        pScaleLayout->addWidget(plabComment);
 
                         pScaleLayout->addStretch();
                     }
@@ -297,10 +297,10 @@ void PrefsDlg::setupLayout()
                 {
                     QLabel *plabLang = new QLabel(tr("Language:"));
                     m_pcbLanguage = new QComboBox;
-                    m_pcbLanguage->addItem(tr("System"));
-                    m_pcbLanguage->addItem(tr("Chinese"));
-                    m_pcbLanguage->addItem(tr("English"));
-                    m_pcbLanguage->addItem(tr("French"));
+                    m_pcbLanguage->addItem("System");
+                    m_pcbLanguage->addItem("Chinese");
+                    m_pcbLanguage->addItem("English");
+                    m_pcbLanguage->addItem("French");
                     m_pchLocale = new QCheckBox(tr("Use locale settings for number formatting"));
                     m_plabLocalOutput = new QLabel("1.23456\n10,000");
                     
@@ -460,7 +460,7 @@ void PrefsDlg::initWidgets()
     m_pcbLanguage->setCurrentIndex(langIndex);
 
     m_pchDontUseNativeMacDlg->setChecked(xfl::dontUseNativeMacDlg());
-    m_pdeScaleFactor->setValue(DisplayOptions::scaleFactor()*100.0);
+    m_pfeScaleFactor->setValue(DisplayOptions::scaleFactor()*100.0);
     m_pieIconSize->setValue(DisplayOptions::iconSize());
 
     m_pUnitsWt->initWidget();
@@ -576,7 +576,7 @@ void PrefsDlg::saveSettings(QSettings &settings)
 
 void PrefsDlg::readData()
 {
-    DisplayOptions::setScaleFactor(m_pdeScaleFactor->value()/100.0);
+    DisplayOptions::setScaleFactor(m_pfeScaleFactor->value()/100.0);
     DisplayOptions::setIconSize(m_pieIconSize->value());
     xfl::setLocalized(m_pchLocale->isChecked());
     xfl::setDontUseNativeColorDlg(m_pchDontUseNativeMacDlg->isChecked());

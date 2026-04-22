@@ -1122,6 +1122,8 @@ void PlaneXflDlg::onInsertFuseOcc()
     QApplication::setOverrideCursor(Qt::WaitCursor);
     bool bImport = occ::importCADShapes(filename.toStdString(), pFuseOcc->shapes(), dimension, str);
 
+    updateStdOutput(str+"\n");
+
     if(!bImport)
     {
         delete pFuseOcc;
@@ -1131,7 +1133,6 @@ void PlaneXflDlg::onInsertFuseOcc()
         QApplication::restoreOverrideCursor();
         return;
     }
-    updateStdOutput(str+"\n");
 
     m_pPlaneXfl->addFuse(pFuseOcc);
 
