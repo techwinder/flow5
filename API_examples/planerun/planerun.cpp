@@ -68,7 +68,6 @@ int main()
     pFoilN2413->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
 
 
-
     // Create and define a new xfl-type plane
     PlaneXfl* pPlaneXfl = new PlaneXfl;
     {
@@ -77,27 +76,52 @@ int main()
 
         // We insert the plane = store the pointer
         // This ensures that the heap memory will not be lost and will be released properly
-        // This should be done after the plane has been given a name so that it may be
-        // inserted in alphabetical order
+        // This should be done after the plane has been given a name
         Objects3d::insertPlane(pPlaneXfl);
 
         // set the style for this plane's children objects, i.e. polars and operating points
         pPlaneXfl->setTheStyle({true, Line::SOLID, 2, {71, 171, 231}, Line::NOSYMBOL});
 
         // Build the default plane, i.e. the one displayed by default in the plane editor
-        // Could also build from scratch
-        pPlaneXfl->makeDefaultPlane();
+        // pPlaneXfl->makeDefaultPlane();
+
+        // Build from scratch
+        WingXfl *pWing = pPlaneXfl->addWing();
+        pWing->setName("Main wing");
+        pWing->makeDefaultWing();
+        //        pWing->computeGeometry();
+
+        pWing = pPlaneXfl->addWing();
+        pWing->setName("Elevator");
+        pWing->makeDefaultStab();
+        //        pWing->computeGeometry();
+
+        pWing = pPlaneXfl->addWing();
+        pWing->setName("Fin");
+        pWing->makeDefaultFin();
+        //        pWing->computeGeometry();
+
+        //position the mainwing
+        pPlaneXfl->wing(0)->setPosition(0.400, 0.000, 0.000);
+
+        //position the elevator
+        pPlaneXfl->wing(1)->setPosition(1.350, 0.000, 0.025);
+        pPlaneXfl->wing(1)->setRy(-1.5);
+
+        //position the fin
+        pPlaneXfl->wing(2)->setPosition(1.350, 0.000, 0.050);
+        pPlaneXfl->wing(2)->setRx(-90.0);
+
 
         // Set the inertia properties
-        // All units must be provided in I.S. standard, i.e. meters and kg
-        // Get a reference to the plane's inertia for ease of access
+        // All units must be provided in I.S. standard, i.e. meters ang kg
         Inertia &inertia = pPlaneXfl->inertia();
-        inertia.appendPointMass(0.20, {-0.35,0,0},  "Nose lead");
+        inertia.appendPointMass(0.30, {-0.35,0,0},  "Nose lead");
         inertia.appendPointMass(0.20, {-0.25,0,0},  "Battery and receiver");
         inertia.appendPointMass(0.10, {-0.05,0,0},  "Two servos");
-        inertia.appendPointMass(0.15, {-0.20,0,0},  "Fuse fore");
-        inertia.appendPointMass(0.30, { 0.40,0,0},  "Fuse mid");
-        inertia.appendPointMass(0.10, { 0.70,0,0},  "Fuse aft");
+        inertia.appendPointMass(0.35, {-0.20,0,0},  "Fuse fore");
+        inertia.appendPointMass(0.50, { 0.30,0,0},  "Fuse mid");
+        inertia.appendPointMass(0.20, { 0.65,0,0},  "Fuse aft");
 
         // Define the main wing
         {
@@ -107,7 +131,7 @@ int main()
 
             // Get a ref to the wing's inertia properties
             Inertia &inertia = mainwing.inertia();
-            inertia.setStructuralMass(0.25);
+            inertia.setStructuralMass(0.55);
             inertia.appendPointMass({0.03, {0.13,  0.15, 0.03}, "Right flap servo" });
             inertia.appendPointMass({0.03, {0.13, -0.15, 0.03}, "Left flap servo" });
             inertia.appendPointMass({0.03, {0.13,  0.95, 0.08}, "Right aileron servo" });
@@ -136,24 +160,25 @@ int main()
 
             //root section
             WingSection &sec0 = mainwing.rootSection(); // or mainwing.section(0);
-            sec0.setDihedral(3.5); // degrees
-            sec0.setChord(0.27);   // meters
+            sec0.setDihedral(3.5);
+            sec0.setChord(0.25);
             sec0.setNY(13);
             sec0.setYDistType(xfl::UNIFORM);
 
             // mid section
             WingSection &sec1 = mainwing.section(1);
             sec1.setXOffset(0.03); // the offset in the X direction
-            sec1.setDihedral(7.5); // degrees
-            sec1.setYPosition(0.9);  // meters
-            sec1.setChord(0.21);
+            sec1.setDihedral(7.5);
+            sec1.setYPosition(0.75);
+            sec1.setChord(0.200);
             sec1.setTwist(-2.5); // degrees
             sec1.setNY(19);
             sec1.setYDistType(xfl::INV_EXP); // moderate panel concentration at wing tip
 
             // tip section
             WingSection &sec2 = mainwing.tipSection(); // or mainwing.section(2);
-            sec2.setYPosition(1.47);  // meters
+            sec2.setYPosition(1.47);
+            sec2.setXOffset(0.065); // the offset in the X direction
             sec2.setChord(0.13);
             sec2.setTwist(-3.5); // degrees
         }
@@ -193,7 +218,7 @@ int main()
         {
             // get a convenience reference or a pointer for ease of access
             WingXfl &fin = *pPlaneXfl->fin();
-        //    WingXfl *pFin = pPlaneXfl->fin(); // or pPlaneXfl->wing(2);
+            //    WingXfl *pFin = pPlaneXfl->fin(); // or pPlaneXfl->wing(2);
 
             fin.inertia().setStructuralMass(0.035);
 

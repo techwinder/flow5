@@ -8,8 +8,8 @@ TEMPLATE = subdirs
 
 SUBDIRS = \
     XFoil-lib \
-    fl5-lib \
-    fl5-app \
+    flow5-lib \
+    flow5-app \
 
 
 TRANSLATIONS = meta/translations/flow5_zh_CN.ts \

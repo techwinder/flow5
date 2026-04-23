@@ -38,8 +38,8 @@ INCLUDEPATH += $$PWD/../XFoil-lib/
 
 
 #The path to the libraries' header files required by the code at compile time
-INCLUDEPATH += $$PWD/../fl5-lib/
-INCLUDEPATH += $$PWD/../fl5-lib/api
+INCLUDEPATH += $$PWD/../flow5-lib/
+INCLUDEPATH += $$PWD/../flow5-lib/api
 
 
 
@@ -62,7 +62,8 @@ linux-g++ {
     target.path = $$BINDIR
 
     # MAKE INSTALL
-    INSTALLS += target desktop icon128 translations
+    # .desktop file sould be added manually to desktop.path otherwise will have root as owner
+    INSTALLS += target icon128 translations
 
     #comment out to use OpenBLAS
 #    CONFIG += INTEL_MKL
@@ -191,13 +192,13 @@ macx {
     XFoil.path = Contents/Frameworks
     QMAKE_BUNDLE_DATA += XFoil
 
-    #-------fl5-lib
+    #-------flow5-lib
     # link to the lib:
-    LIBS += -L$$OUT_PWD/../fl5-lib -lfl5-lib
+    LIBS += -L$$OUT_PWD/../flow5-lib -lflow5-lib
     # deploy the libs:
-    fl5-lib.files = $$OUT_PWD/../fl5-lib/libfl5-lib.1.dylib
-    fl5-lib.path = Contents/Frameworks
-    QMAKE_BUNDLE_DATA += fl5-lib
+    flow5-lib.files = $$OUT_PWD/../flow5-lib/libflow5-lib.1.dylib
+    flow5-lib.path = Contents/Frameworks
+    QMAKE_BUNDLE_DATA += flow5-lib
 
 
     #-------------OPENCASCADE -----------------
@@ -223,7 +224,7 @@ macx {
 
 
 
-include(fl5-app.pri)
+include(flow5-app.pri)
 
 
 
@@ -235,7 +236,7 @@ RESOURCES += \
 
 
 
-LIBS += -L../fl5-lib -lfl5-lib
+LIBS += -L../flow5-lib -lflow5-lib
 
 LIBS += \
     -lTKBRep \

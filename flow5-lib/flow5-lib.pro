@@ -4,7 +4,7 @@
 
 QT -= gui  # not using QColor
 
-TARGET = fl5-lib
+TARGET = flow5-lib
 
 TEMPLATE = lib
 DEFINES += FL5LIB_LIBRARY
@@ -169,7 +169,7 @@ macx {
 
 
 
-include (fl5-lib.pri)
+include (flow5-lib.pri)
 
 
 

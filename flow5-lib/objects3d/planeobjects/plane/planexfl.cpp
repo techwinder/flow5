@@ -78,11 +78,8 @@ void PlaneXfl::makeDefaultPlane()
 
     clearFuse();
 
-
     m_Wing.clear();
     for(int iw=0; iw<NWings; iw++) addWing();
-
-    makeUniqueIndexList();
 
     m_Wing[0].setName("Main wing");
     m_Wing[0].makeDefaultWing();
