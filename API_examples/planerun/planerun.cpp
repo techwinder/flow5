@@ -13,6 +13,7 @@
 #include <planexfl.h>
 #include <polar.h>
 #include <xfoiltask.h>
+#include <planepolarnamemaker.h>
 
 
 
@@ -24,49 +25,35 @@ int main()
     // flow5 objects, i.e. foils, planes, boats and their polar and opp children
     // should always be allocated on the heap
 
-    // makeNacaFoil has been deprecated in v7.55;
-//    Foil *pFoilN2413 = foil::makeNacaFoil(2413, "NACA 2413");
-//    Foil *pFoilN0009 = foil::makeNacaFoil(9,    "NACA 0009");
-
-    // Using seperate methods for creating and storing
-    // Create
-    Foil *pFoilN2413 = new Foil;
-    if(!Objects2d::makeNacaFoil(pFoilN2413, 2413, 200))
+    Foil *pFoilN2413 = foil::makeNacaFoil(2413, "NACA 2413");
+    Foil *pFoilN0009 = foil::makeNacaFoil(9,    "NACA 0009");
     {
-        delete pFoilN2413;
-        return 0;
+        if(!pFoilN0009 || !pFoilN2413)
+        {
+            // failsafe; this should not happen
+            std::cout <<"Error creating the foils ...aborting" << std::endl;
+            if(pFoilN0009) delete pFoilN0009;
+            if(pFoilN2413) delete pFoilN2413;
+            return 0;
+        }
+
+
+        // set the style for these foils and their children objects, i.e. polars and operating points
+        pFoilN0009->setTheStyle({true, Line::SOLID, 2, {31, 111, 231}, Line::NOSYMBOL});
+        pFoilN2413->setTheStyle({true, Line::SOLID, 2, {231, 111, 31}, Line::NOSYMBOL});
+
+
+        // repanel
+        int  npanels = 150;
+        double amp = 0.7; // 0.0: no bunching, 1.0: max. bunching
+        pFoilN0009->rePanel(npanels, amp);
+        pFoilN2413->rePanel(npanels, amp);
+
+        // define the flaps
+        pFoilN0009->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
+        pFoilN2413->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
+
     }
-    pFoilN2413->setName("NACA 2413");
-    // Store
-    Objects2d::insertThisFoil(pFoilN2413);
-
-    // Create
-    Foil *pFoilN0009 = new Foil;
-    if(!Objects2d::makeNacaFoil(pFoilN0009, 9, 200))
-    {
-        delete pFoilN0009;
-        return 0;
-    }
-    pFoilN0009->setName("NACA 0009");
-    // Store
-    Objects2d::insertThisFoil(pFoilN0009);
-
-
-    // set the style for these foils and their children objects, i.e. polars and operating points
-    pFoilN0009->setTheStyle({true, Line::SOLID, 2, {31, 111, 231}, Line::NOSYMBOL});
-    pFoilN2413->setTheStyle({true, Line::SOLID, 2, {231, 111, 31}, Line::NOSYMBOL});
-
-
-    // repanel the foils
-    int  npanels = 149; // prefer primes
-    double amp = 0.7; // 0.0: no bunching, 1.0: max. bunching
-    pFoilN0009->rePanel(npanels, amp);
-    pFoilN2413->rePanel(npanels, amp);
-
-    // define the flaps
-    pFoilN0009->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
-    pFoilN2413->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
-
 
     // Create and define a new xfl-type plane
     PlaneXfl* pPlaneXfl = new PlaneXfl;
@@ -87,21 +74,19 @@ int main()
 
         // Build from scratch
         WingXfl *pWing = pPlaneXfl->addWing();
-        pWing->setName("Main wing");
+        pWing->setName("Main wing"); // for user information only
         pWing->makeDefaultWing();
-        //        pWing->computeGeometry();
 
         pWing = pPlaneXfl->addWing();
         pWing->setName("Elevator");
         pWing->makeDefaultStab();
-        //        pWing->computeGeometry();
 
         pWing = pPlaneXfl->addWing();
         pWing->setName("Fin");
         pWing->makeDefaultFin();
-        //        pWing->computeGeometry();
 
         //position the mainwing
+        //flow5 works internally in IS units
         pPlaneXfl->wing(0)->setPosition(0.400, 0.000, 0.000);
 
         //position the elevator
@@ -114,7 +99,7 @@ int main()
 
 
         // Set the inertia properties
-        // All units must be provided in I.S. standard, i.e. meters ang kg
+        // All units must be provided in I.S. standard, i.e. meters and kg
         Inertia &inertia = pPlaneXfl->inertia();
         inertia.appendPointMass(0.30, {-0.35,0,0},  "Nose lead");
         inertia.appendPointMass(0.20, {-0.25,0,0},  "Battery and receiver");
@@ -254,12 +239,8 @@ int main()
     // Define an analysis
     PlanePolar *pPlPolar = new PlanePolar;
     {
-        pPlPolar->setName("a T2 polar");
-        // Store the pointer to ensure that the object is not lost
-        // This should be done after the polar has been given a name
-        // since objects are referenced by their name and are stored
-        // in alphabetical order
-        Objects3d::insertPlPolar(pPlPolar);
+        // give the polar a temporary name
+        //        pPlPolar->setName("a T2 polar");
 
         pPlPolar->setTheStyle({true, Line::SOLID, 2, {239, 51, 153}, Line::NOSYMBOL});
 
@@ -285,7 +266,10 @@ int main()
         pPlPolar->resizeFlapCtrls(pPlaneXfl);
         {
             // sanity check: the number of ctrls is the same as the number of wings
-            assert(pPlPolar->nFlapCtrls()==pPlaneXfl->nWings()); // because all the wings are flapped
+            assert(pPlPolar->nFlapCtrls()==pPlaneXfl->nWings()); // since all the wings are flapped
+
+            // give the control a name
+            pPlPolar->setFlapCtrlsName("Flaps down");
 
             // get a reference to the main wing's flap controls
             AngleControl &mainwingctrls = pPlPolar->flapCtrls(0);
@@ -298,7 +282,7 @@ int main()
 
                 // Flaps are numbered from left to right
                 // Set their deflection, + is down, unit is degrees
-                // Note: arrays in C are indexed starting at 0
+                // Note: arrays is C are indexed starting at 0
                 mainwingctrls.setValue(0, +5);
                 mainwingctrls.setValue(1, +5);
                 mainwingctrls.setValue(2, +5);
@@ -308,7 +292,7 @@ int main()
             // get a reference to the elevator's flap controls
             AngleControl &elevctrls = pPlPolar->flapCtrls(1);
             {
-                // the elevator has been defined with two flaps
+                // the elevator's has been defined with two flaps
                 elevctrls.setValue(0, +3);
                 elevctrls.setValue(1, +3);
             }
@@ -317,6 +301,18 @@ int main()
         }
 
         // leave the rest of the fields to their default values
+
+        // Now that the polar's parameters have been defined,
+        // it is possible to use flow5's default name maker
+        PlanePolarNameMaker maker;
+        std::string polarname = PlanePolarNameMaker::makeName(pPlaneXfl, pPlPolar).toStdString();
+        pPlPolar->setName(polarname);
+        // Store the pointer to ensure that the object is not lost
+        // This should be done after the polar has been given a name
+        // since objects are referenced by their name and are stored
+        // in alphabetical order
+        Objects3d::insertPlPolar(pPlPolar);
+
     }
 
 
@@ -361,7 +357,7 @@ int main()
 
         std::string separator = ", ";
         std::string exportstr = pPlPolar->exportToString(separator);
-        printf(exportstr.c_str());
+        std::cout<<exportstr.c_str()<<std::endl;
         printf("\n");
 
         // clean up
@@ -373,11 +369,12 @@ int main()
 
     // Must call! will delete the planes, foils and children objects
     // Memory leak otherwise
-    globals::deleteObjects();
+    //    globals::deleteObjects();
 
     std::cout << "done" << std::endl;
 
     return 0;
+
 }
 
 

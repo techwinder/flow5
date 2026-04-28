@@ -34,7 +34,8 @@
 #include <api/planepolar.h>
 #include <api/planexfl.h>
 #include <api/units.h>
-#include <modules/xplane/analysis/plpolarnamemaker.h>
+#include <api/planepolarnamemaker.h>
+
 
 
 
@@ -186,17 +187,17 @@ void WPolarAutoNameDlg::initDialog(PlanePolar const &wPolar)
     else if(m_pWPolar->isControlPolar())    m_prbType6->setChecked(true);
     else if(m_pWPolar->isStabilityPolar())  m_prbType7->setChecked(true);
 
-    m_pchType->setChecked(PlPolarNameMaker::s_bType);
-    m_pchMethod->setChecked(PlPolarNameMaker::s_bMethod);
-    m_pchSurfaces->setChecked(PlPolarNameMaker::s_bSurfaces);
-    m_pchControls->setChecked(PlPolarNameMaker::s_bControls);
-    m_pchViscosity->setChecked(PlPolarNameMaker::s_bViscosity);
-    m_pchInertia->setChecked(PlPolarNameMaker::s_bInertia);
-    m_pchExtraDrag->setChecked(PlPolarNameMaker::s_bExtraDrag);
-    m_pchFuseDrag->setChecked(PlPolarNameMaker::s_bFuseDrag);
-    m_pchGround->setChecked(PlPolarNameMaker::s_bGround);
+    m_pchType->setChecked(PlanePolarNameMaker::s_bType);
+    m_pchMethod->setChecked(PlanePolarNameMaker::s_bMethod);
+    m_pchSurfaces->setChecked(PlanePolarNameMaker::s_bSurfaces);
+    m_pchControls->setChecked(PlanePolarNameMaker::s_bControls);
+    m_pchViscosity->setChecked(PlanePolarNameMaker::s_bViscosity);
+    m_pchInertia->setChecked(PlanePolarNameMaker::s_bInertia);
+    m_pchExtraDrag->setChecked(PlanePolarNameMaker::s_bExtraDrag);
+    m_pchFuseDrag->setChecked(PlanePolarNameMaker::s_bFuseDrag);
+    m_pchGround->setChecked(PlanePolarNameMaker::s_bGround);
 
-    m_plePolarName->setText(PlPolarNameMaker::makeName(m_pPlane, m_pWPolar));
+    m_plePolarName->setText(PlanePolarNameMaker::makeName(m_pPlane, m_pWPolar));
 }
 
 
@@ -207,22 +208,22 @@ void WPolarAutoNameDlg::readData()
     else if(m_prbType6->isChecked()) m_pWPolar->setType(xfl::T6POLAR);
     else if(m_prbType7->isChecked()) m_pWPolar->setType(xfl::T7POLAR);
 
-    PlPolarNameMaker::s_bType      = m_pchType->isChecked();
-    PlPolarNameMaker::s_bMethod    = m_pchMethod->isChecked();
-    PlPolarNameMaker::s_bSurfaces  = m_pchSurfaces->isChecked();
-    PlPolarNameMaker::s_bControls  = m_pchControls->isChecked();
-    PlPolarNameMaker::s_bViscosity = m_pchViscosity->isChecked();
-    PlPolarNameMaker::s_bInertia   = m_pchInertia->isChecked();
-    PlPolarNameMaker::s_bExtraDrag = m_pchExtraDrag->isChecked();
-    PlPolarNameMaker::s_bFuseDrag  = m_pchFuseDrag->isChecked();
-    PlPolarNameMaker::s_bGround    = m_pchGround->isChecked();
+    PlanePolarNameMaker::s_bType      = m_pchType->isChecked();
+    PlanePolarNameMaker::s_bMethod    = m_pchMethod->isChecked();
+    PlanePolarNameMaker::s_bSurfaces  = m_pchSurfaces->isChecked();
+    PlanePolarNameMaker::s_bControls  = m_pchControls->isChecked();
+    PlanePolarNameMaker::s_bViscosity = m_pchViscosity->isChecked();
+    PlanePolarNameMaker::s_bInertia   = m_pchInertia->isChecked();
+    PlanePolarNameMaker::s_bExtraDrag = m_pchExtraDrag->isChecked();
+    PlanePolarNameMaker::s_bFuseDrag  = m_pchFuseDrag->isChecked();
+    PlanePolarNameMaker::s_bGround    = m_pchGround->isChecked();
 }
 
 
 void WPolarAutoNameDlg::onOptionChanged()
 {
     readData();
-    QString name = PlPolarNameMaker::makeName(m_pPlane, m_pWPolar);
+    QString name = PlanePolarNameMaker::makeName(m_pPlane, m_pWPolar);
     m_plePolarName->setText(name);
 }
 
@@ -231,16 +232,16 @@ void WPolarAutoNameDlg::loadSettings(QSettings &settings)
 {
     settings.beginGroup("WPolarAutoName");
     {
-        PlPolarNameMaker::s_bType       = settings.value("Type", true).toBool();
-        PlPolarNameMaker::s_bMethod     = settings.value("Method", true).toBool();
-        PlPolarNameMaker::s_bSurfaces   = settings.value("Surfaces", true).toBool();
-        PlPolarNameMaker::s_bBC         = settings.value("BC", false).toBool();
-        PlPolarNameMaker::s_bControls   = settings.value("Controls", true).toBool();
-        PlPolarNameMaker::s_bViscosity  = settings.value("Viscosity", true).toBool();
-        PlPolarNameMaker::s_bInertia    = settings.value("Inertia", true).toBool();
-        PlPolarNameMaker::s_bExtraDrag  = settings.value("ExtraDrag", false).toBool();
-        PlPolarNameMaker::s_bFuseDrag   = settings.value("FuseDrag", false).toBool();
-        PlPolarNameMaker::s_bGround     = settings.value("GroundFS", false).toBool();
+        PlanePolarNameMaker::s_bType       = settings.value("Type", true).toBool();
+        PlanePolarNameMaker::s_bMethod     = settings.value("Method", true).toBool();
+        PlanePolarNameMaker::s_bSurfaces   = settings.value("Surfaces", true).toBool();
+        PlanePolarNameMaker::s_bBC         = settings.value("BC", false).toBool();
+        PlanePolarNameMaker::s_bControls   = settings.value("Controls", true).toBool();
+        PlanePolarNameMaker::s_bViscosity  = settings.value("Viscosity", true).toBool();
+        PlanePolarNameMaker::s_bInertia    = settings.value("Inertia", true).toBool();
+        PlanePolarNameMaker::s_bExtraDrag  = settings.value("ExtraDrag", false).toBool();
+        PlanePolarNameMaker::s_bFuseDrag   = settings.value("FuseDrag", false).toBool();
+        PlanePolarNameMaker::s_bGround     = settings.value("GroundFS", false).toBool();
     }
     settings.endGroup();
 }
@@ -251,16 +252,16 @@ void WPolarAutoNameDlg::saveSettings(QSettings &settings)
 {
     settings.beginGroup("WPolarAutoName");
     {
-        settings.setValue("Type", PlPolarNameMaker::s_bType);
-        settings.setValue("Method", PlPolarNameMaker::s_bMethod);
-        settings.setValue("Surfaces", PlPolarNameMaker::s_bSurfaces);
-        settings.setValue("BC", PlPolarNameMaker::s_bBC);
-        settings.setValue("Controls", PlPolarNameMaker::s_bControls);
-        settings.setValue("Viscosity", PlPolarNameMaker::s_bViscosity);
-        settings.setValue("Inertia", PlPolarNameMaker::s_bInertia);
-        settings.setValue("ExtraDrag", PlPolarNameMaker::s_bExtraDrag);
-        settings.setValue("FuseDrag", PlPolarNameMaker::s_bFuseDrag);
-        settings.setValue("GroundFS", PlPolarNameMaker::s_bGround);
+        settings.setValue("Type", PlanePolarNameMaker::s_bType);
+        settings.setValue("Method", PlanePolarNameMaker::s_bMethod);
+        settings.setValue("Surfaces", PlanePolarNameMaker::s_bSurfaces);
+        settings.setValue("BC", PlanePolarNameMaker::s_bBC);
+        settings.setValue("Controls", PlanePolarNameMaker::s_bControls);
+        settings.setValue("Viscosity", PlanePolarNameMaker::s_bViscosity);
+        settings.setValue("Inertia", PlanePolarNameMaker::s_bInertia);
+        settings.setValue("ExtraDrag", PlanePolarNameMaker::s_bExtraDrag);
+        settings.setValue("FuseDrag", PlanePolarNameMaker::s_bFuseDrag);
+        settings.setValue("GroundFS", PlanePolarNameMaker::s_bGround);
     }
     settings.endGroup();
 }

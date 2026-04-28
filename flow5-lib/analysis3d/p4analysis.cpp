@@ -29,7 +29,7 @@
 #include <QDebug>
 
 #include <thread>
-#include <iostream>
+//#include <iostream>
 
 
 #include <p4analysis.h>
@@ -683,7 +683,6 @@ void P4Analysis::getSourceVelocity(Vector3d const &C, bool bSelf, Panel4 const &
 }
 
 
-
 void P4Analysis::getVelocityVector(Vector3d const &C,
                                    double const *Mu, double const *Sigma, Vector3d &VT, double coreradius,
                                    bool bWakeOnly, bool bMultiThread) const
@@ -695,6 +694,7 @@ void P4Analysis::getVelocityVector(Vector3d const &C,
     data.bWakeOnly = bWakeOnly;
     data.Mu = Mu;
     data.Sigma = Sigma;
+    data.m_AnalysisMethod = m_pPolar3d->analysisMethod();
 
     std::vector<Vector3d> VBlock(m_nBlocks);
 
@@ -1461,6 +1461,13 @@ void P4Analysis::inducedForce(int nPanels, double QInf, double alpha, double bet
 void P4Analysis::trefftzDrag(int nPanels, double QInf, double alpha, double beta, int pos,
                                Vector3d &FFForce, SpanDistribs &SpanResFF) const
 {
+    auto t0 = std::chrono::high_resolution_clock::now();
+
+    // multithreading overhead slows down the calculation > x3
+//    bool bMultiThreaded = s_bMultiThread;
+    bool bMultiThreaded = false;
+
+
     double inducedAngle(0);
     double GammaStrip(0);
     Vector3d C, Wg;
@@ -1482,96 +1489,140 @@ void P4Analysis::trefftzDrag(int nPanels, double QInf, double alpha, double beta
 
         Vector3d surfacenormal = p4.surfaceNormal();
 
-        if(!m_pPolar3d->isVLM())
+        if(p4.isTrailing())
         {
-            if(p4.isTrailing() && (p4.isBotPanel()||p4.isMidPanel()))
+            if(!m_pPolar3d->isVLM())
             {
-                Panel4 const *p4w = m_WakePanel4.data() + p4.iWake();
-                // modified in 7.01 beta 09 to use vortex lines rather than wake panels
-//                C = (p4.TA() + p4.TB())/2.0;
-//                C += winddir*m_pPolar3d->TrefftzDistance()/2.0;
-                // modified in 7.01 beta 12 to use the mid wake point
-                C = midWakePoint(p4w);
+                if((p4.isBotPanel()||p4.isMidPanel()))
+                {
+                    Panel4 const *p4w = m_WakePanel4.data() + p4.iWake();
+                    // modified in 7.01 beta 09 to use vortex lines rather than wake panels
+    //                C = (p4.TA() + p4.TB())/2.0;
+    //                C += winddir*m_pPolar3d->TrefftzDistance()/2.0;
+                    // modified in 7.01 beta 12 to use the mid wake point
+                    C = midWakePoint(p4w);
 
-                getVelocityVector(C, Mu4, Sigma4, Wg, Vortex::coreRadius(), true, s_bMultiThread);
-//                getFarFieldVelocity(C, m_Panel4, Mu4, Wg, Vortex::coreRadius());
+                    getVelocityVector(C, Mu4, Sigma4, Wg, Vortex::coreRadius(), true, bMultiThreaded);
+    //                getFarFieldVelocity(C, m_Panel4, Mu4, Wg, Vortex::coreRadius());
+                    Wg *= 1.0/2.0;
+    //                Wg += winddir;
+
+                    SpanResFF.m_Vd[m] = Wg;
+                    inducedAngle = atan2(Wg.dot(surfacenormal), QInf);
+                    SpanResFF.m_Ai[m] = inducedAngle*180.0/PI;
+
+                    int idxB = p4.index();
+                    int idxU = nextTopTrailingPanelIndex(p4);
+
+                    if(!p4.isMidPanel())
+                    {
+                        double gU = Mu4[idxU];
+                        double gB = Mu4[idxB];
+                        GammaStrip = -(gU - gB) *4.0*PI;
+                        vortex = p4.trailingVortex() * (-1.0);
+                    }
+                    else
+                    {
+                        GammaStrip = -Mu4[idxB] *4.0*PI;
+                        vortex = p4.trailingVortex();
+                    }
+
+                    stripforce  = Wg * vortex;
+                    stripforce *= GammaStrip;     // N/rho
+
+                    stripforce *= m_pPolar3d->density() / qDyn;     // N/q
+
+                    //____________________________
+                    // Project on wind axes
+    //                SpanResFF.m_Cl[m]  = stripforce.dot(surfacenormal) /SpanResFF.stripArea(m);
+                    SpanResFF.m_ICd[m] = stripforce.dot(winddir) /SpanResFF.stripArea(m);
+                    SpanResFF.m_F[m]  += stripforce * qDyn;                        // N, body axes
+                    ForceBodyAxes     += stripforce;                            // N/q
+                    m++;
+                }
+            }
+            else if (m_pPolar3d->isVLM2())
+            {
+                C = p4.ctrlPt(true);
+
+                // evaluate at half the FF distance, so that we get influence of upstream and downstream parts of the vortices
+                // then divide the influence by 2.0 since point ought to be at infinity with no downstream wake
+                C.x = m_pPolar3d->TrefftzDistance()/2.0;
+
+                stripforce.set(0,0,0);
+                assert(p4.isMidPanel());
+                int pp = i4;
+                SpanResFF.m_Gamma[m] = 0.0;
+
+                getVelocityVector(C, Mu4, Sigma4, Wg, Vortex::coreRadius(), true, bMultiThreaded);
+
+                // The trailing point sees both the upstream and downstream parts of the trailing vortices
+                // Hence it sees twice the downwash.
+                // So divide by 2 to account for this.
                 Wg *= 1.0/2.0;
-//                Wg += winddir;
+                //                        Wg += winddir;
+
 
                 SpanResFF.m_Vd[m] = Wg;
                 inducedAngle = atan2(Wg.dot(surfacenormal), QInf);
                 SpanResFF.m_Ai[m] = inducedAngle*180.0/PI;
 
-                int idxB = p4.index();
-                int idxU = nextTopTrailingPanelIndex(p4);
+                // VLM2 ring vortices: the spanwise bound vortices cancel each other.
+                //induced force is the created by the trailing horseshoe vortex
+                Vector3d dF  = Wg * p4.trailingVortex();
+                dF *= Mu4[pp+pos];       // N/rho
+                stripforce += dF;        // N/rho
 
-                if(!p4.isMidPanel())
-                {
-                    double gU = Mu4[idxU];
-                    double gB = Mu4[idxB];
-                    GammaStrip = -(gU - gB) *4.0*PI;
-                    vortex = p4.trailingVortex() * (-1.0);
-                }
-                else
-                {
-                    GammaStrip = -Mu4[idxB] *4.0*PI;
-                    vortex = p4.trailingVortex();
-                }
 
-                stripforce  = Wg * vortex;
-                stripforce *= GammaStrip;     // N/rho
-
-                stripforce *= m_pPolar3d->density() / qDyn;     // N/q
-
+                stripforce *= 2./QInf/QInf; //N/q
                 //____________________________
                 // Project on wind axes
-//                SpanResFF.m_Cl[m]  = stripforce.dot(surfacenormal) /SpanResFF.stripArea(m);
+                //                SpanResFF.m_Cl[m]  = stripforce.dot(surfacenormal) /SpanResFF.stripArea(m);
                 SpanResFF.m_ICd[m] = stripforce.dot(winddir) /SpanResFF.stripArea(m);
                 SpanResFF.m_F[m]  += stripforce * qDyn;                        // N, body axes
-                ForceBodyAxes     += stripforce;                            // N/q
+                ForceBodyAxes     += stripforce;                           // N/q
                 m++;
+
             }
-        }
-        else if (m_pPolar3d->isVLM())
-        {
-            if(p4.isTrailing())
+            else if (m_pPolar3d->isVLM1())
             {
+                C = p4.ctrlPt(true);
+
+                // evaluate at half the FF distance, so that we get influence of upstream and downstream parts of the vortices
+                // then divide the influence by 2.0 since point ought to be at infinity with no downstream wake
+                C.x = m_pPolar3d->TrefftzDistance()/2.0;
+
                 stripforce.set(0,0,0);
                 assert(p4.isMidPanel());
+
+
+                getVelocityVector(C, Mu4, Sigma4, Wg, Vortex::coreRadius(), true, bMultiThreaded);
+
+                // The trailing point sees both the upstream and downstream parts of the trailing vortices
+                // Hence it sees twice the downwash.
+                // So divide by 2 to account for this.
+                Wg *= 1.0/2.0;
+                //                        Wg += winddir;
+
+                SpanResFF.m_Vd[m] = Wg;
+                inducedAngle = atan2(Wg.dot(surfacenormal), QInf);
+                SpanResFF.m_Ai[m] = inducedAngle*180.0/PI;
+
+
                 int pp = i4;
                 SpanResFF.m_Gamma[m] = 0.0;
                 do
                 {
+                    // VLM1 horseshoe vortices: the spanwise bound vortices do not cancel each other.
+                    // Calculate the lift force of each panel in the strip
+                    // using Wg as the approximate downwash
                     Panel4 const &pp4 = m_Panel4.at(pp+pos);
-                    if(m_pPolar3d->isVLM1() || pp4.isTrailing())
-                    {
-                        C = p4.ctrlPt(true);
 
-                        // evaluate at half the ff distance, so that we get influence of upstream and downstream parts of the vortices
-                        // then divide the influence by 2.0 since point ought to be at infinity with no downstream wake
-                        C.x = m_pPolar3d->TrefftzDistance()/2.0;
+                    //induced force
+                    Vector3d dF  = Wg * p4.trailingVortex();
+                    dF *= Mu4[pp+pos];       // N/rho
+                    stripforce += dF;        // N/rho
 
-                        getVelocityVector(C, Mu4, Sigma4, Wg, Vortex::coreRadius(), true, s_bMultiThread);
-
-
-                        // The trailing point sees both the upstream and downstream parts of the trailing vortices
-                        // Hence it sees twice the downwash.
-                        // So divide by 2 to account for this.
-                        Wg *= 1.0/2.0;
-//                        Wg += winddir;
-
-                        if(pp4.isTrailing())
-                        {
-                            SpanResFF.m_Vd[m] = Wg;
-                            inducedAngle = atan2(Wg.dot(surfacenormal), QInf);
-                            SpanResFF.m_Ai[m] = inducedAngle*180.0/PI;
-                        }
-
-                        //induced force
-                        Vector3d dF  = Wg * p4.trailingVortex();
-                        dF *= Mu4[pp+pos];       // N/rho
-                        stripforce += dF;        // N/rho
-                    }
                     if(pp4.isLeading()) break; // is the next strip
                     pp++;
                     if(pp>=nPanels) break; // safety break
@@ -1589,8 +1640,11 @@ void P4Analysis::trefftzDrag(int nPanels, double QInf, double alpha, double beta
             }
         }
     }
-
     FFForce.set(ForceBodyAxes);    // N/q, body axes
+
+    auto t1 = std::chrono::high_resolution_clock::now();
+    int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+    qDebug("P4Analysis::trefftzDrag %g ms", double(duration)/1000.0);
 }
 
 

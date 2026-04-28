@@ -812,16 +812,26 @@ void PlanePolar::copy(const PlanePolar *pWPolar)
 }
 
 
-std::string PlanePolar::flapCtrlsSetName() const
+std::string PlanePolar::flapCtrlsName() const
 {
     std::string aname("Flap set name");
     if(nFlapCtrls())
     {
         if(m_FlapControls.front().name().length()==0)  return aname;
 
-        return m_FlapControls.front().name(); // repurposing
+        return m_FlapControls.front().name(); // repurposing.....
     }
     return aname;
+}
+
+
+void PlanePolar::setFlapCtrlsName(std::string name)
+{
+    if(nFlapCtrls())
+    {
+        m_FlapControls.front().setName(name); // repurposing.....
+    }
+
 }
 
 
@@ -1876,7 +1886,7 @@ void PlanePolar::getProperties(std::string &props, Plane const *pPlane) const
 
     if((isType123458() || isType7()) && hasActiveFlap() && pPlaneXfl)
     {
-        PolarProps += "Flap settings: " + QString::fromStdString(flapCtrlsSetName()) + EOLch;
+        PolarProps += "Flap settings: " + QString::fromStdString(flapCtrlsName()) + EOLch;
         for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
         {
             WingXfl const*pWing = pPlaneXfl->wingAt(iw);

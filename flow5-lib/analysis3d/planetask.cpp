@@ -731,12 +731,12 @@ bool PlaneTask::T6Loop()
             log += QString::fromStdString(str);
         }
 
-        if(m_pP4A && m_pPlane->isXflType())
+        if(m_pP4A && pPlaneXfl)
         {
             pPlaneXfl->quadMesh().rotate(m_Alpha, m_Beta, m_Phi);
             m_pP4A->setQuadMesh(pPlaneXfl->quadMesh());
         }
-        else if(m_pP3A)
+        else if(m_pP3A && m_pPlane)
         {
             m_pPlane->triMesh().rotate(m_Alpha, m_Beta, m_Phi);
             m_pP3A->setTriMesh(m_pPlane->triMesh());

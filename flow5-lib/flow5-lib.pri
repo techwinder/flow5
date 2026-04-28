@@ -1,10 +1,5 @@
 
 HEADERS += \
-    $$PWD/api/fl5core.h \
-    $$PWD/api/planepolar.h \
-    $$PWD/api/planepolarext.h \
-    $$PWD/api/xmlplanepolarreader.h \
-    $$PWD/api/xmlplanepolarwriter.h \
     api/aeroforces.h \
     api/analysisrange.h \
     api/anglecontrol.h \
@@ -34,6 +29,7 @@ HEADERS += \
     api/extradrag.h \
     api/fileio.h \
     api/fl5color.h \
+    api/fl5core.h \
     api/fl5lib_global.h \
     api/fl5object.h \
     api/flow5events.h \
@@ -88,6 +84,9 @@ HEADERS += \
     api/part.h \
     api/plane.h \
     api/planeopp.h \
+    api/planepolar.h \
+    api/planepolarext.h \
+    api/planepolarnamemaker.h \
     api/planestl.h \
     api/planetask.h \
     api/planexfl.h \
@@ -140,34 +139,31 @@ HEADERS += \
     api/wingxfl.h \
     api/xflmesh.h \
     api/xflobject.h \
-    api/xfoiltask.h \
-    api/xml_globals.h \
-    api/xmlpolarreader.h \
-    api/xmlpolarwriter.h \
-    api/xmlfusereader.h \
-    api/xmlfusewriter.h \
     api/xflxmlreader.h \
     api/xflxmlwriter.h \
-    api/xmlplanereader.h \
-    api/xmlplanewriter.h \
-    api/xmlwingreader.h \
-    api/xmlwingwriter.h \
-    api/xmlxplanereader.h \
+    api/xfoiltask.h \
+    api/xml_globals.h \
     api/xmlboatreader.h \
     api/xmlboatwriter.h \
     api/xmlbtpolarreader.h \
     api/xmlbtpolarwriter.h \
+    api/xmlfusereader.h \
+    api/xmlfusewriter.h \
+    api/xmlplanepolarreader.h \
+    api/xmlplanepolarwriter.h \
+    api/xmlplanereader.h \
+    api/xmlplanewriter.h \
+    api/xmlpolarreader.h \
+    api/xmlpolarwriter.h \
     api/xmlsailreader.h \
     api/xmlsailwriter.h \
+    api/xmlwingreader.h \
+    api/xmlwingwriter.h \
+    api/xmlxplanereader.h \
     api/xmlxsailreader.h \
     api/xmlxsailwriter.h \
 
 SOURCES += \
-    $$PWD/objects3d/analysis3d/planepolar.cpp \
-    $$PWD/objects3d/analysis3d/planepolarext.cpp \
-    $$PWD/utils/fl5core.cpp \
-    $$PWD/xml/xplane/xmlplanepolarreader.cpp \
-    $$PWD/xml/xplane/xmlplanepolarwriter.cpp \
     analysis3d/boattask.cpp \
     analysis3d/llttask.cpp \
     analysis3d/p3analysis.cpp \
@@ -225,6 +221,9 @@ SOURCES += \
     objects3d/analysis3d/boatpolar.cpp \
     objects3d/analysis3d/opp3d.cpp \
     objects3d/analysis3d/planeopp.cpp \
+    objects3d/analysis3d/planepolar.cpp \
+    objects3d/analysis3d/planepolarext.cpp \
+    objects3d/analysis3d/planepolarnamemaker.cpp \
     objects3d/analysis3d/polar3d.cpp \
     objects3d/analysis3d/spandistribs.cpp \
     objects3d/analysis3d/stabderivatives.cpp \
@@ -278,6 +277,7 @@ SOURCES += \
     utils/apilog.cpp \
     utils/fileio.cpp \
     utils/fl5color.cpp \
+    utils/fl5core.cpp \
     utils/trace.cpp \
     utils/units.cpp \
     utils/utils.cpp \
@@ -285,9 +285,11 @@ SOURCES += \
     xml/foil/xmlpolarwriter.cpp \
     xml/fuse/xmlfusereader.cpp \
     xml/fuse/xmlfusewriter.cpp \
-    xml/xml_globals.cpp \
     xml/xflxmlreader.cpp \
     xml/xflxmlwriter.cpp \
+    xml/xml_globals.cpp \
+    xml/xplane/xmlplanepolarreader.cpp \
+    xml/xplane/xmlplanepolarwriter.cpp \
     xml/xplane/xmlplanereader.cpp \
     xml/xplane/xmlplanewriter.cpp \
     xml/xplane/xmlwingreader.cpp \
@@ -305,8 +307,8 @@ SOURCES += \
 
 # LAPACK/BLAS test code is optional and requires a configured backend.
 contains(DEFINES, INTEL_MKL)|contains(DEFINES, OPENBLAS)|contains(DEFINES, ACCELERATE) {
-    HEADERS += $$PWD/math/testmatrix.h
-    SOURCES += $$PWD/math/testmatrix.cpp
+    HEADERS += math/testmatrix.h
+    SOURCES += math/testmatrix.cpp
 }
 
 

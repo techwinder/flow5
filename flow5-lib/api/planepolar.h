@@ -107,7 +107,8 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
         void setPlaneName(std::string const &planename) {m_PlaneName = planename;}
 
         // Flap angle controls for linear polars T123578
-        std::string flapCtrlsSetName() const;
+        std::string flapCtrlsName() const;
+        void setFlapCtrlsName(std::string name);
         bool hasActiveFlap() const; /** returns true if one flap at least is non-zero */
         void clearFlapCtrls() {m_FlapControls.clear();}
         void resetFlapCtrls();

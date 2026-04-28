@@ -1,8 +1,8 @@
 /****************************************************************************
 
     flow5 application
-    Copyright (C) 2025 André Deperrois 
-    
+    Copyright (C) 2025 André Deperrois
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -22,32 +22,30 @@
 
 *****************************************************************************/
 
-
-
+#include <api/planepolarnamemaker.h>
 #include <api/planexfl.h>
 #include <api/units.h>
 #include <api/utils.h>
 #include <api/planepolar.h>
-#include <modules/xplane/analysis/plpolarnamemaker.h>
 
-bool PlPolarNameMaker::s_bBC=false;
-bool PlPolarNameMaker::s_bControls=true;
-bool PlPolarNameMaker::s_bExtraDrag=false;
-bool PlPolarNameMaker::s_bFuseDrag=false;
-bool PlPolarNameMaker::s_bGround=true;
-bool PlPolarNameMaker::s_bInertia=true;
-bool PlPolarNameMaker::s_bMethod=true;
-bool PlPolarNameMaker::s_bSurfaces=true;
-bool PlPolarNameMaker::s_bType=true;
-bool PlPolarNameMaker::s_bViscosity=true;
+bool PlanePolarNameMaker::s_bBC=false;
+bool PlanePolarNameMaker::s_bControls=true;
+bool PlanePolarNameMaker::s_bExtraDrag=false;
+bool PlanePolarNameMaker::s_bFuseDrag=false;
+bool PlanePolarNameMaker::s_bGround=true;
+bool PlanePolarNameMaker::s_bInertia=true;
+bool PlanePolarNameMaker::s_bMethod=true;
+bool PlanePolarNameMaker::s_bSurfaces=true;
+bool PlanePolarNameMaker::s_bType=true;
+bool PlanePolarNameMaker::s_bViscosity=true;
 
 
-PlPolarNameMaker::PlPolarNameMaker()
+PlanePolarNameMaker::PlanePolarNameMaker()
 {
 }
 
 
-QString PlPolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWPolar)
+QString PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWPolar)
 {
     QString plrname;
     if(!pWPolar) return QString();
@@ -59,56 +57,56 @@ QString PlPolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWPola
     {
         switch(pWPolar->type())
         {
-            case xfl::T1POLAR:
-            {
-                plrname = QString::asprintf("-T1-%.1f ", pWPolar->velocity() * Units::mstoUnit());
-                plrname += strSpeedUnit;
-                break;
-            }
-            case xfl::T2POLAR:
-            {
-                plrname = "-T2";
-                break;
-            }
-            case xfl::T3POLAR:
-            {
-                plrname = "-T3";
-                break;
-            }
-            case xfl::T4POLAR: // deprecated, unused
-            {
-                plrname = "-T4-" + ALPHAch + QString::asprintf("%.1f",pWPolar->alphaSpec()) + DEGch;
-                break;
-            }
-            case xfl::T5POLAR:
-            {
-                plrname = "-T5-" + ALPHAch + QString::asprintf("%.1f", pWPolar->alphaSpec())+DEGch;
-                plrname += QString::asprintf("-%.1f",pWPolar->velocity() * Units::mstoUnit());
-                plrname += strSpeedUnit;
-                break;
-            }
-            case xfl::T6POLAR:
-            {
-                plrname = "-T6";
-                if(pWPolar->isAdjustedVelocity()) plrname+="/2";
-                else                              plrname+="/1";
-                break;
-            }
-            case xfl::T7POLAR:
-            {
-                plrname = "-T7";
-                break;
-            }
-            case xfl::T8POLAR:
-            {
-                plrname = "-T8";
-                break;
-            }
-            default:
-            {
-                plrname = "-Tx";
-                break;
-            }
+        case xfl::T1POLAR:
+        {
+            plrname = QString::asprintf("-T1-%.1f ", pWPolar->velocity() * Units::mstoUnit());
+            plrname += strSpeedUnit;
+            break;
+        }
+        case xfl::T2POLAR:
+        {
+            plrname = "-T2";
+            break;
+        }
+        case xfl::T3POLAR:
+        {
+            plrname = "-T3";
+            break;
+        }
+        case xfl::T4POLAR: // deprecated, unused
+        {
+            plrname = "-T4-" + ALPHAch + QString::asprintf("%.1f",pWPolar->alphaSpec()) + DEGch;
+            break;
+        }
+        case xfl::T5POLAR:
+        {
+            plrname = "-T5-" + ALPHAch + QString::asprintf("%.1f", pWPolar->alphaSpec())+DEGch;
+            plrname += QString::asprintf("-%.1f",pWPolar->velocity() * Units::mstoUnit());
+            plrname += strSpeedUnit;
+            break;
+        }
+        case xfl::T6POLAR:
+        {
+            plrname = "-T6";
+            if(pWPolar->isAdjustedVelocity()) plrname+="/2";
+            else                              plrname+="/1";
+            break;
+        }
+        case xfl::T7POLAR:
+        {
+            plrname = "-T7";
+            break;
+        }
+        case xfl::T8POLAR:
+        {
+            plrname = "-T8";
+            break;
+        }
+        default:
+        {
+            plrname = "-Tx";
+            break;
+        }
         }
     }
 
@@ -121,41 +119,41 @@ QString PlPolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWPola
     {
         switch(pWPolar->analysisMethod())
         {
-            case xfl::LLT:
-            {
-                plrname += "-LLT";
-                break;
-            }
-            case xfl::VLM1:
-            {
-                plrname += "-VLM1";
-                break;
-            }
-            case xfl::VLM2:
-            {
-                plrname += "-VLM2";
-                break;
-            }
-            case xfl::QUADS:
-            {
-                plrname += "-Quads";
-                break;
-            }
-            case xfl::TRILINEAR:
-            {
-                plrname += "-TriLinear";
-                break;
-            }
-            case xfl::TRIUNIFORM:
-            {
-                plrname += "-TriUniform";
-                break;
-            }
-            case xfl::NOMETHOD:
-            {
-                plrname += "-NoMethod";
-                break;
-            }
+        case xfl::LLT:
+        {
+            plrname += "-LLT";
+            break;
+        }
+        case xfl::VLM1:
+        {
+            plrname += "-VLM1";
+            break;
+        }
+        case xfl::VLM2:
+        {
+            plrname += "-VLM2";
+            break;
+        }
+        case xfl::QUADS:
+        {
+            plrname += "-Quads";
+            break;
+        }
+        case xfl::TRILINEAR:
+        {
+            plrname += "-TriLinear";
+            break;
+        }
+        case xfl::TRIUNIFORM:
+        {
+            plrname += "-TriUniform";
+            break;
+        }
+        case xfl::NOMETHOD:
+        {
+            plrname += "-NoMethod";
+            break;
+        }
         }
     }
 
@@ -244,25 +242,25 @@ QString PlPolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWPola
 
         switch(pWPolar->type())
         {
-            case xfl::T1POLAR:
-            case xfl::T2POLAR:
-            case xfl::T3POLAR:
-            case xfl::T5POLAR:
-            case xfl::T8POLAR:
-                if(pWPolar->hasActiveFlap())
-                {
-                    if(pWPolar->flapCtrlsSetName().length()!=0)
-                        plrname += "-" + QString::fromStdString(pWPolar->flapCtrlsSetName());
-                }
-                break;
-            case xfl::T6POLAR:
-                plrname += rangeControlNames(pPlaneXfl, pWPolar);
-                break;
-            case xfl::T7POLAR:
-                plrname += stabilityControlNames(pPlaneXfl, pWPolar);
-                break;
-            default:
-                break;
+        case xfl::T1POLAR:
+        case xfl::T2POLAR:
+        case xfl::T3POLAR:
+        case xfl::T5POLAR:
+        case xfl::T8POLAR:
+            if(pWPolar->hasActiveFlap())
+            {
+                if(pWPolar->flapCtrlsName().length()!=0)
+                    plrname += "-" + QString::fromStdString(pWPolar->flapCtrlsName());
+            }
+            break;
+        case xfl::T6POLAR:
+            plrname += rangeControlNames(pPlaneXfl, pWPolar);
+            break;
+        case xfl::T7POLAR:
+            plrname += stabilityControlNames(pPlaneXfl, pWPolar);
+            break;
+        default:
+            break;
         }
     }
 
@@ -299,7 +297,7 @@ QString PlPolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWPola
     }
 
 
-/*    if(fabs(pWPolar->beta()) > .001  && !pWPolar->isBetaPolar())
+    /*    if(fabs(pWPolar->beta()) > .001  && !pWPolar->isBetaPolar())
     {
         strong = QString(QString::fromUtf8("-b%1°")).arg(pWPolar->beta(),0,'f',1);
         plrname += strong;
@@ -311,11 +309,11 @@ QString PlPolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWPola
         plrname += strong;
     }*/
 
-//    if(pWPolar->referenceDim()==Xfl::PROJECTEDREFDIM) plrname += "-proj_area";
+    //    if(pWPolar->referenceDim()==Xfl::PROJECTEDREFDIM) plrname += "-proj_area";
 
-//    if(pWPolar->isTilted()) plrname += "-TG";
+    //    if(pWPolar->isTilted()) plrname += "-TG";
 
-//    if(pWPolar->bWakeRollUp()) plrname += "-rollup";
+    //    if(pWPolar->bWakeRollUp()) plrname += "-rollup";
 
     if(pWPolar->bVortonWake()) plrname += "-VPW";
 
@@ -325,13 +323,13 @@ QString PlPolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWPola
 }
 
 
-QString PlPolarNameMaker::stabilityControlNames(const PlaneXfl *pPlane, const PlanePolar *pWPolar)
+QString PlanePolarNameMaker::stabilityControlNames(const PlaneXfl *pPlane, const PlanePolar *pWPolar)
 {
     if(!pPlane) return QString();
     if(!pWPolar || !pWPolar->isStabilityPolar()) return QString();
 
     QString plrname;
-/*
+    /*
     for(int iw=0; iw<pWPolar->m_AngleGain.size(); iw++)
     {
         bool bHasGain = false;
@@ -367,7 +365,7 @@ QString PlPolarNameMaker::stabilityControlNames(const PlaneXfl *pPlane, const Pl
 }
 
 
-QString PlPolarNameMaker::rangeControlNames(PlaneXfl const *pPlane, PlanePolar const *pWPolar)
+QString PlanePolarNameMaker::rangeControlNames(PlaneXfl const *pPlane, PlanePolar const *pWPolar)
 {
     if(!pPlane) return QString();
     if(!pWPolar || !pWPolar->isControlPolar()) return QString();

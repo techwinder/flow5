@@ -53,6 +53,7 @@
 #include <api/oppoint.h>
 #include <api/panelanalysis.h>
 #include <api/planeopp.h>
+#include <api/planepolarnamemaker.h>
 #include <api/planetask.h>
 #include <api/planexfl.h>
 #include <api/polar.h>
@@ -70,7 +71,7 @@
 #include <globals/mainframe.h>
 #include <modules/xdirect/analysis/polarnamemaker.h>
 #include <modules/xobjects.h>
-#include <modules/xplane/analysis/plpolarnamemaker.h>
+
 
 QThread::Priority XflScriptExec::s_ThreadPriority = QThread::NormalPriority;
 

@@ -131,7 +131,7 @@
 #include <api/wingopp.h>
 #include <api/planepolar.h>
 #include <api/planepolarext.h>
-#include <modules/xplane/analysis/plpolarnamemaker.h>
+#include <api/planepolarnamemaker.h>
 #include <api/objects3d.h>
 #include <api/fuseocc.h>
 #include <api/fusesections.h>
@@ -6852,7 +6852,7 @@ PlanePolar *XPlane::importAnalysisFromXML(QFile &xmlFile)
     }
 
     if(pWPolar->name().length()==0)
-        pWPolar->setName(PlPolarNameMaker::makeName(pPlane, pWPolar).toStdString());
+        pWPolar->setName(PlanePolarNameMaker::makeName(pPlane, pWPolar).toStdString());
 
     PlaneXfl const*pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pCurPlane);
     if(pPlaneXfl)

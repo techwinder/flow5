@@ -45,7 +45,8 @@
 #include <api/task3d.h>
 #include <api/trimesh.h>
 #include <api/planepolar.h>
-#include <modules/xplane/analysis/plpolarnamemaker.h>
+#include <api/planepolarnamemaker.h>
+
 
 #include <api/xmlplanepolarreader.h>
 
@@ -470,7 +471,7 @@ void XflExecutor::makePlaneTasks(QString &logmsg)
 
                 if(pWPolar->name().length()==0)
                 {
-                    pWPolar->setName(PlPolarNameMaker::makeName(pPlane, pWPolar).toStdString());
+                    pWPolar->setName(PlanePolarNameMaker::makeName(pPlane, pWPolar).toStdString());
                 }
 
                 if(pWPolar && pWPolar->planeName().compare(pPlane->name())==0)

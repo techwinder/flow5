@@ -36,6 +36,7 @@
 #include "planepolardlg.h"
 #include <api/plane.h>
 #include <api/planepolar.h>
+#include <api/planepolarnamemaker.h>
 #include <api/planexfl.h>
 #include <api/units.h>
 #include <api/utils.h>
@@ -47,7 +48,6 @@
 #include <interfaces/widgets/customwts/ctrltabledelegate.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
-#include <modules/xplane/analysis/plpolarnamemaker.h>
 
 PlanePolar PlanePolarDlg::s_WPolar;
 
@@ -433,7 +433,7 @@ void PlanePolarDlg::fillFlapControls()
     if(s_WPolar.nFlapCtrls() != pPlaneXfl->nWings())
         s_WPolar.resizeFlapCtrls(pPlaneXfl); // cleaning up
 
-    m_pleFlapSetName->setText(QString::fromStdString(s_WPolar.flapCtrlsSetName()));
+    m_pleFlapSetName->setText(QString::fromStdString(s_WPolar.flapCtrlsName()));
     m_pleFlapSetName->selectAll();
 
     QStandardItem *pRootItem = m_pFlapModel->invisibleRootItem();
@@ -935,7 +935,7 @@ void PlanePolarDlg::enableControls()
 void PlanePolarDlg::setPolar3dName()
 {
     if(!m_bAutoName) return;
-    s_WPolar.setName(PlPolarNameMaker::makeName(m_pPlane, &s_WPolar).toStdString());
+    s_WPolar.setName(PlanePolarNameMaker::makeName(m_pPlane, &s_WPolar).toStdString());
     m_plePolarName->setText(QString::fromStdString(s_WPolar.name()));
 }
 

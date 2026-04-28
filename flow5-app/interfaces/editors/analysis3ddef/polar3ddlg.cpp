@@ -35,6 +35,7 @@
 #include <api/planexfl.h>
 #include <api/polar3d.h>
 #include <api/planepolar.h>
+#include <api/planepolarnamemaker.h>
 #include <api/units.h>
 
 #include <interfaces/editors/analysis3ddef/extradragwt.h>
@@ -43,7 +44,7 @@
 #include <interfaces/widgets/customwts/ctrltabledelegate.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
-#include <modules/xplane/analysis/plpolarnamemaker.h>
+
 
 QByteArray Polar3dDlg::s_Geometry;
 

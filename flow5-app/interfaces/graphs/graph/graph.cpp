@@ -659,7 +659,7 @@ void Graph::drawCurve(int nIndex, QPainter &painter) const
         {
             curvepen.setStyle(Qt::SolidLine); // no stipple for the points
 
-            for (int ipt=0; ipt<pCurve->size();ipt++)
+            for (int ipt=0; ipt<pCurve->size(); ipt++)
             {
                 bool bPoint = true;
                 double x=pCurve->x(ipt);

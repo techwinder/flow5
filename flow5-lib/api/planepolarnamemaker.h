@@ -1,8 +1,8 @@
 /****************************************************************************
 
     flow5 application
-    Copyright (C) 2025 André Deperrois 
-    
+    Copyright (C) 2025 André Deperrois
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -26,19 +26,19 @@
 
 #include <QString>
 
-#include <api/fl5lib_global.h>
+#include <fl5lib_global.h>
 
 
 class Plane;
 class PlaneXfl;
 class PlanePolar;
 
-class PlPolarNameMaker
+class FL5LIB_EXPORT PlanePolarNameMaker
 {
     friend class  WPolarAutoNameDlg;
 
     public:
-        PlPolarNameMaker();
+        PlanePolarNameMaker();
         static QString makeName(const Plane *pPlane, const PlanePolar *pWPolar);
         static QString rangeControlNames(const PlaneXfl *pPlane, const PlanePolar *pWPolar);
         static QString stabilityControlNames(PlaneXfl const *pPlane, PlanePolar const *pWPolar);

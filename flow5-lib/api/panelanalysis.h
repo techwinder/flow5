@@ -32,6 +32,7 @@
 #include <aeroforces.h>
 #include <spandistribs.h>
 #include <utils.h>
+#include <enums_objects.h>
 
 class Polar3d;
 class Panel;
@@ -45,6 +46,7 @@ struct VelBlockData
     bool bWakeOnly = false;
     double const *Mu = nullptr;
     double const *Sigma = nullptr;
+    xfl::enumAnalysisMethod m_AnalysisMethod = xfl::NOMETHOD;
 };
 
 

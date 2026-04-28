@@ -56,7 +56,6 @@
 
 #include <core/displayoptions.h>
 #include <core/saveoptions.h>
-#include <api/trace.h>
 #include <core/xflcore.h>
 #include <globals/aboutf5.h>
 #include <globals/creditsdlg.h>
@@ -190,6 +189,7 @@
 #include <test/tests/threadtestdlg.h>
 #include <test/tests/vortontestdlg.h>
 
+#include <api.h>
 #include <api/boat.h>
 #include <api/boatopp.h>
 #include <api/boatpolar.h>
@@ -206,7 +206,9 @@
 #include <api/panel4.h>
 #include <api/planeopp.h>
 #include <api/planepolar.h>
+#include <api/planepolarnamemaker.h>
 #include <api/planestl.h>
+#include <api/planetask.h>
 #include <api/planexfl.h>
 #include <api/polar.h>
 #include <api/quad3d.h>
@@ -215,6 +217,7 @@
 #include <api/sailwing.h>
 #include <api/splinefoil.h>
 #include <api/testpanels.h>
+#include <api/trace.h>
 #include <api/units.h>
 #include <api/utils.h>
 #include <api/wingxfl.h>
@@ -4408,9 +4411,6 @@ void MainFrame::resetCpCurves()
 }
 
 
-#include <api.h>
-#include <planetask.h>
-
 int MainFrame::onTestRun()
 {
     printf("flow5 plane run\n");
@@ -4468,21 +4468,19 @@ int MainFrame::onTestRun()
 
         // Build from scratch
         WingXfl *pWing = pPlaneXfl->addWing();
-        pWing->setName("Main wing");
+        pWing->setName("Main wing"); // for user information only
         pWing->makeDefaultWing();
-        //        pWing->computeGeometry();
 
         pWing = pPlaneXfl->addWing();
         pWing->setName("Elevator");
         pWing->makeDefaultStab();
-        //        pWing->computeGeometry();
 
         pWing = pPlaneXfl->addWing();
         pWing->setName("Fin");
         pWing->makeDefaultFin();
-        //        pWing->computeGeometry();
 
         //position the mainwing
+        //flow5 works internally in IS units
         pPlaneXfl->wing(0)->setPosition(0.400, 0.000, 0.000);
 
         //position the elevator
@@ -4495,7 +4493,7 @@ int MainFrame::onTestRun()
 
 
         // Set the inertia properties
-        // All units must be provided in I.S. standard, i.e. meters ang kg
+        // All units must be provided in I.S. standard, i.e. meters and kg
         Inertia &inertia = pPlaneXfl->inertia();
         inertia.appendPointMass(0.30, {-0.35,0,0},  "Nose lead");
         inertia.appendPointMass(0.20, {-0.25,0,0},  "Battery and receiver");
@@ -4635,12 +4633,8 @@ int MainFrame::onTestRun()
     // Define an analysis
     PlanePolar *pPlPolar = new PlanePolar;
     {
-        pPlPolar->setName("a T2 polar");
-        // Store the pointer to ensure that the object is not lost
-        // This should be done after the polar has been given a name
-        // since objects are referenced by their name and are stored
-        // in alphabetical order
-        Objects3d::insertPlPolar(pPlPolar);
+        // give the polar a temporary name
+        //        pPlPolar->setName("a T2 polar");
 
         pPlPolar->setTheStyle({true, Line::SOLID, 2, {239, 51, 153}, Line::NOSYMBOL});
 
@@ -4667,6 +4661,9 @@ int MainFrame::onTestRun()
         {
             // sanity check: the number of ctrls is the same as the number of wings
             assert(pPlPolar->nFlapCtrls()==pPlaneXfl->nWings()); // since all the wings are flapped
+
+            // give the control a name
+            pPlPolar->setFlapCtrlsName("Flaps down");
 
             // get a reference to the main wing's flap controls
             AngleControl &mainwingctrls = pPlPolar->flapCtrls(0);
@@ -4698,6 +4695,18 @@ int MainFrame::onTestRun()
         }
 
         // leave the rest of the fields to their default values
+
+        // Now that the polar's parameters have been defined,
+        // it is possible to use flow5's default name maker
+        PlanePolarNameMaker maker;
+        std::string polarname = PlanePolarNameMaker::makeName(pPlaneXfl, pPlPolar).toStdString();
+        pPlPolar->setName(polarname);
+        // Store the pointer to ensure that the object is not lost
+        // This should be done after the polar has been given a name
+        // since objects are referenced by their name and are stored
+        // in alphabetical order
+        Objects3d::insertPlPolar(pPlPolar);
+
     }
 
 
