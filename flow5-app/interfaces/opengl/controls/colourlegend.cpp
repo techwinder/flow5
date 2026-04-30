@@ -121,7 +121,7 @@ void ColourLegend::makeLegend()
 
     double yPos  = m_GradientRect.top()+m_CharHeight;
     double h = m_GradientRect.height()-m_CharHeight;
-    double dy  = (h)/double(nLabels-1);
+    double dy  = (h)/double(nLabels);
 
     QString strong;
 
