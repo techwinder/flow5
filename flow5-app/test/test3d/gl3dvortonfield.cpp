@@ -303,8 +303,8 @@ void gl3dVortonField::glMake3dObjects()
         double lmin = -10;
         double lmax  = 10;
 
-        gl::makeQuadColorMap(m_vboClrMap,   m_nRows, m_nCols, m_Nodes, m_Values, lmin, lmax, true, xfl::isMultiThreaded());
-        gl::makeQuadContoursOnGrid( m_vboContours, m_nRows, m_nCols, m_Nodes, m_Values, xfl::isMultiThreaded());
+        gl::makeQuadColorMap(m_vboClrMap,   m_nRows, m_nCols, m_Nodes, m_Values, lmin, lmax, true);
+        gl::makeQuadContoursOnGrid( m_vboContours, m_nRows, m_nCols, m_Nodes, m_Values);
 
         m_bResetContour = false;
     }
@@ -462,7 +462,8 @@ void gl3dVortonField::makeVorticityColorMap()
     m_Nodes.resize(m_nRows*m_nCols);
     m_Values.resize(m_nRows*m_nCols);
 
-    if(xfl::isMultiThreaded())
+    bool bMultiThread = true;
+    if(bMultiThread)
     {
         QFutureSynchronizer<void> futureSync;
         for(int irow=0; irow<m_nRows; irow++)

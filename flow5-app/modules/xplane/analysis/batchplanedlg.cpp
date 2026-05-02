@@ -665,7 +665,7 @@ void BatchPlaneDlg::calculate()
 
     Task3d::setCancelled(false);
     TriMesh::setCancelled(false);
-    PanelAnalysis::setMultiThread(xfl::isMultiThreaded());
+//    PanelAnalysis::setMultiThread(xfl::isMultiThreaded());
     PanelAnalysis::setMaxThreadCount(xfl::maxThreadCount());
 
     onMessage(QString::fromStdString(fl5::versionName(true)) + "\n");

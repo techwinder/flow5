@@ -51,7 +51,7 @@ class FL5LIB_EXPORT Boat : public fl5Object
         void makeDefaultBoat();
 
         void makeConnections();
-        void makeRefTriMesh(bool bIncludeHull, bool bMultiThread);
+        void makeRefTriMesh(bool bIncludeHull, bool bMultiThread=true);
 
         void duplicate(const Boat *pBoat);
 

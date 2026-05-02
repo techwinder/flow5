@@ -1,8 +1,8 @@
 /****************************************************************************
 
     flow5 application
-    Copyright (C) 2025 André Deperrois 
-    
+    Copyright (C) 2025 André Deperrois
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -36,12 +36,18 @@
 #include <api/utils.h>
 
 
+#ifdef INTEL_MKL
+#include <mkl.h>
+#endif
+
+
 int xfl::g_SymbolSize = 3;
 int xfl::g_DarkFactor = 100;
 
-bool xfl::g_bMultiThread=true;
 int xfl::g_MaxThreadCount = QThread::idealThreadCount();
 QThread::Priority xfl::g_ThreadPriority=QThread::NormalPriority;
+
+bool xfl::g_bMKLDynamic(true);
 
 bool xfl::g_bDontUseNativeDlg(false);
 bool xfl::g_bConfirmDiscard(true);
@@ -176,7 +182,6 @@ void xfl::loadCoreSettings(QSettings &settings)
         g_DarkFactor        = settings.value("DarkFactor",      g_DarkFactor).toInt();
 
         g_bLocalize         = settings.value("LocalizeApp",     g_bLocalize).toBool();
-        g_bMultiThread      = settings.value("Multithreading",  g_bMultiThread).toBool();
         g_MaxThreadCount    = settings.value("MaxThreadCount", QThread::idealThreadCount()).toInt();
         g_ThreadPriority    = QThread::Priority(settings.value("ThreadAnalysisPriority", g_ThreadPriority).toInt());
 
@@ -195,7 +200,6 @@ void xfl::saveCoreSettings(QSettings &settings)
         settings.setValue("DarkFactor",             g_DarkFactor);
 
         settings.setValue("LocalizeApp",            g_bLocalize);
-        settings.setValue("Multithreading",         g_bMultiThread);
         settings.setValue("ThreadAnalysisPriority", g_ThreadPriority);
         settings.setValue("MaxThreadCount",         g_MaxThreadCount);
 
@@ -230,7 +234,7 @@ void xfl::listSysInfo(QString &info)
 
 QColor xfl::colour(QVector<QColor> const &clrs, float tau)
 {
-//    if(tau<=-1.0f) return Qt::black;
+    //    if(tau<=-1.0f) return Qt::black;
     if(tau<=0.0f)
         return clrs.front();
 
@@ -496,5 +500,14 @@ bool xfl::readAVLString(QTextStream &in, int &Line, QString &strong)
     }
 
     return true;
+}
+
+
+void xfl::setMKLDynamic(bool b)
+{
+    g_bMKLDynamic=b;
+#ifdef INTEL_MKL
+    mkl_set_dynamic(b);
+#endif
 }
 

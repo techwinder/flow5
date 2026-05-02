@@ -205,7 +205,8 @@ void P4Analysis::makeInfluenceMatrix()
     s_DebugPts.clear();
     s_DebugVecs.clear();
 
-    if(s_bMultiThread)
+    bool bMultiThread = true;
+    if(bMultiThread)
     {
         std::vector<std::thread> threads;
 
@@ -1095,7 +1096,7 @@ void P4Analysis::forces(double const *Mu4, double const *Sigma4, double alpha, d
                         // then divide the influence by 2.0
                         C.x = m_pPolar3d->TrefftzDistance()/2.0;
 
-                        getVelocityVector(C, Mu4, Sigma4, Wg, Vortex::coreRadius(), true, s_bMultiThread);
+                        getVelocityVector(C, Mu4, Sigma4, Wg, Vortex::coreRadius(), true);
 
                         // The trailing point sees both the upstream and downstream parts of the trailing vortices
                         // Hence it sees twice the downwash.
@@ -2166,7 +2167,7 @@ void P4Analysis::testResults(double alpha, double beta, double QInf) const
     {
         double d=-Z + 2.0*double(id)*Z/n;
         Vector3d C = p4.CoG()+ p4.normal() * d;
-        getVelocityVector(C, mu, sigma, Vel, 0.0, false, s_bMultiThread);
+        getVelocityVector(C, mu, sigma, Vel, 0.0, false);
         Vel += VInf;
         qDebug(" %13g  %13g", d, Vel.dot(p4.normal()));
     }

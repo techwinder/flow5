@@ -2,7 +2,7 @@
 
     flow5 application
     Copyright © 2025 André Deperrois
-    
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -53,7 +53,7 @@ class W3dPrefs;
 
 class PrefsDlg : public QDialog
 {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         PrefsDlg(QWidget *pParent=nullptr);
@@ -90,7 +90,6 @@ class PrefsDlg : public QDialog
         void onItemChanged(QTreeWidgetItem*pNewItem, QTreeWidgetItem *pPreviousItem);
         void onLocalization();
         void onLanguageChanged(int index);
-        void onMultiThreading();
         void onOK();
         void onStyleChanged(const QString &StyleName);
         void onStyleSheet(bool);
@@ -125,11 +124,9 @@ class PrefsDlg : public QDialog
         Section2dOptions *m_p2dViewOptions;
         W3dPrefs *m_p3dPrefsWt;
 
-        QCheckBox *m_pchMultiThreading;
         IntEdit *m_pieMaxThreadCount;
         QComboBox *m_pcbThreadPriority;
 
-        QCheckBox* m_pchMKLMultiThread;
         QCheckBox* m_pchMKLDynamic;
 
         QDialogButtonBox *m_pButtonBox;

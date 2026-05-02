@@ -346,6 +346,6 @@ bool gl3dPlaneSTLView::intersectTheObject(const Vector3d &AA, const Vector3d &BB
 {
     if(!m_pPlaneSTL) return false;
     Vector3d U = (BB-AA).normalized();
-    return m_pPlaneSTL->intersectTriangles(AA,BB,I, xfl::isMultiThreaded());
+    return m_pPlaneSTL->intersectTriangles(AA,BB,I);
 }
 

@@ -916,7 +916,9 @@ void P3LinAnalysis::makeSourceInfluenceMatrix()
     m_bijf.resize(ncols*nrows);
     memset(m_bijf.data(), 0, m_bijf.size()*sizeof(float));
 
-    if(s_bMultiThread)
+
+    bool bMultiThread = true;
+    if(bMultiThread)
     {
 
         std::vector<std::thread> threads;

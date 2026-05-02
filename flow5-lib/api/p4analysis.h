@@ -89,7 +89,7 @@ class FL5LIB_EXPORT P4Analysis : public PanelAnalysis
 
         double getPotential(Vector3d const &C, const double *mu, const double *sigma) const;
         void getVelocityVector(Vector3d const &C,double const *Mu, double const *Sigma, Vector3d &VT, double coreradius,
-                               bool bWakeOnly, bool bMultiThread) const override;
+                               bool bWakeOnly, bool bMultiThread=true) const override;
 
         void VLMGetVortexInfluence(const Panel4 &pPanel, Vector3d const &C, double *phi, Vector3d *V, bool bIncludingBound, double fardist) const;
 

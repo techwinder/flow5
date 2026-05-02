@@ -6472,7 +6472,7 @@ void XPlane::onConnectTriangles()
     QApplication::setOverrideCursor(Qt::WaitCursor);
     onClearHighlightSelection();
 
-    m_pCurPlane->connectTriMesh(false, false, xfl::isMultiThreaded());
+    m_pCurPlane->connectTriMesh(false, false);
 
     QString log("\nTriangle connections done\n\n");
     displayMessage(log, false, true);

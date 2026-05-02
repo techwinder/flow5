@@ -134,8 +134,6 @@ void PSOTaskPlane::calcFitness(Particle *pParticle, bool bLong, bool bTrace) con
     PlaneXfl *pPlaneXfl = new PlaneXfl;
     makePSOPlane(pParticle, m_pPlaneXfl, pPlaneXfl);
 
-    PanelAnalysis::setMultiThread(false);
-
     PlaneTask *pTask = new PlaneTask;
     Task3d::setCancelled(false);
     TriMesh::setCancelled(false);

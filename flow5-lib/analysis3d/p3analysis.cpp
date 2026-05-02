@@ -825,9 +825,9 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
             midWakePoint(p3W, left, right);
             mid.set((left + right)/2.0);
 
-//            getVelocityVector(left,  mu3, sigma3, Wg_l, 0.0001, true, s_bMultiThread);
-            getVelocityVector(mid,   mu3, sigma3, Wg_m, 0.0001, true, s_bMultiThread);
-//            getVelocityVector(right, mu3, sigma3, Wg_r, 0.0001, true, s_bMultiThread);
+//            getVelocityVector(left,  mu3, sigma3, Wg_l, 0.0001, true);
+            getVelocityVector(mid,   mu3, sigma3, Wg_m, 0.0001, true);
+//            getVelocityVector(right, mu3, sigma3, Wg_r, 0.0001, true);
 
 //            Wg_l *= 0.5;
             Wg_m *= 0.5;
@@ -1310,10 +1310,11 @@ bool P3Analysis::computeTrimmedConditions(double mass, Vector3d const &CoG, doub
 
 void P3Analysis::makeInfluenceMatrix()
 {
-
     m_bMatrixError = false;
 
-    if(s_bMultiThread)
+    bool bMultiThread = true;
+
+    if(bMultiThread)
     {
         std::vector<std::thread> threads;
 

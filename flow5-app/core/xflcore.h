@@ -1,8 +1,8 @@
 /****************************************************************************
 
     flow5 application
-    Copyright (C) 2025 André Deperrois 
-    
+    Copyright (C) 2025 André Deperrois
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -41,7 +41,6 @@ namespace xfl
 {
     extern bool g_bLocalize;
 
-    extern bool g_bMultiThread;
     extern int g_MaxThreadCount;
     extern QThread::Priority g_ThreadPriority;
 
@@ -50,6 +49,8 @@ namespace xfl
 
     extern bool g_bDontUseNativeDlg;
     extern bool g_bConfirmDiscard;
+
+    extern bool g_bMKLDynamic;
 
 
     void loadCoreSettings(QSettings &settings);
@@ -99,15 +100,15 @@ namespace xfl
     inline void setLocalized(bool bLocal) {g_bLocalize=bLocal;}
     inline bool isLocalized() {return g_bLocalize;}
 
-    inline bool isMultiThreaded() {return g_bMultiThread;}
-    inline void setMultiThreaded(bool bMultiThread)  {g_bMultiThread=bMultiThread;}
-
     inline void setThreadPriority(QThread::Priority priority) {g_ThreadPriority = priority;}
     inline QThread::Priority threadPriority() {return g_ThreadPriority;}
 
     inline int maxThreadCount() {return g_MaxThreadCount;}
     inline void setMaxThreadCount(int nMaxThreads) {g_MaxThreadCount=nMaxThreads;}
 
+
+    inline bool isMKLDynamic() {return g_bMKLDynamic;}
+    void setMKLDynamic(bool b);
 
     void listSysInfo(QString &info);
 }

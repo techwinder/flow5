@@ -196,7 +196,7 @@ class FL5LIB_EXPORT PlaneXfl : public Plane
         std::string planeData(bool bOtherWings=false) const override;
 
         void makeTriMesh(bool bThickSurfaces=false) override;
-        bool connectTriMesh(bool bRefTriMesh, bool bConnectTE, bool bMultiThreaded) override;
+        bool connectTriMesh(bool bRefTriMesh, bool bConnectTE, bool bMultiThreaded=true) override;
         void makeQuadMesh(bool bThickSurfaces, bool bIgnoreFusePanels);
         void restoreMesh() override;
         int nPanel4() const  override {return m_QuadMesh.nPanels();}

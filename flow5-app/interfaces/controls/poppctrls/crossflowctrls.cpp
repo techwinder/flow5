@@ -427,9 +427,9 @@ void CrossFlowCtrls::makeXPlaneVelocityVectors()
     }
 
     if(pOpp3d->isQuadMethod())
-        m_pgl3dXPlaneView->computeP4VelocityVectors(pOpp3d, m_GridNodesVel, m_GridVectors, xfl::isMultiThreaded());
+        m_pgl3dXPlaneView->computeP4VelocityVectors(pOpp3d, m_GridNodesVel, m_GridVectors);
     else
-        m_pgl3dXPlaneView->computeP3VelocityVectors(pOpp3d, m_GridNodesVel, m_GridVectors, xfl::isMultiThreaded());
+        m_pgl3dXPlaneView->computeP3VelocityVectors(pOpp3d, m_GridNodesVel, m_GridVectors);
 
     gl3dXPlaneView::s_bResetglGridVelocities = true;
     m_pgl3dXPlaneView->update();
@@ -499,7 +499,8 @@ void CrossFlowCtrls::makeOmegaMap()
     m_GridNodesOmega.resize(s_nVorticitySamples*s_nVorticitySamples);
     m_OmegaField.resize(s_nVorticitySamples*s_nVorticitySamples);
 
-    if(xfl::isMultiThreaded())
+    bool bMultiThread = true;
+    if(bMultiThread)
     {
         QFutureSynchronizer<void> futureSync;
         for(int irow=0; irow<s_nVorticitySamples; irow++)

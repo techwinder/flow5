@@ -52,7 +52,6 @@
 
 
 bool PanelAnalysis::s_bDoublePrecision(true);
-bool PanelAnalysis::s_bMultiThread(true);
 int PanelAnalysis::s_MaxThreads(1);
 
 std::vector<Vector3d> PanelAnalysis::s_DebugPts;
@@ -184,15 +183,10 @@ void PanelAnalysis::releasePanelArrays()
 bool PanelAnalysis::LUfactorize()
 {
 #ifdef OPENBLAS
-    if(s_bMultiThread)
-        openblas_set_num_threads(s_MaxThreads);
-    else
-        openblas_set_num_threads(1);
+    openblas_set_num_threads(s_MaxThreads);
+
 #elif defined INTEL_MKL
-    if(s_bMultiThread)
-        MKL_Set_Num_Threads_Local(s_MaxThreads);
-    else
-        MKL_Set_Num_Threads_Local(1);
+    MKL_Set_Num_Threads_Local(s_MaxThreads);
 #endif
 
     lapack_int n = matSize();
@@ -450,8 +444,10 @@ void PanelAnalysis::combineUnitRHS(std::vector<double> &RHS, Vector3d const &VIn
 
 
 void PanelAnalysis::makeUnitRHSVectors()
-{
-    if(s_bMultiThread)
+{   
+    bool bMultiThread = true;
+
+    if(bMultiThread)
     {
         std::vector<std::thread> threads;
 
@@ -481,7 +477,8 @@ void PanelAnalysis::makeUnitRHSVectors()
  * control polars, virtual twist and vorton wake */
 void PanelAnalysis::makeRHS(const std::vector<Vector3d> &VField, std::vector<double> &RHS, Vector3d const*normals)
 {
-    if(s_bMultiThread)
+    bool bMultiThread = true;
+    if(bMultiThread)
     {
         std::vector<std::thread> threads;
 
@@ -530,8 +527,9 @@ void PanelAnalysis::addWakeContribution()
 *     is set arbitrarily to the geometrical orgin so that phi = V.dot(WindDirection) x point_position
 */
 void PanelAnalysis::makeWakeContribution()
-{
-    if(s_bMultiThread)
+{  
+    bool bMultiThread = true;
+    if(bMultiThread)
     {
         std::vector<std::thread> threads;
 
@@ -565,7 +563,8 @@ void PanelAnalysis::makeWakeContribution()
 void PanelAnalysis::makeRHSVWVelocities(std::vector<Vector3d> &VPW, bool bVLM)
 {
     Vector3d C;
-    if(s_bMultiThread)
+    bool bMultiThread = true;
+    if(bMultiThread)
     {
         int nThreads=std::thread::hardware_concurrency();
 

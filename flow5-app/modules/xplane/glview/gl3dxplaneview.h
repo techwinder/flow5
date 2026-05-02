@@ -140,8 +140,8 @@ class gl3dXPlaneView : public gl3dXflView
         void glMakeOppBuffers();
         void glMakeFlowBuffers();
 
-        void computeP4VelocityVectors(const Opp3d *pPOpp, QVector<Vector3d> const &points, QVector<Vector3d> &velvectors, bool bMultithread);
-        void computeP3VelocityVectors(const Opp3d *pPOpp, const QVector<Vector3d> &points, QVector<Vector3d> &velvectors, bool bMultithread);
+        void computeP4VelocityVectors(const Opp3d *pPOpp, QVector<Vector3d> const &points, QVector<Vector3d> &velvectors, bool bMultithread=true);
+        void computeP3VelocityVectors(const Opp3d *pPOpp, const QVector<Vector3d> &points, QVector<Vector3d> &velvectors, bool bMultithread=true);
 
         void paintOverlay() override;
 

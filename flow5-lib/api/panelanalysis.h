@@ -102,7 +102,7 @@ class FL5LIB_EXPORT PanelAnalysis
         virtual void makeRHSVWVelocitiesBlock(int iFirst, int iLast, bool bVLM, Vector3d *Vpanel);
         virtual void makeNegatingVortices(std::vector<Vortex> &negvortices) = 0;
 
-        virtual void getVelocityVector(Vector3d const &C, double const *Mu, double const *Sigma, Vector3d &VT, double coreradius, bool bWakeOnly, bool bMultiThread) const = 0;
+        virtual void getVelocityVector(Vector3d const &C, double const *Mu, double const *Sigma, Vector3d &VT, double coreradius, bool bWakeOnly, bool bMultiThread=true) const = 0;
 
         void makeUnitRHSVectors();
         void makeWakeContribution();
@@ -138,7 +138,6 @@ class FL5LIB_EXPORT PanelAnalysis
 
         virtual void testResults(double alpha, double beta, double QInf) const = 0;
 
-        static void setMultiThread(bool bMulti) {s_bMultiThread=bMulti;}
         static void setMaxThreadCount(int maxthreads) {s_MaxThreads=maxthreads;}
         static void setDoublePrecision(bool bDouble) {s_bDoublePrecision=bDouble;}
         static bool bDoublePrecision() {return s_bDoublePrecision;}
@@ -197,7 +196,6 @@ class FL5LIB_EXPORT PanelAnalysis
 
 
         static bool s_bDoublePrecision;
-        static bool s_bMultiThread;
         static int s_MaxThreads;
 
 

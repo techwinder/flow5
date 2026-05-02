@@ -352,14 +352,22 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
 
         displayMessage(strange + EOLch + EOLch, false);
 #elif defined INTEL_MKL
-    //https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-c/2025-0/mkl-get-dynamic.html
     strange.clear();
     int nt = mkl_get_max_threads();
 
+    mkl_set_dynamic(xfl::isMKLDynamic());
+
+
     if (1 == mkl_get_dynamic())
-        strange = QString::asprintf("Intel MKL may use less than %i threads for a large problem", nt);
+    {
+        strange += "MKL dynamic threading is enabled\n";
+        strange += QString::asprintf("Intel MKL may use less than %i threads for a large problem", nt);
+    }
     else
-        strange = QString::asprintf("Intel MKL should use %i threads for a large problem", nt);
+    {
+        strange += "MKL dynamic threading is disabled\n";
+        strange += QString::asprintf("Intel MKL should use %i threads for a large problem", nt);
+    }
     displayMessage(strange + EOLch + EOLch, false);
 #endif
 

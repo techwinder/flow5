@@ -223,7 +223,6 @@ void XflScriptExec::makeFoilAnalysisList()
                 }
                 else
                 {
-                    FoilAnalysis *pFoilAnalysis = new FoilAnalysis;
                     Polar *pPolar = new Polar;
                     XmlPolarReader polarReader(xmlfile, pPolar);
                     polarReader.readXMLPolarFile();
@@ -236,15 +235,17 @@ void XflScriptExec::makeFoilAnalysisList()
 
                     if(polarReader.hasError())
                     {
-                        QString errorMsg = polarReader.errorString() + QString("on line %1 column %2\n").arg(polarReader.lineNumber()).arg(polarReader.columnNumber());
+                        QString errorMsg = polarReader.errorString()
+                                           + QString("on line %1 column %2\n").arg(polarReader.lineNumber()).arg(polarReader.columnNumber());
                         errorMsg = filename + ": " + errorMsg;
                         traceLog(errorMsg);
-                        delete pPolar;
+                        delete pPolar;;
                     }
                     else
                     {
                         if(pFoil->name().compare(pPolar->foilName())==0)
                         {
+                            FoilAnalysis *pFoilAnalysis = new FoilAnalysis;
                             pFoilAnalysis->m_Foil.copy(pFoil);
                             pFoilAnalysis->m_pPolar = pPolar;
                             if(pPolar->type()<xfl::T4POLAR)
@@ -789,7 +790,6 @@ bool XflScriptExec::runScript(QString const &scriptpath)
     traceLog(logmsg);
     if(isCancelled()) return false;
 
-    PanelAnalysis::setMultiThread(    m_pScriptReader->m_bMultiThreading);
     PanelAnalysis::setMaxThreadCount( m_pScriptReader->m_nMaxThreads);
     PanelAnalysis::setDoublePrecision(m_pScriptReader->m_bDoublePrecision);
 
@@ -1261,7 +1261,7 @@ void XflScriptExec::runBoatAnalyses()
 {
     QString strong;
 
-    PanelAnalysis::setMultiThread(m_pScriptReader->bMultiThreading());
+//    PanelAnalysis::setMultiThread(m_pScriptReader->bMultiThreading());
     PanelAnalysis::setMaxThreadCount(m_pScriptReader->nMaxThreads());
     PanelAnalysis::setDoublePrecision(m_pScriptReader->bDoublePrecision());
 

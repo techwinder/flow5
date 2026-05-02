@@ -201,8 +201,23 @@ bool PlaneTask::initializeTask()
     traceLog(strange);
     traceStdLog("\n");
 
-    if(PanelAnalysis::s_bMultiThread) traceStdLog("Running in multi-threaded mode\n\n");
-    else                              traceStdLog("Running in single-threaded mode\n\n");
+    traceLog(QString::asprintf("Using %d threads\n\n", PanelAnalysis::s_MaxThreads));
+
+
+#ifdef INTEL_MKL
+
+    MKL_Set_Num_Threads_Local(PanelAnalysis::s_MaxThreads);
+    int nt = mkl_get_max_threads();
+
+    if (1 == mkl_get_dynamic())
+    {
+        traceLog(QString::asprintf("MKL dynamic threading is enabled: MKL may use less than %i threads for a large problem\n", nt));
+    }
+    else
+    {
+        traceLog(QString::asprintf("MKL dynamic threading is disabled: MKL should use %i threads for a large problem\n", nt));
+    }
+#endif
 
     if(PanelAnalysis::s_bDoublePrecision) traceStdLog("Linear system calculations in floating point double precision\n\n");
     else                                  traceStdLog("Linear system calculations in floating point single precision\n\n");

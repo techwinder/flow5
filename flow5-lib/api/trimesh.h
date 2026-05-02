@@ -75,7 +75,7 @@ class FL5LIB_EXPORT TriMesh : public XflMesh
         void clearConnections();
         void connectMeshes(int i0, int n0, int i1, int n1);
         void makeConnectionsFromNodeIndexes(int i0, int n0, int i1, int n1);
-        void makeConnectionsFromNodePosition(bool bConnectTE, bool bMultiThread);
+        void makeConnectionsFromNodePosition(bool bConnectTE, bool bMultiThread=true);
 
         void makeConnectionsFromNodePosition2(int i0, int n3_0, double MERGEDISTANCE);
 

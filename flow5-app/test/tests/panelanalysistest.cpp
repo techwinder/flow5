@@ -295,9 +295,9 @@ void PanelAnalysisTest::setAnalysis(const Boat *pBoat, Polar3d const *pBtPolar, 
 void PanelAnalysisTest::getVelocityVector(Vector3d const &C, double const *Mu, double const *Sigma, double coreradius, Vector3d &velocity) const
 {
     if(m_pP4Analysis)
-        m_pP4Analysis->getVelocityVector(C, Mu, Sigma, velocity, coreradius, false, xfl::isMultiThreaded());
+        m_pP4Analysis->getVelocityVector(C, Mu, Sigma, velocity, coreradius, false);
     else if(m_pP3Analysis)
-        m_pP3Analysis->getVelocityVector(C, Mu, Sigma, velocity, coreradius, false, xfl::isMultiThreaded());
+        m_pP3Analysis->getVelocityVector(C, Mu, Sigma, velocity, coreradius, false);
 }
 
 

@@ -91,9 +91,9 @@ namespace gl
     void makeTriangle(Triangle3d const &t3d, QOpenGLBuffer &vbo);
     void makeTriangle(Vector2d const &V0, Vector2d const &V1, Vector2d const &V2, QOpenGLBuffer &vbo);
 
-    void makeQuadColorMap(QOpenGLBuffer &vbo, int nrows, int ncols, QVector<Vector3d> const&nodes, QVector<double> const &values, float lmin, float lmax, bool bAuto, bool bMultiThreaded);
+    void makeQuadColorMap(QOpenGLBuffer &vbo, int nrows, int ncols, QVector<Vector3d> const&nodes, QVector<double> const &values, float lmin, float lmax, bool bAuto, bool bMultiThreaded=true);
     void makeQuadColorMapRow(int r, int ncols, const QVector<Vector3d> &nodes, const QVector<double> &values, float *nodeVertexArray);
-    void makeQuadContoursOnGrid(QOpenGLBuffer &vbo, int nrows, int ncols, QVector<Vector3d> const&nodes, QVector<double> const &values, bool bMultithreaded);
+    void makeQuadContoursOnGrid(QOpenGLBuffer &vbo, int nrows, int ncols, QVector<Vector3d> const&nodes, QVector<double> const &values, bool bMultithreaded=true);
 
 
     void makeQuadContour(double threshold, int nrows,

@@ -495,7 +495,7 @@ void XSail::onNewBoat()
     setBoat(pNewBoat);
     m_pBoatExplorer->insertBoat(pNewBoat);
     m_pBoatExplorer->selectBoat(pNewBoat);
-    if(m_pCurBoat) m_pCurBoat->makeRefTriMesh(true, xfl::isMultiThreaded());
+    if(m_pCurBoat) m_pCurBoat->makeRefTriMesh(true);
     m_pCurBtPolar = nullptr;
     m_pCurBtOpp=nullptr;
 
@@ -547,7 +547,7 @@ void XSail::onEditCurBoat()
 
     SailObjects::deleteBoatResults(m_pCurBoat, false);
 
-    m_pCurBoat->makeRefTriMesh(m_pCurBtPolar&&!m_pCurBtPolar->bIgnoreBodyPanels(), xfl::isMultiThreaded());
+    m_pCurBoat->makeRefTriMesh(m_pCurBtPolar&&!m_pCurBtPolar->bIgnoreBodyPanels());
 
     m_pBoatExplorer->removeBtOpps(m_pCurBoat);
     m_pCurBtOpp=nullptr;
@@ -1243,7 +1243,7 @@ Boat *XSail::setBoat(Boat *pBoat)
         pBoat->setInitialized(true);
     }
 
-    m_pCurBoat->makeRefTriMesh(true, xfl::isMultiThreaded());
+    m_pCurBoat->makeRefTriMesh(true);
     m_pCurBoat->restoreMesh();
 
     m_pgl3dXSailView->setBoat(m_pCurBoat);
@@ -1309,13 +1309,13 @@ BoatPolar *XSail::setBtPolar(BoatPolar *pBtPolar)
     }
     else if(!pBtPolar || m_pCurBoat->name()!=pBtPolar->boatName())
     {
-        m_pCurBoat->makeRefTriMesh(true, xfl::isMultiThreaded());
+        m_pCurBoat->makeRefTriMesh(true);
         m_pCurBoat->restoreMesh();
         m_pCurBtOpp = nullptr;
     }
     else
     {
-        m_pCurBoat->makeRefTriMesh(!m_pCurBtPolar->bIgnoreBodyPanels(), xfl::isMultiThreaded());
+        m_pCurBoat->makeRefTriMesh(!m_pCurBtPolar->bIgnoreBodyPanels());
         m_pCurBoat->restoreMesh();
 
         // clean up legacy data
@@ -1594,7 +1594,7 @@ void XSail::onDuplicateCurBoat()
     {
         m_pBoatExplorer->insertBoat(m_pCurBoat);
         m_pBoatExplorer->selectBoat(m_pCurBoat);
-        m_pCurBoat->makeRefTriMesh(true, xfl::isMultiThreaded());
+        m_pCurBoat->makeRefTriMesh(true);
         m_pCurBoat->restoreMesh();
     }
     m_pCurBtPolar = nullptr;
@@ -1871,7 +1871,7 @@ void XSail::onEditSail()
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
-    m_pCurBoat->makeRefTriMesh(m_pCurBtPolar && !m_pCurBtPolar->bIgnoreBodyPanels(), xfl::isMultiThreaded());
+    m_pCurBoat->makeRefTriMesh(m_pCurBtPolar && !m_pCurBtPolar->bIgnoreBodyPanels());
     m_pCurBoat->restoreMesh();
 
     m_pgl3dXSailView->resetglBoat();
@@ -2253,7 +2253,7 @@ void XSail::onEditHull()
 
     pFuse->makeFuseGeometry();
 //    pFuse->makeDefaultTriMesh(logmsg);
-    m_pCurBoat->makeRefTriMesh(m_pCurBtPolar && !m_pCurBtPolar->bIgnoreBodyPanels(), xfl::isMultiThreaded());
+    m_pCurBoat->makeRefTriMesh(m_pCurBtPolar && !m_pCurBtPolar->bIgnoreBodyPanels());
 
     m_pgl3dXSailView->resetglHull();
     updateView();
@@ -3122,7 +3122,7 @@ void XSail::onConnectTriangles()
     if(!m_pCurBoat) return;
     QString log("\nMaking triangle connections\n");
     QElapsedTimer t; t.start();
-//    m_pCurBoat->refTriMesh().makeConnectionsFromNodePosition(false, xfl::isMultiThreaded());
+//    m_pCurBoat->refTriMesh().makeConnectionsFromNodePosition(false);
     m_pCurBoat->makeConnections(); // avoids the connection of one sail to another
 
     std::vector<int>errorlist;

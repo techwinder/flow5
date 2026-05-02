@@ -342,7 +342,7 @@ PlaneTask* PlaneAnalysisDlg::analyze(Plane *pPlane, PlanePolar *pPlPolar, std::v
     }
     Task3d::setCancelled(false);
     TriMesh::setCancelled(false);
-    PanelAnalysis::setMultiThread(xfl::isMultiThreaded());
+//    PanelAnalysis::setMultiThread(xfl::isMultiThreaded());
     PanelAnalysis::setMaxThreadCount(xfl::maxThreadCount());
 
     m_Clock.start(); // put pressure on something (Jerry)

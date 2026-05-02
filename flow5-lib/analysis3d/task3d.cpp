@@ -175,7 +175,9 @@ void Task3d::advectVortons(double alpha, double beta, double QInf, int qrhs)
     tmp_vortonwakelength = m_pPolar3d->VPWMaxLength()*m_pPolar3d->referenceChordLength();
 
 
-    if(PanelAnalysis::s_bMultiThread)
+    bool bMultiThread = true;
+
+    if(bMultiThread)
     {
         std::vector<std::thread> threads;
 

@@ -2555,10 +2555,10 @@ void gl3dXPlaneView::glMakeOppBuffers()
 
                 gl::makeQuadColorMap(m_pglXPlaneBuffers->m_vboContourClrs, m_pCrossFlowCtrls->s_nVorticitySamples, m_pCrossFlowCtrls->s_nVorticitySamples,
                                    m_pCrossFlowCtrls->m_GridNodesOmega, m_pCrossFlowCtrls->m_OmegaField,
-                                   lmin, lmax, bAuto, xfl::isMultiThreaded());
+                                   lmin, lmax, bAuto);
 
                 gl::makeQuadContoursOnGrid(m_pglXPlaneBuffers->m_vboContourLines, m_pCrossFlowCtrls->s_nVorticitySamples, m_pCrossFlowCtrls->s_nVorticitySamples,
-                                         m_pCrossFlowCtrls->m_GridNodesOmega, m_pCrossFlowCtrls->m_OmegaField, xfl::isMultiThreaded());
+                                         m_pCrossFlowCtrls->m_GridNodesOmega, m_pCrossFlowCtrls->m_OmegaField);
                 m_ColourLegend.setRange(lmin*1000.0, lmax*1000.0);
                 m_ColourLegend.setTitle(tr("Omega x1000.0"));
                 m_ColourLegend.makeLegend();

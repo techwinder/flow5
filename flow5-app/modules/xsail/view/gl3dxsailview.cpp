@@ -572,10 +572,10 @@ void gl3dXSailView::glMakeOppBuffers()
 
                 gl::makeQuadColorMap(m_vboContourClrs, CrossFlowCtrls::s_nVorticitySamples, CrossFlowCtrls::s_nVorticitySamples,
                                    m_pCrossFlowCtrls->m_GridNodesOmega, m_pCrossFlowCtrls->m_OmegaField,
-                                   lmin, lmax, bAuto, xfl::isMultiThreaded());
+                                   lmin, lmax, bAuto);
 
                 gl::makeQuadContoursOnGrid(m_vboContourLines, CrossFlowCtrls::s_nVorticitySamples, CrossFlowCtrls::s_nVorticitySamples,
-                                         m_pCrossFlowCtrls->m_GridNodesOmega, m_pCrossFlowCtrls->m_OmegaField, xfl::isMultiThreaded());
+                                         m_pCrossFlowCtrls->m_GridNodesOmega, m_pCrossFlowCtrls->m_OmegaField);
             }
         }
         else
@@ -1907,7 +1907,8 @@ void gl3dXSailView::computeP3VelocityVectors(Opp3d const *pBtOpp, QVector<Vector
         m_pP3LinAnalysis->setVortons(pBtOpp->m_Vorton);
     }
 
-    if(xfl::isMultiThreaded())
+    bool bMultiThread = true;
+    if(bMultiThread)
     {
         m_nBlocks = QThreadPool::globalInstance()->maxThreadCount();
         QFutureSynchronizer<void> futureSync;

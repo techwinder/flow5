@@ -340,8 +340,8 @@ void gl3dQuadField::glMake3dObjects()
         double lmin = m_pdeVMin->value();
         double lmax = m_pdeVMax->value();
 
-        gl::makeQuadColorMap(m_vboClrMap,   m_nRows, m_nCols, m_Nodes, m_Values, lmin, lmax, bAuto, xfl::isMultiThreaded());
-        gl::makeQuadContoursOnGrid( m_vboContours, m_nRows, m_nCols, m_Nodes, m_Values, xfl::isMultiThreaded());
+        gl::makeQuadColorMap(m_vboClrMap,   m_nRows, m_nCols, m_Nodes, m_Values, lmin, lmax, bAuto);
+        gl::makeQuadContoursOnGrid( m_vboContours, m_nRows, m_nCols, m_Nodes, m_Values);
 
         m_bResetContour = false;
     }
@@ -479,7 +479,8 @@ void gl3dQuadField::makeColorValues()
     m_Nodes.resize(m_nRows*m_nCols);
     m_Values.resize(m_nRows*m_nCols);
 
-    if(xfl::isMultiThreaded())
+    bool bMultiThread = true;
+    if(bMultiThread)
     {
         QFutureSynchronizer<void> futureSync;
         for(int irow=0; irow<m_nRows; irow++)
