@@ -1,8 +1,8 @@
 /****************************************************************************
 
     flow5 application
-    Copyright (C) 2025 André Deperrois 
-    
+    Copyright (C) 2025 André Deperrois
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -46,7 +46,7 @@ class ColourLegend
         void setColorGradient();
 
         void makeLegend();
-        void resize(int w, int h, int dpr);
+        void resize(float w, float h, float dpr);
 
         static int colourCount() {return s_Clr.size();}
         static QVector<QColor> &colours() {return s_Clr;}

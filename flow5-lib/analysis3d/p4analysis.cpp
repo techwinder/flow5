@@ -1461,7 +1461,7 @@ void P4Analysis::inducedForce(int nPanels, double QInf, double alpha, double bet
 void P4Analysis::trefftzDrag(int nPanels, double QInf, double alpha, double beta, int pos,
                                Vector3d &FFForce, SpanDistribs &SpanResFF) const
 {
-    auto t0 = std::chrono::high_resolution_clock::now();
+//    auto t0 = std::chrono::high_resolution_clock::now();
 
     // multithreading overhead slows down the calculation > x3
 //    bool bMultiThreaded = s_bMultiThread;
@@ -1642,9 +1642,9 @@ void P4Analysis::trefftzDrag(int nPanels, double QInf, double alpha, double beta
     }
     FFForce.set(ForceBodyAxes);    // N/q, body axes
 
-    auto t1 = std::chrono::high_resolution_clock::now();
+/*    auto t1 = std::chrono::high_resolution_clock::now();
     int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    qDebug("P4Analysis::trefftzDrag %g ms", double(duration)/1000.0);
+    qDebug("P4Analysis::trefftzDrag %g ms", double(duration)/1000.0);*/
 }
 
 

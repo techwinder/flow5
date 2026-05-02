@@ -171,7 +171,6 @@ class gl3dXPlaneView : public gl3dXflView
 
         int m_nBlocks;
 
-        QOpenGLBuffer m_vboPickedQuad;
         QOpenGLBuffer m_vboHPlane;
 
         glXPlaneBuffers *m_pglXPlaneBuffers;

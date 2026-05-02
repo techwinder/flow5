@@ -24,7 +24,7 @@
 
 #define _MATH_DEFINES_DEFINED
 
-
+#include <QApplication>
 #include <QScreen>
 #include <QMenuBar>
 #include <QClipboard>
@@ -308,11 +308,11 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
                                 pScreen->logicalDotsPerInch(),
                                 pScreen->devicePixelRatio());
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 2, 0))
-    strange += QString::asprintf("Application device pixel ratio = %g\n\n", devicePixelRatio());
+    strange += QString::asprintf("Paint       device pixel ratio = %g\n\n", devicePixelRatio());
+    strange += QString::asprintf("Application device pixel ratio = %g\n\n", qApp->devicePixelRatio());
 #else
     strange += QString::asprintf("Application device pixel ratio = %d\n\n", devicePixelRatio());
 #endif
-
 
     gl2dView::setImageSize(pScreen->size());
 
@@ -1311,18 +1311,21 @@ void MainFrame::keyPressEvent(QKeyEvent *pEvent)
                 }
                 break;
             }
-            case Qt::Key_R:
+            case Qt::Key_D:
             {
 #ifdef QT_DEBUG
                 if(bCtrl)
                 {
                     resize(2560, 1440);
                     setGeometry(150,0,2560, 1440);
-                    qDebug()<<"ratio"<<devicePixelRatio();
+                    qDebug()<<"App device pixel ratio"<<qApp->devicePixelRatio();
+                    qDebug()<<"Device pixel ratio"<<devicePixelRatio()<<devicePixelRatioF();
+                    qDebug()<<"Screen pixel ratio"<<QGuiApplication::primaryScreen()->devicePixelRatio();
                     qDebug()<<"size="<<size();
                     qDebug()<<"geometry="<<geometry();
                     qDebug()<<"framegeom"<<frameGeometry();
                     pEvent->accept();
+
                 }
 #endif
                 break;

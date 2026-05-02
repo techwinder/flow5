@@ -356,7 +356,7 @@ void gl3dQuadField::showEvent(QShowEvent *pEvent)
     restoreGeometry(s_Geometry);
 
 //    m_LegendOverlay.setLegendHeight((height()*2)/3);
-    m_LegendOverlay.resize(100, (height()*2)/3, devicePixelRatioF());
+    m_LegendOverlay.resize(100.0f, float(height())*3.0/5.0, devicePixelRatioF());
     m_LegendOverlay.makeLegend();
 
     QPoint pos1(5,height()-m_pfrControls->height()-5);

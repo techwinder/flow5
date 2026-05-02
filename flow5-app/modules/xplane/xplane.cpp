@@ -474,7 +474,7 @@ void XPlane::connectSignals()
 
 //    connect(m_pglControls->m_ptbDistance, SIGNAL(clicked()), SLOT(onNodeDistance()));
     connect(m_pgl3dXPlaneView,   SIGNAL(pickedNodePair(QPair<int,int>)), SLOT(onPickedNodePair(QPair<int,int>)));
-    connect(m_pgl3dXPlaneView,   SIGNAL(pickedNodeIndex(int)),           SLOT(onPickedNode(int)));
+//    connect(m_pgl3dXPlaneView,   SIGNAL(pickedNodeIndex(int)),           SLOT(onPickedNode(int)));
 }
 
 
@@ -6557,6 +6557,7 @@ void XPlane::onClearHighlightSelection()
 {
     m_pgl3dXPlaneView->clearHighlightList();
     m_pgl3dXPlaneView->clearSegments();
+    m_pgl3dXPlaneView->clearPickedValues();
 }
 
 
@@ -6691,7 +6692,7 @@ void XPlane::onNodeDistance()
     m_pgl3dXPlaneView->update();
 }
 
-
+/*
 void XPlane::onPickedNode(int iNode)
 {
     Node nsrc  = m_pCurPlane->node(iNode);
@@ -6699,7 +6700,7 @@ void XPlane::onPickedNode(int iNode)
     strange  = QString::asprintf("Node %5d: (%9g, %9g, %9g) ", iNode, nsrc.x*Units::mtoUnit(), nsrc.y*Units::mtoUnit(), nsrc.z*Units::mtoUnit());
     strange += Units::lengthUnitQLabel() + "\n";
     displayMessage(strange, true, false);
-}
+}*/
 
 
 void XPlane::onPickedNodePair(QPair<int, int> nodepair)

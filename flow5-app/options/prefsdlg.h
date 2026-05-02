@@ -129,6 +129,9 @@ class PrefsDlg : public QDialog
         IntEdit *m_pieMaxThreadCount;
         QComboBox *m_pcbThreadPriority;
 
+        QCheckBox* m_pchMKLMultiThread;
+        QCheckBox* m_pchMKLDynamic;
+
         QDialogButtonBox *m_pButtonBox;
 
         QCheckBox *m_pchConfirmDiscard;

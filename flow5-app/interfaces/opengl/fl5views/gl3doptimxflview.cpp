@@ -74,7 +74,7 @@ void gl3dOptimXflView::resizeGL(int w, int h)
     gl3dXflView::resizeGL(w, h);
 
 //    m_LegendOverlay.setLegendHeight((height()*2)/3);
-    m_ColourLegend.resize(100, (height()*2)/3, devicePixelRatioF());
+    m_ColourLegend.resize(100.0f, float(height())*3.0/5.0, devicePixelRatioF());
     m_ColourLegend.makeLegend();
 }
 

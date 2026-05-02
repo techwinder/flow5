@@ -37,7 +37,6 @@
 class XSail;
 class XSailDisplayCtrls;
 class gl3dXSailView;
-class gl3dGeomControls;
 class Opp3dScalesCtrls;
 class StreamLineCtrls;
 class FlowCtrls;

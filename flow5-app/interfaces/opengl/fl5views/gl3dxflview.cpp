@@ -95,6 +95,8 @@ gl3dXflView::gl3dXflView(QWidget *pParent) : gl3dView(pParent)
 
     m_bResetglMesh  = true;
     m_bResetglSegments = true;
+    m_bResetPickedValues = true;
+
 
     m_bP3Select = false;
 
@@ -1178,3 +1180,5 @@ QPair<int, int> gl3dXflView::pickFace(const QPoint &point, TopoDS_ListOfShape co
 
     return {iShell, iFace};
 }
+
+

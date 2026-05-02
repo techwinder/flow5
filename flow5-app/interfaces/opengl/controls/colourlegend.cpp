@@ -1,8 +1,8 @@
 /****************************************************************************
 
     flow5 application
-    Copyright (C) 2025 André Deperrois 
-    
+    Copyright (C) 2025 André Deperrois
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -39,7 +39,7 @@
 
 QVector<QColor> ColourLegend::s_Clr = {Qt::blue, Qt::green, Qt::red};
 
-/** @todo pix is not needed; redefine class as a widget and override paintEvent */
+
 ColourLegend::ColourLegend()
 {
     m_bVisible = false;
@@ -64,7 +64,7 @@ void ColourLegend::setTitle(QString const & title)
 }
 
 
-void ColourLegend::resize(int w, int h, int dpr)
+void ColourLegend::resize(float w, float h, float dpr)
 {
     m_DevicePixelRatio = dpr;
     m_pix = QPixmap(w*dpr*2, h*dpr);
@@ -137,6 +137,7 @@ void ColourLegend::makeLegend()
 
     painter.restore();
 }
+
 
 
 QColor ColourLegend::colour(float tau)

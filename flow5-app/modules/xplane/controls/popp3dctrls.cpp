@@ -151,7 +151,11 @@ void POpp3dCtrls::setupLayout()
                 m_pchHPlane         = new QCheckBox(tr("Ground/Free surface"));
                 m_pchPickPanel      = new QCheckBox(tr("Pick value"));
                 m_pchPickPanel->setShortcut(QKeySequence(Qt::SHIFT|Qt::Key_H));
-                QString tip(tr("<p>Activate this checkbox and move the mouse\nover the Cp or Forces color plot. (Shift+H)</p>"));
+                QString tip(tr("<p>Activate this checkbox and move the mouse over the mesh.<br>"
+                               "Click to select.<br>"
+                               "Escape to clear selection.<br>"
+                               "(Shift+H)"
+                               "</p>"));
                 m_pchPickPanel->setToolTip(tip);
                 m_pchPOppAnimate    = new QCheckBox(tr("Animate"));
 
@@ -433,6 +437,10 @@ void POpp3dCtrls::on3dCp()
         }
     }
 
+
+    m_pgl3dXPlaneView->clearPickedValues();
+    m_pgl3dXPlaneView->m_bResetPickedValues = true;
+
     m_pgl3dXPlaneView->showColourLegend(needsColorLegend());
     m_pgl3dXPlaneView->update();
 }
@@ -468,6 +476,9 @@ void POpp3dCtrls::onGamma()
                                     qDyn);
         }
     }
+
+    m_pgl3dXPlaneView->clearPickedValues();
+    m_pgl3dXPlaneView->m_bResetPickedValues = true;
 
     m_pgl3dXPlaneView->showColourLegend(needsColorLegend());
 
@@ -505,6 +516,9 @@ void POpp3dCtrls::onPanelForce()
                                     qDyn);
         }
     }
+
+    m_pgl3dXPlaneView->clearPickedValues();
+    m_pgl3dXPlaneView->m_bResetPickedValues = true;
 
     m_pgl3dXPlaneView->showColourLegend(needsColorLegend());
     m_pgl3dXPlaneView->s_bResetglPanelForce = true;

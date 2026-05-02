@@ -217,6 +217,8 @@ class gl3dXflView : public gl3dView
 
         void resizeLabels();
 
+        void clearPickedValues() {m_PickedValues.clear();}
+
         void pickTriangleNode(Triangle3d const &p3, Vector3d const &I);
         void pickPanelNode(const Panel3 &p3, const Vector3d &I, xfl::enumSurfacePosition pos);
         void pickNode(QPoint const &point, QVector<Node> const &nodes, xfl::enumSurfacePosition pos);
@@ -240,7 +242,6 @@ class gl3dXflView : public gl3dView
 #endif
         void leaveEvent(QEvent *pEvent) override;
         void keyPressEvent(QKeyEvent *pEvent) override;
-
 
     signals:
         void pickedNode(Vector3d);
@@ -266,6 +267,8 @@ class gl3dXflView : public gl3dView
 
         bool m_bResetglSegments;
         bool m_bResetglMesh;
+        bool m_bResetPickedValues;
+
 
         xfl::enumPickObjectType m_PickType;
 
@@ -293,6 +296,11 @@ class gl3dXflView : public gl3dView
         QVector<int> m_PanelHightlight;
         QOpenGLBuffer m_vboHighlightPanel3;
         QOpenGLBuffer m_vboTriangle;
+
+
+        QOpenGLBuffer m_vboHoveredQuad;
+        QOpenGLBuffer m_vboPickedPanels;
+        QMap<int, double> m_PickedValues; //  [panel or node index, colour map value]
 
         bool m_bEdgeNodes;
         QVector<Node> m_Nodes;

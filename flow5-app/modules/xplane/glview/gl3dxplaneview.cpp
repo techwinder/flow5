@@ -263,6 +263,7 @@ void gl3dXPlaneView::setPlane(Plane const *pPlane)
 void gl3dXPlaneView::glRenderPanelBasedBuffers()
 {
     Plane      const *pPlane    = s_pXPlane->curPlane();
+    PlaneXfl   const *pPlaneXfl  = dynamic_cast<PlaneXfl const*>(pPlane);
     PlanePolar const *pPlPolar  = s_pXPlane->curPlPolar();
     PlaneOpp   const *pPOpp     = s_pXPlane->curPOpp();
 
@@ -303,10 +304,8 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
 
     if(m_bMeshPanels && pPlPolar)
     {
-        if(pPlane->isXflType() && pPlPolar->isQuadMethod())
+        if(pPlaneXfl && pPlPolar->isQuadMethod())
         {
-            PlaneXfl const *pPlaneXfl = dynamic_cast<PlaneXfl const*>(s_pXPlane->curPlane());
-
             if(bBackGround) paintTriPanels(m_pglXPlaneBuffers->m_vboMesh,true);
             paintSegments(m_pglXPlaneBuffers->m_vboMeshEdges, W3dPrefs::s_PanelStyle);
 
@@ -417,40 +416,114 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
         }
     }
 
-    if(isPicking() && m_PickedPanelIndex>=0)
+    if(isPicking())
     {
-        if(pPlPolar && pPlPolar->isTriangleMethod())
+        if(m_PickedPanelIndex>=0)
         {
-            if(pPlPolar->isTriUniformMethod())
-            {
-                paintTriangle(m_vboTriangle, true, false, Qt::black);
-            }
-            else if (pPlPolar->isTriLinearMethod())
-            {
-                if(pPOpp && (m_pPOpp3dControls->m_b3dCp || m_pPOpp3dControls->m_bGamma || m_pPOpp3dControls->m_bPanelForce))
-                    paintSphere(m_PickedPoint, 0.0075/double(m_glScalef), Qt::red, true);
-//                else paintTriangle(true, false, Qt::black);
-            }
-        }
-        else // if (pWPolar->isQuadMethod())
-            paintQuad(Qt::black, true, 1.0f, true, false, false, m_vboPickedQuad);
 
-        QString strong;
-        if(pPOpp && (m_pPOpp3dControls->m_b3dCp || m_pPOpp3dControls->m_bGamma || m_pPOpp3dControls->m_bPanelForce))
-        {
-            if     (pPOpp->isTriUniformMethod()) strong = QString::asprintf("T%d: %g", m_PickedPanelIndex, m_PickedVal);
-            else if(pPOpp->isTriLinearMethod())  strong = QString::asprintf("N%d: %g", m_PickedNodeIndex,  m_PickedVal);
-            else if(pPOpp->isQuadMethod())       strong = QString::asprintf("Q%d: %g", m_PickedPanelIndex, m_PickedVal);
+            if(pPlPolar && pPlPolar->isTriangleMethod())
+            {
+                if(pPlPolar->isTriUniformMethod())
+                {
+                    paintTriangle(m_vboTriangle, true, false, Qt::black);
+                }
+                else if (pPlPolar->isTriLinearMethod())
+                {
+                    if(pPOpp && (m_pPOpp3dControls->m_b3dCp || m_pPOpp3dControls->m_bGamma || m_pPOpp3dControls->m_bPanelForce))
+                        paintSphere(m_PickedPoint, 0.0075/double(m_glScalef), Qt::red, true);
+    //                else paintTriangle(true, false, Qt::black);
+                }
+            }
+            else // if (pWPolar->isQuadMethod())
+            {
+                paintQuad(Qt::black, true, 2.0f, true, false, false, m_vboHoveredQuad);
+            }
+
+            QString strong;
+            if(pPOpp && (m_pPOpp3dControls->m_b3dCp || m_pPOpp3dControls->m_bGamma || m_pPOpp3dControls->m_bPanelForce))
+            {
+                if     (pPOpp->isTriUniformMethod()) strong = QString::asprintf("T%d: %g", m_PickedPanelIndex, m_PickedVal);
+                else if(pPOpp->isTriLinearMethod())  strong = QString::asprintf("N%d: %g", m_PickedNodeIndex,  m_PickedVal);
+                else if(pPOpp->isQuadMethod())       strong = QString::asprintf("Q%d: %g", m_PickedPanelIndex, m_PickedVal);
+                glRenderText(m_PickedPoint.x+0.03/double(m_glScalef), m_PickedPoint.y+0.03/double(m_glScalef), m_PickedPoint.z+0.03/double(m_glScalef),
+                             strong, DisplayOptions::textColor(), true);
+            }
+            else if(pPlPolar)
+            {
+                if(pPlPolar->isTriangleMethod())  strong = QString::asprintf("T%d", m_PickedPanelIndex);
+                //            else if(pWPolar->isTriLinearMethod()) strong = QString::asprintf("N%d", m_PickedIndex);
+                else if(pPlPolar->isQuadMethod()) strong = QString::asprintf("Q%d", m_PickedPanelIndex);
+                glRenderText(m_PickedPoint.x+0.03/double(m_glScalef), m_PickedPoint.y+0.03/double(m_glScalef), m_PickedPoint.z+0.03/double(m_glScalef),
+                             strong, DisplayOptions::textColor(), true);
+            }
         }
-        else if(pPlPolar)
+
+        if(pPlane && pPlPolar)
         {
-            if(pPlPolar->isTriangleMethod())  strong = QString::asprintf("T%d", m_PickedPanelIndex);
-            //            else if(pWPolar->isTriLinearMethod()) strong = QString::asprintf("N%d", m_PickedIndex);
-            else if(pPlPolar->isQuadMethod()) strong = QString::asprintf("Q%d", m_PickedPanelIndex);
+            if(!m_PickedValues.isEmpty())
+            {
+                QString strange;
+                Vector3d pt;
+
+                if(pPlaneXfl && pPlPolar->isQuadMethod())
+                {
+                    paintSegments(m_vboPickedPanels, W3dPrefs::selectColor(), 2.0f);
+
+                    QMapIterator<int, double> it(m_PickedValues);
+                    while (it.hasNext())
+                    {
+                        it.next();
+                        int index = it.key();
+                        if(index>=0 && index<pPlaneXfl->quadMesh().nPanels()) // failsafe
+                        {
+                            strange = QString::asprintf("Q%d: %g", index, it.value());
+                            Panel4 const &p4 = pPlaneXfl->quadMesh().panelAt(index);
+                            pt = p4.CoG();
+                            glRenderText(pt.x+0.03/double(m_glScalef), pt.y+0.03/double(m_glScalef), pt.z+0.03/double(m_glScalef),
+                                         strange, DisplayOptions::textColor(), true);
+                        }
+                    }
+
+                }
+                else if(pPlPolar->isTriUniformMethod())
+                {
+                    paintSegments(m_vboPickedPanels, W3dPrefs::selectColor(), 2.0f);
+
+                    QMapIterator<int, double> it(m_PickedValues);
+                    while (it.hasNext())
+                    {
+                        it.next();
+                        int index = it.key();
+
+                        if(index>=0 && index<pPlane->triMesh().nPanels()) // failsafe
+                        {
+                            strange = QString::asprintf("T%d: %g", index, it.value());
+                            Panel3 const &p3 = pPlane->triMesh().panelAt(index);
+                            pt = p3.CoG();
+                            glRenderText(pt.x+0.03/double(m_glScalef), pt.y+0.03/double(m_glScalef), pt.z+0.03/double(m_glScalef),
+                                         strange, DisplayOptions::textColor(), true);
+                        }
+                    }
+                }
+                else if(pPlPolar->isTriLinearMethod())
+                {
+                    QMapIterator<int, double> it(m_PickedValues);
+                    while (it.hasNext())
+                    {
+                        it.next();
+                        int index = it.key();
+                        if(index>=0 && index<pPlane->triMesh().nNodes()) // failsafe
+                        {
+                            Node const &nd = pPlane->triMesh().nodeAt(index);
+                            paintSphere(nd, 0.0075/double(m_glScalef), Qt::red, true);
+                            strange = QString::asprintf("N%d: %g", index,  it.value());
+                            glRenderText(nd.x+0.03/double(m_glScalef), nd.y+0.03/double(m_glScalef), nd.z+0.03/double(m_glScalef),
+                                         strange, DisplayOptions::textColor(), true);
+                        }
+                    }
+                }
+            }
         }
-        if(pPlPolar || pPOpp)
-            glRenderText(m_PickedPoint.x+0.03/double(m_glScalef), m_PickedPoint.y+0.03/double(m_glScalef), m_PickedPoint.z+0.03/double(m_glScalef),
-                         strong, DisplayOptions::textColor(), true);
     }
 
     if(m_pCrossFlowCtrls && m_pCrossFlowCtrls->bGridVelocity() && pPOpp)
@@ -822,6 +895,13 @@ void gl3dXPlaneView::keyPressEvent(QKeyEvent *pEvent)
             update();
         }
     }
+    else if(pEvent->key()==Qt::Key_Escape)
+    {
+        m_PickedValues.clear();
+        m_bResetPickedValues = true;
+    }
+
+
     gl3dXflView::keyPressEvent(pEvent);
 }
 
@@ -898,7 +978,7 @@ void gl3dXPlaneView::resizeGL(int w, int h)
 {
     gl3dXflView::resizeGL(w, h);
 
-    m_ColourLegend.resize(100, (height()*2)/3, devicePixelRatioF());
+    m_ColourLegend.resize(100.0f, float(height())*3.0/5.0, devicePixelRatioF());
     m_ColourLegend.makeLegend();
 }
 
@@ -1547,18 +1627,53 @@ void gl3dXPlaneView::mouseReleaseEvent(QMouseEvent *pEvent)
         m_NodePair = {-1,-1};
         return;
     }
+
     Plane const *pPlane = s_pXPlane->curPlane();
     PlanePolar const *pWPolar = s_pXPlane->curPlPolar();
-    if(pWPolar->isQuadMethod()) pickQuadPanel(pEvent->pos());
-    else
+    if(pWPolar->isQuadMethod())
     {
-        pickTriUniPanel(pEvent->pos());
-        if(pWPolar->isTriLinearMethod() && m_PickedPanelIndex>=0 && m_PickedPanelIndex<pPlane->nPanel3())
+        pickQuadPanel(pEvent->pos());
+
+        if(m_PickedPanelIndex>=0)
         {
-            Panel3 const &p3 = pPlane->panel3At(m_PickedPanelIndex);
-            pickPanelNode(p3, m_PickedPoint, xfl::NOSURFACE);
+            if(!m_PickedValues.contains(m_PickedPanelIndex))
+            {
+                m_PickedValues.insert(m_PickedPanelIndex, m_PickedVal);
+                m_bResetPickedValues = true;
+            }
         }
     }
+
+    if(pWPolar->isTriangleMethod())
+    {
+        pickTriUniPanel(pEvent->pos());
+
+        if(m_PickedPanelIndex>=0 && m_PickedPanelIndex<pPlane->nPanel3())
+        {
+            if(pWPolar->isTriUniformMethod())
+            {
+                if(!m_PickedValues.contains(m_PickedPanelIndex))
+                {
+                    m_PickedValues.insert(m_PickedPanelIndex, m_PickedVal);
+                    m_bResetPickedValues = true;
+                }
+            }
+            else if(pWPolar->isTriLinearMethod() && m_PickedPanelIndex>=0 )
+            {
+                Panel3 const &p3 = pPlane->panel3At(m_PickedPanelIndex);
+                pickPanelNode(p3, m_PickedPoint, xfl::NOSURFACE);
+                if(!m_PickedValues.contains(m_PickedNodeIndex))
+                {
+                    m_PickedValues.insert(m_PickedNodeIndex, m_PickedVal);
+                    m_bResetPickedValues = true;
+                }
+            }
+        }
+
+    }
+
+
+
 
     if(m_PickedPanelIndex>=0 && !bPickNode())
     {
@@ -1575,7 +1690,7 @@ void gl3dXPlaneView::mouseReleaseEvent(QMouseEvent *pEvent)
         }
         emit panelSelected(m_PickedPanelIndex);
     }
-    else if(bPickNode())
+    else if(bPickNode() && m_pPOpp3dControls->getDistance())
     {
         if(m_PickedNodeIndex<0)
         {
@@ -1662,8 +1777,10 @@ void gl3dXPlaneView::mouseMoveEvent(QMouseEvent *pEvent)
             if(m_PickedPanelIndex>=0 && m_PickedPanelIndex<pPlaneXfl->quadMesh().nPanels())
             {
                 Panel4 const &p4 = pPlaneXfl->quadMesh().panelAt(m_PickedPanelIndex);
-                gl::makeQuad(p4.vertex(0), p4.vertex(1), p4.vertex(2), p4.vertex(3), m_vboPickedQuad);
+                gl::makeQuad(p4.vertex(0), p4.vertex(1), p4.vertex(2), p4.vertex(3), m_vboHoveredQuad);
+#ifdef QT_DEBUG
                 setTopRightOutput(p4.properties(true));
+#endif
             }
         }
     }
@@ -1682,8 +1799,10 @@ void gl3dXPlaneView::mouseMoveEvent(QMouseEvent *pEvent)
             {
                 if(m_PickedNodeIndex>=0 && m_PickedNodeIndex<pPlane->nNodes())
                 {
+#ifdef QT_DEBUG
                     Node const &nd = pPlane->node(m_PickedNodeIndex);
                     setTopRightOutput(QString::fromStdString(nd.properties()));
+#endif
                  }
             }
         }
@@ -1693,8 +1812,9 @@ void gl3dXPlaneView::mouseMoveEvent(QMouseEvent *pEvent)
             {
                 Panel3 const &p3 = pPlane->panel3At(m_PickedPanelIndex);
                 gl::makeTriangle(p3.vertexAt(0), p3.vertexAt(1), p3.vertexAt(2), m_vboTriangle);
-
+#ifdef QT_DEBUG
                 setTopRightOutput(p3.properties());
+#endif
             }
         }
     }
@@ -1853,8 +1973,6 @@ bool gl3dXPlaneView::pickQuadPanel(QPoint const &point)
         // pick a panel;
         if(s_pXPlane->m_pCurPlPolar->isQuadMethod() && s_pXPlane->curPlane()->isXflType())
         {
-            PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(s_pXPlane->curPlane());
-
             for(int i4=0; i4<pPlaneXfl->quadMesh().nPanels(); i4++)
             {
                 Panel4 const &p4 = pPlaneXfl->quadMesh().panelAt(i4);
@@ -1879,8 +1997,9 @@ bool gl3dXPlaneView::pickQuadPanel(QPoint const &point)
 void gl3dXPlaneView::glMake3dObjects()
 {
     if(!s_pXPlane->m_pCurPlane) return;
-    Plane    *pPlane  = s_pXPlane->curPlane();
-    PlanePolar   const *pWPolar = s_pXPlane->curPlPolar();
+    Plane      *pPlane  = s_pXPlane->curPlane();
+    PlaneXfl    const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+    PlanePolar  const *pPlPolar = s_pXPlane->curPlPolar();
 //    PlaneOpp const *pPOpp   = s_pXPlane->curPOpp();
 
     if(s_bResetglGeom)
@@ -2020,9 +2139,9 @@ void gl3dXPlaneView::glMake3dObjects()
 
     if(s_bResetglMesh)
     {
-        if(pWPolar)
+        if(pPlPolar)
         {
-            if(pWPolar->isQuadMethod() && pPlane->isXflType())
+            if(pPlPolar->isQuadMethod() && pPlane->isXflType())
             {
                 PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
                 gl::makeQuadPanels(m_Panel4Visible, Vector3d(), m_pglXPlaneBuffers->m_vboMesh);
@@ -2062,7 +2181,7 @@ void gl3dXPlaneView::glMake3dObjects()
                 }
 
             }
-            else if(pWPolar->isTriangleMethod())
+            else if(pPlPolar->isTriangleMethod())
             {                
                 gl::makeTriPanels(m_Panel3Visible, Vector3d(), m_pglXPlaneBuffers->m_vboMesh);
                 gl::makeTriEdges(m_Panel3Visible, Vector3d(), m_pglXPlaneBuffers->m_vboMeshEdges);
@@ -2098,16 +2217,15 @@ void gl3dXPlaneView::glMake3dObjects()
 
     if(m_pPOpp3dControls->m_bWakePanels && (s_bResetglMesh || s_bResetglWake))
     {
-        if(pWPolar /* && pPOpp */)
+        if(pPlPolar /* && pPOpp */)
         {
-            if(pWPolar->isQuadMethod() && pPlane->isXflType())
+            if(pPlPolar->isQuadMethod() && pPlane->isXflType())
             {
-                PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
                 std::vector<Panel4> qVec = std::vector<Panel4>(pPlaneXfl->quadMesh().wakePanels().begin(), pPlaneXfl->quadMesh().wakePanels().end());
                 gl::makeQuadPanels(qVec, Vector3d(), m_pglXPlaneBuffers->m_vboWakePanels);
                 gl::makeQuadEdges( qVec, Vector3d(), m_pglXPlaneBuffers->m_vboWakeEdges);
             }
-            else if(pWPolar->isTriangleMethod())
+            else if(pPlPolar->isTriangleMethod())
             {
                 gl::makeTriPanels(pPlane->triMesh().wakePanels(), Vector3d(), m_pglXPlaneBuffers->m_vboWakePanels);
                 gl::makeTriEdges( pPlane->triMesh().wakePanels(), Vector3d(), m_pglXPlaneBuffers->m_vboWakeEdges);
@@ -2119,17 +2237,52 @@ void gl3dXPlaneView::glMake3dObjects()
     glMakeOppBuffers();
     glMakeFlowBuffers();
 
-    if(s_bResetglMesh && pWPolar && pWPolar->bHPlane())
+    if(s_bResetglMesh && pPlPolar && pPlPolar->bHPlane())
     {
         Vector3d Normal(0.0,0.0,1.0);
-        Node A( W3dPrefs::s_BoxX,  W3dPrefs::s_BoxY, -pWPolar->groundHeight(), Normal);
-        Node B( W3dPrefs::s_BoxX, -W3dPrefs::s_BoxY, -pWPolar->groundHeight(), Normal);
-        Node C(-W3dPrefs::s_BoxX, -W3dPrefs::s_BoxY, -pWPolar->groundHeight(), Normal);
-        Node D(-W3dPrefs::s_BoxX,  W3dPrefs::s_BoxY, -pWPolar->groundHeight(), Normal);
+        Node A( W3dPrefs::s_BoxX,  W3dPrefs::s_BoxY, -pPlPolar->groundHeight(), Normal);
+        Node B( W3dPrefs::s_BoxX, -W3dPrefs::s_BoxY, -pPlPolar->groundHeight(), Normal);
+        Node C(-W3dPrefs::s_BoxX, -W3dPrefs::s_BoxY, -pPlPolar->groundHeight(), Normal);
+        Node D(-W3dPrefs::s_BoxX,  W3dPrefs::s_BoxY, -pPlPolar->groundHeight(), Normal);
         gl::makeQuad(A,B,C,D, m_vboHPlane);
     }
 
     s_bResetglMesh = false;
+
+
+    if(m_bResetPickedValues)
+    {
+        m_bResetPickedValues = false;
+
+        if(!pPlaneXfl || !pPlPolar) return; // mesh needed
+
+        if(pPlPolar->isQuadMethod())
+        {
+            std::vector<Panel4> qVec;
+
+            QMapIterator<int, double> it(m_PickedValues);
+            while (it.hasNext())
+            {
+                it.next();
+                Panel4 const &p4 = pPlaneXfl->quadMesh().panelAt(it.key());
+                qVec.push_back(p4);
+            }
+            gl::makeQuadEdges( qVec, Vector3d(), m_vboPickedPanels);
+        }
+        else if(pPlPolar->isTriUniformMethod())
+        {
+            std::vector<Panel3> qVec;
+
+            QMapIterator<int, double> it(m_PickedValues);
+            while (it.hasNext())
+            {
+                it.next();
+                Panel3 const &p3 = pPlaneXfl->triMesh().panelAt(it.key());
+                qVec.push_back(p3);
+            }
+            gl::makeTriEdges(qVec, Vector3d(), m_vboPickedPanels);
+        }
+    }
 }
 
 

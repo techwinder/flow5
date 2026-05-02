@@ -275,7 +275,7 @@ class XPlane : public QObject
         void onOpen3dViewInNewWindow();
         void onOpenAnalysisWindow();
         void onOptim3d();
-        void onPickedNode(int iNode);
+//        void onPickedNode(int iNode);
         void onPickedNodePair(QPair<int, int> nodepair);
         void onPlaneInertia();
         void onPlaneOppProperties();

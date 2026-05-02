@@ -329,66 +329,101 @@ void PrefsDlg::setupLayout()
     {
         QVBoxLayout *pAllLayout = new QVBoxLayout;
         {
-            m_pchMultiThreading = new QCheckBox(tr("Allow multithreading"));
-            connect(m_pchMultiThreading, SIGNAL(clicked(bool)), SLOT(onMultiThreading()));
-
-            QLabel *pIdealCountLab = new QLabel(tr("Maximum thread count supported by the OS = %1").arg(QThread::idealThreadCount()));
-            pIdealCountLab->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-            QHBoxLayout *pMaxThreadLayout = new QHBoxLayout;
+            QGroupBox *pgbFl5Threads = new QGroupBox(tr("flow5 multithreading"));
             {
-                QLabel *pMaxThreadLab = new QLabel(tr("Maximum thread count to use = "));
-                m_pieMaxThreadCount = new IntEdit(1);
-                pMaxThreadLayout->addStretch();
-                pMaxThreadLayout->addWidget(pMaxThreadLab);
-                pMaxThreadLayout->addWidget(m_pieMaxThreadCount);
-            }
-            QHBoxLayout *pThreadPriorityLayout = new QHBoxLayout;
-            {
-                QLabel *pPriorityLabel = new QLabel(tr("Thread priority"));
-                m_pcbThreadPriority = new QComboBox;
+                QVBoxLayout *pfl5Layout = new QVBoxLayout;
                 {
-                    m_pcbThreadPriority->addItem("Idle");
-                    m_pcbThreadPriority->addItem("Lowest");
-                    m_pcbThreadPriority->addItem("Low");
-                    m_pcbThreadPriority->addItem("Normal");
-                    m_pcbThreadPriority->addItem("High");
-                    m_pcbThreadPriority->addItem("Highest");
-                    m_pcbThreadPriority->addItem("TimeCritical");
+                    m_pchMultiThreading = new QCheckBox(tr("Allow multithreading"));
+                    connect(m_pchMultiThreading, SIGNAL(clicked(bool)), SLOT(onMultiThreading()));
 
-                    QString strong;
-                    strong  =
-                              "IdlePriority:        \tscheduled only when no other threads are running.\n"
-                              "LowestPriority:      \tscheduled less often than LowPriority.\n"
-                              "LowPriority:         \tscheduled less often than NormalPriority.\n"
-                              "NormalPriority:      \tthe default priority of the operating system.\n"
-                              "HighPriority:        \tscheduled more often than NormalPriority.\n"
-                              "HighestPriority:     \tscheduled more often than HighPriority.\n"
-                              "TimeCriticalPriority:\tscheduled as often as possible.";
-                    m_pcbThreadPriority->setToolTip(strong);
+                    QLabel *pIdealCountLab = new QLabel(tr("Maximum thread count supported by the OS = %1").arg(QThread::idealThreadCount()));
+                    pIdealCountLab->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
+                    QHBoxLayout *pMaxThreadLayout = new QHBoxLayout;
+                    {
+                        QLabel *pMaxThreadLab = new QLabel(tr("Maximum thread count to use = "));
+                        m_pieMaxThreadCount = new IntEdit(1);
+                        pMaxThreadLayout->addStretch();
+                        pMaxThreadLayout->addWidget(pMaxThreadLab);
+                        pMaxThreadLayout->addWidget(m_pieMaxThreadCount);
+                    }
+                    QHBoxLayout *pThreadPriorityLayout = new QHBoxLayout;
+                    {
+                        QLabel *pPriorityLabel = new QLabel(tr("Thread priority"));
+                        m_pcbThreadPriority = new QComboBox;
+                        {
+                            m_pcbThreadPriority->addItem("Idle");
+                            m_pcbThreadPriority->addItem("Lowest");
+                            m_pcbThreadPriority->addItem("Low");
+                            m_pcbThreadPriority->addItem("Normal");
+                            m_pcbThreadPriority->addItem("High");
+                            m_pcbThreadPriority->addItem("Highest");
+                            m_pcbThreadPriority->addItem("TimeCritical");
+
+                            QString strong;
+                            strong  =
+                                      "IdlePriority:        \tscheduled only when no other threads are running.\n"
+                                      "LowestPriority:      \tscheduled less often than LowPriority.\n"
+                                      "LowPriority:         \tscheduled less often than NormalPriority.\n"
+                                      "NormalPriority:      \tthe default priority of the operating system.\n"
+                                      "HighPriority:        \tscheduled more often than NormalPriority.\n"
+                                      "HighestPriority:     \tscheduled more often than HighPriority.\n"
+                                      "TimeCriticalPriority:\tscheduled as often as possible.";
+                            m_pcbThreadPriority->setToolTip(strong);
+                        }
+                        pThreadPriorityLayout->addStretch();
+                        pThreadPriorityLayout->addWidget(pPriorityLabel);
+                        pThreadPriorityLayout->addWidget(m_pcbThreadPriority);
+                    }
+
+                    pfl5Layout->addWidget(m_pchMultiThreading);
+                    pfl5Layout->addWidget(pIdealCountLab);
+                    pfl5Layout->addLayout(pMaxThreadLayout);
+                    pfl5Layout->addLayout(pThreadPriorityLayout);
+                    QLabel *plabPriorityDisable = new QLabel(tr("Linux OS does not support thread priority"));
+                    plabPriorityDisable->setStyleSheet("font: italic");
+                    plabPriorityDisable->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
+                    pfl5Layout->addWidget(plabPriorityDisable);
+        #if defined Q_OS_MAC
+                    plabPriorityDisable->hide();
+        #elif defined Q_OS_LINUX
+                    plabPriorityDisable->show();
+                    m_pcbThreadPriority->setEnabled(false);
+        #else
+                    plabPriorityDisable->hide();
+        #endif
                 }
-                pThreadPriorityLayout->addStretch();
-                pThreadPriorityLayout->addWidget(pPriorityLabel);
-                pThreadPriorityLayout->addWidget(m_pcbThreadPriority);
+                pgbFl5Threads->setLayout(pfl5Layout);
             }
 
-            pAllLayout->addWidget(m_pchMultiThreading);
-            pAllLayout->addWidget(pIdealCountLab);
-            pAllLayout->addLayout(pMaxThreadLayout);
-            pAllLayout->addLayout(pThreadPriorityLayout);
-            QLabel *pLabPriorityDisable = new QLabel(tr("Linux OS does not support thread priority"));
-            pLabPriorityDisable->setStyleSheet("font: italic");
-            pLabPriorityDisable->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-            pAllLayout->addWidget(pLabPriorityDisable);
-#if defined Q_OS_MAC
-            pLabPriorityDisable->hide();
-#elif defined Q_OS_LINUX
-            pLabPriorityDisable->show();
-            m_pcbThreadPriority->setEnabled(false);
-#else
-            pLabPriorityDisable->hide();
-#endif
+            QGroupBox *pgbMKL = new QGroupBox(tr("MKL tasks"));
+            {
+                QVBoxLayout *pMKLLayout = new QVBoxLayout;
+                {
+                    m_pchMKLMultiThread = new QCheckBox("Allow multithreading");
+                    m_pchMKLDynamic = new QCheckBox("Enable MKL dynamic threading; recommendation: enable");
+                    m_pchMKLDynamic->setToolTip("<p>Enables Intel® oneAPI Math Kernel Library (oneMKL) to dynamically change the number of OpenMP* threads.<br>"
+                                                "This function indicates whether Intel® oneAPI Math Kernel Library (oneMKL) can dynamically change the number "
+                                                "of OpenMP threads or should avoid doing this. The setting applies to all "
+                                                "Intel® oneAPI Math Kernel Library (oneMKL) functions on all execution threads. "
+                                                "This function takes precedence over the MKL_DYNAMIC environment variable.<br>"
+                                                "Dynamic adjustment of the number of threads is enabled by default. "
+                                                "Specifically, Intel® oneAPI Math Kernel Library (oneMKL) may use fewer threads in parallel regions "
+                                                "than the number returned by the mkl_get_max_threadsfunction. "
+                                                "Disabling dynamic adjustment of the number of threads does not ensure "
+                                                "that Intel® oneAPI Math Kernel Library (oneMKL) actually uses the specified number of threads, "
+                                                "although the library attempts to use that number."
+                                                "</p>");
+                    pMKLLayout->addWidget(m_pchMKLMultiThread);
+                    pMKLLayout->addWidget(m_pchMKLDynamic);
+                }
+                pgbMKL->setLayout(pMKLLayout);
+            }
+
+
+            pAllLayout->addWidget(pgbFl5Threads);
+            pAllLayout->addWidget(pgbMKL);
+            pAllLayout->addStretch();
         }
-        pAllLayout->addStretch();
         m_pMultiThreadOptions->setLayout(pAllLayout);
     }
 
