@@ -47,7 +47,7 @@ class FL5LIB_EXPORT Frame
         void    copyFrame(Frame const &frame);
         void    rotateFrameY(double Angle);
         bool    serializeFrameXfl(QDataStream &ar, bool bIsStoring);
-        bool    serializeFrameXf7(QDataStream &ar, bool bIsStoring);
+        bool    serializeFrameFl5(QDataStream &ar, bool bIsStoring);
         void    setuPosition(int uAxis);
         void    setuPosition(int uAxis, double u);
         double  zPos() const;

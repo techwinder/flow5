@@ -58,6 +58,14 @@ namespace globals
      */
     FL5LIB_EXPORT bool saveFl5Project(std::string const &pathname);
 
+
+    /**
+     * @brief loadFl5Project loads data from a .fl5 project file.
+     * @param path the path to the project file
+     * @return true if the load operation was successful
+     */
+    FL5LIB_EXPORT bool loadFl5Project(std::string const &pathname);
+
     /**
      * @brief pushToLog appends a message to the log. Private.
      * @param msg the message to append

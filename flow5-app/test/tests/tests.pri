@@ -18,7 +18,7 @@ HEADERS += \
     $$PWD/textoutputtestdlg.h \
     $$PWD/vortontestdlg.h \
     $$PWD/streamtestdlg.h \
-
+    $$PWD/testmatrix.h
 
 
 SOURCES += \
@@ -30,4 +30,4 @@ SOURCES += \
     $$PWD/textoutputtestdlg.cpp \
     $$PWD/vortontestdlg.cpp \
     $$PWD/streamtestdlg.cpp \
-
+    $$PWD/testmatrix.cpp

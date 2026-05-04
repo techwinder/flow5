@@ -305,11 +305,6 @@ SOURCES += \
     xml/xsail/xmlxsailwriter.cpp \
 
 
-# LAPACK/BLAS test code is optional and requires a configured backend.
-contains(DEFINES, INTEL_MKL)|contains(DEFINES, OPENBLAS)|contains(DEFINES, ACCELERATE) {
-    HEADERS += math/testmatrix.h
-    SOURCES += math/testmatrix.cpp
-}
 
 
 

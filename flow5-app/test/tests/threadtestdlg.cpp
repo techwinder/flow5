@@ -52,7 +52,6 @@
 #include <api/matrix.h>
 #include <api/flow5events.h>
 #include <api/fl5color.h>
-#include <math/testmatrix.h>
 
 QByteArray ThreadTestDlg::s_Geometry;
 

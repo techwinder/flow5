@@ -101,7 +101,7 @@ linux-g++ {
 
     #----------- OPENCASCADE -------------
     #   The include paths to the development headers must be set explicitely
-    #INCLUDEPATH += /usr/local/include/opencascade/
+    INCLUDEPATH += /usr/local/include/opencascade/  #make install location
     INCLUDEPATH += /usr/include/opencascade/        #fedora install location
     #   Ensure that the paths to the binary libraries
     #   are known either by defining them at system level

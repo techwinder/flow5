@@ -66,32 +66,26 @@ std::string globals::poplog()
 }
 
 
+
 bool globals::saveFl5Project(std::string const &pathname)
 {
-    QString PathName = QString::fromStdString(pathname);
-
-    QFile fp(PathName);
-    if (!fp.open(QIODevice::WriteOnly))
-    {
-        std::string msg = "Could not open the file: "+pathname+" for writing\n\n";
-        globals::pushToLog(msg);
-
-        return false;
-    }
-
     FileIO saver;
-    QDataStream ar(&fp);
+    std::string logmsg;
+    bool bResult = saver.saveProject(pathname, logmsg);
 
-    if(!saver.serializeProjectFl5(ar, true))
-    {
-        std::string msg = "Unknown error saving the project file " + pathname;        /** @todo send to log */
-        globals::pushToLog(msg);
-        return false;
-    }
+    globals::pushToLog(logmsg);
+    return bResult;
+}
 
-    fp.close(); // or let the destructor do it
 
-    return true;
+bool globals::loadFl5Project(std::string const &pathname)
+{
+    FileIO loader;
+    std::string logmsg;
+    bool bResult = loader.loadProject(pathname, logmsg);
+
+    globals::pushToLog(logmsg);
+    return bResult;
 }
 
 

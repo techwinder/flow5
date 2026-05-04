@@ -560,7 +560,7 @@ bool NURBSSurface::serializeFl5(QDataStream &ar, bool bIsStoring)
         ar << frameCount();
         for(int k=0; k<frameCount(); k++)
         {
-            frame(k).serializeFrameXf7(ar, bIsStoring);
+            frame(k).serializeFrameFl5(ar, bIsStoring);
         }
 
         // dynamic space allocation for the future storage of more data, without need to change the format
@@ -591,7 +591,7 @@ bool NURBSSurface::serializeFl5(QDataStream &ar, bool bIsStoring)
         {
             appendNewFrame();
             Frame &pFrame = m_Frame.back();
-            pFrame.serializeFrameXf7(ar, bIsStoring);
+            pFrame.serializeFrameFl5(ar, bIsStoring);
             pFrame.setuPosition(m_uAxis);
         }
 

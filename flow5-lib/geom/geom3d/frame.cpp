@@ -75,7 +75,7 @@ int Frame::isPoint(const Vector3d &Point, double deltax, double deltay, double d
  * @param bIsStoring true if saving the data, false if loading
  * @return true if the operation was successful, false otherwise
  */
-bool Frame::serializeFrameXf7(QDataStream &ar, bool bIsStoring)
+bool Frame::serializeFrameFl5(QDataStream &ar, bool bIsStoring)
 {
     int ArchiveFormat=500001; //500001 : first xf7 format
     int nIntSpares(0);

@@ -21,6 +21,9 @@ int main()
 {
     printf("flow5 plane run\n");
 
+    // Preload some project file
+//  globals::loadFl5Project("/path/to/file.fl5");
+
     // Start by creating the foils needed to build the wings
     // flow5 objects, i.e. foils, planes, boats and their polar and opp children
     // should always be allocated on the heap
