@@ -220,10 +220,7 @@ bool PanelAnalysis::LUfactorize()
 void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, double *pRHS, double *qRHS, double *rRHS)
 {
 #ifdef INTEL_MKL
-    if(s_bMultiThread)
-        mkl_set_num_threads(s_MaxThreads);
-    else
-        mkl_set_num_threads(1);
+    mkl_set_num_threads(s_MaxThreads);
 #endif
     char trans = 'T';
     lapack_int n = matSize();
@@ -629,10 +626,7 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
                                                   StabDerivatives &SD, Vector3d &Force0, Vector3d &Moment0)
 {
 #ifdef INTEL_MKL
-    if(s_bMultiThread)
-        mkl_set_num_threads(s_MaxThreads);
-    else
-        mkl_set_num_threads(1);
+    mkl_set_num_threads(s_MaxThreads);;
 #endif
 
     Vector3d Forcem, Momentm;
@@ -895,10 +889,7 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
 void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3d const &CoG, bool bFuseMi, StabDerivatives &SD)
 {
 #ifdef INTEL_MKL
-    if(s_bMultiThread)
-        mkl_set_num_threads(s_MaxThreads);
-    else
-        mkl_set_num_threads(1);
+    mkl_set_num_threads(s_MaxThreads);
 #endif
 
     Vector3d Forcem, Momentm, Rism, Rjsm, Rksm;

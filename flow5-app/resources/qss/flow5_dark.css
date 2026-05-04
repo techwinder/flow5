@@ -172,7 +172,7 @@ QMenu::separator
 
 QLineEdit, QTextEdit
 {
-    color: ghostwhite;
+    color: black;
     background-color: rgb(45,55,65);
     padding: 2px;
     border: 1px solid #2e2e2e;

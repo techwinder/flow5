@@ -146,9 +146,9 @@ void PrefsDlg::onOK()
 
 void PrefsDlg::setupLayout()
 {
-    m_pStyleOptions = new QWidget(this);
+    QWidget *pfrStyleOptions = new QFrame(this);
     {
-        m_pStyleOptions->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
+        pfrStyleOptions->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
         QVBoxLayout *pWidgetStyleLayout = new QVBoxLayout;
         {
             QGroupBox *pAppStyle = new QGroupBox("Application style");
@@ -322,29 +322,28 @@ void PrefsDlg::setupLayout()
             }
             pWidgetStyleLayout->addStretch();
         }
-        m_pStyleOptions->setLayout(pWidgetStyleLayout);
+        pfrStyleOptions->setLayout(pWidgetStyleLayout);
     }
 
-    m_pMultiThreadOptions = new QGroupBox(tr("Multithreading"));
+    QGroupBox *pgbMultiThreadOptions = new QGroupBox(tr("Multithreading"));
     {
 
         QVBoxLayout *pThreadLayout = new QVBoxLayout;
         {
             QLabel *plabIdealCount = new QLabel(tr("Maximum thread count supported by the OS = %1").arg(QThread::idealThreadCount()));
-            plabIdealCount->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
 
             QHBoxLayout *pMaxThreadLayout = new QHBoxLayout;
             {
-                QLabel *pMaxThreadLab = new QLabel(tr("Maximum thread count to use = "));
+                QLabel *plabMaxThreadLab = new QLabel(tr("Maximum thread count to use = "));
                 m_pieMaxThreadCount = new IntEdit(1);
-                pMaxThreadLayout->addStretch();
-                pMaxThreadLayout->addWidget(pMaxThreadLab);
+                pMaxThreadLayout->addWidget(plabMaxThreadLab);
                 pMaxThreadLayout->addWidget(m_pieMaxThreadCount);
+                pMaxThreadLayout->addStretch();
             }
 
             QHBoxLayout *pThreadPriorityLayout = new QHBoxLayout;
             {
-                QLabel *pPriorityLabel = new QLabel(tr("Thread priority"));
+                QLabel *plabPriority = new QLabel(tr("Thread priority"));
                 m_pcbThreadPriority = new QComboBox;
                 {
                     m_pcbThreadPriority->addItem("Idle");
@@ -366,9 +365,22 @@ void PrefsDlg::setupLayout()
                         "TimeCriticalPriority:\tscheduled as often as possible.";
                     m_pcbThreadPriority->setToolTip(strong);
                 }
-                pThreadPriorityLayout->addStretch();
-                pThreadPriorityLayout->addWidget(pPriorityLabel);
+                QLabel *plabPriorityDisable = new QLabel(tr("Linux OS does not support thread priority"));
+                plabPriorityDisable->setStyleSheet("font: italic");
+                plabPriorityDisable->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
+#if defined Q_OS_MAC
+                plabPriorityDisable->hide();
+#elif defined Q_OS_LINUX
+                plabPriorityDisable->show();
+                m_pcbThreadPriority->setEnabled(false);
+#else
+                plabPriorityDisable->hide();
+#endif
+
+                pThreadPriorityLayout->addWidget(plabPriority);
                 pThreadPriorityLayout->addWidget(m_pcbThreadPriority);
+                pThreadPriorityLayout->addStretch();
+                pThreadPriorityLayout->addWidget(plabPriorityDisable);
             }
 
 
@@ -390,24 +402,13 @@ void PrefsDlg::setupLayout()
             pThreadLayout->addWidget(plabIdealCount);
             pThreadLayout->addLayout(pMaxThreadLayout);
             pThreadLayout->addLayout(pThreadPriorityLayout);
-            QLabel *plabPriorityDisable = new QLabel(tr("Linux OS does not support thread priority"));
-            plabPriorityDisable->setStyleSheet("font: italic");
-            plabPriorityDisable->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-            pThreadLayout->addWidget(plabPriorityDisable);
-#if defined Q_OS_MAC
-            plabPriorityDisable->hide();
-#elif defined Q_OS_LINUX
-            plabPriorityDisable->show();
-            m_pcbThreadPriority->setEnabled(false);
-#else
-            plabPriorityDisable->hide();
-#endif
+
             pThreadLayout->addWidget(m_pchMKLDynamic);
             pThreadLayout->addStretch();
         }
 
 
-        m_pMultiThreadOptions->setLayout(pThreadLayout);
+        pgbMultiThreadOptions->setLayout(pThreadLayout);
     }
 
     m_pGraphOptionsWt    = new GraphOptions(this);
@@ -427,13 +428,13 @@ void PrefsDlg::setupLayout()
         QScrollArea * pScrollArea = new QScrollArea;
         {
             m_pPageStack = new QStackedWidget;
-            m_pPageStack->addWidget(m_pStyleOptions);
+            m_pPageStack->addWidget(pfrStyleOptions);
             m_pPageStack->addWidget(m_pSaveOptionsWt);
             m_pPageStack->addWidget(m_pUnitsWt);
             m_pPageStack->addWidget(m_pGraphOptionsWt);
             m_pPageStack->addWidget(m_p2dViewOptions);
             m_pPageStack->addWidget(m_p3dPrefsWt);
-            m_pPageStack->addWidget(m_pMultiThreadOptions);
+            m_pPageStack->addWidget(pgbMultiThreadOptions);
 
             pScrollArea->setWidgetResizable(true);
             pScrollArea->setWidget(m_pPageStack);

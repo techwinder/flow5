@@ -116,8 +116,8 @@ class PrefsDlg : public QDialog
         TextClrBtn *m_ptcbTextClr;
         QPushButton *m_ppbTextFont, *m_ppbTableFont, *m_ppbTreeFont, *m_ppbToolTipFont;
 
-        QWidget *m_pStyleOptions;
-        QWidget *m_pMultiThreadOptions;
+//        QWidget *m_pStyleOptions;
+//        QWidget *m_pgbMultiThreadOptions;
         SaveOptionsWt *m_pSaveOptionsWt;
         UnitsWt *m_pUnitsWt;
         GraphOptions *m_pGraphOptionsWt;
