@@ -57,7 +57,7 @@ linux-g++ {
     LIBS += -L../XFoil-lib -lXFoil
 
     #comment out to use OpenBLAS
-    CONFIG += INTEL_MKL
+#    CONFIG += INTEL_MKL
 
     INTEL_MKL {
         #------------ MKL --------------------
@@ -97,7 +97,8 @@ linux-g++ {
     #   The include paths to the development headers must be set explicitely
     INCLUDEPATH += /usr/local/include/opencascade/  #make install location
     INCLUDEPATH += /usr/include/opencascade/        #fedora install location
-    LIBS += -L/usr/local/lib/
+    LIBS += -L/usr/local/lib/ #make install location
+    LIBS += -L/usr/lib64/     #fedora install location
 
 }
 

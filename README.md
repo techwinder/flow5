@@ -4,7 +4,7 @@ flow5 is a potential flow solver with built-in pre- and post- processing functio
 It is version 7 of the legacy project xflr5.
 
 
-# Remaining development plans 
+# Remaining developments 
 - Fix bugs and implement minor improvements depending on user requests
 - Add fuselage conforming mesh capability to flow5-lib and to the API
 - Remove the dependency of flow5-lib on Qt6-core
@@ -12,3 +12,4 @@ It is version 7 of the legacy project xflr5.
 - Either complete or remove currently inoperative features, e.g. plane optimization 
 - Clean the documentation
 
+**Note:** The API is still in an experimental state. The intent is to stabilize both the source code and the API by the end of 2026. Until then, expect major refactoring and breakage of interfaces.

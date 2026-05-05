@@ -28,8 +28,6 @@
 #include <vector>
 
 
-#include <Geom_BSplineCurve.hxx>
-
 
 #include <vector3d.h>
 #include <enums_objects.h>
@@ -271,8 +269,6 @@ class FL5LIB_EXPORT Surface
 
         bool makeSectionSplines(BSpline3d & leftspline, BSpline3d &rightspline) const;
         bool makeSectionHalfSpline(xfl::enumSurfacePosition pos, bool bLeft, int degree, int nCtrlPoints, int nOutPoints, BSpline3d &spline) const;
-
-        bool makeSectionSplinesOcc(bool bTop, bool bLeft, Handle(Geom_BSplineCurve)& theSpline) const;
 
         void setNormals(Vector3d const& NA, Vector3d const &NB) {m_NormalA=NA; m_NormalB=NB;}
         void setTwist(double thetaA, double thetaB) {m_TwistA=thetaA; m_TwistB=thetaB;}

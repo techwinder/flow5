@@ -2131,27 +2131,6 @@ bool Surface::makeSectionHalfSpline(xfl::enumSurfacePosition pos, bool bLeft, in
 }
 
 
-// UNUSED
-bool Surface::makeSectionSplinesOcc(bool bTop, bool bLeft, Handle(Geom_BSplineCurve)& theSpline) const
-{
-    int nCtrlPoints = 11;
-    int nPoints = 2*nCtrlPoints; // minimum to get a good approximation
-    std::vector<Vector3d> PtA(nPoints), PtB(nPoints);
-    std::vector<Vector3d> NA(nPoints), NB(nPoints);
-    std::vector<double> xdistrib;
-    xfl::getPointDistribution(xdistrib, nPoints-1, xfl::COSINE); // ensures good resolution at LE and TE
-
-    if(bTop)
-        getSidePoints_2(xfl::TOPSURFACE, nullptr, PtA, PtB, NA, NB, xdistrib, xdistrib);
-    else
-        getSidePoints_2(xfl::BOTSURFACE, nullptr, PtA, PtB, NA, NB, xdistrib, xdistrib);
-
-    std::string strange;
-    if(bLeft) return occ::makeOCCSplineFromPoints(PtA, theSpline, strange);
-    else      return occ::makeOCCSplineFromPoints(PtB, theSpline, strange);
-}
-
-
 void Surface::rotateX(Vector3d const&O, double XTilt)
 {
     m_LA.rotateX(O, XTilt);

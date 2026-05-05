@@ -7,6 +7,7 @@
 #include <objects2d.h>
 #include <objects3d.h>
 #include <oppoint.h>
+#include <panelanalysis.h>
 #include <planeopp.h>
 #include <planepolar.h>
 #include <planetask.h>
@@ -319,9 +320,11 @@ int main()
     }
 
 
-    // Run the analysis
+    // Define and run the analysis
     PlaneTask *pPlaneTask = new PlaneTask;
     {
+        PanelAnalysis::setMaxThreadCount(16); // 1 by default
+
         pPlaneTask->outputToStdIO(true);
         pPlaneTask->setKeepOpps(true);
 

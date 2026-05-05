@@ -202,6 +202,7 @@
 #include <api/objects3d.h>
 #include <api/objects_global.h>
 #include <api/oppoint.h>
+#include <api/panelanalysis.h>
 #include <api/panel3.h>
 #include <api/panel4.h>
 #include <api/planeopp.h>
@@ -4727,6 +4728,8 @@ int MainFrame::onTestRun()
     // Run the analysis
     PlaneTask *pPlaneTask = new PlaneTask;
     {
+        PanelAnalysis::setMaxThreadCount(16);
+
         pPlaneTask->outputToStdIO(true);
         pPlaneTask->setKeepOpps(true);
 

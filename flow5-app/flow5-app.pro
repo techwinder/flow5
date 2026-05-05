@@ -66,7 +66,7 @@ linux-g++ {
     INSTALLS += target icon128 translations
 
     #comment out to use OpenBLAS
-    CONFIG += INTEL_MKL
+#   CONFIG += INTEL_MKL
 
     INTEL_MKL {
         #------------ MKL --------------------
@@ -99,14 +99,15 @@ linux-g++ {
 
     }
 
-    #----------- OPENCASCADE -------------
-    #   The include paths to the development headers must be set explicitely
-    INCLUDEPATH += /usr/local/include/opencascade/  #make install location
-    INCLUDEPATH += /usr/include/opencascade/        #fedora install location
-    #   Ensure that the paths to the binary libraries
-    #   are known either by defining them at system level
-    #   or by setting them explicitely in this section
-    LIBS += -L/usr/local/lib/            # redundant
+#----------- OPENCASCADE -------------
+#   Ensure that the paths to the binary libraries
+#   are known either by defining them at system level
+#   or by setting them explicitely in this section
+#   The include paths to the development headers must be set explicitely
+INCLUDEPATH += /usr/local/include/opencascade/  #make install location
+INCLUDEPATH += /usr/include/opencascade/        #fedora install location
+LIBS += -L/usr/local/lib/ #make install location
+LIBS += -L/usr/lib64/     #fedora install location
 
 
 

@@ -45,7 +45,7 @@ struct VPWReport
         void setMsg(std::string const &msg) {m_Msg=msg;}
     public:
         std::vector<std::vector<Vorton>> m_Vortons;
-        double m_Ctrl;
+        double m_Ctrl=0.0;
 
         std::string m_Msg;
 };
