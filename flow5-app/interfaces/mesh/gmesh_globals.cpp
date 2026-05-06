@@ -406,16 +406,33 @@ bool gmesh::importBRepList(std::vector<std::string> const &breps, std::string &b
         {
             gmsh::merge(temppath);
         }
-        catch(...)
+        catch(std::runtime_error &e)
         {
+            std::cout <<e.what() << std::endl << std::endl;
             return false;
         }
+        catch(std::exception &e)
+        {
+            std::cout <<e.what() << std::endl << std::endl;
+            return false;
+        }
+        catch(...)
+        {
+            std::cout <<"Error importing BRepList" << std::endl << std::endl;
+            return false;
+        }
+
     }
 
     // write the merged BReps
     try
     {
         gmsh::write(temppath);
+    }    
+    catch(std::runtime_error &e)
+    {
+        std::cout <<e.what() << std::endl << std::endl;
+        return false;
     }
     catch (std::exception &e)
     {
@@ -477,7 +494,7 @@ bool gmesh::gmshtoBRep(std::string &brep)
 }
 
 
-/** It would really be nice to have gmesh::merge(std::string) */
+/** It would be really nice to have gmesh::merge(std::string) */
 bool gmesh::BReptoGmsh(std::string const &brep)
 {
     std::string temppath = tempFile();
@@ -488,6 +505,16 @@ bool gmesh::BReptoGmsh(std::string const &brep)
     try
     {
         gmsh::merge(temppath);
+    }
+    catch(std::runtime_error &e)
+    {
+        std::cout <<"std::runtime_error: "<<e.what() << std::endl << std::endl;
+        return false;
+    }
+    catch(std::exception &e)
+    {
+        std::cout <<"std::exception: "<<e.what() << std::endl << std::endl;
+        return false;
     }
     catch(...)
     {
@@ -502,7 +529,6 @@ bool gmesh::BRepstoGmsh(const std::vector<std::string> &brep)
 {
     std::string temppath = tempFile();
 
-
     for(uint i=0; i<brep.size(); i++)
     {
         if(!xfl::stringToFile(brep.at(i), temppath)) return false;
@@ -510,6 +536,16 @@ bool gmesh::BRepstoGmsh(const std::vector<std::string> &brep)
         try
         {
             gmsh::merge(temppath);
+        }
+        catch(std::runtime_error &e)
+        {
+            std::cout <<"std::runtime_error: "<<e.what() << std::endl << std::endl;
+            return false;
+        }
+        catch(std::exception &e)
+        {
+            std::cout <<"std::exception: "<<e.what() << std::endl << std::endl;
+            return false;
         }
         catch(...)
         {
@@ -607,6 +643,16 @@ bool gmesh::scaleBrep(std::string const&brep, Vector3d const &O, double sx, doub
     {
         gmsh::model::occ::dilate(modelenditiesdimTags, O.x, O.y, O.z, sx, sy, sz);
     }
+    catch(std::runtime_error &e)
+    {
+        std::cout <<"std::runtime_error: "<<e.what() << std::endl << std::endl;
+        return false;
+    }
+    catch(std::exception &e)
+    {
+        std::cout <<"std::exception: "<<e.what() << std::endl << std::endl;
+        return false;
+    }
     catch(...)
     {
         return false;
@@ -630,6 +676,16 @@ bool gmesh::translateBrep(std::string const&brep, Vector3d const &T, std::string
     try
     {
         gmsh::model::occ::translate(modelenditiesdimTags, T.x, T.y, T.z);
+    }
+    catch(std::runtime_error &e)
+    {
+        std::cout <<"std::runtime_error: "<<e.what() << std::endl << std::endl;
+        return false;
+    }
+    catch(std::exception &e)
+    {
+        std::cout <<"std::exception: "<<e.what() << std::endl << std::endl;
+        return false;
     }
     catch(...)
     {
@@ -686,9 +742,20 @@ bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, QString &log)
             // make the section
             sectiontags.push_back(gmsh::model::occ::addPlaneSurface({looptagA}));
         }
+        catch(std::runtime_error &e)
+        {
+            log += QString(e.what()) + QString::asprintf(" making wing section %d... aborting\n", is);
+            return false;
+        }
+        catch(std::exception &e)
+        {
+            log += QString(e.what()) + QString::asprintf(" making wing section %d... aborting\n", is);
+            return false;
+        }
+
         catch(...)
         {
-            log += QString::asprintf("Error making wing section %d... aborting\n", is);
+            log += QString::asprintf("Unknown error making wing section %d... aborting\n", is);
             return false;
         }
     }
@@ -723,6 +790,16 @@ bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, QString &log)
         // make the section
         sectiontags.push_back(gmsh::model::occ::addPlaneSurface({looptagB}));
     }
+    catch(std::runtime_error &e)
+    {
+        log += QString(e.what()) + QString(" while making right tip section %d... aborting\n");
+        return false;
+    }
+    catch(std::exception &e)
+    {
+        log += QString(e.what()) + QString(" while making right tip section %d... aborting\n");
+        return false;
+    }
     catch(...)
     {
         log += "Error making right tip section %d... aborting\n";
@@ -740,6 +817,16 @@ bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, QString &log)
         for(uint i=0; i<sectiontags.size(); i++)
             sections.push_back({2, sectiontags.at(i)});
         gmsh::model::occ::remove(sections);
+    }
+    catch(std::runtime_error &e)
+    {
+        log += QString(e.what()) + QString(" while sweeping through the sections... aborting\n\n");
+        return false;
+    }
+    catch(std::exception &e)
+    {
+        log += QString(e.what()) + QString(" while sweeping through the sections... aborting\n\n");
+        return false;
     }
     catch(...)
     {
@@ -825,6 +912,16 @@ bool gmesh::fuseQuadsToBRep(FuseFlatFaces const*pFuse, std::string &brep, std::s
 
         gmsh::model::occ::addSurfaceLoop(surf);
     }
+    catch(std::runtime_error &e)
+    {
+        log += std::string(e.what()) + " while making gmsh Quads surface... aborting\n\n";
+        return false;
+    }
+    catch(std::exception &e)
+    {
+        log += std::string(e.what()) + " while making gmsh Quads surface... aborting\n\n";
+        return false;
+    }
     catch(...)
     {
         log += "Error making gmsh Quads surface... aborting\n";
@@ -862,6 +959,16 @@ bool gmesh::fuseNurbsToBRep(FuseNurbs const*pFuse, std::string &brep, std::strin
         gmsh::model::occ::copy({{2, leftsurftag}}, copiedtags);
         gmsh::model::occ::mirror(copiedtags,0.0,1.0,0.0,0.0);
 //        int rightsurfacetag = copiedtags.front().second;
+    }
+    catch(std::runtime_error &e)
+    {
+        log += std::string(e.what()) + " while making gmsh NURBS surface... aborting\n\n";
+        return false;
+    }
+    catch(std::exception &e)
+    {
+        log += std::string(e.what()) + " while making gmsh NURBS surface... aborting\n\n";
+        return false;
     }
     catch(...)
     {
@@ -1053,6 +1160,17 @@ void gmesh::tessellateBRep(std::string const&BRep, GmshParams const &params, std
         gmsh::option::setNumber("Mesh.Algorithm", 1);
         gmsh::model::mesh::generate(2);
     }
+    catch(std::runtime_error &e)
+    {
+        log += QString(e.what()) + QString(" while making triangulation... aborting\n\n");
+        return;
+    }
+    catch(std::exception &e)
+    {
+        log += QString(e.what()) + QString(" while making triangulation... aborting\n\n");
+        return;
+    }
+
     catch(...)
     {
         log.append("Error making triangulation\n");
@@ -1098,6 +1216,16 @@ void gmesh::tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std
 
         gmsh::model::mesh::generate(2);
         gmesh::convertFromGmsh(triangles, log);
+    }
+    catch(std::runtime_error &e)
+    {
+        log += QString(e.what()) + QString(" while making triangulation... aborting\n\n");
+        return;
+    }
+    catch(std::exception &e)
+    {
+        log += QString(e.what()) + QString(" while making triangulation... aborting\n\n");
+        return;
     }
     catch(...)
     {

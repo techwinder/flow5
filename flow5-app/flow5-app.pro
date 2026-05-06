@@ -99,21 +99,23 @@ linux-g++ {
 
     }
 
-#----------- OPENCASCADE -------------
-#   Ensure that the paths to the binary libraries
-#   are known either by defining them at system level
-#   or by setting them explicitely in this section
-#   The include paths to the development headers must be set explicitely
-INCLUDEPATH += /usr/local/include/opencascade/  #make install location
-INCLUDEPATH += /usr/include/opencascade/        #fedora install location
-LIBS += -L/usr/local/lib/ #make install location
-LIBS += -L/usr/lib64/     #fedora install location
+    #----------- OPENCASCADE -------------
+    #   Ensure that the paths to the binary libraries
+    #   are known either by defining them at system level
+    #   or by setting them explicitely in this section
+    #   The include paths to the development headers must be set explicitely
+    INCLUDEPATH += /usr/local/include/opencascade/  #make install location
+    INCLUDEPATH += /usr/include/opencascade/        #fedora install location
+    LIBS += -L/usr/local/lib/ #make install location
+    LIBS += -L/usr/lib64/     #fedora install location
 
 
 
     #--------------------- GMSH ------------------------
-    INCLUDEPATH += /usr/local/include/
+    INCLUDEPATH += /usr/local/include/  #make install location
+    INCLUDEPATH += /usr/include/        #fedora install location
     LIBS += -L/usr/local/lib64           # redundant
+    LIBS += -L/usr/lib64           # redundant
     LIBS += -lgmsh
 
 
@@ -211,6 +213,11 @@ macx {
     #_____________GMSH__________________
     INCLUDEPATH += /usr/local/include
     LIBS += -lgmsh
+
+    #-------------vecLib -----------------
+    DEFINES += ACCELERATE
+    #    QMAKE_LFLAGS += -framework Accelerate
+    LIBS += -llapack -lcblas
 
     # deploy the libs
 #    gmsh.files =/usr/local/lib/libgmsh.4.14.dylib

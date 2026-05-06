@@ -288,8 +288,8 @@ bool Fuse::stitchShells(TopoDS_Shell &fusedshell, std::string &msg, std::string 
 
 void Fuse::scale(double XFactor, double YFactor, double ZFactor)
 {
-    for(int it=0; it<m_Triangulation.nTriangles(); it++)
-        m_Triangulation.triangle(it).scale(XFactor, YFactor, ZFactor);
+    m_Triangulation.scale(XFactor, YFactor, ZFactor);
+//    for(int it=0; it<m_Triangulation.nTriangles(); it++) m_Triangulation.triangle(it).scale(XFactor, YFactor, ZFactor);
     m_Length *= XFactor;
 
     // scale the tri mesh, if any

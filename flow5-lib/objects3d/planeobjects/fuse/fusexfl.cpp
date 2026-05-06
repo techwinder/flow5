@@ -1002,6 +1002,8 @@ void FuseXfl::scale(double XFactor, double YFactor, double ZFactor)
     makeQuadMesh(0, Vector3d());
     std::string strange;
     makeDefaultTriMesh(strange, "");
+
+    m_Triangulation.scale(XFactor, YFactor, ZFactor);
 }
 
 

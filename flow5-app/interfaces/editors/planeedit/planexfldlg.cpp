@@ -2318,9 +2318,9 @@ bool PlaneXflDlg::makeFragments()
 
         newShapes.Append(compound);
 
-std::string str;
+/*std::string str;
 occ::listShapeContent(compound, str, "", true);
-qDebug("%s", str.c_str());
+qDebug("%s", str.c_str());*/
 
         TopExp_Explorer compexplorer;
         int iShell=0;
