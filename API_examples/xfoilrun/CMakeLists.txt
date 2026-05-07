@@ -6,7 +6,7 @@ project(XFoilRun LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(INTEL_MKL "Activate to use Intel MKL; using OpenBLAS or ACCELERATE otherwise" ON)
+option(INTEL_MKL "Activate if flow5 has been built with Intel MKL" ON)
 
 if (WIN32)
 include_directories(D:/dev/flow5/XFoil-lib)

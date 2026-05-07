@@ -375,7 +375,7 @@ int main()
 
     // Must call! will delete the planes, foils and children objects
     // Memory leak otherwise
-    //    globals::deleteObjects();
+    globals::deleteObjects();
 
     std::cout << "done" << std::endl;
 
