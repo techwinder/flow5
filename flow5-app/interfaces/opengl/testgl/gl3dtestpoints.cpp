@@ -28,7 +28,7 @@
 #include <api/utils.h>
 
 #include <interfaces/controls/w3dprefs.h>
-#include <api/trace.h>
+#include <core/trace.h>
 
 gl3dTestPoints::gl3dTestPoints(QWidget *pParent) : gl3dTestGLView (pParent)
 {

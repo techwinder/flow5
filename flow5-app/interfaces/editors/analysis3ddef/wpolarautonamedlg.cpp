@@ -28,6 +28,7 @@
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 #include <QGroupBox>
+#include <QString>
 
 #include "wpolarautonamedlg.h"
 
@@ -197,7 +198,7 @@ void WPolarAutoNameDlg::initDialog(PlanePolar const &wPolar)
     m_pchFuseDrag->setChecked(PlanePolarNameMaker::s_bFuseDrag);
     m_pchGround->setChecked(PlanePolarNameMaker::s_bGround);
 
-    m_plePolarName->setText(PlanePolarNameMaker::makeName(m_pPlane, m_pWPolar));
+    m_plePolarName->setText(QString::fromStdString(PlanePolarNameMaker::makeName(m_pPlane, m_pWPolar)));
 }
 
 
@@ -223,7 +224,7 @@ void WPolarAutoNameDlg::readData()
 void WPolarAutoNameDlg::onOptionChanged()
 {
     readData();
-    QString name = PlanePolarNameMaker::makeName(m_pPlane, m_pWPolar);
+    QString name = QString::fromStdString(PlanePolarNameMaker::makeName(m_pPlane, m_pWPolar));
     m_plePolarName->setText(name);
 }
 

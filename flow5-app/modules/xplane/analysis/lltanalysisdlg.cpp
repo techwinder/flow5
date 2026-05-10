@@ -42,8 +42,8 @@
 #include <api/planeopp.h>
 #include <api/planetask.h>
 #include <api/planexfl.h>
-#include <api/trace.h>
-#include <api/utils.h>
+#include <core/trace.h>
+#include <api/utils-io.h>
 #include <api/wingxfl.h>
 #include <api/planepolar.h>
 

@@ -23,6 +23,7 @@
 *****************************************************************************/
 
 
+#include <format>
 
 
 
@@ -71,19 +72,19 @@ void FuseSections::makeNURBS()
     }
     catch (Standard_OutOfRange const &ex)
     {
-        qDebug("error making poles %s \n", ex.GetMessageString());
+        std::cerr << std::format("error making poles {:s} \n", ex.GetMessageString()) << std::endl;
     }
     catch (Standard_ConstructionError const &ex)
     {
-        qDebug("error making poles %s \n", ex.GetMessageString());
+        std::cerr << std::format("error making poles {:s} \n", ex.GetMessageString()) << std::endl;
     }
     catch (Standard_NoSuchObject const &ex)
     {
-        qDebug("error making poles %s \n", ex.GetMessageString());
+        std::cerr << std::format("error making poles {:s} \n", ex.GetMessageString()) << std::endl;
     }
     catch(...)
     {
-        qDebug("unknown error making poles\n");
+        std::cerr << "unknown error making poles\n";
     }
 
     // convert the OCC nurbs to an xfl nurbs
@@ -173,94 +174,6 @@ void FuseSections::setNPoints(int npts)
     {
         m_Section[i].resize(npts);
     }
-}
-
-
-bool FuseSections::serializePartFl5(QDataStream &ar, bool bIsStoring)
-{
-    FuseXfl::serializePartFl5(ar, bIsStoring);
-    int k=0;
-    int n=0;
-    int nIntSpares=0;
-    int nDbleSpares=0;
-    double dble=0;
-
-    // 500001: new fl5 format
-    // 500002: added fit precision
-    int ArchiveFormat = 500002;
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-
-        ar << nSections();
-        if(nSections()>0)
-            ar << int(m_Section.front().size());
-
-        for(int is=0; is<nSections(); is++)
-        {
-            std::vector<Vector3d> const & section = m_Section.at(is);
-            for(int ic=0; ic<int(section.size()); ic++)
-            {
-                Vector3d const & pt = section.at(ic);
-                ar << pt.x << pt.y << pt.z;
-            }
-        }
-
-        ar << m_FitPrecision;
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if((ArchiveFormat<500001) || (ArchiveFormat>500002)) return false;
-
-        ar >> n;
-        m_Section.resize(n);
-
-        if(n>0)
-        {
-            ar >> k;
-            for(int i=0; i<n; i++) m_Section[i].resize(k);
-        }
-
-        for(int is=0; is<nSections(); is++)
-        {
-            std::vector<Vector3d> & section = m_Section[is];
-            for(int ic=0; ic<int(section.size()); ic++)
-            {
-                Vector3d & pt = section[ic];
-                ar >> pt.x >> pt.y >> pt.z;
-            }
-        }
-
-        if(ArchiveFormat>=500002)
-            ar >> m_FitPrecision;
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-        // make the shapes, shells, and triangulation
-        makeFuseGeometry();
-        computeStructuralInertia(Vector3d());
-
-        // make the default triangular mesh
-        std::string strange;
-        makeDefaultTriMesh(strange, "");
-    }
-
-    return true;
 }
 
 
@@ -677,7 +590,7 @@ int FuseSections::insertFrame(Vector3d const &Real)
                 std::vector<Vector3d> &secn1 = m_Section[n+1];
                 std::vector<Vector3d> &secn2 = m_Section[n+2];
 
-                for (uint k=0; k<secn1.size(); k++)
+                for (unsigned int k=0; k<secn1.size(); k++)
                 {
                     secn1[k].x = (secn[k].x + secn2[k].x)/2.0;
                     secn1[k].y = (secn[k].y + secn2[k].y)/2.0;

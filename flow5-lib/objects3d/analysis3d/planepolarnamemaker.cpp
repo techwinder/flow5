@@ -22,6 +22,9 @@
 
 *****************************************************************************/
 
+#include <format>
+
+
 #include <api/planepolarnamemaker.h>
 #include <api/planexfl.h>
 #include <api/units.h>
@@ -45,13 +48,13 @@ PlanePolarNameMaker::PlanePolarNameMaker()
 }
 
 
-QString PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWPolar)
+std::string PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWPolar)
 {
-    QString plrname;
-    if(!pWPolar) return QString();
+    std::string plrname;
+    if(!pWPolar) return std::string();
 
-    QString str, strong;
-    QString strSpeedUnit = Units::speedUnitQLabel();
+    std::string str, strong;
+    std::string strSpeedUnit = Units::speedUnitLabel();
 
     if(s_bType)
     {
@@ -59,7 +62,7 @@ QString PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWP
         {
         case xfl::T1POLAR:
         {
-            plrname = QString::asprintf("-T1-%.1f ", pWPolar->velocity() * Units::mstoUnit());
+            plrname = std::format("-T1-{:.1f} ", pWPolar->velocity() * Units::mstoUnit());
             plrname += strSpeedUnit;
             break;
         }
@@ -75,13 +78,13 @@ QString PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWP
         }
         case xfl::T4POLAR: // deprecated, unused
         {
-            plrname = "-T4-" + ALPHAch + QString::asprintf("%.1f",pWPolar->alphaSpec()) + DEGch;
+            plrname = "-T4-" + ALPHAstr + std::format("{:.1f}",pWPolar->alphaSpec()) + DEGstr;
             break;
         }
         case xfl::T5POLAR:
         {
-            plrname = "-T5-" + ALPHAch + QString::asprintf("%.1f", pWPolar->alphaSpec())+DEGch;
-            plrname += QString::asprintf("-%.1f",pWPolar->velocity() * Units::mstoUnit());
+            plrname = "-T5-" + ALPHAstr + std::format("{:.1f}", pWPolar->alphaSpec())+DEGstr;
+            plrname += std::format("-{:.1f}",pWPolar->velocity() * Units::mstoUnit());
             plrname += strSpeedUnit;
             break;
         }
@@ -112,48 +115,48 @@ QString PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWP
 
     if(fabs(pWPolar->phi())>AOAPRECISION)
     {
-        plrname += "-" + PHIch + QString::asprintf("%.1f", pWPolar->phi()) + DEGch;
+        plrname += "-" + PHIstr + std::format("{:.1f}", pWPolar->phi()) + DEGstr;
     }
 
     if(s_bMethod)
     {
         switch(pWPolar->analysisMethod())
         {
-        case xfl::LLT:
-        {
-            plrname += "-LLT";
-            break;
-        }
-        case xfl::VLM1:
-        {
-            plrname += "-VLM1";
-            break;
-        }
-        case xfl::VLM2:
-        {
-            plrname += "-VLM2";
-            break;
-        }
-        case xfl::QUADS:
-        {
-            plrname += "-Quads";
-            break;
-        }
-        case xfl::TRILINEAR:
-        {
-            plrname += "-TriLinear";
-            break;
-        }
-        case xfl::TRIUNIFORM:
-        {
-            plrname += "-TriUniform";
-            break;
-        }
-        case xfl::NOMETHOD:
-        {
-            plrname += "-NoMethod";
-            break;
-        }
+            case xfl::LLT:
+            {
+                plrname += "-LLT";
+                break;
+            }
+            case xfl::VLM1:
+            {
+                plrname += "-VLM1";
+                break;
+            }
+            case xfl::VLM2:
+            {
+                plrname += "-VLM2";
+                break;
+            }
+            case xfl::QUADS:
+            {
+                plrname += "-Quads";
+                break;
+            }
+            case xfl::TRILINEAR:
+            {
+                plrname += "-TriLinear";
+                break;
+            }
+            case xfl::TRIUNIFORM:
+            {
+                plrname += "-TriUniform";
+                break;
+            }
+            case xfl::NOMETHOD:
+            {
+                plrname += "-NoMethod";
+                break;
+            }
         }
     }
 
@@ -202,17 +205,17 @@ QString PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWP
             {
                 if(pWPolar->isFixedLiftPolar())
                 {
-                    strong = QString::asprintf("-%.1f", pWPolar->mass()*Units::kgtoUnit());
-                    plrname += strong + Units::massUnitQLabel();
+                    strong = std::format("-{:.1f}", pWPolar->mass()*Units::kgtoUnit());
+                    plrname += strong + Units::massUnitLabel();
                 }
 
-                strong = QString::asprintf("-x%.1f", pWPolar->CoG().x*Units::mtoUnit());
-                plrname += strong + Units::lengthUnitQLabel();
+                strong = std::format("-x{:.1f}", pWPolar->CoG().x*Units::mtoUnit());
+                plrname += strong + Units::lengthUnitLabel();
 
                 if(fabs(pWPolar->CoG().z)>=LENGTHPRECISION)
                 {
-                    strong = QString::asprintf("-z%.1f", pWPolar->CoG().z*Units::mtoUnit());
-                    plrname += strong + Units::lengthUnitQLabel();
+                    strong = std::format("-z{:.1f}", pWPolar->CoG().z*Units::mtoUnit());
+                    plrname += strong + Units::lengthUnitLabel();
                 }
             }
         }
@@ -250,7 +253,7 @@ QString PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWP
             if(pWPolar->hasActiveFlap())
             {
                 if(pWPolar->flapCtrlsName().length()!=0)
-                    plrname += "-" + QString::fromStdString(pWPolar->flapCtrlsName());
+                    plrname += "-" + pWPolar->flapCtrlsName();
             }
             break;
         case xfl::T6POLAR:
@@ -286,26 +289,26 @@ QString PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWP
     {
         if(pWPolar->bGroundEffect())
         {
-            strong = QString::asprintf("-G%.1f", pWPolar->groundHeight()*Units::mtoUnit());
-            plrname += strong +Units::lengthUnitQLabel();
+            strong = std::format("-G{:.1f}", pWPolar->groundHeight()*Units::mtoUnit());
+            plrname += strong +Units::lengthUnitLabel();
         }
         else if(pWPolar->bFreeSurfaceEffect())
         {
-            strong = QString::asprintf("-FS%.1f", pWPolar->groundHeight()*Units::mtoUnit());
-            plrname += strong +Units::lengthUnitQLabel();
+            strong = std::format("-FS{:.1f}", pWPolar->groundHeight()*Units::mtoUnit());
+            plrname += strong +Units::lengthUnitLabel();
         }
     }
 
 
-    /*    if(fabs(pWPolar->beta()) > .001  && !pWPolar->isBetaPolar())
+/*    if(fabs(pWPolar->betaSpec()) > ANGLEPRECISION  && !pWPolar->isBetaPolar())
     {
-        strong = QString(QString::fromUtf8("-b%1°")).arg(pWPolar->beta(),0,'f',1);
+        strong = "-" + BETAstr + std::format("{:.1f}", pWPolar->betaSpec()) + DEGstr;
         plrname += strong;
     }
 
-    if(fabs(pWPolar->phi()) > .001)
+    if(fabs(pWPolar->phi()) > ANGLEPRECISION)
     {
-        strong = QString(QString::fromUtf8("-B%1°")).arg(pWPolar->phi(),0,'f',1);
+        strong = "-" + PHIstr + std::format("{:.1f}", pWPolar->phi()) + DEGstr;
         plrname += strong;
     }*/
 
@@ -317,18 +320,18 @@ QString PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const *pWP
 
     if(pWPolar->bVortonWake()) plrname += "-VPW";
 
-    plrname.remove(0,1); //remove first character
+    plrname = plrname.substr(1); //remove first character
 
     return plrname;
 }
 
 
-QString PlanePolarNameMaker::stabilityControlNames(const PlaneXfl *pPlane, const PlanePolar *pWPolar)
+std::string PlanePolarNameMaker::stabilityControlNames(const PlaneXfl *pPlane, const PlanePolar *pWPolar)
 {
-    if(!pPlane) return QString();
-    if(!pWPolar || !pWPolar->isStabilityPolar()) return QString();
+    if(!pPlane) return std::string();
+    if(!pWPolar || !pWPolar->isStabilityPolar()) return std::string();
 
-    QString plrname;
+    std::string plrname;
     /*
     for(int iw=0; iw<pWPolar->m_AngleGain.size(); iw++)
     {
@@ -347,14 +350,14 @@ QString PlanePolarNameMaker::stabilityControlNames(const PlaneXfl *pPlane, const
             plrname += "-["+pPlane->wingAt(iw)->name();
             if(pWPolar->m_AngleGain.at(iw).size()>0 && fabs(pWPolar->m_AngleGain.at(iw).at(0))>ANGLEPRECISION)
             {
-                strong = QString::asprintf("(g%.1f)", pWPolar->angleGain(iw,0));
+                strong = std::format("(g{:.1f})", pWPolar->angleGain(iw,0));
                 plrname += "_"+strong;
             }
             for(int iFlap=1; iFlap<pWPolar->m_AngleGain.at(iw).size(); iFlap++)
             {
                 if(fabs(pWPolar->angleGain(iw, iFlap))>ANGLEPRECISION)
                 {
-                    strong = QString::asprintf("F%d(g%.1f)", iFlap, pWPolar->angleGain(iw, iFlap));
+                    strong = std::format("F{:d}(g{:.1f})", iFlap, pWPolar->angleGain(iw, iFlap));
                     plrname += "_"+strong;
                 }
             }
@@ -365,49 +368,49 @@ QString PlanePolarNameMaker::stabilityControlNames(const PlaneXfl *pPlane, const
 }
 
 
-QString PlanePolarNameMaker::rangeControlNames(PlaneXfl const *pPlane, PlanePolar const *pWPolar)
+std::string PlanePolarNameMaker::rangeControlNames(PlaneXfl const *pPlane, PlanePolar const *pWPolar)
 {
-    if(!pPlane) return QString();
-    if(!pWPolar || !pWPolar->isControlPolar()) return QString();
-    QString strong;
-    QString plrname;
+    if(!pPlane) return std::string();
+    if(!pWPolar || !pWPolar->isControlPolar()) return std::string();
+    std::string strong;
+    std::string plrname;
 
     // Operating range
     if(fabs(pWPolar->m_OperatingRange.at(0).range())>PRECISION)
     {
-        strong = "-V" + INFch + QString::asprintf("[%g,%g]", pWPolar->m_OperatingRange.at(0).ctrlMin()*Units::mstoUnit(), pWPolar->m_OperatingRange.at(0).ctrlMax()*Units::mstoUnit());
+        strong = "-V" + INFstr + std::format("[{:g},{:g}]", pWPolar->m_OperatingRange.at(0).ctrlMin()*Units::mstoUnit(), pWPolar->m_OperatingRange.at(0).ctrlMax()*Units::mstoUnit());
         plrname += strong;
     }
     if(fabs(pWPolar->m_OperatingRange.at(1).range())>PRECISION)
     {
-        strong = "-" + ALPHAch +QString::asprintf("[%g,%g]", pWPolar->m_OperatingRange.at(1).ctrlMin(), pWPolar->m_OperatingRange.at(1).ctrlMax());
+        strong = "-" + ALPHAstr +std::format("[{:g},{:g}]", pWPolar->m_OperatingRange.at(1).ctrlMin(), pWPolar->m_OperatingRange.at(1).ctrlMax());
         plrname += strong;
     }
     if(fabs(pWPolar->m_OperatingRange.at(2).range())>PRECISION)
     {
-        strong = "-" + BETAch + QString::asprintf("[%g,%g]", pWPolar->m_OperatingRange.at(2).ctrlMin(), pWPolar->m_OperatingRange.at(2).ctrlMax());
+        strong = "-" + BETAstr + std::format("[{:g},{:g}]", pWPolar->m_OperatingRange.at(2).ctrlMin(), pWPolar->m_OperatingRange.at(2).ctrlMax());
         plrname += strong;
     }
     if(fabs(pWPolar->m_OperatingRange.at(3).range())>PRECISION)
     {
-        strong = "-" + PHIch + QString::asprintf("[%g,%g]", pWPolar->m_OperatingRange.at(3).ctrlMin(), pWPolar->m_OperatingRange.at(3).ctrlMax());
+        strong = "-" + PHIstr + std::format("[{:g},{:g}]", pWPolar->m_OperatingRange.at(3).ctrlMin(), pWPolar->m_OperatingRange.at(3).ctrlMax());
         plrname += strong;
     }
 
     // Inertia
     if(fabs(pWPolar->m_InertiaRange.at(0).range())>PRECISION)
     {
-        strong = QString::asprintf("-Mass[%g,%g]", pWPolar->m_InertiaRange.at(0).ctrlMin()*Units::kgtoUnit(), pWPolar->m_InertiaRange.at(0).ctrlMax()*Units::kgtoUnit());
+        strong = std::format("-Mass[{:g},{:g}]", pWPolar->m_InertiaRange.at(0).ctrlMin()*Units::kgtoUnit(), pWPolar->m_InertiaRange.at(0).ctrlMax()*Units::kgtoUnit());
         plrname += strong;
     }
     if(fabs(pWPolar->m_InertiaRange.at(1).range())>PRECISION)
     {
-        strong = QString::asprintf("-CGx[%g,%g]", pWPolar->m_InertiaRange.at(1).ctrlMin()*Units::mtoUnit(), pWPolar->m_InertiaRange.at(1).ctrlMax()*Units::mtoUnit());
+        strong = std::format("-CGx[{:g},{:g}]", pWPolar->m_InertiaRange.at(1).ctrlMin()*Units::mtoUnit(), pWPolar->m_InertiaRange.at(1).ctrlMax()*Units::mtoUnit());
         plrname += strong;
     }
     if(fabs(pWPolar->m_InertiaRange.at(2).range())>PRECISION)
     {
-        strong = QString::asprintf("-CGz[%g,%g]", pWPolar->m_InertiaRange.at(2).ctrlMin()*Units::mtoUnit(), pWPolar->m_InertiaRange.at(2).ctrlMax()*Units::mtoUnit());
+        strong = std::format("-CGz[{:g},{:g}]", pWPolar->m_InertiaRange.at(2).ctrlMin()*Units::mtoUnit(), pWPolar->m_InertiaRange.at(2).ctrlMax()*Units::mtoUnit());
         plrname += strong;
     }
 
@@ -418,15 +421,15 @@ QString PlanePolarNameMaker::rangeControlNames(PlaneXfl const *pPlane, PlanePola
         {
             if(fabs(pWPolar->m_AngleRange.at(iw).at(0).range())>PRECISION)
             {
-                strong = QString::asprintf("[%g,%g]", pWPolar->angleRange(iw,0).ctrlMin(), pWPolar->angleRange(iw,0).ctrlMax());
-                plrname += "-"+QString::fromStdString(pPlane->wingAt(iw)->name())+"_"+strong;
+                strong = std::format("[{:g},{:g}]", pWPolar->angleRange(iw,0).ctrlMin(), pWPolar->angleRange(iw,0).ctrlMax());
+                plrname += "-"+ pPlane->wingAt(iw)->name() + "_"+strong;
             }
         }
-        for(uint iFlap=1; iFlap<pWPolar->m_AngleRange.at(iw).size(); iFlap++)
+        for(unsigned int iFlap=1; iFlap<pWPolar->m_AngleRange.at(iw).size(); iFlap++)
         {
             if(fabs(pWPolar->angleRange(iw, iFlap).range())>PRECISION)
             {
-                strong = QString::asprintf("-F%d[%g,%g]", iFlap, pWPolar->angleRange(iw, iFlap).ctrlMin(), pWPolar->angleRange(iw, iFlap).ctrlMax());
+                strong = std::format("-F{:d}[{:g},{:g}]", iFlap, pWPolar->angleRange(iw, iFlap).ctrlMin(), pWPolar->angleRange(iw, iFlap).ctrlMax());
                 plrname += strong;
             }
         }

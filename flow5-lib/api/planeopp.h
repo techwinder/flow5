@@ -79,6 +79,7 @@ class FL5LIB_EXPORT PlaneOpp : public Opp3d
         std::string const &polarName() const override {return m_PlrName;}
         void setPolarName(std::string const &name) override {m_PlrName=name;}
 
+        void setPolarType(xfl::enumPolarType type) {m_PolarType=type;}
         xfl::enumPolarType polarType() const {return m_PolarType;}
 
         bool isType1()           const {return m_PolarType==xfl::T1POLAR;}   /**< returns true if the polar is of the FIXEDSPEEDPOLAR type, false otherwise >*/
@@ -101,11 +102,8 @@ class FL5LIB_EXPORT PlaneOpp : public Opp3d
         bool isType8Polar()      const {return m_PolarType==xfl::T8POLAR;}
         bool isExternalPolar()   const {return m_PolarType==xfl::EXTERNALPOLAR;}
 
-
+        void setOut(bool b) {m_bOut=b;}
         bool isOut() const {return m_bOut;}
-
-        bool serializePOppXFL(QDataStream &ar, bool bIsStoring);
-        bool serializeFl5(QDataStream &ar, bool bIsStoring);
 
         void getProperties(const Plane *pPlane, const PlanePolar *pWPolar, std::string &properties) const;
 
@@ -134,12 +132,14 @@ class FL5LIB_EXPORT PlaneOpp : public Opp3d
         std::string m_PlaneName;        /**< the pPane's name to which the PlaneOpp is attached */
         std::string m_PlrName;         /**< the WPolar's name to which the PlaneOpp is attached */
 
+    public:
+
         double m_Span;             /**< the parent's Wing span */
         double m_MAChord;          /**< the parent's Wing mean aerodynamic chord*/
 
         bool m_bOut;               /**<  true if the interpolation of viscous properties was outside the Foil Polar mesh */
 
-    public:
+
 
         xfl::enumPolarType m_PolarType;   /**< defines the type of the parent PlanePolar */
         std::vector<WingOpp> m_WingOpp;      /**< An array of pointers to the four WingOpp objects associated to the four wings */

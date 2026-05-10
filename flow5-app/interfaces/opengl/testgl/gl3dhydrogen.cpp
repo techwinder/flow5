@@ -30,11 +30,12 @@
 
 #include "gl3dhydrogen.h"
 
+#include <api/mathelem.h>
+#include <api/utils.h>
+
+#include <core/displayoptions.h>
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/globals/gl_globals.h>
-#include <core/displayoptions.h>
-#include <api/utils.h>
-#include <api/mathelem.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/globals/wt_globals.h>

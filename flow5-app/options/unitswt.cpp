@@ -22,6 +22,7 @@
 
 *****************************************************************************/
 
+
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QFontDatabase>
@@ -31,6 +32,7 @@
 
 #include <api/units.h>
 
+#include <core/qunits.h>
 
 UnitsWt::UnitsWt(QWidget *parent): QWidget(parent)
 {

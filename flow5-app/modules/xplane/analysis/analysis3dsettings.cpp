@@ -42,26 +42,29 @@
 
 
 
-#include <modules/xplane/analysis/planeanalysisdlg.h>
-#include <core/displayoptions.h>
+#include <api/boattask.h>
+#include <api/llttask.h>
+#include <api/panel3.h>
+#include <api/panel4.h>
+#include <api/panelanalysis.h>
+#include <api/planeopp.h>
+#include <api/planetask.h>
+#include <api/task3d.h>
 #include <api/units.h>
+#include <api/utils-io.h>
+#include <api/vortex.h>
+#include <api/wingxfl.h>
+
+#include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/xflcore.h>
-#include <api/utils.h>
 #include <interfaces/graphs/containers/graphwt.h>
 #include <interfaces/graphs/controls/graphoptions.h>
 #include <interfaces/graphs/graph/graph.h>
-#include <api/boattask.h>
-#include <api/llttask.h>
-#include <api/panelanalysis.h>
-#include <api/planetask.h>
-#include <api/task3d.h>
-#include <api/planeopp.h>
-#include <api/wingxfl.h>
-#include <api/panel3.h>
-#include <api/panel4.h>
-#include <api/vortex.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
+#include <modules/xplane/analysis/planeanalysisdlg.h>
+
 
 bool Analysis3dSettings::s_bStabDerivatives = true;
 bool Analysis3dSettings::s_bKeepOpenOnErrors = true;

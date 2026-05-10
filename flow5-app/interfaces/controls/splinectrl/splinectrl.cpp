@@ -187,7 +187,7 @@ void SplineCtrl::initSplineCtrls(Spline *pSpline)
 
     m_pcbSplineDegree->setEnabled(m_pSpline->isBSpline());
 
-    m_pchSymmetric->setChecked(pSpline->issymmetric());
+    m_pchSymmetric->setChecked(pSpline->isSymmetric());
 
     if(m_pSpline->isBSpline())
     {

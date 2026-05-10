@@ -24,9 +24,6 @@
 
 
 
-
-#include <QDataStream>
-
 #include <pointspline.h>
 
 #include <constants.h>
@@ -44,7 +41,7 @@ PointSpline::PointSpline() : Spline()
 
 void PointSpline::makeCurve()
 {
-    for(uint i=0; i<m_Output.size(); i++)
+    for(unsigned int i=0; i<m_Output.size(); i++)
     {
         double di = double(i)/double(m_Output.size()-1);
         m_Output[i] = splinePoint(di);
@@ -58,7 +55,7 @@ double PointSpline::getY(double xinterp, bool bRel) const
     double x = xinterp;
     if(bRel) x = m_Output.front().x + xinterp*(m_Output.back().x - m_Output.front().x);
 
-    for (uint i=0; i<m_CtrlPt.size()-1; i++)
+    for (unsigned int i=0; i<m_CtrlPt.size()-1; i++)
     {
         if (m_CtrlPt[i].x <m_CtrlPt[i+1].x  &&   m_CtrlPt[i].x <= x && x<=m_CtrlPt[i+1].x )
         {
@@ -75,7 +72,7 @@ void PointSpline::getCamber(double &Camber, double &xc)
 {
     Camber = xc =0.0;
 
-    for (uint i=0; i<m_CtrlPt.size()-1; i++)
+    for (unsigned int i=0; i<m_CtrlPt.size()-1; i++)
     {
         if(fabs(m_CtrlPt.at(i).y)>fabs(Camber))
         {
@@ -116,7 +113,7 @@ Vector2d PointSpline::splinePoint(double u) const
 
     double l0 = 0;
     double l1 = 0;
-    for(uint i=1; i<m_CtrlPt.size(); i++)
+    for(unsigned int i=1; i<m_CtrlPt.size(); i++)
     {
         double deltaL = (m_CtrlPt[i]-m_CtrlPt[i-1]).norm();
         l1 = l0 + deltaL;
@@ -172,7 +169,7 @@ void PointSpline::splineDerivative(double u, double &dx, double &dy) const
 
     double l0{0};
     double l1{0};
-    for(uint i=1; i<m_CtrlPt.size(); i++)
+    for(unsigned int i=1; i<m_CtrlPt.size(); i++)
     {
         Vector2d const&pt = m_CtrlPt.at(i);
         Vector2d const&pt1 = m_CtrlPt.at(i-1);
@@ -203,14 +200,3 @@ bool PointSpline::updateSpline()
     return true;
 }
 
-bool PointSpline::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    if(!Spline::serializeFl5(ar, bIsStoring)) return false;
-
-    if(!bIsStoring)
-    {
-        updateSpline();
-        makeCurve();
-    }
-    return true;
-}

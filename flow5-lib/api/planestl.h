@@ -69,7 +69,6 @@ class FL5LIB_EXPORT PlaneSTL : public Plane
         void duplicatePanels(Plane const *pPlane);
 
         void makePlane(bool bThickSurfaces, bool bIgnoreFusePanels, bool bMakeTriMesh) override;
-        bool serializePlaneFl5(QDataStream &ar, bool bIsStoring) override;
 
         void makeTriMesh(bool bThickSurfaces = false) override;
 
@@ -111,7 +110,7 @@ class FL5LIB_EXPORT PlaneSTL : public Plane
 
         bool intersectTriangles(Vector3d A, Vector3d B, Vector3d &I, bool bMultiThreaded=true);
 
-        bool reversed() const {return m_bReversed;}
+        bool isReversed() const {return m_bReversed;}
         void setReversed(bool bReversed) {m_bReversed = bReversed;}
 
         void scale(double ScaleFactor) override;
@@ -151,8 +150,18 @@ class FL5LIB_EXPORT PlaneSTL : public Plane
 
         double maxSize() const;
 
-        fl5Color surfaceColor() const {return m_SurfaceColor;}
+        fl5Color const &surfaceColor() const {return m_SurfaceColor;}
+        fl5Color &surfaceColor() {return m_SurfaceColor;}
         void setSurfaceColor(fl5Color const &clr) {m_SurfaceColor=clr;}
+
+        double wettedArea() const {return m_WettedArea;}
+        void setWettedArea(double w) {m_WettedArea=w;}
+
+        double length() const {return m_Length;}
+        void setLength(double l) {m_Length=l;}
+
+        double height() const {return m_Height;}
+        void setHeight(double h) {m_Height=h;}
 
     private:
         Triangulation m_Triangulation;

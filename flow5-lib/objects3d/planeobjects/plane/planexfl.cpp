@@ -22,10 +22,8 @@
 
 *****************************************************************************/
 
-#include <QElapsedTimer>
-#include <QString>
-#include <QDebug>
-#include <QCoreApplication>
+#include <format>
+
 
 #include <planexfl.h>
 #include <fusenurbs.h>
@@ -76,7 +74,7 @@ void PlaneXfl::makeDefaultPlane()
     int NWings = 3;
     m_PartIndexes.clear();
 
-    clearFuse();
+    clearFuses();
 
     m_Wing.clear();
     for(int iw=0; iw<NWings; iw++) addWing();
@@ -244,7 +242,7 @@ void PlaneXfl::duplicate(Plane const*pPlane)
     }
 //    m_Wing.detach();
 
-    clearFuse();
+    clearFuses();
 
     if(pPlaneXfl->hasFuse())
     {
@@ -520,410 +518,6 @@ Fuse *PlaneXfl::fuse(const std::string &fusename)
 }
 
 
-/**
- * Loads or Saves the data of this Plane to a binary file.
- * @param ar the QDataStream object from/to which the data should be serialized
- * @param bIsStoring true if saving the data, false if loading
- * @return true if the operation was successful, false otherwise
- */
-bool PlaneXfl::serializePlaneXFL(QDataStream &ar, bool bIsStoring)
-{
-    int i(0), k(0);
-    double dble(0), mass(0), px(0), py(0), pz(0);
-    bool bDouble(false), bSym(false), bl(false), bBiplane(false), bStab(false), bFin(false), bFuse(false);
-    QString str, strange;
-
-    int ArchiveFormat(0);// identifies the format of the file
-    if (bIsStoring)
-    {
-        // using xf7 format instead
-        return true;
-    }
-    else
-    {    // loading code
-
-        ar >> ArchiveFormat;
-        if (ArchiveFormat <100001 || ArchiveFormat>110000)
-        {
-            return false;
-        }
-
-        int nw=4; //MAXWINGS
-        m_Wing.clear();
-        for(int iw=0; iw<nw; iw++)
-        {
-            addWing();
-        }
-
-        ar >> strange;    m_Name = strange.trimmed().toStdString();
-        ar >> strange;    m_Description = strange.toStdString();;
-
-        if(ArchiveFormat>=100002)  m_theStyle.serializeFl5(ar, bIsStoring);
-
-        for(int iw=0; iw<nWings(); iw++)
-        {
-            m_Wing[iw].serializePartXFL(ar, bIsStoring);
-        }
-
-        if(ArchiveFormat<100003)
-        {
-            m_Wing[0].setWingType(xfl::Main);
-            m_Wing[1].setWingType(xfl::OtherWing);
-            m_Wing[2].setWingType(xfl::Elevator) ;
-            m_Wing[3].setWingType(xfl::Fin);
-            m_Wing[3].setClosedInnerSide(true);
-        }
-
-        ar >> bBiplane>> bStab >>bFin >> bDouble>> bSym>> bl; // m_bDoubleSymFin;
-        for(int iw=0; iw<nWings(); iw++)
-        {
-            ar >> px >> py >> pz >> dble;
-            // correcting past errors
-            if(std::isnan(px))   px = 0.0;
-            if(std::isnan(py))   py = 0.0;
-            if(std::isnan(pz))   pz = 0.0;
-            if(std::isnan(dble)) dble = 0.0;
-            if(fabs(px)  <LENGTHPRECISION) px = 0.0;
-            if(fabs(py)  <LENGTHPRECISION) py = 0.0;
-            if(fabs(pz)  <LENGTHPRECISION) pz = 0.0;
-            if(fabs(dble)<LENGTHPRECISION) dble = 0.0;
-            if(fabs(px)  >1000.0) px = 0.0;
-            if(fabs(py)  >1000.0) py = 0.0;
-            if(fabs(pz)  >1000.0) pz = 0.0;
-            if(fabs(dble)>1000.0) dble = 0.0;
-
-            m_Wing[iw].setPosition(px, py, pz);
-            m_Wing[iw].setRy(dble);
-            if(m_Wing[iw].isFin())
-            {
-                m_Wing[iw].setTwoSided(bDouble);
-            }
-        }
-
-        if(ArchiveFormat<100003 && nWings()>=4 && m_Wing[3].isFin())
-        {
-            //            m_Wing[3].isDoubleFin() = bDouble;
-            //            m_Wing[3].setSymFin(bSym);
-            m_Wing[3].setRx(-90.0);
-        }
-
-        ar >> bFuse;
-        ar >> px >> pz;
-        if(bFuse)
-        {
-            QString BodyName;
-            ar >> BodyName; //unused
-            int format=0;
-            ar >> format;
-            if(100000<=format && format<200000)
-            {
-                clearFuse();
-                FuseXfl *pBody = new FuseNurbs;
-                pBody->serializePartXFL(ar, bIsStoring, format);
-                addFuse(pBody);
-                m_Fuse[0]->setPosition(px,0.0,pz);
-            }
-            else if(500000<=format && format<600000)
-            {
-                clearFuse();
-                FuseOcc *pBodyOcc = new FuseOcc;
-                pBodyOcc->serializePartFl5(ar, bIsStoring);
-                addFuse(pBodyOcc);
-                m_Fuse[0]->setPosition(px,0.0,pz);
-            }
-            else if(600000<=format && format<700000)
-            {
-                clearFuse();
-                FuseStl *pBodyStl = new FuseStl;
-                pBodyStl->serializePartFl5(ar, bIsStoring);
-                addFuse(pBodyStl);
-                m_Fuse[0]->setPosition(px,0.0,pz);
-            }
-
-            if(std::find(m_PartIndexes.begin(), m_PartIndexes.end(), fuse(0)->uniqueIndex()) == m_PartIndexes.end())
-                m_PartIndexes.insert(m_PartIndexes.begin(), fuse(0)->uniqueIndex());
-        }
-
-        clearPointMasses();
-
-        ar >> k;
-        for(i=0; i<k; i++)
-        {
-            ar >> mass >> px >>py >> pz;
-            ar >> str;
-            m_Inertia.appendPointMass(mass, Vector3d(px, py, pz), str.toStdString());
-        }
-
-        // space allocation
-        for (int i=0; i<20; i++) ar >> k;
-        for (int i=0; i<50; i++) ar >> dble;
-
-        if(ArchiveFormat<100003)
-        {
-            if(!bFin)
-            {
-                int index = m_Wing.back().uniqueIndex();
-
-                std::vector<int>::iterator it = std::find(m_PartIndexes.begin(), m_PartIndexes.end(), index);
-                if(it!=m_PartIndexes.end()) m_PartIndexes.erase(it);
-                m_Wing.pop_back();
-            }
-            if(!bStab)
-            {
-                int index = m_Wing.at(2).uniqueIndex();
-                std::vector<int>::iterator it = std::find(m_PartIndexes.begin(), m_PartIndexes.end(), index);
-                if(it!=m_PartIndexes.end()) m_PartIndexes.erase(it);
-                m_Wing.erase(m_Wing.begin()+2);
-            }
-
-            if(!bBiplane)
-            {
-                int index = m_Wing.at(1).uniqueIndex();
-                std::vector<int>::iterator it = std::find(m_PartIndexes.begin(), m_PartIndexes.end(), index);
-                if(it!=m_PartIndexes.end()) m_PartIndexes.erase(it);
-                m_Wing.erase(m_Wing.begin()+1);
-            }
-        }
-
-        return true;
-    }
-}
-
-
-/**
- * Loads or Saves the data of this Plane to a binary file.
- * @param ar the QDataStream object from/to which the data should be serialized
- * @param bIsStoring true if saving the data, false if loading
- * @return true if the operation was successful, false otherwise
- */
-bool PlaneXfl::serializePlaneFl5(QDataStream &ar, bool bIsStoring)
-{
-    double dble=0.0, m=0.0, px=0.0, py=0.0, pz=0.0;
-
-    QString str, strange;
-
-    int ArchiveFormat;// identifies the format of the file
-    // 500001: new fl5 format
-    // 500002: added m_bInertiaFromParts flag
-    // 500003: beta 11; added new sub classes for FuseXfl
-    ArchiveFormat = 500003;
-
-    if (bIsStoring)
-    {
-        ar << ArchiveFormat;
-
-        ar << nWings();
-
-        ar << QString::fromStdString(m_Name);
-        ar << QString::fromStdString(m_Description);
-        ar << m_theStyle.m_Stipple << m_theStyle.m_Width << m_theStyle.m_Symbol;
-        m_theStyle.m_Color.serialize(ar, true);
-
-        for(int iw=0; iw<nWings(); iw++)
-        {
-            m_Wing[iw].serializePartFl5(ar, bIsStoring);
-        }
-
-        ar << nFuse();
-
-        for(int ifuse=0; ifuse<nFuse(); ifuse++)
-        {
-            Fuse *pFuse = fuse(ifuse);
-            if(pFuse->isFlatFaceType())
-            {
-                ar << 100004;
-                FuseFlatFaces *pBody = dynamic_cast<FuseFlatFaces*>(pFuse);
-                pBody->serializePartFl5(ar, true);
-            }
-            else if(pFuse->isSplineType())
-            {
-                ar << 100005;
-                FuseNurbs *pBody = dynamic_cast<FuseNurbs*>(pFuse);
-                pBody->serializePartFl5(ar, true);
-            }
-            else if(pFuse->isSectionType())
-            {
-                ar << 100006;
-                FuseSections *pBody = dynamic_cast<FuseSections*>(pFuse);
-                pBody->serializePartFl5(ar, true);
-            }
-            else if(pFuse->isOccType())
-            {
-                ar << 100002;
-                FuseOcc *pBodyOcc = dynamic_cast<FuseOcc*>(pFuse);
-                pBodyOcc->serializePartFl5(ar, true);
-            }
-            else if(pFuse->isStlType())
-            {
-                ar << 100003;
-                FuseStl *pBodyStl = dynamic_cast<FuseStl*>(pFuse);
-                pBodyStl->serializePartFl5(ar, true);
-            }
-            pFuse->triMesh().serializePanelsFl5(ar, bIsStoring);
-        }
-
-        ar << m_bAutoInertia;
-        m_Inertia.serializeFl5(ar, bIsStoring);
-
-        //        serializeTriMesh(ar, bIsStoring);
-
-        // space allocation for the future storage of more data, without need to change the format
-        int nSpares=1;
-        ar << nSpares;
-        ar << int(m_bThickBuild);
-//        for (int i=0; i<nSpares; i++) ar << 0;
-        int nDbleSpares = 0;
-        ar << nDbleSpares;
-//        for (int i=0; i<nSpares; i++) ar << 0.0;
-
-        return true;
-    }
-    else
-    {    // loading code
-        int k=0;
-        int nw=0;
-        ar >> ArchiveFormat;
-        if (ArchiveFormat <500000 || ArchiveFormat>500010) return false;
-
-        ar >> nw;
-        m_Wing.clear();
-        for(int iw=0; iw<nw; iw++)
-        {
-            addWing();
-        }
-
-        ar >> strange;    m_Name = strange.trimmed().toStdString();
-        ar >> strange;    m_Description = strange.toStdString();
-        ar >> k; m_theStyle.m_Stipple = LineStyle::convertLineStyle(k);
-        ar >> m_theStyle.m_Width;
-        ar >> k; m_theStyle.m_Symbol=LineStyle::convertSymbol(k);
-        m_theStyle.m_Color.serialize(ar, false);
-
-        for(int iw=0; iw<nWings(); iw++)
-        {
-            m_Wing[iw].serializePartFl5(ar, bIsStoring);
-        }
-
-        int nFuse;
-        ar >> nFuse;
-        clearFuse();
-
-        if(nFuse<0 || nFuse>10000)
-            return false;
-
-        for(int ifuse=0; ifuse<nFuse; ifuse++)
-        {
-            int format=0;
-            ar >> format;
-            if(format==100001)
-            {
-                FuseNurbs *pFuseNurbs = new FuseNurbs;
-                pFuseNurbs->serializePartFl5(ar, bIsStoring);
-                if(pFuseNurbs)
-                {
-                    if(pFuseNurbs->fuseType()==Fuse::FlatFace)
-                    {
-                        // clean old mess
-                        FuseFlatFaces *pFuseFF = new FuseFlatFaces();
-                        pFuseFF->duplicateFuseXfl(*pFuseNurbs);
-                        pFuseFF->setFuseType(Fuse::FlatFace);
-                        pFuseFF->makeFuseGeometry();
-                        if(pFuseFF->bAutoInertia()) pFuseFF->computeStructuralInertia(Vector3d());
-                        std::string logmsg;
-                        pFuseFF->makeDefaultTriMesh(logmsg, "");
-
-                        delete pFuseNurbs;
-                        m_Fuse.push_back(pFuseFF);
-                    }
-                    else
-                    {
-                        m_Fuse.push_back(pFuseNurbs);
-                    }
-                }
-            }
-            else if(format==100002)
-            {
-                FuseOcc *pBodyOcc = new FuseOcc;
-                pBodyOcc->serializePartFl5(ar, bIsStoring);
-                if(pBodyOcc) m_Fuse.push_back(pBodyOcc);
-            }
-            else if(format==100003)
-            {
-                FuseStl *pBodyStl = new FuseStl;
-                pBodyStl->serializePartFl5(ar, bIsStoring);
-                if(pBodyStl) m_Fuse.push_back(pBodyStl);
-            }
-            else if(format==100004)
-            {
-                FuseFlatFaces *pBodyFF = new FuseFlatFaces;
-                pBodyFF->serializePartFl5(ar, bIsStoring);
-                if(pBodyFF) m_Fuse.push_back(pBodyFF);
-            }
-            else if(format==100005)
-            {
-                FuseNurbs *pBodyNurbs = new FuseNurbs;
-                pBodyNurbs->serializePartFl5(ar, bIsStoring);
-                if(pBodyNurbs) m_Fuse.push_back(pBodyNurbs);
-            }
-            else if(format==100006)
-            {
-                FuseSections *pBodyFromPts = new FuseSections;
-                pBodyFromPts->serializePartFl5(ar, bIsStoring);
-                if(pBodyFromPts) m_Fuse.push_back(pBodyFromPts);
-            }
-            Fuse *pFuse = m_Fuse.back();
-            pFuse->triMesh().serializePanelsFl5(ar, bIsStoring);
-
-            // compatibility with legacy project formats
-            if(pFuse->nPanel3()==0)
-            {
-                std::string strange;
-                pFuse->makeDefaultTriMesh(strange, "");
-            }
-
-            for(uint in=0; in<pFuse->nodes().size(); in++)
-            {
-                pFuse->nodes()[in].setSurfacePosition(xfl::FUSESURFACE);
-            }
-            pFuse->setUniqueIndex();
-        }
-
-        makeUniqueIndexList();
-
-        if(ArchiveFormat>=500002)
-        {
-            ar >> m_bAutoInertia;
-            m_Inertia.serializeFl5(ar, bIsStoring);
-        }
-        else
-        {
-            clearPointMasses();
-            ar >> k;
-            for(int i=0; i<k; i++)
-            {
-                ar >> m >> px >>py >> pz;
-                ar >> str;
-                m_Inertia.appendPointMass(m, Vector3d(px, py, pz), str.toStdString());
-            }
-        }
-
-        // space allocation
-        int nSpares=0;
-        ar >> nSpares;
-        if(nSpares>0)
-        {
-            ar >> k;  m_bThickBuild = bool(k); // v7.54
-        }
-
-        for (int i=1; i<nSpares; i++) ar >> k;
-        int nDbleSpares = 0;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-        return true;
-    }
-}
-
 
 bool PlaneXfl::hasMainWing() const
 {
@@ -988,6 +582,12 @@ void PlaneXfl::makeUniqueIndexList()
 }
 
 
+void PlaneXfl::clearWings()
+{
+    m_Wing.clear();
+}
+
+
 WingXfl* PlaneXfl::addWing(xfl::enumType wingtype)
 {
     m_Wing.push_back({wingtype});
@@ -995,9 +595,9 @@ WingXfl* PlaneXfl::addWing(xfl::enumType wingtype)
     m_Wing.back().setUniqueIndex();
     makeUniqueIndexList();
 
-    QString strange;
-    strange = QString::asprintf("Wing_%d", nWings());
-    m_Wing.back().setName(strange.toStdString());
+    std::string strange;
+    strange = std::format("Wing_{:d}", nWings());
+    m_Wing.back().setName(strange);
 
     return &m_Wing.back();
 }
@@ -1014,7 +614,7 @@ WingXfl *PlaneXfl::addWing(WingXfl *pNewWing)
 }
 
 
-void PlaneXfl::clearFuse()
+void PlaneXfl::clearFuses()
 {
     for(int ifuse=0; ifuse<nFuse(); ifuse++)
     {
@@ -1056,9 +656,9 @@ WingXfl* PlaneXfl::duplicateWing(int iWing)
     m_Wing.push_back(m_Wing[iWing]);
     if(m_Wing[iWing].isMainWing()) m_Wing.back().setWingType(xfl::OtherWing);
 
-    QString strange;
-    strange = QString::asprintf("Wing_%d", nWings());
-    m_Wing.back().setName(strange.toStdString());
+    std::string strange;
+    strange = std::format("Wing_{:d}", nWings());
+    m_Wing.back().setName(strange);
 
     createSurfaces();
     return &m_Wing.back();
@@ -1072,9 +672,9 @@ Fuse* PlaneXfl::duplicateFuse(int iFuse)
     Fuse *pFuse = m_Fuse[iFuse]->clone();
     m_Fuse.push_back(pFuse);
 
-    QString strange;
-    strange = QString::asprintf("Fuse_%d", nFuse());
-    m_Fuse.back()->setName(strange.toStdString());
+    std::string strange;
+    strange = std::format("Fuse_{:d}", nFuse());
+    m_Fuse.back()->setName(strange);
 
     return m_Fuse.back();
 }
@@ -1113,7 +713,7 @@ Fuse * PlaneXfl::setFuse(bool bFuse, Fuse::enumType bodytype)
 {
     if(bFuse)
     {
-        clearFuse();
+        clearFuses();
         Fuse *pFuse = nullptr;
         switch(bodytype)
         {
@@ -1148,7 +748,7 @@ Fuse * PlaneXfl::setFuse(bool bFuse, Fuse::enumType bodytype)
         return pFuse;
     }
 
-    clearFuse();
+    clearFuses();
     return nullptr;
 }
 
@@ -1464,8 +1064,6 @@ bool PlaneXfl::connectTriMesh(bool bRefTriMesh, bool bConnectTE, bool )
 {
     TriMesh *pTriMesh = bRefTriMesh ? &m_RefTriMesh : &m_TriMesh;
 
-    QElapsedTimer t; t.start();
-
     //make internal fuse connections
     for(int ifuse=0; ifuse<fuseCount(); ifuse++)
     {
@@ -1561,91 +1159,91 @@ Fuse *PlaneXfl::makeNewFuse(Fuse::enumType bodytype)
 
 std::string PlaneXfl::planeData(bool bOtherWings) const
 {
-    QString Result;
-    QString str1;
-    QString strange;
-
-    QString lengthlab = Units::lengthUnitQLabel();
-    QString arealab = Units::areaUnitQLabel();
-    QString masslab = Units::massUnitQLabel();
+    std::string Result;
+    std::string str1;
+    std::string strange;
+    std::string lengthlab, arealab, masslab;
+    lengthlab = Units::lengthUnitLabel();
+    arealab = Units::areaUnitLabel();
+    masslab = Units::massUnitLabel();
 
     WingXfl const *pMainWing = mainWing();
 
-    constexpr int labelWidth = 15;
-    auto label = [=](const char *sourceText) {
-        return QCoreApplication::translate("PlaneXfl", sourceText).leftJustified(labelWidth, ' ');
-    };
 
-    str1 = QString("%1 = %2 ").arg(label("Wing span")).arg(planformSpan()*Units::mtoUnit(), 9, 'f', 3);
-    strange += str1 + lengthlab + "\n";
+    str1 = std::format("Wing span       = {:9.3f} ", planformSpan()*Units::mtoUnit());
+    str1 += lengthlab;
+    strange += str1 +"\n";
 
-    str1 = QString("%1 = %2 ").arg(label("xyProj. span")).arg(projectedSpan()*Units::mtoUnit(), 9, 'f', 3);
-    strange += str1 + lengthlab + "\n";
+    str1 = std::format("xyProj. span    = {:9.3f} ", projectedSpan()*Units::mtoUnit());
+    str1 += lengthlab;
+    strange += str1 +"\n";
 
-    str1 = QString("%1 = %2 ").arg(label("Wing area")).arg(planformArea(bOtherWings) * Units::m2toUnit(), 9, 'f', 3);
-    strange += str1 + arealab + "\n";
+    str1 = std::format("Wing area       = {:9.3f} ", planformArea(bOtherWings) * Units::m2toUnit());
+    str1 += arealab;
+    strange += str1 +"\n";
 
-    str1 = QString("%1 = %2 ").arg(label("Projected area")).arg(projectedArea(bOtherWings) * Units::m2toUnit(), 9, 'f', 3);
-    strange += str1 + arealab + "\n";
+    str1   = std::format("Projected area  = {:9.3f} ", projectedArea(bOtherWings) * Units::m2toUnit());
+    str1 += arealab;
+    strange += str1 +"\n";
 
-    Result = QString("%1 = %2 ").arg(label("Mass")).arg(totalMass()*Units::kgtoUnit(), 9, 'f', 3);
-    strange += Result + masslab + "\n";
+    Result = std::format("Mass            = {:9.3f} ", totalMass()*Units::kgtoUnit());
+    Result += masslab;
+    strange += Result +"\n";
 
-    Result = QString("%1 = (%2, %3, %4) ")
-                 .arg(QCoreApplication::translate("PlaneXfl", "CoG"))
-                 .arg(m_Inertia.CoG_t().x*Units::mtoUnit(), 0, 'f', 3)
-                 .arg(m_Inertia.CoG_t().y*Units::mtoUnit(), 0, 'f', 3)
-                 .arg(m_Inertia.CoG_t().z*Units::mtoUnit(), 0, 'f', 3);
-    strange += Result + lengthlab + "\n";
+    Result = std::format("CoG = ({:.3f}, {:.3f}, {:.3f}) ", m_Inertia.CoG_t().x*Units::mtoUnit(), m_Inertia.CoG_t().y*Units::mtoUnit(), m_Inertia.CoG_t().z*Units::mtoUnit());
+    Result += lengthlab;
+    strange += Result +"\n";
 
     if(pMainWing)
     {
-        Result = QString("%1 = %2")
-                     .arg(label("Wing load"))
-                     .arg(totalMass()*Units::kgtoUnit()/projectedArea(bOtherWings)/Units::m2toUnit(), 9, 'f', 3);
-        strange += Result + " " + masslab + "/" + arealab + "\n";
+        Result = std::format("Wing load       = {:9.3f}", totalMass()*Units::kgtoUnit()/projectedArea(bOtherWings)/Units::m2toUnit());
+        Result += " "+ masslab + "/" + arealab;
+        strange += Result +"\n";
     }
 
     if(hasStab())
     {
-        str1 = QString("%1 = %2").arg(label("Tail volume (H)")).arg(tailVolumeHorizontal(), 9, 'f', 3);
-        strange += str1 + "\n";
+        str1 = std::format("Tail volume (H) = {:9.3f}", tailVolumeHorizontal());
+        strange += str1 +"\n";
     }
+
 
     if(hasFin())
     {
-        str1 = QString("%1 = %2").arg(label("Tail volume (V)")).arg(tailVolumeVertical(), 9, 'f', 3);
-        strange += str1 + "\n";
+        str1 = std::format("Tail volume (V) = {:9.3f}", tailVolumeVertical());
+        strange += str1 +"\n";
     }
 
     if(pMainWing)
     {
-        str1 = QString("%1 = %2 ").arg(label("Root chord")).arg(pMainWing->rootChord()*Units::mtoUnit(), 9, 'f', 3);
-        strange += str1 + lengthlab + "\n";
+        str1 = std::format("Root chord      = {:9.3f} ", pMainWing->rootChord()*Units::mtoUnit());
+        Result = str1+ lengthlab;
+        strange += Result +"\n";
     }
 
-    str1 = QString("%1 = %2 ").arg(label("MAC")).arg(mac()*Units::mtoUnit(), 9, 'f', 3);
-    strange += str1 + lengthlab + "\n";
+    str1 = std::format("MAC             = {:9.3f} ", mac()*Units::mtoUnit());
+    Result = str1+ lengthlab;
+    strange += Result +"\n";
 
     if(pMainWing)
     {
-        str1 = QString("%1 = %2").arg(label("Tip twist")).arg(pMainWing->tipTwist(), 9, 'f', 3) + DEGch;
-        strange += str1 + "\n";
+        str1 = std::format("Tip twist       = {:9.3f}", pMainWing->tipTwist()) + DEGstr;
+        strange += str1 +"\n";
     }
 
-    str1 = QString("%1 = %2").arg(label("Aspect Ratio")).arg(aspectRatio(), 9, 'f', 3);
-    strange += str1 + "\n";
+    str1 = std::format("Aspect Ratio    = {:9.3f}", aspectRatio());
+    strange += str1 +"\n";
 
-    str1 = QString("%1 = %2").arg(label("Taper Ratio")).arg(taperRatio(), 9, 'f', 3);
-    strange += str1 + "\n";
+    str1 = std::format("Taper Ratio     = {:9.3f}", taperRatio());
+    strange += str1 +"\n";
 
     if(pMainWing)
     {
-        str1 = QString("%1 = %2").arg(label("Root-Tip Sweep")).arg(pMainWing->averageSweep(), 9, 'f', 3) + DEGch;
+        str1 = std::format("Root-Tip Sweep  = {:9.3f}",pMainWing->averageSweep()) + DEGstr;
         strange += str1;
     }
 
-    return strange.toStdString();
+    return strange;
 }
 
 
@@ -1771,14 +1369,14 @@ void PlaneXfl::joinSurfaces(Surface const &LeftSurf, Surface const &RightSurf)
 {
     std::vector<Panel4> &panels = m_RefQuadMesh.panels();
 
-    for(uint il=0; il<LeftSurf.panel4List().size(); il++)
+    for(unsigned int il=0; il<LeftSurf.panel4List().size(); il++)
     {
         int idx0 = LeftSurf.panel4List().at(il);
         Panel4 &pl = panels[idx0];
 
         if(pl.isFlapPanel()) continue; // do not connect flaps to adjacent surface
 
-        for(uint ir=0; ir<RightSurf.panel4List().size(); ir++)
+        for(unsigned int ir=0; ir<RightSurf.panel4List().size(); ir++)
         {
             int idx1 = RightSurf.panel4List().at(ir);
             Panel4 &pr = panels[idx1];
@@ -1937,7 +1535,7 @@ std::string PlaneXfl::flapName(int iFlap) const
 
         for(int iflap=0; iflap<wing.nFlaps(); iflap++)
         {
-            if(iFlap==ic) return wing.name() + QString::asprintf("_flap_%d", iflap+1).toStdString();
+            if(iFlap==ic) return wing.name() + std::format("_flap_{:d}", iflap+1);
             ic++;
         }
     }
@@ -2011,7 +1609,7 @@ std::string PlaneXfl::controlSurfaceName(int iCtrl) const
         WingXfl const &wing = m_Wing.at(iw);
         for(int iflap=0; iflap<wing.nFlaps(); iflap++)
         {
-            if(iCtrl==ic) return wing.name() + QString::asprintf("_flap_%d", iflap+1).toStdString();
+            if(iCtrl==ic) return wing.name() + std::format("_flap_{:d}", iflap+1);
             ic++;
         }
     }
@@ -2025,8 +1623,8 @@ void PlaneXfl::setRangePositions4(PlanePolar const *pWPolar, double t, std::stri
 
     Vector3d H, Origin;
     Vector3d YVector(0.0, 1.0, 0.0);
-    QString strange;
-    QString outstring;
+    std::string strange;
+    std::string outstring;
 
     for(int iw=0; iw<nWings(); iw++)
     {
@@ -2043,8 +1641,8 @@ void PlaneXfl::setRangePositions4(PlanePolar const *pWPolar, double t, std::stri
             H.set(0.0, 1.0, 0.0);
 
             double totalAngle = ryAngle(iw) + deltaangle;
-            strange = "      Rotating " + QString::fromStdString(pWing->name());
-            outstring += strange +  QString::asprintf(" by %f°, total angle is %f", deltaangle, totalAngle) + DEGch + EOLch;
+            strange = "      Rotating " + pWing->name();
+            outstring += strange +  std::format(" by {:f}°, total angle is {:f}", deltaangle, totalAngle) + DEGstr + EOLstr;
 
             Origin = wingLE(iw);
 
@@ -2070,9 +1668,9 @@ void PlaneXfl::setRangePositions4(PlanePolar const *pWPolar, double t, std::stri
 
                 if (fabs(deltaangle)>FLAPANGLEPRECISION)
                 {
-                    strange = QString::asprintf("- rotating flap %d by %f°", iCtrl, deltaangle);
+                    strange = std::format("- rotating flap {:d} by {:f}°", iCtrl, deltaangle);
 
-                    strange = "      " + QString::fromStdString(pWing->name()) +strange + EOLch;
+                    strange = "      " + pWing->name() +strange + EOLstr;
                     outstring +=strange;
 
                     if(pWPolar->isQuadMethod())
@@ -2093,7 +1691,7 @@ void PlaneXfl::setRangePositions4(PlanePolar const *pWPolar, double t, std::stri
 
     outstring  +="\n";
 
-    outstr = outstring.toStdString();
+    outstr = outstring;
 }
 
 
@@ -2101,11 +1699,11 @@ void PlaneXfl::setRangePositions3(PlanePolar const *pWPolar, double t, std::stri
 {
     assert(pWPolar->isType6());
     assert(pWPolar->isTriangleMethod());
-    QString outstring;
+    std::string outstring;
 
     Vector3d H, Origin;
     Vector3d YVector(0.0, 1.0, 0.0);
-    QString strange;
+    std::string strange;
     double totalAngle(0), deltaangle(0);
 
     if(pWPolar->isTriLinearMethod())
@@ -2130,8 +1728,8 @@ void PlaneXfl::setRangePositions3(PlanePolar const *pWPolar, double t, std::stri
             H.set(0.0, 1.0, 0.0);
 
             totalAngle = ryAngle(iw) + deltaangle;
-            strange = "      Rotating " + QString::fromStdString(pWing->name());
-            outstring += strange + QString::asprintf(" by %.3f°, total angle is %.3f°\n", deltaangle, totalAngle);
+            strange = "      Rotating " + pWing->name();
+            outstring += strange + std::format(" by {:.3f}°, total angle is {:.3f}°\n", deltaangle, totalAngle);
 
             Origin = wingLE(iw);
             rotateWingNodes(triPanels(), nodes, pWing, Origin, YVector, deltaangle);
@@ -2154,9 +1752,9 @@ void PlaneXfl::setRangePositions3(PlanePolar const *pWPolar, double t, std::stri
                     else
                         totalAngle = deltaangle;
 
-                    strange = QString::asprintf("- rotating flap %d by %.3f°, total flap angle is %.3f°", iCtrl, deltaangle, totalAngle);
+                    strange = std::format("- rotating flap {:d} by {:.3f}°, total flap angle is {:.3f}°", iCtrl, deltaangle, totalAngle);
 
-                    strange = "      " + QString::fromStdString(pWing->name()) + strange + EOLch;
+                    strange = "      " + pWing->name() + strange + EOLstr;
                     outstring += strange;
 
                     rotateFlapNodes(triPanels(), nodes, surf, surf.hingePoint(), surf.hingeVector(), deltaangle);
@@ -2171,7 +1769,7 @@ void PlaneXfl::setRangePositions3(PlanePolar const *pWPolar, double t, std::stri
 
     outstring  +="\n";
 
-    outstr = outstring.toStdString();
+    outstr = outstring;
 }
 
 
@@ -2182,10 +1780,10 @@ void PlaneXfl::rotateWingNodes(std::vector<Panel3> const &panel3, std::vector<No
 
     bool bFound=false;
 
-    for(uint iNode=0; iNode<node.size(); iNode++)
+    for(unsigned int iNode=0; iNode<node.size(); iNode++)
     {
         bFound = false;
-        for(uint i3=0; i3<panel3.size(); i3++)
+        for(unsigned int i3=0; i3<panel3.size(); i3++)
         {
             if(pWing->hasPanel3(i3) && panel3.at(i3).hasVertex(iNode))
             {
@@ -2198,8 +1796,8 @@ void PlaneXfl::rotateWingNodes(std::vector<Panel3> const &panel3, std::vector<No
 
 /*
     auto t1 = std::chrono::high_resolution_clock::now();
-    int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    qDebug("PlaneTask::rotateWingNodes: %gms", double(duration)/1000.0);*/
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+    qDebug("PlaneTask::rotateWingNodes: {:g}ms", double(duration)/1000.0);*/
 }
 
 
@@ -2208,10 +1806,10 @@ void PlaneXfl::rotateFlapNodes(const std::vector<Panel3> &panel3, std::vector<No
 {
     bool bFound = false;
     // scan nodes one at a time so as not to rotate shared nodes multiple times
-    for(uint iNode=0; iNode<node.size(); iNode++)
+    for(unsigned int iNode=0; iNode<node.size(); iNode++)
     {
         bFound = false;
-        for(uint i=0; i<surf.flapPanel3().size(); i++)
+        for(unsigned int i=0; i<surf.flapPanel3().size(); i++)
         {
             int i3 = surf.flapPanel3().at(i);
             if(panel3.at(i3).hasVertex(iNode))
@@ -2257,8 +1855,8 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstr)
 //    auto t0 = std::chrono::high_resolution_clock::now();
     assert(pWPolar->isType123458() || pWPolar->isType7());
 
-    QString outstring;
-    QString strange;
+    std::string outstring;
+    std::string strange;
 
     outstring += "Setting flap positions\n";
 
@@ -2278,7 +1876,7 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstr)
 
         if(iw>=pWPolar->nFlapCtrls())
         {
-            outstring += "      No flap settings defined for " + QString::fromStdString(pWing->name()) + " ... skipping" + EOLch;
+            outstring += "      No flap settings defined for " + pWing->name() + " ... skipping" + EOLstr;
             break; // correcting past errors
         }
 
@@ -2288,7 +1886,7 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstr)
 
         int iFlap=0;
 
-        outstring += "   " + QString::fromStdString(pWing->name()) +":\n";
+        outstring += "   " + pWing->name() +":\n";
 
         for (int jSurf=0; jSurf<pWing->nSurfaces(); jSurf++)
         {
@@ -2299,13 +1897,13 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstr)
 
                 if (fabs(flapangle)>FLAPANGLEPRECISION)
                 {
-                    strange = QString::asprintf("      rotating flap %d by %g", iFlap, flapangle) + DEGch + EOLch;
+                    strange = std::format("      rotating flap {:d} by {:g}", iFlap, flapangle) + DEGstr + EOLstr;
 
                     outstring += strange;
 
                     if(pWPolar->isTriangleMethod())
                     {
-                        for(uint i=0; i<surf.flapPanel3().size(); i++)
+                        for(unsigned int i=0; i<surf.flapPanel3().size(); i++)
                         {
                             int idx = surf.flapPanel3().at(i);
                             m_TriMesh.panel(idx).rotate(surf.hingePoint(), surf.hingeVector(), flapangle);
@@ -2332,11 +1930,11 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstr)
 
     outstring  +="\n";
 
-    outstr = outstring.toStdString();
+    outstr = outstring;
 /*
     auto t1 = std::chrono::high_resolution_clock::now();
-    int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    qDebug("Setting flaps1: %gms",  double(duration)/1000.0);;*/
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+    qDebug("Setting flaps1: {:g}ms",  double(duration)/1000.0);;*/
 
 }
 

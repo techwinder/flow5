@@ -23,9 +23,9 @@
 *****************************************************************************/
 
 
-#include <QString>
-#include <QDataStream>
 
+#include <format>
+#include <cassert>
 
 #include <foil.h>
 
@@ -133,7 +133,7 @@ void Foil::makeBaseMidLine()
     m_BaseCbLine.front() = m_LE;
     m_Thickness.front() = 0.0;
 
-    for (uint l=1; l<m_BaseCbLine.size(); l++)
+    for (unsigned int l=1; l<m_BaseCbLine.size(); l++)
     {
         Vector2d pt = m_LE + U *m_BaseCbLine.at(l).x;
 
@@ -157,7 +157,7 @@ double Foil::camber(double x) const
     {
         return m_BaseCbLine.front().y;
     }
-    for (uint i=0; i<m_BaseCbLine.size()-1; i++)
+    for (unsigned int i=0; i<m_BaseCbLine.size()-1; i++)
     {
         if ((m_BaseCbLine.at(i).x <= x) && (x < m_BaseCbLine.at(i+1).x))
         {
@@ -182,7 +182,7 @@ double Foil::thickness(double x) const
         return m_Thickness.front();
     }
 
-    for (uint i=0; i<m_Thickness.size()-1; i++)
+    for (unsigned int i=0; i<m_Thickness.size()-1; i++)
     {
         if ((m_BaseCbLine.at(i).x<=x) && (x<m_BaseCbLine.at(i+1).x))
         {
@@ -202,7 +202,7 @@ double Foil::thickness(double x) const
 double Foil::camberSlope(double x) const
 {
     //returns the camber slope at position x
-    for (uint i=0; i<m_BaseCbLine.size()-1; i++)
+    for (unsigned int i=0; i<m_BaseCbLine.size()-1; i++)
     {
         if ((m_BaseCbLine[i].x <= x) && (x < m_BaseCbLine[i+1].x))
         {
@@ -224,7 +224,7 @@ double Foil::camberSlope(double x) const
 double Foil::maxCamber() const
 {
     double Camber = 0.0;
-    for (uint l=1; l<m_BaseCbLine.size(); l++)
+    for (unsigned int l=1; l<m_BaseCbLine.size(); l++)
     {
         if(fabs(m_BaseCbLine.at(l).y)>fabs(Camber))
         {
@@ -239,7 +239,7 @@ double Foil::xCamber() const
 {
     double camb = 0.0;
     double XCamber = 0.0;
-    for (uint l=1; l<m_BaseCbLine.size(); l++)
+    for (unsigned int l=1; l<m_BaseCbLine.size(); l++)
     {
         if(fabs(m_BaseCbLine.at(l).y)>fabs(camb))
         {
@@ -254,7 +254,7 @@ double Foil::xCamber() const
 double Foil::maxThickness() const
 {
     double thick = 0.0;
-    for(uint i=0; i<m_Thickness.size(); i++)
+    for(unsigned int i=0; i<m_Thickness.size(); i++)
     {
         if(fabs(m_Thickness[i])>thick) thick = m_Thickness.at(i);
     }
@@ -266,7 +266,7 @@ double Foil::xThickness() const
 {
     double xthick = 0.0;
     double thick = 0.0;
-    for(uint i=0; i<m_Thickness.size(); i++)
+    for(unsigned int i=0; i<m_Thickness.size(); i++)
     {
         if(fabs(m_Thickness.at(i))>thick)
         {
@@ -288,7 +288,7 @@ void Foil::setThickness(double xthick, double thick)
 
     if(fabs(xtr-1.0)>0.001)
     {
-        for(uint i=0; i<newth.size(); i++)
+        for(unsigned int i=0; i<newth.size(); i++)
         {
             double xc = m_BaseCbLine[i].x;
             if(xc<=xthick)
@@ -311,7 +311,7 @@ void Foil::setThickness(double xthick, double thick)
     //scale the thickness
     if(fabs(tr-1.0)>0.001)
     {
-        for(uint i=0; i<newth.size(); i++)
+        for(unsigned int i=0; i<newth.size(); i++)
         {
             newth[i] *= tr;
         }
@@ -331,7 +331,7 @@ void Foil::setCamber(double xcamb, double camb)
 
     if(fabs(xcr-1.0)>0.001)
     {
-        for(uint i=0; i<newc.size(); i++)
+        for(unsigned int i=0; i<newc.size(); i++)
         {
             if(newc[i].x<=xcamb)
             {
@@ -353,7 +353,7 @@ void Foil::setCamber(double xcamb, double camb)
     //scale the camber
     if(fabs(cr-1.0)>0.001)
     {
-        for(uint i=0; i<newc.size(); i++)
+        for(unsigned int i=0; i<newc.size(); i++)
         {
             newc[i].y *= cr;
         }
@@ -370,14 +370,14 @@ void Foil::makeBaseFromCamberAndThickness()
     m_BaseTop.resize(m_BaseCbLine.size());
     m_BaseBot.resize(m_BaseCbLine.size());
 
-    for(uint i=0; i<m_BaseCbLine.size(); i++)
+    for(unsigned int i=0; i<m_BaseCbLine.size(); i++)
     {
         c = camber(m_BaseCbLine.at(i).x);
         t = thickness(m_BaseCbLine.at(i).x);
         m_BaseTop[i].x = m_BaseCbLine.at(i).x;
         m_BaseTop[i].y = c + 0.5*t;
     }
-    for(uint i=0; i<m_BaseCbLine.size(); i++)
+    for(unsigned int i=0; i<m_BaseCbLine.size(); i++)
     {
         c = camber(m_BaseCbLine.at(i).x);
         t = thickness(m_BaseCbLine.at(i).x);
@@ -402,7 +402,7 @@ void Foil::rebuildPointSequenceFromBase()
         m_BaseNode[topsize-1-i].y = m_BaseTop.at(i).y;
     }
 
-    for (uint i=0; i<m_BaseBot.size(); i++)
+    for (unsigned int i=0; i<m_BaseBot.size(); i++)
     {
         m_BaseNode[topsize+i-1].x = m_BaseBot.at(i).x;
         m_BaseNode[topsize+i-1].y = m_BaseBot.at(i).y;
@@ -433,7 +433,7 @@ void Foil::applyBase()
             m_Node[sizeExt-1-i].y = m_Top.at(i).y;
         }
 
-        for (uint i=0; i<m_Bot.size(); i++)
+        for (unsigned int i=0; i<m_Bot.size(); i++)
         {
             m_Node[sizeExt+i-1].x = m_Bot.at(i).x;
             m_Node[sizeExt+i-1].y = m_Bot.at(i).y;
@@ -601,14 +601,11 @@ double Foil::deRotate()
  */
 bool Foil::exportFoilToDat(std::string &out) const
 {
-    QString strOut;
-
     out = m_Name +"\n";
 
     for (int i=0; i<nNodes(); i++)
     {
-        strOut = QString::asprintf(" %11.7f    %11.7f\n", m_Node.at(i).x, m_Node.at(i).y);
-        out += strOut.toStdString();
+        out += std::format(" {:11.7f}    {:11.7f}\n", m_Node.at(i).x, m_Node.at(i).y);;
     }
 
     return true;
@@ -642,7 +639,7 @@ double Foil::baseLowerY(double x) const
 
     x = m_BaseBot.front().x + x*(m_BaseBot.back().x-m_BaseBot.front().x);//in case there is a flap which reduces the length
 
-    for (uint i=0; i<m_BaseBot.size()-1; i++)
+    for (unsigned int i=0; i<m_BaseBot.size()-1; i++)
     {
         if (m_BaseBot.at(i).x <m_BaseBot.at(i+1).x  &&  m_BaseBot.at(i).x <= x && x<=m_BaseBot.at(i+1).x )
         {
@@ -667,7 +664,7 @@ double Foil::baseUpperY(double x) const
 
     x = m_BaseTop.front().x + x*(m_BaseTop.back().x-m_BaseTop.front().x);//in case there is a flap which reduces the length
 
-    for (uint i=0; i<m_BaseTop.size()-1; i++)
+    for (unsigned int i=0; i<m_BaseTop.size()-1; i++)
     {
         if (m_BaseTop.at(i).x <m_BaseTop.at(i+1).x  &&  m_BaseTop.at(i).x <= x && x<=m_BaseTop.at(i+1).x )
         {
@@ -687,7 +684,7 @@ double Foil::baseUpperY(double x) const
  */
 double Foil::bottomSlope(double x) const
 {
-    for (uint i=0; i<m_Bot.size(); i++)
+    for (unsigned int i=0; i<m_Bot.size(); i++)
     {
         if ((m_Bot[i].x <= x) && (x < m_Bot[i+1].x))
         {
@@ -708,7 +705,7 @@ double Foil::bottomSlope(double x) const
 double Foil::topSlope(double x) const
 {
     //returns the upper slope at position x
-    for (uint i=0; i<m_Top.size(); i++)
+    for (unsigned int i=0; i<m_Top.size(); i++)
     {
         if ((m_Top[i].x <= x) && (x < m_Top[i+1].x))
         {
@@ -763,7 +760,7 @@ Vector2d Foil::midYRel(double sRel, Vector2d &N) const
         return m_CbLine.back();
     }
 
-    for (uint i=0; i<m_CbLine.size()-1; i++)
+    for (unsigned int i=0; i<m_CbLine.size()-1; i++)
     {
         if (m_CbLine.at(i).x < m_CbLine.at(i+1).x && m_CbLine.at(i).x <= x && x<=m_CbLine.at(i+1).x )
         {
@@ -812,7 +809,7 @@ Vector2d Foil::upperYRel(double xRel, Vector2d &N) const
     }
 
 
-    for (uint i=0; i<m_Top.size()-1; i++)
+    for (unsigned int i=0; i<m_Top.size()-1; i++)
     {
         if (m_Top.at(i).x < m_Top.at(i+1).x && m_Top.at(i).x <= x && x<=m_Top.at(i+1).x )
         {
@@ -863,7 +860,7 @@ Vector2d Foil::lowerYRel(double xRel, Vector2d &N) const
         return m_Bot.back();
     }
 
-    for(uint i=0; i<m_Bot.size()-1; i++)
+    for(unsigned int i=0; i<m_Bot.size()-1; i++)
     {
         if (m_Bot.at(i).x<m_Bot.at(i+1).x && m_Bot.at(i).x<= x && x<=m_Bot.at(i+1).x )
         {
@@ -893,7 +890,7 @@ void Foil::getY(std::vector<Vector2d> const &vec, double x, double &y) const
         return;
     }
 
-    for(uint i=0; i<vec.size()-1; i++)
+    for(unsigned int i=0; i<vec.size()-1; i++)
     {
         if (vec.at(i).x <vec.at(i+1).x  &&  vec.at(i).x<=x && x<=vec.at(i+1).x )
         {
@@ -1142,7 +1139,7 @@ void Foil::setLEFlapData(bool bFlap, double xhinge, double yhinge, double angle)
 void Foil::setLEFlap()
 {
     bool bIntersect{false};
-    uint l{0}, p{0}, i1{0}, i2{0};
+    unsigned int l{0}, p{0}, i1{0}, i2{0};
     double xh{0}, yh{0}, dx{0}, dy{0};
     Vector2d M;
 
@@ -1157,7 +1154,7 @@ void Foil::setLEFlap()
     // insert a breakpoint at xhinge location, if there isn't one already
     int iUpperh = 0;
     int iLowerh = 0;
-    for (uint i=0; i<m_Top.size(); i++)
+    for (unsigned int i=0; i<m_Top.size(); i++)
     {
         if(fabs(m_Top[i].x-xh)<0.001)
         {
@@ -1183,7 +1180,7 @@ void Foil::setLEFlap()
         }
     }
 
-    for (uint i=0; i<m_Bot.size(); i++)
+    for (unsigned int i=0; i<m_Bot.size(); i++)
     {
         if(fabs(m_Bot[i].x-xh)<0.001)
         {
@@ -1346,8 +1343,8 @@ void Foil::setLEFlap()
     i2 = iUpperh-1;
 
     bIntersect = false;
-    uint j=0;
-    uint k=0;
+    unsigned int j=0;
+    unsigned int k=0;
     for (j=i2-1; j>0; j--)
     {
         for (k=i1; k<m_Top.size()-1; k++)
@@ -1429,7 +1426,7 @@ Vector2d Foil::TEHinge() const
 
 void Foil::setTEFlap()
 {
-    uint i{0};
+    unsigned int i{0};
     int j{0}, k{0}, l{0}, p{0}, i1{0}, i2{0};
 
     bool bIntersect = false;
@@ -1439,7 +1436,7 @@ void Foil::setTEFlap()
     // insert a breakpoint at xhinge location, if there isn't one already
     int iUpperh = 0;
     int iLowerh = 0;
-    for (uint i=0; i<m_Top.size(); i++)
+    for (unsigned int i=0; i<m_Top.size(); i++)
     {
         if(fabs(m_Top.at(i).x-M.x)<0.001)
         {
@@ -1551,7 +1548,7 @@ void Foil::setTEFlap()
             m_Top.pop_back();
     }
 
-    //for(int i=0; i<m_rpTop.size(); i++) qDebug("%13.5f  %13.5f", m_rpTop.at(i).x, m_rpTop.at(i).y);
+    //for(int i=0; i<m_rpTop.size(); i++) qDebug("{:13.5f}  {:13.5f}", m_rpTop.at(i).x, m_rpTop.at(i).y);
 
     // trim lower surface next
     i1 = iLowerh;
@@ -1589,7 +1586,7 @@ void Foil::setTEFlap()
 
     // rotate the camber line
 
-    uint im = 0;
+    unsigned int im = 0;
     while(im<m_CbLine.size())
     {
         if(m_CbLine[im].x>=M.x)
@@ -1628,7 +1625,7 @@ void Foil::setFlaps()
         m_Node[sizeExt-1-i].y = m_Top.at(i).y;
     }
 
-    for (uint i=0; i<m_Bot.size(); i++)
+    for (unsigned int i=0; i<m_Bot.size(); i++)
     {
         m_Node[sizeExt+i-1].x = m_Bot.at(i).x;
         m_Node[sizeExt+i-1].y = m_Bot.at(i).y;
@@ -1703,256 +1700,81 @@ void Foil::makeCubicSpline(CubicSpline &cs, int nCtrlPts) const
 }
 
 
-bool Foil::serializeXfl(QDataStream &ar, bool bIsStoring)
-{
-    int k(0);
-    int ArchiveFormat = 100007;
-    // 100006 : first version of new xfl format
-    // 100007: foil new style
-    QString strange;
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-        ar << QString::fromStdString(m_Name);
-        ar << QString::fromStdString(m_Description);
-
-        m_theStyle.serializeXfl(ar, bIsStoring);
-
-        ar << m_bCamberLine << m_bLEFlap << m_bTEFlap;
-        ar << m_LEFlapAngle << m_LEXHinge*100.0 << m_LEYHinge*100.0;
-        ar << m_TEFlapAngle << m_TEXHinge*100.0 << m_TEYHinge*100.0;
-        ar << nBaseNodes();
-        for (int j=0; j<nBaseNodes(); j++)
-        {
-            ar << m_BaseNode.at(j).x << m_BaseNode.at(j).y;
-        }
-        return true;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        ar >> strange;   m_Name = strange.toStdString();
-        ar >> strange;   m_Description = strange.toStdString();
-
-        if(ArchiveFormat<100007)
-        {
-            ar >> k; m_theStyle.setStipple(k);
-            ar >> m_theStyle.m_Width;
-
-            m_theStyle.m_Color.serialize(ar, false);
-            ar >> m_theStyle.m_bIsVisible;
-
-            qint8 b = 0x00;
-            ar >> b; m_theStyle.setPointStyle(LineStyle::convertSymbol(int(b)));
-        }
-        else
-            m_theStyle.serializeXfl(ar, bIsStoring);
-
-        ar >> m_bCamberLine >> m_bLEFlap >> m_bTEFlap;
-        ar >> m_LEFlapAngle >> m_LEXHinge >> m_LEYHinge;
-        ar >> m_TEFlapAngle >> m_TEXHinge >> m_TEYHinge;
-
-        m_LEXHinge /= 100.0;
-        m_LEYHinge /= 100.0;
-        m_TEXHinge /= 100.0;
-        m_TEYHinge /= 100.0;
-
-        int n;
-        ar >> n;
-        if(n>604) return false;
-
-        for (int jl=0; jl<n; jl++)
-        {
-            double x, y;
-            ar>>x>>y;
-            appendBasePoint(x,y);
-        }
-        initGeometry();
-        return true;
-    }
-}
-
-
-bool Foil::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    int kj(0), n(0);
-    QString strange;
-
-    int ArchiveFormat = 500753;
-    // 500001: first version of new fl5 format
-    // 500750: v7.50 making legacy TE flaps permanent
-    // 500753: v7.53 added spline bunch parameters
-
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-        ar << QString::fromStdString(m_Name);
-        ar << QString::fromStdString(m_Description);
-        ar << LineStyle::convertLineStyle(m_theStyle.m_Stipple);
-        ar << m_theStyle.m_Width;
-        ar << LineStyle::convertSymbol(m_theStyle.m_Symbol);
-        m_theStyle.m_Color.serialize(ar, true);
-
-        ar << m_theStyle.m_bIsVisible;
-        ar << m_bCamberLine << m_bLEFlap << m_bTEFlap;
-        ar << m_LEFlapAngle << m_LEXHinge << m_LEYHinge;
-        ar << m_TEFlapAngle << m_TEXHinge << m_TEYHinge;
-
-        ar << m_BunchAmp;
-        n=0;
-        switch(m_BunchType)
-        {
-            case Spline::NOBUNCH:    n=0;    break;
-            case Spline::UNIFORM:    n=1;    break;
-            case Spline::SIGMOID:    n=2;    break;
-            case Spline::DOUBLESIG:  n=3;    break;
-        }
-        ar << n;
-
-        ar << nBaseNodes(); // store as int!
-        for (int l=0; l<nBaseNodes(); l++)
-        {
-            ar <<m_BaseNode[l].x << m_BaseNode[l].y;
-        }
-
-        return true;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<500000 || ArchiveFormat>550000) return false;
-        ar >> strange;   m_Name = strange.toStdString();
-        ar >> strange;   m_Description = strange.toStdString();;
-        ar >> kj;   m_theStyle.m_Stipple=LineStyle::convertLineStyle(kj);
-        ar >> m_theStyle.m_Width;
-        ar >> kj;   m_theStyle.m_Symbol=LineStyle::convertSymbol(kj);
-        m_theStyle.m_Color.serialize(ar, false);
-        ar >> m_theStyle.m_bIsVisible;
-
-        ar >> m_bCamberLine >> m_bLEFlap >> m_bTEFlap;
-        ar >> m_LEFlapAngle >> m_LEXHinge >> m_LEYHinge;
-        ar >> m_TEFlapAngle >> m_TEXHinge >> m_TEYHinge;
-
-        if(ArchiveFormat>=500753)
-        {
-            ar >> m_BunchAmp;
-            ar >> n;
-            switch(n)
-            {
-                case 0: m_BunchType = Spline::NOBUNCH;    break;
-                case 1: m_BunchType = Spline::UNIFORM;    break;
-                case 2: m_BunchType = Spline::SIGMOID;    break;
-                default:
-                case 3: m_BunchType = Spline::DOUBLESIG;  break;
-            }
-        }
-        m_BunchType = Spline::DOUBLESIG; // force it
-
-        int n(0);
-        double x(0), y(0);
-        ar >> n;
-
-        m_BaseNode.resize(n);
-        for (int j=0; j<n; j++)
-        {
-            ar>>x>>y;
-            m_BaseNode[j].set(x,y);
-        }
-
-        if(ArchiveFormat<500750)
-        {
-            if(m_bTEFlap && fabs(m_TEFlapAngle)>FLAPANGLEPRECISION)
-            {
-                initGeometry();
-                setFlaps();
-                makeModPermanent();
-            }
-        }
-
-        m_TEFlapAngle = 0.0;
-
-
-        initGeometry();
-        return true;
-    }
-}
-
-
 std::string Foil::listCoords(bool bBaseCoords)
 {
-    QString strCoords = "           x               y\n";
+    std::string strCoords = "           x               y\n";
 
     if(bBaseCoords)
     {
         for(int i=0; i<nBaseNodes(); i++)
         {
-            strCoords += QString::asprintf(" %13.5f   %13.5f\n", xb(i), yb(i));
+            strCoords += std::format(" {:13.5f}   {:13.5f}\n", xb(i), yb(i));
         }
     }
     else
     {
         for(int i=0; i<nNodes(); i++)
         {
-            strCoords += QString::asprintf(" %13.5f   %13.5f\n", x(i), y(i));
+            strCoords += std::format(" {:13.5f}   {:13.5f}\n", x(i), y(i));
         }
     }
-    return strCoords.toStdString();
+    return strCoords;
 }
 
 
 std::string Foil::properties(bool bLong) const
 {
-    QString props;
-    QString strange;
+    std::string props;
+    std::string strange;
 
-    if(bLong && m_Description.length()!=0) props +=  QString::fromStdString(m_Description)+EOLch;
+    if(bLong && m_Description.length()!=0) props +=  m_Description+EOLstr;
 
-    strange = QString::asprintf("Length           = %7.3f\n",   length());
+    strange = std::format("Length           = {:7.3f}\n",   length());
     props += strange;
-    strange = QString::asprintf("Mid-line angle   = %7.3f",     midLineAngle()) + DEGch + EOLch;
+    strange = std::format("Mid-line angle   = {:7.3f}",     midLineAngle()) + DEGstr + EOLstr;
     props += strange;
 
-    strange = QString::asprintf("Thickness        = %7.3f%%\n", maxThickness()*100.0);
+    strange = std::format("Thickness        = {:7.3f}%\n", maxThickness()*100.0);
     props += strange;
-    strange = QString::asprintf("Max. thick. pos. = %7.3f%%\n", xThickness()*100.0);
+    strange = std::format("Max. thick. pos. = {:7.3f}%\n", xThickness()*100.0);
     props += strange;
-    strange = QString::asprintf("Camber           = %7.3f%%\n", maxCamber()*100.0);
+    strange = std::format("Camber           = {:7.3f}%\n", maxCamber()*100.0);
     props += strange;
-    strange = QString::asprintf("Max. camber pos. = %7.3f%%\n", xCamber()*100.0);
+    strange = std::format("Max. camber pos. = {:7.3f}%\n", xCamber()*100.0);
     props += strange;
-    strange = QString::asprintf("T.E. gap         = %7.3f%%\n", TEGap()*100.0);
+    strange = std::format("T.E. gap         = {:7.3f}%\n", TEGap()*100.0);
     props += strange;
 
     if(m_bLEFlap)
     {
         props += "L.E. flap:\n";
-        strange = QString::asprintf("   hinge pos. = (%g%%, %g%%)\n", m_LEXHinge*100.0, m_LEYHinge*100.0);
+        strange = std::format("   hinge pos. = ({:g}%, {:g}%)\n", m_LEXHinge*100.0, m_LEYHinge*100.0);
         props += strange;
-        strange = QString::asprintf("   flap angle = %5.2f", m_LEFlapAngle) + DEGch + "\n";
+        strange = std::format("   flap angle = {:5.2f}", m_LEFlapAngle) + DEGstr + "\n";
         props += strange;
     }
 
 
     if(m_bTEFlap)
     {
-        strange = QString::asprintf("T.E. flap hinge pos. = (%g%%, %g%%)\n", m_TEXHinge*100.0, m_TEYHinge*100.0);
+        strange = std::format("T.E. flap hinge pos. = ({:g}%, {:g}%)\n", m_TEXHinge*100.0, m_TEYHinge*100.0);
         props += strange;
     }
     else
         props += "No T.E. flap\n";
 
-    strange = QString::asprintf("Number of nodes  = %d", nNodes());
+    strange = std::format("Number of nodes  = {:d}", nNodes());
     props += strange;
 
 
-    return props.toStdString();
+    return props;
 }
 
 /*
 void Foil::setBaseNodes(std::vector<Node2d> const &Nodes)
 {
     m_BaseNode.resize(Nodes.size());
-    for(uint i=0; i<Nodes.size(); i++)
+    for(unsigned int i=0; i<Nodes.size(); i++)
         m_BaseNode[i] = Nodes.at(i);
 }
 
@@ -1960,7 +1782,7 @@ void Foil::setBaseNodes(std::vector<Node2d> const &Nodes)
 void Foil::setBaseTop(std::vector<Node2d> const &nodes)
 {
     m_BaseTop.resize(nodes.size());
-    for(uint i=0; i<nodes.size(); i++)
+    for(unsigned int i=0; i<nodes.size(); i++)
         m_BaseTop[i] = nodes.at(i);
 }
 
@@ -1968,7 +1790,7 @@ void Foil::setBaseTop(std::vector<Node2d> const &nodes)
 void Foil::setBaseBot(std::vector<Node2d> const &nodes)
 {
     m_BaseBot.resize(nodes.size());
-    for(uint i=0; i<nodes.size(); i++)
+    for(unsigned int i=0; i<nodes.size(); i++)
         m_BaseBot[i] = nodes.at(i);
 }
 
@@ -1976,7 +1798,7 @@ void Foil::setBaseBot(std::vector<Node2d> const &nodes)
 void Foil::setBaseCamberLine(std::vector<Node2d> const &cb)
 {
     m_BaseCbLine.resize(cb.size());
-    for(uint i=0; i<cb.size(); i++)
+    for(unsigned int i=0; i<cb.size(); i++)
         m_BaseCbLine[i] = cb[i];
 }
 
@@ -1984,7 +1806,7 @@ void Foil::setBaseCamberLine(std::vector<Node2d> const &cb)
 void Foil::setThicknessLine(std::vector<double> const &th)
 {
     m_Thickness.resize(th.size());
-    for(uint i=0; i<th.size(); i++)
+    for(unsigned int i=0; i<th.size(); i++)
         m_Thickness[i] = th[i];
 }*/
 
@@ -2007,7 +1829,7 @@ void Foil::interpolate(Foil const *pFoil1, Foil const *pFoil2, double frac)
     assert(th1.size()==th2.size());
     assert(cline1.size()==th1.size());
 
-    for(uint i=0; i<m_BaseCbLine.size(); i++)
+    for(unsigned int i=0; i<m_BaseCbLine.size(); i++)
     {
         m_BaseCbLine[i].y = (1.0-frac) * cline1[i].y + frac*cline2[i].y;
         m_Thickness[i] = (1.0-frac) * th1[i] + frac*th2[i];

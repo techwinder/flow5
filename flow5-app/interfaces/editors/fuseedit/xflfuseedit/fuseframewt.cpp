@@ -35,6 +35,7 @@
 #include <api/units.h>
 
 #include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <interfaces/view2d/paint2d.h>
 

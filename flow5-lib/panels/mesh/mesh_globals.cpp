@@ -32,7 +32,7 @@ void rotateQuadMesh(std::vector<Panel4> &panel4, double alpha, double beta)
 {
     Vector3d Origin;
 
-    for(uint i4=0; i4<panel4.size(); i4++)
+    for(unsigned int i4=0; i4<panel4.size(); i4++)
     {
         Panel4 &p4 = panel4[i4];
         for(int in=0; in<4; in++)

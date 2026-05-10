@@ -154,7 +154,7 @@ void Foil1SplineDlg::onApply()
 
     std::vector<Node2d> basenodes;
 
-    if(!pSpline->issymmetric())
+    if(!pSpline->isSymmetric())
     {
         int npts = pSpline->outputSize();
         basenodes.resize(npts);

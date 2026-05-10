@@ -24,9 +24,11 @@
 
 #include <fstream>
 #include <iostream>
-#include <QString>
+#include <format>
+#include <iterator>
 
-#include <QString>
+#include <format>
+
 
 #if defined ACCELERATE
   #include <Accelerate/Accelerate.h>
@@ -56,155 +58,6 @@ fl5Color xfl::IndianRed      = fl5Color(205,92,92);
 fl5Color xfl::Turquoise      = fl5Color(64,224,208);
 
 
-fl5Color xfl::readQColor(QDataStream &ar)
-{
-    uchar byte=0;
-
-    ar>>byte; // a format identifier?
-
-    ar>>byte>>byte;
-    int a = int(byte);
-    ar>>byte>>byte;
-    int r = int(byte);
-    ar>>byte>>byte;
-    int g = int(byte);
-    ar>>byte>>byte;
-    int b = int(byte);
-
-    return fl5Color(r,g,b,a);
-}
-
-
-/**
-* Reads the RGB int values of a color from binary datastream and returns a QColor. Inherited from the MFC versions of XFLR5.
-*@param ar the binary datastream
-*@param r the red component
-*@param g the green component
-*@param b the blue component
-*/
-void xfl::readColor(QDataStream &ar, int &r, int &g, int &b)
-{
-    qint32 colorref;
-
-    ar >> colorref;
-    b = colorref/256/256;
-    colorref -= b*256*256;
-    g = colorref/256;
-    r = colorref - g*256;
-}
-
-
-/**
-* Writes the RGB int values of a color to a binary datastream. Inherited from the MFC versions of XFLR5.
-*@param ar the binary datastream
-*@param r the red component
-*@param g the green component
-*@param b the blue component
-
-*/
-void xfl::writeColor(QDataStream &ar, int r, int g, int b)
-{
-    qint32 colorref;
-
-    colorref = b*256*256+g*256+r;
-    ar << colorref;
-}
-
-
-/**
-* Reads the RGB int values of a color from binary datastream and returns a QColor. Inherited from the MFC versions of XFLR5.
-*@param ar the binary datastream
-*@param r the red component
-*@param g the green component
-*@param b the blue component
-*@param a the alpha component
-*/
-void xfl::readColor(QDataStream &ar, int &r, int &g, int &b, int &a)
-{
-    uchar byte=0;
-
-    ar>>byte;//probably a format identificator
-    ar>>byte>>byte;
-    a = int(byte);
-    ar>>byte>>byte;
-    r = int(byte);
-    ar>>byte>>byte;
-    g = int(byte);
-    ar>>byte>>byte;
-    b = int(byte);
-    ar>>byte>>byte; //
-}
-
-/**
-* Writes the RGB int values of a color to a binary datastream. Inherited from the MFC versions of XFLR5.
-*@param ar the binary datastream
-*@param r the red component
-*@param g the green component
-*@param b the blue component
-*@param a the alpha component
-*/
-void xfl::writeColor(QDataStream &ar, int r, int g, int b, int a)
-{
-    uchar byte;
-
-    byte = 1;
-    ar<<byte;
-    byte = a & 0xFF;
-    ar << byte<<byte;
-    byte = r & 0xFF;
-    ar << byte<<byte;
-    byte = g & 0xFF;
-    ar << byte<<byte;
-    byte = b & 0xFF;
-    ar << byte<<byte;
-    byte = 0;
-    ar << byte<<byte;
-}
-
-
-void xfl::readString(QDataStream &ar, std::string &strong)
-{
-    QString str;
-    qint8 qi(0), ch(0);
-    char c(0);
-
-    ar >> qi;
-    str.clear();
-    for(int j=0; j<qi;j++)
-    {
-        str += " ";
-        ar >> ch;
-        c = char(ch);
-        str[j] = c;
-    }
-
-    strong = str.toStdString();
-}
-
-
-void xfl::writeString(QDataStream &ar, QString const &strong)
-{
-    qint8 qi = qint8(strong.length());
-
-    QByteArray textline;
-    char *text;
-    textline = strong.toLatin1();
-    text = textline.data();
-    ar << qi;
-    ar.writeRawData(text, qi);
-}
-
-
-void xfl::writeString(QDataStream &ar, std::string const &strong)
-{
-    qint8 qi = qint8(strong.length());
-
-    QByteArray textline;
-    char *text= textline.data();;
-
-    ar << qi;
-    ar.writeRawData(text, qi);
-}
 
 
 /**
@@ -231,41 +84,25 @@ int xfl::readValues(std::string const &theline, float val[], int nValues)
 
     try
     {
-        for(uint is=0; is<split.size() && nread<nValues; is++)
+        for(unsigned int is=0; is<split.size() && nread<nValues; is++)
         {
             val[nread++] = std::stof(split.at(is), &sz);
         }
     }
     catch (const std::invalid_argument& ia)
     {
-//          std::cerr << "Invalid argument: " << ia.what() << '\n';
+          std::cerr << "Invalid argument: " << ia.what() << '\n';
     }
     catch (const std::out_of_range& oor)
     {
-//        std::cerr << "Out of Range error: " << oor.what() << '\n';
+        std::cerr << "Out of Range error: " << oor.what() << '\n';
     }
     catch(...)
     {
-//        std::cerr << "Unknown error reading floats"<< '\n';
+        std::cerr << "Unknown error reading floats"<< '\n';
     }
 
     return nread;
-}
-
-
-void xfl::readFloat(QDataStream &inStream, float &f)
-{
-    char buffer[4];
-    inStream.readRawData(buffer, 4);
-    memcpy(&f, buffer, sizeof(float));
-}
-
-
-void xfl::writeFloat(QDataStream &outStream, float f)
-{
-    char buffer[4];
-    memcpy(buffer, &f, sizeof(float));
-    outStream.writeRawData(buffer, 4);
 }
 
 
@@ -362,30 +199,20 @@ bool xfl::stringFromFile(std::string &string, std::string const &path)
 }
 
 
-bool xfl::stringToBool(const QString &str)
-{
-    return str.trimmed().compare("true", Qt::CaseInsensitive)==0 ? true : false;
-}
-
-
-QString xfl::boolToString(bool b)
-{
-    return b ? "true" : "false";
-}
 
 std::string xfl::MklVersion()
 {
-    QString strange;
+    std::string strange;
 
 #ifdef INTEL_MKL
     MKLVersion Version;
 
     mkl_get_version(&Version);
 
-    strange += QString::asprintf("<p><b>Version: </b>%d.%d.%d<br>", Version.MajorVersion, Version.MinorVersion, Version.UpdateVersion);
-    strange += QString::asprintf("<b>Processor optimization: </b> %s", Version.Processor) + "</p>";
+    strange += std::format("<p><b>Version: </b>{:d}.{:d}.{:d}<br>", Version.MajorVersion, Version.MinorVersion, Version.UpdateVersion);
+    strange += std::format("<b>Processor optimization: </b> {:s}", Version.Processor) + "</p>";
 #endif
-    return strange.toStdString();
+    return strange;
 }
 
 

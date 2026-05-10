@@ -23,10 +23,9 @@
 *****************************************************************************/
 
 
-#define _MATH_DEFINES_DEFINED
 
-#include <QString>
-#include <QDebug>
+
+#include <format>
 
 
 #include <BRepBuilderAPI_Copy.hxx>
@@ -316,9 +315,9 @@ int FuseXfl::makeShape(std::string &log)
 
 void FuseXfl::computeSurfaceProperties(std::string &msg, const std::string &prefx)
 {
-    QString prefix = QString::fromStdString(prefx);
-    QString logmsg;
-    QString strong;
+    std::string prefix = prefx;
+    std::string logmsg;
+    std::string strong;
 
     // computeWettedArea();
     // makeQuadMesh(0);
@@ -404,27 +403,27 @@ void FuseXfl::computeSurfaceProperties(std::string &msg, const std::string &pref
 
     m_Length = length();
 
-    strong = QString::asprintf("Length            = %11g ", m_Length*Units::mtoUnit());
-    strong += Units::lengthUnitQLabel();
+    strong = std::format("Length            = {:11g} ", m_Length*Units::mtoUnit());
+    strong += Units::lengthUnitLabel();
     logmsg += prefix + strong + "\n";
 
-    strong = QString::asprintf("Total wetted area = %11g ", m_WettedArea*Units::m2toUnit());
-    strong += Units::areaUnitQLabel();
+    strong = std::format("Total wetted area = {:11g} ", m_WettedArea*Units::m2toUnit());
+    strong += Units::areaUnitLabel();
     logmsg += prefix + strong + "\n";
 
-    strong = QString::asprintf("Max. frame area   = %11g ", m_MaxFrameArea*Units::m2toUnit());
-    strong += Units::areaUnitQLabel();
+    strong = std::format("Max. frame area   = {:11g} ", m_MaxFrameArea*Units::m2toUnit());
+    strong += Units::areaUnitLabel();
     logmsg += prefix + strong + "\n";
 
-    strong = QString::asprintf("Max. frame width  = %11g ", m_MaxWidth*Units::mtoUnit());
-    strong += Units::lengthUnitQLabel();
+    strong = std::format("Max. frame width  = {:11g} ", m_MaxWidth*Units::mtoUnit());
+    strong += Units::lengthUnitLabel();
     logmsg += prefix + strong + "\n";
 
-    strong = QString::asprintf("Max. frame height = %11g ", m_MaxHeight*Units::mtoUnit());
-    strong += Units::lengthUnitQLabel();
+    strong = std::format("Max. frame height = {:11g} ", m_MaxHeight*Units::mtoUnit());
+    strong += Units::lengthUnitLabel();
     logmsg += prefix + strong + "\n";
 
-    msg = logmsg.toStdString();
+    msg = logmsg;
 }
 
 
@@ -1022,194 +1021,6 @@ void FuseXfl::setEdgeWeight(double uw, double vw)
 }
 
 
-bool FuseXfl::serializePartXFL(QDataStream &ar, bool bIsStoring, int format)
-{
-    int i=0,k=0,n=0,p=0;
-
-    double dble=0,m=0,px=0,py=0,pz=0;
-    QString str;
-
-    if(bIsStoring)
-    {
-    }
-    else
-    {
-        if(format<100000 || format>200000) return false;
-
-        ar >> str;  m_Name = str.toStdString();
-        ar >> str;  m_Description = str.toStdString();
-        m_theStyle.m_Color.serialize(ar, false);
-
-        ar >> k;
-        if(k==1) m_FuseType = Fuse::FlatFace;
-        else     m_FuseType = Fuse::NURBS;
-
-        ar >> k; //m_iRes
-        ar >> m_nxNurbsPanels >> m_nhNurbsPanels;
-        ar >> dble;   m_nurbs.setBunchAmplitude(dble);
-
-        m_hPanels.clear();
-        ar >> n;
-        for(k=0; k<n; k++)
-        {
-            ar >> p;
-            m_hPanels.push_back(p);
-        }
-
-        m_nurbs.clearFrames();
-        m_xPanels.clear();
-        ar >> n;
-        for(k=0; k<n; k++)
-        {
-            m_nurbs.appendNewFrame();
-
-            ar >> p;
-            m_xPanels.push_back(p);
-
-            ar >> dble;
-            m_nurbs.frame(k).setuPosition(m_nurbs.uAxis(), dble);
-            for(int ic=0; ic<m_nurbs.frame(k).nCtrlPoints(); ic++)
-            {
-                m_nurbs.frame(k).ctrlPoint(ic).x = dble;
-            }
-
-            m_nurbs.frame(k).serializeFrameXfl(ar, bIsStoring);
-        }
-
-        ar >> dble;
-        m_Inertia.setStructuralMass(dble);
-
-        clearPointMasses();
-        ar >> k;
-        for(i=0; i<k; i++)
-        {
-            ar >> m >> px >> py >> pz;
-            ar >> str;
-            m_Inertia.appendPointMass(m, Vector3d(px, py, pz), str.toStdString());
-        }
-
-        // space allocation
-        ar >> k; // m_bTextures = k ? true : false;
-        ar >> k; // m_bReversed = k ? true : false;
-
-        for (int i=2; i<18; i++) ar >> k;
-        ar >> k;
-        k = std::min(k, frameCount()-1);
-        k = std::max(k,2); k = std::min(k,5);
-        m_nurbs.setuDegree(k);
-
-        ar >> k;
-        k = std::min(k, framePointCount()-1);
-        k = std::max(k,2); k = std::min(k,5);
-        m_nurbs.setvDegree(k);
-
-        for (int i=0; i<50; i++) ar >> dble;
-
-        // make the shapes, shells, and triangulation
-
-        makeFuseGeometry();
-        computeStructuralInertia(Vector3d());
-
-        // make the triangular mesh
-        std::string strange;
-        makeDefaultTriMesh(strange, "");
-    }
-    return true;
-}
-
-
-/**
- * Serialize the Body data to or from a QDataStream associated to a .xfl file
- * @param ar the binary QDataStream from/to which the data shall be directed
- * @param bIsStoring true if storing, false if loading the data
- * @return true if the operation was successful, false otherwise
- */
-bool FuseXfl::serializePartFl5(QDataStream &ar, bool bIsStoring)
-{
-    Fuse::serializePartFl5(ar, bIsStoring);
-
-    int k(0);
-    int n(0);
-    int nIntSpares(0);
-    int nDbleSpares(0);
-    double dble(0);
-    // 500001 : new fl5 format
-    int ArchiveFormat = 500001;
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-
-        if     (m_FuseType==Fuse::FlatFace) ar << 1;
-        else if(m_FuseType==Fuse::NURBS)    ar << 2;
-        else if(m_FuseType==Fuse::Sections) ar << 3;
-
-        // point and spline data
-        m_nurbs.serializeFl5(ar, bIsStoring);
-
-        //mesh data
-        ar << m_nxNurbsPanels << m_nhNurbsPanels;
-        for(k=0; k<sideLineCount(); k++) ar << m_hPanels[k];
-        for(k=0; k<frameCount();    k++) ar << m_xPanels[k];
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat!=500001) return false;
-
-        ar >> k;
-        switch(k)
-        {
-            case 1: m_FuseType = Fuse::FlatFace;     break;
-            default:
-            case 2: m_FuseType = Fuse::NURBS;        break;
-            case 3: m_FuseType = Fuse::Sections;     break;
-        }
-
-        // point and spline data
-        m_nurbs.serializeFl5(ar, bIsStoring);
-
-        //mesh data
-        ar >> m_nxNurbsPanels >> m_nhNurbsPanels;
-
-        m_hPanels.resize(sideLineCount());
-        for(k=0; k<sideLineCount(); k++)
-        {
-            ar >> m_hPanels[k];
-        }
-        m_xPanels.resize(frameCount());
-        for(k=0; k<frameCount(); k++)
-        {
-            ar >> m_xPanels[k];
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-        // make the shapes, shells, and triangulation
-        makeFuseGeometry();
-        computeStructuralInertia(Vector3d());
-
-        // make the default triangular mesh
-        std::string strange;
-        makeDefaultTriMesh(strange, "");
-    }
-
-    return true;
-}
-
-
 /**
  * Check if the volume enclosed by the two half surfaces is fully closed.
  * The conditions to be verified are
@@ -1277,8 +1088,8 @@ bool FuseXfl::isClosedVolume(std::string &report) const
     }
     if(!bisFrameClosed)
     {
-        QString strong = QString::asprintf("The end points of frame %d are not in the plane of symetry (y=0)", iFrame);
-        report += strong.toStdString() + "\n";
+        std::string strong = std::format("The end points of frame {:d} are not in the plane of symetry (y=0)", iFrame);
+        report += strong + "\n";
         bClosed = false;
     }
 
@@ -1310,7 +1121,7 @@ int FuseXfl::makeDefaultTriMesh(std::string &logmsg, const std::string &prefix)
 
     // split each quad in two triangles
     int i3=0;
-    for(uint i4=0; i4<m_Panel4.size(); i4++)
+    for(unsigned int i4=0; i4<m_Panel4.size(); i4++)
     {
         Panel4 const &p4 = m_Panel4.at(i4);
         if(!p4.isLeftWingPanel()) break;
@@ -1338,7 +1149,7 @@ int FuseXfl::makeDefaultTriMesh(std::string &logmsg, const std::string &prefix)
 
     // duplicate symmetric triangular panels
     Vector3d S[3];
-    for(uint i3=0; i3<panel3list.size(); i3++)
+    for(unsigned int i3=0; i3<panel3list.size(); i3++)
     {
         Panel3 const &p3 = panel3list.at(i3);
         for(int in=0; in<3; in++)
@@ -1623,7 +1434,7 @@ void FuseXfl::makeBodySplineShape_old(std::string &logmsg)
     uMults.SetValue(0, p);
     uKnots.SetValue(uSize-1, 1.0);
     uMults.SetValue(uSize-1, p);
-    for(uint iu=1; iu<nurbs().uKnot().size()-2*p+1; iu++)
+    for(unsigned int iu=1; iu<nurbs().uKnot().size()-2*p+1; iu++)
     {
         double knot = nurbs().uKnot().at(p+iu-1);
         // occ requires that the knot values are strictly increasing
@@ -1641,7 +1452,7 @@ void FuseXfl::makeBodySplineShape_old(std::string &logmsg)
     vMults.SetValue(0, p);
     vKnots.SetValue(vSize-1, 1.0);
     vMults.SetValue(vSize-1, p);
-    for(uint iv=1; iv<nurbs().vKnot().size()-2*p+1; iv++)
+    for(unsigned int iv=1; iv<nurbs().vKnot().size()-2*p+1; iv++)
     {
         double knot = nurbs().vKnot().at(p+iv-1);
         // occ requires that the knot values are strictly increasing
@@ -1731,7 +1542,7 @@ void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &logmsg)
 {
     Vector3d P1, P2, P3;
     TopTools_ListOfShape RightFaceList;
-    QString tracelog;
+    std::string tracelog;
 
     std::string occstr;
     for (int k=0; k<sideLineCount()-1;k++)
@@ -1762,7 +1573,7 @@ void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &logmsg)
         }
     }
 
-    tracelog = QString::fromStdString(occstr);
+    tracelog = occstr;
 
     // sew the Panels together
     BRepBuilderAPI_Sewing stitcher(0.001);
@@ -1776,13 +1587,13 @@ void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &logmsg)
     TopoDS_Shell RightBodyShell;
     try
     {
-        QString strong = QString::asprintf("   Sewing %d left faces", nFaces) + "\n";
+        std::string strong = std::format("   Sewing {:d} left faces", nFaces) + "\n";
         tracelog+= strong;
         stitcher.Perform();
         TopoDS_Shape sewedShape = stitcher.SewedShape();
         if(!sewedShape.IsNull())
         {
-            strong = "   Sewed shape is a "+ QString::fromStdString(occ::shapeType(sewedShape))+"\n";
+            strong = "   Sewed shape is a "+ occ::shapeType(sewedShape)+"\n";
             tracelog+= strong;
 
             if(sewedShape.ShapeType()==TopAbs_SHELL)
@@ -1792,17 +1603,17 @@ void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &logmsg)
             }
             else
             {
-                strong = QString::asprintf("   Nb of free edges=%d\n", stitcher.NbFreeEdges());
+                strong = std::format("   Nb of free edges={:d}\n", stitcher.NbFreeEdges());
                 tracelog += strong;
-                strong = QString::asprintf("   Nb of contiguous edges=%d\n", stitcher.NbContigousEdges());
+                strong = std::format("   Nb of contiguous edges={:d}\n", stitcher.NbContigousEdges());
                 tracelog += strong;
             }
         }
     }
     catch(Standard_TypeMismatch const &ex)
     {
-        QString strong;
-        strong = "   Left body shells not made: " + QString::fromStdString(ex.GetMessageString())+"\n";
+        std::string strong;
+        strong = "   Left body shells not made: " + std::string(ex.GetMessageString())+"\n";
         tracelog+= strong;
     }
 
@@ -1824,7 +1635,7 @@ void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &logmsg)
     LeftBodyShell = TopoDS::Shell(trfSym.Shape());
     m_Shape.Append(LeftBodyShell);
 
-    logmsg = tracelog.toStdString();
+    logmsg = tracelog;
 }
 
 
@@ -1832,7 +1643,7 @@ void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &logmsg)
 {
     Vector3d P1, P2, P3, P4;
     std::vector<Vector3d> Pt;
-    QString strong, tracelog;
+    std::string strong, tracelog;
 
     // define parameters
     Standard_Real Tol = 0.00001;
@@ -1883,7 +1694,7 @@ void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &logmsg)
                     continue;
 
                 for(int i=0; i<4; i++) bnd[i].Nullify();
-                for(uint i=0; i<Pt.size()-1; i++)
+                for(unsigned int i=0; i<Pt.size()-1; i++)
                 {
                     TC[i] = GC_MakeSegment(gp_Pnt(Pt[i].x, Pt[i].y, Pt[i].z), gp_Pnt(Pt[i+1].x, Pt[i+1].y, Pt[i+1].z));
                     adapCurve[i] = new GeomAdaptor_Curve(TC[i]);
@@ -1924,7 +1735,7 @@ void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &logmsg)
             }
         }
 
-        tracelog += QString::fromStdString(occstr);
+        tracelog += occstr;
         occstr.clear();
 
         //sew the Panels together
@@ -1938,13 +1749,13 @@ void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &logmsg)
 
         try
         {
-            strong = QString::asprintf("   Sewing %d faces", nFaces) + "\n";
+            strong = std::format("   Sewing {:d} faces", nFaces) + "\n";
             tracelog+= strong;
             stitcher.Perform();
             TopoDS_Shape sewedShape = stitcher.SewedShape();
             if(!sewedShape.IsNull())
             {
-                strong = "   Sewed shape is a "+ QString::fromStdString(occ::shapeType(sewedShape))+"\n";
+                strong = "   Sewed shape is a " + occ::shapeType(sewedShape) +"\n";
                 tracelog+= strong;
 
                 if(sewedShape.ShapeType()==TopAbs_SHELL)
@@ -1956,9 +1767,9 @@ void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &logmsg)
                 }
                 else
                 {
-                    strong = QString::asprintf("   Nb. of free edges=%d\n", stitcher.NbFreeEdges());
+                    strong = std::format("   Nb. of free edges={:d}\n", stitcher.NbFreeEdges());
                     tracelog += strong;
-                    strong = QString::asprintf("   Nb. of contiguous edges=%d\n", stitcher.NbContigousEdges());
+                    strong = std::format("   Nb. of contiguous edges={:d}\n", stitcher.NbContigousEdges());
                     tracelog += strong;
                 }
             }
@@ -1966,10 +1777,10 @@ void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &logmsg)
         catch(Standard_TypeMismatch const &ex)
         {
             std::string strong = "   Right side body shells not made: " + std::string(ex.GetMessageString())+"\n";
-            tracelog += QString::fromStdString(strong);
+            tracelog += strong;
         }
     }
-    logmsg = tracelog.toStdString();
+    logmsg = tracelog;
 }
 
 
@@ -2001,9 +1812,9 @@ void FuseXfl::getProperties(std::string &props, const std::string &prefix, bool 
 {
     Fuse::getProperties(props, prefix);
 
-    QString strong;
-    strong = QString::asprintf("Quads           = %6d", quadCount());
-    props += "\n" + prefix + strong.toStdString();
+    std::string strong;
+    strong = std::format("Quads           = {:6d}", quadCount());
+    props += "\n" + prefix + strong;
 }
 
 

@@ -35,15 +35,17 @@
 #include "planedlg.h"
 
 
+
+#include <api/plane.h>
+#include <api/units.h>
+
+#include <core/qunits.h>
+#include <core/xflcore.h>
 #include <interfaces/mesh/panelcheckdlg.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <interfaces/opengl/fl5views/gl3dxflview.h>
-#include <api/units.h>
-#include <core/xflcore.h>
-#include <api/plane.h>
 #include <interfaces/widgets/customdlg/doublevaluedlg.h>
 #include <interfaces/widgets/customdlg/intvaluedlg.h>
-
 #include <interfaces/widgets/customwts/formattextoutput.h>
 
 

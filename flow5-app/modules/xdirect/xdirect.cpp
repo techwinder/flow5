@@ -22,6 +22,7 @@
 
 *****************************************************************************/
 
+#define _MATH_DEFINES_DEFINED
 
 
 #include <QApplication>
@@ -87,16 +88,16 @@
 #include <modules/xobjects.h>
 
 #include <api/constants.h>
-#include <api/fileio.h>
+#include <api/serialization.h>
 #include <api/fl5core.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 #include <api/foil.h>
 #include <api/objects2d.h>
 #include <api/objects2d_globals.h>
 #include <api/objects3d.h>
 #include <api/oppoint.h>
 #include <api/polar.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <api/xfoiltask.h>
 #include <api/xmlpolarreader.h>
 #include <api/xmlpolarwriter.h>
@@ -4071,7 +4072,7 @@ void XDirect::writeFoilPolars(QDataStream &ar, Foil *pFoil)
 
     //first write the foil
     ar << 1; //only one foil to write
-    pFoil->serializeFl5(ar,true);
+    serial::serializeFoilFl5(pFoil, ar,true);
 
     //count polars associated to the foil
     Polar * pPolar =nullptr;
@@ -4088,7 +4089,7 @@ void XDirect::writeFoilPolars(QDataStream &ar, Foil *pFoil)
     {
         pPolar = Objects2d::polarAt(i);
         if (pPolar->foilName() == pFoil->name())
-            pPolar->serializePolarFl5(ar, true);
+            serial::serializePolarFl5(pPolar, ar, true);
     }
 }
 

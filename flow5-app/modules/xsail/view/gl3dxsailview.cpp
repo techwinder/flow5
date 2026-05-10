@@ -36,7 +36,6 @@
 #include "gl3dxsailview.h"
 
 
-
 #include <api/boat.h>
 #include <api/boatopp.h>
 #include <api/boatpolar.h>
@@ -54,11 +53,12 @@
 #include <api/sailspline.h>
 #include <api/sailwing.h>
 #include <api/triangle3d.h>
-#include <api/utils.h>
+#include <api/units.h>
+#include <api/utils-io.h>
 
 #include <core/displayoptions.h>
-#include <api/units.h>
-#include <api/trace.h>
+#include <core/qunits.h>
+#include <core/trace.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/poppctrls/crossflowctrls.h>
 #include <interfaces/controls/poppctrls/flowctrls.h>

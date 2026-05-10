@@ -23,15 +23,14 @@
 *****************************************************************************/
 
 
-#define _MATH_DEFINES_DEFINED
 
 #include <chrono>
 #include <string>
 #include <thread>
 
 
-#include <QString>
-#include <QDebug>
+#include <format>
+
 
 
 #if defined ACCELERATE
@@ -137,8 +136,8 @@ void PlaneTask::setT8OppList(std::vector<T8Opp> const &ranges)
 
 bool PlaneTask::initializeTask()
 {
-    QString strange, strong;
-    QString lenlab = Units::lengthUnitQLabel();
+    std::string strange, strong;
+    std::string lenlab = Units::lengthUnitLabel();
 
     m_bWarning = m_bError = false;
 
@@ -173,23 +172,23 @@ bool PlaneTask::initializeTask()
 
     if     (m_pPolar3d->isFixedSpeedPolar())  strange = "Type 1 - Fixed speed polar";
     else if(m_pPolar3d->isFixedLiftPolar())   strange = "Type 2 - Fixed lift polar";
-    else if(m_pPolar3d->isFixedaoaPolar())    strange = "Type 4 - Fixed "+ ALPHAch + " polar";
-    else if(m_pPolar3d->isBetaPolar())        strange = "Type 5 - " + BETAch + " polar";
+    else if(m_pPolar3d->isFixedaoaPolar())    strange = "Type 4 - Fixed "+ ALPHAstr + " polar";
+    else if(m_pPolar3d->isBetaPolar())        strange = "Type 5 - " + BETAstr + " polar";
     else if(m_pPolar3d->isControlPolar())     strange = "Type 6 - Control polar";
     else if(m_pPolar3d->isStabilityPolar())   strange = "Type 7 - Stability polar";
     else if(m_pPolar3d->isBoatPolar())        strange = "Sail analysis";
     else                                      strange = "Unsupported polar type";
-    traceLog(strange+"\n\n");
+    traceStdLog(strange+"\n\n");
 
-    strange = RHOch + QString::asprintf(" = %9.5g ", m_pPolar3d->density()*Units::densitytoUnit());
-    traceLog(strange+ Units::densityUnitQLabel() + EOLch);
-    strange = NUch  + QString::asprintf(" = %9.5g ", m_pPolar3d->viscosity()*Units::viscositytoUnit());
-    traceLog(strange+ Units::viscosityUnitQLabel()+"\n\n");
+    strange = RHOstr + std::format(" = {:9.5g} ", m_pPolar3d->density()*Units::densitytoUnit());
+    traceStdLog(strange+ Units::densityUnitLabel() + EOLstr);
+    strange = NUstr  + std::format(" = {:9.5g} ", m_pPolar3d->viscosity()*Units::viscositytoUnit());
+    traceStdLog(strange+ Units::viscosityUnitLabel()+"\n\n");
 
-    strange = QString::asprintf("RFF         = %g\n", Panel::RFF());
-    traceLog(strange);
-    strange = QString::asprintf("Core radius = %g ", Vortex::coreRadius()*Units::mtoUnit());
-    strange += Units::lengthUnitQLabel()  + EOLch;
+    strange = std::format("RFF         = {:g}\n", Panel::RFF());
+    traceStdLog(strange);
+    strange = std::format("Core radius = {:g} ", Vortex::coreRadius()*Units::mtoUnit());
+    strange += Units::lengthUnitLabel()  + EOLstr;
 
     if(Vortex::coreRadius()<1.e-6)
     {
@@ -198,10 +197,10 @@ bool PlaneTask::initializeTask()
     }
 
 
-    traceLog(strange);
+    traceStdLog(strange);
     traceStdLog("\n");
 
-    traceLog(QString::asprintf("Using %d threads\n\n", PanelAnalysis::s_MaxThreads));
+    traceStdLog(std::format("Using {:d} threads\n\n", PanelAnalysis::s_MaxThreads));
 
 
 #ifdef INTEL_MKL
@@ -211,11 +210,11 @@ bool PlaneTask::initializeTask()
 
     if (1 == mkl_get_dynamic())
     {
-        traceLog(QString::asprintf("MKL dynamic threading is enabled: MKL may use less than %i threads for a large problem\n", nt));
+        traceStdLog(std::format("MKL dynamic threading is enabled: MKL may use less than %i threads for a large problem\n", nt));
     }
     else
     {
-        traceLog(QString::asprintf("MKL dynamic threading is disabled: MKL should use %i threads for a large problem\n", nt));
+        traceStdLog(std::format("MKL dynamic threading is disabled: MKL should use %i threads for a large problem\n", nt));
     }
 #endif
 
@@ -253,16 +252,16 @@ bool PlaneTask::initializeTask()
             strange = "The element size is incompatible with the vortex core size.\n"
                       "Either increase the element size, or reduce the vortex core size to be at most 1/50 of the smallest element size.\n"
                       "The vortex core size is set in the global analysis settings (menu option analysis/3d analysis settings).\n";
-            strange += QString::asprintf("   Core radius = %g ", Vortex::coreRadius()*Units::mtoUnit()) + lenlab + EOLch;
+            strange += std::format("   Core radius = {:g} ", Vortex::coreRadius()*Units::mtoUnit()) + lenlab + EOLstr;
             strange += "      Critical elements:\n";
-            for(uint i=0; i<criticals.size(); i++)
+            for(unsigned int i=0; i<criticals.size(); i++)
             {
-                strange += QString::asprintf("      element %5d   width=%11.5g ",
+                strange += std::format("      element {:5d}   width={:11.5g} ",
                                              criticals.at(i),
                                              sizes.at(i)*Units::mtoUnit()) + lenlab;
-                strange += QString::asprintf("  ratio = 1/%.1f", sizes.at(i)/Vortex::coreRadius()) + EOLch;
+                strange += std::format("  ratio = 1/{:.1f}", sizes.at(i)/Vortex::coreRadius()) + EOLstr;
             }
-            traceLog(strange+"\n\n");
+            traceStdLog(strange+"\n\n");
             m_bError = true;
             return false;
         }
@@ -318,15 +317,15 @@ bool PlaneTask::initializeTask()
                 if(!m_pPlane->connectTriMesh(true, false, true))
                 {
                     strange = "\n   Error making trailing edge connections -- aborting.\n\n";
-                    traceLog(strange);
+                    traceStdLog(strange);
                     m_bError = true;
                     return false;
                 }
 
                 auto end = std::chrono::system_clock::now();
-                int duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-                strange = QString::asprintf("   done in %.3f s\n", double(duration)/1000.0);
-                traceLog(strange);
+                auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+                strange = std::format("   done in {:.3f} s\n", double(duration)/1000.0);
+                traceStdLog(strange);
             }
 
             if(fabs(m_pPlPolar->phi())>AOAPRECISION)
@@ -360,15 +359,15 @@ bool PlaneTask::initializeTask()
             if(!m_pPlane->connectTriMesh(true, false, true))
             {
                 strange = "\n   Error making trailing edge connections -- aborting.\n\n";
-                traceLog(strange);
+                traceStdLog(strange);
                 m_bError = true;
                 return false;
             }
 
             auto end = std::chrono::system_clock::now();
-            int duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-            strange = QString::asprintf("   done in %.3f s\n", double(duration)/1000.0);
-            traceLog(strange);
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+            strange = std::format("   done in {:.3f} s\n", double(duration)/1000.0);
+            traceStdLog(strange);
 
             if(pPlaneXfl && m_pPlPolar->isQuadMethod())
             {
@@ -384,36 +383,36 @@ bool PlaneTask::initializeTask()
             if(m_pPlPolar->bViscousLoop())
             {
                 strange = "The viscous loop is activated:\n";
-                strong = QString::asprintf("   Max. iterations         = %d\n", s_ViscMaxIter);
+                strong = std::format("   Max. iterations         = {:d}\n", s_ViscMaxIter);
                 strange += strong;
-                strong = QString::asprintf("   Virtual twist precision = %g", s_ViscAlphaPrecision);
-                strong += DEGch  + EOLch;
+                strong = std::format("   Virtual twist precision = {:g}", s_ViscAlphaPrecision);
+                strong += DEGstr  + EOLstr;
                 strange += strong;
-                strong = QString::asprintf("   Relaxation factor       = %g\n\n", s_ViscRelax);
+                strong = std::format("   Relaxation factor       = {:g}\n\n", s_ViscRelax);
                 strange += strong;
-                traceLog(strange);
+                traceStdLog(strange);
             }
 
             if(m_pPlPolar->bVortonWake())
             {
                 strange = "Vortex particle wake:\n";
-                strong = QString::asprintf("   Max. iterations  = %d\n", m_pPolar3d->VPWIterations());
+                strong = std::format("   Max. iterations  = {:d}\n", m_pPolar3d->VPWIterations());
                 strange += strong;
-                strong = QString::asprintf("   Discard distance = %g x MAC\n", m_pPolar3d->VPWMaxLength());
+                strong = std::format("   Discard distance = {:g} x MAC\n", m_pPolar3d->VPWMaxLength());
                 strange += strong;
-                strong = QString::asprintf("   Vorton core size = %g x MAC = %g",
+                strong = std::format("   Vorton core size = {:g} x MAC = {:g}",
                                            m_pPolar3d->vortonCoreSize(), m_pPolar3d->vortonCoreSize()*m_pPolar3d->referenceChordLength()*Units::mtoUnit());
-                strong += lenlab  + EOLch;
+                strong += lenlab  + EOLstr;
                 strange += strong;
-                traceLog(strange);
+                traceStdLog(strange);
             }
             break;
         }
     }
 
-    strange = QString::asprintf("Counted %d elements\n", m_pPA->nPanels());
-    strange += QString::asprintf("Matrix size = %d\n\n", m_pPA->matSize());
-    traceLog(strange);
+    strange = std::format("Counted {:d} elements\n", m_pPA->nPanels());
+    strange += std::format("Matrix size = {:d}\n\n", m_pPA->matSize());
+    traceStdLog(strange);
 
     if(isCancelled()) return false;
 
@@ -518,7 +517,7 @@ bool PlaneTask::checkWPolarData(Plane const *pPlane, PlanePolar *pWPolar)
         return false;
     }
 
-    QString strange, logmsg;
+    std::string strange, logmsg;
     std::string str;
     bool bCheck = true;
 
@@ -527,7 +526,7 @@ bool PlaneTask::checkWPolarData(Plane const *pPlane, PlanePolar *pWPolar)
         PlaneXfl const *pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pPlane);
         if(!pWPolar->checkFlaps(pPlaneXfl, str))
         {
-            logmsg += QString::fromStdString(str);
+            logmsg += str;
             pWPolar->resizeFlapCtrls(pPlaneXfl);
         }
 
@@ -536,8 +535,8 @@ bool PlaneTask::checkWPolarData(Plane const *pPlane, PlanePolar *pWPolar)
             if(fabs(pPlane->mac())<1.e-3)
             {
                 // needed for wake construction
-                strange = QString::asprintf("   error: Plane has MAC = %g", pPlane->mac()*Units::mtoUnit());
-                strange += Units::lengthUnitQLabel()  + EOLch;
+                strange = std::format("   error: Plane has MAC = {:g}", pPlane->mac()*Units::mtoUnit());
+                strange += Units::lengthUnitLabel()  + EOLstr;
                 logmsg += strange;
                 bCheck = false;
             }
@@ -545,24 +544,24 @@ bool PlaneTask::checkWPolarData(Plane const *pPlane, PlanePolar *pWPolar)
             if(fabs(pWPolar->referenceChordLength())<1.e-3)
             {
                 // needed for coefficient calculations
-                strange = QString::asprintf("   error: reference chord length is %g", pWPolar->referenceChordLength()*Units::mtoUnit());
-                strange += Units::lengthUnitQLabel()  + EOLch;
+                strange = std::format("   error: reference chord length is {:g}", pWPolar->referenceChordLength()*Units::mtoUnit());
+                strange += Units::lengthUnitLabel()  + EOLstr;
                 logmsg += strange;
                 bCheck = false;
             }
             if(fabs(pWPolar->referenceSpanLength())<1.e-3)
             {
                 // needed for coefficient calculations
-                strange = QString::asprintf("   error: reference span length is %g", pWPolar->referenceSpanLength()*Units::mtoUnit());
-                strange += Units::lengthUnitQLabel()  + EOLch;
+                strange = std::format("   error: reference span length is {:g}", pWPolar->referenceSpanLength()*Units::mtoUnit());
+                strange += Units::lengthUnitLabel()  + EOLstr;
                 logmsg += strange;
                 bCheck = false;
             }
             if(fabs(pWPolar->referenceArea())<1.e-6)
             {
                 // needed for coefficient calculations
-                strange = QString::asprintf("   error: reference area is %g", pWPolar->referenceArea()*Units::m2toUnit());
-                strange += Units::areaUnitQLabel()  + EOLch;
+                strange = std::format("   error: reference area is {:g}", pWPolar->referenceArea()*Units::m2toUnit());
+                strange += Units::areaUnitLabel()  + EOLstr;
                 logmsg += strange;
                 bCheck = false;
             }
@@ -571,7 +570,7 @@ bool PlaneTask::checkWPolarData(Plane const *pPlane, PlanePolar *pWPolar)
             {
                 if(!pPlane->hasMainWing())
                 {
-                    strange = "   warning: no main wing detected in plane:" + QString::fromStdString(pPlane->name());
+                    strange = "   warning: no main wing detected in plane:" + pPlane->name();
                 }
                 logmsg += strange;
                 m_bError = true;
@@ -580,7 +579,7 @@ bool PlaneTask::checkWPolarData(Plane const *pPlane, PlanePolar *pWPolar)
     }
 
     if(bCheck) traceStdLog("   ...done\n\n");
-    else       traceLog(logmsg);
+    else       traceStdLog(logmsg);
 
     return bCheck;
 }
@@ -600,7 +599,7 @@ void PlaneTask::loop()
             m_T8Opps.clear();
 
             double alpha(0), beta(0), qinf(0);
-            for(uint qrhs=0; qrhs<m_AngleList.size(); qrhs++)
+            for(unsigned int qrhs=0; qrhs<m_AngleList.size(); qrhs++)
             {
                 if(m_pPlPolar->isType1())
                 {
@@ -645,7 +644,7 @@ void PlaneTask::loop()
 
 bool PlaneTask::T6Loop()
 {
-    QString log, str, strange;
+    std::string log, str, strange;
 
     double error(0), CL(0);
 
@@ -678,49 +677,49 @@ bool PlaneTask::T6Loop()
         m_bStopVPWIterations = false;
 
         m_Ctrl = m_T6CtrlList.at(m_qRHS);
-        strange = QString::asprintf("    Processing control value= %.3f\n", m_Ctrl);
+        strange = std::format("    Processing control value= {:.3f}\n", m_Ctrl);
 
         if(!m_pPlPolar->isAdjustedVelocity())
         {
             QInfStab = m_pPlPolar->QInfCtrl(m_Ctrl);
-            str = "      V" + INFch + QString::asprintf(" = %.3f ", QInfStab*Units::mstoUnit());
-            strange += str + Units::speedUnitQLabel()  + EOLch;
+            str = "      V" + INFstr + std::format(" = {:.3f} ", QInfStab*Units::mstoUnit());
+            strange += str + Units::speedUnitLabel()  + EOLstr;
             if(fabs(QInfStab)<1.e-6)
             {
                 strange +="         null velocity... skipping operating point\n";
-                traceLog(strange);
+                traceStdLog(strange);
                 continue;
             }
         }
         else
         {
-            strange += "      V" + INFch + " = adjusted\n";
+            strange += "      V" + INFstr + " = adjusted\n";
         }
 
         m_Alpha = m_pPlPolar->aoaCtrl(m_Ctrl);
-        str = "      " + ALPHAch + QString::asprintf("  = %.3f", m_Alpha);
-        strange += str + DEGch  + EOLch;
+        str = "      " + ALPHAstr + std::format("  = {:.3f}", m_Alpha);
+        strange += str + DEGstr  + EOLstr;
 
         m_Beta = m_pPlPolar->betaCtrl(m_Ctrl);
-        str = "      " + BETAch  + QString::asprintf("  = %.3f", m_Beta);
-        strange += str + DEGch  + EOLch;
+        str = "      " + BETAstr  + std::format("  = {:.3f}", m_Beta);
+        strange += str + DEGstr  + EOLstr;
         BetaStab = -m_Beta;
 
         m_Phi = m_pPlPolar->phiCtrl(m_Ctrl);
-        str = "      " + PHIch   + QString::asprintf("  = %.3f", m_Phi);
-        strange += str + DEGch  + EOLch;
+        str = "      " + PHIstr   + std::format("  = {:.3f}", m_Phi);
+        strange += str + DEGstr  + EOLstr;
 
         double mass = m_pPlPolar->massCtrl(m_Ctrl);
-        str = QString::asprintf("      mass     = %.3f ", mass*Units::kgtoUnit());
-        strange += str + Units::massUnitQLabel()  + EOLch;
+        str = std::format("      mass     = {:.3f} ", mass*Units::kgtoUnit());
+        strange += str + Units::massUnitLabel()  + EOLstr;
 
         Vector3d CoG = m_pPlPolar->CoGCtrl(m_Ctrl);
-        str = QString::asprintf("      CoG.x    = %.3f ", CoG.x*Units::mtoUnit());
-        strange += str + Units::lengthUnitQLabel()  + EOLch;
+        str = std::format("      CoG.x    = {:.3f} ", CoG.x*Units::mtoUnit());
+        strange += str + Units::lengthUnitLabel()  + EOLstr;
 
-        str = QString::asprintf("      CoG.z    = %.3f ", CoG.z*Units::mtoUnit());
-        strange += str + Units::lengthUnitQLabel()  + EOLch;
-        traceLog(strange);
+        str = std::format("      CoG.z    = {:.3f} ", CoG.z*Units::mtoUnit());
+        strange += str + Units::lengthUnitLabel()  + EOLstr;
+        traceStdLog(strange);
 
         //reset the initial geometry before a new angle is processed
         traceStdLog("\n      Restoring the base mesh\n");
@@ -743,7 +742,7 @@ bool PlaneTask::T6Loop()
                 pPlaneXfl->setRangePositions3(m_pPlPolar, m_Ctrl, str);
                 m_pP3A->setTriMesh(m_pPlane->triMesh());
             }
-            log += QString::fromStdString(str);
+            log += str;
         }
 
         if(m_pP4A && pPlaneXfl)
@@ -758,7 +757,7 @@ bool PlaneTask::T6Loop()
         }
 
 
-        traceLog(log);
+        traceStdLog(log);
 
         traceStdLog("      Updating wake panels\n");
         // wake panels aligned with x-axis up to beta 11
@@ -780,11 +779,11 @@ bool PlaneTask::T6Loop()
         m_pPA->makeInfluenceMatrix();
 
         auto end = std::chrono::system_clock::now();
-        int duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         start = end;
-        strange = QString::asprintf("     done in %.3f s\n", double(duration)/1000.0);
+        strange = std::format("     done in {:.3f} s\n", double(duration)/1000.0);
 
-        traceLog(strange);
+        traceStdLog(strange);
 
         if(m_pPA->m_bMatrixError) return false;
         if (isCancelled()) return true;
@@ -808,9 +807,9 @@ bool PlaneTask::T6Loop()
         end = std::chrono::system_clock::now();
         duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         start = end;
-        strange = QString::asprintf("       done in %.3f s\n", double(duration)/1000.0);
+        strange = std::format("       done in {:.3f} s\n", double(duration)/1000.0);
 
-        traceLog(strange);
+        traceStdLog(strange);
 
         traceStdLog("      Making source strengths...");
         m_pPA->makeSourceStrengths(objects::windDirection(m_Alpha, 0.0)); // unit source strengths
@@ -849,7 +848,7 @@ bool PlaneTask::T6Loop()
                 if(m_pPlane->isXflType())  addTwistedVelField(m_QInf, AlphaStab, VField);
 
                 // add the vorton induced velocities to the velocity field
-                for(uint iv=0; iv<VField.size(); iv++) VField[iv] += VVPW.at(iv);
+                for(unsigned int iv=0; iv<VField.size(); iv++) VField[iv] += VVPW.at(iv);
 
 //                m_pPA->makeSourceStrengths(VField);
 
@@ -896,7 +895,7 @@ bool PlaneTask::T6Loop()
                 scaleResultsToSpeed(m_QInf, QInfStab);
 
                 // scale the calculated densities - required for Cp calc.
-                for(uint i=0; i<m_pPA->m_uRHS.size(); i++) m_pPA->m_uRHS[i] *= QInfStab/m_QInf;
+                for(unsigned int i=0; i<m_pPA->m_uRHS.size(); i++) m_pPA->m_uRHS[i] *= QInfStab/m_QInf;
 
                 m_QInf = QInfStab; // set the velocity for the next iteration
                 F.reset();
@@ -920,10 +919,10 @@ bool PlaneTask::T6Loop()
                     std::string strerr;
                     if(updateVirtualTwist(QInfStab, error, strerr))
                     {
-                        str = QString::asprintf("         iter=%3d   error=%9.5f", inl+1, error);
-                        str += DEGch + "   ";
-                        str += QString::asprintf(" CL=%9.5f", CL);
-                        traceLog(str + strange);
+                        str = std::format("         iter={:3d}   error=%9.5f", inl+1, error);
+                        str += DEGstr + "   ";
+                        str += std::format(" CL=%9.5f", CL);
+                        traceStdLog(str + strange);
                     }
                     else
                     {
@@ -946,13 +945,13 @@ bool PlaneTask::T6Loop()
                     if(error<s_ViscAlphaPrecision)
                     {
                         str = "         --- Converged ---\n\n";
-                        traceLog(str);
+                        traceStdLog(str);
                         bConvergedLast = true;
                     }
                     else
                     {
                         str = "         Unconverged, max number of iterations exceeded, skipping operating point\n\n";
-                        traceLog(str);
+                        traceStdLog(str);
                         m_bError = true;
                         bConvergedLast = false;
                         bViscLoopError = true;
@@ -961,7 +960,7 @@ bool PlaneTask::T6Loop()
                 else
                 {
                     str = "         Error in the viscous loop, skipping the operating point\n\n";
-                    traceLog(str);
+                    traceStdLog(str);
                     bConvergedLast = false;
                     m_bWarning = true;
                     continue;
@@ -984,12 +983,12 @@ bool PlaneTask::T6Loop()
             }
 
             if(m_pPlPolar->bVortonWake())
-                traceLog(QString::asprintf("      VPW iteration %3d/%3d      CL=%9.5f\n", ivw+1, nWakeIter, CL));
+                traceStdLog(std::format("      VPW iteration {:3d}/{:3d}      CL=%9.5f\n", ivw+1, nWakeIter, CL));
 
             if(isCancelled()) return true;
         } // end VPW loop
 
-        traceLog(EOLch);
+        traceStdLog(EOLstr);
 
         if(bViscLoopError) continue; // move on to the next operating point calculation
 
@@ -1002,8 +1001,8 @@ bool PlaneTask::T6Loop()
         std::fill(VField.begin(), VField.end(), objects::windDirection(0, 0)*QInfStab);
         m_pPA->computeOnBodyCp(VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
 
-        strange = QString::asprintf("      Calculating plane for control parameter=%.3f\n", m_Ctrl);
-        traceLog(strange);
+        strange = std::format("      Calculating plane for control parameter={:.3f}\n", m_Ctrl);
+        traceStdLog(strange);
 
         PlaneOpp *pPOpp = computePlane(m_Ctrl, m_Alpha, BetaStab, m_Phi, QInfStab, mass, CoG, true);
         traceStdLog(EOLstr);
@@ -1099,8 +1098,8 @@ bool PlaneTask::updateVirtualTwist(double QInf, double &error, std::string &logm
 
     PlaneXfl *pPlaneXfl = dynamic_cast<PlaneXfl*>(m_pPlane);
 
-    QString logg;
-    QString strange, strong;
+    std::string logg;
+    std::string strange, strong;
 
     Vector3d CoG; // dummy argument, unused
     Foil *pFoil0=nullptr;
@@ -1159,21 +1158,21 @@ bool PlaneTask::updateVirtualTwist(double QInf, double &error, std::string &logm
 
                 if(bOutRe || bOutAlpha)
                 {
-                    strange = "       " + QString::fromStdString(pWing->name()) + QString::asprintf("  Span pos[%d]=%11g ", m, sd.m_StripPos.at(m)*Units::mtoUnit());
-                    strange += Units::lengthUnitQLabel();
+                    strange = "       " + pWing->name() + std::format("  Span pos[{:d}]={:11g} ", m, sd.m_StripPos.at(m)*Units::mtoUnit());
+                    strange += Units::lengthUnitLabel();
                     strange += ",  Re = ";
-                    strong = QString::asprintf("%.0f", Re);
+                    strong = std::format("{:.0f}", Re);
                     strange += strong;
                     logg += strange;
                     // interpolation error, makes no sense to continue
                     if(bOutAlpha)
                     {
-                        strong = QString::asprintf(", aoa_effective=%7.3g", aoa_effective) + DEGch;
+                        strong = std::format(", aoa_effective={:7.3g}", aoa_effective) + DEGstr;
                         logg +=strong;
                     }
                     else if(bOutRe)
                     {
-                        strong = QString::asprintf(", aoa_effective=%7.3g", aoa_effective) + DEGch;
+                        strong = std::format(", aoa_effective={:7.3g}", aoa_effective) + DEGstr;
                         logg += strong;
                     }
                     return false;
@@ -1189,14 +1188,14 @@ bool PlaneTask::updateVirtualTwist(double QInf, double &error, std::string &logm
         }
     }
 
-    logmsg = logg.toStdString();
+    logmsg = logg;
     return true;
 }
 
 
 void PlaneTask::outputStateMatrices(PlaneOpp const *pPOpp)
 {
-    QString strange, log;
+    std::string strange, log;
 
     //____________________Longitudinal stability_____________
 
@@ -1206,7 +1205,7 @@ void PlaneTask::outputStateMatrices(PlaneOpp const *pPOpp)
     log += strange;
     for (int i=0; i<4; i++)
     {
-        strange = QString::asprintf("        %13g      %13g      %13g      %13g\n", pPOpp->m_ALong[i][0], pPOpp->m_ALong[i][1], pPOpp->m_ALong[i][2], pPOpp->m_ALong[i][3]);
+        strange = std::format("        {:13g}      {:13g}      {:13g}      {:13g}\n", pPOpp->m_ALong[i][0], pPOpp->m_ALong[i][1], pPOpp->m_ALong[i][2], pPOpp->m_ALong[i][3]);
         log += strange;
     }
 
@@ -1218,7 +1217,7 @@ void PlaneTask::outputStateMatrices(PlaneOpp const *pPOpp)
 
     for (int i=0; i<4; i++)
     {
-        strange = QString::asprintf("        %13g      %13g      %13g      %13g\n", pPOpp->m_ALat[i][0], pPOpp->m_ALat[i][1], pPOpp->m_ALat[i][2], pPOpp->m_ALat[i][3]);
+        strange = std::format("        {:13g}      {:13g}      {:13g}      {:13g}\n", pPOpp->m_ALat[i][0], pPOpp->m_ALat[i][1], pPOpp->m_ALat[i][2], pPOpp->m_ALat[i][3]);
         log += strange;
     }
 
@@ -1230,23 +1229,23 @@ void PlaneTask::outputStateMatrices(PlaneOpp const *pPOpp)
     //build the control matrix
     for(int ie=0; ie<m_pPlPolar->nAVLCtrls(); ie++)
     {
-        strange = "      _____Control Matrices for set " + QString::fromStdString(m_pPlPolar->AVLCtrl(ie).name())+" __________\n";
+        strange = "      _____Control Matrices for set " + m_pPlPolar->AVLCtrl(ie).name()+" __________\n";
         log += strange;
 
         strange = "       Longitudinal control matrix\n";
         log += strange;
 
-        strange = QString::asprintf("      %13g\n      %13g\n      %13g\n      %13g\n\n",  pPOpp->m_BLong[ie][0],  pPOpp->m_BLong[ie][1],  pPOpp->m_BLong[ie][2],  pPOpp->m_BLong[ie][3]);
+        strange = std::format("      {:13g}\n      {:13g}\n      {:13g}\n      {:13g}\n\n",  pPOpp->m_BLong[ie][0],  pPOpp->m_BLong[ie][1],  pPOpp->m_BLong[ie][2],  pPOpp->m_BLong[ie][3]);
         log += strange;
 
         strange = "       Lateral control matrix\n";
         log += strange;
 
-        strange = QString::asprintf("      %13g\n      %13g\n      %13g\n      %13g\n\n", pPOpp->m_BLat[ie][0], pPOpp->m_BLat[ie][1], pPOpp->m_BLat[ie][2], pPOpp->m_BLat[ie][3]);
+        strange = std::format("      {:13g}\n      {:13g}\n      {:13g}\n      {:13g}\n\n", pPOpp->m_BLat[ie][0], pPOpp->m_BLat[ie][1], pPOpp->m_BLat[ie][2], pPOpp->m_BLat[ie][3]);
         log += strange;
     }
 
-    traceLog(log);
+    traceStdLog(log);
 }
 
 
@@ -1401,10 +1400,9 @@ PlaneOpp* PlaneTask::computePlane(double ctrl, double alpha, double beta, double
                 }
                 else
                 {
-                    traceLog("             Processing "+
-                             QString::fromStdString(pWing->name()) +": " +
-                             QString::asprintf("%d surfaces", pWing->nSurfaces()) +
-                             EOLch);
+                    traceStdLog("             Processing "+ pWing->name() +": " +
+                                std::format("{:d} surfaces", pWing->nSurfaces()) +
+                                EOLstr);
                     bViscOK = computeViscousDragOTF(pWing, alpha, beta, QInf, m_pPlPolar, CoG, m_pPlPolar->flapCtrls(iw), m_SpanDistFF[iw], logmsg);
                     if(logmsg.length()!=0)
                     {
@@ -1545,7 +1543,7 @@ void PlaneTask::computeInviscidAero(std::vector<Panel3> const &panel3, const dou
     Vector3d FiBodyAxes(0,0,0);
     Vector3d MiBodyAxes(0,0,0);
     Vector3d M0;
-    for (uint p=0; p<panel3.size(); p++)
+    for (unsigned int p=0; p<panel3.size(); p++)
     {
         Panel3 const &p3 = panel3.at(p);
         int index = p3.index();
@@ -1622,7 +1620,7 @@ double PlaneTask::computeBalanceSpeeds(double Alpha, double mass, bool &bWarning
         return -100.0;
     }
     double v = sqrt(2.0* 9.81 * mass/m_pPlPolar->density()/Lift);
-    log = prefix + "V" + INFstr + QString::asprintf("=%7.3f ", v*Units::mstoUnit()).toStdString();
+    log = prefix + "V" + INFstr + std::format("={:7.3f} ", v*Units::mstoUnit());
     log += Units::speedUnitLabel();
     return v;
 }
@@ -1698,8 +1696,8 @@ double PlaneTask::computeGlideSpeed(double Alpha, double mass, std::string &log)
      }
     else
     {
-        log = "V" + INFstr + QString::asprintf("= %g ", v1*Units::mstoUnit()).toStdString() + Units::speedUnitLabel();
-        log += QString::asprintf(" converged in %d iterations", iter).toStdString();
+        log = "V" + INFstr + std::format("= {:g} ", v1*Units::mstoUnit()) + Units::speedUnitLabel();
+        log += std::format(" converged in {:d} iterations", iter);
     }
 
     return v1;
@@ -1835,18 +1833,18 @@ PlaneOpp *PlaneTask::createPlaneOpp(double ctrl, double alpha, double beta, doub
 
     if(m_pPlPolar->isTriangleMethod())
     {
-        int N = m_pP3A->nPanels();
-        int N3 = N*3;
-        if(Cp)    memcpy(pPOpp->m_Cp.data(),    Cp,      ulong(N3)*sizeof(double));
-        if(Gamma) memcpy(pPOpp->m_gamma.data(), Gamma,   ulong(N3)*sizeof(double));
-        if(Sigma) memcpy(pPOpp->m_sigma.data(), Sigma,   ulong(N)*sizeof(double));
+        unsigned long N = m_pP3A->nPanels();
+        unsigned long N3 = N*3;
+        if(Cp)    memcpy(pPOpp->m_Cp.data(),    Cp,      N3*sizeof(double));
+        if(Gamma) memcpy(pPOpp->m_gamma.data(), Gamma,   N3*sizeof(double));
+        if(Sigma) memcpy(pPOpp->m_sigma.data(), Sigma,   N*sizeof(double));
     }
     else if (m_pPlPolar->isQuadMethod())
     {
         int N = m_pP4A->nPanels();
-        if(Cp)    memcpy(pPOpp->m_Cp.data(),    Cp,    ulong(N)*sizeof(double));
-        if(Gamma) memcpy(pPOpp->m_gamma.data(), Gamma, ulong(N)*sizeof(double));
-        if(Sigma) memcpy(pPOpp->m_sigma.data(), Sigma, ulong(N)*sizeof(double));
+        if(Cp)    memcpy(pPOpp->m_Cp.data(),    Cp,    N*sizeof(double));
+        if(Gamma) memcpy(pPOpp->m_gamma.data(), Gamma, N*sizeof(double));
+        if(Sigma) memcpy(pPOpp->m_sigma.data(), Sigma, N*sizeof(double));
     }
 
 
@@ -1933,7 +1931,7 @@ PlaneOpp *PlaneTask::createPlaneOpp(double ctrl, double alpha, double beta, doub
 
 bool PlaneTask::T7Loop()
 {
-    QString str, outstring;
+    std::string str, outstring;
 
     traceStdLog("\nSolving the problem... \n\n");
 
@@ -1959,7 +1957,7 @@ bool PlaneTask::T7Loop()
 
     outstring.clear();
 
-    traceLog(outstring);
+    traceStdLog(outstring);
     if(isCancelled()) return true;
 
     // next find the balanced and trimmed conditions
@@ -1971,8 +1969,8 @@ bool PlaneTask::T7Loop()
     {
         if(isCancelled()) return true;
         //no zero moment alpha
-        str = QString::asprintf("      Unsuccessful attempt to trim the model for control position = %.2f - skipping.\n\n\n", m_Ctrl);
-        traceLog(str);
+        str = std::format("      Unsuccessful attempt to trim the model for control position = %.2f - skipping.\n\n\n", m_Ctrl);
+        traceStdLog(str);
         m_bError = true;
     }
     else
@@ -1986,8 +1984,8 @@ bool PlaneTask::T7Loop()
 
         if (isCancelled()) return true;
 
-        str = "      Calculating Plane for "+ALPHAch + QString::asprintf("=%.2f", AlphaEq) + DEGch + EOLch;
-        traceLog(str);
+        str = "      Calculating Plane for "+ALPHAstr + std::format("=%.2f", AlphaEq) + DEGstr + EOLstr;
+        traceStdLog(str);
         PlaneOpp *pPOpp = computePlane(m_Ctrl, AlphaEq, m_Beta, m_Phi, u0, mass, CoG, false);
         if(!pPOpp)
         {
@@ -2072,7 +2070,7 @@ bool PlaneTask::computeStability(PlaneOpp *pPOpp, bool bOutput)
 
 bool PlaneTask::T123458Loop()
 {
-    QString strange, str, outstring;
+    std::string strange, str, outstring;
 
     traceStdLog("\nSolving the problem... \n\n");
 
@@ -2096,11 +2094,11 @@ bool PlaneTask::T123458Loop()
     if(isCancelled()) return true;
 
     m_nRHS = int(m_T8Opps.size());
-    strange = QString::asprintf("   Calculating %d operating point", m_nRHS);
+    strange = std::format("   Calculating {:d} operating point", m_nRHS);
     if(m_nRHS>1) strange +="s";
-    traceLog(EOLch+strange+EOLch);
+    traceStdLog(EOLstr+strange+EOLstr);
 
-    for(uint io=0; io<m_T8Opps.size(); io++)
+    for(unsigned int io=0; io<m_T8Opps.size(); io++)
     {
         if(s_bCancel)
         {
@@ -2119,16 +2117,16 @@ bool PlaneTask::T123458Loop()
         m_Ctrl  = 0.0;
 
         outstring = "     ";
-        outstring += ALPHAch + QString::asprintf("=%g", m_Alpha) + DEGch + ", ";
-        outstring += BETAch  + QString::asprintf("=%g", m_Beta)  + DEGch + ", ";
-        outstring += PHIch   + QString::asprintf("=%g", m_Phi)   + DEGch + ", ";
+        outstring += ALPHAstr + std::format("={:g}", m_Alpha) + DEGstr + ", ";
+        outstring += BETAstr  + std::format("={:g}", m_Beta)  + DEGstr + ", ";
+        outstring += PHIstr   + std::format("={:g}", m_Phi)   + DEGstr + ", ";
 
         if(m_pPlPolar->isType1() || m_pPlPolar->isType4() || m_pPlPolar->isType5() || m_pPlPolar->isType8())
-            outstring += "V" + INFch + QString::asprintf("=%g ", m_QInf*Units::mstoUnit()) + Units::speedUnitQLabel() + EOLch;
+            outstring += "V" + INFstr + std::format("={:g} ", m_QInf*Units::mstoUnit()) + Units::speedUnitLabel() + EOLstr;
         else
-            outstring += "V" + INFch + ": adjusted" + EOLch;
+            outstring += "V" + INFstr + ": adjusted" + EOLstr;
 
-        traceLog(outstring);
+        traceStdLog(outstring);
 
         if(!m_pPlPolar->isVLM())
         {
@@ -2163,8 +2161,8 @@ bool PlaneTask::T123458Loop()
                 m_QInf = computeBalanceSpeeds(m_Alpha, m_pPlPolar->mass(), m_bError, "", str);
             else if(m_pPlPolar->isGlidePolar())
                 m_QInf = computeGlideSpeed(m_Alpha, m_pPlPolar->mass(), str);
-            strange = "             " + QString::fromStdString(str) + EOLch;
-            traceLog(strange);
+            strange = "             " + str + EOLstr;
+            traceStdLog(strange);
         }
         else if(m_pPlPolar->isType4())
         {
@@ -2200,7 +2198,7 @@ bool PlaneTask::T123458Loop()
         if (isCancelled()) return true;
 
         str = "       Calculating plane\n";
-        traceLog(str);
+        traceStdLog(str);
         PlaneOpp *pPOpp = computePlane(m_Ctrl, m_Alpha, m_Beta, m_pPlPolar->phi(), m_QInf, mass, CoG, false);
         if(!pPOpp)
         {
@@ -2254,61 +2252,61 @@ void PlaneTask::outputNDStabDerivatives(double u0, StabDerivatives const &SD)
     double S   = m_pPlPolar->referenceArea();
     double mac = m_pPlane->mac();
 
-    QString str;
-    QString prefix("                ");
-    QString logmsg;
+    std::string str;
+    std::string prefix("                ");
+    std::string logmsg;
 
     // no OpPoint, we output the data to the log file
     str = "             Longitudinal derivatives\n";
     logmsg += str;
-    str = QString::asprintf("Xu  = %11.5g         Cxu  = %11.5g\n", SD.Xu,SD.CXu);
+    str = std::format("Xu  = {:11.5g}         Cxu  = {:11.5g}\n", SD.Xu,SD.CXu);
     logmsg += prefix + str;
-    str = QString::asprintf("Xw  = %11.5g         Cxa  = %11.5g\n", SD.Xw,SD.CXa);
+    str = std::format("Xw  = {:11.5g}         Cxa  = {:11.5g}\n", SD.Xw,SD.CXa);
     logmsg += prefix + str;
-    str = QString::asprintf("Xq  = %11.5g         Cxq  = %11.5g\n", SD.Xq, SD.CXq);
+    str = std::format("Xq  = {:11.5g}         Cxq  = {:11.5g}\n", SD.Xq, SD.CXq);
     logmsg += prefix + str;
-    str = QString::asprintf("Zu  = %11.5g         Czu  = %11.5g\n", SD.Zu, SD.CZu);
+    str = std::format("Zu  = {:11.5g}         Czu  = {:11.5g}\n", SD.Zu, SD.CZu);
     logmsg += prefix + str;
-    str = QString::asprintf("Zw  = %11.5g         CZa  = %11.5g\n", SD.Zw, SD.CZa);
+    str = std::format("Zw  = {:11.5g}         CZa  = {:11.5g}\n", SD.Zw, SD.CZa);
     logmsg += prefix + str;
-    str = QString::asprintf("Zq  = %11.5g         CZq  = %11.5g\n", SD.Zq, SD.CZq);
+    str = std::format("Zq  = {:11.5g}         CZq  = {:11.5g}\n", SD.Zq, SD.CZq);
     logmsg += prefix + str;
-    str = QString::asprintf("Mu  = %11.5g         Cmu  = %11.5g\n", SD.Mu, SD.Cmu);
+    str = std::format("Mu  = {:11.5g}         Cmu  = {:11.5g}\n", SD.Mu, SD.Cmu);
     logmsg += prefix + str;
-    str = QString::asprintf("Mw  = %11.5g         Cma  = %11.5g\n", SD.Mw, SD.Cma);
+    str = std::format("Mw  = {:11.5g}         Cma  = {:11.5g}\n", SD.Mw, SD.Cma);
     logmsg += prefix + str;
-    str = QString::asprintf("Mq  = %11.5g         Cmq  = %11.5g\n", SD.Mq, SD.Cmq);
+    str = std::format("Mq  = {:11.5g}         Cmq  = {:11.5g}\n", SD.Mq, SD.Cmq);
     logmsg += prefix + str;
 
-    str = QString::asprintf("Neutral Point position = %g ", SD.XNP*Units::mtoUnit()) + Units::lengthUnitQLabel();
+    str = std::format("Neutral Point position = {:g} ", SD.XNP*Units::mtoUnit()) + Units::lengthUnitLabel();
     str +="\n\n";
     logmsg += prefix + str;
 
     str = "             Lateral derivatives\n";
     logmsg += str;
-    str = QString::asprintf("Yv  = %11.5g         CYb  = %11.5g\n", SD.Yv, SD.CYb);
+    str = std::format("Yv  = {:11.5g}         CYb  = {:11.5g}\n", SD.Yv, SD.CYb);
     logmsg += prefix + str;
-    str = QString::asprintf("Yp  = %11.5g         CYp  = %11.5g\n", SD.Yp, SD.CYp);
+    str = std::format("Yp  = {:11.5g}         CYp  = {:11.5g}\n", SD.Yp, SD.CYp);
     logmsg += prefix + str;
-    str = QString::asprintf("Yr  = %11.5g         CYr  = %11.5g\n", SD.Yr, SD.CYr);
+    str = std::format("Yr  = {:11.5g}         CYr  = {:11.5g}\n", SD.Yr, SD.CYr);
     logmsg += prefix + str;
-    str = QString::asprintf("Lv  = %11.5g         Clb  = %11.5g\n", SD.Lv, SD.Clb);
+    str = std::format("Lv  = {:11.5g}         Clb  = {:11.5g}\n", SD.Lv, SD.Clb);
     logmsg += prefix + str;
-    str = QString::asprintf("Lp  = %11.5g         Clp  = %11.5g\n", SD.Lp, SD.Clp);
+    str = std::format("Lp  = {:11.5g}         Clp  = {:11.5g}\n", SD.Lp, SD.Clp);
     logmsg += prefix + str;
-    str = QString::asprintf("Lr  = %11.5g         Clr  = %11.5g\n", SD.Lr, SD.Clr);
+    str = std::format("Lr  = {:11.5g}         Clr  = {:11.5g}\n", SD.Lr, SD.Clr);
     logmsg += prefix + str;
-    str = QString::asprintf("Nv  = %11.5g         Cnb  = %11.5g\n", SD.Nv, SD.Cnb);
+    str = std::format("Nv  = {:11.5g}         Cnb  = {:11.5g}\n", SD.Nv, SD.Cnb);
     logmsg += prefix + str;
-    str = QString::asprintf("Np  = %11.5g         Cnp  = %11.5g\n", SD.Np, SD.Cnp);
+    str = std::format("Np  = {:11.5g}         Cnp  = {:11.5g}\n", SD.Np, SD.Cnp);
     logmsg += prefix + str;
-    str = QString::asprintf("Nr  = %11.5g         Cnr  = %11.5g\n", SD.Nr, SD.Cnr);
-    logmsg += prefix + str + EOLch;
+    str = std::format("Nr  = {:11.5g}         Cnr  = {:11.5g}\n", SD.Nr, SD.Cnr);
+    logmsg += prefix + str + EOLstr;
 
     //output control derivatives
     if(!m_pPlPolar->hasActiveAVLControl())
     {
-        traceLog(logmsg);
+        traceStdLog(logmsg);
         return;
     }
 
@@ -2318,19 +2316,19 @@ void PlaneTask::outputNDStabDerivatives(double u0, StabDerivatives const &SD)
     {
         if(int(SD.ControlNames.size())>ie)
         {
-            logmsg += prefix + QString::fromStdString(SD.ControlNames.at(ie))  + EOLch;
-            logmsg += prefix + QString::asprintf("Xde = %11.5g         CXde = %11.5g\n", SD.Xde.at(ie), SD.Xde.at(ie)/(q*S));
-            logmsg += prefix + QString::asprintf("Yde = %11.5g         CYde = %11.5g\n", SD.Yde.at(ie), SD.Yde.at(ie)/(q*S));
-            logmsg += prefix + QString::asprintf("Zde = %11.5g         CZde = %11.5g\n", SD.Zde.at(ie), SD.Zde.at(ie)/(q*S));
-            logmsg += prefix + QString::asprintf("Lde = %11.5g         CLde = %11.5g\n", SD.Lde.at(ie), SD.Lde.at(ie)/(q*S*b));
-            logmsg += prefix + QString::asprintf("Mde = %11.5g         CMde = %11.5g\n", SD.Mde.at(ie), SD.Mde.at(ie)/(q*S*mac));
-            logmsg += prefix + QString::asprintf("Nde = %11.5g         CNde = %11.5g\n", SD.Nde.at(ie), SD.Nde.at(ie)/(q*S*b));
+            logmsg += prefix + SD.ControlNames.at(ie)  + EOLstr;
+            logmsg += prefix + std::format("Xde = {:11.5g}         CXde = {:11.5g}\n", SD.Xde.at(ie), SD.Xde.at(ie)/(q*S));
+            logmsg += prefix + std::format("Yde = {:11.5g}         CYde = {:11.5g}\n", SD.Yde.at(ie), SD.Yde.at(ie)/(q*S));
+            logmsg += prefix + std::format("Zde = {:11.5g}         CZde = {:11.5g}\n", SD.Zde.at(ie), SD.Zde.at(ie)/(q*S));
+            logmsg += prefix + std::format("Lde = {:11.5g}         CLde = {:11.5g}\n", SD.Lde.at(ie), SD.Lde.at(ie)/(q*S*b));
+            logmsg += prefix + std::format("Mde = {:11.5g}         CMde = {:11.5g}\n", SD.Mde.at(ie), SD.Mde.at(ie)/(q*S*mac));
+            logmsg += prefix + std::format("Nde = {:11.5g}         CNde = {:11.5g}\n", SD.Nde.at(ie), SD.Nde.at(ie)/(q*S*b));
         }
     }
     str ="\n";
     logmsg += str;
 
-    traceLog(logmsg);
+    traceStdLog(logmsg);
 }
 
 
@@ -2452,8 +2450,8 @@ void PlaneTask::setControlPositions(PlaneXfl const*pPlaneXfl, PlanePolar const*p
                                     int iAVLCtrl,
                                     std::string &outstring)
 {
-    QString outstr;
-    QString strange;
+    std::string outstr;
+    std::string strange;
     double totalAngle=0.0, deltaangle = 0.0;
     double gain = 0.0;
 
@@ -2480,12 +2478,12 @@ void PlaneTask::setControlPositions(PlaneXfl const*pPlaneXfl, PlanePolar const*p
                     else
                         totalAngle = deltaangle;
 
-                    strange = QString::asprintf("- rotating flap %d by %g°, total flap angle is %g°", iCtrl, deltaangle, totalAngle);
+                    strange = std::format("- rotating flap {:d} by {:g}°, total flap angle is {:g}°", iCtrl, deltaangle, totalAngle);
 
-                    strange = "      " + QString::fromStdString(pWing->name()) + strange + EOLch;
+                    strange = "      " + pWing->name() + strange + EOLstr;
                     outstr +=strange;
 
-                    for(uint i4=0; i4<panel4.size(); i4++)
+                    for(unsigned int i4=0; i4<panel4.size(); i4++)
                     {
                         if(surf.hasFlapPanel4(i4))
                         {
@@ -2500,7 +2498,7 @@ void PlaneTask::setControlPositions(PlaneXfl const*pPlaneXfl, PlanePolar const*p
     }
 
     outstr  +="\n";
-    outstring = outstr.toStdString();
+    outstring = outstr;
 }
 
 
@@ -2509,8 +2507,8 @@ void PlaneTask::setControlPositions(PlaneXfl const *pPlaneXfl, PlanePolar const 
                                     std::vector<Panel3> &panel3, std::vector<Node> const &refnodes, double deltactrl, int iAVLCtrl,
                                     std::string &outstring)
 {
-    QString strange;
-    QString outstr;
+    std::string strange;
+    std::string outstr;
     double totalAngle(0.0), deltaangle(0);
     double gain(0);
     std::vector<Node> node = refnodes;
@@ -2538,8 +2536,8 @@ void PlaneTask::setControlPositions(PlaneXfl const *pPlaneXfl, PlanePolar const 
                     else
                         totalAngle = deltaangle;
 
-                    strange = QString::asprintf("- rotating flap %d by %g°, total flap angle is %g°", iCtrl, deltaangle, totalAngle);
-                    strange = "      " + QString::fromStdString(pWing->name()) + strange + EOLch;
+                    strange = std::format("- rotating flap {:d} by {:g}°, total flap angle is {:g}°", iCtrl, deltaangle, totalAngle);
+                    strange = "      " + pWing->name() + strange + EOLstr;
                     outstr +=strange;
 
                     pPlaneXfl->rotateFlapNodes(panel3, node, surf, surf.hingePoint(), surf.hingeVector(), deltaangle);
@@ -2555,7 +2553,7 @@ void PlaneTask::setControlPositions(PlaneXfl const *pPlaneXfl, PlanePolar const 
 
     outstr  +="\n";
 
-    outstring = outstr.toStdString();
+    outstring = outstr;
 }
 
 
@@ -2596,8 +2594,8 @@ bool PlaneTask::computeViscousDrag(WingXfl *pWing, double alpha, double beta, do
                                    PlanePolar const *pWPolar, Vector3d const &cog, int iStation0, SpanDistribs &SpanResFF,
                                    std::string &logmsg) const
 {
-    QString strong, strange, strOut;
-    QString logg;
+    std::string strong, strange, strOut;
+    std::string logg;
 
     // Define the wind axes
     Vector3d winddirection = objects::windDirection(alpha, beta);
@@ -2643,7 +2641,7 @@ bool PlaneTask::computeViscousDrag(WingXfl *pWing, double alpha, double beta, do
 
                 if(bOutVar)
                 {
-                    strOut = QString::asprintf(",  Cl = %7.2f\n", sd.m_Cl.at(m));
+                    strOut = std::format(",  Cl = {:7.2f}\n", sd.m_Cl.at(m));
                     bViscOK = false;
                 }
             }
@@ -2662,14 +2660,14 @@ bool PlaneTask::computeViscousDrag(WingXfl *pWing, double alpha, double beta, do
 
                 if(bOutVar)
                 {
-                    strOut = QString::asprintf(",  AoA_effective = %7.2f", aoa_effective) + DEGch + EOLch;
+                    strOut = std::format(",  AoA_effective = {:7.2f}", aoa_effective) + DEGstr + EOLstr;
                     bViscOK = false;
                 }
             }
 
-            strong = "           " + QString::asprintf("     Span position %9.2f ", sd.m_StripPos.at(m)*Units::mtoUnit());
-            strong += Units::lengthUnitQLabel();
-            strong += QString::asprintf(",  Re = %9.0f", sd.m_Re.at(m));
+            strong = "           " + std::format("     Span position {:9.2f} ", sd.m_StripPos.at(m)*Units::mtoUnit());
+            strong += Units::lengthUnitLabel();
+            strong += std::format(",  Re = %9.0f", sd.m_Re.at(m));
 
             if(bOutVar)
             {
@@ -2677,7 +2675,7 @@ bool PlaneTask::computeViscousDrag(WingXfl *pWing, double alpha, double beta, do
             }
             else if(bOutRe)
             {
-                strange = QString::asprintf(",  Cl = %7.2f\n", sd.m_Cl.at(m));
+                strange = std::format(",  Cl = {:7.2f}\n", sd.m_Cl.at(m));
                 logg += strong + strange;
                 bViscOK = false;
             }
@@ -2705,7 +2703,7 @@ bool PlaneTask::computeViscousDrag(WingXfl *pWing, double alpha, double beta, do
         if(s_bCancel) break;
     }
 
-    logmsg = logg.toStdString();
+    logmsg = logg;
 
     return bViscOK;
 }
@@ -2803,7 +2801,7 @@ bool PlaneTask::computeSurfaceDragOTF(Surface const &surf, int iStartStation, do
 
 
     bool bCv = true;
-    QString logg;
+    std::string logg;
     int iStation=iStartStation;
     for(int k=0; k<surf.NYPanels(); k++)
     {
@@ -2827,12 +2825,12 @@ bool PlaneTask::computeSurfaceDragOTF(Surface const &surf, int iStartStation, do
 
         if(!spandist.m_bConverged.at(iStation))
         {
-            QString strong = "                     ";
-            strong +=  QString::asprintf("span pos. %9.3f ", spandist.m_StripPos.at(iStation)*Units::mtoUnit());
-            strong += Units::lengthUnitQLabel();
-            strong += QString::asprintf(", Cl=%9.5f, Re=%7.0f", spandist.m_Cl.at(iStation), spandist.m_Re.at(iStation));
+            std::string strong = "                     ";
+            strong +=  std::format("span pos. {:9.3f} ", spandist.m_StripPos.at(iStation)*Units::mtoUnit());
+            strong += Units::lengthUnitLabel();
+            strong += std::format(", Cl=%9.5f, Re=%7.0f", spandist.m_Cl.at(iStation), spandist.m_Re.at(iStation));
 
-            logg += strong + EOLch;
+            logg += strong + EOLstr;
             bCv = false;
         }
 
@@ -2841,17 +2839,17 @@ bool PlaneTask::computeSurfaceDragOTF(Surface const &surf, int iStartStation, do
         if(s_bCancel) break;
     }
 
-    QString report = QString::asprintf("                 ...done surface %d", surf.index());
+    std::string report = std::format("                 ...done surface {:d}", surf.index());
     if(bCv)
     {
-        report += EOLch;
+        report += EOLstr;
     }
     else
     {
-        report += " - OTF failures:" + EOLch + logg;
+        report += " - OTF failures:" + EOLstr + logg;
     }
 
-    traceLog(report);
+    traceStdLog(report);
 
     return bCv;
 }
@@ -2894,7 +2892,7 @@ bool PlaneTask::computeViscousDragOTF(WingXfl *pWing, double alpha, double beta,
     // for each surface, calulate the drag at each end foil for each lift and reynolds at each span station
     // then interpolate
 
-    QString logg;
+    std::string logg;
 
     assert(pWing->nFlaps()==TEFlapAngles.nValues());
 
@@ -2934,12 +2932,12 @@ bool PlaneTask::computeViscousDragOTF(WingXfl *pWing, double alpha, double beta,
     {
         if(!sd.m_bConverged.at(k))
         {
-/*            QString strong = "                  ";
-            strong +=  QString::asprintf("span pos. %9.3f ", sd.m_StripPos.at(k)*Units::mtoUnit());
+/*            std::string strong = "                  ";
+            strong +=  std::format("span pos. {:9.3f} ", sd.m_StripPos.at(k)*Units::mtoUnit());
             strong += Units::lengthUnitLabel();
-            strong += QString::asprintf(", Cl=%9.5f, Re=%7.0f", sd.m_Cl.at(k), sd.m_Re.at(k));
+            strong += std::format(", Cl=%9.5f, Re=%7.0f", sd.m_Cl.at(k), sd.m_Re.at(k));
 
-            logg += strong + EOLch;*/
+            logg += strong + EOLstr;*/
             bCv = false;
         }
     }
@@ -2967,7 +2965,7 @@ bool PlaneTask::computeViscousDragOTF(WingXfl *pWing, double alpha, double beta,
     if(!s_bCancel)
         assert(iCtrl == TEFlapAngles.nValues());
 
-    logmsg = logg.toStdString();
+    logmsg = logg;
 
     return bCv;
 }
@@ -3037,7 +3035,7 @@ void PlaneTask::makeVortonRow(int qrhs)
             {
                 vortonrow[iv].setVortex(vortonrow[iv].vortex()+vortonrow[jv].vortex());
                 vortonrow.erase(vortonrow.begin()+jv);
-                for(uint i=0; i<m_pPA->m_VortexNeg.size(); i++)
+                for(unsigned int i=0; i<m_pPA->m_VortexNeg.size(); i++)
                 {
                     Vortex &vortex = m_pPA->m_VortexNeg[i];
                     if(vortex.nodeIndex(0)==jv)
@@ -3064,7 +3062,7 @@ void PlaneTask::makeVortonRow(int qrhs)
     // check if the last row is still active
     bool bActiveLastRow = false;
     std::vector<Vorton> &lastrow = newvortons.back();
-    for(uint i=0; i<lastrow.size(); i++)
+    for(unsigned int i=0; i<lastrow.size(); i++)
     {
         if(lastrow.at(i).isActive())
         {
@@ -3075,11 +3073,11 @@ void PlaneTask::makeVortonRow(int qrhs)
     if(!bActiveLastRow)
     {
         newvortons.pop_back();
-//        qDebug(" popping back new size = %d", int(newvortons.size()));
+//        qDebug(" popping back new size = {:d}", int(newvortons.size()));
     }
     else
     {
-//        qDebug(" new size = %d", int(newvortons.size()));
+//        qDebug(" new size = {:d}", int(newvortons.size()));
     }
 
     // save the new vortons
@@ -3096,7 +3094,7 @@ void PlaneTask::getVelocityVector(Vector3d const &C, double coreradius, bool bMu
 
 bool PlaneTask::setLinearSolution()
 {
-    QString strange;
+    std::string strange;
 
     auto start = std::chrono::system_clock::now();
 
@@ -3104,11 +3102,11 @@ bool PlaneTask::setLinearSolution()
     m_pPA->makeUnitRHSVectors();
 
     auto end = std::chrono::system_clock::now();
-    int duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
     start = end;
-    strange = QString::asprintf("       done in %.3f s\n", double(duration)/1000.0);
+    strange = std::format("       done in {:.3f} s\n", double(duration)/1000.0);
 
-    traceLog(strange);
+    traceStdLog(strange);
 
     if (isCancelled()) return true;
 
@@ -3118,9 +3116,9 @@ bool PlaneTask::setLinearSolution()
     end = std::chrono::system_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
     start = end;
-    strange = QString::asprintf("       done in %.3f s\n", double(duration)/1000.0);
+    strange = std::format("       done in {:.3f} s\n", double(duration)/1000.0);
 
-    traceLog(strange);
+    traceStdLog(strange);
 
     if(m_pPA->m_bMatrixError)
     {
@@ -3138,8 +3136,8 @@ bool PlaneTask::setLinearSolution()
         end = std::chrono::system_clock::now();
         duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         start = end;
-        strange = QString::asprintf("    done in %.3f s\n", double(duration)/1000.0);
-        traceLog(strange);
+        strange = std::format("    done in {:.3f} s\n", double(duration)/1000.0);
+        traceStdLog(strange);
 
         if(m_pPA->m_bMatrixError) return false;
     }
@@ -3157,8 +3155,8 @@ bool PlaneTask::setLinearSolution()
     end = std::chrono::system_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
     start = end;
-    strange = QString::asprintf("         done in %.3f s\n", double(duration)/1000.0);
-    traceLog(strange);
+    strange = std::format("         done in {:.3f} s\n", double(duration)/1000.0);
+    traceStdLog(strange);
     if (isCancelled()) return true;
 
     traceStdLog("   Back-substituting RHS...");
@@ -3168,9 +3166,9 @@ bool PlaneTask::setLinearSolution()
     end = std::chrono::system_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
     start = end;
-    strange = QString::asprintf("             done in %.3f s\n", double(duration)/1000.0);
+    strange = std::format("             done in {:.3f} s\n", double(duration)/1000.0);
 
-    traceLog(strange);
+    traceStdLog(strange);
 
 //    listArrays(m_pPA->m_uRHS, m_pPA->m_wRHS);
 

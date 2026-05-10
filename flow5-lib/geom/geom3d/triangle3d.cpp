@@ -23,8 +23,9 @@ flow5 application
         *****************************************************************************/
 
 
-#include <QString>
+#include <format>
 
+#include <format>
 
 #include <triangle3d.h>
 
@@ -169,8 +170,8 @@ void Triangle3d::setTriangle()
 
 std::string Triangle3d::properties(bool bLong) const
 {
-    QString props;
-    QString strange;
+    std::string props;
+    std::string strange;
 
     if(m_bNullTriangle)
     {
@@ -178,38 +179,38 @@ std::string Triangle3d::properties(bool bLong) const
         return "";
     }
 
-    strange = QString::asprintf("  Area    = %9g ", m_SignedArea);
+    strange = std::format("  Area    = {:9g} ", m_SignedArea);
     props.append(strange).append("\n");
 
-    strange = QString::asprintf("  Max. edge length = %9g ", maxEdgeLength());
+    strange = std::format("  Max. edge length = {:9g} ", maxEdgeLength());
     strange.append("\n");
     props += strange;
 
-    strange = QString::asprintf("  Min. edge length = %9g ", minEdgeLength());
+    strange = std::format("  Min. edge length = {:9g} ", minEdgeLength());
     strange.append("\n");
     props += strange;
 
     if(bLong)
     {
-        strange = QString::asprintf("  CoG     = (%7g, %7g, %7g) ", CoG_g().x, CoG_g().y, CoG_g().z);
+        strange = std::format("  CoG     = ({:7g}, {:7g}, {:7g}) ", CoG_g().x, CoG_g().y, CoG_g().z);
         strange += "\n";
         props.append(strange);
 
         for(int in=0; in<3; in++)
         {
-            strange = QString::asprintf("  Node(%d) = (%7g, %7g, %7g) ", in, m_S[in].x, m_S[in].y, m_S[in].z);
+            strange = std::format("  Node({:d}) = ({:7g}, {:7g}, {:7g}) ", in, m_S[in].x, m_S[in].y, m_S[in].z);
             strange.append("\n");
             props.append(strange);
         }
 
-        strange = QString::asprintf("  Vertex indexes:  %4d  %4d  %4d\n", m_S[0].index(), m_S[1].index(), m_S[2].index());
+        strange = std::format("  Vertex indexes:  {:4d}  {:4d}  {:4d}\n", m_S[0].index(), m_S[1].index(), m_S[2].index());
         props.append(strange);
 
-        strange = QString::asprintf("  Neighbours:      %4d  %4d  %4d\n", m_Neighbour[0], m_Neighbour[1], m_Neighbour[2]);
+        strange = std::format("  Neighbours:      {:4d}  {:4d}  {:4d}\n", m_Neighbour[0], m_Neighbour[1], m_Neighbour[2]);
         props.append(strange);
     }
 
-    return props.toStdString();
+    return props;
 }
 
 

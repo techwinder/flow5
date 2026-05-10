@@ -24,7 +24,6 @@
 
 #pragma once
 
-#include <QDataStream>
 
 #include <fl5lib_global.h>
 
@@ -68,8 +67,6 @@ struct FL5LIB_EXPORT fl5Color
 
     fl5Color darker(int f) const;
 
-    // in place replacement for QColor serialization
-    void serialize(QDataStream &stream, bool bIsStoring);
 };
 
 

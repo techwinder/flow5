@@ -3,7 +3,8 @@
 #    https://flow5.tech/docs/flow5_doc/Source/Compilation.html
 
 
-QT       -= gui
+CONFIG -= app_bundle
+CONFIG -= qt
 
 TARGET = XFoil
 TEMPLATE = lib

@@ -29,18 +29,17 @@
 
 #include "foilexplorer.h"
 
-#include <globals/mainframe.h>
-#include <modules/xdirect/menus/xdirectmenus.h>
-#include <modules/xdirect/view2d/dfoilwt.h>
-#include <modules/xdirect/xdirect.h>
 
-#include <core/saveoptions.h>
-#include <core/xflcore.h>
 #include <api/foil.h>
+#include <api/geom_params.h>
 #include <api/objects2d.h>
 #include <api/oppoint.h>
 #include <api/polar.h>
-#include <api/geom_params.h>
+#include <api/utils-io.h>
+
+#include <core/saveoptions.h>
+#include <core/xflcore.h>
+#include <globals/mainframe.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <interfaces/widgets/line/linebtn.h>
 #include <interfaces/widgets/line/linemenu.h>
@@ -48,6 +47,9 @@
 #include <interfaces/widgets/mvc/objecttreedelegate.h>
 #include <interfaces/widgets/mvc/objecttreeitem.h>
 #include <interfaces/widgets/mvc/objecttreemodel.h>
+#include <modules/xdirect/menus/xdirectmenus.h>
+#include <modules/xdirect/view2d/dfoilwt.h>
+#include <modules/xdirect/xdirect.h>
 
 
 MainFrame *FoilExplorer::s_pMainFrame = nullptr;

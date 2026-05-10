@@ -36,7 +36,9 @@
 #include <api/boatpolar.h>
 #include <api/sailobjects.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
+
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/poppctrls/opp3dscalesctrls.h>
 #include <interfaces/opengl/controls/fine3dcontrols.h>

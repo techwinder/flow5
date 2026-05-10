@@ -23,7 +23,7 @@
 *****************************************************************************/
 
 
-#define _MATH_DEFINES_DEFINED
+
 
 #include <chrono>
 #include <thread>
@@ -554,10 +554,10 @@ void Surface::getSidePoints1_task(int i, int tmp_nPoints, Node *nodeA, Node *nod
             }
         }
     }
-/*    qDebug("AB  %13g  %13g  %13g  %13g  %13g  %13g",
+/*    qDebug("AB  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}",
            nodeA->normal().x, nodeA->normal().y, nodeA->normal().z,
            nodeB->normal().x, nodeB->normal().y, nodeB->normal().z);*/
-//    qDebug("normals  %13g  %13g", nodeA->normal().norm(), nodeB->normal().norm());
+//    qDebug("normals  {:13g}  {:13g}", nodeA->normal().norm(), nodeB->normal().norm());
 }
 
 
@@ -596,7 +596,7 @@ void Surface::getSidePoints_2(xfl::enumSurfacePosition pos,
 
     std::vector<Node> nodeA(xPointsA.size());
     std::vector<Node> nodeB(xPointsB.size());
-    for(uint i=0; i<xPointsA.size(); i++)
+    for(unsigned int i=0; i<xPointsA.size(); i++)
     {
         double xRelA = xPointsA.at(i);
         double xRelB = xPointsB.at(i);
@@ -604,10 +604,10 @@ void Surface::getSidePoints_2(xfl::enumSurfacePosition pos,
     }
 
 /*    auto t1 = std::chrono::high_resolution_clock::now();
-    int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    qDebug("Surface::getSidePoints_2 %gms", double(duration)/1000.0);
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+    qDebug("Surface::getSidePoints_2 {:g}ms", double(duration)/1000.0);
 */
-    for(uint i=0; i<xPointsA.size(); i++)
+    for(unsigned int i=0; i<xPointsA.size(); i++)
     {
         PtA[i].set(nodeA.at(i));
         PtB[i].set(nodeB.at(i));
@@ -875,8 +875,8 @@ void Surface::makeSideNodes(Fuse const*pTranslatedFuse, bool bDebug)
     if(bDebug)
     {
         auto t1 = std::chrono::high_resolution_clock::now();
-        int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-        qDebug("Surface::makeSideNodes %gms", double(duration)/1000.0);
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+        std::cout << std::format("Surface::makeSideNodes {:g} ms", double(duration)/1000.0) << std::endl;
     }
 
     //merge trailing edge nodes in case the foil has a T.E. gap
@@ -893,8 +893,8 @@ void Surface::makeSideNodes(Fuse const*pTranslatedFuse, bool bDebug)
     if(bDebug)
     {
         s_DebugPts.clear();
-        for(uint i=0; i<m_SideA_Top.size(); i++) s_DebugPts.push_back(m_SideA_Top.at(i));
-        for(uint i=0; i<m_SideA_Top.size(); i++) s_DebugPts.push_back(m_SideB_Top.at(i));
+        for(unsigned int i=0; i<m_SideA_Top.size(); i++) s_DebugPts.push_back(m_SideA_Top.at(i));
+        for(unsigned int i=0; i<m_SideA_Top.size(); i++) s_DebugPts.push_back(m_SideB_Top.at(i));
     }
 }
 
@@ -1226,9 +1226,8 @@ void Surface::makeTriPanels(std::vector<Panel3> &panel3list, std::vector<Node> &
 
     // add this surface's points to the array of nodes
     // always duplicate the nodes in the xz plane, in case there is a fuse in between
-    bool bMakeLeftSideNodes = m_bIsTipLeft || (m_bIsCenterSurf&&m_bIsRightSurf);
-
-    bMakeLeftSideNodes = true;
+//    bool bMakeLeftSideNodes = m_bIsTipLeft || (m_bIsCenterSurf&&m_bIsRightSurf);
+    bool bMakeLeftSideNodes = true;
 
     int n0 = int(nodes.size());
     if(!bMakeLeftSideNodes)

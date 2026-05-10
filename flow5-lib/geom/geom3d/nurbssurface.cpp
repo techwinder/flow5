@@ -51,7 +51,6 @@ NURBSSurface::NURBSSurface(int uAxis, int vAxis)
     m_iuDegree = 2;
     m_ivDegree = 2;
 
-    m_iOutput = 31;
 
     m_BunchAmp = 0.0;
     m_BunchDist = 0.5;
@@ -74,7 +73,7 @@ void NURBSSurface::copy(NURBSSurface const & aSurface)
 {
     m_iuDegree    = aSurface.m_iuDegree;
     m_ivDegree    = aSurface.m_ivDegree;
-    m_iOutput     = aSurface.m_iOutput;
+
     m_BunchAmp    = aSurface.m_BunchAmp;
     m_BunchDist   = aSurface.m_BunchDist;
     m_EdgeWeightu = aSurface.m_EdgeWeightu;
@@ -537,74 +536,6 @@ double NURBSSurface::hoopLength(double u, int nDiscretization)
 }
 
 
-bool NURBSSurface::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    int nIntSpares=0;
-    int nDbleSpares=0;
-    int n=0;
-    double dble=0;
-
-    // 500001 : new fl5 format
-    int ArchiveFormat = 500001;
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-        m_Color.serialize(ar, true);
-        ar << m_iuDegree<<m_ivDegree;
-        ar << m_BunchAmp << m_BunchDist;
-        ar << m_EdgeWeightu << m_EdgeWeightv;
-        ar << m_uAxis << m_vAxis;
-        ar << m_iOutput;
-
-
-        ar << frameCount();
-        for(int k=0; k<frameCount(); k++)
-        {
-            frame(k).serializeFrameFl5(ar, bIsStoring);
-        }
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat!=500001) return false;
-        m_Color.serialize(ar, false);
-        ar >> m_iuDegree >> m_ivDegree;
-        ar >> m_BunchAmp >> m_BunchDist;
-        ar >> m_EdgeWeightu >> m_EdgeWeightv;
-        ar >> m_uAxis >> m_vAxis;
-        ar >> m_iOutput;
-
-
-        clearFrames();
-        int nFrames=0;
-        ar >> nFrames;
-        for(int k=0; k<nFrames; k++)
-        {
-            appendNewFrame();
-            Frame &pFrame = m_Frame.back();
-            pFrame.serializeFrameFl5(ar, bIsStoring);
-            pFrame.setuPosition(m_uAxis);
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-    }
-    return true;
-}
-
-
 Vector3d NURBSSurface::leadingEdgeAxis() const
 {
     return (m_Frame.back().firstControlPoint() - m_Frame.front().firstControlPoint());
@@ -683,7 +614,7 @@ void NURBSSurface::makeDefaultNurbs()
 
 int NURBSSurface::indexof(Frame *pFrame) const
 {
-    for(uint i=0; i<m_Frame.size(); i++)
+    for(unsigned int i=0; i<m_Frame.size(); i++)
     {
         if(&m_Frame.at(i)==pFrame) return i;
     }
@@ -802,7 +733,7 @@ void NURBSSurface::insertPoint(int iSel)
 
 void NURBSSurface::translate(Vector3d const &T)
 {
-    for(uint i=0; i<m_Frame.size(); i++)
+    for(unsigned int i=0; i<m_Frame.size(); i++)
     {
         m_Frame[i].translate(T);
     }
@@ -1038,8 +969,8 @@ bool NURBSSurface::intersect(Vector3d const&A, Vector3d const&B, double &u, doub
     v = (vmin+vmax)/2.0;
 /*
     auto t1 = std::chrono::high_resolution_clock::now();
-    int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    qDebug("Intersection(%d):  u=%9g  v=%9g  %gms", iter, u, v, double(duration)/1000.0);
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+    qDebug("Intersection({:d}):  u={:9g}  v={:9g}  {:g}ms", iter, u, v, double(duration)/1000.0);
 */
     return true;
 }

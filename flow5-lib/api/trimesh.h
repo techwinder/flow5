@@ -83,9 +83,6 @@ class FL5LIB_EXPORT TriMesh : public XflMesh
 
         void checkElementSize(double minsize, std::vector<int> &elements, std::vector<double> &size);
 
-        void serializePanelsFl5(QDataStream &ar, bool bIsStoring);
-        void serializeMeshFl5(  QDataStream &ar, bool bIsStoring);
-
         void makeMeshFromTriangles(const std::vector<Triangle3d> &triangulation, int firstindex, xfl::enumSurfacePosition pos, std::string &logmsg, const std::string &prefix);
         void makeMeshTriangleBlock();
 
@@ -142,12 +139,6 @@ class FL5LIB_EXPORT TriMesh : public XflMesh
 
     private:
         void connectPanelBlock(int iBlock, bool bConnectTE);
-
-        void savePanels(QDataStream &ar);
-        void loadPanels(QDataStream &ar);
-
-        void saveMesh(QDataStream &ar);
-        void loadMesh(QDataStream &ar);
 
     private:
         std::vector<Panel3> m_Panel3;

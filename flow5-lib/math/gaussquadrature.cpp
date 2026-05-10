@@ -23,7 +23,9 @@
 *****************************************************************************/
 
 #include <iostream>
-#include <QString>
+#include <format>
+#include <format>
+
 
 
 #include <gaussquadrature.h>
@@ -435,7 +437,7 @@ void testPolynomial()
     for(int i=0; i<=10; i++)
     {
         double t = double(i)/10.0;
-        std::cout << QString::asprintf("%13.7f  %13.7f  %13.7f  ", t, gq.polynomial(n, p.data(), t), gq.polynomialDerivative(n, p.data(), t)).toStdString() << std::endl;
+        std::cout << std::format("{:13.7f}  {:13.7f}  {:13.7f}  ", t, gq.polynomial(n, p.data(), t), gq.polynomialDerivative(n, p.data(), t)) << std::endl;
     }
 }
 
@@ -444,7 +446,7 @@ void testQuadrature(int n)
 {
     GaussQuadrature gq;
     gq.makeCoefficients(n);
-    std::cout << QString::asprintf("Sum sin(x)cos(x) [0, PI/2] = %g", gq.quadrature(func, 0, PI/2)).toStdString() << std::endl;
+    std::cout << std::format("Sum sin(x)cos(x) [0, PI/2] = {:g}", gq.quadrature(func, 0, PI/2)) << std::endl;
 }
 
 

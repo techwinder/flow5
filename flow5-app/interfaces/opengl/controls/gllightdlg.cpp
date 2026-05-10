@@ -31,6 +31,8 @@
 #include <QTabWidget>
 
 #include "gllightdlg.h"
+
+#include <core/qunits.h>
 #include <interfaces/opengl/views/gl3dview.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/exponentialslider.h>

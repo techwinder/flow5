@@ -24,7 +24,6 @@
 
 
 #pragma once
-#include <QDataStream>
 
 #include <segment3d.h>
 
@@ -42,7 +41,6 @@ class FL5LIB_EXPORT Vortex : public Segment3d
         void setCirculation(double gamma) {m_Circulation=gamma;}
         double circulation() const {return m_Circulation;}
 
-        bool serializeFl5(QDataStream &ar, bool bIsStoring);
 
         void getInducedVelocity(Vector3d const &C, Vector3d &vel, double coreradius, enumVortex vortexmodel=POTENTIAL) const;
 

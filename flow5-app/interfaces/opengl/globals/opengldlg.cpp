@@ -62,7 +62,7 @@
 #include <interfaces/opengl/testgl/gl3dsagittarius.h>
 #include <interfaces/opengl/testgl/gl3dspace.h>
 
-#include <api/trace.h>
+#include <core/trace.h>
 
 QByteArray OpenGlDlg::s_Geometry;
 QByteArray OpenGlDlg::s_HSplitterSizes;

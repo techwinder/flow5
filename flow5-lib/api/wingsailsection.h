@@ -31,7 +31,6 @@
 
 #pragma once
 
-#include <QDataStream>
 
 #include <string>
 
@@ -52,7 +51,6 @@ class FL5LIB_EXPORT WingSailSection
 
         void sectionPoint(double t, xfl::enumSurfacePosition pos, double &x, double &y) const;
 
-        bool serializeFl5(QDataStream &ar, bool bIsStoring);
 
         std::string const &foilName()  const {return m_FoilName;}
         int nxPanels() const {return m_NXPanels;}

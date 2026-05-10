@@ -34,11 +34,13 @@
 #include <api/constants.h>
 #include <api/geom_global.h>
 #include <api/planeopp.h>
+#include <api/planepolar.h>
 #include <api/planexfl.h>
 #include <api/units.h>
-#include <api/utils.h>
-#include <api/planepolar.h>
+#include <api/utils-io.h>
+
 #include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <modules/xplane/glview/gl3dxplaneview.h>

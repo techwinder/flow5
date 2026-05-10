@@ -22,6 +22,9 @@
 
 *****************************************************************************/
 
+#define _MATH_DEFINES_DEFINED
+
+
 #include <QDebug>
 #include <QThread>
 
@@ -45,7 +48,7 @@
 #include <api/fusenurbs.h>
 #include <api/gmshparams.h>
 #include <api/triangle3d.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <api/vector3d.h>
 #include <api/wingxfl.h>
 #include <api/sailocc.h>
@@ -408,17 +411,17 @@ bool gmesh::importBRepList(std::vector<std::string> const &breps, std::string &b
         }
         catch(std::runtime_error &e)
         {
-            std::cout <<e.what() << std::endl << std::endl;
+            std::cerr <<e.what() << std::endl << std::endl;
             return false;
         }
         catch(std::exception &e)
         {
-            std::cout <<e.what() << std::endl << std::endl;
+            std::cerr <<e.what() << std::endl << std::endl;
             return false;
         }
         catch(...)
         {
-            std::cout <<"Error importing BRepList" << std::endl << std::endl;
+            std::cerr <<"Error importing BRepList" << std::endl << std::endl;
             return false;
         }
 
@@ -431,12 +434,12 @@ bool gmesh::importBRepList(std::vector<std::string> const &breps, std::string &b
     }    
     catch(std::runtime_error &e)
     {
-        std::cout <<e.what() << std::endl << std::endl;
+        std::cerr <<e.what() << std::endl << std::endl;
         return false;
     }
     catch (std::exception &e)
     {
-        std::cout << "Gmsh exception: " << e.what() << EOLstr;
+        std::cerr << "Gmsh exception: " << e.what() << EOLstr;
         return false;
     }
     catch(...)
@@ -508,12 +511,12 @@ bool gmesh::BReptoGmsh(std::string const &brep)
     }
     catch(std::runtime_error &e)
     {
-        std::cout <<"std::runtime_error: "<<e.what() << std::endl << std::endl;
+        std::cerr <<"std::runtime_error: "<<e.what() << std::endl << std::endl;
         return false;
     }
     catch(std::exception &e)
     {
-        std::cout <<"std::exception: "<<e.what() << std::endl << std::endl;
+        std::cerr <<"std::exception: "<<e.what() << std::endl << std::endl;
         return false;
     }
     catch(...)
@@ -539,12 +542,12 @@ bool gmesh::BRepstoGmsh(const std::vector<std::string> &brep)
         }
         catch(std::runtime_error &e)
         {
-            std::cout <<"std::runtime_error: "<<e.what() << std::endl << std::endl;
+            std::cerr <<"std::runtime_error: "<<e.what() << std::endl << std::endl;
             return false;
         }
         catch(std::exception &e)
         {
-            std::cout <<"std::exception: "<<e.what() << std::endl << std::endl;
+            std::cerr <<"std::exception: "<<e.what() << std::endl << std::endl;
             return false;
         }
         catch(...)
@@ -645,12 +648,12 @@ bool gmesh::scaleBrep(std::string const&brep, Vector3d const &O, double sx, doub
     }
     catch(std::runtime_error &e)
     {
-        std::cout <<"std::runtime_error: "<<e.what() << std::endl << std::endl;
+        std::cerr <<"std::runtime_error: "<<e.what() << std::endl << std::endl;
         return false;
     }
     catch(std::exception &e)
     {
-        std::cout <<"std::exception: "<<e.what() << std::endl << std::endl;
+        std::cerr <<"std::exception: "<<e.what() << std::endl << std::endl;
         return false;
     }
     catch(...)
@@ -679,12 +682,12 @@ bool gmesh::translateBrep(std::string const&brep, Vector3d const &T, std::string
     }
     catch(std::runtime_error &e)
     {
-        std::cout <<"std::runtime_error: "<<e.what() << std::endl << std::endl;
+        std::cerr <<"std::runtime_error: "<<e.what() << std::endl << std::endl;
         return false;
     }
     catch(std::exception &e)
     {
-        std::cout <<"std::exception: "<<e.what() << std::endl << std::endl;
+        std::cerr <<"std::exception: "<<e.what() << std::endl << std::endl;
         return false;
     }
     catch(...)
@@ -1032,7 +1035,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
     gmsh::model::occ::fragment(Facedimtags, Ldimtags, outDimTags, outDimTagsMap, -1, false, false); // slow...
 
     auto t1 = std::chrono::high_resolution_clock::now();
-    int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
     qDebug() << QString::asprintf("gmesh::fragment: %7g ms\n", float(duration)/1000.0);
 
     gmsh::model::occ::synchronize();
@@ -1064,7 +1067,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
         auto t0 = std::chrono::high_resolution_clock::now();
         gmsh::model::occ::fragment(Facedimtags, {Ldimtags[k]}, outDimTags, outDimTagsMap, -1, false, false);
         auto t1 = std::chrono::high_resolution_clock::now();
-        int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
         qDebug("gmesh::fragment: %7g ms", float(duration)/1000.0);
 
         gmsh::model::occ::synchronize();// slow...

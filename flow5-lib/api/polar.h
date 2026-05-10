@@ -141,9 +141,6 @@ class FL5LIB_EXPORT Polar : public XflObject
         bool isRubberChordPolar() const {return m_Type==xfl::T3POLAR;}
         bool isControlPolar()     const {return m_Type==xfl::T6POLAR;}
 
-        bool serializePolarXFL(QDataStream &ar, bool bIsStoring);
-        bool serializePolarFl5(QDataStream &ar, bool bIsStoring);
-
         const std::vector<double> &getVariable(int iVar) const;
         bool hasData() const {return m_Alpha.size()>0;}
         int dataSize() const {return int(m_Alpha.size());}

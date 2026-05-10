@@ -23,13 +23,11 @@
 *****************************************************************************/
 
 
-#define _MATH_DEFINES_DEFINED
 
-#include <QString>
-#include <QDebug>
 
+#include <format>
 #include <thread>
-//#include <iostream>
+#include <iostream>
 
 
 #include <p4analysis.h>
@@ -104,7 +102,7 @@ void P4Analysis::makeLocalVelocities(std::vector<double> const &uRHS, const std:
         if(isCancelled()) return;
     }
 
-    for (uint i4=0; i4<vRHS.size(); i4++)
+    for (unsigned int i4=0; i4<vRHS.size(); i4++)
     {
         if(!m_Panel4.at(i4).isMidPanel() || !m_pPolar3d->isVLM())
         {
@@ -113,7 +111,7 @@ void P4Analysis::makeLocalVelocities(std::vector<double> const &uRHS, const std:
         if(isCancelled()) return;
     }
 
-    for (uint i4=0; i4<wRHS.size(); i4++)
+    for (unsigned int i4=0; i4<wRHS.size(); i4++)
     {
         if(!m_Panel4.at(i4).isMidPanel() || !m_pPolar3d->isVLM())
         {
@@ -131,7 +129,7 @@ void P4Analysis::combineLocalVelocities(double alpha, double beta, std::vector<V
     double sina = sin(alpha*PI/180.0);
     double cosb = cos(-beta*PI/180.0); //change of beta sign introduced in v7.24 to be consistent with AVL
     double sinb = sin(-beta*PI/180.0); //change of beta sign introduced in v7.24 to be consistent with AVL
-    for(uint i=0; i<VLocal.size(); i++)
+    for(unsigned int i=0; i<VLocal.size(); i++)
     {
         VLocal[i].x = cosa*cosb* m_uVLocal.at(i).x + sinb*m_vVLocal.at(i).x + sina*cosb* m_wVLocal.at(i).x;
         VLocal[i].y = cosa*cosb* m_uVLocal.at(i).y + sinb*m_vVLocal.at(i).y + sina*cosb* m_wVLocal.at(i).y;
@@ -157,9 +155,9 @@ int P4Analysis::allocateRHS4(int nRHS)
         m_Mu.resize(size);
         m_Cp.resize(size);
 
-        memsize += 5*uint(size)*sizeof(double);
+        memsize += 5*size*sizeof(double);
 
-        memsize += uint(size)*sizeof(Vector3d);
+        memsize += size*sizeof(Vector3d);
     }
     catch(std::exception &e)
     {
@@ -175,7 +173,7 @@ int P4Analysis::allocateRHS4(int nRHS)
     m_rRHS.resize(nPanel4);
     m_cRHS.resize(nPanel4);
 
-    memsize += 14 * uint(nPanel4) * sizeof(double);
+    memsize += 14 * nPanel4 * sizeof(double);
 
     std::fill(m_uRHS.begin(), m_uRHS.end(), 0);
     std::fill(m_vRHS.begin(), m_vRHS.end(), 0);
@@ -188,7 +186,7 @@ int P4Analysis::allocateRHS4(int nRHS)
     m_uVLocal.resize(nPanel4);
     m_vVLocal.resize(nPanel4);
     m_wVLocal.resize(nPanel4);
-    memsize += 2 * uint(nPanel4) * sizeof(Vector3d);
+    memsize += 2 * nPanel4 * sizeof(Vector3d);
 
     return memsize;
 }
@@ -270,17 +268,17 @@ void P4Analysis::makeMatrixBlock(int iBlock)
 
                 if(std::isnan(V.x) || std::isnan(V.y) || std::isnan(V.z))
                 {
-                    QString strange;
-                    strange = QString::asprintf("      *** numerical error when calculating the influence of panel %d on panel %d ***\n", k4, i4);
-                    traceLog(strange);
+                    std::string strange;
+                    strange = std::format("      *** numerical error when calculating the influence of panel {:d} on panel {:d} ***\n", k4, i4);
+                    traceStdLog(strange);
                     m_bMatrixError = true;
                     return;
                 }
 
                 double d =  V.dot(p4i.normal());
 
-                if(s_bDoublePrecision) m_aijd[uint(i4*N+k4)] = d;
-                else                   m_aijf[uint(i4*N+k4)] = float(d);
+                if(s_bDoublePrecision) m_aijd[i4*N+k4] = d;
+                else                   m_aijf[i4*N+k4] = float(d);
 
 /*                if(!p4i.isMidPanel())
                 {
@@ -294,15 +292,15 @@ void P4Analysis::makeMatrixBlock(int iBlock)
 
                 if(std::isnan(phi))
                 {
-                    QString strange;
-                    strange = QString::asprintf("      *** numerical error when calculating the influence of panel %d on panel %d ***\n", k4, i4);
-                    traceLog(strange);
+                    std::string strange;
+                    strange = std::format("      *** numerical error when calculating the influence of panel {:d} on panel {:d} ***\n", k4, i4);
+                    traceStdLog(strange);
                     m_bMatrixError = true;
                     return;
                 }
 
-                if(s_bDoublePrecision)  m_aijd[uint(i4*N+k4)] = phi;
-                else                    m_aijf[uint(i4*N+k4)] = float(phi);
+                if(s_bDoublePrecision)  m_aijd[i4*N+k4] = phi;
+                else                    m_aijf[i4*N+k4] = float(phi);
             }
 
             if(isCancelled()) break;
@@ -563,8 +561,8 @@ void P4Analysis::makeWakeMatrixBlock(int iBlock)
                     //we do not add the term Phi_inf_KWPUM - Phi_inf_KWPLM (eq. 44) since it is 0, thin edge
                 }
 
-                if(s_bDoublePrecision) m_aijd[uint(i4*Size+k4)] += MatWakeContrib;
-                else                   m_aijf[uint(i4*Size+k4)] += float(MatWakeContrib);
+                if(s_bDoublePrecision) m_aijd[i4*Size+k4] += MatWakeContrib;
+                else                   m_aijf[i4*Size+k4] += float(MatWakeContrib);
             }
             if(isCancelled()) return;
         }
@@ -835,7 +833,7 @@ void P4Analysis::getFarFieldVelocity(const Vector3d &C, const std::vector<Panel4
 
     Vector3d VL, VR, A, B;
     double fardist = m_pPolar3d->TrefftzDistance();
-    for (uint i4=0; i4<panel4.size(); i4++)
+    for (unsigned int i4=0; i4<panel4.size(); i4++)
     {
         if(isCancelled()) return;
         Panel4 const &p4 = panel4.at(i4);
@@ -852,7 +850,7 @@ void P4Analysis::getFarFieldVelocity(const Vector3d &C, const std::vector<Panel4
             // circulations of each seg are oppposite
             VT +=  VR*(-Mu[i4]);
 
-//if(bTrace) qDebug("  %3d  %13g ---  %13g   %13g   %13g  ---  %13g   %13g   %13g", i4,  Mu[i4], VL.x, VL.y, VL.z, VR.x, VR.y, VR.z);
+//if(bTrace) qDebug("  {:3d}  {:13g} ---  {:13g}   {:13g}   {:13g}  ---  {:13g}   {:13g}   {:13g}", i4,  Mu[i4], VL.x, VL.y, VL.z, VR.x, VR.y, VR.z);
         }
     }
     VT *=  4.0*PI;
@@ -960,7 +958,7 @@ void P4Analysis::VLMGetVortexInfluence(Panel4 const &p4, Vector3d const &C, doub
 //            double BB1x = p4.m_Node[2].x + (p4.m_Node[2].x-p4.VA.x)/3.0;
 //            BB1.x = p4.m_Node[2].x + (p4.m_Node[2].x-p4.VA.x)/3.0;
              BB1.x = p4.TB().x + (p4.TB().x-p4.m_VB.x)/3.0;
-//             qDebug("  %13g  %13g", BB1x, BB1.x);
+//             qDebug("  {:13g}  {:13g}", BB1x, BB1.x);
             BB1.y = p4.TB().y;
             BB1.z = p4.TB().z;
 
@@ -1445,7 +1443,7 @@ void P4Analysis::inducedForce(int nPanels, double QInf, double alpha, double bet
                 stripforce *= 2./QInf/QInf; //N/q
                 //____________________________
                 // Project on wind axes
-                //qDebug(" %2d  %13.7f  %13.7f  %13.7f  %13.7f",m, C.y, stripforce.x,stripforce.y,stripforce.z);
+                //qDebug(" {:2d}  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}",m, C.y, stripforce.x,stripforce.y,stripforce.z);
                 SpanResFF.m_Cl[m]  = stripforce.dot(surfacenormal) /SpanResFF.stripArea(m);
                 ForceBodyAxes     += stripforce;                           // N/q
                 SpanResFF.m_F[m]   = stripforce * qDyn;                       // N,  V=1
@@ -1644,8 +1642,8 @@ void P4Analysis::trefftzDrag(int nPanels, double QInf, double alpha, double beta
     FFForce.set(ForceBodyAxes);    // N/q, body axes
 
 /*    auto t1 = std::chrono::high_resolution_clock::now();
-    int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    qDebug("P4Analysis::trefftzDrag %g ms", double(duration)/1000.0);*/
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+    qDebug("P4Analysis::trefftzDrag {:g} ms", double(duration)/1000.0);*/
 }
 
 
@@ -1999,8 +1997,8 @@ bool P4Analysis::computeTrimmedConditions(double mass, Vector3d const &CoG, doub
     if(Lift<=PRECISION)
     {
         u0 = -100.0;
-        QString strong = QString::asprintf("        Found a negative lift for Alpha=%.3f.... skipping the angle...\n", alphaeq);
-        traceLog("\n"+strong);
+        std::string strong = std::format("        Found a negative lift for Alpha={:.3f}.... skipping the angle...\n", alphaeq);
+        traceStdLog("\n"+strong);
         m_bWarning = true;
         return false;
     }
@@ -2169,7 +2167,7 @@ void P4Analysis::testResults(double alpha, double beta, double QInf) const
         Vector3d C = p4.CoG()+ p4.normal() * d;
         getVelocityVector(C, mu, sigma, Vel, 0.0, false);
         Vel += VInf;
-        qDebug(" %13g  %13g", d, Vel.dot(p4.normal()));
+        std::cout << std::format(" {:13g}  {:13g}", d, Vel.dot(p4.normal()))<< EOLstr;
     }
 }
 

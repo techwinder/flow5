@@ -70,8 +70,8 @@ class FL5LIB_EXPORT Boat : public fl5Object
         void clearSails();
         void clearHulls();
 
-        bool serializeBoatFl5(QDataStream &ar, bool bIsStoring);
-
+        std::vector <Sail*> &sails() {return m_Sail;}
+        std::vector <Sail*> const &sails() const {return m_Sail;}
         int nSails() const {return int(m_Sail.size());}
 
         Fuse *hull(std::string const &BodyName) const;
@@ -86,6 +86,8 @@ class FL5LIB_EXPORT Boat : public fl5Object
         bool deleteHull(int iHull);
         void deleteFuse(Fuse *pFuse);
 
+        std::vector <Fuse*> &hulls() {return m_Hull;}
+        std::vector <Fuse*> const &hulls() const {return m_Hull;}
 
         int nHulls() const {return int(m_Hull.size());}
         int xflFuseCount() const;

@@ -26,6 +26,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 #include <fl5lib_global.h>
 
@@ -41,7 +42,6 @@ class FL5LIB_EXPORT StabDerivatives
         void resizeControlDerivatives(int n);
 
         void computeNDStabDerivatives();
-        bool serializeFl5(QDataStream &ar, bool bIsStoring);
 
         //--------------- VARIABLES --------------
 

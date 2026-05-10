@@ -30,6 +30,7 @@
 
 #include <api/planepolar.h>
 #include <api/units.h>
+#include <core/qunits.h>
 #include <interfaces/graphs/containers/splinedgraphwt.h>
 #include <interfaces/graphs/controls/graphoptions.h>
 #include <interfaces/graphs/graph/graph.h>

@@ -79,6 +79,7 @@
 #include <api/xflmesh.h>
 #include <api/sail.h>
 
+#include <core/qunits.h>
 #include <interfaces/mesh/meshevent.h>
 //#include <interfaces/mesh/slg3d.h>
 

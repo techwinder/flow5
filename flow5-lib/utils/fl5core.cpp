@@ -23,10 +23,9 @@
 *****************************************************************************/
 
 
-#include <QString>
 
 
-#include <QString>
+#include <format>
 
 
 #include <fl5core.h>
@@ -35,10 +34,10 @@
 
 std::string fl5::versionName(bool bFull)
 {
-    QString vname;
-    vname = QString::asprintf("v%d.%d", MAJOR_VERSION, MINOR_VERSION);
+    std::string vname;
+    vname = std::format("v{:d}.{:d}", MAJOR_VERSION, MINOR_VERSION);
     if(bFull) vname = "flow5 "+vname;
-    return vname.toStdString();
+    return vname;
 }
 
 

@@ -39,7 +39,7 @@
 #include "batchxmldlg.h"
 
 #include <api/fl5core.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 #include <api/llttask.h>
 #include <api/objects3d.h>
 #include <api/plane.h>
@@ -52,6 +52,7 @@
 #include <api/xmlplanepolarwriter.h>
 
 #include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/analysisrangetable.h>

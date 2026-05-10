@@ -38,7 +38,9 @@
 #include <api/sail.h>
 #include <api/sailnurbs.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
+
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/boatedit/sailsectionview.h>
 #include <interfaces/editors/fuseedit/bodytransdlg.h>

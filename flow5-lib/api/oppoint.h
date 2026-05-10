@@ -33,7 +33,6 @@
 #pragma once
 
 
-#include <QDataStream>
 
 
 #include <xflobject.h>
@@ -109,9 +108,6 @@ class FL5LIB_EXPORT OpPoint : public XflObject
         bool isType4()           const {return m_PolarType==xfl::T4POLAR;}     /**< returns true if the polar is of the FIXEDAOAPOLAR type, false otherwise >*/
         bool isType6()           const {return m_PolarType==xfl::T6POLAR;}     /**< returns true if the polar is of the FIXEDAOAPOLAR type, false otherwise >*/
 
-        bool serializeOppXFL(QDataStream &ar, bool bIsStoring, int ArchiveFormat=0);
-        bool serializeOppFl5(QDataStream &ar, bool bIsStoring);
-
     public:
         xfl::enumPolarType m_PolarType;   /**< defines the type of the parent PlanePolar */
 
@@ -151,8 +147,8 @@ class FL5LIB_EXPORT OpPoint : public XflObject
         // BL data
         BLXFoil m_BLXFoil;          /**< BL data from an XFoil analysis */
 
-        std::vector<float> m_Cpi;
-        std::vector<float> m_Cpv;
+        std::vector<double> m_Cpi;
+        std::vector<double> m_Cpv;
         std::vector<double> m_Qv;             /**< the distribution of stream velocity on the surfaces for a viscous analysis */
         std::vector<double> m_Qi;             /**< the distribution of stream velocity on the surfaces for an inviscid analysis */
 

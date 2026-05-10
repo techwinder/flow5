@@ -23,7 +23,7 @@
 *****************************************************************************/
 
 
-#define _MATH_DEFINES_DEFINED
+
 
 #include <sailglobals.h>
 #include <vector3d.h>

@@ -31,9 +31,13 @@
 #include <QMenu>
 
 #include "pointmasstable.h"
-#include <api/units.h>
+
 #include <api/part.h>
+#include <api/units.h>
+
+#include <core/qunits.h>
 #include <interfaces/widgets/customwts/xfldelegate.h>
+
 
 PointMassTable::PointMassTable(QWidget *pParent) : CPTableView(pParent)
 {

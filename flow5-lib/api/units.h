@@ -25,7 +25,8 @@
 
 #pragma once
 
-#include <QString>
+#include <format>
+
 
 #include <string>
 #include <vector>
@@ -128,19 +129,6 @@ namespace Units
     FL5LIB_EXPORT inline int fluidUnitType() {return g_FluidUnitType;}
     FL5LIB_EXPORT inline void setFluidUnitType(int type) {g_FluidUnitType=type;}
 
-
-    // convenience conversion to QString
-    inline QString lengthUnitQLabel(int idx=-1)    {return QString::fromStdString(Units::lengthUnitLabel(idx));}
-    inline QString speedUnitQLabel(int idx=-1)     {return QString::fromStdString(Units::speedUnitLabel(idx));}
-    inline QString massUnitQLabel(int idx=-1)      {return QString::fromStdString(Units::massUnitLabel(idx));}
-    inline QString areaUnitQLabel(int idx=-1)      {return QString::fromStdString(Units::areaUnitLabel(idx));}
-    inline QString forceUnitQLabel(int idx=-1)     {return QString::fromStdString(Units::forceUnitLabel(idx));}
-    inline QString momentUnitQLabel(int idx=-1)    {return QString::fromStdString(Units::momentUnitLabel(idx));}
-    inline QString pressureUnitQLabel(int idx=-1)  {return QString::fromStdString(Units::pressureUnitLabel(idx));}
-    inline QString inertiaUnitQLabel(int idx=-1)   {return QString::fromStdString(Units::inertiaUnitLabel(idx));}
-
-    inline QString densityUnitQLabel()    {return QString::fromStdString(Units::densityUnitLabel());}
-    inline QString viscosityUnitQLabel()  {return QString::fromStdString(Units::viscosityUnitLabel());}
 
 }
 

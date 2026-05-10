@@ -58,8 +58,6 @@ class FL5LIB_EXPORT SailStl : public ExternalSail
 
         void makeSurface() override {}
 
-        bool serializeSailFl5(QDataStream &ar, bool bIsStoring) override;
-
 
         void makeTriangulation(int nx=s_iXRes, int nz=s_iZRes) override;
         void setTriangles(std::vector<Triangle3d> const &triangles) override;

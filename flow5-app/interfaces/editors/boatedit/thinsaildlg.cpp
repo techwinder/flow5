@@ -56,7 +56,7 @@ void ThinSailDlg::onRuledMesh()
     {
         m_ppto->onAppendQText("Making sail ruled mesh\n");
         m_pSail->makeRuledMesh(Vector3d()); // fast and automatic
-        m_ppto->onAppendQText(QString::asprintf("   made %d triangles\n\n", int(m_pSail->refTriangles().size())));
+        m_ppto->onAppendQText(QString::asprintf("   made %d triangles\n\n", int(m_pSail->triangles().size())));
     }
     else
     {

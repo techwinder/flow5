@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
+
 
 
 #include <sailwing.h>
@@ -80,6 +80,14 @@ void SailWing::makeDefaultSail()
 }
 
 
+void SailWing::resizeSections(int nSections)
+{
+    m_Section.resize(nSections);
+    m_Pos.resize(nSections);
+    m_Ry.resize(nSections);
+}
+
+
 void SailWing::resizeSections(int nSections, int )
 {
     if(nSections==sectionCount()) return;
@@ -87,8 +95,8 @@ void SailWing::resizeSections(int nSections, int )
 
     // leave only bot and top sections
     m_Section = {m_Section.front(), m_Section.back()};
-    m_Pos    = {m_Pos.front(), m_Pos.back()};
-    m_Ry          = {m_Ry.front(), m_Ry.back()};
+    m_Pos     = {m_Pos.front(), m_Pos.back()};
+    m_Ry      = {m_Ry.front(), m_Ry.back()};
 
     // rebuild as many sections as needed between bot and top sections
     int nNewSecs = nSections-sectionCount();
@@ -155,7 +163,7 @@ void SailWing::translate(const Vector3d &T)
 {
     Sail::translate(T);
 
-    for(uint is=0; is<m_Pos.size(); is++)
+    for(unsigned int is=0; is<m_Pos.size(); is++)
         m_Pos[is].translate(T);
     makeSurface();
 }
@@ -219,70 +227,6 @@ double SailWing::area() const
         S += dz*c;
     }
     return S;
-}
-
-
-bool SailWing::serializeSailFl5(QDataStream &ar, bool bIsStoring)
-{
-    Sail::serializeSailFl5(ar, bIsStoring);
-
-    int n(0);
-    int ArchiveFormat=500001;// identifies the format of the file
-    double dble(0);
-    int nIntSpares(0);
-    int nDbleSpares(0);
-
-    if(bIsStoring)
-    {
-        // storing code
-        ar << ArchiveFormat;
-
-        ar<<int(m_Section.size());
-        for(int i=0; i<sectionCount(); i++)
-        {
-            m_Section[i].serializeFl5(ar, bIsStoring);
-            ar << m_Pos[i].x<<m_Pos[i].y<<m_Pos[i].z;
-            ar << m_Ry[i];
-        }
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares; n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-
-        return true;
-    }
-    else
-    {
-        // loading code
-        ar >> ArchiveFormat;
-
-        if (ArchiveFormat!=500001)  return false;
-
-        ar>>n;
-        m_Section.resize(n);
-        m_Pos.resize(n);
-        m_Ry.resize(n);
-        for(int i=0; i<n; i++)
-        {
-            m_Section[i].serializeFl5(ar, bIsStoring);
-            ar >> m_Pos[i].x >> m_Pos[i].y >> m_Pos[i].z;
-            ar >> m_Ry[i];
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-        makeSurface();
-
-        return true;
-    }
 }
 
 
@@ -475,7 +419,7 @@ void SailWing::makeTriangulation(int nx, int )
     {
         std::vector<Vector3d> const &botpts = sectionpoints.at(is);
         std::vector<Vector3d> const &toppts = sectionpoints.at(is+1);
-        for(uint ipt=0; ipt<botpts.size()-1; ipt++)
+        for(unsigned int ipt=0; ipt<botpts.size()-1; ipt++)
         {
             Vector3d ptb0 = botpts.at(ipt);
             ptb0.x += xPosition(is);
@@ -534,7 +478,7 @@ void SailWing::makeTriangulation(int nx, int )
             PR0.set(xPosition(is)+pt0.x*ws.chord(), pt0.y*ws.chord(), zPosition(is));
             PR0.rotateZ(sectionPosition(is), -ws.twist());
             PR0.rotateY(sectionPosition(is), sectionAngle(is));
-            for (uint k=1; k<fraclist.size()-1; k++)
+            for (unsigned int k=1; k<fraclist.size()-1; k++)
             {
                 double xrel = fraclist.at(k);
                 pb1 = pFoil->lowerYRel(xrel, N);
@@ -708,7 +652,7 @@ void SailWing::computeChords()
     }
 
     //make the span position array
-    for(uint m=0; m<SpanPosition.size(); m++)
+    for(unsigned int m=0; m<SpanPosition.size(); m++)
     {
         int idx = m_NStation-m-1;
         m_SpanResFF.m_StripPos.push_back(SpanPosition.at(idx));
@@ -741,7 +685,7 @@ void SailWing::computeChords()
         }
     }
 
-    //    for(int i=0; i<m_SpanResFF.m_StripArea.size(); i++) qDebug(" %3d %15.7f", i, m_SpanResFF.m_StripArea.at(i));
+    //    for(int i=0; i<m_SpanResFF.m_StripArea.size(); i++) qDebug(" {:3d} %15.7f", i, m_SpanResFF.m_StripArea.at(i));
     // prepare results arrays
     m_SpanResFF.resizeResults(m_NStation);
 
@@ -762,19 +706,19 @@ void SailWing::properties(std::string &props, const std::string &frontspacer, bo
     {
         props += frontspacer + "   Wing type sail\n";
     }
-    strange = QString::asprintf("   Luff length    = %7.3g", luffLength()*Units::mtoUnit());
-    props += frontspacer + strange + strlength+ EOLChar;
-    strange = QString::asprintf("   Leech length   = %7.3g", leechLength()*Units::mtoUnit());
-    props += frontspacer + strange + strlength+ EOLChar;
-    strange = QString::asprintf("   Foot length    = %7.3g", footLength()*Units::mtoUnit());
-    props += frontspacer + strange + strlength+ EOLChar;
-    strange = QString::asprintf("   Area           = %7.3g",  area()*Units::m2toUnit());
-    props += frontspacer + strange + strarea+ EOLChar;
-    strange = QString::asprintf("   Aspect ratio   = %7.3g", aspectRatio());
+    strange = std::format("   Luff length    = {:7.3g}", luffLength()*Units::mtoUnit());
+    props += frontspacer + strange + strlength+ EOLstrar;
+    strange = std::format("   Leech length   = {:7.3g}", leechLength()*Units::mtoUnit());
+    props += frontspacer + strange + strlength+ EOLstrar;
+    strange = std::format("   Foot length    = {:7.3g}", footLength()*Units::mtoUnit());
+    props += frontspacer + strange + strlength+ EOLstrar;
+    strange = std::format("   Area           = {:7.3g}",  area()*Units::m2toUnit());
+    props += frontspacer + strange + strarea+ EOLstrar;
+    strange = std::format("   Aspect ratio   = {:7.3g}", aspectRatio());
     props += frontspacer + strange + "\n";
-    strange = QString::asprintf("   Top twist      = %7.3g", twist());
-    props += frontspacer + strange + DEGChar+ EOLChar;
-    strange = QString::asprintf("   Triangle count = %d", m_RefTriangles.size());
+    strange = std::format("   Top twist      = {:7.3g}", twist());
+    props += frontspacer + strange + DEGstrar+ EOLstrar;
+    strange = std::format("   Triangle count = {:d}", m_RefTriangles.size());
     props += frontspacer + strange;
 }*/
 

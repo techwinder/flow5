@@ -22,8 +22,9 @@
 
 *****************************************************************************/
 
-#include <QString>
+#include <format>
 
+#include <format>
 #include <algorithm>
 
 
@@ -54,17 +55,17 @@ void Node::addNeighbourIndex(int index)
 
 std::string Node::properties() const
 {
-    QString props;
-    QString strong,str;
+    std::string props;
+    std::string strong, str;
 
-    props.append(QString::asprintf("Node %d:\n", m_Index));
-    props.append(QString::asprintf("   position= (%9g, %9g, %9g)\n", x, y, z));
-    props.append(QString::asprintf("   normal  = (%9g, %9g, %9g)\n", m_Normal.x, m_Normal.y, m_Normal.z));
+    props.append(std::format("Node {:d}:\n", m_Index));
+    props.append(std::format("   position= ({:9g}, {:9g}, {:9g})\n", x, y, z));
+    props.append(std::format("   normal  = ({:9g}, {:9g}, {:9g})\n", m_Normal.x, m_Normal.y, m_Normal.z));
 
     strong.clear();
     for(unsigned int i=0; i<m_TriangleIndex.size(); i++)
     {
-        str = QString::asprintf(" %d", m_TriangleIndex.at(i));
+        str = std::format(" {:d}", m_TriangleIndex.at(i));
         strong.append(str);
     }
     props.append("   connected triangles:").append(strong).append("\n");
@@ -72,7 +73,7 @@ std::string Node::properties() const
     strong.clear();
     for(unsigned int in=0; in<m_NeighbourIndex.size(); in++)
     {
-        str = QString::asprintf(" %d", m_NeighbourIndex.at(in));
+        str = std::format(" {:d}", m_NeighbourIndex.at(in));
         strong.append(str);
     }
     props.append("   connected nodes:").append(strong).append("\n");
@@ -88,5 +89,5 @@ std::string Node::properties() const
         case xfl::NOSURFACE:   props.append("   NO SURFACE");    break;
     }
 
-    return props.toStdString();
+    return props;
 }

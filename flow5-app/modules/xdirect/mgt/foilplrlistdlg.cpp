@@ -35,13 +35,15 @@
 #include "foilplrlistdlg.h"
 
 
-#include <core/xflcore.h>
-#include <api/utils.h>
-#include <api/objects2d_globals.h>
 #include <api/foil.h>
 #include <api/objects2d.h>
-#include <api/polar.h>
+#include <api/objects2d_globals.h>
 #include <api/objects_global.h>
+#include <api/polar.h>
+#include <api/serialization.h>
+#include <api/utils-io.h>
+
+#include <core/xflcore.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 
 
@@ -254,7 +256,7 @@ void FoilPlrListDlg::onImportSelectedFiles()
 
             std::vector<Foil*> foillist;
             std::vector<Polar*> polarlist;
-            objects::readPolarFile(file, foillist, polarlist);
+            serial::readPolarFile(file, foillist, polarlist);
             file.close();
 
             m_ppto->onAppendQText(QString::asprintf("   file contains %d foil(s) and %d polar(s)", int(foillist.size()), int(polarlist.size()))+EOLch);
@@ -325,7 +327,7 @@ void FoilPlrListDlg::onScanDirectory()
         {
             m_ppto->onAppendQText("Reading file " + filename + EOLch);
 
-            objects::readPolarFile(plrfile, foils, polars);
+            serial::readPolarFile(plrfile, foils, polars);
             plrfile.close();
 
             for(uint j=0; j<foils.size(); j++)

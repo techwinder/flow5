@@ -49,7 +49,6 @@ class FL5LIB_EXPORT FuseSections : public FuseXfl
         void makeDefaultFuse() override;
         void makeNURBS() override;
         void makeFuseGeometry() override;
-        bool serializePartFl5(QDataStream &ar, bool bIsStoring) override;
         void scale(double XFactor, double YFactor, double ZFactor) override;
         void scaleFrame(double YFactor, double ZFactor, int FrameID=0) override;
         void translateFrame(Vector3d T, int FrameID) override;
@@ -80,6 +79,9 @@ class FL5LIB_EXPORT FuseSections : public FuseXfl
         int activeSectionIndex()                  const {return m_iActiveSection;}
         std::vector<Vector3d> const & activeSection() const {return m_Section.at(m_iActiveSection);}
         std::vector<Vector3d> & activeSection() {return m_Section[m_iActiveSection];}
+        std::vector<std::vector<Vector3d>> &sections() {return m_Section;}
+        std::vector<std::vector<Vector3d>> const &sections() const {return m_Section;}
+
 
         void setActiveSectionPosition(double x, double z);
         void setSectionXPosition(int isec, double x);

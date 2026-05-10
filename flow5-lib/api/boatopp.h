@@ -38,7 +38,7 @@ class FL5LIB_EXPORT BoatOpp : public Opp3d
     public:
         BoatOpp();
         BoatOpp(Boat *pBoat, BoatPolar *pBtPolar, int nPanel3, int nPanel4);
-        bool serializeBoatOppFl5(QDataStream &ar, bool bIsStoring);
+
         void getProperties(const Boat *pBoat, double density, std::string &props, bool bLongOutput=false) const;
 
         std::string const &boatName() const {return m_BoatName;}
@@ -48,6 +48,9 @@ class FL5LIB_EXPORT BoatOpp : public Opp3d
         void setPolarName(std::string const &name) override {m_BtPolarName=name;}
 
         void setTWInf(double tws, double twa)  {m_TWS_inf=tws; m_TWA_inf=twa;}
+
+        std::vector<double> & sailAngles() {return m_SailAngle;}
+        std::vector<double> const & sailAngles() const {return m_SailAngle;}
 
         void setSailAngle(int iSail, double theta) {if(iSail>=0 && iSail<int(m_SailAngle.size())) m_SailAngle[iSail]=theta;}
         double sailAngle(int iSail) const {if(iSail>=0 && iSail<int(m_SailAngle.size())) return m_SailAngle.at(iSail); else return 0.0;}
@@ -59,6 +62,12 @@ class FL5LIB_EXPORT BoatOpp : public Opp3d
 
         Vector3d windDir() const;
 
+        std::vector<Vector3d> &sailForceFF() {return m_SailForceFF;}
+        std::vector<Vector3d> const &sailForceFF() const {return m_SailForceFF;}
+
+        std::vector<Vector3d> &sailForceSum() {return m_SailForceSum;}
+        std::vector<Vector3d> const &sailForceSum() const {return m_SailForceSum;}
+
         Vector3d sailForceFF(int iSail) const {return m_SailForceFF[iSail];}
         Vector3d sailForceSum(int iSail) const {return m_SailForceSum[iSail];}
 
@@ -67,6 +76,15 @@ class FL5LIB_EXPORT BoatOpp : public Opp3d
 
         void exportMainDataToString(const Boat *pBoat, std::string &data, xfl::enumTextFileType filetype, const std::string &textsep) const;
         void exportPanel3DataToString(const Boat *pBoat, xfl::enumTextFileType exporttype, std::string &data) const;
+
+        void setTrefftz(bool b) {m_bTrefftz=b;}
+        bool bTrefftz() const {return m_bTrefftz;}
+
+        void setThinSurfaces(bool b) {m_bThinSurfaces=b;}
+        bool bThinSurfaces() const {return m_bThinSurfaces;}
+
+        void setIgnoreBodyPanels(bool b) {m_bIgnoreBodyPanels=b;}
+        bool bIgnoreBodyPanels() const {return m_bIgnoreBodyPanels;}
 
 
     private:

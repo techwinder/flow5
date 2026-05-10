@@ -22,12 +22,11 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
-
-#include <QString>
 
 
-#include <QDataStream>
+
+#include <format>
+
 
 #include <sail.h>
 #include <boatpolar.h>
@@ -109,15 +108,15 @@ void Sail::duplicate(Sail const*pSail)
 
 void Sail::properties(std::string &properties, const std::string &prefix, bool bFull) const
 {
-    QString strlength = Units::lengthUnitQLabel();
-    QString strarea = Units::areaUnitQLabel();
-    QString strange;
+    std::string strlength = Units::lengthUnitLabel();
+    std::string strarea = Units::areaUnitLabel();
+    std::string strange;
 
-    QString props;
-    QString frontspacer = QString::fromStdString(prefix);
+    std::string props;
+    std::string frontspacer = prefix;
 
     props.clear();
-    props += frontspacer + QString::fromStdString(m_Name) + EOLch;
+    props += frontspacer + m_Name + EOLstr;
     if(bFull)
     {
         if     (isNURBSSail())  props += frontspacer + "   NURBS type sail\n";
@@ -126,185 +125,28 @@ void Sail::properties(std::string &properties, const std::string &prefix, bool b
         else if(isStlSail())    props += frontspacer + "   STL type sail\n";
         else if(isOccSail())    props += frontspacer + "   CAD type sail\n";
     }
-    strange = QString::asprintf("   Luff length    = %7.3g", luffLength()*Units::mtoUnit());
-    props += frontspacer + strange + strlength+ EOLch;
-    strange = QString::asprintf("   Leech length   = %7.3g", leechLength()*Units::mtoUnit());
-    props += frontspacer + strange + strlength+ EOLch;
-    strange = QString::asprintf("   Foot length    = %7.3g", footLength()*Units::mtoUnit());
-    props += frontspacer + strange + strlength+ EOLch;
-    strange = QString::asprintf("   Area           = %7.3g",  area()*Units::m2toUnit());
-    props += frontspacer + strange + strarea+ EOLch;
-    strange = QString::asprintf("   Aspect ratio   = %7.3g", aspectRatio());
+    strange = std::format("   Luff length    = {:7.3g}", luffLength()*Units::mtoUnit());
+    props += frontspacer + strange + strlength+ EOLstr;
+    strange = std::format("   Leech length   = {:7.3g}", leechLength()*Units::mtoUnit());
+    props += frontspacer + strange + strlength+ EOLstr;
+    strange = std::format("   Foot length    = {:7.3g}", footLength()*Units::mtoUnit());
+    props += frontspacer + strange + strlength+ EOLstr;
+    strange = std::format("   Area           = {:7.3g}",  area()*Units::m2toUnit());
+    props += frontspacer + strange + strarea+ EOLstr;
+    strange = std::format("   Aspect ratio   = {:7.3g}", aspectRatio());
     props += frontspacer + strange + "\n";
-    strange = QString::asprintf("   Top twist      = %7.3g", twist());
-    props += frontspacer + strange + DEGch+ EOLch;
-    strange = QString::asprintf("   Triangle count = %d", int(m_RefTriangles.size()));
+    strange = std::format("   Top twist      = {:7.3g}", twist());
+    props += frontspacer + strange + DEGstr+ EOLstr;
+    strange = std::format("   Triangle count = {:d}", int(m_RefTriangles.size()));
     props += frontspacer + strange;
 
-    properties = props.toStdString();
+    properties = props;
 }
 
 
 double Sail::size() const
 {
     return std::max(footLength(), luffLength());
-}
-
-
-bool Sail::serializeSailFl5(QDataStream &ar, bool bIsStoring)
-{
-    Part::serializePartFl5(ar, bIsStoring);
-    int n=0;
-
-    // 500001: new fl5 format;
-    // 500002: beta 17: added Clew-Peak-Head-Tack
-    // 500003: beta 18: added reference the area
-    // 500004: beta 18: added reference the reference chord
-    // 500005: beta 19: added free mesh parameters
-    // 500006: v7.03:   added edge split parameters
-
-    int ArchiveFormat=500006;// identifies the format of the file
-    int nIntSpares=0;
-    int nDbleSpares=0;
-
-    if(bIsStoring)
-    {
-        // storing code
-        ar << ArchiveFormat;
-
-        ar << m_RefArea << m_RefChord;
-
-        ar << m_bThinSurface;
-        ar << m_bRuledMesh;
-        ar << m_MaxElementSize;
-
-        ar << m_NXPanels;
-        ar << 11; // formerly NZPanels
-        switch(m_XDistrib)
-        {
-            default:
-            case xfl::UNIFORM:       n=0;  break;
-            case xfl::COSINE:        n=1;  break;
-            case xfl::SINE:          n=2;  break;
-            case xfl::INV_SINE:      n=3;  break;
-            case xfl::INV_SINH:      n=4;  break;
-            case xfl::TANH:          n=5;  break;
-            case xfl::EXP:           n=6;  break;
-            case xfl::INV_EXP:       n=7;  break;
-        }
-        ar << n;
-
-        n=0;
-        ar << n; // formerly m_ZDist
-
-        ar << m_LE.x << m_LE.y << m_LE.z;
-
-        ar << m_Clew.x << m_Clew.y << m_Clew.z;
-        ar << m_Peak.x << m_Peak.y << m_Peak.z;
-        ar << m_Tack.x << m_Tack.y << m_Tack.z;
-        ar << m_Head.x << m_Head.y << m_Head.z;
-
-        ar << int(m_EdgeSplit.size());
-        for(uint i=0; i<m_EdgeSplit.size(); i++)
-        {
-            ar << int(m_EdgeSplit[i].size());
-            for(uint j=0; j<m_EdgeSplit[i].size(); j++)
-                m_EdgeSplit[i][j].serialize(ar, bIsStoring);
-        }
-
-        ar << 0; // nIntSpares
-        ar << 0; // nDoubleSpares
-        return true;
-    }
-    else
-    {
-        // loading code
-        ar >> ArchiveFormat;
-
-        if (ArchiveFormat<500000 || ArchiveFormat>510000)  return false;
-
-        if(ArchiveFormat>=500003) ar >> m_RefArea;
-        if(ArchiveFormat>=500004) ar >> m_RefChord;
-
-        if(ArchiveFormat>=500005)
-        {
-            ar >> m_bThinSurface;
-            ar >> m_bRuledMesh;
-            ar >> m_MaxElementSize;
-        }
-
-        ar >> m_NXPanels;
-        ar >> n; // m_NZPanels;
-        ar >> n;
-        switch(n)
-        {
-            default:
-            case 0: m_XDistrib=xfl::UNIFORM;      break;
-            case 1: m_XDistrib=xfl::COSINE;       break;
-            case 2: m_XDistrib=xfl::SINE;         break;
-            case 3: m_XDistrib=xfl::INV_SINE;     break;
-            case 4: m_XDistrib=xfl::INV_SINH;     break;
-            case 5: m_XDistrib=xfl::TANH;         break;
-            case 6: m_XDistrib=xfl::EXP;          break;
-            case 7: m_XDistrib=xfl::INV_EXP;      break;
-        }
-
-        if(ArchiveFormat<=500006)
-        {
-            ar >> n;
-/*            switch(n)
-            {
-                default:
-                case 0: m_ZDist=Xfl::UNIFORM;      break;
-                case 1: m_ZDist=Xfl::COSINE;       break;
-                case 2: m_ZDist=Xfl::SINE;         break;
-                case 3: m_ZDist=Xfl::INV_SINE;     break;
-                case 4: m_ZDist=Xfl::INV_SINH;     break;
-                case 5: m_ZDist=Xfl::TANH;         break;
-                case 6: m_ZDist=Xfl::EXP;          break;
-                case 7: m_ZDist=Xfl::INV_EXP;      break;
-            }*/
-        }
-
-        ar >> m_LE.x >>m_LE.y >> m_LE.z;
-
-        if(ArchiveFormat>=500002)
-        {
-            ar >> m_Clew.x >> m_Clew.y >> m_Clew.z;
-            ar >> m_Peak.x >> m_Peak.y >> m_Peak.z;
-            ar >> m_Tack.x >> m_Tack.y >> m_Tack.z;
-            ar >> m_Head.x >> m_Head.y >> m_Head.z;
-        }
-
-        if(ArchiveFormat>=500006)
-        {
-            ar >> n;
-            if(n==0)
-            {
-                // update legacy projects
-                n=4;
-                m_EdgeSplit.resize(n);
-                m_EdgeSplit.front().resize(4);
-            }
-            else
-            {
-                m_EdgeSplit.resize(n);
-                for(uint i=0; i<m_EdgeSplit.size(); i++)
-                {
-                    ar >> n;
-                    m_EdgeSplit[i].resize(n);
-                    for(uint j=0; j<m_EdgeSplit[i].size(); j++)
-                        m_EdgeSplit[i][j].serialize(ar, bIsStoring);
-                }
-            }
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        ar >> nDbleSpares;
-
-        return true;
-    }
 }
 
 
@@ -347,7 +189,7 @@ void Sail::makeTriangulation(int nx, int nh)
 
 void Sail::saveConnections()
 {
-    for(uint i=0; i<m_RefTriangles.size(); i++)
+    for(unsigned int i=0; i<m_RefTriangles.size(); i++)
     {
         m_RefTriangles[i].setNeighbours(m_TriMesh.panelAt(i).neighbours());
     }
@@ -356,7 +198,7 @@ void Sail::saveConnections()
 
 void Sail::mergeRefNodes(Node const& src, Node const&dest)
 {
-    for(uint i3=0; i3<m_RefTriangles.size(); i3++)
+    for(unsigned int i3=0; i3<m_RefTriangles.size(); i3++)
     {
         Triangle3d &t3d = m_RefTriangles[i3];
         for(int ivtx=0; ivtx<3; ivtx++)
@@ -448,7 +290,7 @@ void Sail::panel3ComputeInviscidForces(std::vector<Panel3> const &panel3list,
         FiBodyAxis += PanelForce;                             // N
         MiBodyAxis += leverArmPanelCoG * PanelForce;          // N.m/q
 
-//qDebug("  %d Cp=%11g  N=%11g  %11g  %11g  F=%11g  %11g  %11g", i3, CpAverage, p3.normal().x, p3.normal().y, p3.normal().z, PanelForce.x, PanelForce.y, PanelForce.z);
+//qDebug("  {:d} Cp={:11g}  N={:11g}  {:11g}  {:11g}  F={:11g}  {:11g}  {:11g}", i3, CpAverage, p3.normal().x, p3.normal().y, p3.normal().z, PanelForce.x, PanelForce.y, PanelForce.z);
     }
 
     // store the results
@@ -459,7 +301,7 @@ void Sail::panel3ComputeInviscidForces(std::vector<Panel3> const &panel3list,
 
 void Sail::translate(const Vector3d &T)
 {    
-    for(uint it=0; it<m_RefTriangles.size(); it++)
+    for(unsigned int it=0; it<m_RefTriangles.size(); it++)
     {
         m_RefTriangles[it].translate(T);
     }
@@ -482,7 +324,7 @@ void Sail::scaleArea(double newarea)
 
 void Sail::scale(double XFactor, double YFactor, double ZFactor)
 {
-    for(uint it=0; it<m_RefTriangles.size(); it++)
+    for(unsigned int it=0; it<m_RefTriangles.size(); it++)
     {
         m_RefTriangles[it].scale(XFactor, YFactor, ZFactor);
     }
@@ -642,7 +484,7 @@ void Sail::addTEindex(int idx, bool bBotMid)
 
 void Sail::clearTEIndexes()
 {
-    for(uint i=0; i<m_TopTEIndexes.size(); i++)
+    for(unsigned int i=0; i<m_TopTEIndexes.size(); i++)
     {
         int idx = m_TopTEIndexes.at(i);
         if(idx>=0 && idx<m_TriMesh.nPanels())
@@ -654,7 +496,7 @@ void Sail::clearTEIndexes()
     }
     m_TopTEIndexes.clear();
 
-    for(uint i=0; i<m_BotMidTEIndexes.size(); i++)
+    for(unsigned int i=0; i<m_BotMidTEIndexes.size(); i++)
     {
         int idx = m_BotMidTEIndexes.at(i);
         if(idx>=0 && idx<m_TriMesh.nPanels())
@@ -716,7 +558,7 @@ void Sail::setTEfromIndexes()
     }
 
     // set opposite side panels
-    for(uint i=0; i<m_BotMidTEIndexes.size(); i++)
+    for(unsigned int i=0; i<m_BotMidTEIndexes.size(); i++)
     {
         int i3 = m_BotMidTEIndexes.at(i);
         if(i3>=0 && i3<m_TriMesh.nPanels())
@@ -728,7 +570,7 @@ void Sail::setTEfromIndexes()
             else               p3b.setSurfacePosition(xfl::BOTSURFACE);
 
             // triangles may not have been connected yet, so check the edges instead
-            for(uint it=0; it<m_TopTEIndexes.size(); it++)
+            for(unsigned int it=0; it<m_TopTEIndexes.size(); it++)
             {
                 bool bFound = false;
                 int idx = m_TopTEIndexes.at(it);
@@ -750,7 +592,7 @@ void Sail::setTEfromIndexes()
         }
     }
 
-    for(uint i=0; i<m_TopTEIndexes.size(); i++)
+    for(unsigned int i=0; i<m_TopTEIndexes.size(); i++)
     {
         int i3 = m_TopTEIndexes.at(i);
         if(i3>=0 && i3<m_TriMesh.nPanels())
@@ -760,7 +602,7 @@ void Sail::setTEfromIndexes()
             p3t.setSurfacePosition(xfl::TOPSURFACE);
 
             // triangles may not have been connected yet, so check the edges instead
-            for(uint it=0; it<m_BotMidTEIndexes.size(); it++)
+            for(unsigned int it=0; it<m_BotMidTEIndexes.size(); it++)
             {
                 int idx = m_BotMidTEIndexes.at(it);
                 bool bFound = false;

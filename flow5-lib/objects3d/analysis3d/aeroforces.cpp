@@ -22,6 +22,8 @@
 
 *****************************************************************************/
 
+#include <iostream>
+#include <format>
 
 #include <aeroforces.h>
 
@@ -176,79 +178,14 @@ void AeroForces::scaleForces(double q)
 }
 
 
-void AeroForces::serializeFl5_b17(QDataStream &ar, bool bIsStoring)
-{
-    double dble(0);
-    if(bIsStoring)
-    {
-        //deprecated
-    }
-    else
-    {
-        ar >> m_RefArea >> m_RefChord >> m_RefSpan;
-        ar >> dble >> dble >> dble;
-        ar >> m_Fff.x  >> m_Fff.y  >> m_Fff.z;
-        ar >> m_Fsum.x >> m_Fsum.y >> m_Fsum.z;
-        ar >> m_ProfileDrag >> m_FuseDrag >> m_ExtraDrag;
-        ar >> m_Mi.x >> m_Mi.y >> m_Mi.z;
-        ar >> m_Mv.x >> m_Mv.y >> m_Mv.z;
-    }
-}
-
-bool AeroForces::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    int ArchiveFormat = 500750;
-    // beta18: added Archive format, alpha, beta ,QInf;
-    // 5000750:  v750 removed Cp and added M0
-
-    double dble(0);
-
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-        ar << m_Alpha << m_Beta << m_QInf;
-        ar << m_RefArea << m_RefChord << m_RefSpan;
-        ar << dble << dble << dble;  // formerly CP
-        ar << m_Fff.x<<m_Fff.y<<m_Fff.z;
-        ar << m_Fsum.x<<m_Fsum.y<<m_Fsum.z;
-        ar << m_ProfileDrag << m_FuseDrag << m_ExtraDrag;
-        ar << m_Mi.x<<m_Mi.y<<m_Mi.z;
-        ar << m_Mv.x<<m_Mv.y<<m_Mv.z;
-        ar << m_M0.x<<m_M0.y<<m_M0.z;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<500000 || ArchiveFormat>510000) return false;
-        ar >> m_Alpha >> m_Beta >> m_QInf;
-        ar >> m_RefArea >> m_RefChord >> m_RefSpan;
-        ar >> dble >> dble >> dble; // formerly CP
-        ar >> m_Fff.x  >> m_Fff.y  >> m_Fff.z;
-        ar >> m_Fsum.x >> m_Fsum.y >> m_Fsum.z;
-        ar >> m_ProfileDrag >> m_FuseDrag >> m_ExtraDrag;
-        ar >> m_Mi.x >> m_Mi.y >> m_Mi.z;
-        ar >> m_Mv.x >> m_Mv.y >> m_Mv.z;
-
-        if(ArchiveFormat>=500750)
-            ar >> m_M0.x >> m_M0.y >> m_M0.z;
-
-        if(ArchiveFormat<500002)
-        {
-            m_Mi.x=-m_Mi.x; /*  m_Mi.y=-m_Mi.y; */  m_Mi.z=-m_Mi.z;
-            m_Mv.x=-m_Mv.x; /*  m_Mv.y=-m_Mv.y; */  m_Mv.z=-m_Mv.z;
-        }
-    }
-    return true;
-}
-
 
 void AeroForces::displayAF()
 {
-    qDebug("  Area=%13.5f   Chord=%13.5f   Span=%13.5f", m_RefArea, m_RefChord, m_RefSpan);
-    qDebug("  CX =%13.5f  CY =%13.5f  CL=%13.5f", Cx(), Cy(), Cz());
-    qDebug("  CDv=%13.5f  ", CDv());
-    qDebug("  Cmi=%13.5f  Cmv=%13.5f  ", Cmi(), Cmv());
-    qDebug("  Cli=%13.5f  Cni=%13.5f  ", Cli(), Cni());
+    std::cout << std::format("  Area={:13.5f}   Chord={:13.5f}   Span={:13.5f}", m_RefArea, m_RefChord, m_RefSpan) << std::endl;
+    std::cout << std::format("  CX ={:13.5f}  CY ={:13.5f}  CL={:13.5f}", Cx(), Cy(), Cz()) << std::endl;
+    std::cout << std::format("  CDv={:13.5f}  ", CDv()) << std::endl;
+    std::cout << std::format("  Cmi={:13.5f}  Cmv={:13.5f}  ", Cmi(), Cmv()) << std::endl;
+    std::cout << std::format("  Cli={:13.5f}  Cni={:13.5f}  ", Cli(), Cni()) << std::endl;
 }
 
 

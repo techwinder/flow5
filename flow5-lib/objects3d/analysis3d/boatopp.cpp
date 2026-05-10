@@ -22,10 +22,11 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
 
 
-#include <QString>
+
+#include <format>
+
 
 
 
@@ -86,203 +87,10 @@ BoatOpp::BoatOpp(Boat *pBoat, BoatPolar *pBtPolar, int nPanel3, int nPanel4)
     m_Ctrl        = 0.0;
 
     m_SailAngle.resize(pBtPolar->sailAngleSize());
-    for(uint is=0;is<m_SailAngle.size(); is++) m_SailAngle[is]=0.0;
+    for(unsigned int is=0;is<m_SailAngle.size(); is++) m_SailAngle[is]=0.0;
 
     m_SailForceFF.resize(pBoat->nSails());
     m_SailForceSum.resize(pBoat->nSails());
-}
-
-
-bool BoatOpp::serializeBoatOppFl5(QDataStream &ar, bool bIsStoring)
-{
-    // 100001: first file format
-    // 100002: added lift and drag
-    // 100003: added vortons and negating vortices
-    // 100004: Modified the format of AeroForces serialization
-    // 100005: beta20 - Added the roration about Ry
-
-    int ArchiveFormat=100005;
-
-    float f(0),g(0),h(0);
-
-    int n(0);
-    double dble(0);
-    int nIntSpares(0);
-    int nDbleSpares(0);
-    QString strange;
-
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-
-        ar << QString::fromStdString(m_BoatName);
-        ar << QString::fromStdString(m_BtPolarName);
-
-        m_theStyle.serializeFl5(ar, bIsStoring);
-
-        //ANALYSIS METHOD
-        if     (m_AnalysisMethod==xfl::LLT)        ar<<1;
-        else if(m_AnalysisMethod==xfl::VLM1)       ar<<2;
-        else if(m_AnalysisMethod==xfl::VLM1)       ar<<3;
-        else if(m_AnalysisMethod==xfl::QUADS)      ar<<4;
-        else if(m_AnalysisMethod==xfl::TRILINEAR)  ar<<5;
-        else if(m_AnalysisMethod==xfl::TRIUNIFORM) ar<<6;
-        else                                       ar<<0;
-
-        ar << m_bThinSurfaces;
-        ar << m_bTrefftz;
-
-        ar << m_bIgnoreBodyPanels;
-
-        ar << m_GroundHeight << m_QInf << m_Beta << m_Phi << m_Ry <<m_Ctrl;
-
-        ar<<int(m_SailAngle.size());
-        for(uint is=0;is<m_SailAngle.size(); is++)
-        {
-            ar<< m_SailAngle[is];
-        }
-
-        m_AF.serializeFl5(ar, bIsStoring);
-
-        ar << int(m_SailForceFF.size());
-        for(uint i=0; i<m_SailForceFF.size(); i++)
-        {
-            ar << m_SailForceFF.at(i).xf()  << m_SailForceFF.at(i).yf()  << m_SailForceFF.at(i).zf();
-            ar << m_SailForceSum.at(i).xf() << m_SailForceSum.at(i).yf() << m_SailForceSum.at(i).zf();
-        }
-
-        int N=0;
-        if(isQuadMethod())           N = m_nPanel4;
-        else if(isTriangleMethod())  N = 3*m_nPanel3;
-        ar << N;
-        for (int p=0; p<N; p++) ar << float(m_Cp[p]) << float(m_gamma[p]) << float(m_sigma[p]);
-
-
-        ar << int(m_Vorton.size());
-        for(uint ir=0; ir<m_Vorton.size(); ir++)
-        {
-            ar <<int(m_Vorton.at(ir).size());
-            for(uint ic=0; ic<m_Vorton.at(ir).size(); ic++)
-            {
-                m_Vorton[ir][ic].serializeFl5(ar, bIsStoring);
-            }
-        }
-
-        ar << int(m_VortexNeg.size());
-        for(uint iv=0; iv<m_VortexNeg.size(); iv++)
-        {
-            m_VortexNeg[iv].serializeFl5(ar, bIsStoring);
-        }
-
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        dble=0.0;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<100000 || ArchiveFormat>120000) return false;
-        //read variables
-        ar >> strange;   m_BoatName = strange.toStdString();;
-        ar >> strange;   m_BtPolarName = strange.toStdString();;
-
-        m_theStyle.serializeFl5(ar, bIsStoring);
-
-        // ANALYSIS METHOD
-        ar >> n;
-        if     (n==1) m_AnalysisMethod=xfl::LLT;
-        else if(n==2) m_AnalysisMethod=xfl::VLM1;
-        else if(n==3) m_AnalysisMethod=xfl::VLM2;
-        else if(n==4) m_AnalysisMethod=xfl::QUADS;
-        else if(n==5) m_AnalysisMethod=xfl::TRILINEAR;
-        else if(n==6) m_AnalysisMethod=xfl::TRIUNIFORM;
-
-        ar >> m_bThinSurfaces;
-        ar >> m_bTrefftz;
-
-        ar >> m_bIgnoreBodyPanels;
-
-        ar >> m_GroundHeight >> m_QInf >> m_Beta >> m_Phi;
-        if(ArchiveFormat>=100005) ar >> m_Ry;
-        ar >> m_Ctrl;
-
-        ar>>n;
-        m_SailAngle.resize(n);
-        for(int is=0;is<n; is++)
-        {
-            ar>> m_SailAngle[is];
-        }
-
-        if(ArchiveFormat<100004) m_AF.serializeFl5_b17(ar, bIsStoring);
-        else
-        {
-            if(!m_AF.serializeFl5(ar, bIsStoring)) return false;
-        }
-        m_AF.setOpp(0.0, m_Beta, m_Phi, m_QInf);
-
-        ar >> n;
-        for(int i=0; i<n; i++)
-        {
-            ar >> f >> g >> h;
-            m_SailForceFF.push_back({double(f), double(g), double (h)});
-            ar >> f >> g >> h;
-            m_SailForceSum.push_back({double(f), double(g), double (h)});
-        }
-
-        int N=0;
-        ar >> N;
-
-        m_Cp.resize(N);
-        m_gamma.resize(N);
-        m_sigma.resize(N);
-        for (int p=0; p<N; p++)
-        {
-            ar >> f >> g >> h;
-            m_Cp[p]    = double(f);
-            m_gamma[p]     = double(g);
-            m_sigma[p] = double(h);
-        }
-
-        m_nPanel4 = m_nPanel3 = 0;
-        if(isQuadMethod())           m_nPanel4 = N;
-        else if(isTriangleMethod())  m_nPanel3 = N/3;
-
-        if(ArchiveFormat>=100003)
-        {
-            ar >> n;
-            m_Vorton.resize(n);
-            for(uint ir=0; ir<m_Vorton.size(); ir++)
-            {
-                ar >> n;
-                m_Vorton[ir].resize(n);
-                for(uint ic=0; ic<m_Vorton.at(ir).size(); ic++)
-                {
-                    m_Vorton[ir][ic].serializeFl5(ar, bIsStoring);
-                }
-            }
-
-            ar >> n;
-            m_VortexNeg.resize(n);
-            for(int iv=0; iv<n; iv++)
-            {
-                m_VortexNeg[iv].serializeFl5(ar, bIsStoring);
-            }
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-    }
-    return true;
 }
 
 
@@ -299,101 +107,101 @@ void BoatOpp::resizeResultsArrays(int N)
 
 void BoatOpp::getProperties(Boat const *pBoat, double density, std::string &props, bool bLongOutput) const
 {
-    QString strong;
-    QString lenunit, areaunit, forceunit, momentunit, speedunit;
-    lenunit    = QString::fromStdString(" " + Units::lengthUnitLabel());
-    speedunit  = QString::fromStdString(" " + Units::speedUnitLabel());
-    forceunit  = QString::fromStdString(" " + Units::forceUnitLabel());
-    momentunit = QString::fromStdString(" " + Units::momentUnitLabel());
-    areaunit   = QString::fromStdString(" " + Units::areaUnitLabel());
+    std::string strong;
+    std::string lenunit, areaunit, forceunit, momentunit, speedunit;
+    lenunit    = " " + Units::lengthUnitLabel();
+    speedunit  = " " + Units::speedUnitLabel();
+    forceunit  = " " + Units::forceUnitLabel();
+    momentunit = " " + Units::momentUnitLabel();
+    areaunit   = " " + Units::areaUnitLabel();
 
     double q = 0.5*density*m_QInf*m_QInf;
 
-    QString BOppProperties;
+    std::string BOppProperties;
 
     if(bLongOutput)
     {
         BOppProperties += "Reference dimensions:\n";
-        BOppProperties += "  area  = " + QString::asprintf("%9.5g", m_AF.refArea()*Units::m2toUnit()) + areaunit + "\n";
-        BOppProperties += "  chord = " + QString::asprintf("%9.5g", m_AF.refChord()*Units::mtoUnit()) + lenunit+ "\n";
+        BOppProperties += "  area  = " + std::format("{:9.5g}", m_AF.refArea()*Units::m2toUnit()) + areaunit + "\n";
+        BOppProperties += "  chord = " + std::format("{:9.5g}", m_AF.refChord()*Units::mtoUnit()) + lenunit+ "\n";
     }
 
-    strong = "Ctrl    = " + QString::asprintf("%7.3f", m_Ctrl);
+    strong = "Ctrl    = " + std::format("{:7.3f}", m_Ctrl);
     BOppProperties += strong + "\n";
 
-    strong = "AWS" + INFch + "    = " + QString::asprintf("%7.3f", m_QInf);
+    strong = "AWS" + INFstr + "    = " + std::format("{:7.3f}", m_QInf);
     BOppProperties += strong + speedunit+"\n";
 
-    strong = "AWA" + INFch + "    = " + QString::asprintf("%7.3f", m_Beta);
-    BOppProperties += strong +DEGch+"\n";
+    strong = "AWA" + INFstr + "    = " + std::format("{:7.3f}", m_Beta);
+    BOppProperties += strong +DEGstr+"\n";
 
-    strong = PHIch + "       = " + QString::asprintf("%7.3f", m_Phi);
-    BOppProperties += strong +DEGch+"\n";
+    strong = PHIstr + "       = " + std::format("{:7.3f}", m_Phi);
+    BOppProperties += strong +DEGstr+"\n";
 
-    for(uint is=0; is<m_SailAngle.size(); is++)
+    for(unsigned int is=0; is<m_SailAngle.size(); is++)
     {
-        strong = QString::asprintf("Sail_%d Angle = ", is+1) + QString::asprintf("%9.3g", m_SailAngle.at(is));
-        BOppProperties += strong + DEGch+"\n";
+        strong = std::format("Sail_{:d} Angle = ", is+1) + std::format("{:9.3g}", m_SailAngle.at(is));
+        BOppProperties += strong + DEGstr+"\n";
     }
 
-    BOppProperties += "CL           = " + QString::asprintf("%9.5g", m_AF.CSide())+"\n";
-    BOppProperties += "CD           = " + QString::asprintf("%9.5g", m_AF.CD())+"\n";
+    BOppProperties += "CL           = " + std::format("{:9.5g}", m_AF.CSide())+"\n";
+    BOppProperties += "CD           = " + std::format("{:9.5g}", m_AF.CD())+"\n";
     if(bLongOutput)
     {
-        BOppProperties += "   CDi       = " + QString::asprintf("%9.5g", m_AF.CDi())+"\n";
-        BOppProperties += "   CDv       = " + QString::asprintf("%9.5g", m_AF.CDv())+"\n";
+        BOppProperties += "   CDi       = " + std::format("{:9.5g}", m_AF.CDi())+"\n";
+        BOppProperties += "   CDv       = " + std::format("{:9.5g}", m_AF.CDv())+"\n";
     }
-    BOppProperties += "Cx           = " + QString::asprintf("%9.5g", m_AF.Cx())+"\n";
-    BOppProperties += "Cy           = " + QString::asprintf("%9.5g", m_AF.Cy())+"\n";
+    BOppProperties += "Cx           = " + std::format("{:9.5g}", m_AF.Cx())+"\n";
+    BOppProperties += "Cy           = " + std::format("{:9.5g}", m_AF.Cy())+"\n";
 
-    strong = "Far Field Fx = " + QString::asprintf("%9.5g", m_AF.fffx() * q * Units::NtoUnit());
+    strong = "Far Field Fx = " + std::format("{:9.5g}", m_AF.fffx() * q * Units::NtoUnit());
     BOppProperties += strong +forceunit+"\n";
-    strong = "Far Field Fy = " + QString::asprintf("%9.5g", m_AF.fffy() * q * Units::NtoUnit());
+    strong = "Far Field Fy = " + std::format("{:9.5g}", m_AF.fffy() * q * Units::NtoUnit());
     BOppProperties += strong +forceunit+"\n";
-    strong = "Far Field Fz = " + QString::asprintf("%9.5g", m_AF.fffz() * q * Units::NtoUnit());
-    BOppProperties += strong +forceunit+"\n";
-
-    strong = "Summed Fx    = " + QString::asprintf("%9.5g", m_AF.fsumx() * q * Units::NtoUnit());
-    BOppProperties += strong +forceunit+"\n";
-    strong = "Summed Fy    = " + QString::asprintf("%9.5g", m_AF.fsumy() * q * Units::NtoUnit());
-    BOppProperties += strong +forceunit+"\n";
-    strong = "Summed Fz    = " + QString::asprintf("%9.5g", m_AF.fsumz() * q * Units::NtoUnit());
+    strong = "Far Field Fz = " + std::format("{:9.5g}", m_AF.fffz() * q * Units::NtoUnit());
     BOppProperties += strong +forceunit+"\n";
 
-    strong  = "Mx = " + QString::asprintf("%9.5g", (m_AF.Mi()+m_AF.Mv()).x * q * Units::NmtoUnit());
+    strong = "Summed Fx    = " + std::format("{:9.5g}", m_AF.fsumx() * q * Units::NtoUnit());
+    BOppProperties += strong +forceunit+"\n";
+    strong = "Summed Fy    = " + std::format("{:9.5g}", m_AF.fsumy() * q * Units::NtoUnit());
+    BOppProperties += strong +forceunit+"\n";
+    strong = "Summed Fz    = " + std::format("{:9.5g}", m_AF.fsumz() * q * Units::NtoUnit());
+    BOppProperties += strong +forceunit+"\n";
+
+    strong  = "Mx = " + std::format("{:9.5g}", (m_AF.Mi()+m_AF.Mv()).x * q * Units::NmtoUnit());
     BOppProperties += strong +momentunit+"\n";
-    strong  = "My = " + QString::asprintf("%9.5g", (m_AF.Mi()+m_AF.Mv()).y * q * Units::NmtoUnit());
+    strong  = "My = " + std::format("{:9.5g}", (m_AF.Mi()+m_AF.Mv()).y * q * Units::NmtoUnit());
     BOppProperties += strong +momentunit+"\n";
-    strong  = "Mz = " + QString::asprintf("%9.5g", (m_AF.Mi()+m_AF.Mv()).z * q * Units::NmtoUnit());
+    strong  = "Mz = " + std::format("{:9.5g}", (m_AF.Mi()+m_AF.Mv()).z * q * Units::NmtoUnit());
     BOppProperties += strong +momentunit;
 
     if(!bLongOutput) return;
     BOppProperties +="\n";
 
-    strong  = "XCE = Mz/Fy =" + QString::asprintf("%9.5g", (m_AF.Mi()+m_AF.Mv()).z /m_AF.fsumy() * Units::mtoUnit());
+    strong  = "XCE = Mz/Fy =" + std::format("{:9.5g}", (m_AF.Mi()+m_AF.Mv()).z /m_AF.fsumy() * Units::mtoUnit());
     BOppProperties += strong +lenunit+"\n";
-    strong  = "ZCE = Mx/Fy = " + QString::asprintf("%9.5g", (m_AF.Mi()+m_AF.Mv()).x /m_AF.fsumy() * Units::mtoUnit());
+    strong  = "ZCE = Mx/Fy = " + std::format("{:9.5g}", (m_AF.Mi()+m_AF.Mv()).x /m_AF.fsumy() * Units::mtoUnit());
     BOppProperties += strong +lenunit +"\n";
 
-    for(uint is=0; is<m_SailForceFF.size(); is++)
+    for(unsigned int is=0; is<m_SailForceFF.size(); is++)
     {
-        BOppProperties += QString::fromStdString(pBoat->sailAt(is)->name()) + ": \n";
-        strong = "   Far Field Fx= " + QString::asprintf("%9.5g", m_SailForceFF.at(is).x * q * Units::NtoUnit());
+        BOppProperties += pBoat->sailAt(is)->name() + ": \n";
+        strong = "   Far Field Fx= " + std::format("{:9.5g}", m_SailForceFF.at(is).x * q * Units::NtoUnit());
         BOppProperties += strong +forceunit+"\n";
-        strong = "   Far Field Fy= " + QString::asprintf("%9.5g", m_SailForceFF.at(is).y * q * Units::NtoUnit());
+        strong = "   Far Field Fy= " + std::format("{:9.5g}", m_SailForceFF.at(is).y * q * Units::NtoUnit());
         BOppProperties += strong +forceunit+"\n";
-        strong = "   Far Field Fz= " + QString::asprintf("%9.5g", m_SailForceFF.at(is).z * q * Units::NtoUnit());
+        strong = "   Far Field Fz= " + std::format("{:9.5g}", m_SailForceFF.at(is).z * q * Units::NtoUnit());
         BOppProperties += strong +forceunit+"\n";
-        strong = "   Summed Fx   = " + QString::asprintf("%9.5g", m_SailForceSum.at(is).x * q * Units::NtoUnit());
+        strong = "   Summed Fx   = " + std::format("{:9.5g}", m_SailForceSum.at(is).x * q * Units::NtoUnit());
         BOppProperties += strong +forceunit+"\n";
-        strong = "   Summed Fy   = " + QString::asprintf("%9.5g", m_SailForceSum.at(is).y * q * Units::NtoUnit());
+        strong = "   Summed Fy   = " + std::format("{:9.5g}", m_SailForceSum.at(is).y * q * Units::NtoUnit());
         BOppProperties += strong +forceunit+"\n";
-        strong = "   Summed Fz   = " + QString::asprintf("%9.5g", m_SailForceSum.at(is).z * q * Units::NtoUnit());
+        strong = "   Summed Fz   = " + std::format("{:9.5g}", m_SailForceSum.at(is).z * q * Units::NtoUnit());
         BOppProperties += strong +forceunit +"\n";
     }
 //    BOppProperties.pop_back(); //last \n
 
-    props = BOppProperties.toStdString();
+    props = BOppProperties;
 }
 
 
@@ -405,7 +213,7 @@ Vector3d BoatOpp::windDir() const
 
 std::string BoatOpp::title(bool bLong) const
 {
-    QString strong;
+    std::string strong;
 
     if(bLong)
     {
@@ -436,44 +244,44 @@ std::string BoatOpp::title(bool bLong) const
         strong +="-";
     }
 
-    strong += QString::asprintf("%5.2f-", ctrl());
+    strong += std::format("{:5.2f}-", ctrl());
 
-    if(fabs(beta())>PRECISION) strong += QString::asprintf("%5.2f°-", beta());
+    if(fabs(beta())>PRECISION) strong += std::format("{:5.2f}°-", beta());
 
-    return strong.toStdString();
+    return strong;
 }
 
 
 
 void BoatOpp::exportMainDataToString(Boat const*, std::string &data, xfl::enumTextFileType filetype, std::string const &textsep) const
 {
-    QString btoppdata;
-    QString strange;
-    QString title;
-    QString lengthlab  = Units::lengthUnitQLabel();
-    QString inertialab = Units::inertiaUnitQLabel();
-    QString speedlab   = Units::speedUnitQLabel();
-    QString masslab    = Units::massUnitQLabel();
+    std::string btoppdata;
+    std::string strange;
+    std::string title;
+    std::string lengthlab  = Units::lengthUnitLabel();
+    std::string inertialab = Units::inertiaUnitLabel();
+    std::string speedlab   = Units::speedUnitLabel();
+    std::string masslab    = Units::massUnitLabel();
 
-    QString sep = "  ";
-    if(filetype==xfl::CSV) sep = QString::fromStdString(textsep+ " ");
+    std::string sep = "  ";
+    if(filetype==xfl::CSV) sep = textsep+ " ";
 
-    btoppdata += QString::fromStdString(boatName())+"\n";
-    btoppdata += QString::fromStdString(polarName())+"\n\n";
+    btoppdata += boatName()+"\n";
+    btoppdata += polarName()+"\n\n";
     btoppdata += "ctrl       " + sep
               + "beta       " + sep
               + "phi        " + sep
               + "VInf("+speedlab+")" +sep
               + "h("+lengthlab+")\n";
-    strange = QString::asprintf("%11.5g", m_Ctrl);
+    strange = std::format("{:11.5g}", m_Ctrl);
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_Beta);
+    strange = std::format("{:11.5g}", m_Beta);
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_Phi);
+    strange = std::format("{:11.5g}", m_Phi);
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_QInf*Units::mstoUnit());
+    strange = std::format("{:11.5g}", m_QInf*Units::mstoUnit());
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_GroundHeight*Units::mtoUnit());
+    strange = std::format("{:11.5g}", m_GroundHeight*Units::mtoUnit());
     btoppdata += strange;
 
     btoppdata += "\n\n";
@@ -490,25 +298,25 @@ void BoatOpp::exportMainDataToString(Boat const*, std::string &data, xfl::enumTe
             + "Cn_viscous\n";
     btoppdata += strange;
 
-    strange = QString::asprintf("%11.5g", m_AF.CL());
+    strange = std::format("{:11.5g}", m_AF.CL());
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_AF.Cx());
+    strange = std::format("{:11.5g}", m_AF.Cx());
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_AF.Cy());
+    strange = std::format("{:11.5g}", m_AF.Cy());
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_AF.CDi());
+    strange = std::format("{:11.5g}", m_AF.CDi());
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_AF.CDv());
+    strange = std::format("{:11.5g}", m_AF.CDv());
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_AF.Cli());
+    strange = std::format("{:11.5g}", m_AF.Cli());
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_AF.Cmi());
+    strange = std::format("{:11.5g}", m_AF.Cmi());
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_AF.Cmv());
+    strange = std::format("{:11.5g}", m_AF.Cmv());
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_AF.Cni());
+    strange = std::format("{:11.5g}", m_AF.Cni());
     btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_AF.Cnv());
+    strange = std::format("{:11.5g}", m_AF.Cnv());
     btoppdata += strange;
 
     btoppdata += "\n";
@@ -520,9 +328,9 @@ void BoatOpp::exportMainDataToString(Boat const*, std::string &data, xfl::enumTe
     btoppdata += "\n";
 
 
-    strange = QString::asprintf("%11.5g", m_AF.centreOfPressure().x*Units::mtoUnit());    btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_AF.centreOfPressure().y*Units::mtoUnit());    btoppdata += strange+sep;
-    strange = QString::asprintf("%11.5g", m_AF.centreOfPressure().z*Units::mtoUnit());    btoppdata += strange+sep;
+    strange = std::format("{:11.5g}", m_AF.centreOfPressure().x*Units::mtoUnit());    btoppdata += strange+sep;
+    strange = std::format("{:11.5g}", m_AF.centreOfPressure().y*Units::mtoUnit());    btoppdata += strange+sep;
+    strange = std::format("{:11.5g}", m_AF.centreOfPressure().z*Units::mtoUnit());    btoppdata += strange+sep;
     btoppdata += strange + "\n\n";
 
     strange = "mass("+masslab+")";  for(int i=int(strange.length()); i<11; i++) strange+=" ";   btoppdata += strange+sep;
@@ -559,7 +367,7 @@ void BoatOpp::exportMainDataToString(Boat const*, std::string &data, xfl::enumTe
     title += "F.z        ";
     title += '\n';
 
-    data = btoppdata.toStdString();
+    data = btoppdata;
 }
 
 
@@ -567,7 +375,7 @@ void BoatOpp::exportPanel3DataToString(Boat const*pBoat,
                                        xfl::enumTextFileType exporttype,
                                        std::string &data) const
 {
-    QString strong, paneldata;
+    std::string strong, paneldata;
 
     if(exporttype==xfl::TXT) paneldata += " Panel        CtrlPt.x        CtrlPt.y        CtrlPt.z           Nx               Ny             Nz            Area             Cp\n";
     else                     paneldata += "Panel,CtrlPt.x,CtrlPt.y,CtrlPt.z,Nx,Ny,Nz,Area,Cp\n";
@@ -577,7 +385,7 @@ void BoatOpp::exportPanel3DataToString(Boat const*pBoat,
     {
         Sail const *pSail = pBoat->sailAt(iw);
 
-        paneldata += QString::fromStdString(pSail->name())+ "_Cp Coefficients"+"\n";
+        paneldata += pSail->name() + "_Cp Coefficients"+"\n";
         int p=pSail->m_FirstPanel3Index;
 
         for(int i3=0; i3<pSail->nPanel3(); i3++)
@@ -589,10 +397,10 @@ void BoatOpp::exportPanel3DataToString(Boat const*pBoat,
             cp /= 3.0;
 
             if(exporttype==xfl::TXT)
-                strong = QString::asprintf("%d     %11g     %11g     %11g     %11g     %11g     %11g     %11g     %11g\n",
+                strong = std::format("{:d}     {:11g}     {:11g}     {:11g}     {:11g}     {:11g}     {:11g}     {:11g}     {:11g}\n",
                                      p, p3.CoG().x,  p3.CoG().y, p3.CoG().z,  p3.normal().x, p3.normal().y, p3.normal().z, p3.area(), cp);
             else
-                strong = QString::asprintf("%d, %11g, %11g, %11g, %11g, %11g, %11g, %11g, %11g\n",
+                strong = std::format("{:d}, {:11g}, {:11g}, {:11g}, {:11g}, {:11g}, {:11g}, {:11g}, {:11g}\n",
                                      p, p3.CoG().x,  p3.CoG().y, p3.CoG().z,  p3.normal().x, p3.normal().y, p3.normal().z, p3.area(), cp);
 
             paneldata += strong;
@@ -602,5 +410,5 @@ void BoatOpp::exportPanel3DataToString(Boat const*pBoat,
         paneldata += ("\n\n");
     }
 
-    data = paneldata.toStdString();
+    data = paneldata;
 }

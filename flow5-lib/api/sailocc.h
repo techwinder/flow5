@@ -47,7 +47,6 @@ class FL5LIB_EXPORT SailOcc : public ExternalSail
         Sail* clone() const override {return new SailOcc(*this);}
 
         Vector3d point(double , double , xfl::enumSurfacePosition) const override {return Vector3d();}
-        bool serializeSailFl5(QDataStream &ar, bool bIsStoring) override;
         void duplicate(Sail const*pSail) override;
         void flipXZ() override;
         void makeDefaultSail() override {}
@@ -66,11 +65,13 @@ class FL5LIB_EXPORT SailOcc : public ExternalSail
         void clearShapes() {m_Shape.Clear();}
         void appendShape(TopoDS_Shape const &shape) {m_Shape.Append(shape);}
 
+        OccMeshParams &occTessParams() {return m_OccTessParams;}
         OccMeshParams const &occTessParams() const {return m_OccTessParams;}
         void setOccTessParams(OccMeshParams const &params) {m_OccTessParams=params;}
 
 
         std::vector<std::string> const &bReps() const {return m_BRep;}
+        std::vector<std::string> &bReps() {return m_BRep;}
 
         std::string const &logMsg() const {return m_LogMsg;}
         void clearLogMsg() {m_LogMsg.clear();}

@@ -26,8 +26,6 @@
 #pragma once
 
 
-#include <QDataStream>
-
 #include <fl5lib_global.h>
 
 
@@ -145,9 +143,6 @@ struct FL5LIB_EXPORT  AeroForces
     double extraDrag() const {return m_ExtraDrag;}  //N/q
     void setExtraDrag(double d) {m_ExtraDrag=d;}
     void addExtraDrag(double d) {m_ExtraDrag+=d;}
-
-    void serializeFl5_b17(QDataStream &ar, bool bIsStoring);
-    bool serializeFl5(QDataStream &ar, bool bIsStoring);
 
     void displayAF();
 

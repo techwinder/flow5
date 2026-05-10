@@ -51,8 +51,6 @@ class FL5LIB_EXPORT Plane : public fl5Object
         virtual void makeTriMesh(bool bThickSurfaces = false) = 0;
         virtual bool connectTriMesh(bool bRefTriMesh, bool bConnectTE, bool bMultithreaded=true) = 0;
 
-        virtual bool serializePlaneFl5(QDataStream &ar, bool bIsStoring) = 0;
-
         virtual int nParts() const = 0;
         virtual int nWings() const = 0;
         virtual int nFuse()  const = 0;

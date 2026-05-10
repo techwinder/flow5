@@ -22,11 +22,11 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
+
 
 #include <thread>
 #include <iostream>
-#include <QString>
+#include <format>
 
 
 
@@ -79,9 +79,9 @@ void P3LinAnalysis::makeMatrixBlock(int iBlock)
 
             if(std::isnan(sp[0]) || std::isnan(sp[1]) || std::isnan(sp[2]))
             {
-                QString strange;
-                strange = QString::asprintf("      *** numerical error when calculating the influence of panel %d on panel %d ***\n", k3, i3);
-                traceLog(strange);
+                std::string strange;
+                strange = std::format("      *** numerical error when calculating the influence of panel {:d} on panel {:d} ***\n", k3, i3);
+                traceStdLog(strange);
                 m_bMatrixError = true;
                 return;
             }
@@ -93,9 +93,9 @@ void P3LinAnalysis::makeMatrixBlock(int iBlock)
                 {
                     int col = 3*k3+kBasis;
                     if(s_bDoublePrecision)
-                        m_aijd[uint(row*N+col)] = sp[3*iBasis+kBasis];// * p3i->orientationSign();
+                        m_aijd[unsigned(row*N+col)] = sp[3*iBasis+kBasis];// * p3i->orientationSign();
                     else
-                        m_aijf[uint(row*N+col)] = float(sp[3*iBasis+kBasis]);// * p3i->orientationSign();
+                        m_aijf[unsigned(row*N+col)] = float(sp[3*iBasis+kBasis]);// * p3i->orientationSign();
                 }
             }
 
@@ -118,8 +118,8 @@ void P3LinAnalysis::makeMatrixBlock(int iBlock)
                     for(int kBasis=0; kBasis<3; kBasis++)
                     {
                         int col = 3*k3+kBasis;
-                        if(s_bDoublePrecision) m_aijd[uint(row*N+col)] += sp[3*iBasis+kBasis]*coef;
-                        else                   m_aijf[uint(row*N+col)] += float(sp[3*iBasis+kBasis]*coef);
+                        if(s_bDoublePrecision) m_aijd[unsigned(row*N+col)] += sp[3*iBasis+kBasis]*coef;
+                        else                   m_aijf[unsigned(row*N+col)] += float(sp[3*iBasis+kBasis]*coef);
                     }
                 }
             }
@@ -162,12 +162,12 @@ void P3LinAnalysis::makeWakeMatrixBlock(int iBlock)
                 // calculate the contribution of the wake column shed by p3k
                 if(!scalarProductWake(p3i, p3k.iWake(), scalarLeft, scalarRight))
                 {
-                    QString strange;
-                    strange = QString::asprintf("*** numerical error calculating the scalar products of panel %d with the wake contribution of TE panel %d\n", i3, k3);
+                    std::string strange;
+                    strange = std::format("*** numerical error calculating the scalar products of panel {:d} with the wake contribution of TE panel {:d}\n", i3, k3);
                     strange += "*** aborting calculation \n";
                     m_bMatrixError = true;
                     m_bWarning = true;
-                    traceLog(strange);
+                    traceStdLog(strange);
                     return;
                 }
                 for(int ib=0; ib<3; ib++)
@@ -189,18 +189,18 @@ void P3LinAnalysis::makeWakeMatrixBlock(int iBlock)
                         if(s_bDoublePrecision)
                         {
                             // add the wake's left contribution to basis function 1
-                            m_aijd[uint(row*N + col1)] += sign * LeftContrib[ib];
+                            m_aijd[unsigned(row*N + col1)] += sign * LeftContrib[ib];
 
                             // add the wake's right contribution to basis function 2
-                            m_aijd[uint(row*N + col2)] += sign * RightContrib[ib];
+                            m_aijd[unsigned(row*N + col2)] += sign * RightContrib[ib];
                         }
                         else
                         {
                             // add the wake's left contribution to basis function 1
-                            m_aijf[uint(row*N + col1)] += float(sign * LeftContrib[ib]);
+                            m_aijf[unsigned(row*N + col1)] += float(sign * LeftContrib[ib]);
 
                             // add the wake's right contribution to basis function 2
-                            m_aijf[uint(row*N + col2)] += float(sign * RightContrib[ib]);
+                            m_aijf[unsigned(row*N + col2)] += float(sign * RightContrib[ib]);
                         }
                     }
                 }
@@ -217,18 +217,18 @@ void P3LinAnalysis::makeWakeMatrixBlock(int iBlock)
                         if(s_bDoublePrecision)
                         {
                             // add the wake's left contribution to basis function 1
-                            m_aijd[uint(row*N + col1)] += sign * LeftContrib[ib];
+                            m_aijd[unsigned(row*N + col1)] += sign * LeftContrib[ib];
 
                             // add the wake's right contribution to basis function 2
-                            m_aijd[uint(row*N + col2)] += sign * RightContrib[ib];
+                            m_aijd[unsigned(row*N + col2)] += sign * RightContrib[ib];
                         }
                         else
                         {
                             // add the wake's left contribution to basis function 1
-                            m_aijf[uint(row*N + col1)] += float(sign * LeftContrib[ib]);
+                            m_aijf[unsigned(row*N + col1)] += float(sign * LeftContrib[ib]);
 
                             // add the wake's right contribution to basis function 2
-                            m_aijf[uint(row*N + col2)] += float(sign * RightContrib[ib]);
+                            m_aijf[unsigned(row*N + col2)] += float(sign * RightContrib[ib]);
                         }
                     }
 
@@ -244,18 +244,18 @@ void P3LinAnalysis::makeWakeMatrixBlock(int iBlock)
                         if(s_bDoublePrecision)
                         {
                             // add the wake's left contribution to basis function 1
-                            m_aijd[uint(row*N + col1)] += sign * LeftContrib[ib];
+                            m_aijd[unsigned(row*N + col1)] += sign * LeftContrib[ib];
 
                             // add the wake's right contribution to basis function 2
-                            m_aijd[uint(row*N + col2)] += sign * RightContrib[ib];
+                            m_aijd[unsigned(row*N + col2)] += sign * RightContrib[ib];
                         }
                         else
                         {
                             // add the wake's left contribution to basis function 1
-                            m_aijf[uint(row*N + col1)] += float(sign * LeftContrib[ib]);
+                            m_aijf[unsigned(row*N + col1)] += float(sign * LeftContrib[ib]);
 
                             // add the wake's right contribution to basis function 2
-                            m_aijf[uint(row*N + col2)] += float(sign * RightContrib[ib]);
+                            m_aijf[unsigned(row*N + col2)] += float(sign * RightContrib[ib]);
                         }
                     }
                 }
@@ -294,7 +294,7 @@ bool P3LinAnalysis::scalarProductWake(Panel3 const &panel0, int iWake, double *s
 
     GQTriangle gq(Panel3::quadratureOrder());
 
-    for(uint igq=0; igq<gq.points().size(); igq++)
+    for(unsigned int igq=0; igq<gq.points().size(); igq++)
     {
         double x = panel0.m_Sl[0].x*(1.0-gq.points().at(igq).x-gq.points().at(igq).y) + panel0.m_Sl[1].x*gq.points().at(igq).x + panel0.m_Sl[2].x*gq.points().at(igq).y;
         double y = panel0.m_Sl[0].y*(1.0-gq.points().at(igq).x-gq.points().at(igq).y) + panel0.m_Sl[1].y*gq.points().at(igq).x + panel0.m_Sl[2].y*gq.points().at(igq).y;
@@ -513,8 +513,8 @@ void P3LinAnalysis::sourceToRHS(std::vector<double> const &sigma, std::vector<do
     matrix::matVecMultLapack(m_bijf.data(), sig.data(), rhs.data(), ncols, nrows, std::thread::hardware_concurrency());
 
 /*    auto t1 = std::chrono::high_resolution_clock::now();
-    int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    qDebug("P3LinAnalysis::sourceToRHS:matmult %g ms", double(duration)/1000.0);*/
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+    qDebug("P3LinAnalysis::sourceToRHS:matmult {:g} ms", double(duration)/1000.0);*/
 
     for(int i=0; i<nrows; i++) RHS[i] = double(rhs.at(i));
 }
@@ -626,7 +626,7 @@ void P3LinAnalysis::makeNodeDoubletSurfaceVelocity(int iNode, std::vector<double
     while(Xrnd.dot(nnormal)>0.25 && Xrnd.dot(nnormal)<0.75 && iter<50);
     if(iter>=50)
     {
-        traceLog(QString::asprintf("      ***** Error making doublet derivative at node %d\n", iNode));
+        traceStdLog(std::format("      ***** Error making doublet derivative at node {:d}\n", iNode));
         uNode.set(0,0,0);
         wNode.set(0,0,0);
         return;
@@ -1127,7 +1127,7 @@ void P3LinAnalysis::testResults(double alpha, double beta, double QInf) const
         GQTriangle gq(Panel3::quadratureOrder());
 
         double average = 0;
-        for(uint igq=0; igq<gq.points().size(); igq++)
+        for(unsigned int igq=0; igq<gq.points().size(); igq++)
         {
             double x = p3.m_Sl[0].x*(1.0-gq.points().at(igq).x-gq.points().at(igq).y) + p3.m_Sl[1].x*gq.points().at(igq).x + p3.m_Sl[2].x*gq.points().at(igq).y;
             double y = p3.m_Sl[0].y*(1.0-gq.points().at(igq).x-gq.points().at(igq).y) + p3.m_Sl[1].y*gq.points().at(igq).x + p3.m_Sl[2].y*gq.points().at(igq).y;
@@ -1141,10 +1141,10 @@ void P3LinAnalysis::testResults(double alpha, double beta, double QInf) const
             {
                 s_DebugPts.push_back(ptGlobal);
                 s_DebugVecs.push_back(Vel);
-//                qDebug(" pt_%d: %13g", igq, Vel.dot(p3.normal()));
+//                qDebug(" pt_{:d}: {:13g}", igq, Vel.dot(p3.normal()));
             }
         }
-        qDebug(" average[%d]=%13g", i3, average/gq.points().size());
+        std::cout << std::format(" average[{:d}]={:13g}", i3, average/gq.points().size()) << EOLstr;
     }
 
 }

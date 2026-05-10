@@ -117,7 +117,6 @@ class FL5LIB_EXPORT Sail : public Part
         virtual Node edgeNode(double xrel, double zrel, xfl::enumSurfacePosition pos=xfl::MIDSURFACE) const;
         virtual Vector3d normal(double xrel, double zrel, xfl::enumSurfacePosition pos=xfl::MIDSURFACE) const;
         virtual void makeSurface() = 0;
-        virtual bool serializeSailFl5(QDataStream &ar, bool bIsStoring);
 
         virtual void createSection(int iSection) = 0;
         virtual void deleteSection(int iSection) = 0;
@@ -177,19 +176,27 @@ class FL5LIB_EXPORT Sail : public Part
         Vector3d const &tack() const {return m_Tack;}
         Vector3d const &peak() const {return m_Peak;}
 
+        void setClew(Vector3d const&pos) {m_Clew = pos;}
+        void setHead(Vector3d const&pos) {m_Head = pos;}
+        void setTack(Vector3d const&pos) {m_Tack = pos;}
+        void setPeak(Vector3d const&pos) {m_Peak = pos;}
+
         virtual void updateStations();
 
         void setTEfromIndexes();
         void clearTEIndexes();
         void addTEindex(int idx, bool bBotMid);
         bool removeTEindex(int i3, bool bBotMid);
+        std::vector<int> &topTEIndexes()  {return m_TopTEIndexes;}
+        std::vector<int> &botMidTEIndexes()  {return m_BotMidTEIndexes;}
         std::vector<int> const &topTEIndexes() const {return m_TopTEIndexes;}
         std::vector<int> const &botMidTEIndexes() const {return m_BotMidTEIndexes;}
 
+        std::vector<Triangle3d> &triangles() {return m_RefTriangles;}
+        std::vector<Triangle3d> const &triangles() const {return m_RefTriangles;}
         void clearRefTriangles() {m_RefTriangles.clear();}
         Triangle3d const& refTriangleAt(int index) const {return m_RefTriangles.at(index);}
         Triangle3d & refPanel(int index) {return m_RefTriangles[index];}
-        std::vector<Triangle3d> const& refTriangles() {return m_RefTriangles;}
         void setRefTriangles(std::vector<Triangle3d> const &triangles) {m_RefTriangles = triangles;}
 
         bool isThinSurface() const {return m_bThinSurface;}
@@ -211,7 +218,8 @@ class FL5LIB_EXPORT Sail : public Part
         void setZDistType(xfl::enumDistribution xdisttype) {m_ZDistrib = xdisttype;}
 
 
-        std::vector<std::vector<EdgeSplit>> const &edgeSplit() {return m_EdgeSplit;} // for each face<each edge>
+        std::vector<std::vector<EdgeSplit>> const &edgeSplit() const {return m_EdgeSplit;} // for each face<each edge>
+        std::vector<std::vector<EdgeSplit>> &edgeSplit() {return m_EdgeSplit;} // for each face<each edge>
 
 
 

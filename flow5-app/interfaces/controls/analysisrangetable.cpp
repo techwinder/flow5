@@ -36,7 +36,7 @@
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
 
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <api/constants.h>
 
 QVector<AnalysisRange> AnalysisRangeTable::s_AlphaRange;

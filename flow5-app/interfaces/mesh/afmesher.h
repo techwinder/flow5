@@ -30,7 +30,7 @@
 
 #include <api/triangle3d.h>
 #include <api/edgesplit.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 #include <interfaces/mesh/slg3d.h>
 
 #include <TopoDS_Face.hxx>

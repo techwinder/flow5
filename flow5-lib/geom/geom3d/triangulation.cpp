@@ -23,7 +23,6 @@
 *****************************************************************************/
 
 
-#include <QDataStream>
 
 #include <triangulation.h>
 #include <constants.h>
@@ -45,7 +44,7 @@ int Triangulation::makeNodes()
     //make the array of nodes and set the vertex indices
     m_Node.clear();
     m_Node.reserve(m_Triangle.size()*3);
-    for(uint it=0; it<m_Triangle.size(); it++)
+    for(unsigned int it=0; it<m_Triangle.size(); it++)
     {
         Triangle3d &t3 = m_Triangle[it];
         for(int iv=0; iv<3; iv++)
@@ -73,7 +72,7 @@ int Triangulation::makeNodes()
 void Triangulation::makeNodeNormals(bool bReversed)
 {
     //make the node normals
-    for(uint iNode=0; iNode<m_Node.size(); iNode++)
+    for(unsigned int iNode=0; iNode<m_Node.size(); iNode++)
     {
         Node &node = m_Node[iNode];
         Vector3d normal(0.0,0.0,0.0);
@@ -105,7 +104,7 @@ void Triangulation::makeNodeNormals(bool bReversed)
     }
 
     //set the normals at the triangle nodes
-    for(uint it=0; it<m_Triangle.size(); it++)
+    for(unsigned int it=0; it<m_Triangle.size(); it++)
     {
         Triangle3d &t3 = m_Triangle[it];
         for(int iv=0; iv<3; iv++)
@@ -139,12 +138,12 @@ int Triangulation::isTriangleNode(const Node &nd) const
 
 void Triangulation::flipXZ()
 {
-    for(uint it=0; it<m_Triangle.size(); it++)
+    for(unsigned int it=0; it<m_Triangle.size(); it++)
     {
         m_Triangle[it].flipXZ();
     }
 
-    for(uint in=0; in<m_Node.size(); in++)
+    for(unsigned int in=0; in<m_Node.size(); in++)
     {
         m_Node[in].y = m_Node[in].y;
     }
@@ -153,12 +152,12 @@ void Triangulation::flipXZ()
 
 void Triangulation::scale(double XFactor, double YFactor, double ZFactor)
 {
-    for(uint it=0; it<m_Triangle.size(); it++)
+    for(unsigned int it=0; it<m_Triangle.size(); it++)
     {
         m_Triangle[it].scale(XFactor, YFactor, ZFactor);
     }
 
-    for(uint in=0; in<m_Node.size(); in++)
+    for(unsigned int in=0; in<m_Node.size(); in++)
     {
         m_Node[in].x *= XFactor;
         m_Node[in].y *= YFactor;
@@ -169,12 +168,12 @@ void Triangulation::scale(double XFactor, double YFactor, double ZFactor)
 
 void Triangulation::translate(const Vector3d &T)
 {
-    for(uint it=0; it<m_Triangle.size(); it++)
+    for(unsigned int it=0; it<m_Triangle.size(); it++)
     {
         m_Triangle[it].translate(T);
     }
 
-    for(uint in=0; in<m_Node.size(); in++)
+    for(unsigned int in=0; in<m_Node.size(); in++)
     {
         m_Node[in].translate(T);
     }
@@ -183,12 +182,12 @@ void Triangulation::translate(const Vector3d &T)
 
 void Triangulation::rotate(Vector3d const &Origin, Vector3d const&axis, double theta)
 {
-    for(uint it=0; it<m_Triangle.size(); it++)
+    for(unsigned int it=0; it<m_Triangle.size(); it++)
     {
         m_Triangle[it].rotate(Origin, axis, theta);
     }
 
-    for(uint in=0; in<m_Node.size(); in++)
+    for(unsigned int in=0; in<m_Node.size(); in++)
     {
         m_Node[in].rotate(Origin, axis, theta);
     }
@@ -235,14 +234,14 @@ void Triangulation::makeXZsymmetric()
 
 void Triangulation::flipNormals()
 {
-    for(uint it=0; it<m_Triangle.size(); it++)
+    for(unsigned int it=0; it<m_Triangle.size(); it++)
     {
         m_Triangle[it].reverseOrientation();
         for(int it=0; it<3; it++)
             m_Triangle[it].vertex(it).normal().reverse();
     }
 
-    for(uint it=0; it<m_Node.size(); it++)
+    for(unsigned int it=0; it<m_Node.size(); it++)
         m_Node[it].normal().reverse();
 }
 
@@ -250,7 +249,7 @@ void Triangulation::flipNormals()
 double Triangulation::wettedArea() const
 {
     double area=0.0;
-    for(uint it=0; it<m_Triangle.size(); it++)
+    for(unsigned int it=0; it<m_Triangle.size(); it++)
     {
         area += m_Triangle.at(it).area();
     }
@@ -295,61 +294,11 @@ void Triangulation::computeSurfaceProperties(double &lx, double &ly, double &lz,
 }
 
 
-bool Triangulation::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    int n(0);
-    float xf(0),yf(0),zf(0);
-
-    Vector3d V0,V1,V2;
-
-    // 500001: new fl5 format
-    int ArchiveFormat = 500002;
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-
-        ar << nTriangles();
-        for(int i=0; i<nTriangles(); i++)
-        {
-            Triangle3d const &t3d = triangleAt(i);
-            ar << t3d.vertexAt(0).xf() << t3d.vertexAt(0).yf() << t3d.vertexAt(0).zf();
-            ar << t3d.vertexAt(1).xf() << t3d.vertexAt(1).yf() << t3d.vertexAt(1).zf();
-            ar << t3d.vertexAt(2).xf() << t3d.vertexAt(2).yf() << t3d.vertexAt(2).zf();
-        }
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<500001 || ArchiveFormat>500010) return false;
-
-        m_Triangle.clear();
-        m_Node.clear();
-
-        ar >> n;
-        m_Triangle.resize(n);
-        for(int i3=0; i3<n; i3++)
-        {
-            ar >> xf >> yf >> zf;
-            V0.set(double(xf), double(yf), double(zf));
-
-            ar >> xf >> yf >> zf;
-            V1.set(double(xf), double(yf), double(zf));
-
-            ar >> xf >> yf >> zf;
-            V2.set(double(xf), double(yf), double(zf));
-
-            m_Triangle[i3].setTriangle(V0, V1, V2);
-        }
-    }
-    return true;
-}
-
-
 /** Assumes that the connections have been made */
 void Triangulation::getFreeEdges(std::vector<Segment3d> &freeedges) const
 {
     freeedges.clear();
-    for(uint i3=0; i3<m_Triangle.size(); i3++)
+    for(unsigned int i3=0; i3<m_Triangle.size(); i3++)
     {
         Triangle3d const &p3 = m_Triangle.at(i3);
         for(int i=0; i<3; i++)
@@ -378,7 +327,7 @@ bool Triangulation::areNeighbours(Triangle3d const &t1, Triangle3d const &t2) co
 
 void Triangulation::clearConnections()
 {
-    for(uint it0=0; it0<m_Triangle.size(); it0++)
+    for(unsigned int it0=0; it0<m_Triangle.size(); it0++)
     {
         m_Triangle[it0].clearConnections();
     }
@@ -397,7 +346,7 @@ void Triangulation::makeTriangleConnections()
 
     clearConnections();
 
-    for(uint it0=0; it0<m_Triangle.size(); it0++)
+    for(unsigned int it0=0; it0<m_Triangle.size(); it0++)
     {
         Triangle3d &t30 = m_Triangle[it0];
         // seek neighbours around the triangle's index first moving upwards and downwards
@@ -418,7 +367,7 @@ void Triangulation::makeTriangleConnections()
                 }
             }
         }
-        for(uint it1=it0+1; it1<m_Triangle.size(); it1++)
+        for(unsigned int it1=it0+1; it1<m_Triangle.size(); it1++)
         {
             Triangle3d &t31 = m_Triangle[it1];
             if(t30.neighbourCount()>=3) break; // a triangle has no more than 3 neighbours

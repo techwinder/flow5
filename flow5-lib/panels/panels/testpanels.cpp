@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <QDebug>
+#include <iostream>
+#include <format>
 
 
 
@@ -64,7 +65,7 @@ void testBasisFunctions()
     g[0]=1.0;  g[1]=0.0;   g[2]=0.0;
     panelSource.cartesianCoords(g, ptGlobal);
     Vector3d ptLocal = panelSource.globalToLocalPosition(ptGlobal);
-    qDebug()<<panelSource.basis(ptLocal.x, ptLocal.y, 0)<<panelSource.basis(ptLocal.x, ptLocal.y, 1)<<panelSource.basis(ptLocal.x, ptLocal.y, 2);
+    std::cout << panelSource.basis(ptLocal.x, ptLocal.y, 0)<<panelSource.basis(ptLocal.x, ptLocal.y, 1)<<panelSource.basis(ptLocal.x, ptLocal.y, 2)  << std::endl;
 }
 
 
@@ -93,11 +94,11 @@ void testPanel3_3()
     p3.sourceVelocity(pt, false, VBasis);
     p3.sourceN4023Potential(pt, false, phiNasa, 0.0);
     p3.sourceN4023Velocity(pt, false, VNasa, 0.0);
-    qDebug(" SOURCE             GQ              tw++      NASA");
-    qDebug("       phi=   %13.7g   %13.7g   %13.7g", phiGQ, phiBasis, phiNasa);
-    qDebug("       Vx =   %13.7g   %13.7g   %13.7g", VGQ.x, VBasis.x, VNasa.x);
-    qDebug("       Vy =   %13.7g   %13.7g   %13.7g", VGQ.y, VBasis.y, VNasa.y);
-    qDebug("       Vz =   %13.7g   %13.7g   %13.7g", VGQ.z, VBasis.z, VNasa.z);
+    std::cout << (" SOURCE             GQ              tw++      NASA") << std::endl;
+    std::cout << std::format("       phi=   {:13.7g}   {:13.7g}   {:13.7g}", phiGQ, phiBasis, phiNasa) << std::endl;
+    std::cout << std::format("       Vx =   {:13.7g}   {:13.7g}   {:13.7g}", VGQ.x, VBasis.x, VNasa.x) << std::endl;
+    std::cout << std::format("       Vy =   {:13.7g}   {:13.7g}   {:13.7g}", VGQ.y, VBasis.y, VNasa.y) << std::endl;
+    std::cout << std::format("       Vz =   {:13.7g}   {:13.7g}   {:13.7g}", VGQ.z, VBasis.z, VNasa.z) << std::endl;
 
     p3.doubletQuadraturePotential(pt, phiq);
     p3.doubletQuadratureVelocity(pt, Vq);
@@ -110,11 +111,11 @@ void testPanel3_3()
     p3.doubletBasisVelocity(pt, Vb, true);
     VBasis = Vb[0]*mu0 + Vb[1]*mu1 + Vb[2]*mu2;
 
-    qDebug(" DOUBLET            GQ              tw++");
-    qDebug("       phi=   %13.7g   %13.7g", phiGQ, phiBasis);
-    qDebug("       Vx =   %13.7g   %13.7g", VGQ.x, VBasis.x);
-    qDebug("       Vy =   %13.7g   %13.7g", VGQ.y, VBasis.y);
-    qDebug("       Vz =   %13.7g   %13.7g", VGQ.z, VBasis.z);
+    std::cout << std::format(" DOUBLET            GQ              tw++") << std::endl;
+    std::cout << std::format("       phi=   {:13.7g}   {:13.7g}", phiGQ, phiBasis) << std::endl;
+    std::cout << std::format("       Vx =   {:13.7g}   {:13.7g}", VGQ.x, VBasis.x) << std::endl;
+    std::cout << std::format("       Vy =   {:13.7g}   {:13.7g}", VGQ.y, VBasis.y) << std::endl;
+    std::cout << std::format("       Vz =   {:13.7g}   {:13.7g}", VGQ.z, VBasis.z) << std::endl;
 }
 
 
@@ -154,7 +155,7 @@ void testPanel4()
 //        p4.sourceNASA4023(pt, bSelf, V, phi, 0.000001);
         p4.doubletN4023Velocity( pt, V,   0.000001, true);
         p4.doubletN4023Potential(pt, bSelf, phi, 0.000001, true);
-        qDebug(" %13.7g  %13.7g  %13.7g  %13.7g  %13.7g ", t, phi, V.x, V.y, V.z);
+        std::cout << std::format(" {:13.7g}  {:13.7g}  {:13.7g}  {:13.7g}  {:13.7g} ", t, phi, V.x, V.y, V.z);
     }
     //restore things as they were
     Panel::setRFF(rff);
@@ -168,7 +169,7 @@ void testVortex()
     Vector3d C(0.0, -0.3213, 0.5);
     double phi;
     Panel::vortexSegmentPotential(A,B,C,phi);
-    qDebug("phi=%13.7f", phi);
+    std::cout << std::format("phi={:13.7f}", phi);
     return;*/
 
     Vector3d Vertice[4];
@@ -224,8 +225,8 @@ void testVortex()
         p4.doubletVortex(point, bSelf, VRing, phim, 0.000001, false);
         VRing.z = (phip-phim)/2/dl;*/
 
-//        qDebug(" %13.7f  %13.7g  %13.7g", t, phiNasa, phiRing/4.0/PI);
-        qDebug(" %13.7f  %13.7f  %13.7f  %13.7f  %13.7f  %13.7f  %13.7f", t, VNasa.x, VNasa.y, VNasa.z,
+//        std::cout << std::format(" {:13.7f}  {:13.7g}  {:13.7g}", t, phiNasa, phiRing/4.0/PI);
+        std::cout << std::format(" {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}", t, VNasa.x, VNasa.y, VNasa.z,
                                                                              VRing.x, VRing.y, VRing.z);
     }
     //restore things as they were
@@ -281,8 +282,8 @@ void testPanel3_1()
 //        phiTW = phi[0]+phi[1]+phi[2];
         VTW = V[0]+V[1]+V[2];
 
-        qDebug(" %13.7f  %13.7f  %13.7f  %13.7f  %13.7f  %13.7f  %13.7f ", t, VNasa.x, VNasa.y, VNasa.z, VTW.x, VTW.y, VTW.z);
-//        qDebug(" %13.7f  %13.7f  %13.7f ",t, phiNasa, phiTW);
+        std::cout << std::format(" {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f} ", t, VNasa.x, VNasa.y, VNasa.z, VTW.x, VTW.y, VTW.z) << std::endl;
+//        std::cout << std::format(" {:13.7f}  {:13.7f}  {:13.7f} ",t, phiNasa, phiTW);
     }
 
     //restore things as they were
@@ -308,29 +309,29 @@ void testPanel2d()
     int iEdge=-1;
     bool bEdge=false;
     bEdge = t2d.isOnEdge(Vector2d(1.6, 1.0), iEdge); // true, 2
-    qDebug()<<"isOnEdge"<<bEdge<<iEdge;
+    std::cout <<"isOnEdge"<<bEdge<<iEdge << std::endl;
     bEdge = t2d.isOnEdge(Vector2d(1.6, 1.1), iEdge); // false
-    qDebug()<<"isOnEdge"<<bEdge<<iEdge;
+    std::cout <<"isOnEdge"<<bEdge<<iEdge << std::endl;
     bEdge = t2d.isOnEdge(Vector2d(1.6, 0.9), iEdge); // false
-    qDebug()<<"isOnEdge"<<bEdge<<iEdge;
+    std::cout <<"isOnEdge"<<bEdge<<iEdge << std::endl;
     bEdge = t2d.isOnEdge(Vector2d(1.6, 0.6), iEdge); // true, 1
-    qDebug()<<"isOnEdge"<<bEdge<<iEdge;
+    std::cout <<"isOnEdge"<<bEdge<<iEdge << std::endl;
     bEdge = t2d.isOnEdge(Vector2d(1.0, 0.7), iEdge); // true, 0
-    qDebug()<<"isOnEdge"<<bEdge<<iEdge;
+    std::cout <<"isOnEdge"<<bEdge<<iEdge << std::endl;
 
-    qDebug()<<"--";
+    std::cout <<"--";
     // check is inside
-    qDebug()<<"  hasInside"<<t2d.isInside(0.0,0.0); // false
-    qDebug()<<"  hasInside"<<t2d.isInside(1.4,0.0); // false
-    qDebug()<<"  hasInside"<<t2d.isInside(1.4,1.2); // false
-    qDebug()<<"  hasInside"<<t2d.isInside(0.8,0.5); // false
-    qDebug()<<"  hasInside"<<t2d.isInside(2.2,0.5); // false
-    qDebug()<<"  hasInside"<<t2d.isInside(1.4,0.8); // true
-    qDebug()<<"  hasInside"<<t2d.isInside(1.99,0.995); // true
-    qDebug()<<"  hasInside"<<t2d.isInside(1.01,0.995); // true
-    qDebug()<<"  hasInside"<<t2d.isInside(1.01,1.005); // false
-    qDebug()<<"  hasInside"<<t2d.isInside(1.01,0.015); // true
-    qDebug()<<"--";
+    std::cout <<"  hasInside"<<t2d.isInside(0.0,0.0) << std::endl; // false
+    std::cout <<"  hasInside"<<t2d.isInside(1.4,0.0) << std::endl; // false
+    std::cout <<"  hasInside"<<t2d.isInside(1.4,1.2) << std::endl; // false
+    std::cout <<"  hasInside"<<t2d.isInside(0.8,0.5) << std::endl; // false
+    std::cout <<"  hasInside"<<t2d.isInside(2.2,0.5) << std::endl; // false
+    std::cout <<"  hasInside"<<t2d.isInside(1.4,0.8) << std::endl; // true
+    std::cout <<"  hasInside"<<t2d.isInside(1.99,0.995) << std::endl; // true
+    std::cout <<"  hasInside"<<t2d.isInside(1.01,0.995) << std::endl; // true
+    std::cout <<"  hasInside"<<t2d.isInside(1.01,1.005) << std::endl; // false
+    std::cout <<"  hasInside"<<t2d.isInside(1.01,0.015) << std::endl; // true
+    std::cout <<"--" << std::endl;
 
 /*    TRIANGLE::enumPointPosition pos;
     pos = t2d.pointPosition(0.0,0.0, iVertex, iEdge); // OUTSIDE
@@ -365,12 +366,12 @@ void testPanelNF1(bool bPositive)
     Panel3 p3;
     if(bPositive)
     {
-        qDebug("-----Testing positive orientation-----");
+        std::cout << std::format("-----Testing positive orientation-----") << std::endl;
                 p3.setFrame(Vertice[0], Vertice[1], Vertice[2]);
     }
     else
     {
-        qDebug("-----Testing negative orientation-----");
+        std::cout << std::format("-----Testing negative orientation-----") << std::endl;
                 p3.setFrame(Vertice[0], Vertice[1], Vertice[2]); /// assert false
     }
 
@@ -394,18 +395,18 @@ void testPanelNF1(bool bPositive)
     memset(NF5, 0, 6*sizeof(double));
     p3.computeNFIntegrals(ptGlobal, NF1, NF3, NF5, true);
 
-    qDebug("1/r:      /            GQ            MC               NF");
+    std::cout << std::format("1/r:      /            GQ            MC               NF") << std::endl;
     for(int i=0; i<3; i++)
-        qDebug("    I1[%d] %15.7g  %15.7g  %15.7g", i, G1[i], MC1[i], NF1[i]);
+        std::cout << std::format("    I1[{:d}] %15.7g  %15.7g  %15.7g", i, G1[i], MC1[i], NF1[i]) << std::endl;
 
-    qDebug("1/r³:");
+    std::cout << std::format("1/r³:") << std::endl;
     for(int i=0; i<6; i++)
-        qDebug("    I3[%d] %15.7g  %15.7g  %15.7g", i, G3[i], MC3[i], NF3[i]);
+        std::cout << std::format("    I3[{:d}] %15.7g  %15.7g  %15.7g", i, G3[i], MC3[i], NF3[i]) << std::endl;
 
-    qDebug("1/r⁵:");
+    std::cout << std::format("1/r⁵:") << std::endl;
     for(int i=0; i<6; i++)
-        qDebug("    I5[%d] %15.7g  %15.7g  %15.7g", i, G5[i], MC5[i], NF5[i]);
-    qDebug(" ");
+        std::cout << std::format("    I5[{:d}] %15.7g  %15.7g  %15.7g", i, G5[i], MC5[i], NF5[i]) << std::endl;
+    std::cout << std::format(" ") << std::endl;
 }
 
 
@@ -439,19 +440,19 @@ void testPanel5()
     memset(NF5, 0, 6*sizeof(double));
     p3.computeNFIntegrals(ptGlobal, NF1, NF3, NF5, false);
 
-    qDebug("1/r:      /            GQ            MC               NF");
+    std::cout << std::format("1/r:      /            GQ            MC               NF") << std::endl;
     for(int i=0; i<3; i++)
-        qDebug("    I1[%d] %15.7g  %15.7g  %15.7g", i, G1[i], MC1[i], NF1[i]);
+        std::cout << std::format("    I1[{:d}] %15.7g  %15.7g  %15.7g", i, G1[i], MC1[i], NF1[i]) << std::endl;
 
-    qDebug("1/r³:     /            GQ              MC                 NF");
+    std::cout << std::format("1/r³:     /            GQ              MC                 NF") << std::endl;
     for(int i=0; i<6; i++)
-        qDebug("    I3[%d] %15.7g  %15.7g  %15.7g", i, G3[i], MC3[i], NF3[i]);
+        std::cout << std::format("    I3[{:d}] %15.7g  %15.7g  %15.7g", i, G3[i], MC3[i], NF3[i]) << std::endl;
 
-    qDebug("1/r⁵:     /            GQ              MC                 NF");
+    std::cout << std::format("1/r⁵:     /            GQ              MC                 NF") << std::endl;
     for(int i=0; i<6; i++)
-        qDebug("    I5[%d] %15.7g  %15.7g  %15.7g", i, G5[i], MC5[i], NF5[i]);
-    qDebug(" ");
-    qDebug(" ");
+        std::cout << std::format("    I5[{:d}] %15.7g  %15.7g  %15.7g", i, G5[i], MC5[i], NF5[i]) << std::endl;
+    std::cout << std::format(" ") << std::endl;
+    std::cout << std::format(" ") << std::endl;
 }
 
 
@@ -460,7 +461,7 @@ double potentialP3(const Vector3d &pt, const std::vector<Panel3> &panel3, PANELM
     double phib[]{0,0,0};
     double phi(0), phi_tot(0);
 
-    for(uint i3=0; i3<panel3.size(); i3++)
+    for(unsigned int i3=0; i3<panel3.size(); i3++)
     {
         Panel3 const &p3 = panel3.at(i3);
         if(Method==BASIS)
@@ -488,7 +489,7 @@ double potentialP4(const Vector3d &pt, const std::vector<Panel4> &panel4, PANELM
 {
     double phi(0), phi_tot(0);
 
-    for(uint i4=0; i4<panel4.size(); i4++)
+    for(unsigned int i4=0; i4<panel4.size(); i4++)
     {
         Panel4 const &p4 = panel4.at(i4);
         if(Method==NASA4023)
@@ -509,7 +510,7 @@ Vector3d velocityP3(Vector3d const &pt, std::vector<Panel3> const &panel3,
 {
     Vector3d V, vel, Vb[3];
 
-    for(uint i3=0; i3<panel3.size(); i3++)
+    for(unsigned int i3=0; i3<panel3.size(); i3++)
     {
         Panel3 const &p3 = panel3.at(i3);
         if(bSource)
@@ -548,7 +549,7 @@ Vector3d velocityP4(Vector3d const &pt, std::vector<Panel4> const &panel4, PANEL
 {
     Vector3d V, vel;
 
-    for(uint i4=0; i4<panel4.size(); i4++)
+    for(unsigned int i4=0; i4<panel4.size(); i4++)
     {
         Panel4 const &p4 = panel4.at(i4);
         if(bSource)

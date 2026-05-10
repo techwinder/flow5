@@ -46,8 +46,6 @@ class FL5LIB_EXPORT Polar3d : public XflObject
 
         virtual void duplicateSpec(Polar3d const *pPolar3d);
 
-        virtual bool serializeFl5v726(QDataStream &ar, bool bIsStoring);
-        virtual bool serializeFl5v750(QDataStream &ar, bool bIsStoring);
         virtual double TrefftzDistance() const = 0;
 
         virtual double windFactor(double x, double y, double z) const {(void)x; (void)y; (void)z; return 1.0;}  // overriden by WindGradient of BoatPolars
@@ -60,6 +58,7 @@ class FL5LIB_EXPORT Polar3d : public XflObject
 
 
         int polarFormat() const {return m_PolarFormat;}
+        void setPolarFormat(int format) {m_PolarFormat=format;}
 
         void lock()   {m_bLocked=true;}
         void unlock() {m_bLocked=false;}
@@ -226,9 +225,12 @@ class FL5LIB_EXPORT Polar3d : public XflObject
         void setCoGy(double y) {m_CoG.y=y;}
         void setCoGz(double z) {m_CoG.z=z;}
 
+        std::vector<ExtraDrag> &extraDrags() {return m_ExtraDrag;}
+        std::vector<ExtraDrag> const &extraDrags() const {return m_ExtraDrag;}
         bool hasExtraDrag() const;
         void clearExtraDrag() {m_ExtraDrag.clear();}
         int extraDragCount() const {return int(m_ExtraDrag.size());}
+        void resizeExtraDrag(int n) {m_ExtraDrag.resize(n);}
         double constantDrag() const;
         virtual double extraDragTotal(double CL) const;
         ExtraDrag const &extraDrag(int idx) const {return m_ExtraDrag.at(idx);}

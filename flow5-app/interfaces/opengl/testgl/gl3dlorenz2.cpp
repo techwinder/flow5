@@ -32,11 +32,13 @@
 #include <QTime>
 
 #include "gl3dlorenz2.h"
-#include <interfaces/opengl/globals/gl_globals.h>
-#include <interfaces/controls/w3dprefs.h>
-#include <core/displayoptions.h>
-#include <api/trace.h>
+
 #include <api/utils.h>
+
+#include <core/displayoptions.h>
+#include <core/trace.h>
+#include <interfaces/controls/w3dprefs.h>
+#include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/globals/wt_globals.h>

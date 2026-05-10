@@ -62,6 +62,7 @@
 
 
 #include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <globals/mainframe.h>

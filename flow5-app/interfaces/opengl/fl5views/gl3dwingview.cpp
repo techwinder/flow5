@@ -28,16 +28,19 @@
 #include <QMouseEvent>
 #include <QPainter>
 
-#include <core/xflcore.h>
+
 #include <api/geom_global.h>
+#include <api/panel3.h>
+#include <api/surface.h>
+#include <api/units.h>
+#include <api/wingxfl.h>
+#include <core/qunits.h>
+#include <core/xflcore.h>
+
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/fl5views/gl3dwingview.h>
 #include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/opengl/globals/gl_xfl.h>
-#include <api/surface.h>
-#include <api/wingxfl.h>
-#include <api/panel3.h>
-#include <api/units.h>
 
 
 gl3dWingView::gl3dWingView(QWidget *pParent) : gl3dXflView(pParent)

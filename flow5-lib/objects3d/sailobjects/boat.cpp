@@ -23,9 +23,9 @@
 *****************************************************************************/
 
 
-#define _MATH_DEFINES_DEFINED
 
-#include <QString>
+
+#include <format>
 
 
 
@@ -71,14 +71,14 @@ Boat::Boat(Boat const &aboat)
     // deep copy sails and hulls
     m_Sail.clear();
     m_Hull.clear();
-    for(uint is=0; is<aboat.m_Sail.size(); is++)
+    for(unsigned int is=0; is<aboat.m_Sail.size(); is++)
     {
         Sail *pSail = aboat.sailAt(is)->clone();
         m_Sail.push_back(pSail);
     }
 
     m_Hull.clear();
-    for(uint ih=0; ih<aboat.m_Hull.size(); ih++)
+    for(unsigned int ih=0; ih<aboat.m_Hull.size(); ih++)
     {
         Fuse *pHull = aboat.hullAt(ih)->clone();
         m_Hull.push_back(pHull);
@@ -88,13 +88,13 @@ Boat::Boat(Boat const &aboat)
 
 Boat::~Boat()
 {
-    for(uint ih=0; ih<m_Hull.size(); ih++)
+    for(unsigned int ih=0; ih<m_Hull.size(); ih++)
     {
         delete m_Hull[ih];
     }
     m_Hull.clear();
 
-    for(uint is=0; is<m_Sail.size(); is++)
+    for(unsigned int is=0; is<m_Sail.size(); is++)
     {
         delete m_Sail[is];
     }
@@ -232,190 +232,12 @@ Sail *Boat::sail(const std::string &SailName)
 
 Fuse *Boat::hull(const std::string &BodyName) const
 {
-    for(uint is=0; is<m_Hull.size(); is++)
+    for(unsigned int is=0; is<m_Hull.size(); is++)
     {
         Fuse* pBody = m_Hull.at(is);
         if(pBody->name()==BodyName) return pBody;
     }
     return nullptr;
-}
-
-
-bool Boat::serializeBoatFl5(QDataStream &ar, bool bIsStoring)
-{
-    int ArchiveFormat;// identifies the format of the file
-    int k(0), n(0);
-    double dble(0);
-    QString strange;
-
-    int nIntSpares(0);
-    int nDbleSpares(0);
-
-    if(bIsStoring)
-    {    // storing code
-        ar << 500009;
-        //500001: initial format
-        //500002: added theStyle in beta 17
-
-        ar << QString::fromStdString(m_Name);
-        ar << QString::fromStdString(m_Description);
-
-        m_theStyle.serializeFl5(ar, bIsStoring);
-
-        ar << nSails();
-        for(int is=0; is<nSails(); is++)
-        {
-            Sail *pSail = m_Sail.at(is);
-            if(!pSail) return false;
-
-            if     (pSail->isSplineSail()) ar<<1;
-            else if(pSail->isNURBSSail())  ar<<2;
-            else if(pSail->isWingSail())   ar<<3;
-            else if(pSail->isStlSail())    ar<<4;
-            else if(pSail->isOccSail())    ar<<5;
-            else                           ar<<0;
-
-            if(!pSail->serializeSailFl5(ar, true)) return false;
-        }
-
-        ar << int(m_Hull.size());
-
-        for(int ifuse=0; ifuse<nHulls(); ifuse++)
-        {
-            Fuse *pHull = hull(ifuse);
-            if(pHull->isXflType())
-            {
-                if(pHull->fuseType()==Fuse::NURBS) ar << 100001;
-                else                               ar << 100004; // flat faces
-                FuseXfl *pBody = dynamic_cast<FuseXfl*>(pHull);
-                pBody->serializePartFl5(ar, true);
-            }
-            else if(pHull->isOccType())
-            {
-                ar << 100002;
-                FuseOcc *pBodyOcc = dynamic_cast<FuseOcc*>(pHull);
-                pBodyOcc->serializePartFl5(ar, true);
-            }
-            else if(pHull->isStlType())
-            {
-                ar << 100003;
-                FuseStl *pBodyStl = dynamic_cast<FuseStl*>(pHull);
-                pBodyStl->serializePartFl5(ar, true);
-            }
-            pHull->triMesh().serializePanelsFl5(ar, bIsStoring);
-        }
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-
-        return true;
-    }
-    else
-    {
-        // loading code
-        ar >> ArchiveFormat;
-        if (ArchiveFormat<500000 || ArchiveFormat>500100)  return false;
-
-        ar >> strange;  m_Name = strange.toStdString();;
-        ar >> strange;  m_Description = strange.toStdString();
-        if(ArchiveFormat>=500002)
-            m_theStyle.serializeFl5(ar, bIsStoring);
-
-        ar>>n;
-        for(int is=0; is<n; is++)
-        {
-            ar >> k;
-            if(k==1)
-            {
-                SailSpline *pSSail = new SailSpline;
-                if(!pSSail->serializeSailFl5(ar, false)) return false;
-                m_Sail.push_back(pSSail);
-            }
-            else if(k==2)
-            {
-                SailNurbs *pNSail = new SailNurbs;
-                if(!pNSail->serializeSailFl5(ar, false)) return false;
-                m_Sail.push_back(pNSail);
-            }
-            else if(k==3)
-            {
-                SailWing *pWSail = new SailWing;
-                if(!pWSail->serializeSailFl5(ar, false)) return false;
-                m_Sail.push_back(pWSail);
-            }
-            else if(k==4)
-            {
-                SailStl *pStlSail = new SailStl;
-                if(!pStlSail->serializeSailFl5(ar, false)) return false;
-                m_Sail.push_back(pStlSail);
-            }
-            else if(k==5)
-            {
-                SailOcc *pOccSail = new SailOcc;
-                if(!pOccSail->serializeSailFl5(ar, false)) return false;
-                m_Sail.push_back(pOccSail);
-            }
-            else return false;
-        }
-
-        int nFuse(0);
-        ar >> nFuse;
-        clearHulls();
-
-        for(int ifuse=0; ifuse<nFuse; ifuse++)
-        {
-            int format=0;
-            ar >> format;
-            if(format==100001)
-            {
-                FuseNurbs *pBody = new FuseNurbs;
-                pBody->serializePartFl5(ar, bIsStoring);
-                if(pBody) m_Hull.push_back(pBody);
-            }
-            else if(format==100004)
-            {
-                FuseFlatFaces *pBody = new FuseFlatFaces;
-                pBody->serializePartFl5(ar, bIsStoring);
-                if(pBody) m_Hull.push_back(pBody);
-            }
-            else if(format==100002)
-            {
-                FuseOcc *pBodyOcc = new FuseOcc;
-                pBodyOcc->serializePartFl5(ar, bIsStoring);
-                if(pBodyOcc) m_Hull.push_back(pBodyOcc);
-            }
-            else if(format==100003)
-            {
-                FuseStl *pBodyStl = new FuseStl;
-                pBodyStl->serializePartFl5(ar, bIsStoring);
-                if(pBodyStl) m_Hull.push_back(pBodyStl);
-            }
-            m_Hull.back()->triMesh().serializePanelsFl5(ar, bIsStoring);
-//            m_Hull.back()->saveBaseTriangulation();
-
-            // compatibility
-            if(m_Hull.back()->nPanel3()==0)
-            {
-                std::string strange;
-                m_Hull.back()->makeDefaultTriMesh(strange, "");
-            }
-            m_Hull.back()->setUniqueIndex();
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-        return true;
-    }
 }
 
 
@@ -768,24 +590,24 @@ Fuse const * Boat::hull() const
 
 std::string Boat::properties(bool bFull) const
 {
-    QString props, strange, frontspacer;
+    std::string props, strange, frontspacer;
 
     if(m_Description.length())
-        props = QString::fromStdString(m_Description) +"\n";
+        props = m_Description +"\n";
 
     if(m_Sail.size()<=1)
-        props += QString::asprintf("Boat is made of %d sail\n", nSails());
+        props += std::format("Boat is made of {:d} sail\n", nSails());
     else
-        props += QString::asprintf("Boat is made of %d sails\n", nSails());
+        props += std::format("Boat is made of {:d} sails\n", nSails());
 
     if(bFull)
     {
         std::string str;
-        std::string spacer = frontspacer.toStdString();
+        std::string spacer = frontspacer;
         for(int is=0; is<nSails(); is++)
         {
             m_Sail.at(is)->properties(str, spacer);
-            props += QString::fromStdString(str);
+            props += str;
             props += "\n";
         }
     }
@@ -793,20 +615,20 @@ std::string Boat::properties(bool bFull) const
     {
         if(m_Sail.size()>0)
         {
-            props += QString::asprintf("Main sail area  = %g", m_Sail.at(0)->refArea()*Units::m2toUnit());
-            props += " " + Units::areaUnitQLabel() + "\n";
+            props += std::format("Main sail area  = {:g}", m_Sail.at(0)->refArea()*Units::m2toUnit());
+            props += " " + Units::areaUnitLabel() + "\n";
         }
         if(m_Sail.size()>1)
         {
-            props += QString::asprintf("Jib area        = %g", m_Sail.at(1)->refArea()*Units::m2toUnit());
-            props += " " + Units::areaUnitQLabel() + "\n";
+            props += std::format("Jib area        = {:g}", m_Sail.at(1)->refArea()*Units::m2toUnit());
+            props += " " + Units::areaUnitLabel() + "\n";
         }
     }
 
-    strange = QString::asprintf("Boat triangle panels = %d", refTriMesh().nPanels());
+    strange = std::format("Boat triangle panels = {:d}", refTriMesh().nPanels());
     props += strange;
 
-    return props.toStdString();
+    return props;
 }
 
 
@@ -840,7 +662,7 @@ void Boat::rotateMesh(BoatPolar const*pBtPolar, double phi, double Ry, double ct
         Vector3d O(0.0,0.0,0.0);
         if(fabs(Ry)>ANGLEPRECISION)
         {
-            for(uint i3=0; i3<panels.size(); i3++)
+            for(unsigned int i3=0; i3<panels.size(); i3++)
                 panels[i3].rotate(O,Vector3d(0.0,1.0,0.0), Ry);
         }
 
@@ -848,7 +670,7 @@ void Boat::rotateMesh(BoatPolar const*pBtPolar, double phi, double Ry, double ct
 
         if(fabs(phi)>ANGLEPRECISION)
         {
-            for(uint i3=0; i3<panels.size(); i3++)
+            for(unsigned int i3=0; i3<panels.size(); i3++)
                 panels[i3].rotate(O,Vector3d(1.0,0.0,0.0), phi);
         }
     }

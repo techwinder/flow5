@@ -128,7 +128,7 @@ void EdgeSplit::makeNodes(TopoDS_Edge const &Edge, std::vector<Node> &nodes)
     CA.Initialize(Edge);
 
     gp_Pnt pt;
-    for(uint i=0; i<m_Split.size(); i++)
+    for(unsigned int i=0; i<m_Split.size(); i++)
     {
         CA.D0(m_Split.at(i), pt);
         nodes.push_back({pt.X(), pt.Y(), pt.Z()});
@@ -136,42 +136,5 @@ void EdgeSplit::makeNodes(TopoDS_Edge const &Edge, std::vector<Node> &nodes)
 }
 
 
-void EdgeSplit::serialize(QDataStream &ar, bool bIsStoring)
-{
-    if(bIsStoring)
-    {
-        ar << m_nSegs;
-        switch(m_Distrib)
-        {
-            default:
-            case xfl::UNIFORM:    ar<<0;   break;
-            case xfl::COSINE:     ar<<1;   break;
-            case xfl::SINE:       ar<<2;   break;
-            case xfl::INV_SINE:   ar<<3;   break;
-            case xfl::INV_SINH:   ar<<4;   break;
-            case xfl::TANH:       ar<<5;   break;
-            case xfl::EXP:        ar<<6;   break;
-            case xfl::INV_EXP:    ar<<7;   break;
-        }
-    }
-    else
-    {
-        ar >> m_nSegs;
-        if(m_nSegs<0) m_nSegs=3; // cleaning up pas errors
-        int k=0;
-        ar>>k;
-        switch (k)
-        {
-            case 0:   m_Distrib=xfl::UNIFORM;    break;
-            case 1:   m_Distrib=xfl::COSINE;     break;
-            case 2:   m_Distrib=xfl::SINE;       break;
-            case 3:   m_Distrib=xfl::INV_SINE;   break;
-            case 4:   m_Distrib=xfl::INV_SINH;   break;
-            case 5:   m_Distrib=xfl::TANH;       break;
-            case 6:   m_Distrib=xfl::EXP;        break;
-            case 7:   m_Distrib=xfl::INV_EXP;    break;
-        }
-    }
-}
 
 

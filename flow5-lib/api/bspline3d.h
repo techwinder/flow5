@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <vector>
 
 #include <vector3d.h>
 #include <linestyle.h>

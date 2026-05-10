@@ -39,8 +39,10 @@
 #include <api/planepolarnamemaker.h>
 #include <api/planexfl.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
+
 #include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/analysis3ddef/aerodatadlg.h>
 #include <interfaces/editors/analysis3ddef/extradragwt.h>
@@ -935,7 +937,7 @@ void PlanePolarDlg::enableControls()
 void PlanePolarDlg::setPolar3dName()
 {
     if(!m_bAutoName) return;
-    s_WPolar.setName(PlanePolarNameMaker::makeName(m_pPlane, &s_WPolar).toStdString());
+    s_WPolar.setName(PlanePolarNameMaker::makeName(m_pPlane, &s_WPolar));
     m_plePolarName->setText(QString::fromStdString(s_WPolar.name()));
 }
 

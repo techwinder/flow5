@@ -50,7 +50,7 @@
 
 #include <api/constants.h>
 #include <api/matrix.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 #include <api/fl5color.h>
 
 QByteArray ThreadTestDlg::s_Geometry;

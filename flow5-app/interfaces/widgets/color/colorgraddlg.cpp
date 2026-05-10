@@ -32,7 +32,7 @@
 #include "colorgraddlg.h"
 #include <interfaces/widgets/color/colorbtn.h>
 #include <interfaces/opengl/controls/colourlegend.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <core/xflcore.h>
 
 ColorGradDlg::ColorGradDlg(QVector<QColor>const &clrs, QWidget *parent) : QDialog(parent)

@@ -31,6 +31,7 @@
 #include <api/sail.h>
 #include <api/units.h>
 
+#include <core/qunits.h>
 
 bool BtPolarNameMaker::s_bMethod=true;
 bool BtPolarNameMaker::s_bBC=false;

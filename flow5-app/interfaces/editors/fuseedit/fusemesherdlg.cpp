@@ -55,6 +55,7 @@
 
 
 
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <interfaces/mesh/afmesher.h>
 #include <interfaces/mesh/gmesherwt.h>

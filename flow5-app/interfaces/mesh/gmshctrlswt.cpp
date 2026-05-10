@@ -29,6 +29,8 @@
 
 #include <api/units.h>
 #include <api/part.h>
+
+#include <core/qunits.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 

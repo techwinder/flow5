@@ -22,9 +22,9 @@
 
 *****************************************************************************/
 
-#include <QString>
 
 #include <string>
+#include <format>
 
 #include <BRepBuilderAPI_Sewing.hxx>
 #include <BRepBuilderAPI_Transform.hxx>
@@ -223,8 +223,8 @@ void Fuse::makeFuseGeometry()
 
 bool Fuse::stitchShells(TopoDS_Shell &fusedshell, std::string &msg, std::string prefx)
 {
-    QString prefix = QString::fromStdString(prefx);
-    QString logmsg;
+    std::string prefix = prefx;
+    std::string logmsg;
     // sew the Panels together
     BRepBuilderAPI_Sewing stitcher(0.001);
     int nFaces=0;
@@ -239,13 +239,13 @@ bool Fuse::stitchShells(TopoDS_Shell &fusedshell, std::string &msg, std::string 
 
     try
     {
-        QString strong;
+        std::string strong;
         logmsg += prefix + "Sewing shells\n";
         stitcher.Perform();
         TopoDS_Shape sewedShape = stitcher.SewedShape();
         if(!sewedShape.IsNull())
         {
-            strong = prefix + "Sewed shape is a "+ QString::fromStdString(occ::shapeType(sewedShape))+"\n";
+            strong = prefix + "Sewed shape is a "+ occ::shapeType(sewedShape)+"\n";
             logmsg+= strong;
 
             if(sewedShape.ShapeType()==TopAbs_SHELL)
@@ -254,9 +254,9 @@ bool Fuse::stitchShells(TopoDS_Shell &fusedshell, std::string &msg, std::string 
             }
             else
             {
-                strong = prefix + QString::asprintf("Nb of free edges=%d\n",stitcher.NbFreeEdges());
+                strong = prefix + std::format("Nb of free edges={:d}\n",stitcher.NbFreeEdges());
                 logmsg += strong;
-                strong = prefix + QString::asprintf("Nb of contiguous edges=%d\n", stitcher.NbContigousEdges());
+                strong = prefix + std::format("Nb of contiguous edges={:d}\n", stitcher.NbContigousEdges());
                 logmsg += strong;
             }
         }
@@ -267,18 +267,18 @@ bool Fuse::stitchShells(TopoDS_Shell &fusedshell, std::string &msg, std::string 
     }
     catch(Standard_TypeMismatch &ex)
     {
-        QString strong;
-        strong = prefix + "Fused shells not made: " + QString(ex.GetMessageString())+"\n";
+        std::string strong;
+        strong = prefix + "Fused shells not made: " + ex.GetMessageString()+"\n";
         logmsg += strong;
-        msg = logmsg.toStdString();
+        msg = logmsg;
         return false;
     }
     catch(...)
     {
-        QString strong;
+        std::string strong;
         strong = prefix + "Unrecoverable error sewing shells\n";
         logmsg += strong;
-        msg = logmsg.toStdString();
+        msg = logmsg;
         return false;
     }
 
@@ -412,53 +412,6 @@ void Fuse::computeViscousForces(PlanePolar const *pWPolar, double Alpha, double 
 }
 
 
-bool Fuse::serializePartFl5(QDataStream &ar, bool bIsStoring)
-{
-    Part::serializePartFl5(ar, bIsStoring);
-
-    int n=0;
-
-    // 500001: new fl5 format;
-    // 500003; added max element size in beta 12
-    int ArchiveFormat = 500003;
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-
-        ar << m_LE.x << m_LE.y << m_LE.z;
-        ar << m_rx << m_ry << m_rz;
-
-        m_OccTessParams.serializeParams(ar, bIsStoring);
-
-        ar << m_MaxElementSize;
-
-        n=0;
-        ar << n;
-        ar << n;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<500001 || ArchiveFormat>500003) return false;
-
-        ar >> m_LE.x >> m_LE.y >> m_LE.z;
-        ar >> m_rx >> m_ry >> m_rz;
-
-        if(ArchiveFormat>=500002)
-            m_OccTessParams.serializeParams(ar, bIsStoring);
-
-        if(ArchiveFormat>=500003)
-            ar >> m_MaxElementSize;
-        else
-            m_MaxElementSize = m_OccTessParams.maxElementSize();
-
-        ar >> n;
-        ar >> n;
-    }
-    return true;
-}
-
-
 void Fuse::computeStructuralInertia(Vector3d const &PartPosition)
 {
     if(!m_bAutoInertia) return;
@@ -521,8 +474,8 @@ void Fuse::computeStructuralInertia(Vector3d const &PartPosition)
     m_Inertia.setIxz_s(CoGIxz);
 
 /*
-    qDebug("fuse %s inertia:\n", fuseName().toStdString().c_str());
-    qDebug("%s\n",m_Inertia.toString().toStdString().c_str());
+    qDebug("fuse {:s} inertia:\n", fuseName().c_str());
+    qDebug("{:s}\n",m_Inertia.toString().c_str());
     qDebug("____\n\n");
 */
 }
@@ -530,10 +483,10 @@ void Fuse::computeStructuralInertia(Vector3d const &PartPosition)
 
 void Fuse::getProperties(std::string &properties, const std::string &prefx, bool )
 {
-    QString prefix = QString::fromStdString(prefx);
-    QString props;
-    QString lenlab  = Units::lengthUnitQLabel();
-    QString arealab = Units::areaUnitQLabel();
+    std::string prefix = prefx;
+    std::string props;
+    std::string lenlab  = Units::lengthUnitLabel();
+    std::string arealab = Units::areaUnitLabel();
 
     switch(m_FuseType)
     {
@@ -548,31 +501,31 @@ void Fuse::getProperties(std::string &properties, const std::string &prefx, bool
     std::string str;
     computeSurfaceProperties(str, prefx);
 
-    QString strong = QString::fromStdString(str);
-    strong = QString::asprintf("Length          = %9.5g ", length()*Units::mtoUnit());
+    std::string strong = str;
+    strong = std::format("Length          = {:9.5g} ", length()*Units::mtoUnit());
     strong += lenlab + "\n";
     props +=  prefix + strong;
 
-    strong = QString::asprintf("Max. width      = %9.5g ", m_MaxWidth*Units::mtoUnit());
+    strong = std::format("Max. width      = {:9.5g} ", m_MaxWidth*Units::mtoUnit());
     strong += lenlab + "\n";
     props +=  prefix + strong;
 
-    strong = QString::asprintf("Max. height     = %9.5g ", m_MaxHeight*Units::mtoUnit());
+    strong = std::format("Max. height     = {:9.5g} ", m_MaxHeight*Units::mtoUnit());
     strong += lenlab + "\n";
     props +=  prefix + strong;
 
-    strong = QString::asprintf("Max. cross area = %9.5g ", m_MaxFrameArea*Units::m2toUnit());
+    strong = std::format("Max. cross area = {:9.5g} ", m_MaxFrameArea*Units::m2toUnit());
     strong += arealab + "\n";
     props +=  prefix + strong;
 
-    strong = QString::asprintf("Wetted area     = %9.5g ", wettedArea()*Units::m2toUnit());
+    strong = std::format("Wetted area     = {:9.5g} ", wettedArea()*Units::m2toUnit());
     strong += arealab + "\n";
     props +=  prefix + strong;
 
-    strong = QString::asprintf("Triangles       = %6d", nPanel3());
+    strong = std::format("Triangles       = {:6d}", nPanel3());
     props +=  prefix + strong;
 
-    properties = props.toStdString();
+    properties = props;
 }
 
 
@@ -645,18 +598,18 @@ std::string Fuse::bodyPanelType(Fuse::enumType panelType)
 
 void Fuse::listShells()
 {
-    QString strange;
+    std::string strange;
     int ishell=0;
     for(TopTools_ListIteratorOfListOfShape iterator(shells()); iterator.More(); iterator.Next())
     {
-        strange = QString::asprintf("Shell %d ", ishell);
+        strange = std::format("Shell {:d} ", ishell);
         if     (iterator.Value().Orientation()==TopAbs_FORWARD)  strange += "is FORWARD";
         else if(iterator.Value().Orientation()==TopAbs_REVERSED) strange += "is REVERSED";
-        qDebug("%s", strange.toStdString().c_str());
+        std::cout << std::format("{:s}", strange.c_str()) << std::endl;
 
         std::string str;
         occ::listShapeContent(iterator.Value(), str, "   ");
-        qDebug("%s", str.c_str());
+        std::cout << std::format("{:s}", str.c_str()) << std::endl;
 
         ishell++;
     }
@@ -665,18 +618,18 @@ void Fuse::listShells()
 
 void Fuse::listShapes()
 {
-    QString strange;
+    std::string strange;
     int ishell=0;
     for(TopTools_ListIteratorOfListOfShape iterator(shapes()); iterator.More(); iterator.Next())
     {
-        strange = QString::asprintf("Shell %d ", ishell);
+        strange = std::format("Shell {:d} ", ishell);
         if     (iterator.Value().Orientation()==TopAbs_FORWARD)  strange += "is FORWARD";
         else if(iterator.Value().Orientation()==TopAbs_REVERSED) strange += "is REVERSED";
-        qDebug("%s", strange.toStdString().c_str());
+        std::cout << std::format("{:s}", strange.c_str()) << std::endl;
 
         std::string str;
         occ::listShapeContent(iterator.Value(), str, "   ");
-        qDebug("%s", str.c_str());
+        std::cout << std::format("{:s}", str.c_str()) << std::endl;
 
         ishell++;
     }

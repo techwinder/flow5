@@ -29,7 +29,6 @@
 
 
 
-#include <QDataStream>
 #include <vector>
 
 #include <utils.h>
@@ -80,13 +79,24 @@ class FL5LIB_EXPORT Opp3d : public XflObject
         double Cp(int index)    const {return m_Cp.at(index);}
 
         int nPanel4() const {return m_nPanel4;}
+        void setNPanel4(int n) {m_nPanel4=n;}
+
         int nPanel3() const {return m_nPanel3;}
+        void setNPanel3(int n) {m_nPanel3=n;}
 
         bool bHPlane() const {return m_bGround || m_bFreeSurface;}
         bool bGround() const {return m_bGround;}
+        bool bFreeSurfaceEffect() const {return m_bFreeSurface;}
+        void setFreeSurfaceEffect(bool b) {m_bFreeSurface=b;}
         void setGroundEffect(bool b) {m_bGround=b;}
         double groundHeight() const {return m_GroundHeight;}
         void setGroundHeight(double h) {m_GroundHeight=h;}
+
+        std::vector<std::vector<Vorton>> &vortons() {return m_Vorton;}
+        std::vector<std::vector<Vorton>> const &vortons() const {return m_Vorton;}
+
+        std::vector<Vorton> &vortonRow(int k) {return m_Vorton[k];}
+        std::vector<Vorton> const &vortonRow(int k) const {return m_Vorton.at(k);}
 
         int vortonRows() const {return int(m_Vorton.size());}
         int vortonCount() const;
@@ -95,6 +105,9 @@ class FL5LIB_EXPORT Opp3d : public XflObject
         std::vector<Vector3d> vortonLines() const;
         void setVortons(std::vector<std::vector<Vorton>> const &vortons) {m_Vorton=vortons;}
         void setVortexNeg(std::vector<Vortex> const &vortexNeg) {m_VortexNeg=vortexNeg;}
+
+        std::vector<Vortex> &vortexNeg() {return m_VortexNeg;}
+        std::vector<Vortex> const &vortexNeg() const {return m_VortexNeg;}
 
         double nodeValue(int index) const {if(index>=0 && index<int(m_NodeValue.size())) return m_NodeValue.at(index); else return 0.0;}
         std::vector<double> &nodeValues() {return m_NodeValue;}

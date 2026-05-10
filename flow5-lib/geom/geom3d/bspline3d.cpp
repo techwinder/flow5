@@ -125,7 +125,7 @@ void BSpline3d::setCtrlPoints(const std::vector<Vector3d> &ptList, double w)
     m_CtrlPt = ptList;
 
     m_Weight.clear();
-    for(uint i=0; i<ptList.size(); i++)
+    for(unsigned int i=0; i<ptList.size(); i++)
         m_Weight.push_back(w);
 
     setModified(true);
@@ -135,7 +135,7 @@ void BSpline3d::setCtrlPoints(const std::vector<Vector3d> &ptList, double w)
 void BSpline3d::appendCtrlPoints(std::vector<Vector3d> const & ptList, double w)
 {
     m_CtrlPt.insert(m_CtrlPt.end(), ptList.begin(), ptList.end());
-    for(uint i=0; i<ptList.size(); i++) m_Weight.push_back(w);
+    for(unsigned int i=0; i<ptList.size(); i++) m_Weight.push_back(w);
 
     setModified(true);
 }
@@ -201,7 +201,7 @@ bool BSpline3d::removeCtrlPoint(int k)
 
 int BSpline3d::isCtrlPoint(double x, double y, double tolx, double toly) const
 {
-    for (uint k=0; k<m_CtrlPt.size(); k++)
+    for (unsigned int k=0; k<m_CtrlPt.size(); k++)
     {
         if(fabs(x-m_CtrlPt.at(k).x)<tolx && fabs(y-m_CtrlPt.at(k).y)<toly) return int(k);
     }
@@ -283,7 +283,7 @@ void BSpline3d::splinePoint(double t, Vector3d &pt) const
 {
     double w=0.0;
     pt.reset();
-    for (uint i=0; i<m_CtrlPt.size(); i++)
+    for (unsigned int i=0; i<m_CtrlPt.size(); i++)
     {
         double b = geom::basis(i, m_degree, t, m_knot.data()) * m_Weight[i];
         pt.x += m_CtrlPt[i].x * b;
@@ -333,7 +333,7 @@ void BSpline3d::splineDerivative(BSpline3d &der) const
     std::vector<Vector3d> Q(m_CtrlPt.size()-1);
 
     int p = m_degree;
-    for(uint i=0; i<Q.size(); i++)
+    for(unsigned int i=0; i<Q.size(); i++)
     {
         Q[i] = (m_CtrlPt[i+1]-m_CtrlPt[i]) * double(p)/(double(m_knot[i+p+1]-m_knot[i]));
     }

@@ -22,7 +22,9 @@
 
 *****************************************************************************/
 
-#include <QString>
+
+
+#include <format>
 
 
 #include <BRepBuilderAPI_Sewing.hxx>
@@ -242,196 +244,6 @@ void SailSpline::insertSection(int is, Spline *pSpline, Vector3d position, doubl
         m_Spline.insert(m_Spline.begin()+is, pSpline);
         m_Position.insert(m_Position.begin()+is, position);
         m_Ry.insert(m_Ry.begin()+is, ry);
-    }
-}
-
-
-bool SailSpline::serializeSailFl5(QDataStream &ar, bool bIsStoring)
-{
-    Sail::serializeSailFl5(ar, bIsStoring);
-
-    int k(0), n(0);
-    float xf(0),yf(0),zf(0);
-    Vector3d V0, V1, V2;
-
-    //500001: first .fl5 format
-    //500002: added refpanels in beta19
-    //500003: v7.03 added NZPanels and ZDist arrays
-    int ArchiveFormat=500003;// identifies the format of the file
-
-    int nIntSpares=0;
-    int nDbleSpares=0;
-
-    if(bIsStoring)
-    {
-        // storing code
-        ar << ArchiveFormat;
-
-        switch(m_SplineType)
-        {
-            default:
-            case Spline::BSPLINE:         ar<<0;    break;
-            case Spline::CUBIC:     ar<<1;    break;
-            case Spline::BEZIER:    ar<<2;    break;
-            case Spline::POINT:     ar<<3;    break;
-            case Spline::ARC:       ar<<4;    break;
-            case Spline::NACA4:     ar<<5;    break;
-        }
-
-        ar<<nSections();
-        for(int i=0; i<sectionCount(); i++)
-        {
-            if      (m_Spline.at(i)->isBSpline())      ar<<1;
-            else if (m_Spline.at(i)->isBezierSpline()) ar<<2;
-            else if (m_Spline.at(i)->isCubicSpline())  ar<<3;
-            else if (m_Spline.at(i)->isPointSpline())  ar<<4;
-            m_Spline.at(i)->serializeFl5(ar, bIsStoring);
-
-            ar << m_Position.at(i).x<<m_Position.at(i).y<<m_Position.at(i).z;
-            ar << m_Ry.at(i);
-            n=1; ar <<n;  //          ar << m_nZPanels.at(i);
-            n=0; ar <<n;  //          ar <<  xfl::UNIFORM;  break;
-        }
-
-        ar << int(m_RefTriangles.size());
-        for(uint i=0; i<m_RefTriangles.size(); i++)
-        {
-            Triangle3d const &t3d = m_RefTriangles.at(i);
-            ar << t3d.vertexAt(0).xf() << t3d.vertexAt(0).yf() << t3d.vertexAt(0).zf();
-            ar << t3d.vertexAt(1).xf() << t3d.vertexAt(1).yf() << t3d.vertexAt(1).zf();
-            ar << t3d.vertexAt(2).xf() << t3d.vertexAt(2).yf() << t3d.vertexAt(2).zf();
-        }
-
-        ar << int(m_BotMidTEIndexes.size());
-        for(int idx : m_BotMidTEIndexes)   ar << idx;
-
-        ar << int(m_TopTEIndexes.size());
-        for(int idx : m_TopTEIndexes)      ar << idx;
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-
-        nDbleSpares=0;
-        ar << nDbleSpares;
-
-        return true;
-    }
-    else
-    {
-        // loading code
-        ar >> ArchiveFormat;
-
-        if (ArchiveFormat<500001 || ArchiveFormat>500100)  return false;
-
-        ar >> n;
-        switch(n)
-        {
-            default:
-            case 0: m_SplineType = Spline::BSPLINE;             break;
-            case 1: m_SplineType = Spline::CUBIC;         break;
-            case 2: m_SplineType = Spline::BEZIER;        break;
-            case 3: m_SplineType = Spline::POINT;         break;
-            case 4: m_SplineType = Spline::ARC;           break;
-            case 5: m_SplineType = Spline::NACA4;         break;
-        }
-
-        ar>>n;
-        m_Spline.resize(n);
-        m_Position.resize(n);
-        m_Ry.resize(n);
-
-        for(int i=0; i<n; i++)
-        {
-            int type=0;
-            ar >> type;
-            switch (type) {
-                case 1:
-                {
-                    BSpline *pbs = new BSpline;
-                    m_Spline[i] = pbs;
-                    break;
-                }
-                case 2:
-                {
-                    BezierSpline *pbzs = new BezierSpline;
-                    m_Spline[i] = pbzs;
-                    break;
-                }
-                case 3:
-                {
-                    CubicSpline *pcs = new CubicSpline;
-                    m_Spline[i] = pcs;
-                    break;
-                }
-                case 4:
-                {
-                    PointSpline *pps = new PointSpline;
-                    m_Spline[i] = pps;
-                    break;
-                }
-                default:
-                    return false;
-            }
-            m_Spline[i]->serializeFl5(ar, bIsStoring);
-
-            ar >> m_Position[i].x >> m_Position[i].y >> m_Position[i].z;
-            ar >> m_Ry[i];
-            if(ArchiveFormat>=500003)
-            {
-                ar >> k;
-                ar >> k;
-            }
-            else
-            {
-            }
-        }
-
-        if( ArchiveFormat>=500002)
-        {
-            ar >> n;
-            m_RefTriangles.resize(n);
-            for(int i3=0; i3<n; i3++)
-            {
-                ar >> xf >> yf >> zf;
-                V0.set(double(xf), double(yf), double(zf));
-
-                ar >> xf >> yf >> zf;
-                V1.set(double(xf), double(yf), double(zf));
-
-                ar >> xf >> yf >> zf;
-                V2.set(double(xf), double(yf), double(zf));
-
-                m_RefTriangles[i3].setTriangle(V0, V1, V2);
-            }
-
-            ar >> n;
-            for(int i=0; i<n; i++)
-            {
-                ar >> k;
-                m_BotMidTEIndexes.push_back(k);
-            }
-
-            ar >> n;
-            for(int i=0; i<n; i++)
-            {
-                ar >> k;
-                m_TopTEIndexes.push_back(k);
-            }
-            if(m_RefTriangles.size()==0) clearTEIndexes(); // clean-up past mistakes
-        }
-        else
-        {
-            makeRuledMesh(Vector3d());
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        ar >> nDbleSpares;
-
-        makeSurface();
-        updateStations();
-        return true;
     }
 }
 
@@ -740,6 +552,14 @@ void SailSpline::convertSplines(Spline::enumType newtype)
 }
 
 
+void SailSpline::resizeSections(int nSections)
+{
+    m_Spline.resize(nSections);
+    m_Position.resize(nSections);
+    m_Ry.resize(nSections);
+}
+
+
 void SailSpline::resizeSections(int nSections, int nPoints)
 {
     // keep the top and bottom sections, and recreate as many as required in between
@@ -803,9 +623,9 @@ double SailSpline::length() const
 
 bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) const
 {
-    QString logg;
+    std::string logg;
     double stitchprecision = 1.e-6;
-    QString strong = "Processing wing "+ QString::fromStdString(m_Name) + "\n";
+    std::string strong = "Processing wing "+ m_Name + "\n";
     logg += strong;
 
     std::string occstr;
@@ -824,20 +644,20 @@ bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) cons
                 makeBSpline3d(iSpline+1, b3d1);
                 if(!occ::makeSplineWire(b3d0, Wire0, occstr))
                 {
-                    logg += QString::asprintf("   Error making spline wire %d", iSpline);
+                    logg += std::format("   Error making spline wire {:d}", iSpline);
                     return false;
                 }
 
-                logg += QString::fromStdString(occstr);
+                logg += occstr;
                 occstr.clear();
 
                 if(!occ::makeSplineWire(b3d1, Wire1, occstr))
                 {
-                    logg += QString::asprintf("   Error making spline wire %d", iSpline+1);
+                    logg += std::format("   Error making spline wire {:d}", iSpline+1);
                     return false;
                 }
 
-                logg += QString::fromStdString(occstr);
+                logg += occstr;
                 occstr.clear();
 
                 break;
@@ -860,7 +680,7 @@ bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) cons
                 Wire0 = PolyMaker0.Wire();
                 if(!PolyMaker0.IsDone() || Wire0.IsNull())
                 {
-                    logg += QString::asprintf("   error making wire %d\n", iSpline);
+                    logg += std::format("   error making wire {:d}\n", iSpline);
                     return false;
                 }
 
@@ -876,7 +696,7 @@ bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) cons
                 Wire1 = PolyMaker1.Wire();
                 if(!PolyMaker1.IsDone() || Wire1.IsNull())
                 {
-                    logg += QString::asprintf("   error making wire %d\n", iSpline+1);
+                    logg += std::format("   error making wire {:d}\n", iSpline+1);
                     return false;
                 }
             }
@@ -900,11 +720,11 @@ bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) cons
         }
         catch(Standard_DomainError &e)
         {
-            logg += QString("     Standard_DomainError sweeping wires\n") + QString(e.GetMessageString()) + "\n";
+            logg += "     Standard_DomainError sweeping wires\n" + std::string(e.GetMessageString()) + "\n";
         }
         catch (StdFail_NotDone &e)
         {
-            logg += QString("   StdFail_NotDone sweeping wires") + QString(e.GetMessageString()) + "\n";
+            logg += "   StdFail_NotDone sweeping wires" + std::string(e.GetMessageString()) + "\n";
             return false;
         }
         catch (...)
@@ -932,7 +752,7 @@ bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) cons
 
     logg += "\n";
 
-    logmsg = logg.toStdString();
+    logmsg = logg;
     return !sailshape.IsNull();
 }
 

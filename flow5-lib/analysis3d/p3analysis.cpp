@@ -22,10 +22,10 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
 
-#include <QString>
 
+#include <iostream>
+#include <format>
 #include <thread>
 
 
@@ -90,8 +90,8 @@ bool P3Analysis::initializeAnalysis(Polar3d const *pPolar3d, int nRHS)
         if(!allocateMatrix(N)) return false;
 
         int memsize =     allocateRHS3(nRHS);
-        QString strange = QString::asprintf("Allocating %2f Mb for %d RHS vectors", double(memsize)/1024.0/1024.0, nRHS);
-        traceLog(strange+"\n\n");
+        std::string strange = std::format("Allocating {:2f} Mb for {:d} RHS vectors", double(memsize)/1024.0/1024.0, nRHS);
+        traceStdLog(strange+"\n\n");
     }
 
     m_bWarning  = false;
@@ -104,7 +104,7 @@ int P3Analysis::allocateRHS3(int nRHS)
 {
     if(!m_pPolar3d) return 0;
 
-    int memsize = 0;
+    unsigned int memsize = 0;
 
     int N = m_pPolar3d->isTriUniformMethod() ? nPanels() : nPanels()*3;
 
@@ -118,7 +118,7 @@ int P3Analysis::allocateRHS3(int nRHS)
     m_vRHSVertex.resize(nPanels()*3);
     m_wRHSVertex.resize(nPanels()*3);
 
-    memsize += 7 * uint(nPanels())*3 * sizeof(double);
+    memsize += 7 * nPanels()*3 * sizeof(double);
 
     m_uRHS.resize(N);
     m_vRHS.resize(N);
@@ -402,7 +402,7 @@ double P3Analysis::getPotential(Vector3d const &C, double const *mu, double cons
         phiT += phiSource * sigma[i3];
 
         getDoubletInfluence(C, p3, nullptr, phiBasis, 0.0, true);
-//        strange += QString::asprintf("   %9g", phiBasis[0]+phiBasis[1]+phiBasis[2]);
+//        strange += std::format("   {:9g}", phiBasis[0]+phiBasis[1]+phiBasis[2]);
         phiT += phiBasis[0]*mu[3*i3] + phiBasis[1]*mu[3*i3+1] + phiBasis[2]*mu[3*i3+2];
 
         // Is the panel shedding a wake?
@@ -436,7 +436,7 @@ double P3Analysis::getPotential(Vector3d const &C, double const *mu, double cons
             }
         }
     }
-//qDebug("%s", strange.toStdString().c_str());
+//qDebug("{:s}", strange.toStdString().c_str());
     return phiT;
 }
 
@@ -773,7 +773,7 @@ void P3Analysis::inducedForce(int nPanel3, double QInf, double alpha, double bet
         }
     }
 
-    for(uint m=0; m<SpanResFF.m_F.size(); m++)
+    for(unsigned int m=0; m<SpanResFF.m_F.size(); m++)
         ForceBodyAxes += SpanResFF.m_F.at(m);
     ForceBodyAxes *= 1.0/q;    // N/q, body axes
 }
@@ -878,8 +878,8 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
             SpanResFF.m_ICd[m] = StripForce.dot(winddir) /SpanResFF.stripArea(m);
 
 #ifdef QT_DEBUG
-//qDebug("Wg[%d]  %11g  %11g  %11g", m, SpanResFF.m_Vd[m].x, SpanResFF.m_Vd[m].y, SpanResFF.m_Vd[m].z);
-//qDebug("Wg[%d]  %11g  %11g", m, p3.trailingVortex().norm(), Wg_m.norm());
+//qDebug("Wg[{:d}]  {:11g}  {:11g}  {:11g}", m, SpanResFF.m_Vd[m].x, SpanResFF.m_Vd[m].y, SpanResFF.m_Vd[m].z);
+//qDebug("Wg[{:d}]  {:11g}  {:11g}", m, p3.trailingVortex().norm(), Wg_m.norm());
 
 #endif
             m++;
@@ -938,7 +938,7 @@ void P3Analysis::forces(double const *Mu3, double const *Sigma3, double alpha, d
 
                 int idxM = p3.index();
                 double GammaStrip = -(Mu3[3*idxM+1] + Mu3[3*idxM+2])/2.0 *4.0*PI;
-                //qDebug("m=%3d  %13.5f  %13.5f  %13.5f  %13.5f", m, GammaStrip, Wg.x, Wg.y, Wg.z);
+                //qDebug("m={:3d}  %13.5f  %13.5f  %13.5f  %13.5f", m, GammaStrip, Wg.x, Wg.y, Wg.z);
 
                 Wg += VInf.at(i3);
 
@@ -1127,8 +1127,8 @@ double P3Analysis::computeCm(Vector3d const &CoG, double Alpha, bool bFuseMi)
             //next calculate the force acting on the panel
             ForcePt = p3.CoG();
             PanelForce = p3.normal() * (-Cp) * p3.area();      // Newtons/q
-if(bTrace) qDebug("  %3d  %13g  %13g  %13g  %13g  %13g  %13g",
-                  i3, ForcePt.x, ForcePt.y, ForcePt.z, PanelForce.x, PanelForce.y, PanelForce.z);
+if(bTrace) std::cout << std::format("  {:3d}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}",
+                  i3, ForcePt.x, ForcePt.y, ForcePt.z, PanelForce.x, PanelForce.y, PanelForce.z)<<std::endl;
 
             PanelLeverArm.x = ForcePt.x - CoG.x;
             PanelLeverArm.y = ForcePt.y - CoG.y;
@@ -1194,7 +1194,7 @@ bool P3Analysis::getZeroMomentAngle(Vector3d const &CoG, double &alphaeq, bool b
         a1 *=0.9;
         Cm0 = computeCm(CoG, a0*180.0/PI, bFuseMi);
         Cm1 = computeCm(CoG, a1*180.0/PI, bFuseMi);
-//        qDebug(" iter=%3d,  %11g   %11g,  %11g   %11g", iter, a0*180.0/PI, a1*180.0/PI, Cm0, Cm1);
+//        qDebug(" iter={:3d},  {:11g}   {:11g},  {:11g}   {:11g}", iter, a0*180.0/PI, a1*180.0/PI, Cm0, Cm1);
         iter++;
         if(isCancelled()) break;
     }
@@ -1288,12 +1288,12 @@ bool P3Analysis::computeTrimmedConditions(double mass, Vector3d const &CoG, doub
     if(Lift<=PRECISION)
     {
         u0 = -100.0;
-        QString strong;
-        strong = "        Found a negative lift for " + ALPHAch;
-        strong = QString::asprintf("=%.5f", alphaeq) + DEGch;
+        std::string strong;
+        strong = "        Found a negative lift for " + ALPHAstr;
+        strong = std::format("=%.5f", alphaeq) + DEGstr;
         strong = ".... skipping the angle...\n";
         m_bWarning = true;
-        traceLog("\n"+strong);
+        traceStdLog("\n"+strong);
         return false;
     }
     else
@@ -1442,7 +1442,7 @@ void P3Analysis::combineLocalVelocities(double alpha, double beta, std::vector<V
         VLocal[i].z = cosa*cosb* m_uVLocal.at(i).z + sinb*m_vVLocal.at(i).z + sina*cosb* m_wVLocal.at(i).z;
     }
 
-//    for(int i=0; i<VLocal.size(); i++)        qDebug("  %11g  %11g  %11g", VLocal.at(i).x, VLocal.at(i).y, VLocal.at(i).z);
+//    for(int i=0; i<VLocal.size(); i++)        qDebug("  {:11g}  {:11g}  {:11g}", VLocal.at(i).x, VLocal.at(i).y, VLocal.at(i).z);
 }
 
 

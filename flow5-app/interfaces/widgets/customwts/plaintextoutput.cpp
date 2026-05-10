@@ -29,7 +29,7 @@
 
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 
 PlainTextOutput::PlainTextOutput(QWidget *pWidget) : QPlainTextEdit(pWidget)
 {

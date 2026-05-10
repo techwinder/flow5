@@ -37,7 +37,7 @@
 #include <core/saveoptions.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <api/occ_globals.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 
 bool SailCadReaderDlg::s_bShell = true;
 QByteArray SailCadReaderDlg::s_WindowGeometry;

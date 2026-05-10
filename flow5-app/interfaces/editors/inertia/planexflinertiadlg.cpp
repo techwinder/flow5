@@ -36,6 +36,12 @@
 
 #include "planexflinertiadlg.h"
 
+#include <api/objects3d.h>
+#include <api/planexfl.h>
+#include <api/units.h>
+
+#include <core/qunits.h>
+#include <core/saveoptions.h>
 #include <interfaces/editors/inertia/partinertiadelegate.h>
 #include <interfaces/editors/inertia/partinertiadlg.h>
 #include <interfaces/editors/inertia/partinertiamodel.h>
@@ -43,10 +49,6 @@
 #include <interfaces/editors/inertia/pointmasstable.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <interfaces/opengl/fl5views/gl3dplanexflview.h>
-#include <core/saveoptions.h>
-#include <api/units.h>
-#include <api/objects3d.h>
-#include <api/planexfl.h>
 #include <interfaces/widgets/customdlg/stringvaluedlg.h>
 #include <interfaces/widgets/customwts/cptableview.h>
 #include <interfaces/widgets/customwts/floatedit.h>

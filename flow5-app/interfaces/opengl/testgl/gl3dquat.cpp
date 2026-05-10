@@ -87,7 +87,7 @@ gl3dQuat::gl3dQuat(QWidget *pParent) : gl3dTestGLView (pParent)
             {
                 QGridLayout *pParamsLayout = new QGridLayout;
                 {
-                    QLabel *plabSeedX = new QLabel(THETAch +"=");
+                    QLabel *plabSeedX = new QLabel("&theta;=");
                     QLabel *plabSeedY = new QLabel("x=");
                     QLabel *plabSeedZ = new QLabel("y=");
                     QLabel *plabSeedW = new QLabel("z=");

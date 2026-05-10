@@ -54,7 +54,7 @@ class FL5LIB_EXPORT QuadMesh : public XflMesh
         void rotate(double alpha, double beta, double phi) override;
 
 
-        void getFreeEdges(std::vector<Segment3d> &freeedges, std::vector<QPair<int, int> > &pairerrors) const;
+        void getFreeEdges(std::vector<Segment3d> &freeedges, std::vector<std::pair<int, int> > &pairerrors) const;
 
         void clearWakePanels() {m_WakePanel4.clear();}
 

@@ -40,11 +40,13 @@
 
 #include <api/geom_global.h>
 #include <api/node.h>
-#include <api/trace.h>
 #include <api/triangle3d.h>
 #include <api/units.h>
+#include <core/trace.h>
+#include <api/utils-io.h>
 
 #include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/w3dprefs.h>

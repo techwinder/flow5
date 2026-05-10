@@ -41,7 +41,6 @@ class FL5LIB_EXPORT BSpline : public Spline
         void duplicate(const Spline &spline) override;
         int degree() const override {return m_degree;}
         void setDegree(int iDegree) override {m_degree = iDegree;}
-        bool serializeFl5(QDataStream &ar, bool bIsStoring) override;
 
         Vector2d splinePoint(double u) const override;
         void splineDerivative(double u, double &dx, double &dy) const override;

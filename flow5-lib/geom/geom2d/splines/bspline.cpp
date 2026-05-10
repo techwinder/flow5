@@ -22,15 +22,16 @@
 
 *****************************************************************************/
 
-
-#include <QDataStream>
-
+#include <cassert>
+#include <iostream>
+#include <format>
 #include <bspline.h>
 
 #include <constants.h>
 #include <geom_global.h>
 #include <mathelem.h>
 #include <matrix.h>
+#include <utils.h>
 
 BSpline::BSpline() : Spline()
 {
@@ -85,7 +86,7 @@ Vector2d BSpline::splinePoint(double t) const
     double w(0);
     x=y=0.0;
     t=std::min(t, 0.99999);
-    for (uint i=0; i<m_CtrlPt.size(); i++)
+    for (unsigned int i=0; i<m_CtrlPt.size(); i++)
     {
         double b = geom::basis(i, m_degree, t, m_knot.data()) * m_Weight[i];
         x += m_CtrlPt.at(i).x * b;
@@ -173,41 +174,9 @@ void BSpline::duplicate(Spline const &spline)
 }
 
 
-bool BSpline::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    int n=0;
-    // 500001 : first version of new fl5 format
-
-    if(bIsStoring)
-    {
-        Spline::serializeFl5(ar, bIsStoring);
-        ar << m_degree;
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        n=0;
-        ar << n << n;
-
-        return true;
-    }
-    else
-    {
-        resetSpline();
-        Spline::serializeFl5(ar, bIsStoring);
-        ar >> m_degree;
-
-        // space allocation
-        ar >> n >> n;
-
-        updateSpline();
-        makeCurve();
-        return true;
-    }
-}
-
-
 void BSpline::copySymmetric(BSpline const &bspline)
 {
-    Spline::copysymmetric(bspline); //call base class FL5LIB_EXPORT method
+    Spline::copySymmetric(bspline); //call base class FL5LIB_EXPORT method
     m_degree     = bspline.degree();
     m_Weight.clear();
     m_Weight.insert(bspline.m_Weight.end(), bspline.m_Weight.begin(), bspline.m_Weight.end());
@@ -386,21 +355,21 @@ void BSpline::testApproximation()
 
     std::vector<Node2d> node = {{0.0, 0.0}, {1.0, 1.0}, {2.0, 3.0}, {3.0,4.5}, {4.0,3.2}, {5.0,2.0}, {6.0,1.0}};
 
-    for(uint i=0; i<node.size(); i++)
-        qDebug(" in  %11.5g  %11.5g", node[i].x, node[i].y);
+    for(unsigned int i=0; i<node.size(); i++)
+        std::cout << std::format(" in  {:11.5g}  {:11.5g}", node[i].x, node[i].y)<<EOLstr;
 
     int degree=3;
     int nPts=4;
     if(bs.approximate(degree, nPts, node))
     {
         for(int i=0; i<bs.ctrlPointCount(); i++)
-            qDebug(" ctrl %11.5g  %11.5g", bs.m_CtrlPt[i].x, bs.m_CtrlPt[i].y);
+            std::cout << std::format(" ctrl {:11.5g}  {:11.5g}", bs.m_CtrlPt[i].x, bs.m_CtrlPt[i].y)<<EOLstr;
 
         for(int i=0; i<bs.outputSize(); i++)
-            qDebug(" out %11.5g  %11.5g", bs.m_Output[i].x, bs.m_Output[i].y);
+            std::cout << std::format(" out {:11.5g}  {:11.5g}", bs.m_Output[i].x, bs.m_Output[i].y)<<EOLstr;
     }
     else
-        qDebug("Error making spline approximation");
+        std::cout << std::format("Error making spline approximation")<<EOLstr;
 }
 
 
@@ -420,7 +389,7 @@ bool BSpline::smoothFunction(int deg, int npts, std::vector<double> const& x0, s
     if(nInput<5)                return false;
 
     std::vector<Node2d> node(x0.size());
-    for(uint i=1; i<x0.size(); i++)
+    for(unsigned int i=1; i<x0.size(); i++)
     {
         if(x0[i-1]>x0[i])       return false;
 
@@ -496,14 +465,14 @@ void BSpline::testSmooth()
 
     if(bs.isSingular())
     {
-        qDebug(" Smoothing failed");
+        std::cout << " Smoothing failed" << std::endl;
         return;
     }
 
-    qDebug("         x0            y0           y");
+    std::cout << "         x0            y0           y" << std::endl;
     for(int i=0; i<N; i++)
     {
-        qDebug(" %13.5g  %13.5g  %13.5g", x0[i], y0[i], y[i]);
+        std::cout << std::format(" {:13.5g}  {:13.5g}  {:13.5g}", x0[i], y0[i], y[i]) << std::endl;
     }
 }
 
@@ -511,7 +480,7 @@ void BSpline::testSmooth()
 
 void BSpline::makePointWeights()
 {
-    uint n = m_Weight.size();
+    unsigned int n = m_Weight.size();
 
     // parabola parameters
     // w = amp*(alpha (x_i)² + beta)
@@ -520,12 +489,12 @@ void BSpline::makePointWeights()
     alpha = m_BunchDist;
     beta=0.;
 
-//    qDebug(" weighhts:  %11.5g  %11.5g  %11.5g  %11.5g", m_WeightAmp, m_WeightDist, alpha, beta);
-    for(uint i=0; i<n; i++)
+//    qDebug(" weighhts:  {:11.5g}  {:11.5g}  {:11.5g}  {:11.5g}", m_WeightAmp, m_WeightDist, alpha, beta);
+    for(unsigned int i=0; i<n; i++)
     {
         double xi = 1.0 -2.0*double(n-1-i)/double(n-1);
         m_Weight[i] = 1.0+ m_BunchAmp*(alpha *xi*xi + beta);
-//        qDebug("  %7.2f   w=%9.5f", xi, m_Weight[i]);
+//        qDebug("  {:7.2f}   w=%9.5f", xi, m_Weight[i]);
     }
 }
 */
@@ -546,7 +515,7 @@ double BSpline::closest(double x, double y)
 
     double dmax=1.e10;
     double tc = t0;
-    for(uint i=1; i<int(m_Output.size()); i++)
+    for(unsigned int i=1; i<int(m_Output.size()); i++)
     {
         t1 = t0+dt;
         if(t1>1.0001) break;
@@ -572,7 +541,7 @@ double BSpline::closest(double x, double y)
     d0 = (x-x0)*(x-x0)+(y-y0)*(y-y0);
     d1 = (x-x1)*(x-x1)+(y-y1)*(y-y1);
     double t=(t0+t1)/2.0;
-    uint iter=0;
+    unsigned int iter=0;
     do
     {
         t=(t0+t1)/2.0;

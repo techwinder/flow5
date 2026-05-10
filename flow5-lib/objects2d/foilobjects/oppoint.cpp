@@ -22,8 +22,9 @@
 
 *****************************************************************************/
 
-#include <QString>
-
+#include <format>
+#include <sstream>
+#include <iomanip>
 
 #include <oppoint.h>
 
@@ -168,356 +169,109 @@ void OpPoint::setHingeMoments(Foil const*pFoil)
 
 void OpPoint::exportOpp(std::string &out, const std::string &Version, bool bCSV, std::string const &textseparator) const
 {
-    QString outstring;
-    QString strong;
-    QString line, sep;
+    std::string outstring;
+    std::string strong;
+    std::string line, sep;
 
-    outstring = QString::fromStdString(Version)+"\n";
+    outstring = Version+EOLstr;
 
-    strong = QString::fromStdString(m_FoilName) + "\n";
+    strong = m_FoilName + EOLstr;
     outstring += strong;
-    strong = QString::fromStdString(m_PlrName) + "\n";
+    strong = m_PlrName + EOLstr;
     outstring += strong;
 
-    if(bCSV) sep = QString::fromStdString(textseparator);
+    if(bCSV) sep = textseparator;
     else     sep = " ";
 
-    strong = QString::asprintf("Alpha%.3f", m_Alpha);
+    strong = std::format("Alpha{:.3f}", m_Alpha);
     line +=  strong + sep + " ";
-    strong = QString::asprintf("Re=%.0f", m_Reynolds);
+    strong = std::format("Re={:.0f}", m_Reynolds);
     line +=  strong + sep + " ";
-    strong = QString::asprintf("Ma%.3f", m_Mach);
+    strong = std::format("Ma{:.3f}", m_Mach);
     line +=  strong + sep + " ";
-    strong = QString::asprintf("NCrit%.3f", m_NCrit);
+    strong = std::format("NCrit{:.3f}", m_NCrit);
     line +=  strong;
-    outstring += line + "\n";
+    outstring += line + EOLstr;
 
-    out = outstring.toStdString();
+    out = outstring;
 }
 
 
 std::string OpPoint::fullName() const
 {
-    QString name = QString::fromStdString(m_FoilName) + QString::asprintf("-Re=%g-", m_Reynolds) + ALPHAch +  QString::asprintf("=%.2f", m_Alpha) + DEGch;
-    return name.toStdString();
+    std::string name = m_FoilName + std::format("-Re={:g}-", m_Reynolds) + ALPHAstr +  std::format("=%.2f", m_Alpha) + DEGstr;
+    return name;
 }
 
 
 std::string OpPoint::name() const
 {
-    QString strange;
+    std::string strange;
+
+    std::stringstream ss;
 
     if      (isType6())
     {
-        strange = QString::asprintf("%.3f", m_Theta) +DEGch;
-        strange = strange.rightJustified(9);
+        strange = std::format("{:.3f}", m_Theta) +DEGstr;
+        ss << std::right << std::setw(9) << strange;
     }
     else if (isType4())
     {
-        strange = QString::asprintf("%g", m_Reynolds);
-        strange = strange.rightJustified(9);
+        strange = std::format("{:g}", m_Reynolds);
+        ss << std::right << std::setw(9) << strange;
     }
     else
     {
-        strange = QString::asprintf("%.3f", m_Alpha) + DEGch;
-        strange = strange.rightJustified(9);
+        strange = std::format("{:.3f}", m_Alpha) + DEGstr;
+        ss << std::right << std::setw(9) << strange;
     }
-    return strange.toStdString();
-}
-
-
-bool OpPoint::serializeOppXFL(QDataStream &ar, bool bIsStoring, int ArchiveFormat)
-{
-    bool boolean(false);
-    int k(0);
-    float f0(0), f1(0);
-    double dble(0);
-
-    QString strange;
-
-    if(bIsStoring)
-    {
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        //write variables
-        ar >> strange;  m_FoilName = strange.toStdString();
-        ar >> strange;  m_PlrName  = strange.toStdString();
-
-        if(ArchiveFormat<200005)
-        {
-            ar >> k;
-            m_theStyle.setStipple(k);
-            ar >> m_theStyle.m_Width;
-            m_theStyle.m_Color = xfl::readQColor(ar);
-            ar >> m_theStyle.m_bIsVisible >> boolean;
-        }
-        else
-            m_theStyle.serializeXfl(ar, bIsStoring);
-
-        int m_n(0);
-        ar >> m_Reynolds >> m_Mach >> m_Alpha;
-        ar >> m_n >> m_BLXFoil.nd1 >> m_BLXFoil.nd2 >> m_BLXFoil.nd3;
-
-        ar >> m_bViscResults;
-        ar >> m_bBL;
-
-        ar >> m_Cl >> m_Cm >> m_Cd >> m_Cdp;
-        ar >> m_XTrTop >> m_XTrBot >> m_XCP;
-        ar >> m_NCrit >> m_TEHMom >> m_Cpmn;
-
-        m_Cpv.resize(m_n);
-        m_Cpi.resize(m_n);
-        m_Qv.resize(m_n);
-        m_Qi.resize(m_n);
-        for (k=0; k<m_n; k++)
-        {
-            ar >> f0 >> f1;
-            m_Cpv[k] = f0;
-            m_Cpi[k] = f1;
-        }
-        for (k=0; k<m_n; k++)
-        {
-            ar >> f0 >> f1;
-            m_Qv[k] = double(f0);
-            m_Qi[k] = double(f1);
-        }
-        for (k=0; k<=m_BLXFoil.nd1; k++)
-        {
-            ar >> f0 >> f1;
-            m_BLXFoil.xd1[k] = double(f0);
-            m_BLXFoil.yd1[k] = double(f1);
-        }
-        for (k=0; k<m_BLXFoil.nd2; k++)
-        {
-            ar >> f0 >> f1;
-            m_BLXFoil.xd2[k] = double(f0);
-            m_BLXFoil.yd2[k] = double(f1);
-        }
-        for (k=0; k<m_BLXFoil.nd3; k++)
-        {
-            ar >> f0 >> f1;
-            m_BLXFoil.xd3[k] = double(f0);
-            m_BLXFoil.yd3[k] = double(f1);
-        }
-
-        // space allocation
-        for (int i=0; i<20; i++) ar >> k;
-        for (int i=0; i<50; i++) ar >> dble;
-    }
-    return true;
-}
-
-
-bool OpPoint::serializeOppFl5(QDataStream &ar, bool bIsStoring)
-{
-    double dble=0.0;
-    int nIntSpares=0;
-    int nDbleSpares=0;
-
-    int n(0), k(0);
-    float f0(0), f1(0);
-    bool boolean(false);
-
-    QString strange;
-
-    // 500001: first fl5 format
-    // 500002: restored Cpv and Cpi
-    // 500003: added surface nodes
-    // 500004: restored BLXFoil save
-    // 500750: v750, added theta
-    int ArchiveFormat = 500750;
-
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-
-        //write variables
-        ar << QString::fromStdString(m_FoilName);
-        ar << QString::fromStdString(m_PlrName);
-
-        m_theStyle.serializeFl5(ar, bIsStoring);
-
-        switch(m_BLMethod)
-        {
-            default:
-            case BL::XFOIL:         n=0;  break;
-        }
-        ar << n;
-
-        ar << m_Reynolds << m_Mach << m_Alpha;
-
-        ar << m_Theta;
-
-        ar << m_bViscResults;
-        ar << m_bBL;
-
-        ar << m_Cl << m_Cm << m_Cd << m_Cdp;
-        ar << m_XTrTop << m_XTrBot << m_XCP;
-        ar << m_NCrit << m_TEHMom << m_Cpmn;
-
-        n = 0;
-        ar << n; //int(m_Node.size());
-/*        for(int l=0; l<m_Node.size(); l++)
-        {
-            Node2d const &n2d = m_Node.at(l);
-            ar << n2d.index() << n2d.isWakeNode() <<n2d.xf() << n2d.yf() << n2d.normal().xf() << n2d.normal().yf();
-        }*/
-
-        ar << int(m_Qi.size());
-        for (uint l=0; l<m_Qi.size(); l++)     ar << float(m_Cpv[l]) << float(m_Cpi[l]);
-        for (uint l=0; l<m_Qi.size(); l++)     ar << float(m_Qv[l])  << float(m_Qi[l]);
-
-        if(m_BLMethod==BL::XFOIL)
-        {
-            m_BLXFoil.serialize(ar, bIsStoring);
-        }
-        else
-        {
-        }
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<500000 || ArchiveFormat>550000) return false;
-
-        ar >> strange; m_FoilName = strange.toStdString();
-        ar >> strange; m_PlrName = strange.toStdString();;
-
-        m_theStyle.serializeFl5(ar, bIsStoring);
-
-
-        ar >>n;
-        switch(n)
-        {
-            default:
-            case 0: m_BLMethod=BL::XFOIL;         break;
-        }
-
-        ar >> m_Reynolds >> m_Mach >> m_Alpha;
-
-        if(ArchiveFormat>=500750)
-            ar >> m_Theta;
-
-        ar >> m_bViscResults;
-        ar >> m_bBL;
-
-        ar >> m_Cl >> m_Cm >> m_Cd >> m_Cdp;
-        ar >> m_XTrTop >> m_XTrBot >> m_XCP;
-        ar >> m_NCrit >> m_TEHMom >> m_Cpmn;
-
-        if(ArchiveFormat>=500003)
-        {
-            ar >> n;
-//            m_Node.resize(n);
-            for(int l=0; l<n; l++)
-            {
-//                Node2d &n2d = m_Node[l];
-                ar >> k;        //  n2d.setIndex(k);
-                ar >> boolean;  //  n2d.setWakeNode(boolean);
-                ar >> f0 >> f1; //  n2d.set(f0, f1);
-                ar >> f0 >> f1; //  n2d.setNormal(f0, f1);
-            }
-        }
-
-        ar >> n;
-        resizeSurfacePoints(n);
-        if(ArchiveFormat>=500002)
-        {
-            for (int l=0; l<n; l++)
-            {
-                ar >> f0 >> f1;
-                m_Cpv[l] = double(f0);
-                m_Cpi[l] = double(f1);
-            }
-        }
-
-        for (int l=0; l<n; l++)
-        {
-            ar >> f0 >> f1;
-            m_Qv[l] = double(f0);
-            m_Qi[l] = double(f1);
-        }
-
-        if(ArchiveFormat>=500004)
-        {
-            if(m_BLMethod==BL::XFOIL)
-            {
-                m_BLXFoil.serialize(ar, bIsStoring);
-            }
-            else
-            {
-            }
-        }
-        else
-        {
-            BLData bl;
-            bl.serializeFl5(ar, bIsStoring); // top
-            bl.serializeFl5(ar, bIsStoring); // bot
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-    }
-    return true;
+    return ss.str();
 }
 
 
 std::string OpPoint::properties(std::string const & textseparator, bool bData) const
 {
-    QString props;
-    QString strong;
+    std::string props;
+    std::string strong;
     props.clear();
 
-    props += THETAch + QString::asprintf("     = %g", m_Theta) + DEGch +"\n";
-    props += QString::asprintf("Re    = %g\n",     m_Reynolds);
-    props += ALPHAch + QString::asprintf("     = %g", m_Alpha) + DEGch +"\n";
-    props += QString::asprintf("Mach  = %g\n",     m_Mach);
-    props += QString::asprintf("NCrit = %g\n",     m_NCrit);
-    props += QString::asprintf("Cl    = %11.5f\n", m_Cl);
-    props += QString::asprintf("Cd    = %11.5f\n", m_Cd);
-    props += QString::asprintf("Cl/Cd = %11.5f\n", m_Cl/m_Cd);
-    props += QString::asprintf("Cm    = %11.5f\n", m_Cm);
-    props += QString::asprintf("Cdp   = %11.5f\n", m_Cdp);
-    props += QString::asprintf("Cpmn  = %11.5f\n", m_Cpmn);
-    props += QString::asprintf("XCP   = %11.5f\n", m_XCP);
+    props += THETAstr + std::format("     = {:g}", m_Theta) + DEGstr +EOLstr;
+    props += std::format("Re    = {:g}\n",     m_Reynolds);
+    props += ALPHAstr + std::format("     = {:g}", m_Alpha) + DEGstr +EOLstr;
+    props += std::format("Mach  = {:g}\n",     m_Mach);
+    props += std::format("NCrit = {:g}\n",     m_NCrit);
+    props += std::format("Cl    = {:11.5f}\n", m_Cl);
+    props += std::format("Cd    = {:11.5f}\n", m_Cd);
+    props += std::format("Cl/Cd = {:11.5f}\n", m_Cl/m_Cd);
+    props += std::format("Cm    = {:11.5f}\n", m_Cm);
+    props += std::format("Cdp   = {:11.5f}\n", m_Cdp);
+    props += std::format("Cpmn  = {:11.5f}\n", m_Cpmn);
+    props += std::format("XCP   = {:11.5f}\n", m_XCP);
 
-    props += "\n";
+    props += EOLstr;
     props += "Transition locations:\n";
-    strong += QString::asprintf("   Top side     = %11.5f\n", m_XTrTop);
-    strong += QString::asprintf("   Bottom side  = %11.5f\n", m_XTrBot);
-    props += strong + "\n";
+    strong += std::format("   Top side     = {:11.5f}\n", m_XTrTop);
+    strong += std::format("   Bottom side  = {:11.5f}\n", m_XTrBot);
+    props += strong + EOLstr;
 
-    props += "\n";
+    props += EOLstr;
     if(m_bTEFlap)
     {
-        props += QString::asprintf("T.E. flap moment = %g\n", m_TEHMom);
+        props += std::format("T.E. flap moment = {:g}\n", m_TEHMom);
     }
     if(m_bLEFlap)
     {
-        props += QString::asprintf("L.E. flap moment = %g\n", m_m_LEHMom);
+        props += std::format("L.E. flap moment = {:g}\n", m_m_LEHMom);
     }
 
     if(bData)
     {
         std::string str;
         exportOpp(str, "", false, textseparator);
-        props += "\n"+ QString::fromStdString(str);
+        props += EOLstr+ str;
     }
 
-    return props.toStdString();
+    return props;
 }
 
 

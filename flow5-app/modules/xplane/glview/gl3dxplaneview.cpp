@@ -40,6 +40,8 @@
 
 
 
+
+
 #include <api/bspline3d.h>
 #include <api/fuseocc.h>
 #include <api/fusesections.h>
@@ -56,12 +58,12 @@
 #include <api/planestl.h>
 #include <api/planexfl.h>
 #include <api/surface.h>
+#include <api/units.h>
 #include <api/wingopp.h>
 
-
 #include <core/displayoptions.h>
-#include <api/units.h>
-#include <api/trace.h>
+#include <core/qunits.h>
+#include <core/trace.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/poppctrls/crossflowctrls.h>
 #include <interfaces/controls/poppctrls/flowctrls.h>

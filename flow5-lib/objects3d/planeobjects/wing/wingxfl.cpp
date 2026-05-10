@@ -22,11 +22,9 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
 
-#include <QString>
-#include <QTextStream>
-#include <QCoreApplication>
+
+#include <format>
 
 
 #include <wingxfl.h>
@@ -444,7 +442,7 @@ void WingXfl::createSurfaces(Vector3d const &Toffset, double XTilt, double YTilt
     if(nSurf<=0) return;
     int NSurfaces = nSurf;
 
-    for(uint jsurf=0; jsurf<m_Surface.size(); jsurf++) m_Surface[jsurf].setIndex(jsurf);
+    for(unsigned int jsurf=0; jsurf<m_Surface.size(); jsurf++) m_Surface[jsurf].setIndex(jsurf);
 
     //define the normals at panel junctions: average between the normals of the two connecting sufaces
     for(int jsurf=0; jsurf<nSurf; jsurf++)
@@ -2241,256 +2239,6 @@ void WingXfl::resizeSpanDistribs(int nStations)
 }
 
 
-/**
- * Loads or Saves the data of this Wing to a binary file.
- * @param ar a refernce to the QDataStream object from/to which the data should be serialized
- * @param bIsStoring true if saving the data, false if loading
- * @return true if the operation was successful, false otherwise
- */
-bool WingXfl::serializePartXFL(QDataStream &ar, bool bIsStoring)
-{
-    QString tag;
-    QString rightfoil, leftfoil;
-    int nx(0), ny(0);
-    int k(0), n(0);
-    int ArchiveFormat(0);// identifies the format of the file
-    double dble(0), dm(0), px(0), py(0), pz(0);
-    double cord(0), tw(0), pos(0), dih(0), off(0);
-    QString strange;
-    xfl::enumDistribution xDist=xfl::COSINE, yDist=xfl::UNIFORM;
-
-    if(bIsStoring)
-    {
-        // using flow5 format instead
-        return true;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<100000 || ArchiveFormat>100003) return false;
-
-        ar >> strange;  m_Name=strange.toStdString();
-        ar >> strange;  m_Description=strange.toStdString();
-
-        m_theStyle.m_Color.serialize(ar, false);
-
-        ar >> m_bSymmetric;
-
-        m_Section.clear();
-        ar >> n;
-        for (int i=0; i<n; i++)
-        {
-            ar >> rightfoil;
-            ar >> leftfoil;
-            ar >> cord;
-            ar >> pos;
-            ar >> off;
-            ar >> dih;
-            ar >> tw;
-            ar >> nx;
-            ar >> ny;
-
-            ar >> k;
-            if(k==1)       xDist = xfl::COSINE;
-            else if(k== 2) xDist = xfl::SINE;
-            else if(k==-2) xDist = xfl::INV_SINE;
-            else           xDist = xfl::UNIFORM;
-
-            ar >> k;
-            if(k==1)       yDist = xfl::COSINE;
-            else if(k== 2) yDist = xfl::SINE;
-            else if(k==-2) yDist = xfl::INV_SINE;
-            else           yDist = xfl::UNIFORM;
-
-            appendWingSection(cord, tw, pos, dih, off, nx, ny, xDist, yDist, rightfoil.toStdString(), leftfoil.toStdString());
-        }
-
-        // improve uniformity of nx panel numbers
-        if(n>=2)
-        {
-            int nx = m_Section.at(n-2).nXPanels();
-            m_Section.back().setNX(nx);
-        }
-
-        ar >> dble;
-        m_Inertia.setStructuralMass(dble);
-
-        clearPointMasses();
-        ar >> n;
-        for(int i=0; i<n; i++)
-        {
-            ar >> dm >> px >> py >> pz;
-            ar >> tag;
-            m_Inertia.appendPointMass(PointMass(dm, Vector3d(px, py, pz), tag.toStdString()));
-        }
-
-        ar>>k; // if(k) m_bTextures=true; else m_bTextures=false;
-
-
-        // space allocation
-        for (int i=1; i<15; i++) ar >> k;
-        ar>>k;  // m_bIsFin     = k? true : false; deprecated
-        ar>>k;  m_bTwoSided = k? true : false;
-        ar>>k; // m_bSymFin    = k? true : false;
-        ar>>k;
-        switch (k) {
-            case 0:
-                m_WingType=xfl::Main;
-                if(ArchiveFormat<100002) m_bTwoSided = true;
-                break;
-            case 1:
-                m_WingType=xfl::OtherWing;
-                if(ArchiveFormat<100002) m_bTwoSided = true;
-                break;
-            case 2:
-                m_WingType=xfl::Elevator;
-                if(ArchiveFormat<100002) m_bTwoSided = true;
-                break;
-            case 3:
-                m_WingType=xfl::Fin;
-                m_bCloseInnerSide = true;
-                if(ArchiveFormat<100002) m_bTwoSided = false;
-                break;
-            case 4:
-                m_WingType=xfl::OtherWing;
-                if(ArchiveFormat<100002) m_bTwoSided = true;
-                break;
-            default:
-                break;
-        }
-        ar >>k; /*m_bReversed = k? true : false;*/
-
-        for (int i=0; i<50; i++) ar >> dble;
-
-        m_nTipStrips = 1;
-
-        computeGeometry();
-
-        return true;
-    }
-}
-
-
-/**
- * Loads or Saves the data of this Wing to a binary file.
- * @param ar the QDataStream object from/to which the data should be serialized
- * @param bIsStoring true if saving the data, false if loading
- * @return true if the operation was successful, false otherwise
- */
-bool WingXfl::serializePartFl5(QDataStream &ar, bool bIsStoring)
-{
-    Part::serializePartFl5(ar, bIsStoring);
-    int i(0), k(0), n(0), is(0);
-    double dble(0);
-    int nIntSpares = 0;
-    int nDbleSpares = 0;
-
-    // 500001 : new fl5 format;
-    int ArchiveFormat = 500001;
-
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-
-        ar << m_bSymmetric;
-
-        ar << nSections();
-
-        for (is=0; is<nSections(); is++)
-        {
-            WingSection &ws = m_Section[is];
-            ws.serializeFl5(ar, bIsStoring);
-        }
-
-        ar << m_bTwoSided;
-        ar << m_bCloseInnerSide;
-        bool bReverse = false; // deprecated
-        ar << bReverse;
-
-        switch (m_WingType)
-        {
-            case xfl::Main:      ar<<0; break;
-//            case WingXfl::Second:    ar<<1; break;
-            case xfl::Elevator:  ar<<2; break;
-            case xfl::Fin:       ar<<3; break;
-            case xfl::OtherWing: ar<<4; break;
-        }
-
-        ar << m_LE.x << m_LE.y<< m_LE.z;
-        ar << m_rx << m_ry << m_rz;
-
-
-        // space allocation for the future storage of more data, without need to change the format
-
-        nIntSpares = 2;
-        ar << nIntSpares;
-        ar << m_nTipStrips;
-        ar << m_nXFlapPanels;
-//        for (int i=0; i<nIntSpares-1; i++) ar << 0;
-
-        nDbleSpares = 0;
-        ar << nDbleSpares;
- //       for (int i=0; i<nDbleSpares; i++) ar << 0.0;
-
-        return true;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<=500000 || ArchiveFormat>500002) return false;
-
-        ar >> m_bSymmetric;
-
-        m_Section.clear();
-        ar >> n;
-        for (i=0; i<n; i++)
-        {
-            m_Section.push_back(WingSection());
-            m_Section.back().serializeFl5(ar, bIsStoring);
-        }
-
-        ar >> m_bTwoSided;
-        ar >> m_bCloseInnerSide;
-        bool bReverse = false; // deprecated
-        ar >> bReverse;
-
-        ar >> n;
-        switch(n)
-        {
-            case 0: m_WingType = xfl::Main;       break;
-            case 1: m_WingType = xfl::OtherWing;  break;
-            case 2: m_WingType = xfl::Elevator;   break;
-            case 3: m_WingType = xfl::Fin;        break;
-            default:
-            case 4: m_WingType = xfl::OtherWing;  break;
-        }
-
-        ar >> m_LE.x >> m_LE.y >> m_LE.z;
-        ar >> m_rx >> m_ry >> m_rz;
-
-        // space allocation
-
-        ar >> nIntSpares;
-
-        if(nIntSpares>0)
-        {
-            ar >> m_nTipStrips;
-            m_nTipStrips = std::max(m_nTipStrips, 1);
-        }
-        if(nIntSpares>1)
-            ar >> m_nXFlapPanels;
-
-        for (int i=0; i<nIntSpares-2; i++) ar >> k;
-
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-        computeGeometry();
-
-        return true;
-    }
-}
-
-
 /** Force a common number of x-panels at all span stations */
 int WingXfl::uniformizeXPanelNumber()
 {
@@ -2518,18 +2266,18 @@ int WingXfl::uniformizeXPanelNumber()
 
 void WingXfl::exportToAVL(std::string &avlstring, int index, Vector3d const &T, double ry, double lengthunit) const
 {
-    QString strong, str;
-    QString strange;
-    QTextStream out(&strange);
+    std::string strong, str;
+    std::string strange;
+    std::stringstream out;
 
-    out << EOLch;
+    out << EOLstr;
 
-    str = "#================" +   QString::fromStdString(m_Name) + "================\n";
-    strong.fill('=', str.length()-2);
-    strong = "#"+strong + EOLch;
+    str = "#================" +  m_Name + "================\n";
+//    strong.fill('=', str.length()-2);
+//    strong = "#"+strong + EOLstr;
 
-    out << strong;
-    out << str + EOLch;
+    out << "#==============================================" << EOLstr;
+    out << str + EOLstr;
 
     //write only right wing surfaces since we provide YDUPLICATE
     Surface aSurface;
@@ -2541,35 +2289,35 @@ void WingXfl::exportToAVL(std::string &avlstring, int index, Vector3d const &T, 
 
     out << "#_______________________________________\n";
     out << "SURFACE\n";
-    out << QString::fromStdString(m_Name);
-    out << EOLch;
+    out << m_Name;
+    out << EOLstr;
     out << "#Nchord    Cspace   [ Nspan Sspace ]\n";
-    out << QString::asprintf("%d        %3.1f\n", nXPanels(0), 1.0);
+    out << std::format("{:d}        %3.1f\n", nXPanels(0), 1.0);
 
-    out << EOLch;
+    out << EOLstr;
     out << "ANGLE\n";
-    out << QString::asprintf("%9.3f                        | dAinc\n", ry);
+    out << std::format("{:9.3f}                        | dAinc\n", ry);
 
-    out << EOLch;
+    out << EOLstr;
     out << "TRANSLATE\n";
-    out << QString::asprintf("%9.3f    %9.3f     %9.3f\n", T.x*lengthunit, T.y*lengthunit, T.z*lengthunit);
+    out << std::format("{:9.3f}    {:9.3f}     {:9.3f}\n", T.x*lengthunit, T.y*lengthunit, T.z*lengthunit);
 
     if(!isFin())
     {
-        out << EOLch;
+        out << EOLstr;
         out << "YDUPLICATE\n";
         out << "0.0\n";
     }
     else if(isTwoSided())
     {
-        out << EOLch;
+        out << EOLstr;
         out << "YDUPLICATE\n";
         out << "0.0\n";
     }
 
-    out << EOLch;
+    out << EOLstr;
     out << "COMPONENT\n";
-    out << QString::asprintf("%4d                         | Lcomp\n",index);
+    out << std::format("{:4d}                         | Lcomp\n",index);
 
     for(int j=startIndex; j<NSurfaces; j++)
     {
@@ -2577,7 +2325,7 @@ void WingXfl::exportToAVL(std::string &avlstring, int index, Vector3d const &T, 
 
         out << "#______________\nSECTION\n";
 
-        strong = QString::asprintf("%9.4f %9.4f %9.4f %9.4f  %7.3f  %3d  %3d   | Xle Yle Zle   Chord Ainc   [ Nspan Sspace ]\n",
+        strong = std::format("{:9.4f} {:9.4f} {:9.4f} {:9.4f}  {:7.3f}  {:3d}  {:3d}   | Xle Yle Zle   Chord Ainc   [ Nspan Sspace ]\n",
                 aSurface.m_LA.x       *lengthunit,
                 aSurface.m_LA.y       *lengthunit,
                 aSurface.m_LA.z       *lengthunit,
@@ -2588,18 +2336,18 @@ void WingXfl::exportToAVL(std::string &avlstring, int index, Vector3d const &T, 
         out << strong;
         out << "\n";
         out << "AFIL 0.0 1.0\n";
-        if(aSurface.foilA())  out << QString::fromStdString(aSurface.foilA()->name()) +".dat\n";
-        out << EOLch;
+        if(aSurface.foilA())  out << aSurface.foilA()->name() +".dat\n";
+        out << EOLstr;
         if(aSurface.hasTEFlap())
         {
             out << "CONTROL\n";
-            strong = QString::asprintf("Flap_%d  ", iFlap);
+            strong = std::format("Flap_{:d}  ", iFlap);
 
             str = "1.0   ";
             strong += str;
 
             assert(aSurface.foilA());
-            str = QString::asprintf("%5.3f  %9.4f   %9.4f  %9.4f   -1.0  ",
+            str = std::format("%5.3f  {:9.4f}   {:9.4f}  {:9.4f}   -1.0  ",
                     aSurface.foilA()->TEXHinge(),
                     aSurface.hingeVector().x,
                     aSurface.hingeVector().y,
@@ -2616,7 +2364,7 @@ void WingXfl::exportToAVL(std::string &avlstring, int index, Vector3d const &T, 
     //write the last section
     out << ("\n#______________\nSECTION\n");
 
-    strong = QString::asprintf("%9.4f  %9.4f  %9.4f  %9.4f  %7.3f   %3d  %3d   | Xle Yle Zle   Chord Ainc   [ Nspan Sspace ]\n",
+    strong = std::format("{:9.4f}  {:9.4f}  {:9.4f}  {:9.4f}  {:7.3f}   {:3d}  {:3d}   | Xle Yle Zle   Chord Ainc   [ Nspan Sspace ]\n",
             aSurface.m_LB.x       *lengthunit,
             aSurface.m_LB.y       *lengthunit,
             aSurface.m_LB.z       *lengthunit,
@@ -2625,84 +2373,83 @@ void WingXfl::exportToAVL(std::string &avlstring, int index, Vector3d const &T, 
             aSurface.NYPanels(),
             objects::AVLSpacing(aSurface.yDistType()));
     out << strong;
-    out << EOLch;
+    out << EOLstr;
     out << "AFIL 0.0 1.0\n";
-    if(aSurface.foilB())  out << QString::fromStdString(aSurface.foilB()->name()) +".dat\n";
-    out << EOLch;
+    if(aSurface.foilB())  out << aSurface.foilB()->name() +".dat\n";
+    out << EOLstr;
 
     if(aSurface.hasTEFlap())
     {
         out << "CONTROL\n";
-        strong = QString::asprintf("Flap_%d  ", iFlap);
+        strong = std::format("Flap_{:d}  ", iFlap);
 
         str = "1.0   ";
         strong += str;
 
         assert(aSurface.foilB());
-        str = QString::asprintf("%5.3f  %9.4f  %9.4f   %9.4f   -1.0  ",
+        str = std::format("%5.3f  {:9.4f}  {:9.4f}   {:9.4f}   -1.0  ",
                           aSurface.foilB()->TEXHinge(),
                           aSurface.hingeVector().x,
                           aSurface.hingeVector().y,
                           aSurface.hingeVector().z);
         strong +=str + "| name, gain,  Xhinge,  XYZhvec,  SgnDup\n";
         out << strong;
-        out << EOLch;
+        out << EOLstr;
 
         iFlap++;
     }
-    out << EOLch << EOLch;
+    out << EOLstr << EOLstr;
 
-    avlstring.append(strange.toStdString());
+    avlstring.append(strange);
 }
 
 
 void WingXfl::getProperties(std::string &properties, std::string const &prefx) const
 {
-    QString props;
-    QString strange;
-    QString prefix = QString::fromStdString(prefx);
+    std::string props;
+    std::string strange;
+    std::string prefix = prefx;
 
-    constexpr int labelWidth = 17;
-    auto label = [&](const char *sourceText) {
-        return QCoreApplication::translate("WingXfl", sourceText).leftJustified(labelWidth, ' ');
-    };
+    strange = std::format("{:9.3f}", m_PlanformArea*Units::m2toUnit()) + " ";
+    props += prefix + "Wing area         ="+strange+Units::areaUnitLabel() + "\n";
 
-    strange = QString::asprintf("%9.3f", m_PlanformArea*Units::m2toUnit()) + " ";
-    props += prefix + label("Wing area") + "=" + strange + Units::areaUnitQLabel() + "\n";
+    strange = std::format("{:9.3f}", m_PlanformSpan*Units::mtoUnit()) + " ";
+    props += prefix + "Wing span         ="+strange+Units::lengthUnitLabel() + "\n";
 
-    strange = QString::asprintf("%9.3f", m_PlanformSpan*Units::mtoUnit()) + " ";
-    props += prefix + label("Wing span") + "=" + strange + Units::lengthUnitQLabel() + "\n";
+    strange = std::format("{:9.3f}", m_ProjectedArea*Units::m2toUnit()) + " ";
+    props += prefix + "Projected area    ="+strange+Units::areaUnitLabel() + "\n";
 
-    strange = QString::asprintf("%9.3f", m_ProjectedArea*Units::m2toUnit()) + " ";
-    props += prefix + label("Projected area") + "=" + strange + Units::areaUnitQLabel() + "\n";
+    strange = std::format("{:9.3f}", m_ProjectedSpan*Units::mtoUnit()) + " ";
+    props += prefix + "Projected span    ="+strange+Units::lengthUnitLabel() + "\n";
 
-    strange = QString::asprintf("%9.3f", m_ProjectedSpan*Units::mtoUnit()) + " ";
-    props += prefix + label("Projected span") + "=" + strange + Units::lengthUnitQLabel() + "\n";
+    strange = std::format("{:9.3f}", GChord()*Units::mtoUnit()) + " ";
+    props += prefix + "Mean geom. chord  ="+strange+Units::lengthUnitLabel() + "\n";
 
-    strange = QString::asprintf("%9.3f", GChord()*Units::mtoUnit()) + " ";
-    props += prefix + label("Mean geom. chord") + "=" + strange + Units::lengthUnitQLabel() + "\n";
+    strange = std::format("{:9.3f}", m_MAChord*Units::mtoUnit()) + " ";
+    props += prefix + "Mean aero. chord  ="+strange+Units::lengthUnitLabel() + "\n";
 
-    strange = QString::asprintf("%9.3f", m_MAChord*Units::mtoUnit()) + " ";
-    props += prefix + label("Mean aero. chord") + "=" + strange + Units::lengthUnitQLabel() + "\n";
+    strange = std::format("{:9.3f}", aspectRatio());
+    props += prefix + "Aspect ratio      ="+strange+ "\n";
 
-    strange = QString::asprintf("%9.3f", aspectRatio());
-    props += prefix + label("Aspect ratio") + "=" + strange + "\n";
+    if(tipChord()>0.0) strange = std::format("{:9.3f}", taperRatio());
+    else               strange = "Undefined";
+    props += prefix + "Taper ratio       ="+strange+"\n";
 
-    if(tipChord()>0.0) strange = QString::asprintf("%9.3f", taperRatio());
-    else               strange = QCoreApplication::translate("WingXfl", "Undefined");
-    props += prefix + label("Taper ratio") + "=" + strange + "\n";
-
-    strange = QString::asprintf("%9.3f", averageSweep());
-    props += prefix + label("Sweep") + "=" + strange + DEGch + "\n";
+    strange = std::format("{:9.3f}", averageSweep());
+    props += prefix + "Sweep             =" + strange + DEGstr + "\n";
 
 
-    props += prefix + label("VLM panels") + "=" + QString::number(quadTotal(true)) + "\n";
-    props += prefix + label("Quad panels") + "=" + QString::number(quadTotal(false)) + "\n";
-    props += prefix + label("Triangular panels") + "=" + QString::number(nTriangles());
+    strange = std::format("VLM panels        =%d\n", quadTotal(true));
+    props += prefix + strange;
 
-    properties = props.toStdString();
+    strange = std::format("Quad panels       =%d\n", quadTotal(false));
+    props += prefix + strange;
+
+    strange = std::format("Triangular panels =%d", nTriangles());
+    props += prefix + strange;
+
+    properties = props;
 }
-
 
 void WingXfl::makeTriangulation(Fuse const *pFuse, int CHORDPANELS)
 {
@@ -3089,13 +2836,13 @@ void WingXfl::makeTopBotWires(std::vector<std::vector<Node>> &topbotwires) const
         if(surf.isLeftSurf() && surf.isCenterSurf())
         {
             std::vector<Node> leftwire;
-            for(uint k=0; k<surf.m_SideA_Bot.size()-1; k++)
+            for(unsigned int k=0; k<surf.m_SideA_Bot.size()-1; k++)
                 leftwire.push_back(surf.m_SideA_Bot.at(k));
             for(int k=int(surf.m_SideA_Top.size())-1; k>=0; k--)
                 leftwire.push_back(surf.m_SideA_Top.at(k));
 
             std::vector<Node> midwire;
-            for(uint k=0; k<surf.m_SideB_Bot.size()-1; k++)
+            for(unsigned int k=0; k<surf.m_SideB_Bot.size()-1; k++)
                 midwire.push_back(surf.m_SideB_Bot.at(k));
             for(int k=int(surf.m_SideB_Top.size())-1; k>=0; k--)
                 midwire.push_back(surf.m_SideB_Top.at(k));
@@ -3104,19 +2851,19 @@ void WingXfl::makeTopBotWires(std::vector<std::vector<Node>> &topbotwires) const
             topbotwires.push_back(leftwire);
             topbotwires.push_back(midwire);
 
-/*            for(uint i=0; i<leftwire.size(); i++)
+/*            for(unsigned int i=0; i<leftwire.size(); i++)
             {
                 Node const &nd = leftwire.at(i);
-                qDebug("%13g   %13g   %13g", nd.x, nd.y, nd.z);
+                qDebug("{:13g}   {:13g}   {:13g}", nd.x, nd.y, nd.z);
             }
             qDebug("__________");*/
         }
         else if(surf.isRightSurf() && surf.isCenterSurf())
         {
             std::vector<Node> rightwire;
-            for(uint k=0; k<surf.m_SideB_Bot.size()-1; k++)
+            for(unsigned int k=0; k<surf.m_SideB_Bot.size()-1; k++)
                 rightwire.push_back(surf.m_SideB_Bot.at(k));
-            for(int k=surf.m_SideB_Top.size()-1; k>=0; k--)
+            for(int k=int(surf.m_SideB_Top.size()-1); k>=0; k--)
                 rightwire.push_back(surf.m_SideB_Top.at(k));
 
             topbotwires.push_back(rightwire);
@@ -3124,7 +2871,7 @@ void WingXfl::makeTopBotWires(std::vector<std::vector<Node>> &topbotwires) const
     }
 
     // close the wires
-    for(uint i=0; i<topbotwires.size(); i++)
+    for(unsigned int i=0; i<topbotwires.size(); i++)
     {
         std::vector<Node> &wire = topbotwires[i];
         Node midnode = (wire.front() + wire.back())*0.5;

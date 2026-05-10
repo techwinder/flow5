@@ -24,10 +24,7 @@
 
 #pragma once
 
-
-#include <QString>
-#include <QDataStream>
-#include <QMetaType>
+#include<string>
 
 #include <fl5color.h>
 
@@ -103,7 +100,12 @@ struct LineStyle
 
 
     void setStipple(int n) {m_Stipple = convertLineStyle(n);}
+    void setWidth(int n) {m_Width = n;}
     void setPointStyle(int n) {m_Symbol = convertPointStyle_old(n);}
+    void setColor(fl5Color const &clr) {m_Color=clr;}
+    void setEnabled(bool b) {m_bIsEnabled=b;}
+    void setVisible(bool b) {m_bIsVisible=b;}
+    void setHighlighted(bool b) {m_bIsHighlighted=b;}
 
     bool m_bIsEnabled=true;
     bool m_bIsVisible=true;
@@ -116,7 +118,7 @@ struct LineStyle
 
     std::string m_Tag="";
 
-
+/*
     Qt::PenStyle getStipple()
     {
          switch(m_Stipple)
@@ -129,7 +131,7 @@ struct LineStyle
              case Line::DASHDOTDOT: return Qt::DashDotDotLine;
              case Line::NOLINE:     return Qt::NoPen;
          }
-    }
+    }*/
 
     static Line::enumLineStipple convertLineStyle(int iStipple)
     {
@@ -230,77 +232,5 @@ struct LineStyle
         return 0;
     }
 
-
-
-
-    void serializeXfl(QDataStream &ar, bool bIsStoring)
-    {
-        int k=0;
-        if(bIsStoring)
-        {
-            ar << convertLineStyle(m_Stipple);
-            ar << m_Width;
-            ar << convertSymbol(m_Symbol);
-            m_Color.serialize(ar, true);
-            ar << m_bIsVisible;
-        }
-        else
-        {
-            ar >> k; m_Stipple=convertLineStyle(k);
-            ar >> m_Width;
-            ar >> k; m_Symbol=convertSymbol(k);
-            m_Color.serialize(ar, false);
-            ar >> m_bIsVisible;
-        }
-    }
-
-    void serializeFl5(QDataStream &ar, bool bIsStoring)
-    {
-        int k=0;
-        QString strange;
-
-        // 500756: serialized fl5Color in place of QColor - no mod.
-        int ArchiveFormat = 500756;
-        if(bIsStoring)
-        {
-            ar << ArchiveFormat;
-            ar << LineStyle::convertLineStyle(m_Stipple);
-            ar << m_Width;
-            ar << LineStyle::convertSymbol(m_Symbol);
-            m_Color.serialize(ar, true);
-            ar << m_bIsVisible;
-            ar << QString::fromStdString(m_Tag);
-        }
-        else
-        {
-            ar >> k;
-            if(k<500001)
-            {
-                // --> v712 format
-                m_Stipple=LineStyle::convertLineStyle(k);
-                ar >> m_Width;
-                ar >> k; m_Symbol=LineStyle::convertPointStyle_old(k);
-                m_Color.serialize(ar, false);
-                ar >> m_bIsVisible;
-                ar >> strange;   m_Tag=strange.toStdString();
-            }
-            else
-            {
-                // v713+ format
-                ar >> k; m_Stipple=LineStyle::convertLineStyle(k);
-                ar >> m_Width;
-                ar >> k; m_Symbol=LineStyle::convertSymbol(k);
-                m_Color.serialize(ar, false);
-                ar >> m_bIsVisible;
-                ar >> strange;   m_Tag = strange.toStdString();
-
-            }
-        }
-    }
-
 };
-
-
-// allow use as QVariant
-Q_DECLARE_METATYPE(LineStyle)
 

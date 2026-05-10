@@ -44,7 +44,6 @@ class FL5LIB_EXPORT BezierSpline : public Spline
 
         Vector2d splinePoint(double u) const override;
         void splineDerivative(double u, double &dx, double &dy) const override;
-        bool serializeFl5(QDataStream &ar, bool bIsStoring) override;
 
         void getCamber(double &Camber, double &xc);
         void getSlopes(double &s0, double &s1);

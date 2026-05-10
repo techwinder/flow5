@@ -37,14 +37,14 @@
 
 #include <api/analysisrange.h>
 #include <api/fl5core.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 #include <api/objects3d.h>
 #include <api/panelanalysis.h>
 #include <api/planeopp.h>
 #include <api/planepolar.h>
 #include <api/planetask.h>
 #include <api/planexfl.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <api/xfoiltask.h>
 
 #include <core/saveoptions.h>

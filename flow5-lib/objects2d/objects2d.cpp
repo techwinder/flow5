@@ -22,6 +22,7 @@
 
 *****************************************************************************/
 
+#include <cassert>
 
 #include <objects2d.h>
 
@@ -573,7 +574,7 @@ double Objects2d::getPlrPointFromCl(Foil const*pFoil, double Re, double Cl, Pola
     //Type 1 Polars are sorted by crescending Re Number
 
     //if Re is less than that of the first polar, use this one
-    for (uint i=0; i<polars.size(); i++)
+    for (unsigned int i=0; i<polars.size(); i++)
     {
         Polar const *pPolar = polars.at(i);
 
@@ -588,7 +589,7 @@ double Objects2d::getPlrPointFromCl(Foil const*pFoil, double Re, double Cl, Pola
     }
 
     // if not Find the two polars
-    for (uint i=0; i<polars.size(); i++)
+    for (unsigned int i=0; i<polars.size(); i++)
     {
         Polar const *pPolar = polars.at(i);
 
@@ -738,7 +739,7 @@ double Objects2d::getPlrPointFromAlpha(Foil const*pFoil, double Re, double Alpha
     //Type 1 Polars are sorted by crescending Re Number
 
     //if Re is less than that of the first polar, use this one
-    for (uint i=0; i<polars.size(); i++)
+    for (unsigned int i=0; i<polars.size(); i++)
     {
         Polar const *pPolar = polars.at(i);
         if(pPolar->dataSize()>0)
@@ -755,7 +756,7 @@ double Objects2d::getPlrPointFromAlpha(Foil const*pFoil, double Re, double Alpha
     }
 
     // if not find the two polars surrounding the Re number
-    for (uint i=0; i<polars.size(); i++)
+    for (unsigned int i=0; i<polars.size(); i++)
     {
         Polar const *pPolar = polars.at(i);
         if(pPolar->dataSize()>0)
@@ -1403,7 +1404,7 @@ std::vector<Foil*> Objects2d::sortedFoils()
     {
         Foil *pFoil = foil(i);
         bool bInserted = false;
-        for(uint j=0; j<foils.size(); j++)
+        for(unsigned int j=0; j<foils.size(); j++)
         {
             if(pFoil->name().compare(foils.at(j)->name())<0)
             {
@@ -1448,7 +1449,7 @@ Polar *Objects2d::createPolar(Foil const*pFoil, xfl::enumPolarType PolarType, do
 }
 
 
-bool Objects2d::foilExists(std::string const &FoilName, Qt::CaseSensitivity )
+bool Objects2d::foilExists(std::string const &FoilName)
 {
     for (int i=0; i<nFoils(); i++)
     {
@@ -1605,7 +1606,7 @@ bool Objects2d::makeNaca4(Foil *pFoil, int digits)
     if(n1==0 || n2==0)
     {
         // no camber, or camber max pos is undefined
-        for(uint i=0; i<cbl.size(); i++)
+        for(unsigned int i=0; i<cbl.size(); i++)
         {
             cbl[i].y = 0.0;
         }
@@ -1614,7 +1615,7 @@ bool Objects2d::makeNaca4(Foil *pFoil, int digits)
     {
         double a0 = m/p/p;
         double a1 =m/(1.0-p)/(1.0-p);
-        for(uint i=0; i<cbl.size(); i++)
+        for(unsigned int i=0; i<cbl.size(); i++)
         {
             double x = cbl[i].x;
             if(x<=p)
@@ -1679,7 +1680,7 @@ bool Objects2d::makeNaca5(Foil *pFoil, int digits)
 
 
     std::vector<Node2d> cbl = pFoil->baseCbLine();
-    for(uint i=0; i<cbl.size(); i++)
+    for(unsigned int i=0; i<cbl.size(); i++)
     {
         double x = cbl[i].x;
         if(x<=m)
@@ -1711,7 +1712,7 @@ void Objects2d::makeNacaThickness(Foil *pFoil, double t)
 {
     std::vector<double> th    = pFoil->thickness();
     std::vector<Node2d> const &cbl = pFoil->baseCbLine();
-    for(uint i=0; i<th.size(); i++)
+    for(unsigned int i=0; i<th.size(); i++)
     {
         double x = cbl[i].x;
         th[i] = 0.2969*sqrt(x) - 0.1260*x -0.3516*x*x + 0.2843*x*x*x -0.1015*x*x*x*x;

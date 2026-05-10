@@ -37,6 +37,7 @@
 
 #include "fuseoccdlg.h"
 
+#include <core/qunits.h>
 #include <interfaces/editors/fuseedit/shapefixerdlg.h>
 #include <interfaces/exchange/cadexportdlg.h>
 #include <interfaces/mesh/afmesher.h>

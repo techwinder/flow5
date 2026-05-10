@@ -181,7 +181,7 @@ void testMatVecMult(int nThreads)
     auto t0 = std::chrono::high_resolution_clock::now();
     matrix::matVecMultLapack(A.data(), B.data(), AB0.data(), m, n, nThreads);
     auto t1 = std::chrono::high_resolution_clock::now();
-    int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
     std::cout << "matVecMultLapack " << double(duration)/1000.0 << " ms" << std::endl;
 
     auto t2 = std::chrono::high_resolution_clock::now();

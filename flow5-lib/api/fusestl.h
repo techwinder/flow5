@@ -50,8 +50,6 @@ class FL5LIB_EXPORT FuseStl : public Fuse
         bool isOccType()       const override {return false;}
         bool isStlType()       const override {return true;}
 
-        bool serializePartFl5(QDataStream &ar, bool bIsStoring) override;
-
         void computeSurfaceProperties(std::string &msg, const std::string &prefx) override;
         void computeWettedArea() override ;
         void computeStructuralInertia(Vector3d const &PartPosition) override;

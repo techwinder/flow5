@@ -23,10 +23,9 @@
 *****************************************************************************/
 
 
-#include <QString>
 
+#include <format>
 
-#include <QDataStream>
 
 #include <fusestl.h>
 #include <units.h>
@@ -84,117 +83,26 @@ void FuseStl::computeSurfaceProperties(std::string &msg, const std::string &pref
 
     m_Triangulation.computeSurfaceProperties(m_Length, m_MaxWidth, m_MaxHeight, m_WettedArea);
 
-    QString strong, logmsg;
-    QString prefix = QString::fromStdString(prefx);
+    std::string strong, logmsg;
+    std::string prefix = prefx;
 
-    strong = QString::asprintf("Length          = %9.5g ", length()*Units::mtoUnit());
-    strong += Units::lengthUnitQLabel() + "\n";
+    strong = std::format("Length          = {:9.5g} ", length()*Units::mtoUnit());
+    strong += Units::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 
-    strong = QString::asprintf("Max. width      = %9.5g ", m_MaxWidth*Units::mtoUnit());
-    strong += Units::lengthUnitQLabel() + "\n";
+    strong = std::format("Max. width      = {:9.5g} ", m_MaxWidth*Units::mtoUnit());
+    strong += Units::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 
-    strong = QString::asprintf("Max. height     = %9.5g ", m_MaxHeight*Units::mtoUnit());
-    strong += Units::lengthUnitQLabel() + "\n";
+    strong = std::format("Max. height     = {:9.5g} ", m_MaxHeight*Units::mtoUnit());
+    strong += Units::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 
-    strong = QString::asprintf("Wetted area     = %9.5g ", m_WettedArea*Units::m2toUnit());
-    strong += Units::areaUnitQLabel();
+    strong = std::format("Wetted area     = {:9.5g} ", m_WettedArea*Units::m2toUnit());
+    strong += Units::areaUnitLabel();
     logmsg += prefix + strong;
 
-    msg = logmsg.toStdString();
-}
-
-
-bool FuseStl::serializePartFl5(QDataStream &ar, bool bIsStoring)
-{
-    Fuse::serializePartFl5(ar, bIsStoring);
-    int k(0);
-    float xf(0),yf(0),zf(0);
-    double x(0),y(0),z(0);
-    int nIntSpares(0);
-    int nDbleSpares(0);
-
-    int n(0);
-    double dble(0);
-
-    Vector3d V0,V1,V2;
-
-    // 500001: new fl5 format
-    // 500002: storing variables as floats rather than doubles
-    int ArchiveFormat = 500002;
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-
-        ar << nTriangles();
-        for(int i=0; i<nTriangles(); i++)
-        {
-            Triangle3d const &t3d = triangleAt(i);
-            xf = t3d.vertexAt(0).xf(); yf = t3d.vertexAt(0).yf(); zf = t3d.vertexAt(0).zf();
-            ar << xf <<yf << zf;
-//            ar << t3d.vertex(0).xf() << t3d.vertex(0).yf() << t3d.vertex(0).zf();
-            ar << t3d.vertexAt(1).xf() << t3d.vertexAt(1).yf() << t3d.vertexAt(1).zf();
-            ar << t3d.vertexAt(2).xf() << t3d.vertexAt(2).yf() << t3d.vertexAt(2).zf();
-        }
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        dble=0.0;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<500001 || ArchiveFormat>500010) return false;
-
-        clearTriangles();
-        ar >> k;
-        for(int i=0; i<k; i++)
-        {
-            if(ArchiveFormat<500002) { ar >> x  >> y  >> z;    V0.set(x,y,z);}
-            else
-            {
-                ar >> xf >> yf >> zf;
-                V0.set(double(xf), double(yf), double(zf));
-            }
-            if(ArchiveFormat<500002) { ar >> x  >> y  >> z;    V1.set(x,y,z);}
-            else
-            {
-                ar >> xf >> yf >> zf;
-                V1.set(double(xf), double(yf), double(zf));
-            }
-            if(ArchiveFormat<500002) { ar >> x  >> y  >> z;    V2.set(x,y,z);}
-            else
-            {
-                ar >> xf >> yf >> zf;
-                V2.set(double(xf), double(yf), double(zf));
-            }
-            Triangle3d t3(V0,V1,V2);
-            m_Triangulation.appendTriangle(t3);
-        }
-
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-        makeFuseGeometry();
-        makeTriangleNodes();
-        makeNodeNormals();
-
-        std::string logmsg;
-        makeDefaultTriMesh(logmsg, "");
-    }
-    return true;
+    msg = logmsg;
 }
 
 

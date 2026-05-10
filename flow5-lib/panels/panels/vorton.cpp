@@ -22,12 +22,11 @@
 
 *****************************************************************************/
 
-#include <QString>
-
+#include <string>
+#include <format>
 #include <iostream>
 #include <cstring>
 
-#include <QDataStream>
 
 #include <vorton.h>
 #include <constants.h>
@@ -121,7 +120,7 @@ void Vorton::velocityGradient(Vector3d const &R, double CoreSize, double *G) con
         double lambda = r/CoreSize;
         f = mollifiedInt(lambda);
     }
-//qDebug("core=%13g, r=%13g f=%13g",s_CoreSize,r,f);
+//qDebug("core={:13g}, r={:13g} f={:13g}",s_CoreSize,r,f);
 
     for(int i=0; i<9; i++) G[i] *= 1.0/4.0/PI*f;
 }
@@ -144,35 +143,10 @@ Vector3d Vorton::vorticity(Vector3d const &pos) const
 
 void Vorton::listVorton(std::string const &prefix) const
 {
-    QString strange = QString::asprintf("x=%13g y=%13g z=%13g  //  om.x=%13g om.y=%13g om.z=%13g",
+    std::string strange = std::format("x={:13g} y={:13g} z={:13g}  //  om.x={:13g} om.y={:13g} om.z={:13g}",
                                         m_Position.x, m_Position.y, m_Position.z,
                                         m_Omega.x, m_Omega.y, m_Omega.z);
-    std::cout << prefix +" "+strange.toStdString() << std::endl;
+    std::cout << prefix +" "+strange << std::endl;
 }
 
 
-bool Vorton::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    // 500001: first format
-
-    int ArchiveFormat = 500001;
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-        ar << m_Position.x << m_Position.y << m_Position.z;
-        ar << m_Omega.x    << m_Omega.y    << m_Omega.z;
-        ar << m_Volume;
-        ar << m_bActive;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<500001 || ArchiveFormat>=500002) return false;
-
-        ar >> m_Position.x >> m_Position.y >> m_Position.z;
-        ar >> m_Omega.x    >> m_Omega.y    >> m_Omega.z;
-        ar >> m_Volume;
-        ar >> m_bActive;
-    }
-    return true;
-}

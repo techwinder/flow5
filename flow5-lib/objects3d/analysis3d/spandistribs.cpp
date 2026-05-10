@@ -24,9 +24,8 @@
  *
  *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
 
-#include <QDataStream>
+
 
 #include <spandistribs.h>
 #include <wingxfl.h>
@@ -131,74 +130,6 @@ void SpanDistribs::initializeToZero()
     std::fill(m_Vd.begin(),         m_Vd.end(),         Vector3d());
 }
 
-
-bool SpanDistribs::serializeSpanResultsFl5(QDataStream &ar, bool bIsStoring)
-{
-    double dble = 0.0;;
-    float xf=0, yf=0, zf=0;
-    // 500001: new fl5 format
-    // 500002: added offset and PtC4 properties
-    int ArchiveFormat = 500002;
-    int NStation = int(m_Re.size());
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-        ar << NStation;
-        for (int k=0; k<NStation; k++)
-        {
-            ar << m_Chord.at(k) << m_Twist.at(k) << m_StripPos.at(k) << m_StripArea.at(k);
-            ar << m_Re.at(k);
-            ar << m_Ai.at(k) << m_Cl.at(k) << m_PCd.at(k) << m_ICd.at(k);
-            ar << m_CmPressure.at(k) << m_CmViscous.at(k) << m_CmC4.at(k);
-            ar << m_XCPSpanRel.at(k)<< m_XCPSpanAbs.at(k);
-            ar << m_XTrTop.at(k) << m_XTrBot.at(k);
-            ar << m_VTwist.at(k);
-            ar << m_BendingMoment.at(k);
-            ar << m_Vd.at(k).x << m_Vd.at(k).y << m_Vd.at(k).z;
-            ar << m_F.at(k).x << m_F.at(k).y << m_F.at(k).z;
-            ar << m_Alpha_0.at(k) << m_Gamma.at(k);
-
-            ar << m_Offset.at(k);
-            ar << m_PtC4.at(k).xf()<< m_PtC4.at(k).yf()<< m_PtC4.at(k).zf();
-            dble=0.0;
-            for(int i=0; i<8; i++) ar<<dble; // space allocation
-        }
-
-        for(int i=0; i<10; i++) ar<<dble; // space allocation
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<500001 || ArchiveFormat>500002) return false;
-
-        ar >> NStation;
-        resizeGeometry(NStation);
-        resizeResults(NStation);
-        for (int k=0; k<NStation; k++)
-        {
-            ar >> m_Chord[k] >> m_Twist[k] >> m_StripPos[k] >> m_StripArea[k];
-            ar >> m_Re[k];
-            ar >> m_Ai[k] >> m_Cl[k] >> m_PCd[k] >> m_ICd[k];
-            ar >> m_CmPressure[k] >> m_CmViscous[k] >> m_CmC4[k];
-            ar >> m_XCPSpanRel[k]>> m_XCPSpanAbs[k];
-            ar >> m_XTrTop[k] >> m_XTrBot[k];
-            ar >> m_VTwist[k];
-            ar >> m_BendingMoment[k];
-            ar >> m_Vd[k].x >> m_Vd[k].y >> m_Vd[k].z;
-            ar >> m_F[k].x >> m_F[k].y >> m_F[k].z;
-            ar >> m_Alpha_0[k] >> m_Gamma[k];
-            if(ArchiveFormat>=500002)
-            {
-                ar >> m_Offset[k];
-                ar >> xf >> yf >> zf;
-                m_PtC4[k].set(xf,yf,zf);
-            }
-            for(int i=0; i<8; i++) ar>>dble; // space allocation
-        }
-        for(int i=0; i<10; i++) ar >> dble; // space allocation
-    }
-    return true;
-}
 
 
 /**

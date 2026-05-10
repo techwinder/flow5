@@ -99,9 +99,6 @@ class FL5LIB_EXPORT PlaneXfl : public Plane
         Fuse *makeNewFuse(Fuse::enumType bodytype);
         void joinSurfaces(const Surface &LeftSurf, const Surface &RightSurf);
 
-        bool serializePlaneXFL(QDataStream &ar, bool bIsStoring);
-        bool serializePlaneFl5(QDataStream &ar, bool bIsStoring) override;
-
         bool hasMainWing() const override;
         bool hasOtherWing() const override;
 //        bool hasWing2() const override;
@@ -146,15 +143,13 @@ class FL5LIB_EXPORT PlaneXfl : public Plane
         double ryAngle(int iWing) const {return m_Wing[iWing].ry();}
         void setRyAngle(int iWing, double ry) {m_Wing[iWing].setRy(ry);}
 
+
+        void clearWings();
+        std::vector<WingXfl> &wings() {return m_Wing;}
+        std::vector<WingXfl> const &wings() const {return m_Wing;}
         WingXfl *wing(int iw) override;
         WingXfl const*wingAt(int iw) const override;
         WingXfl *wing(xfl::enumType wingType);
-
-        /** Returns a pointer to the Plane's fuse, or NULL if none. */
-        Fuse *fuse(int idx) override {if(idx>=0 && idx<nFuse()) return m_Fuse[idx];    else return nullptr;}
-        Fuse const *fuseAt(int idx) const override {if(idx>=0 && idx<nFuse()) return m_Fuse.at(idx); else return nullptr;}
-        Fuse *fuse(const std::string &fusename);
-
 
         double mac()            const override {if(mainWing()) return mainWing()->MAC();           else return 0.0;}
         double span()           const override {if(mainWing()) return mainWing()->planformSpan();  else return 0.0;}
@@ -209,12 +204,19 @@ class FL5LIB_EXPORT PlaneXfl : public Plane
         QuadMesh const & refQuadMesh() const  {return m_RefQuadMesh;}
         QuadMesh & refQuadMesh() {return m_RefQuadMesh;}
 
+        void clearFuses();
+        std::vector<Fuse*> &fuses() {return m_Fuse;}
+        std::vector<Fuse*> const &fuses() const {return m_Fuse;}
+        Fuse *fuse(int idx) override {if(idx>=0 && idx<nFuse()) return m_Fuse[idx];    else return nullptr;}
+        Fuse const *fuseAt(int idx) const override {if(idx>=0 && idx<nFuse()) return m_Fuse.at(idx); else return nullptr;}
+        Fuse *fuse(const std::string &fusename);
+
         int nFuse() const override {return int(m_Fuse.size());}
         int fuseCount() const {return int(m_Fuse.size());}
         int xflFuseCount() const;
         int occFuseCount() const;
         int stlFuseCount() const;
-        void clearFuse();
+
         void addFuse(Fuse *pFuse);
         void removeFuse(Fuse *pFuse);
 
@@ -243,6 +245,8 @@ class FL5LIB_EXPORT PlaneXfl : public Plane
 
         void setThickBuild(bool b) {m_bThickBuild=b;}
         bool isThickBuild() const {return m_bThickBuild;}
+
+        std::vector<int> &partIndexes() {return m_PartIndexes;}
 
 
     private:

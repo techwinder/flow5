@@ -56,6 +56,7 @@ class FL5LIB_EXPORT SailSpline : public Sail
         void convertSplines(Spline::enumType newtype);
 
 
+        void resizeSections(int nSections);
         void resizeSections(int nSections, int nPoints) override;
         void makeDefaultSail() override;
         void makeSurface() override;
@@ -69,8 +70,6 @@ class FL5LIB_EXPORT SailSpline : public Sail
         void translate(Vector3d const &T) override;
         void scaleTwist(double newtwist) override;
         void scaleAR(   double newAR)    override;
-
-        bool serializeSailFl5(QDataStream &ar, bool bIsStoring) override;
 
         Vector3d point(double xrel, double zrel, xfl::enumSurfacePosition pos=xfl::MIDSURFACE) const override;
 

@@ -116,8 +116,8 @@ namespace Objects3d
     FL5LIB_EXPORT  void cleanObjects(std::string &log);
     FL5LIB_EXPORT  void updatePlPolarstoV750();
 
-    FL5LIB_EXPORT PlaneOpp *storePlaneOpps(QList<PlaneOpp*> const &POppList);
-    FL5LIB_EXPORT PlaneOpp *storePlaneOpps(std::vector<PlaneOpp*> const &POppList);
+//    FL5LIB_EXPORT PlaneOpp *storePlaneOpps(QList<PlaneOpp*> const &POppList);
+//    FL5LIB_EXPORT PlaneOpp *storePlaneOpps(std::vector<PlaneOpp*> const &POppList);
 
 }
 

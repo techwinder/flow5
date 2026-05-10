@@ -341,7 +341,7 @@ void WingDefDlg::onWingSides()
 
     if(m_pchsymmetric->isChecked())
     {
-        m_pWing->setsymmetric(true);
+        m_pWing->setSymmetric(true);
         m_bRightSide          = true;
         for(int i=0; i<m_pWing->nSections(); i++)
         {
@@ -350,7 +350,7 @@ void WingDefDlg::onWingSides()
     }
     else
     {
-        m_pWing->setsymmetric(false);
+        m_pWing->setSymmetric(false);
     }
 
     if(!m_pWing->isTwoSided()) m_bRightSide = false;

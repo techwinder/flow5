@@ -30,25 +30,28 @@
 
 #include "panelanalysistest.h"
 
-#include <interfaces/opengl/fl5views/gl3dxflview.h>
+#include <api/boat.h>
+#include <api/boatopp.h>
 #include <api/p3linanalysis.h>
 #include <api/p3unianalysis.h>
 #include <api/p4analysis.h>
+#include <api/planeopp.h>
+#include <api/planexfl.h>
+#include <api/polar3d.h>
 #include <api/units.h>
-#include <core/xflcore.h>
+
 #include <core/displayoptions.h>
+#include <core/qunits.h>
+#include <core/xflcore.h>
 #include <interfaces/graphs/controls/graphoptions.h>
 #include <interfaces/graphs/graph/graph.h>
-#include <api/boatopp.h>
-#include <api/planeopp.h>
-#include <api/polar3d.h>
-#include <api/planexfl.h>
-#include <api/boat.h>
+#include <interfaces/opengl/fl5views/gl3dxflview.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <interfaces/widgets/line/linebtn.h>
 #include <interfaces/widgets/line/linemenu.h>
+
 
 LineStyle PanelAnalysisTest::s_LS = {true, Line::SOLID, 1, xfl::Orchid, Line::NOSYMBOL};
 

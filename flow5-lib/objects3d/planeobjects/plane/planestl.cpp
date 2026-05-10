@@ -23,7 +23,7 @@
 *****************************************************************************/
 
 
-#include <QString>
+#include <format>
 
 
 #include <planestl.h>
@@ -101,143 +101,6 @@ void PlaneSTL::makePlane(bool , bool , bool )
 }
 
 
-bool PlaneSTL::serializePlaneFl5(QDataStream &ar, bool bIsStoring)
-{
-    int k(0);
-    float x(0),y(0),z(0);
-    int nIntSpares(0);
-    int nDbleSpares(0);
-    QString strange;
-
-    int n(0);
-    double dble(0);
-
-    // 500001: new fl5 format
-    // 500002: added geom and inertia data; serialized the style properly - beta 14
-    // 500003: serialized mesh info instead of triangulation info
-    // 500004: surface color
-    // 500005: base triangulation in beta20
-
-    int ArchiveFormat = 500005;
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-        ar << QString::fromStdString(m_Name);
-        ar << QString::fromStdString(m_Description);
-        m_SurfaceColor.serialize(ar, bIsStoring);
-        m_theStyle.serializeFl5(ar, bIsStoring);
-
-        ar << m_bReversed;
-        ar << m_ReferenceArea << m_ReferenceChord << m_ReferenceSpan;
-        ar << m_WettedArea << m_Span << m_Length << m_Height;
-
-        m_Inertia.serializeFl5(ar, bIsStoring);
-
-        m_RefTriMesh.serializeMeshFl5(ar, bIsStoring);
-
-        m_Triangulation.serializeFl5(ar, bIsStoring);
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<500000 || ArchiveFormat>500100) return false;
-
-        ar >> strange;   m_Name = strange.trimmed().toStdString();
-        ar >> strange;   m_Description = strange.trimmed().toStdString();
-        if(ArchiveFormat>=500004) m_SurfaceColor.serialize(ar, false);
-        if(ArchiveFormat<500002)
-        {
-            ar >> k; m_theStyle.m_Stipple = LineStyle::convertLineStyle(k);
-            ar >> m_theStyle.m_Width;
-            ar >> k; m_theStyle.m_Symbol=LineStyle::convertSymbol(k);
-            m_theStyle.m_Color.serialize(ar, false);
-        }
-
-        if(ArchiveFormat>=500002)
-        {
-            m_theStyle.serializeFl5(ar, bIsStoring);
-            ar >> m_bReversed;
-            ar >> m_ReferenceArea >> m_ReferenceChord >> m_ReferenceSpan;
-            ar >> m_WettedArea >> m_Span >> m_Length >> m_Height;
-            m_Inertia.serializeFl5(ar, bIsStoring);
-        }
-
-        if(ArchiveFormat<=500002)
-        {
-            clearTriangles();
-            ar >> k;
-            Vector3d V0, V1, V2;
-            for(int i=0; i<k; i++)
-            {
-                ar >> x >> y >> z;
-                V0.set(double(x), double(y), double(z));
-                ar >> x >> y >> z;
-                V1.set(double(x), double(y), double(z));
-                ar >> x >> y >> z;
-                V2.set(double(x), double(y), double(z));
-                Triangle3d t3(V0,V1,V2);
-                m_Triangulation.appendTriangle(t3);
-            }
-
-            // space allocation
-            ar >> nIntSpares;
-            for (int i=0; i<nIntSpares; i++) ar >> n;
-            ar >> nDbleSpares;
-            for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-            makeTriangleNodes();
-            makeNodeNormals();
-            makeTriMesh(false);
-            m_RefTriMesh = m_TriMesh;
-        }
-        else
-        {
-            m_RefTriMesh.serializeMeshFl5(ar, bIsStoring);
-            for(int i3=0; i3<m_RefTriMesh.nPanels(); i3++)
-            {
-                m_RefTriMesh.panel(i3).setFromSTL(true);
-            }
-            m_TriMesh = m_RefTriMesh;
-
-            if(ArchiveFormat<500005)
-            {
-                // make triangulation from mesh
-                m_Triangulation.setNodes(m_RefTriMesh.nodes());
-                m_Triangulation.setTriangleCount(m_RefTriMesh.nPanels());
-                for(int i3=0; i3<m_RefTriMesh.nPanels(); i3++)
-                {
-                    Panel3 const &p3 = m_RefTriMesh.panelAt(i3);
-                    Triangle3d &t3d = m_Triangulation.triangle(i3);
-                    t3d.setVertices(p3.vertices());
-                    t3d.setTriangle();
-                }
-            }
-            else
-            {
-                m_Triangulation.serializeFl5(ar, bIsStoring);
-                m_Triangulation.makeNodes();
-            }
-            m_Triangulation.makeNodeNormals();
-
-            // space allocation
-            ar >> nIntSpares;
-            ar >> nDbleSpares;
-
-            if(m_bAutoInertia)
-                computeStructuralInertia();
-            m_bIsInitialized = true;
-        }
-    }
-    return true;
-}
-
-
 int PlaneSTL::nStations() const
 {
     int n=0;
@@ -263,61 +126,61 @@ void PlaneSTL::computeSurfaceProperties()
 
 std::string PlaneSTL::planeData(bool) const
 {
-    QString strange, strong, prefix;
+    std::string strange, strong, prefix;
 
-    QString lengthlab, surfacelab, masslab, arealab;
-    lengthlab   = Units::lengthUnitQLabel();
-    surfacelab  = Units::areaUnitQLabel();
-    masslab     = Units::massUnitQLabel();
-    arealab     = Units::areaUnitQLabel();
+    std::string lengthlab, surfacelab, masslab, arealab;
+    lengthlab   = Units::lengthUnitLabel();
+    surfacelab  = Units::areaUnitLabel();
+    masslab     = Units::massUnitLabel();
+    arealab     = Units::areaUnitLabel();
 
-    strong = QString::asprintf("Ref. span length  = %7g ", m_ReferenceSpan*Units::mtoUnit());
+    strong = std::format("Ref. span length  = {:7g} ", m_ReferenceSpan*Units::mtoUnit());
     strong += lengthlab;
-    strange += strong+ EOLch;
+    strange += strong+ EOLstr;
 
-    strong = QString::asprintf("Ref. area         = %7g ", m_ReferenceArea*Units::m2toUnit());
-    strong += Units::areaUnitQLabel();
-    strange += strong+ EOLch;
+    strong = std::format("Ref. area         = {:7g} ", m_ReferenceArea*Units::m2toUnit());
+    strong += Units::areaUnitLabel();
+    strange += strong+ EOLstr;
 
-    strong = QString::asprintf("Ref. chord length = %7g ", m_ReferenceChord*Units::mtoUnit());
+    strong = std::format("Ref. chord length = {:7g} ", m_ReferenceChord*Units::mtoUnit());
     strong += lengthlab;
-    strange += strong+ EOLch;
+    strange += strong+ EOLstr;
 
-    strong = QString::asprintf("Mass              = %7g ", totalMass()*Units::kgtoUnit());
+    strong = std::format("Mass              = {:7g} ", totalMass()*Units::kgtoUnit());
     strong += masslab;
-    strange += strong+ EOLch;
+    strange += strong+ EOLstr;
 
-    strong = QString::asprintf("CoG = (%.3f, %.3f, %.3f) ", m_Inertia.CoG_t().x*Units::mtoUnit(), m_Inertia.CoG_t().y*Units::mtoUnit(), m_Inertia.CoG_t().z*Units::mtoUnit());
+    strong = std::format("CoG = ({:.3f}, {:.3f}, {:.3f}) ", m_Inertia.CoG_t().x*Units::mtoUnit(), m_Inertia.CoG_t().y*Units::mtoUnit(), m_Inertia.CoG_t().z*Units::mtoUnit());
     strong += lengthlab;
-    strange += strong+ EOLch;
+    strange += strong+ EOLstr;
 
-    strong = QString::asprintf("Wing Load         = %7g ", totalMass()*Units::kgtoUnit()/m_ReferenceArea/Units::m2toUnit());
+    strong = std::format("Wing Load         = {:7g} ", totalMass()*Units::kgtoUnit()/m_ReferenceArea/Units::m2toUnit());
     strong += masslab + "/" + surfacelab;
-    strange += strong+ EOLch;
+    strange += strong+ EOLstr;
 
-    strong = QString::asprintf("Length            = %9.5g ", m_Length*Units::mtoUnit());
-    strong += lengthlab+ EOLch;
+    strong = std::format("Length            = {:9.5g} ", m_Length*Units::mtoUnit());
+    strong += lengthlab+ EOLstr;
     strange += prefix + strong;
 
-    strong = QString::asprintf("Max. width        = %9.5g ", m_Span*Units::mtoUnit());
-    strong += lengthlab+ EOLch;
+    strong = std::format("Max. width        = {:9.5g} ", m_Span*Units::mtoUnit());
+    strong += lengthlab+ EOLstr;
     strange += prefix + strong;
 
-    strong = QString::asprintf("Max. height       = %9.5g ", m_Height*Units::mtoUnit());
-    strong += lengthlab+ EOLch;
+    strong = std::format("Max. height       = {:9.5g} ", m_Height*Units::mtoUnit());
+    strong += lengthlab+ EOLstr;
     strange += prefix + strong;
 
-    strong = QString::asprintf("Wetted area       = %9.5g ", m_WettedArea*Units::m2toUnit());
-    strong += arealab + EOLch;
+    strong = std::format("Wetted area       = {:9.5g} ", m_WettedArea*Units::m2toUnit());
+    strong += arealab + EOLstr;
     strange += prefix + strong;
 
-    strong = QString::asprintf("Triangulation     = %d", m_Triangulation.nTriangles());
-    strange += prefix + strong+ EOLch;
+    strong = std::format("Triangulation     = {:d}", m_Triangulation.nTriangles());
+    strange += prefix + strong+ EOLstr;
 
-    strong = QString::asprintf("Triangular panels = %d", m_RefTriMesh.nPanels());
+    strong = std::format("Triangular panels = {:d}", m_RefTriMesh.nPanels());
     strange += prefix + strong;
 
-    return strange.toStdString();
+    return strange;
 }
 
 

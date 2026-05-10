@@ -44,7 +44,6 @@ class FL5LIB_EXPORT PointSpline : public Spline
 
         void getSlopes(double &s0, double &s1);
 
-        bool serializeFl5(QDataStream &ar, bool bIsStoring) override;
 
     private:
         double m_Length;

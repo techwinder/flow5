@@ -2,7 +2,7 @@
 #    Compilation instructions:
 #    https://flow5.tech/docs/flow5_doc/Source/Compilation.html
 
-QT -= gui  # not using QColor
+CONFIG -= qt
 
 TARGET = flow5-lib
 
@@ -10,15 +10,9 @@ TEMPLATE = lib
 DEFINES += FL5LIB_LIBRARY
 
 
-DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 
-
-greaterThan(QT_MAJOR_VERSION, 5) {
-    CONFIG += c++20
-} else {
-    CONFIG += c++17
-}
+CONFIG += c++20
 
 
 # The path to the libraries' header files required by the code at compile time
@@ -107,8 +101,6 @@ win32-msvc {
 
     DEFINES += WIN_OS
 
-
-    CONFIG += console
     CONFIG -= debug_and_release debug_and_release_target
 
 
@@ -142,9 +134,12 @@ win32-msvc {
 
 macx {
 
+    CONFIG -= app_bundle
+
     DEFINES += MAC_OS
     DEFINES += GL_SILENCE_DEPRECATION   #Shame
 
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 13.3   # needed for c++20 / std::format
 
     QMAKE_MAC_SDK = macosx
     QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64

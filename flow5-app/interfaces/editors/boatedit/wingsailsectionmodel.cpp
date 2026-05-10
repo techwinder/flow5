@@ -37,7 +37,9 @@
 #include "wingsailsectionmodel.h"
 #include <api/sailwing.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
+
+#include <core/qunits.h>
 #include <core/xflcore.h>
 
 

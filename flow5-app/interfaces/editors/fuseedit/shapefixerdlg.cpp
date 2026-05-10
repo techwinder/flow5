@@ -43,6 +43,8 @@
 #include <api/fuse.h>
 #include <api/occ_globals.h>
 #include <api/units.h>
+
+#include <core/qunits.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 

@@ -51,9 +51,6 @@ class FL5LIB_EXPORT WingSection
         WingSection();
 
 
-        bool serializeFl5(QDataStream &ar, bool bIsStoring);
-
-
         xfl::enumDistribution xDistType() const {return m_XPanelDist;}
         xfl::enumDistribution yDistType() const {return m_YPanelDist;}
         int nXPanels()     const {return m_NXPanels;}

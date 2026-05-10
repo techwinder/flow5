@@ -35,18 +35,20 @@
 #include "gl3dfuseview.h"
 
 
-#include <core/displayoptions.h>
-#include <core/xflcore.h>
 #include <api/frame.h>
-#include <interfaces/controls/w3dprefs.h>
-#include <interfaces/opengl/globals/gl_globals.h>
-#include <interfaces/opengl/globals/gl_occ.h>
-#include <interfaces/opengl/globals/gl_xfl.h>
 #include <api/fuseocc.h>
 #include <api/fusesections.h>
 #include <api/fusestl.h>
 #include <api/fusexfl.h>
 #include <api/units.h>
+
+#include <core/displayoptions.h>
+#include <core/qunits.h>
+#include <core/xflcore.h>
+#include <interfaces/controls/w3dprefs.h>
+#include <interfaces/opengl/globals/gl_globals.h>
+#include <interfaces/opengl/globals/gl_occ.h>
+#include <interfaces/opengl/globals/gl_xfl.h>
 
 
 gl3dFuseView::gl3dFuseView(QWidget *pParent) : gl3dXflView(pParent)
@@ -249,7 +251,7 @@ void gl3dFuseView::glRenderView()
     paintMeasure();
 
 //    auto t1 = std::chrono::high_resolution_clock::now();
-//    int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+//    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
 //    qDebug("gl3dFuseView::glRenderView: %7d µs  time=%s", duration, QTime::currentTime().toString("hh:mm:ss.zzz").toStdString().c_str());
 //    qDebug() << QTime::currentTime().toString("hh:mm:ss.zzz").toStdString().c_str();
 }

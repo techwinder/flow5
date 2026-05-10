@@ -41,5 +41,13 @@
 #define FL5LIB_EXPORT Q_DECL_IMPORT
 #endif
 
+#if defined(_MSC_VER) || defined(WIN64) || defined(_WIN64) || defined(__WIN64__) || defined(WIN32) \
+|| defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+// /https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4251?view=msvc-170
+#pragma warning( disable: 4251 )
+#endif
+
+
 #endif // MINLIB_GLOBAL_H
+
 

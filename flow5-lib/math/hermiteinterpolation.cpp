@@ -77,7 +77,7 @@ void testHermiteInterpolation()
     {
         float t = float(i)/float(N-1) * float(n-1);
         float y = interpolateHermite(X, Y, 7, t);
-        qDebug("  %13.5g  %13.7g", t, y);
+        qDebug("  %13.5g  {:13.7g}", t, y);
     }*/
 }
 

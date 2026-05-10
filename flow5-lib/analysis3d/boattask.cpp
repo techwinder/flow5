@@ -22,9 +22,10 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
 
-#include <QString>
+
+
+#include <format>
 
 #include <boattask.h>
 
@@ -87,7 +88,7 @@ void BoatTask::setObjects(Boat *pBoat, BoatPolar *pBtPolar)
 }
 
 
-bool BoatTask::initializeTask(QObject *)
+bool BoatTask::initializeTask()
 {
     if(!m_pBoat || !m_pBtPolar) return false;
 
@@ -138,7 +139,7 @@ bool BoatTask::initializeTriangleAnalysis()
 
 //    m_pP3Analysis->makeConnections();
 //    std::string strange;
-//    strange = QString::asprintf("      Time to make connections: %2f s\n", (double)t.elapsed()/1000);
+//    strange = std::format("      Time to make connections: {:2f} s\n", (double)t.elapsed()/1000);
 //    traceStdLog(strange);
 
     return true;
@@ -147,9 +148,9 @@ bool BoatTask::initializeTriangleAnalysis()
 
 void BoatTask::loop()
 {
-    QString strange;
+    std::string strange;
     strange = "\n   Solving the problem...\n";
-    traceLog(strange);
+    traceStdLog(strange);
 
     std::vector<Vector3d> AWS(m_pPA->nPanels());
     std::vector<Vector3d> VField(m_pPA->nPanels());
@@ -161,17 +162,17 @@ void BoatTask::loop()
 
     for (m_qRHS=0; m_qRHS<int(m_OppList.size()); m_qRHS++)
     {
-        for(uint i=0; i<m_SailForceFF.size();  i++) m_SailForceFF[i].reset();
-        for(uint i=0; i<m_SailForceSum.size(); i++) m_SailForceSum[i].reset();
-        for(uint i=0; i<m_HullForce.size();    i++) m_HullForce[i].reset();
-        for(uint i=0; i<m_SpanDist.size();     i++) m_SpanDist[i].initializeToZero();
+        for(unsigned int i=0; i<m_SailForceFF.size();  i++) m_SailForceFF[i].reset();
+        for(unsigned int i=0; i<m_SailForceSum.size(); i++) m_SailForceSum[i].reset();
+        for(unsigned int i=0; i<m_HullForce.size();    i++) m_HullForce[i].reset();
+        for(unsigned int i=0; i<m_SpanDist.size();     i++) m_SpanDist[i].initializeToZero();
 
         traceStdLog(EOLstr);
         m_bStopVPWIterations = false;
 
         m_Ctrl = m_OppList.at(m_qRHS);
-        strange = QString::asprintf("    Processing control value= %.3f\n", m_Ctrl);
-        traceLog(strange);
+        strange = std::format("    Processing control value= {:.3f}\n", m_Ctrl);
+        traceStdLog(strange);
 
         double alpha = 0.0;
         double phi   = m_pBtPolar->phi(m_Ctrl);
@@ -239,7 +240,7 @@ void BoatTask::loop()
 //            PanelAnalysis::s_DebugPts.clear();
 //            PanelAnalysis::s_DebugVecs.clear();
 #endif
-        for(uint i=0; i<VField.size(); i++)
+        for(unsigned int i=0; i<VField.size(); i++)
         {
             m_pBtPolar->apparentWind(m_Ctrl, m_pPA->panelAt(i)->CoG().z, AWS[i]);
 #ifdef QT_DEBUG
@@ -254,14 +255,14 @@ void BoatTask::loop()
         if(nWakeIter>1) traceStdLog("      Starting vorton loop\n");
         for(int ivw=0; ivw<nWakeIter; ivw++)
         {
-            if(m_pPolar3d->bVortonWake()) traceLog(QString::asprintf("        VPW iteration %3d/%d\n", ivw+1, nWakeIter));
+            if(m_pPolar3d->bVortonWake()) traceStdLog(std::format("        VPW iteration {:3d}/{:d}\n", ivw+1, nWakeIter));
 
             if(m_pPolar3d->bVortonWake())
                 m_pPA->makeRHSVWVelocities(VField);
             else
-                for(uint i=0; i<VField.size(); i++) VField[i].reset();
+                for(unsigned int i=0; i<VField.size(); i++) VField[i].reset();
 
-            for(uint i=0; i<VField.size(); i++)
+            for(unsigned int i=0; i<VField.size(); i++)
             {
                 VField[i] += AWS.at(i);
             }
@@ -321,8 +322,8 @@ void BoatTask::loop()
         if (isCancelled()) return;
         traceStdLog(" done\n");
 
-        strange = QString::asprintf("      Computing boat for control parameter=%.3f\n", m_Ctrl);
-        traceLog(strange);
+        strange = std::format("      Computing boat for control parameter={:.3f}\n", m_Ctrl);
+        traceStdLog(strange);
         BoatOpp *pBtOpp = computeBoat(0);
         m_BtOppList.push_back(pBtOpp);
 
@@ -470,7 +471,7 @@ void BoatTask::setAngles(std::vector<Panel3> &panels, double phi)
     }
 
     // rotate the panels around the x-axis by the bank angle
-    for(uint i3=0; i3<panels.size(); i3++)
+    for(unsigned int i3=0; i3<panels.size(); i3++)
     {
         panels[i3].rotate(O, Vector3d(1,0,0), phi);
     };
@@ -504,7 +505,7 @@ BoatOpp *BoatTask::createBtOpp(double const*Cp, double const*Mu, double const*Si
 {
     BoatOpp *pBtOpp = nullptr;
 
-    int nPanels=0;
+    unsigned long nPanels=0;
 
     if(m_pPolar3d->isQuadMethod())
     {
@@ -517,9 +518,9 @@ BoatOpp *BoatTask::createBtOpp(double const*Cp, double const*Mu, double const*Si
         pBtOpp = new BoatOpp(m_pBoat, m_pBtPolar, nPanels, 0);
         if(!pBtOpp) return nullptr;
         pBtOpp->resizeResultsArrays(3*nPanels);
-        memcpy(pBtOpp->Cp().data(),    Cp,    3*ulong(nPanels)*sizeof(double));
-        memcpy(pBtOpp->gamma().data(), Mu,    3*ulong(nPanels)*sizeof(double));
-        memcpy(pBtOpp->sigma().data(), Sigma, ulong(nPanels)*sizeof(double));
+        memcpy(pBtOpp->Cp().data(),    Cp,    3*nPanels*sizeof(double));
+        memcpy(pBtOpp->gamma().data(), Mu,    3*nPanels*sizeof(double));
+        memcpy(pBtOpp->sigma().data(), Sigma, nPanels*sizeof(double));
     }
 
     pBtOpp->setTheStyle(m_pPolar3d->theStyle());
@@ -636,7 +637,7 @@ void BoatTask::makeVortonRow(int qrhs)
             {
                 vortonrow[iv].setVortex(vortonrow[iv].vortex()+vortonrow[jv].vortex());
                 vortonrow.erase(vortonrow.begin()+jv);
-                for(uint i=0; i<m_pPA->m_VortexNeg.size(); i++)
+                for(unsigned int i=0; i<m_pPA->m_VortexNeg.size(); i++)
                 {
                     Vortex &vortex = m_pPA->m_VortexNeg[i];
                     if(vortex.nodeIndex(0)==jv)
@@ -654,7 +655,7 @@ void BoatTask::makeVortonRow(int qrhs)
         iv++;
     }
 
-//for(int i=0; i<m_pPA->m_VortexNeg.size(); i++)    qDebug("vortexnex%3d:  %2d  %2d", i, m_pPA->m_VortexNeg.at(i).nodeIndex(0), m_pPA->m_VortexNeg.at(i).nodeIndex(1));
+//for(int i=0; i<m_pPA->m_VortexNeg.size(); i++)    qDebug("vortexnex{:3d}:  {:2d}  {:2d}", i, m_pPA->m_VortexNeg.at(i).nodeIndex(0), m_pPA->m_VortexNeg.at(i).nodeIndex(1));
 //qDebug(" ");
 
     newvortons.insert(newvortons.begin(), vortonrow);
@@ -685,7 +686,7 @@ void BoatTask::makeVortonRow(int qrhs)
     // check if the last row is still active
     bool bActiveLastRow = false;
     std::vector<Vorton> &lastrow = newvortons.back();
-    for(uint i=0; i<lastrow.size(); i++)
+    for(unsigned int i=0; i<lastrow.size(); i++)
     {
         if(lastrow.at(i).isActive())
         {

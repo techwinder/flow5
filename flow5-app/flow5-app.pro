@@ -9,7 +9,7 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 TEMPLATE = app
 TARGET = flow5
 
-VERSION = 7.56
+VERSION = 7.70
 
 QT += opengl widgets xml
 
@@ -41,6 +41,8 @@ INCLUDEPATH += $$PWD/../XFoil-lib/
 INCLUDEPATH += $$PWD/../flow5-lib/
 INCLUDEPATH += $$PWD/../flow5-lib/api
 
+INCLUDEPATH += $$PWD/../flow5-io-lib/
+INCLUDEPATH += $$PWD/../flow5-io-lib/api
 
 
 linux-g++ {
@@ -231,7 +233,7 @@ macx {
 #QMAKE_CFLAGS_WARN_ON += -W3
 #QMAKE_CFLAGS_WARN_ON += -W4
 
-
+#QMAKE_CXXFLAGS += -WX   # warnings as errors
 
 include(flow5-app.pri)
 
@@ -246,6 +248,7 @@ RESOURCES += \
 
 
 LIBS += -L../flow5-lib -lflow5-lib
+LIBS += -L../flow5-io-lib -lflow5-io-lib
 
 LIBS += \
     -lTKBRep \

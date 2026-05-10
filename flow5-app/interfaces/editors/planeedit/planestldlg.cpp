@@ -37,6 +37,7 @@
 #include "planestldlg.h"
 
 
+#include <core/qunits.h>
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/inertia/planestlinertiadlg.h>
@@ -47,13 +48,13 @@
 #include <interfaces/widgets/color/colorbtn.h>
 #include <interfaces/widgets/customdlg/doublevaluedlg.h>
 #include <interfaces/widgets/customwts/floatedit.h>
+#include <interfaces/widgets/customwts/formattextoutput.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
-#include <interfaces/widgets/customwts/formattextoutput.h>
 
 #include <api/planestl.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 
 bool PlaneSTLDlg::s_bGuessOpposite = false;
 QByteArray PlaneSTLDlg::s_VSplitterSizes;
@@ -576,7 +577,7 @@ void PlaneSTLDlg::onFlipNormals()
     deselectButtons();
     if(!m_pPlaneSTL) return;
 
-    m_pPlaneSTL->setReversed(!m_pPlaneSTL->reversed());
+    m_pPlaneSTL->setReversed(!m_pPlaneSTL->isReversed());
     m_pPlaneSTL->triangulation().flipNormals();
 
     gl3dPlaneSTLView *pglPlaneSTLView = dynamic_cast<gl3dPlaneSTLView*>(m_pglPlaneView);

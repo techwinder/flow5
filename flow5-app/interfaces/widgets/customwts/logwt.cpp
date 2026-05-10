@@ -28,7 +28,7 @@
 
 #include "logwt.h"
 #include <interfaces/widgets/customwts/plaintextoutput.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 
 QByteArray LogWt::s_Geometry;
 

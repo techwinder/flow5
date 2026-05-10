@@ -47,7 +47,7 @@ class FL5LIB_EXPORT BoatTask : public Task3d
         BoatTask();
 
         void setObjects(Boat *pBoat, BoatPolar *pBtPolar);
-        bool initializeTask(QObject *pParent);
+        bool initializeTask();
 
 
         void setAnalysisRange(const std::vector<double> &opplist);

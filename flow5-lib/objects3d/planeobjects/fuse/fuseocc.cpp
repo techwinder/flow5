@@ -26,10 +26,8 @@
 
 #include <string>
 #include <sstream>
-#include <QString>
+#include <format>
 
-
-#include <QDataStream>
 
 #include <BRepAdaptor_Curve.hxx>
 #include <BRepGProp.hxx>
@@ -56,102 +54,15 @@ FuseOcc::FuseOcc() : Fuse()
 }
 
 
-bool FuseOcc::serializePartFl5(QDataStream &ar, bool bIsStoring)
-{
-    Fuse::serializePartFl5(ar, bIsStoring);
-
-    int nIntSpares=0;
-    int nDbleSpares=0;
-    int n=0;
-    double dble=0;
-
-    //500001 : new fl5 format;
-
-    int ArchiveFormat = 500001;
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-
-        ar<<int(m_Shape.Size());
-
-        /** @todo use global occ::shapeToBrep */
-        std::stringstream sstream;
-        for(TopTools_ListIteratorOfListOfShape shapeit(m_Shape); shapeit.More(); shapeit.Next())
-        {
-            sstream.str(std::string()); // clear the stream
-            BRepTools::Write(shapeit.Value(), sstream); // stream the brep to the stringstream
-            std::string string = sstream.str();
-            QString brepstr = QString::fromStdString(string);
-            ar << brepstr; // write the QString to the archive file
-        }
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        dble=0.0;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat!=500001) return false;
-
-        m_Shape.Clear();
-        int nShapes;
-        ar >> nShapes;
-        for(int iShape=0; iShape<nShapes; iShape++)
-        {
-            QString brepstr;
-            ar >> brepstr;
-            try
-            {
-                std::stringstream sstream;
-                sstream << brepstr.toStdString().c_str();
-
-                TopoDS_Shape shape;
-                BRep_Builder aBuilder;
-                BRepTools::Read(shape, sstream, aBuilder);
-                if(shape.IsNull())
-                {
-//                    qDebug()<<"Error serializing CAD fuse " + m_Name;
-                    return false;
-                }
-                m_Shape.Append(shape);
-            }
-            catch(...)
-            {
-//                qDebug()<<"Error converting Rrep for CAD fuse " + m_Name;
-                return false;
-            }
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-        makeShellsFromShapes();
-        makeFuseGeometry();
-    }
-    return true;
-}
-
-
 void FuseOcc::getProperties(std::string &properties, std::string const &prefx, bool bFull)
 {
     Fuse::getProperties(properties, prefx);
 
     if(bFull)
     {
-        QString strange;
-        strange = QString::asprintf("Fuse is made of %d shapes\n", int(m_Shape.Size()));
-        properties += "\n"+prefx+strange.toStdString();
+        std::string strange;
+        strange = std::format("Fuse is made of {:d} shapes\n", int(m_Shape.Size()));
+        properties += "\n"+prefx+strange;
 
         std::string occstr;
         for(TopTools_ListIteratorOfListOfShape shapeit(m_Shape); shapeit.More(); shapeit.Next())
@@ -275,19 +186,19 @@ void FuseOcc::computeSurfaceProperties(std::string &logmsg, const std::string &p
     m_MaxHeight = fabs(zmax-zmin);
 
     std::string strong;
-    strong = QString::asprintf("Length          = %9.5g ", length()*Units::mtoUnit()).toStdString();
+    strong = std::format("Length          = {:9.5g} ", length()*Units::mtoUnit());
     strong += Units::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 
-    strong = QString::asprintf("Max. width      = %9.5g ", m_MaxWidth*Units::mtoUnit()).toStdString();
+    strong = std::format("Max. width      = {:9.5g} ", m_MaxWidth*Units::mtoUnit());
     strong += Units::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 
-    strong = QString::asprintf("Max. height     = %9.5g ", m_MaxHeight*Units::mtoUnit()).toStdString();
+    strong = std::format("Max. height     = {:9.5g} ", m_MaxHeight*Units::mtoUnit());
     strong += Units::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 
-    strong = QString::asprintf("Wetted area     = %9.5g ", m_WettedArea*Units::m2toUnit()).toStdString();
+    strong = std::format("Wetted area     = {:9.5g} ", m_WettedArea*Units::m2toUnit());
     strong += Units::areaUnitLabel();
     logmsg += prefix + strong;
 }

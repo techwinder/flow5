@@ -58,7 +58,7 @@
 
 #include <core/displayoptions.h>
 #include <core/saveoptions.h>
-#include <api/trace.h>
+#include <core/trace.h>
 #include <core/xflcore.h>
 #include <core/xflcore.h>
 #include <globals/mainframe.h>

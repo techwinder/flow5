@@ -25,7 +25,6 @@
 
 #pragma once
 
-#include <QDataStream>
 
 #include <fl5lib_global.h>
 
@@ -36,7 +35,6 @@ class FL5LIB_EXPORT OccMeshParams
         OccMeshParams();
         void duplicate(OccMeshParams const &params);
         void setDefaults();
-        void serializeParams(QDataStream &ar, bool bIsStoring);
 
         void setDefAbsolute(double deflection)             {m_LinDeflectionAbs = deflection;}
         void setDefRelative(double deflection)             {m_LinDeflectionRel = deflection;}
@@ -52,10 +50,10 @@ class FL5LIB_EXPORT OccMeshParams
         std::string listParams(const std::string &prefix);
 
 
-    private:
+    public:
         double m_LinDeflectionAbs, m_LinDeflectionRel;
         double m_AngularDeviation; // in degrees
-        double m_MaxElementSize; // used to ensure compatibimity with legacy projects < beta 12
+        double m_MaxElementSize; // used to ensure compatibility with legacy projects < beta 12
         bool m_bLinDefAbs;
 };
 

@@ -56,16 +56,15 @@ class FL5LIB_EXPORT WingOpp
     public:
         //________________METHODS____________________________________
 
-        bool serializeWingOppXFL(QDataStream &ar, bool bIsStoring);
-        bool serializeWingOppFl5(QDataStream &ar, bool bIsStoring);
-
         double maxLift() const;
         void createWOpp(const WingXfl *pWing, const PlanePolar *pWPolar, const SpanDistribs &distribs, const AeroForces &AF);
 
         std::string const &wingName() const {return m_WingName;}
+        void setWingName(std::string const &wingname) {m_WingName=wingname;}
 
         void setAeroForces(AeroForces const &af) {m_AF=af;}
         AeroForces const & aeroForces() const {return m_AF;}
+        AeroForces & aeroForces() {return m_AF;}
 
         void setSpanResults(SpanDistribs const &distribs);
         SpanDistribs const &spanResults() const {return m_SpanDistrib;}

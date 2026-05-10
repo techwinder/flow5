@@ -9,6 +9,7 @@ TEMPLATE = subdirs
 SUBDIRS = \
     XFoil-lib \
     flow5-lib \
+    flow5-io-lib \
     flow5-app \
 
 

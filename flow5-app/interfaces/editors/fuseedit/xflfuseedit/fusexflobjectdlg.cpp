@@ -40,7 +40,9 @@
 #include <api/units.h>
 #include <api/xmlfusereader.h>
 #include <api/xmlfusewriter.h>
+
 #include <core/enums_core.h>
+#include <core/qunits.h>
 #include <core/saveoptions.h>
 #include <interfaces/editors/editobjectdelegate.h>
 #include <interfaces/editors/fuseedit/bodyscaledlg.h>

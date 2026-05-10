@@ -31,12 +31,13 @@
 #include "gl2dquat.h"
 
 #include <core/xflcore.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <core/displayoptions.h>
 #include <interfaces/opengl/views/gl3dview.h> // for the static variables
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/globals/wt_globals.h>
+#include <api/utils.h>
 
 int gl2dQuat::s_Hue(1000);
 int gl2dQuat::s_MaxIter(128);

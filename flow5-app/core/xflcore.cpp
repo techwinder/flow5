@@ -33,7 +33,7 @@
 #include <core/displayoptions.h>
 #include <core/enums_core.h>
 #include <api/linestyle.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 
 
 #ifdef INTEL_MKL

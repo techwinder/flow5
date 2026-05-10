@@ -28,7 +28,7 @@
 
 #include "analysis2dctrls.h"
 #include <api/polar.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <api/xfoiltask.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/analysisrangetable.h>

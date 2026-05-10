@@ -211,8 +211,8 @@ void testRungeKutta()
 
     calcRungeKutta(order, y0, A.data(), B.data(), &ctrlfunc, result);
 
-/*    for(uint i=0; i<result[0].size(); i++)
+/*    for(unsigned int i=0; i<result[0].size(); i++)
     {
-        qDebug(" %13.7g   %13.7g   %13.7g   %13.7g  ", result[0][i], result[1][i], result[2][i], result[3][i]);
+        qDebug(" {:13.7g}   {:13.7g}   {:13.7g}   {:13.7g}  ", result[0][i], result[1][i], result[2][i], result[3][i]);
     }*/
 }

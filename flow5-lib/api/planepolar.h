@@ -73,7 +73,7 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
         virtual ~PlanePolar() = default;
 
         virtual void duplicateSpec(const Polar3d *pPolar3d) override;
-        void clearWPolarData();
+        void clearPolarData();
 
         void setDefaults() override;
         void setDefaultSpec(const Plane *pPlane);
@@ -96,14 +96,9 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
         virtual void removeAt(int index);
         void removeAoA(double alphaT4);
 
-
-        bool serializeWPlrXFL(QDataStream &ar, bool bIsStoring);
-        virtual bool serializeFl5v726(QDataStream &ar, bool bIsStoring) override;
-        virtual bool serializeFl5v750(QDataStream &ar, bool bIsStoring) override;
-
         void setPlane(Plane const *pPlane) {m_pPlane = pPlane;}
 
-        std::string const &planeName()  const {return m_PlaneName;}      /**< returns the name of the polar's parent object as a QString object. */
+        std::string const &planeName()  const {return m_PlaneName;}      /**< returns the name of the polar's parent object as a string object. */
         void setPlaneName(std::string const &planename) {m_PlaneName = planename;}
 
         // Flap angle controls for linear polars T123578
@@ -128,6 +123,7 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
 
         void clearAVLCtrls() {m_AVLControls.clear();}
         int nAVLCtrls() const {return int(m_AVLControls.size());}
+        void resizeAVLCtrls(int n) {m_AVLControls.resize(n);}
         void addAVLControl() {m_AVLControls.push_back(AngleControl());}
         void addAVLControl(AngleControl const &avlc) {m_AVLControls.push_back(avlc);}
         void insertAVLControl(int ic, AngleControl const &avlc) {m_AVLControls.insert(m_AVLControls.begin()+ic, avlc);}
@@ -138,6 +134,10 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
         std::string AVLCtrlName(int ic) const;
         double AVLGain(int iAVLCtrl, int iCtrlSurf) const;
         void setGain(int iAVLCtrl, int iCtrlSurf, double g);
+
+        void resizeAngleRange(int n) {m_AngleRange.resize(n);}
+        int nAngleRange() const {return int(m_AngleRange.size());}
+
 
         void retrieveInertia(Plane const *pPlane);
 

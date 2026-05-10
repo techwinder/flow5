@@ -54,7 +54,6 @@ class FL5LIB_EXPORT Spline
         virtual void setDegree(int ) {}
         virtual int degree() const {return 3;}
         virtual void duplicate(const Spline &spline);
-        virtual bool serializeFl5(QDataStream &ar, bool bIsStoring);
 
         virtual bool updateSpline() = 0;
         virtual void makeCurve() = 0;
@@ -121,14 +120,15 @@ class FL5LIB_EXPORT Spline
         void setPointWeights(std::vector<double> const &weights) {m_Weight=weights;}
         void setUniformWeights();
         double const &weight(int i) const {return m_Weight.at(i);}
-        void setWeight(uint i, double w) {if(i<m_Weight.size()) m_Weight[i]=w;}
+        void setWeight(unsigned int i, double w) {if(i<m_Weight.size()) m_Weight[i]=w;}
 
-        void copysymmetric(const Spline &spline);
+        void copySymmetric(const Spline &spline);
 
         void makeDefaultControlPoints(bool bClosed, bool bTopHalfOnly);
 
         void setTheStyle(LineStyle ls) {m_theStyle=ls;}
-        LineStyle theStyle() const {return m_theStyle;}
+        LineStyle const &theStyle() const {return m_theStyle;}
+        LineStyle &theStyle() {return m_theStyle;}
 
         bool isVisible() const {return m_theStyle.m_bIsVisible;}
         void setVisible(bool bVisible) {m_theStyle.m_bIsVisible = bVisible;}
@@ -154,7 +154,7 @@ class FL5LIB_EXPORT Spline
         int outputSize() const {return int(m_Output.size());}
         void setOutputSize(int n) {m_Output.resize(n);}
         std::vector<Node2d> const &outputPts() const {return m_Output;}
-        Node2d outputPt(uint i) const {if(i<m_Output.size()) return m_Output.at(i); else return Node2d();}
+        Node2d outputPt(unsigned int i) const {if(i<m_Output.size()) return m_Output.at(i); else return Node2d();}
 
         int selectedPoint() const {return m_iSelect;}
         void setSelectedPoint(int iPoint) {m_iSelect = iPoint;}
@@ -170,7 +170,7 @@ class FL5LIB_EXPORT Spline
         bool isClosed() const {return m_bClosed;}
         void setClosed(bool bClosed);
 
-        bool issymmetric() const {return m_bForcesymmetric;}
+        bool isSymmetric() const {return m_bForcesymmetric;}
         void setForcedsymmetric(bool bSym);
 
         bool isSingular() const {return m_bSingular;}

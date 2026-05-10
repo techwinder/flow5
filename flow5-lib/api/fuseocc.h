@@ -45,7 +45,6 @@ class FL5LIB_EXPORT FuseOcc : public Fuse
         bool isFuse() const override {return true;}
         bool isSail() const override {return false;}
 
-        bool serializePartFl5(QDataStream &ar, bool bIsStoring) override;
         Fuse* clone() const override {return new FuseOcc(*this);}
 
         void translate(Vector3d const &T) override;

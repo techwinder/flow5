@@ -29,12 +29,14 @@
 
 
 
-#include <interfaces/opengl/globals/gl_globals.h>
-#include <interfaces/controls/w3dprefs.h>
-#include <core/displayoptions.h>
-#include <api/stream2d.h>
 #include <api/panel2d.h>
 #include <api/panel3.h>
+
+#include <api/stream2d.h>
+#include <core/displayoptions.h>
+#include <interfaces/controls/w3dprefs.h>
+#include <interfaces/opengl/globals/gl_globals.h>
+
 
 gl3dSurfacePlot::gl3dSurfacePlot(QWidget *pParent) : gl3dSurface(pParent)
 {

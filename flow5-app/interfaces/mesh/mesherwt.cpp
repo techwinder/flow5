@@ -35,13 +35,15 @@
 #include "mesherwt.h"
 
 
-#include <interfaces/mesh/panelcheckdlg.h>
-#include <api/units.h>
-#include <api/sail.h>
 #include <api/occ_globals.h>
-#include <interfaces/mesh/meshevent.h>
-#include <interfaces/mesh/afmesher.h>
+#include <api/sail.h>
+#include <api/units.h>
 #include <api/xflmesh.h>
+
+#include <core/qunits.h>
+#include <interfaces/mesh/afmesher.h>
+#include <interfaces/mesh/meshevent.h>
+#include <interfaces/mesh/panelcheckdlg.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>

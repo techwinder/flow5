@@ -39,8 +39,6 @@ class FL5LIB_EXPORT Naca4Spline : public s7Spline
         void getSlopes(double &s0, double &s1) override;
         Vector2d normal(double const &x) override;
 
-        bool serialize(QDataStream &ar, bool bIsStoring);
-
 
         void duplicate(Spline const &n4spline) override;
         bool updateSpline() override;
@@ -49,7 +47,7 @@ class FL5LIB_EXPORT Naca4Spline : public s7Spline
         void splineDerivative(double u, double &dx, double &dy) const override;
 
 
-    private:
+    public:
         double p, m;
 };
 

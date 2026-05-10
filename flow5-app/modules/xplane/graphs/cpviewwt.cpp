@@ -33,8 +33,9 @@
 #include "cpviewwt.h"
 
 
-#include <core/displayoptions.h>
 #include <api/units.h>
+#include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <globals/mainframe.h>
 #include <interfaces/graphs/containers/graphwt.h>

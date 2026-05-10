@@ -27,8 +27,11 @@
 #include <QDialogButtonBox>
 
 #include "translatedlg.h"
-#include <interfaces/widgets/customwts/floatedit.h>
+
 #include <api/units.h>
+
+#include <core/qunits.h>
+#include <interfaces/widgets/customwts/floatedit.h>
 
 QByteArray TranslateDlg::s_WindowGeometry;
 

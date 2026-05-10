@@ -53,19 +53,20 @@
 #include <api/oppoint.h>
 #include <api/panelanalysis.h>
 #include <api/planeopp.h>
+#include <api/planepolar.h>
 #include <api/planepolarnamemaker.h>
 #include <api/planetask.h>
 #include <api/planexfl.h>
 #include <api/polar.h>
 #include <api/sailobjects.h>
-#include <api/utils.h>
-#include <api/planepolar.h>
+#include <api/serialization.h>
+#include <api/utils-io.h>
 #include <api/xfoiltask.h>
 #include <api/xmlboatreader.h>
 #include <api/xmlbtpolarreader.h>
+#include <api/xmlplanepolarreader.h>
 #include <api/xmlplanereader.h>
 #include <api/xmlpolarreader.h>
-#include <api/xmlplanepolarreader.h>
 
 #include <core/xflcore.h>
 #include <globals/mainframe.h>
@@ -332,7 +333,7 @@ bool XflScriptExec::loadFoilPolarFiles()
             std::vector<Foil*>foilList;
             std::vector<Polar*> polarList;
 
-            objects::readPolarFile(plrFile, foilList, polarList);
+            serial::readPolarFile(plrFile, foilList, polarList);
 
             for(uint ifoil=0;ifoil<foilList.size(); ifoil++)
             {
@@ -1321,7 +1322,7 @@ void XflScriptExec::launchBoatTask(BoatTask *pBoatTask)
     // set the active mesh
     pBoat->restoreMesh();
 
-    pBoatTask->initializeTask(this);
+    pBoatTask->initializeTask();
     pBoatTask->run();
 }
 

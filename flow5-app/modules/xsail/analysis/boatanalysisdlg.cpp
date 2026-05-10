@@ -41,7 +41,7 @@
 #include <api/boatpolar.h>
 #include <api/boattask.h>
 #include <api/fl5core.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 #include <api/objects3d.h>
 #include <api/panelanalysis.h>
 #include <api/sailobjects.h>
@@ -341,7 +341,7 @@ BoatTask* BoatAnalysisDlg::analyze(Boat *pBoat, BoatPolar *pBoatPolar, std::vect
 
     m_pActiveTask->setObjects(pBoat, pBoatPolar);
     m_pActiveTask->setAnalysisRange(opplist);
-    m_pActiveTask->initializeTask(this);
+    m_pActiveTask->initializeTask();
 
 /*    m_pActiveTask->setEventDestination(this);
     connect(m_pActiveTask,                  &Task3d::outputMessage,    this, &BoatAnalysisDlg::onOutputMessage);

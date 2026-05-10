@@ -24,7 +24,7 @@
 
 #include <complex>
 #include <cstring>
-#include <QString>
+#include <format>
 
 #include <fstream>
 #include <cassert>
@@ -670,7 +670,7 @@ void matrix::display_vec(double *vec, int n, std::string &list)
 {
     list.clear();
     for(int i=0; i<n; i++)
-        list += QString::asprintf("\t%17.9glg", vec[i]).toStdString();
+        list += std::format("\t%17.9glg", vec[i]);
 }
 
 
@@ -684,19 +684,19 @@ void matrix::display_mat(std::vector<double> const &mat, int size, std::string &
 void matrix::display_mat(double const *mat, int rows, int cols, std::string &list)
 {
     list.clear();
-    QString str, strong;
+    std::string str, strong;
     if(cols<=0) cols = rows;
     for(int i=0; i<rows; i++)
     {
         strong=" ";
         for(int j=0; j<cols; j++)
         {
-            str = QString::asprintf(" %17g ", mat[i*cols+j]);
+            str = std::format(" %17g ", mat[i*cols+j]);
             strong += str;
         }
-//        std::string str = strong.toStdString();
+//        std::string str = strong;
 //        const char* p = str.c_str();
-        list += QString::asprintf("%s", strong.toStdString().c_str()).toStdString();//avoid inverted commas
+        list += std::format("{:s}", strong.c_str());//avoid inverted commas
     }
 }
 
@@ -704,18 +704,18 @@ void matrix::display_mat(double const *mat, int rows, int cols, std::string &lis
 void matrix::display_mat(float const*mat, int rows, int cols, std::string &list)
 {
     list.clear();
-    QString str, strong;
+    std::string str, strong;
     if(cols<=0) cols = rows;
     for(int i=0; i<rows; i++)
     {
         strong=" ";
         for(int j=0; j<cols; j++)
         {
-            str = QString::asprintf(" %17g ", mat[i*cols+j]);
+            str = std::format(" %17g ", mat[i*cols+j]);
             strong += str;
         }
 
-        list += QString::asprintf("%s", strong.toStdString().c_str()).toStdString();//avoid inverted commas
+        list += std::format("{:s}", strong.c_str());//avoid inverted commas
     }
 }
 
@@ -725,13 +725,13 @@ void matrix::display_mat(std::vector<std::vector<double>> const &mat, std::strin
     list.clear();
     for(unsigned int i=0; i<mat.size(); i++)
     {
-        QString strong="    ";
+        std::string strong="    ";
         for(unsigned int j=0; j<mat[i].size(); j++)
         {
-            strong += QString::asprintf("%11.5g  ", mat[i][j]);
+            strong += std::format("{:11.5g}  ", mat[i][j]);
         }
 
-        list += QString::asprintf("%s", strong.toStdString().c_str()).toStdString();//avoid inverted commas
+        list += std::format("{:s}", strong.c_str());//avoid inverted commas
     }
 }
 
@@ -743,17 +743,17 @@ void matrix::display_vec(float *vec, int n, bool bHorizontal, std::string &list)
     if(!bHorizontal)
     {
         for(int i=0; i<n; i++)
-            list += QString::asprintf("\t%17g", double(vec[i])).toStdString();
+            list += std::format("\t%17g", double(vec[i]));
     }
     else
     {
-        QString strange, strong;
+        std::string strange, strong;
         for(int i=0; i<n; i++)
         {
-            strong = QString::asprintf("  %11g", double(vec[i]));
+            strong = std::format("  {:11g}", double(vec[i]));
             strange += strong;
         }
-        list += QString::asprintf("%s", strange.toStdString().c_str()).toStdString();
+        list += std::format("{:s}", strange.c_str());
     }
 }
 
@@ -762,17 +762,17 @@ void matrix::saveMatrixtoFile(std::string filename, std::vector<double> const &m
 {
     std::ofstream out(filename);
 
-    QString strange, strong;
+    std::string strange, strong;
     for(int row=0; row<N; row++)
     {
         strange.clear();
         for(int col=0; col<N; col++)
         {
-            strong = QString::asprintf(" %11g;", mat.at(row*N+col));
+            strong = std::format(" {:11g};", mat.at(row*N+col));
             strange += strong;
         }
         strange += "\n";
-        out << strange.toStdString();
+        out << strange;
     }
     out.close();
 }
@@ -1298,7 +1298,7 @@ void listArray(double *array, int size, std::string &list)
 {
     list.clear();
     for(int i=0; i<size; i++)
-        list += QString::asprintf("\t%17g", array[i]).toStdString();
+        list += std::format("\t%17g", array[i]);
 }
 
 
@@ -1306,7 +1306,7 @@ void matrix::listArray(const std::vector<double> &array, std::string &list)
 {
     list.clear();
     for(unsigned int i=0; i<array.size(); i++)
-        list += QString::asprintf("\t%17g", array.at(i)).toStdString();
+        list += std::format("\t%17g", array.at(i));
 }
 
 
@@ -1316,7 +1316,7 @@ void matrix::listArrays(std::vector<double> const &array1, std::vector<double> c
     int maxsize = std::min(int(array1.size()), int(array2.size()));
     for(int i=0; i<maxsize; i++)
     {
-        list += QString::asprintf("\t%17g  \t%17g  ", array1.at(i), array2.at(i)).toStdString();
+        list += std::format("\t%17g  \t%17g  ", array1.at(i), array2.at(i));
     }
 }
 
@@ -1328,7 +1328,7 @@ void matrix::listArrays(std::vector<double> const &array1, std::vector<double> c
     maxsize = std::min(maxsize, int(array3.size()));
     for(int i=0; i<maxsize; i++)
     {
-        list += QString::asprintf("\t%17g  \t%17g  \t%17g", array1.at(i), array2.at(i), array3.at(i)).toStdString();
+        list += std::format("\t%17g  \t%17g  \t%17g", array1.at(i), array2.at(i), array3.at(i));
     }
 }
 
@@ -1338,7 +1338,7 @@ void matrix::listArrays(const std::vector<float> &array1, const std::vector<floa
     list.clear();
     for(unsigned int i=0; i<array1.size(); i++)
     {
-        list += QString::asprintf("\t%17g  \t%17g  ", double(array1.at(i)), double(array2.at(i))).toStdString();
+        list += std::format("\t%17g  \t%17g  ", double(array1.at(i)), double(array2.at(i)));
     }
 }
 

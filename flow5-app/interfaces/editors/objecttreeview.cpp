@@ -28,14 +28,16 @@
 #include <QHeaderView>
 
 #include "objecttreeview.h"
+
 #include <api/objects_global.h>
 #include <api/planexfl.h>
-#include <api/utils.h>
+#include <api/units.h>
+#include <api/utils-io.h>
 #include <api/wingxfl.h>
 #include <api/xml_globals.h>
 
 #include <core/enums_core.h>
-#include <api/units.h>
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <modules/xobjects.h>
 
@@ -104,7 +106,7 @@ void ObjectTreeView::readWingTree(WingXfl *pWing)
             field = indexlevel.sibling(indexlevel.row(),1).data().toString();
             bool bValue = indexlevel.sibling(indexlevel.row(),2).data().toBool();
 
-            if     (field.compare("Symmetric",         Qt::CaseInsensitive)==0) pWing->setsymmetric(bValue);
+            if     (field.compare("Symmetric",         Qt::CaseInsensitive)==0) pWing->setSymmetric(bValue);
             else if(field.compare("Two sided",         Qt::CaseInsensitive)==0) pWing->setTwoSided(bValue);
             else if(field.compare("Closed inner side", Qt::CaseInsensitive)==0) pWing->setClosedInnerSide(bValue);
 

@@ -26,6 +26,9 @@
 
 #pragma once
 
+#include <vector>
+#include <algorithm>
+
 #include <fl5lib_global.h>
 
 #include <linestyle.h>

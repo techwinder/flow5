@@ -22,6 +22,7 @@
 
 *****************************************************************************/
 
+#define _MATH_DEFINES_DEFINED
 
 
 
@@ -34,10 +35,11 @@
 #include "gl3dcontourview.h"
 
 
-#include <interfaces/opengl/globals/gl_globals.h>
-#include <interfaces/controls/w3dprefs.h>
-#include <core/displayoptions.h>
 #include <api/geom_global.h>
+
+#include <core/displayoptions.h>
+#include <interfaces/controls/w3dprefs.h>
+#include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 

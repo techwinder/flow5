@@ -44,10 +44,11 @@
 #include <api/objects3d.h>
 #include <api/planexfl.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <api/planepolar.h>
 
 #include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/analysis3ddef/ctrltablemodel.h>
 #include <interfaces/editors/analysis3ddef/extradragwt.h>

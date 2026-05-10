@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
+
 
 #include <sailobjects.h>
 
@@ -463,7 +463,7 @@ void SailObjects::storeBtOpps(BoatPolar *pBtPolar, std::vector<BoatOpp*> const &
     }
     fl5Color clr = pBtPolar->lineColor();
 
-    for(uint k=0; k<BtOppList.size(); k++)
+    for(unsigned int k=0; k<BtOppList.size(); k++)
     {
         BoatOpp *pBtOpp = BtOppList.at(k);
 

@@ -51,7 +51,7 @@
 
 #include <api/sailocc.h>
 #include <api/occ_globals.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 #include <api/units.h>
 
 QByteArray SailOccDlg::s_VSplitterSizes;

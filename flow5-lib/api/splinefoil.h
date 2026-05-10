@@ -56,10 +56,12 @@ class FL5LIB_EXPORT SplineFoil
 
         bool bOutPoints()     const {return m_bOutPoints;}
         bool bCenterLine()    const {return m_bCenterLine;}
+        void showOutPoints(bool bShow) {m_bOutPoints=bShow;}
         void showCenterLine(bool bShow) {m_bCenterLine = bShow;}
 
         void setTheStyle(LineStyle ls) {m_theStyle=ls; m_Extrados.setTheStyle(ls); m_Intrados.setTheStyle(ls);}
-        LineStyle theStyle() const {return m_theStyle;}
+        LineStyle const &theStyle() const {return m_theStyle;}
+        LineStyle &theStyle() {return m_theStyle;}
 
         bool isVisible() const {return m_theStyle.m_bIsVisible;}
         void setVisible(bool bVisible) {m_theStyle.m_bIsVisible = bVisible; m_Extrados.setVisible(bVisible); m_Intrados.setVisible(bVisible);}
@@ -83,9 +85,6 @@ class FL5LIB_EXPORT SplineFoil
         void makeSplineFoil();
 
         void initSplineFoil();
-
-        bool serializeXfl(QDataStream &ar, bool bIsStoring);
-        bool serializeFl5(QDataStream &ar, bool bIsStoring);
 
         void copy(const SplineFoil *pSF);
         void exportToFoil(Foil *pFoil) const;

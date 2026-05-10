@@ -22,14 +22,14 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
+
 
 
 // Visual studio bug override
 //https://developercommunity.visualstudio.com/t/Visual-Studio-17100-Update-leads-to-Pr/10669759?sort=newest
 //#define _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR
 
-#include <QString>
+#include <format>
 
 
 #include <llttask.h>
@@ -39,7 +39,6 @@
 #include <planepolar.h>
 #include <planexfl.h>
 #include <polar.h>
-#include <trace.h>
 #include <units.h>
 #include <wingxfl.h>
 
@@ -195,7 +194,7 @@ void LLTTask::computeWing(double QInf, double Alpha, std::string &ErrMessage)
     Foil* pFoil0(nullptr);
     Foil* pFoil1(nullptr);
 
-    QString ErrorMessage;
+    std::string ErrorMessage;
 
     double yob(0), tau(0), c4(0), zpos(0);
     double Integral0(0), Integral1(0), Integral2(0), Integral3(0);
@@ -289,14 +288,14 @@ void LLTTask::computeWing(double QInf, double Alpha, std::string &ErrMessage)
 
         if(bPointOutAlpha)
         {
-            ErrorMessage = QString::asprintf("       Span pos = %9.2f ", cos(m*PI/s_NLLTStations)*m_pWing->planformSpan()/2.0*Units::mtoUnit());
-            ErrorMessage += Units::lengthUnitQLabel();
+            ErrorMessage = std::format("       Span pos = {:9.2f}", cos(m*PI/s_NLLTStations)*m_pWing->planformSpan()/2.0*Units::mtoUnit());
+            ErrorMessage += Units::lengthUnitLabel();
             ErrorMessage += ",  Re = ";
-            QString str;
-            str = QString::asprintf("%.0f", m_Re.at(m));
+            std::string str;
+            str = std::format("{:.0f}", m_Re.at(m));
             ErrorMessage += str;
 
-            str = QString::asprintf(" ,  A+Ai+Twist = %2f could not be interpolated\n", Alpha+m_Ai.at(m) + m_Twist.at(m));
+            str = std::format(" ,  A+Ai+Twist = {:2f} could not be interpolated\n", Alpha+m_Ai.at(m) + m_Twist.at(m));
             ErrorMessage+=str;
 
             m_bWingOut = true;
@@ -304,14 +303,14 @@ void LLTTask::computeWing(double QInf, double Alpha, std::string &ErrMessage)
         }
         else if(bPointOutRe)
         {
-            ErrorMessage = QString::asprintf("       Span pos = %9.2f ", cos(m*PI/s_NLLTStations)*m_pWing->planformSpan()/2.0*Units::mtoUnit());
-            ErrorMessage += Units::lengthUnitQLabel();
+            ErrorMessage = std::format("       Span pos = {:9.2f} ", cos(m*PI/s_NLLTStations)*m_pWing->planformSpan()/2.0*Units::mtoUnit());
+            ErrorMessage += Units::lengthUnitLabel();
             ErrorMessage += ",  Re = ";
-            QString str;
-            str = QString::asprintf("%.0f", m_Re.at(m));
+            std::string str;
+            str = std::format("{:.0f}", m_Re.at(m));
             ErrorMessage += str;
 
-            str = QString::asprintf(" ,  A+Ai+Twist = %2f is outside the flight envelope\n", Alpha+m_Ai.at(m) + m_Twist.at(m));
+            str = std::format(" ,  A+Ai+Twist = {:2f} is outside the flight envelope\n", Alpha+m_Ai.at(m) + m_Twist.at(m));
             ErrorMessage+=str;
 
             m_bWingOut = true;
@@ -350,7 +349,7 @@ void LLTTask::computeWing(double QInf, double Alpha, std::string &ErrMessage)
     (void)Integral3;
     (void)PitchingMoment;
 
-    ErrMessage = ErrorMessage.toStdString();
+    ErrMessage = ErrorMessage;
 }
 
 
@@ -395,8 +394,6 @@ void LLTTask::setBending(double QInf)
  */
 bool LLTTask::setLinearSolution(double Alpha)
 {
-    xfl::trace("LLTTask::setLinearSolution\n");
-
     std::vector<double> aij(s_NLLTStations*s_NLLTStations, 0);
     std::vector<double> rhs(s_NLLTStations+1, 0);
 
@@ -459,7 +456,6 @@ bool LLTTask::setLinearSolution(double Alpha)
         m_Cl[i] *= slope*cs/m_pWing->getChord(yob);
         m_Ai[i]  = -(Alpha-a0+m_pWing->getTwist(yob)) + m_Cl[i]/slope*180.0/PI;
     }
-    xfl::trace("LLTTask::setLinearSolution - done\n");
 
     return true;
 }
@@ -497,7 +493,7 @@ int LLTTask::iterate(double &QInf, double Alpha)
             double a        = m_Ai[k];
             double anext    = -alphaInduced(k);
             m_Ai[k]  = a +(anext-a)/s_RelaxMax;
-            maxa   = qMax(maxa, qAbs(a-anext));
+            maxa   = std::max(maxa, std::abs(a-anext));
         }
 
         double Lift=0.0;// required for Type 2
@@ -593,15 +589,12 @@ void LLTTask::run()
 
 bool LLTTask::alphaLoop()
 {
-    QString strange;
+    std::string strange;
     double yob(0), tau(0);
     Foil *pFoil0(nullptr), *pFoil1(nullptr);
     bool bOutRe(false), bError(false);
 
     bool s_bInitCalc = true;
-
-    xfl::trace("LLTTask::alphaloop\n");
-
 
     for (int i=0; i<int(m_AoAList.size()); i++)
     {
@@ -612,7 +605,7 @@ bool LLTTask::alphaLoop()
         if(isCancelled())
         {
             strange = "Analysis cancelled on user request....\n";
-            traceLog(strange);
+            traceStdLog(strange);
             break;
         }
 
@@ -631,11 +624,8 @@ bool LLTTask::alphaLoop()
             m_Cl[k] = Objects2d::getPlrPointFromAlpha(Polar::CL, pFoil0, pFoil1, m_Re[k], alpha + m_Ai[k] + m_Twist[k], tau, bOutRe, bError);
         }
 
-
-        xfl::trace("LLTTask::alphaloop - 1\n");
-
-        strange = "Calculating " + ALPHAch + QString::asprintf(" = %5.2f", alpha) + DEGch + "...";
-        traceLog(strange);
+        strange = "Calculating " + ALPHAstr + std::format(" = {:5.2f}", alpha) + DEGstr + "...";
+        traceStdLog(strange);
 
         double QInf = m_pPlPolar->velocity();
         int iter = iterate(QInf, alpha);
@@ -645,22 +635,19 @@ bool LLTTask::alphaLoop()
             strange= "    ...negative Lift... Aborting\n";
             m_bError = true;
             s_bInitCalc = true;
-            traceLog(strange);
+            traceStdLog(strange);
         }
         else if (iter<s_IterLim && !isCancelled())
         {
             //converged,
-            strange= QString::asprintf("    ...converged after %d iterations\n", iter);
-            traceOpp(alpha, m_Max_a, strange.toStdString());
+            strange= std::format("    ...converged after {:d} iterations\n", iter);
+            traceOpp(alpha, m_Max_a, strange);
 
             std::string str;
             computeWing(m_pPlPolar->velocity(), alpha, str);// generates wing results,
             traceStdLog(str);
             if (m_bWingOut) m_bWarning = true;
             PlaneOpp *pPOpp = createPlaneOpp(QInf, alpha, m_bWingOut);// Adds WOpp point and adds result to polar
-
-
-            xfl::trace("LLTTask::alphaloop -2 \n");
 
             // store the results
             if(pPOpp)
@@ -684,14 +671,12 @@ bool LLTTask::alphaLoop()
         {
             if (m_bWingOut) m_bWarning = true;
             m_bError = true;
-            strange= QString::asprintf("    ...unconverged after %d iterations out of %d\n", iter, s_IterLim);
-            traceOpp(alpha, m_Max_a, strange.toStdString());
+            strange= std::format("    ...unconverged after {:d} iterations out of {:d}\n", iter, s_IterLim);
+            traceOpp(alpha, m_Max_a, strange);
             s_bInitCalc = true;
         }
 
-        strange = ALPHAch + QString::asprintf("=%g", alpha) + DEGch;
-
-        xfl::trace("LLTTask::alphaloop - 3\n");
+        strange = ALPHAstr + std::format("={:g}", alpha) + DEGstr;
 
     }
 
@@ -870,9 +855,6 @@ void LLTTask::traceOpp(double alpha, std::vector<double>const &max_a, std::strin
     m_theOppQueue.push(oppreport);
     m_cv.notify_all();
 }
-
-
-void LLTTask::traceLog(QString const &str) {traceStdLog(str.toStdString());}
 
 
 void LLTTask::traceStdLog(std::string const &str)

@@ -33,6 +33,7 @@
 #include <api/planetask.h>
 #include <api/vorton.h>
 #include <api/xml_globals.h>
+#include <api/utils-io.h>
 
 #include <core/xflcore.h>
 #include <modules/xobjects.h>

@@ -23,8 +23,9 @@
 *****************************************************************************/
 
 #include <sstream>
-#include <QString>
-#include <QTextStream>
+#include <string>
+#include <format>
+
 
 #include <utils.h>
 #include <constants.h>
@@ -79,22 +80,18 @@ Polar::Polar(double Re, double NCrit, double xTrTop, double xTrBot, BL::enumBLMe
 
 void Polar::exportToString(std::string &outstring, bool bDataOnly, bool bCSV) const
 {
-    QString strong, Header;
-    QString strange;
-    QTextStream out(&strange);
-
+    std::string strong, Header;
+    std::string strange;
+    std::stringstream out;
 
     if(!bDataOnly)
     {
-        strong = QString::fromStdString(fl5::versionName(true));
+        out << fl5::versionName(true) << "\n\n";
+        out <<" Calculated polar for: ";
+        out << m_FoilName << "\n\n";
 
-        strong += "\n\n";
-        out << strong;
-        strong =(" Calculated polar for: ");
-        strong += QString::fromStdString(m_FoilName) + "\n\n";
-        out << strong;
+        strong = std::format(" {:d} {:d}", m_ReType, m_MaType);
 
-        strong = QString::asprintf(" %d %d", m_ReType, m_MaType);
 
         if     (m_ReType==1) strong += (" Reynolds number fixed       ");
         else if(m_ReType==2) strong += (" Reynolds number ~ 1/sqrt(CL)");
@@ -106,10 +103,10 @@ void Polar::exportToString(std::string &outstring, bool bDataOnly, bool bCSV) co
         strong +="\n\n";
         out << strong;
 
-        strong=QString::asprintf(" xtrf =   %.3f (top)        %.3f (bottom)\n", m_XTripTop, m_XTripBot);
+        strong = std::format(" xtrf =   {:.3f} (top)        {:.3f} (bottom)\n", m_XTripTop, m_XTripBot);
         out << strong;
 
-        strong = QString::asprintf(" Mach = %7.3f     Re = %9.3f e 6     Ncrit = %7.3f\n\n", m_Mach, Reynolds()/1.e6, m_ACrit);
+        strong = std::format(" Mach = {:7.3f}     Re = {:9.3f} e 6     Ncrit = {:7.3f}\n\n", m_Mach, Reynolds()/1.e6, m_ACrit);
         out << strong;
     }
 
@@ -123,22 +120,22 @@ void Polar::exportToString(std::string &outstring, bool bDataOnly, bool bCSV) co
             Header=(" ------- -------- --------- --------- -------- ------- ------- -------- --------- ---------\n");
             out << Header;
         }
-        for (uint j=0; j<m_Alpha.size(); j++)
+        for (unsigned int j=0; j<m_Alpha.size(); j++)
         {
-            if(!bCSV) strong = QString::asprintf(" %7.3f  %7.4f  %8.5f  %8.5f  %7.4f", m_Alpha[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
-            else      strong = QString::asprintf(" %7.3f, %7.4f, %8.5f, %8.5f, %7.4f", m_Alpha[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
+            if(!bCSV) strong = std::format(" {:7.3f}  {:7.4f}  {:8.5f}  {:8.5f}  {:7.4f}", m_Alpha[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
+            else      strong = std::format(" {:7.3f}, {:7.4f}, {:8.5f}, {:8.5f}, {:7.4f}", m_Alpha[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
 
             out << strong;
             if(m_XTrTop[j]<990.0)
             {
-                if(!bCSV) strong=QString::asprintf("  %6.4f  %6.4f", m_XTrTop[j], m_XTrBot[j]);
-                else      strong=QString::asprintf(", %6.4f, %6.4f", m_XTrTop[j], m_XTrBot[j]);
+                if(!bCSV) strong=std::format("  {:6.4f}  {:6.4f}", m_XTrTop[j], m_XTrBot[j]);
+                else      strong=std::format(", {:6.4f}, {:6.4f}", m_XTrTop[j], m_XTrBot[j]);
                 out << strong;
             }
-            if(!bCSV) strong=QString::asprintf("  %7.4f  %7.4f  %7.4f\n", m_Cpmn[j], m_HMom[j], m_XCp[j]);
-            else      strong=QString::asprintf(", %7.4f, %7.4f, %7.4f\n", m_Cpmn[j], m_HMom[j], m_XCp[j]);
-            out << strong;
-            }
+            if(!bCSV) strong=std::format("  {:7.4f}  {:7.4f}  {:7.4f}\n", m_Cpmn[j], m_HMom[j], m_XCp[j]);
+            else      strong=std::format(", {:7.4f}, {:7.4f}, {:7.4f}\n", m_Cpmn[j], m_HMom[j], m_XCp[j]);
+            out << strong;            
+        }
     }
     else
     {
@@ -150,26 +147,25 @@ void Polar::exportToString(std::string &outstring, bool bDataOnly, bool bCSV) co
             Header=" ------- -------- -------- --------- --------- -------- ------- ------- -------- --------- ---------\n";
             out << Header;
         }
-        for(uint j=0; j<m_Alpha.size(); j++)
+        for(unsigned int j=0; j<m_Alpha.size(); j++)
         {
-            if(!bCSV) strong=QString::asprintf(" %7.3f %8.0f  %7.4f  %8.5f  %8.5f  %7.4f", m_Alpha[j], m_Re[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
-            else      strong=QString::asprintf(" %7.3f %8.0f  %7.4f  %8.5f  %8.5f  %7.4f", m_Alpha[j], m_Re[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
+            if(!bCSV) strong=std::format(" {:7.3f} %8.0f  {:7.4f}  {:8.5f}  {:8.5f}  {:7.4f}", m_Alpha[j], m_Re[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
+            else      strong=std::format(" {:7.3f} %8.0f  {:7.4f}  {:8.5f}  {:8.5f}  {:7.4f}", m_Alpha[j], m_Re[j], m_Cl[j], m_Cd[j], m_Cdp[j], m_Cm[j]);
             out << strong;
             if(m_XTrTop[j]<990.0)
             {
-                if(!bCSV) strong=QString::asprintf("  %6.4f  %6.4f", m_XTrTop[j], m_XTrBot[j]);
-                else      strong=QString::asprintf(",%6.4f,%6.4f", m_XTrTop[j], m_XTrBot[j]);;
+                if(!bCSV) strong=std::format("  {:6.4f}  {:6.4f}", m_XTrTop[j], m_XTrBot[j]);
+                else      strong=std::format(",{:6.4f},{:6.4f}", m_XTrTop[j], m_XTrBot[j]);;
                 out << strong;
             }
-            if(!bCSV) strong=QString::asprintf("  %7.4f  %7.4f  %7.4f\n", m_Cpmn[j], m_HMom[j], m_XCp[j]);
-            else      strong=QString::asprintf(",%7.4f,%7.4f,%7.4f\n",    m_Cpmn[j], m_HMom[j], m_XCp[j]);
+            if(!bCSV) strong=std::format("  {:7.4f}  {:7.4f}  {:7.4f}\n", m_Cpmn[j], m_HMom[j], m_XCp[j]);
+            else      strong=std::format(",{:7.4f},{:7.4f},{:7.4f}\n",    m_Cpmn[j], m_HMom[j], m_XCp[j]);
             out << strong;
         }
     }
     out << "\n\n";
 
-    outstring = strange.toStdString();
-//    outstring = out.readAll().toStdString();
+    out >> outstring;
 }
 
 
@@ -516,7 +512,7 @@ void Polar::getAlphaLimits(double &amin, double &amax) const
     {
         amin = 100.0;
         amax =  -100.0;
-        for(uint i=0; i<m_Alpha.size(); i++)
+        for(unsigned int i=0; i<m_Alpha.size(); i++)
         {
             amin = std::min(amin, m_Alpha.at(i));
             amax = std::max(amax, m_Alpha.at(i));
@@ -542,7 +538,7 @@ void Polar::getClLimits(double &Clmin, double &Clmax) const
         Clmin = 10000.0;
         Clmax =-10000.0;
         double Cl;
-        for (uint i=0; i<m_Cl.size(); i++)
+        for (unsigned int i=0; i<m_Cl.size(); i++)
         {
             Cl = m_Cl.at(i);
             if(Clmin>Cl) Clmin = Cl;
@@ -561,13 +557,13 @@ double Polar::getCm0() const
 {
     double Clmin =  1000.0;
     double Clmax = -1000.0;
-    for (uint i=0; i<m_Cl.size(); i++)
+    for (unsigned int i=0; i<m_Cl.size(); i++)
     {
         Clmin = std::min(Clmin, m_Cl.at(i));
         Clmax = std::max(Clmax, m_Cl.at(i));
     }
     if(!(Clmin<0.0) || !(Clmax>0.0)) return 0.0;
-    uint k=0;
+    unsigned int k=0;
 //    double rr  = m_Cl.at(k);
 //    double rr1 = m_Cl.at(k+1);
 
@@ -587,14 +583,14 @@ double Polar::getZeroLiftAngle() const
 {
     double Clmin =  1000.0;
     double Clmax = -1000.0;
-    for (uint i=0; i<m_Cl.size(); i++)
+    for (unsigned int i=0; i<m_Cl.size(); i++)
     {
         Clmin = std::min(Clmin, m_Cl.at(i));
         Clmax = std::max(Clmax, m_Cl.at(i));
     }
     if(!(Clmin<0.0) || !(Clmax>0.0)) return 0.0;
 
-    uint k=0;
+    unsigned int k=0;
 
     while (m_Cl.at(k)<0.0)
     {
@@ -709,9 +705,9 @@ void Polar::setType(xfl::enumPolarType type)
 
 std::string Polar::properties()
 {
-    QString polarprops;
+    std::string polarprops;
 
-    QString strong;
+    std::string strong;
     polarprops.clear();
 
     switch(m_BLMethod)
@@ -720,7 +716,7 @@ std::string Polar::properties()
         case BL::NOBLMETHOD:    polarprops += "BL Solver: Blasius\n";       break;
     }
 
-    strong = QString::asprintf("Type = %d", m_Type+1);
+    strong = std::format("Type = {:d}", m_Type+1);
     if     (m_Type==xfl::T1POLAR) strong += " (Fixed speed)\n";
     else if(m_Type==xfl::T2POLAR) strong += " (Fixed lift)\n";
     else if(m_Type==xfl::T3POLAR) strong += " (Rubber chord)\n";
@@ -730,358 +726,75 @@ std::string Polar::properties()
 
     if( (isType123() || isType4()))
     {
-        strong = "T.E. flap angle: " + THETAch + QString::asprintf(" = %g", m_TEFlapAngle) + DEGch + EOLch;
+        strong = "T.E. flap angle: " + THETAstr + std::format(" = {:g}", m_TEFlapAngle) + DEGstr + EOLstr;
         polarprops += strong;
     }
 
     if(m_Type==xfl::T1POLAR)
     {
-        strong = QString::asprintf("Reynolds    = %.0f\n", Reynolds());
+        strong = std::format("Reynolds    = {:.0f}\n", Reynolds());
         polarprops += strong;
-        strong = QString::asprintf("Mach        = %5.2f\n", m_Mach);
+        strong = std::format("Mach        = {:5.2f}\n", m_Mach);
         polarprops += strong;
     }
     else if(m_Type==xfl::T2POLAR)
     {
-        strong = QString::asprintf("Re.sqrt(Cl) = %.0f\n",Reynolds());
+        strong = std::format("Re.sqrt(Cl) = {:.0f}\n",Reynolds());
         polarprops += strong;
-        strong = QString::asprintf("Ma.sqrt(Cl) = %5.2f\n",m_Mach);
+        strong = std::format("Ma.sqrt(Cl) = {:5.2f}\n",m_Mach);
         polarprops += strong;
     }
     else if(m_Type==xfl::T3POLAR)
     {
-        strong = QString::asprintf("Re.Cl       = %.0f\n",Reynolds());
+        strong = std::format("Re.Cl       = {:.0f}\n",Reynolds());
         polarprops += strong;
-        strong = QString::asprintf("Mach        = %2f\n",m_Mach);
+        strong = std::format("Mach        = {:2f}\n",m_Mach);
         polarprops += strong;
     }
     else if(m_Type==xfl::T4POLAR)
     {
-        strong = ALPHAch + QString::asprintf("           = %5.2f",m_aoaSpec) + DEGch +"\n";
+        strong = ALPHAstr + std::format("           = {:5.2f}",m_aoaSpec) + DEGstr +"\n";
         polarprops += strong;
-        strong = QString::asprintf("Mach        = %5.2f\n",m_Mach);
+        strong = std::format("Mach        = {:5.2f}\n",m_Mach);
         polarprops += strong;
     }
     else if(m_Type==xfl::T6POLAR)
     {
-        strong = ALPHAch + QString::asprintf("           = %5.2f",m_aoaSpec) + DEGch +"\n";
+        strong = ALPHAstr + std::format("           = {:5.2f}",m_aoaSpec) + DEGstr +"\n";
         polarprops += strong;
 
-        strong = QString::asprintf("Reynolds    = %.0f\n", Reynolds());
+        strong = std::format("Reynolds    = {:.0f}\n", Reynolds());
         polarprops += strong;
-        strong = QString::asprintf("Mach        = %5.2f\n", m_Mach);
+        strong = std::format("Mach        = {:5.2f}\n", m_Mach);
         polarprops += strong;
     }
 
-    strong = QString::asprintf("NCrit       = %5.2f\n", m_ACrit);
+    strong = std::format("NCrit       = {:5.2f}\n", m_ACrit);
     polarprops += strong;
 
-    strong = QString::asprintf("Forced top trans.    = %5.1f%%\n", m_XTripTop*100.0);
+    strong = std::format("Forced top trans.    = {:5.1f}%\n", m_XTripTop*100.0);
     polarprops += strong;
 
-    strong = QString::asprintf("Forced bottom trans. = %5.1f%%\n", m_XTripBot*100.0);
+    strong = std::format("Forced bottom trans. = {:5.1f}%\n", m_XTripBot*100.0);
     polarprops += strong;
 
     if(isType12())
     {
-        strong = ALPHAch + QString::asprintf("0 = %5.2f", getZeroLiftAngle());
-        polarprops += strong + DEGch + EOLch;
+        strong = ALPHAstr + std::format("0 = {:5.2f}", getZeroLiftAngle());
+        polarprops += strong + DEGstr + EOLstr;
 
         double positive=0, negative=0;
         getStallAngles(negative, positive);
-        strong = QString::asprintf("stall angle- = %5.2f", negative);
-        polarprops += strong + DEGch + EOLch;
-        strong = QString::asprintf("stall angle+ = %5.2f", positive);
-        polarprops += strong + DEGch + EOLch;
+        strong = std::format("stall angle- = {:5.2f}", negative);
+        polarprops += strong + DEGstr + EOLstr;
+        strong = std::format("stall angle+ = {:5.2f}", positive);
+        polarprops += strong + DEGstr + EOLstr;
     }
 
-    strong = QString::asprintf("Number of data points = %d", int(m_Alpha.size()));
+    strong = std::format("Number of data points = {:d}", int(m_Alpha.size()));
     polarprops += "\n" +strong;
 
-    return polarprops.toStdString();
-}
-
-
-bool Polar::serializePolarXFL(QDataStream &ar, bool bIsStoring)
-{
-    double dble(0.0);
-    bool boolean(false);
-    int i(0), k(0), n(0);
-    QString strange;
-
-    int ArchiveFormat(0);// identifies the format of the file
-    // 100005 : added the array of control values
-    ArchiveFormat = 100005;
-
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat; // first format for XFL file
-
-        ar << QString::fromStdString(m_FoilName);
-        ar << QString::fromStdString(m_Name);
-
-        m_theStyle.serializeXfl(ar, bIsStoring);
-
-        if     (m_Type==xfl::T1POLAR)          ar<<1;
-        else if(m_Type==xfl::T2POLAR)          ar<<2;
-        else if(m_Type==xfl::T3POLAR) ar<<3;
-        else if(m_Type==xfl::T4POLAR)          ar<<4;
-        else                                        ar<<1;
-
-        ar << m_MaType << m_ReType;
-        ar << Reynolds() << m_Mach;
-        ar << m_aoaSpec;
-        ar << m_XTripTop << m_XTripBot;
-        ar << m_ACrit;
-
-        ar << int(m_Alpha.size());
-        for (uint l=0; l< m_Alpha.size(); l++)
-        {
-            ar << float(m_Alpha.at(l))  << float(m_Cd.at(l));
-            ar << float(m_Cdp.at(l))    << float(m_Cl.at(l)) << float(m_Cm.at(l));
-            ar << float(m_XTrTop.at(l)) << float(m_XTrBot.at(l));
-            ar << float(m_HMom.at(l))   << float(m_Cpmn.at(l));
-            ar << float(m_Re.at(l));
-            ar << float(m_XCp.at(l));
-        }
-
-//        ar << m_theStyle.m_Symbol;
-        // space allocation for the future storage of more data, without need to change the format
-        for (int i=0; i<19; i++) ar << 0;
-        for (int i=0; i<50; i++) ar << 0.0;
-
-        return true;
-    }
-    else
-    {
-        //read variables
-        float Alpha(0), Cd(0), Cdp(0), Cl(0), Cm(0), XTr1(0), XTr2(0), HMom(0), Cpmn(0), Re(0), XCp(0), Ctrl(0);
-
-        ar >> ArchiveFormat;
-        if (ArchiveFormat <100000 || ArchiveFormat>110000) return false;
-
-        ar >> strange;   m_FoilName=strange.toStdString();
-        ar >> strange;   m_Name = strange.toStdString();
-        if(ArchiveFormat<100005)
-        {
-            int s(0);
-            int w(0);
-            ar >>s>>w;
-            setLineStipple(LineStyle::convertLineStyle(s));
-            setLineWidth(w);
-            int r(0),g(0),b(0),a(0);
-            xfl::readColor(ar, r,g,b,a);
-            setLineColor(fl5Color(r,g,b,a));
-            ar >> m_theStyle.m_bIsVisible >> boolean;
-        }
-        else
-            m_theStyle.serializeXfl(ar, bIsStoring);
-
-        ar >> n;
-        if     (n==2) m_Type=xfl::T2POLAR;
-        else if(n==3) m_Type=xfl::T3POLAR;
-        else if(n==4) m_Type=xfl::T4POLAR;
-        else if(n==5) m_Type=xfl::T6POLAR;
-        else m_Type=xfl::T1POLAR;
-
-        ar >> m_MaType >> m_ReType;
-
-        ar >> m_Reynolds >> m_Mach;
-
-        ar >> m_aoaSpec;
-        ar >> m_XTripTop >> m_XTripBot;
-        ar >> m_ACrit;
-
-        ar >> n;
-
-        for (i=0; i<n; i++)
-        {
-            ar >> Alpha >> Cd >> Cdp >> Cl >> Cm >> XTr1 >> XTr2 >> HMom >> Cpmn >> Re >> XCp;
-
-            addPoint(double(Alpha), double(Cd), double(Cdp), double(Cl), double(Cm), double(HMom), double(Cpmn),
-                     double(Re), double(XCp), double(Ctrl), double(XTr1), double(XTr2),
-                     0,0,0,0);
-        }
-        if(ArchiveFormat<100005)
-        {
-            ar >> n;
-            m_theStyle.m_Symbol=LineStyle::convertSymbol(n);
-        }
-
-        // space allocation
-        for (int i=0; i<19; i++) ar >> k;
-        for (int i=0; i<50; i++) ar >> dble;
-    }
-
-
-    return true;
-}
-
-
-bool Polar::serializePolarFl5(QDataStream &ar, bool bIsStoring)
-{
-    int nIntSpares(0);
-    int nDbleSpares(0);
-
-    int nVariables(0);
-    int n(0);
-
-    QString strange;
-
-    int ArchiveFormat(0);// identifies the format of the file
-    // 500001 : initialization of the new fl5 format
-    // 500750 : v7.50
-
-    ArchiveFormat = 500750;
-
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat; // first format for XFL file
-
-        ar << QString::fromStdString(m_FoilName);
-        ar << QString::fromStdString(m_Name);
-
-        m_theStyle.serializeFl5(ar, bIsStoring);
-
-        switch(m_Type)
-        {
-            default:
-            case xfl::T1POLAR:  ar<<1;  break;
-            case xfl::T2POLAR:  ar<<2;  break;
-            case xfl::T3POLAR:  ar<<3;  break;
-            case xfl::T4POLAR:  ar<<4;  break;
-            case xfl::T6POLAR:  ar<<6;  break;
-        }
-
-        switch(m_BLMethod)
-        {
-            default:
-            case BL::XFOIL:         n=0;  break;
-            case BL::NOBLMETHOD:    n=4;  break;
-        }
-        ar << n;
-
-        ar << m_MaType << m_ReType;
-
-/*        ar << m_Density << m_nu;
-        ar << m_QInf;
-        ar << m_Chord;*/
-        ar << m_Reynolds;
-        ar << m_Mach;
-        ar << m_aoaSpec;
-        ar << m_XTripTop << m_XTripBot;
-        ar << m_ACrit;
-
-//        ar << nCtrls();
-//        for (int ic=0; ic<Polar::nCtrls(); ic++) ar << dble<<dble;
-        ar << nVariables; // formerly nCtrls
-
-        nVariables = 12; // change to add new variables
-        ar << nVariables;
-        ar << int(m_Alpha.size());
-        for (uint l=0; l< m_Alpha.size(); l++)
-        {
-            ar << float(m_Alpha.at(l)) << float(m_Cd.at(l));
-            ar << float(m_Cdp.at(l))   << float(m_Cl.at(l)) << float(m_Cm.at(l));
-            ar << float(m_HMom.at(l))  << float(m_Cpmn.at(l));
-            ar << float(m_Re.at(l));
-            ar << float(m_XCp.at(l));
-            ar << float(m_Control.at(l));
-            ar << float(m_XTrTop.at(l)) << float(m_XTrBot.at(l));
-            ar << float(m_XLamSepTop.at(l)) << float(m_XLamSepBot.at(l));
-            ar << float(m_XTurbSepTop.at(l)) << float(m_XTurbSepBot.at(l));
-        }
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=1;
-        ar << nDbleSpares;
-        ar << m_TEFlapAngle;
-
-        return true;
-    }
-    else
-    {
-        //read variables
-        float Alpha, Cd(0), Cdp(0), Cl(0), Cm(0), HMom(0), Cpmn(0), Re(0), XCp(0), Ctrl(0);
-        float XTr1(0), XTr2(0), XLSTop(0), XLSBot(0), XTSTop(0), XTSBot(0);
-
-        ar >> ArchiveFormat;
-        if (ArchiveFormat<500000 || ArchiveFormat>501000) return false;
-
-        ar >> strange;    m_FoilName = strange.toStdString();
-        ar >> strange;    m_Name = strange.toStdString();
-
-        m_theStyle.serializeFl5(ar, bIsStoring);
-
-        ar >> n;
-        switch (n)
-        {
-            default:
-            case 1: m_Type=xfl::T1POLAR;    break;
-            case 2: m_Type=xfl::T2POLAR;    break;
-            case 3: m_Type=xfl::T3POLAR;    break;
-            case 4: m_Type=xfl::T4POLAR;    break;
-            case 5:
-            case 6: m_Type=xfl::T6POLAR;    break;
-        }
-        ar >>n;
-        switch(n)
-        {
-            case 0: m_BLMethod=BL::XFOIL;         break;
-            case 4: m_BLMethod=BL::NOBLMETHOD;    break;
-        }
-
-        ar >> m_MaType >> m_ReType;
-
-        if(ArchiveFormat<500750)
-        {
-            double qinf(0), rho(0), nu(0), chord(0);
-            ar >> rho >> nu;
-            ar >> qinf; // m_QInf;
-            ar >> chord; // m_Chord;
-            m_Reynolds = qinf*chord/nu;
-        }
-        else
-        {
-            ar >> m_Reynolds;
-        }
-        ar >> m_Mach;
-        ar >> m_aoaSpec;
-        ar >> m_XTripTop >> m_XTripBot;
-        ar >> m_ACrit;
-
-        ar >> n; // formerly nCtrls;
-        double d1(0), d2(0);
-        for (int ic=0; ic<n; ic++)
-        {
-            ar>>d1>>d2;
-        }
-
-        ar >> nVariables;
-        ar >> n;
-        for (int i=0; i< n; i++)
-        {
-            ar >> Alpha >> Cd >> Cdp >> Cl >> Cm >> HMom >> Cpmn >> Re >> XCp >> Ctrl;
-            ar >> XTr1 >> XTr2 >> XLSTop >> XLSBot >> XTSTop >>XTSBot;
-            addPoint(double(Alpha), double(Cd), double(Cdp), double(Cl), double(Cm), double(HMom), double(Cpmn), double(Re), double(XCp), double(Ctrl),
-                     double(XTr1), double(XTr2), double(XLSTop), double(XLSBot), double(XTSTop), double(XTSBot));
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        if(nDbleSpares>0)
-            ar >> m_TEFlapAngle;
-
-        // correct past errors
-        if(isType6()) m_TEFlapAngle = 0.0;
-    }
-    return true;
+    return polarprops;
 }
 
 
@@ -1190,7 +903,7 @@ double Polar::interpolateFromAlpha(double alpha, Polar::enumPolarVariable PlrVar
         return pX.back();
     }
 
-    for (uint i=0; i<m_Alpha.size()-1; i++)
+    for (unsigned int i=0; i<m_Alpha.size()-1; i++)
     {
         if(m_Alpha.at(i)<=alpha && alpha<m_Alpha.at(i+1))
         {
@@ -1236,7 +949,7 @@ double Polar::interpolateFromCl(double Cl, Polar::enumPolarVariable PlrVar, bool
         //Start from the point closest to Cl=0 because of weird shaped polars
         int pt = 0;
         double  dist = fabs(m_Cl.at(0));
-        for (uint i=1; i<m_Cl.size();i ++)
+        for (unsigned int i=1; i<m_Cl.size();i ++)
         {
             if (fabs(m_Cl.at(i))< dist)
             {
@@ -1269,7 +982,7 @@ double Polar::interpolateFromCl(double Cl, Polar::enumPolarVariable PlrVar, bool
         }
         else
         {
-            for (uint i=pt; i<m_Cl.size()-1; i++)
+            for (unsigned int i=pt; i<m_Cl.size()-1; i++)
             {
                 if(m_Cl.at(i) <=Cl && Cl < m_Cl.at(i+1))
                 {

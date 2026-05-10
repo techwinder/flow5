@@ -32,11 +32,13 @@
 
 #include "wingscaledlg.h"
 
-#include <api/wingxfl.h>
 #include <api/units.h>
-#include <api/utils.h>
-#include <interfaces/widgets/customwts/floatedit.h>
+#include <api/utils-io.h>
+#include <api/wingxfl.h>
+
+#include <core/qunits.h>
 #include <core/xflcore.h>
+#include <interfaces/widgets/customwts/floatedit.h>
 
 
 WingScaleDlg::WingScaleDlg(QWidget *pParent) : QDialog(pParent)

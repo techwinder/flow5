@@ -22,9 +22,9 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
 
-#include <QString>
+
+#include <format>
 
 
 #include <boatpolar.h>
@@ -161,7 +161,7 @@ void BoatPolar::addPoint(BoatOpp const *pBtOpp)
                 m_VInf[i]    =  pBtOpp->QInf();
                 m_Beta[i]    =  pBtOpp->beta();
                 m_Phi[i]     =  pBtOpp->phi();
-                m_AC[i]      =  pBtOpp->aeroForces();
+                m_AF[i]      =  pBtOpp->aeroForces();
                 bInserted = true;
                 break;
             }
@@ -172,7 +172,7 @@ void BoatPolar::addPoint(BoatOpp const *pBtOpp)
                 m_VInf.insert(m_VInf.begin()+i, pBtOpp->QInf());
                 m_Beta.insert(m_Beta.begin()+i, pBtOpp->beta());
                 m_Phi.insert( m_Phi.begin()+i, pBtOpp->phi());
-                m_AC.insert(  m_AC.begin()+i, pBtOpp->aeroForces());
+                m_AF.insert(  m_AF.begin()+i, pBtOpp->aeroForces());
                 bInserted = true;
                 break;
             }
@@ -185,211 +185,9 @@ void BoatPolar::addPoint(BoatOpp const *pBtOpp)
         m_VInf.push_back(pBtOpp->QInf());
         m_Beta.push_back(pBtOpp->beta());
         m_Phi.push_back(pBtOpp->phi());
-        m_AC.push_back(pBtOpp->aeroForces());
+        m_AF.push_back(pBtOpp->aeroForces());
     }
 }
-
-
-bool BoatPolar::serializeFl5v726(QDataStream &ar, bool bIsStoring)
-{
-    Polar3d::serializeFl5v726(ar, bIsStoring);
-
-    bool boolean(false);
-    int n(0);
-    double dble(0),d0(0),d1(0),d2(0);
-    int i(0);
-    int nIntSpares(0);
-    int nDbleSpares(0);
-
-    QString strange;
-
-    if(bIsStoring)
-    {
-        assert(false);
-    }
-    else
-    {
-        //read variables
-        ar >> m_PolarFormat;
-        if(m_PolarFormat<500001 || m_PolarFormat>500100) return false;
-
-        if(m_PolarFormat<500028) m_bIgnoreBodyPanels = true;
-
-        ar >> strange; m_BoatName = strange.toStdString();
-
-        if(m_PolarFormat>=500023)
-        {
-            ar >> boolean;
-            m_ReferenceDim = boolean ? xfl::AUTODIMS : xfl::CUSTOM;
-            ar >> m_ReferenceArea >> m_ReferenceChord;
-        }
-
-        if(m_PolarFormat<500024)
-        {
-            ar >> dble >> dble >> dble >> dble; // formerly wind gradient
-        }
-        else
-        {
-            m_WindSpline.serializeFl5(ar, bIsStoring);
-        }
-
-        if(m_PolarFormat>=500026) ar >> m_VBtMin >> m_VBtMax;
-        ar >> m_TWSMin>>m_TWSMax>>m_TWAMin>>m_TWAMax; // AWS up to format 500026
-
-        ar >> m_PhiMin>>m_PhiMax;
-        if(m_PolarFormat>=500025) ar >> m_RyMin >> m_RyMax;
-
-        ar >> n;
-        m_SailAngleMin.resize(n);
-        m_SailAngleMax.resize(n);
-        for (int is=0; is<n; is++)
-        {
-            ar >> m_SailAngleMin[is] >> m_SailAngleMax[is];
-        }
-
-        int datasize=0;
-        ar >> datasize;
-        ar >> nDbleSpares;
-        m_AC.resize(datasize);
-        for (i=0; i<datasize; i++)
-        {
-            ar >>d0;              m_Ctrl.push_back(d0);
-            ar >>d0>>d1>>d2;      m_VInf.push_back(d0);   m_Beta.push_back(d1);   m_Phi.push_back(d2);
-            if(m_PolarFormat<500022)  m_AC[i].serializeFl5_b17(ar, bIsStoring);
-            else
-            {
-                if(!m_AC[i].serializeFl5(ar, bIsStoring)) return false;
-            }
-
-            for(int l=0; l<nDbleSpares; l++) ar >> dble;
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++)  ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-
-        // clean-up legacy formats
-        m_Type = xfl::BOATPOLAR;
-        m_bGround      = true;
-        m_GroundHeight = 0.0;
-    }
-    return true;
-}
-
-
-bool BoatPolar::serializeFl5v750(QDataStream &ar, bool bIsStoring)
-{
-    Polar3d::serializeFl5v750(ar, bIsStoring);
-
-    bool boolean(false);
-    int integer(0);
-    double dble(0);
-    QString strange;
-
-    int n(0);
-    double d0(0),d1(0),d2(0);
-    int i(0);
-
-    int nDbleSpares(0);
-
-    if(bIsStoring)
-    {
-        //write variables
-        ar << m_PolarFormat; // identifies the format of the file
-        ar << QString::fromStdString(m_BoatName);
-
-        boolean = m_ReferenceDim==xfl::AUTODIMS ? true : false;
-        ar << boolean;
-        ar << m_ReferenceArea << m_ReferenceChord;
-
-        m_WindSpline.serializeFl5(ar, bIsStoring);
-
-        ar << m_VBtMin << m_VBtMax;
-        ar << m_TWSMin << m_TWSMax << m_TWAMin << m_TWAMax;
-        ar << m_PhiMin << m_PhiMax;
-        ar << m_RyMin << m_RyMax;
-
-        ar << int(m_SailAngleMin.size());
-        for(uint is=0; is<m_SailAngleMin.size();is++)
-        {
-            ar << m_SailAngleMin[is] << m_SailAngleMax[is];
-        }
-
-        ar <<int(m_Ctrl.size());
-
-        nDbleSpares = 0;
-        ar << nDbleSpares;
-        for(uint i=0; i<m_Ctrl.size(); i++)
-        {
-            ar << m_Ctrl[i];
-            ar << m_VInf[i] <<m_Beta[i] << m_Phi[i];
-            m_AC[i].serializeFl5(ar, bIsStoring);
-
-            dble=0.0;
-            for(int i=0; i<nDbleSpares; i++) ar << dble;
-        }
-
-        // provisions for future variable saves
-        for(int i=0; i<10; i++) ar <<boolean;
-        for(int i=0; i<20; i++) ar <<integer;
-        for(int i=0; i<20; i++) ar <<dble;
-
-        return true;
-    }
-    else
-    {
-        //read variables
-        ar >> m_PolarFormat;
-        if(m_PolarFormat<500750 || m_PolarFormat>501000) return false;
-
-
-        ar >> strange;  m_BoatName = strange.toStdString();;
-
-        ar >> boolean;
-        m_ReferenceDim = boolean ? xfl::AUTODIMS : xfl::CUSTOM;
-        ar >> m_ReferenceArea >> m_ReferenceChord;
-
-        m_WindSpline.serializeFl5(ar, bIsStoring);
-
-
-        ar >> m_VBtMin >> m_VBtMax;
-        ar >> m_TWSMin>>m_TWSMax>>m_TWAMin>>m_TWAMax; // AWS up to format 500026
-
-        ar >> m_PhiMin>>m_PhiMax;
-        ar >> m_RyMin >> m_RyMax;
-
-        ar >> n;
-        m_SailAngleMin.resize(n);
-        m_SailAngleMax.resize(n);
-        for (int is=0; is<n; is++)
-        {
-            ar >> m_SailAngleMin[is] >> m_SailAngleMax[is];
-        }
-
-        int datasize=0;
-        ar >> datasize;
-        ar >> nDbleSpares;
-        m_AC.resize(datasize);
-        for (i=0; i<datasize; i++)
-        {
-            ar >>d0;              m_Ctrl.push_back(d0);
-            ar >>d0>>d1>>d2;      m_VInf.push_back(d0);   m_Beta.push_back(d1);   m_Phi.push_back(d2);
-            if(!m_AC[i].serializeFl5(ar, bIsStoring)) return false;
-
-            for(int l=0; l<nDbleSpares; l++) ar >> dble;
-        }
-
-        // provisions for future variable saves
-        for(int i=0; i<10; i++) ar >>boolean;
-        for(int i=0; i<20; i++) ar >>integer;
-        for(int i=0; i<20; i++) ar >>dble;
-
-    }
-    return true;
-} 
 
 
 double BoatPolar::variable(int iVariable, int index) const
@@ -420,23 +218,23 @@ double BoatPolar::getVariable(int iVar, int iPoint) const
         case 3:   return m_VInf.at(iPoint);
         case 4:   return m_Beta.at(iPoint);
         case 5:   return m_Phi.at(iPoint);
-        case 6:   return m_AC.at(iPoint).CD();
-        case 7:   return m_AC.at(iPoint).CDi();
-        case 8:   return m_AC.at(iPoint).CDv();
-        case 9:   return m_AC.at(iPoint).CSide();
-        case 10:  return m_AC.at(iPoint).Cx();
-        case 11:  return m_AC.at(iPoint).Cy();
-        case 12:  return m_AC.at(iPoint).Cx_sum();
-        case 13:  return m_AC.at(iPoint).Cy_sum();
-        case 14:  return m_AC.at(iPoint).fffx()  * q * Units::NtoUnit();
-        case 15:  return m_AC.at(iPoint).fffy()  * q * Units::NtoUnit();
-        case 16:  return m_AC.at(iPoint).fffz()  * q * Units::NtoUnit();
-        case 17:  return m_AC.at(iPoint).fsumx() * q * Units::NtoUnit();
-        case 18:  return m_AC.at(iPoint).fsumy() * q * Units::NtoUnit();
-        case 19:  return m_AC.at(iPoint).fsumz() * q * Units::NtoUnit();
-        case 20:  return (m_AC.at(iPoint).Mi()+m_AC.at(iPoint).Mv()).x * q * Units::NmtoUnit();
-        case 21:  return (m_AC.at(iPoint).Mi()+m_AC.at(iPoint).Mv()).y * q * Units::NmtoUnit();
-        case 22:  return (m_AC.at(iPoint).Mi()+m_AC.at(iPoint).Mv()).z * q * Units::NmtoUnit();
+        case 6:   return m_AF.at(iPoint).CD();
+        case 7:   return m_AF.at(iPoint).CDi();
+        case 8:   return m_AF.at(iPoint).CDv();
+        case 9:   return m_AF.at(iPoint).CSide();
+        case 10:  return m_AF.at(iPoint).Cx();
+        case 11:  return m_AF.at(iPoint).Cy();
+        case 12:  return m_AF.at(iPoint).Cx_sum();
+        case 13:  return m_AF.at(iPoint).Cy_sum();
+        case 14:  return m_AF.at(iPoint).fffx()  * q * Units::NtoUnit();
+        case 15:  return m_AF.at(iPoint).fffy()  * q * Units::NtoUnit();
+        case 16:  return m_AF.at(iPoint).fffz()  * q * Units::NtoUnit();
+        case 17:  return m_AF.at(iPoint).fsumx() * q * Units::NtoUnit();
+        case 18:  return m_AF.at(iPoint).fsumy() * q * Units::NtoUnit();
+        case 19:  return m_AF.at(iPoint).fsumz() * q * Units::NtoUnit();
+        case 20:  return (m_AF.at(iPoint).Mi()+m_AF.at(iPoint).Mv()).x * q * Units::NmtoUnit();
+        case 21:  return (m_AF.at(iPoint).Mi()+m_AF.at(iPoint).Mv()).y * q * Units::NmtoUnit();
+        case 22:  return (m_AF.at(iPoint).Mi()+m_AF.at(iPoint).Mv()).z * q * Units::NmtoUnit();
     }
     return m_Ctrl.at(iPoint);
 }
@@ -444,15 +242,15 @@ double BoatPolar::getVariable(int iVar, int iPoint) const
 
 void BoatPolar::getProperties(std::string &props, xfl::enumTextFileType filetype, bool bData) const
 {
-    QString PolarProps;
+    std::string PolarProps;
 
-    QString strong, lenlab, masslab, speedlab, arealab;
-    QString frontspacer("  ");
+    std::string strong, lenlab, masslab, speedlab, arealab;
+    std::string frontspacer("  ");
 
-    lenlab   = " "+ Units::lengthUnitQLabel();
-    masslab  = " "+ Units::massUnitQLabel();
-    speedlab = " "+ Units::speedUnitQLabel();
-    arealab  = " "+ Units::areaUnitQLabel();
+    lenlab   = " "+ Units::lengthUnitLabel();
+    masslab  = " "+ Units::massUnitLabel();
+    speedlab = " "+ Units::speedUnitLabel();
+    arealab  = " "+ Units::areaUnitLabel();
 
 //    if     (isPanel4Method() && bThickSurfaces()) PolarProps += "Quad Panels/thick surfaces";
 //    if     (isPanel4Method() && bThinSurfaces())  PolarProps += "Quad Panels/thin surfaces";
@@ -470,8 +268,8 @@ void BoatPolar::getProperties(std::string &props, xfl::enumTextFileType filetype
     else                                     PolarProps += "B.C. = Neumann\n";
 
     PolarProps += "Reference dimensions:\n";
-    PolarProps += "  area  = " + QString::asprintf("%g", m_ReferenceArea*Units::m2toUnit()) + arealab+ "\n";
-    PolarProps += "  chord = " + QString::asprintf("%g", m_ReferenceChord*Units::mtoUnit()) + lenlab+ "\n";
+    PolarProps += "  area  = " + std::format("{:g}", m_ReferenceArea*Units::m2toUnit()) + arealab+ "\n";
+    PolarProps += "  chord = " + std::format("{:g}", m_ReferenceChord*Units::mtoUnit()) + lenlab+ "\n";
 
     if(isViscous()) PolarProps +="Viscous analysis\n";
     else            PolarProps += "Inviscid analysis\n";
@@ -480,48 +278,48 @@ void BoatPolar::getProperties(std::string &props, xfl::enumTextFileType filetype
     strong = "Analysis variables:";
     PolarProps += strong + "\n";
 
-    strong = "V_boat:  "+ QString::asprintf("%5.1f, %5.1f", m_VBtMin*Units::mstoUnit(), m_VBtMax*Units::mstoUnit());
+    strong = "V_boat:  "+ std::format("%5.1f, %5.1f", m_VBtMin*Units::mstoUnit(), m_VBtMax*Units::mstoUnit());
     PolarProps += frontspacer + strong + speedlab+ "\n";
 
-    strong = "TWS_inf: "+QString::asprintf("%5.1f, %5.1f", m_TWSMin*Units::mstoUnit(), m_TWSMax*Units::mstoUnit());
+    strong = "TWS_inf: "+std::format("%5.1f, %5.1f", m_TWSMin*Units::mstoUnit(), m_TWSMax*Units::mstoUnit());
     PolarProps += frontspacer + strong + speedlab+ "\n";
 
-    strong = "TWA:     "+QString::asprintf("%5.1f, %5.1f", m_TWAMin, m_TWAMax);
-    PolarProps += frontspacer + strong + DEGch + EOLch;
+    strong = "TWA:     "+std::format("%5.1f, %5.1f", m_TWAMin, m_TWAMax);
+    PolarProps += frontspacer + strong + DEGstr + EOLstr;
 
-    strong = "Phi:     "+QString::asprintf("%5.1f, %5.1f", m_PhiMin, m_PhiMax);
-    PolarProps += frontspacer + strong + DEGch + EOLch;
+    strong = "Phi:     "+std::format("%5.1f, %5.1f", m_PhiMin, m_PhiMax);
+    PolarProps += frontspacer + strong + DEGstr + EOLstr;
 
-    strong = "Ry:      "+QString::asprintf("%5.1f, %5.1f", m_RyMin, m_RyMax);
-    PolarProps += frontspacer + strong + DEGch + EOLch;
+    strong = "Ry:      "+std::format("%5.1f, %5.1f", m_RyMin, m_RyMax);
+    PolarProps += frontspacer + strong + DEGstr + EOLstr;
 
-    for(uint is=0; is<m_SailAngleMin.size();is++)
+    for(unsigned int is=0; is<m_SailAngleMin.size();is++)
     {
         Boat *pBoat = SailObjects::boat(boatName());
         if(!pBoat) break;
         Sail *pSail = pBoat->sail(is);
         if(!pSail) break;
-        strong = " = "+QString::asprintf("%5.1f, %5.1f", m_SailAngleMin[is], m_SailAngleMax[is]);
-        PolarProps += frontspacer+ QString::fromStdString(pSail->name()) + strong + " "+ DEGch + EOLch;
+        strong = " = "+std::format("%5.1f, %5.1f", m_SailAngleMin[is], m_SailAngleMax[is]);
+        PolarProps += frontspacer+ pSail->name() + strong + " "+ DEGstr + EOLstr;
     }
 
     PolarProps +="\n";
 
-    strong  = "CoG = ("+QString::asprintf("%7.2f", m_CoG.x*Units::mtoUnit());
+    strong  = "CoG = ("+std::format("{:7.2f}", m_CoG.x*Units::mtoUnit());
     PolarProps += strong + lenlab;
 
-    strong  = "; "+QString::asprintf("%7.2f", m_CoG.z*Units::mtoUnit());
+    strong  = "; "+std::format("{:7.2f}", m_CoG.z*Units::mtoUnit());
     PolarProps += strong + lenlab + ")\n";
 
 
     PolarProps += "Fluid properties:\n";
 
-    strong  = frontspacer + RHOch + " = " + QString::asprintf("%9.5g", density()*Units::densitytoUnit());
-    strong += Units::densityUnitQLabel() + "\n";
+    strong  = frontspacer + RHOstr + " = " + std::format("{:9.5g}", density()*Units::densitytoUnit());
+    strong += Units::densityUnitLabel() + "\n";
     PolarProps += strong;
 
-    strong  = frontspacer + NUch  + " = " + QString::asprintf("%9.5g", viscosity()*Units::viscositytoUnit());
-    strong += Units::viscosityUnitQLabel() + "\n";
+    strong  = frontspacer + NUstr  + " = " + std::format("{:9.5g}", viscosity()*Units::viscositytoUnit());
+    strong += Units::viscosityUnitLabel() + "\n";
     PolarProps += strong;
 
     if(extraDragCount())
@@ -532,11 +330,11 @@ void BoatPolar::getProperties(std::string &props, xfl::enumTextFileType filetype
         {
             if(fabs(m_ExtraDrag[ix].area())>PRECISION && fabs(m_ExtraDrag[ix].coef())>PRECISION)
             {
-                PolarProps += frontspacer+ QString::fromStdString(m_ExtraDrag.at(ix).tag())+":";
-                strong = " area=" + QString::asprintf("%g", m_ExtraDrag.at(ix).area()*Units::m2toUnit());
+                PolarProps += frontspacer+ m_ExtraDrag.at(ix).tag()+":";
+                strong = " area=" + std::format("{:g}", m_ExtraDrag.at(ix).area()*Units::m2toUnit());
                 strong += arealab + ",  ";
                 PolarProps += strong;
-                strong = "coeff.=" + QString::asprintf("%g", m_ExtraDrag.at(ix).coef());
+                strong = "coeff.=" + std::format("{:g}", m_ExtraDrag.at(ix).coef());
                 PolarProps += strong + "\n";
             }
         }
@@ -549,11 +347,11 @@ void BoatPolar::getProperties(std::string &props, xfl::enumTextFileType filetype
         {
             strong = "Flat panel wake:\n";
             PolarProps += strong;
-            strong = "Nb. of wake panels = " + QString::asprintf("%d", NXWakePanel4());
+            strong = "Nb. of wake panels = " + std::format("{:d}", NXWakePanel4());
             PolarProps += frontspacer + strong;
-            strong = "Length             = "+QString::asprintf("%g", totalWakeLengthFactor());
+            strong = "Length             = "+std::format("{:g}", totalWakeLengthFactor());
             PolarProps += frontspacer + strong + " x MAC\n";
-            strong = "Progression factor = "+QString::asprintf("%g", wakePanelFactor());
+            strong = "Progression factor = "+std::format("{:g}", wakePanelFactor());
             PolarProps += frontspacer + strong;
         }
         else
@@ -561,20 +359,20 @@ void BoatPolar::getProperties(std::string &props, xfl::enumTextFileType filetype
             strong = "Vorton wake:\n";
             double refchord = referenceChordLength();
             PolarProps += strong;
-            strong = "Buffer wake length = " + QString::asprintf("%9g", m_BufferWakeFactor*refchord*Units::mtoUnit());
-            PolarProps += frontspacer + strong + lenlab + EOLch;
-            strong = "Streamwise step    = " + QString::asprintf("%9g", m_VortonL0*refchord*Units::mtoUnit());
-            PolarProps += frontspacer + strong + lenlab + EOLch;
-            strong = "Discard distance   = " + QString::asprintf("%9g", m_VPWMaxLength*refchord*Units::mtoUnit());
-            PolarProps += frontspacer + strong + lenlab + EOLch;
-            strong = "Vorton core size   = " + QString::asprintf("%9g", m_VortonCoreSize*refchord*Units::mtoUnit());
-            PolarProps += frontspacer + strong + lenlab + EOLch;
-            strong = "VPW iterations     = " + QString::asprintf("%d", m_VPWIterations);
+            strong = "Buffer wake length = " + std::format("{:9g}", m_BufferWakeFactor*refchord*Units::mtoUnit());
+            PolarProps += frontspacer + strong + lenlab + EOLstr;
+            strong = "Streamwise step    = " + std::format("{:9g}", m_VortonL0*refchord*Units::mtoUnit());
+            PolarProps += frontspacer + strong + lenlab + EOLstr;
+            strong = "Discard distance   = " + std::format("{:9g}", m_VPWMaxLength*refchord*Units::mtoUnit());
+            PolarProps += frontspacer + strong + lenlab + EOLstr;
+            strong = "Vorton core size   = " + std::format("{:9g}", m_VortonCoreSize*refchord*Units::mtoUnit());
+            PolarProps += frontspacer + strong + lenlab + EOLstr;
+            strong = "VPW iterations     = " + std::format("{:d}", m_VPWIterations);
             PolarProps += frontspacer + strong;
         }
     }
 
-    strong = QString::asprintf("Data points = %d\n", int(m_Ctrl.size()));
+    strong = std::format("Data points = {:d}\n", int(m_Ctrl.size()));
     PolarProps += "\n"+strong;
 
     if(!bData) return;
@@ -582,14 +380,14 @@ void BoatPolar::getProperties(std::string &props, xfl::enumTextFileType filetype
     exportBtPlr(outstring, filetype, true);
     PolarProps += "\n"+strong;
 
-    props = PolarProps.toStdString();
+    props = PolarProps;
 }
 
 
 void BoatPolar::exportBtPlr(std::string & outstr, xfl::enumTextFileType filetype, bool bDataOnly) const
 {
-    QString Header, strong;
-    QString outstring;
+    std::string Header, strong;
+    std::string outstring;
 
     if (filetype==xfl::TXT)
     {
@@ -598,26 +396,26 @@ void BoatPolar::exportBtPlr(std::string & outstr, xfl::enumTextFileType filetype
             strong = "sail7 v.xxxx\n\n";
             outstring += strong;
 
-            outstring += QString::fromStdString(m_BoatName) + EOLch;
-            outstring += QString::fromStdString(m_Name) + EOLch;
+            outstring += m_BoatName + EOLstr;
+            outstring += m_Name + EOLstr;
 
-            outstring += EOLch;
+            outstring += EOLstr;
         }
 
 
         Header = "     Ctrl        Fx         Fy         Fz         Mx         My         Mz    \n";
         outstring += Header;
-        for (uint j=0; j<m_Ctrl.size(); j++)
+        for (unsigned int j=0; j<m_Ctrl.size(); j++)
         {
-            Vector3d drag = objects::windDirection(0, m_Beta.at(j)) * m_AC.at(j).viscousDrag();
-            strong = QString::asprintf(" %9.3f  %9.3f  %9.3f  %9.3f  %9.3f  %9.3f  %9.3f \n",
+            Vector3d drag = objects::windDirection(0, m_Beta.at(j)) * m_AF.at(j).viscousDrag();
+            strong = std::format(" {:9.3f}  {:9.3f}  {:9.3f}  {:9.3f}  {:9.3f}  {:9.3f}  {:9.3f} \n",
                                        m_Ctrl.at(j),
-                                       m_AC.at(j).fffx()+drag.x,
-                                       m_AC.at(j).fffy()+drag.y,
-                                       m_AC.at(j).fffz()+drag.z,
-                                       (m_AC.at(j).Mi()+m_AC.at(j).Mi()).x,
-                                       (m_AC.at(j).Mi()+m_AC.at(j).Mi()).y,
-                                       (m_AC.at(j).Mi()+m_AC.at(j).Mi()).z);
+                                       m_AF.at(j).fffx()+drag.x,
+                                       m_AF.at(j).fffy()+drag.y,
+                                       m_AF.at(j).fffz()+drag.z,
+                                       (m_AF.at(j).Mi()+m_AF.at(j).Mi()).x,
+                                       (m_AF.at(j).Mi()+m_AF.at(j).Mi()).y,
+                                       (m_AF.at(j).Mi()+m_AF.at(j).Mi()).z);
 
             outstring += strong;
         }
@@ -628,24 +426,24 @@ void BoatPolar::exportBtPlr(std::string & outstr, xfl::enumTextFileType filetype
         {
             strong ="version xxxxxxxxx\n\n";
             outstring += strong;
-            outstring += QString::fromStdString(m_BoatName) + EOLch;
-            outstring += QString::fromStdString(m_Name) + EOLch;
+            outstring += m_BoatName + EOLstr;
+            outstring += m_Name + EOLstr;
         }
 
         Header = "Ctrl, FFFx, FFFy, FFFz, Fx, Fy, Fz, Mx, My, Mz\n";
         outstring += Header;
-        for(uint j=0; j<m_Ctrl.size(); j++)
+        for(unsigned int j=0; j<m_Ctrl.size(); j++)
         {
-            Vector3d drag = objects::windDirection(0, m_Beta.at(j)) * m_AC.at(j).viscousDrag();
+            Vector3d drag = objects::windDirection(0, m_Beta.at(j)) * m_AF.at(j).viscousDrag();
 
-            strong = QString::asprintf(" %9.3f,  %9.3f,  %9.3f,  %9.3f,  %9.3f,  %9.3f,  %9.3f\n",
+            strong = std::format(" {:9.3f},  {:9.3f},  {:9.3f},  {:9.3f},  {:9.3f},  {:9.3f},  {:9.3f}\n",
                                        m_Ctrl.at(j),
-                                       m_AC.at(j).fffx()+drag.x,
-                                       m_AC.at(j).fffy()+drag.y,
-                                       m_AC.at(j).fffz()+drag.z,
-                                       (m_AC.at(j).Mi()+m_AC.at(j).Mi()).x,
-                                       (m_AC.at(j).Mi()+m_AC.at(j).Mi()).y,
-                                       (m_AC.at(j).Mi()+m_AC.at(j).Mi()).z);
+                                       m_AF.at(j).fffx()+drag.x,
+                                       m_AF.at(j).fffy()+drag.y,
+                                       m_AF.at(j).fffz()+drag.z,
+                                       (m_AF.at(j).Mi()+m_AF.at(j).Mi()).x,
+                                       (m_AF.at(j).Mi()+m_AF.at(j).Mi()).y,
+                                       (m_AF.at(j).Mi()+m_AF.at(j).Mi()).z);
 
             outstring += strong;
 
@@ -653,7 +451,7 @@ void BoatPolar::exportBtPlr(std::string & outstr, xfl::enumTextFileType filetype
     }
     outstring += "\n\n";
 
-    outstr = outstring.toStdString();
+    outstr = outstring;
 }
 
 
@@ -669,7 +467,7 @@ void BoatPolar::clearData()
     m_VInf.clear();
     m_Beta.clear();
     m_Phi.clear();
-    m_AC.clear();
+    m_AF.clear();
 }
 
 
@@ -705,7 +503,7 @@ void BoatPolar::makeDefaultArrays() //debug only
     m_VInf.resize(N);
     m_Beta.resize(N);
     m_Phi.resize(N);
-    m_AC.resize(N);
+    m_AF.resize(N);
 
     double phi = double(rand())/double(RAND_MAX) *2.0*PI;
 
@@ -737,19 +535,19 @@ void BoatPolar::resizeSailAngles(int newsize)
 
 void BoatPolar::getBtPolarData(std::string &data, std::string const & separator) const
 {
-    QString strong, strange;
-    QString polardata;
-    QString sep = QString::fromStdString(separator);
+    std::string strong, strange;
+    std::string polardata;
+    std::string sep = separator;
 
-    strong = QString::fromStdString(boatName()) + EOLch;
+    strong = boatName() + EOLstr;
     polardata += strong;
 
-    strong = QString::fromStdString(name()) + EOLch;
+    strong = name() + EOLstr;
     polardata += strong;
 
     for(int in=0; in<BoatPolar::variableCount(); in++)
     {
-        strange =  QString::fromStdString(BoatPolar::variableName(in));
+        strange =  BoatPolar::variableName(in);
         if(in==0) strange = "     "+strange;// start with a blank space for consistency with polar data
         for(int il=int(strange.length()); il<11; il++) strange+=" ";
         polardata += strange+sep;
@@ -757,18 +555,18 @@ void BoatPolar::getBtPolarData(std::string &data, std::string const & separator)
     polardata += "\n";
 
 
-    for(uint i=0; i<m_Ctrl.size(); i++)
+    for(unsigned int i=0; i<m_Ctrl.size(); i++)
     {
         for(int iVar=0; iVar<BoatPolar::variableCount(); iVar++)
         {
             double pX = getVariable(iVar, i);
-            strange = QString::asprintf("%11.5g", pX);
+            strange = std::format("{:11.5g}", pX);
             polardata += strange+sep;
         }
-        polardata += EOLch;
+        polardata += EOLstr;
     }
 
-    data = polardata.toStdString();
+    data = polardata;
 }
 
 
@@ -784,7 +582,7 @@ void BoatPolar::copy(const BoatPolar *pBoatPolar)
     m_Beta = pBoatPolar->m_Beta;
     m_VInf = pBoatPolar->m_VInf;
     m_Phi  = pBoatPolar->m_Phi;
-    m_AC   = pBoatPolar->m_AC;
+    m_AF   = pBoatPolar->m_AF;
 }
 
 
@@ -795,7 +593,7 @@ void BoatPolar::remove(int i)
     m_VInf.erase(m_VInf.begin()+i);
     m_Beta.erase(m_Beta.begin()+i);
     m_Phi.erase( m_Phi.begin()+i);
-    m_AC.erase(  m_AC.begin()+i);
+    m_AF.erase(  m_AF.begin()+i);
 }
 
 
@@ -806,7 +604,7 @@ void BoatPolar::insertDataPointAt(int index, bool bAfter)
     m_VInf.insert(m_VInf.begin()+index,0.0);
     m_Beta.insert(m_Beta.begin()+index,0.0);
     m_Phi.insert( m_Phi.begin() +index,0.0);
-    m_AC.insert(  m_AC.begin()  +index,AeroForces());
+    m_AF.insert(  m_AF.begin()  +index,AeroForces());
 }
 
 
@@ -819,7 +617,7 @@ double BoatPolar::windForce(double z) const
 
     std::vector<Node2d> const &pts = m_WindSpline.outputPts();
 
-    for (uint k=0; k<pts.size()-1; k++)
+    for (unsigned int k=0; k<pts.size()-1; k++)
     {
         if (pts.at(k).y<pts.at(k+1).y  && pts.at(k).y <= z && z<=pts.at(k+1).y )
         {
@@ -843,7 +641,7 @@ void BoatPolar::trueWindSpeed(double ctrl, double z, Vector3d &VT) const
 
     std::vector<Node2d> const &pts = m_WindSpline.outputPts();
 
-    for (uint k=0; k<pts.size()-1; k++)
+    for (unsigned int k=0; k<pts.size()-1; k++)
     {
         if (pts.at(k).y<pts.at(k+1).y  && pts.at(k).y <= z && z<=pts.at(k+1).y )
         {
@@ -902,7 +700,7 @@ void BoatPolar::apparentWind(double ctrl, double z, Vector3d &AWS) const
 
     std::vector<Node2d> const &pts = m_WindSpline.outputPts();
 
-    for (uint k=0; k<pts.size()-1; k++)
+    for (unsigned int k=0; k<pts.size()-1; k++)
     {
         if (pts.at(k).y<pts.at(k+1).y  && pts.at(k).y<=z && z<=pts.at(k+1).y )
         {
@@ -917,6 +715,18 @@ void BoatPolar::apparentWind(double ctrl, double z, Vector3d &AWS) const
     // execution should never get here
     AWS.set(TWS.x+Vb, TWS.y, 0.0);
     assert(false);
+}
+
+
+void BoatPolar::setData(int i, double ctrl, double vinf, double beta, double phi)
+{
+    if(i>=0 && i<int(m_Ctrl.size()))
+    {
+        m_Ctrl[i] = ctrl;
+        m_VInf[i] = vinf;
+        m_Beta[i] = beta;
+        m_Phi[i]  = phi;
+    }
 }
 
 

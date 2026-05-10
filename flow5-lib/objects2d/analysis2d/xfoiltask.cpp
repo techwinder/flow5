@@ -27,8 +27,8 @@
 //https://developercommunity.visualstudio.com/t/Visual-Studio-17100-Update-leads-to-Pr/10669759?sort=newest
 //#define _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR
 
-
-#include <QString>
+#include <cstring>
+#include <format>
 
 
 #include <xfoiltask.h>
@@ -88,12 +88,6 @@ void XFoilTask::setClRange(double vMin, double vMax, double vDelta)
 }
 
 
-void XFoilTask::traceLog(QString const &str)
-{
-    traceStdLog(str.toStdString());
-}
-
-
 void XFoilTask::traceStdLog(std::string const &str)
 {
     // Access the Q under the lock:
@@ -121,7 +115,7 @@ void XFoilTask::run()
 
         m_AnalysisStatus = xfl::FINISHED;
 
-        traceLog("\nDone processing ranges.\n"); // final notification after flag is set to FINISHED so that sender thread may exit
+        traceStdLog("\nDone processing ranges.\n"); // final notification after flag is set to FINISHED so that sender thread may exit
 
         // leave things as they were
         m_pFoil->setTEFlapAngle(0.0);
@@ -174,9 +168,9 @@ bool XFoilTask::initialize(Foil &foil, Polar *pPolar, bool bKeepOpps)
 /** Fallback for 3d OTF calculations at unconverged span spations */
 bool XFoilTask::processCl(int k)
 {
-    QString str;
+    std::string str;
 
-    traceLog("   Initializing BL\n");
+    traceStdLog("   Initializing BL\n");
     m_XFoilInstance.lblini = false;
     m_XFoilInstance.lipan = false;
 
@@ -190,12 +184,12 @@ bool XFoilTask::processCl(int k)
     m_XFoilInstance.minf1  = 0.0;
 
 
-    str = QString::asprintf("   Re=%g  Cl=%g ", m_pPolar->m_Re.at(k), m_pPolar->m_Cl.at(k));
-    traceLog(str);
+    str = std::format("   Re={:g}  Cl={:g} ", m_pPolar->m_Re.at(k), m_pPolar->m_Cl.at(k));
+    traceStdLog(str);
     if(!m_XFoilInstance.speccl())
     {
         str = "Invalid Analysis Settings\nCpCalc: local speed too large\n Compressibility corrections invalid";
-        traceLog(str);
+        traceStdLog(str);
         m_bErrors = true;
         return false;
     }
@@ -208,8 +202,8 @@ bool XFoilTask::processCl(int k)
 
     if(m_XFoilInstance.lvconv)
     {
-//        str = QString::asprintf("   ...converged after %3d iterations / Cl=%5f  Cd=%5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
-//        traceLog(str);
+//        str = std::format("   ...converged after {:3d} iterations / Cl=%5f  Cd=%5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
+//        traceStdLog(str);
         // repurposing control variable to contain convergence result
         m_pPolar->m_Control[k] = m_XFoilInstance.lvconv ? 1.0 : -1.0;
         m_pPolar->m_Cd[k]      = m_XFoilInstance.cd;
@@ -218,8 +212,8 @@ bool XFoilTask::processCl(int k)
     }
     else
     {
-//        str = QString::asprintf("   ...unconverged after %d iterations\n", iterations);
-//        traceLog(str);
+//        str = std::format("   ...unconverged after {:d} iterations\n", iterations);
+//        traceStdLog(str);
 
         // final fallback: build a polar to try an interpolation
         Polar temppolar(*m_pPolar);
@@ -342,12 +336,12 @@ bool XFoilTask::processClRange(Polar *pPolar, AnalysisRange const &range)
 /** Tailored for 3d OTF calculations */
 bool XFoilTask::processClList()
 {
-    QString str;
+    std::string str;
 
-    traceLog("   Initializing BL\n");
+    traceStdLog("   Initializing BL\n");
     initializeBL();
 
-    for(uint icl=0; icl<m_pPolar->m_Cl.size(); icl++)
+    for(unsigned int icl=0; icl<m_pPolar->m_Cl.size(); icl++)
     {
         if(s_bCancel) break;
 
@@ -361,12 +355,12 @@ bool XFoilTask::processClList()
         m_XFoilInstance.reinf1 = m_pPolar->m_Re.at(icl);
         m_XFoilInstance.minf1  = 0.0;
 
-        str = QString::asprintf("   Re=%g  Cl=%g ", m_pPolar->m_Re.at(icl), m_pPolar->m_Cl.at(icl));
-        traceLog(str);
+        str = std::format("   Re={:g}  Cl={:g} ", m_pPolar->m_Re.at(icl), m_pPolar->m_Cl.at(icl));
+        traceStdLog(str);
         if(!m_XFoilInstance.speccl())
         {
             str = "Invalid Analysis Settings\nCpCalc: local speed too large\n Compressibility corrections invalid";
-            traceLog(str);
+            traceStdLog(str);
             m_bErrors = true;
             return false;
         }
@@ -382,16 +376,16 @@ bool XFoilTask::processClList()
 
         if(m_XFoilInstance.lvconv)
         {
-            str = QString::asprintf("   ...converged after %d iterations / Cl=%5f  Cd=%5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
-            traceLog(str);
+            str = std::format("   ...converged after {:d} iterations / Cl=%5f  Cd=%5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
+            traceStdLog(str);
             m_pPolar->m_Cd[icl]     = m_XFoilInstance.cd;
             m_pPolar->m_XTrTop[icl] = m_XFoilInstance.xoctr[1];
             m_pPolar->m_XTrBot[icl] = m_XFoilInstance.xoctr[2];
         }
         else
         {
-            str = QString::asprintf("   ...unconverged after %3d iterations\n", iterations);
-            traceLog(str);
+            str = std::format("   ...unconverged after {:3d} iterations\n", iterations);
+            traceStdLog(str);
             m_bErrors = true;
             m_XFoilInstance.lblini = false;
             m_XFoilInstance.lipan  = false;
@@ -404,7 +398,7 @@ bool XFoilTask::processClList()
 
 void XFoilTask::initializeBL()
 {
-    traceLog("   Initializing B.L.\n");
+    traceStdLog("   Initializing B.L.\n");
     m_XFoilInstance.lblini = false;
     m_XFoilInstance.lipan = false;
 }
@@ -413,7 +407,7 @@ void XFoilTask::initializeBL()
 /** aoa or Cl ranges */
 bool XFoilTask::alphaSequence(bool bAlpha)
 {
-    QString str;
+    std::string str;
 
     double SpMin(0), SpMax(0), SpInc(0);
 
@@ -440,17 +434,17 @@ bool XFoilTask::alphaSequence(bool bAlpha)
         return false;
 
 
-    for (uint iSeries=0; iSeries<m_AnalysisRange.size(); iSeries++)
+    for (unsigned int iSeries=0; iSeries<m_AnalysisRange.size(); iSeries++)
     {
         if(s_bCancel) break;
         AnalysisRange const &range = m_AnalysisRange.at(iSeries);
         if(range.isActive())
         {
-            traceLog(QString::asprintf("\nProcessing active range [%7.3f  %7.3f  %7.3f]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
+            traceStdLog(std::format("\nProcessing active range [{:7.3f}  {:7.3f}  {:7.3f}]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
         }
         else
         {
-            traceLog(QString::asprintf("\nSkipping inactive range [%7.3f  %7.3f  %7.3f]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
+            traceStdLog(std::format("\nSkipping inactive range [{:7.3f}  {:7.3f}  {:7.3f}]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
             continue;
         }
 
@@ -474,16 +468,16 @@ bool XFoilTask::alphaSequence(bool bAlpha)
                 m_XFoilInstance.alfa = alphadeg * PI/180.0;
                 m_XFoilInstance.lalfa = true;
                 m_XFoilInstance.qinf = 1.0;
-                str = "   " + ALPHAch;
-                str.append(QString::asprintf(" = %7.3f°", alphadeg));
-                traceLog(str);
+                str = "   " + ALPHAstr;
+                str.append(std::format(" = {:7.3f}°", alphadeg));
+                traceStdLog(str);
 
 
                 // here we go!
                 if (!m_XFoilInstance.specal())
                 {
                     str = "Invalid Analysis Settings\nCpCalc: local speed too large\n Compressibility corrections invalid";
-                    traceLog(str);
+                    traceStdLog(str);
                     m_bErrors = true;
                     return false;
                 }
@@ -494,8 +488,8 @@ bool XFoilTask::alphaSequence(bool bAlpha)
                 m_XFoilInstance.alfa = 0.0;
                 m_XFoilInstance.qinf = 1.0;
                 m_XFoilInstance.clspec = Cl;
-                str = QString::asprintf("   Cl = %7.3f", Cl);
-                traceLog(str);
+                str = std::format("   Cl = {:7.3f}", Cl);
+                traceStdLog(str);
                 if(!m_XFoilInstance.speccl())
                 {
                     m_bErrors = true;
@@ -510,13 +504,13 @@ bool XFoilTask::alphaSequence(bool bAlpha)
 
             if(m_XFoilInstance.lvconv)
             {
-                str = QString::asprintf("   ...converged after %3d iterations / Cl=%9.5f  Cd=%9.5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
-                traceLog(str);
+                str = std::format("   ...converged after {:3d} iterations / Cl=%9.5f  Cd=%9.5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
+                traceStdLog(str);
 
                 if(m_XFoilInstance.cd<s_CdError)
                 {
-                    str = QString::asprintf("      ...discarding operating point with spurious Cd=%g\n", m_XFoilInstance.cd);
-                    traceLog(str);
+                    str = std::format("      ...discarding operating point with spurious Cd={:g}\n", m_XFoilInstance.cd);
+                    traceStdLog(str);
                 }
                 else
                 {
@@ -535,9 +529,9 @@ bool XFoilTask::alphaSequence(bool bAlpha)
             }
             else
             {
-                str = QString::asprintf("   ...unconverged after %3d iterations\n", iterations);
-                traceLog(str);
-                traceLog("      ...initializing BL\n");
+                str = std::format("   ...unconverged after {:3d} iterations\n", iterations);
+                traceStdLog(str);
+                traceStdLog("      ...initializing BL\n");
                 m_XFoilInstance.lblini = false;
                 m_XFoilInstance.lipan = false;
 
@@ -588,13 +582,13 @@ bool XFoilTask::alphaSequence(bool bAlpha)
 
 bool XFoilTask::thetaSequence()
 {
-    QString str;
+    std::string str;
 
     if(!m_pFoil->hasTEFlap())
     {
-        str = "The foil "+QString::fromStdString(m_pFoil->name()) + " has no T.E. flap\n"
-              "     ...Skipping the T6 polar " + QString::fromStdString(m_pPolar->name()) + EOLch;
-        traceLog(str);
+        str = "The foil " + m_pFoil->name() + " has no T.E. flap\n"
+              "     ...Skipping the T6 polar " + m_pPolar->name() + EOLstr;
+        traceStdLog(str);
 
         m_bErrors = true;
         return false;
@@ -610,20 +604,20 @@ bool XFoilTask::thetaSequence()
     double SpMin(0), SpMax(0), SpInc(0);
     double alphadeg = m_pPolar->aoaSpec();
 
-    str = QString::asprintf("   alpha = %7.3f°", alphadeg);
-    traceLog(str);
+    str = std::format("   alpha = {:7.3f}°", alphadeg);
+    traceStdLog(str);
 
-    for (uint iSeries=0; iSeries<m_AnalysisRange.size(); iSeries++)
+    for (unsigned int iSeries=0; iSeries<m_AnalysisRange.size(); iSeries++)
     {
         if(s_bCancel) break;
         AnalysisRange const &range = m_AnalysisRange.at(iSeries);
         if(range.isActive())
         {
-            traceLog(QString::asprintf("\nProcessing active range [%7.3f  %7.3f  %7.3f]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
+            traceStdLog(std::format("\nProcessing active range [{:7.3f}  {:7.3f}  {:7.3f}]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
         }
         else
         {
-            traceLog(QString::asprintf("\nSkipping inactive range [%7.3f  %7.3f  %7.3f]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
+            traceStdLog(std::format("\nSkipping inactive range [{:7.3f}  {:7.3f}  {:7.3f}]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
             continue;
         }
 
@@ -636,7 +630,7 @@ bool XFoilTask::thetaSequence()
 
         double theta = SpMin;
         int nTheta = 0;
-        if(fabs(SpInc)>FLAPANGLEPRECISION) nTheta = fabs((SpMax-SpMin)/SpInc) + 1;
+        if(fabs(SpInc)>FLAPANGLEPRECISION) nTheta = int(fabs((SpMax-SpMin)/SpInc)) + 1;
         nTheta = std::max(1, nTheta);
         nTheta = std::min(100, nTheta); // failsafe limit
 
@@ -649,8 +643,8 @@ bool XFoilTask::thetaSequence()
             m_XFoilInstance.qinf = 1.0;
 
             theta = SpMin + iter * SpInc;
-            str = QString::asprintf("   theta = %7.3f°", theta);
-            traceLog(str);
+            str = std::format("   theta = {:7.3f}°", theta);
+            traceStdLog(str);
 
             m_pFoil->setTEFlapAngle(theta);
             m_pFoil->setFlaps();
@@ -674,7 +668,7 @@ bool XFoilTask::thetaSequence()
             if (!m_XFoilInstance.specal())
             {
                 str = "Invalid Analysis Settings\nCpCalc: local speed too large\n Compressibility corrections invalid";
-                traceLog(str);
+                traceStdLog(str);
                 m_bErrors = true;
                 return false;
             }
@@ -687,13 +681,13 @@ bool XFoilTask::thetaSequence()
 
             if(m_XFoilInstance.lvconv)
             {
-                str = QString::asprintf("   ...converged after %3d iterations / Cl=%9.5f  Cd=%9.5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
-                traceLog(str);
+                str = std::format("   ...converged after {:3d} iterations / Cl=%9.5f  Cd=%9.5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
+                traceStdLog(str);
 
                 if(m_XFoilInstance.cd<s_CdError)
                 {
-                    str = QString::asprintf("      ...discarding operating point with spurious Cd=%g\n", m_XFoilInstance.cd);
-                    traceLog(str);
+                    str = std::format("      ...discarding operating point with spurious Cd={:g}\n", m_XFoilInstance.cd);
+                    traceStdLog(str);
                 }
                 else
                 {
@@ -712,9 +706,9 @@ bool XFoilTask::thetaSequence()
             }
             else
             {
-                str = QString::asprintf("   ...unconverged after %3d iterations\n", iterations);
-                traceLog(str);
-                traceLog("      ...initializing BL\n");
+                str = std::format("   ...unconverged after {:3d} iterations\n", iterations);
+                traceStdLog(str);
+                traceStdLog("      ...initializing BL\n");
                 m_XFoilInstance.lblini = false;
                 m_XFoilInstance.lipan = false;
 
@@ -729,7 +723,7 @@ bool XFoilTask::thetaSequence()
             if(fabs(SpInc)<FLAPANGLEPRECISION)
             {
                 str.append("theta increment is null - aborting\n");
-                traceLog(str);
+                traceStdLog(str);
                 break;
             }
         }
@@ -741,7 +735,7 @@ bool XFoilTask::thetaSequence()
 
 bool XFoilTask::ReSequence()
 {
-    QString str, strange;
+    std::string str, strange;
 
 
     m_pFoil->setTEFlapAngle(m_pPolar->TEFlapAngle());
@@ -767,17 +761,17 @@ bool XFoilTask::ReSequence()
         return false;
 
 
-    for (uint iSeries=0; iSeries<m_AnalysisRange.size(); iSeries++)
+    for (unsigned int iSeries=0; iSeries<m_AnalysisRange.size(); iSeries++)
     {
         if(s_bCancel) break;
         AnalysisRange const &range = m_AnalysisRange.at(iSeries);
         if(range.isActive())
         {
-            traceLog(QString::asprintf("\nProcessing active range [%g  %g  %g]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
+            traceStdLog(std::format("\nProcessing active range [{:g}  {:g}  {:g}]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
         }
         else
         {
-            traceLog(QString::asprintf("\nSkipping inactive range [%g  %g  %g]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
+            traceStdLog(std::format("\nSkipping inactive range [{:g}  {:g}  {:g}]\n", range.m_vStart, range.m_vEnd, range.m_vInc));
             continue;
         }
 
@@ -792,8 +786,8 @@ bool XFoilTask::ReSequence()
         double Re = SpMin;
         do
         {
-            strange =QString::asprintf("Re = %7.0f", Re);
-            traceLog(strange);
+            strange =std::format("Re = %7.0f", Re);
+            traceStdLog(strange);
             m_XFoilInstance.reinf1 = Re;
             m_XFoilInstance.lalfa = true;
             m_XFoilInstance.qinf = 1.0;
@@ -802,7 +796,7 @@ bool XFoilTask::ReSequence()
             if (!m_XFoilInstance.specal())
             {
                 str = "Invalid Analysis Settings\nCpCalc: local speed too large\n Compressibility corrections invalid ";
-                traceLog(str);
+                traceStdLog(str);
                 m_bErrors = true;
                 return false;
             }
@@ -814,14 +808,14 @@ bool XFoilTask::ReSequence()
 
             if(m_XFoilInstance.lvconv)
             {
-                str = QString::asprintf("   ...converged after %3d iterations\n", iterations);
-                traceLog(str);
+                str = std::format("   ...converged after {:3d} iterations\n", iterations);
+                traceStdLog(str);
             }
             else
             {
-                str = QString::asprintf("   ...unconverged after %3d iterations\n", iterations);
-                traceLog(str);
-                traceLog("      ...initializing BL\n");
+                str = std::format("   ...unconverged after {:3d} iterations\n", iterations);
+                traceStdLog(str);
+                traceStdLog("      ...initializing BL\n");
                 m_XFoilInstance.lblini = false;
                 m_XFoilInstance.lipan = false;
 
@@ -870,7 +864,7 @@ int XFoilTask::loop()
     if(!m_XFoilInstance.viscal())
     {
         m_XFoilInstance.lvconv = false;
-//        QString str ="CpCalc: local speed too large\n Compressibility corrections invalid";
+//        std::string str ="CpCalc: local speed too large\n Compressibility corrections invalid";
         return -1;
     }
 

@@ -22,8 +22,6 @@
 
 *****************************************************************************/
 
-#include <QDataStream>
-
 
 #include <spline.h>
 
@@ -84,7 +82,7 @@ void Spline::makeDefaultControlPoints(bool bClosed, bool bTopHalfOnly)
     }
 
     m_Weight.clear();
-    for(uint i=0; i<m_CtrlPt.size(); i++)
+    for(unsigned int i=0; i<m_CtrlPt.size(); i++)
         m_Weight.push_back(1.0);
 }
 
@@ -116,10 +114,10 @@ void Spline::resetSpline()
 }
 
 
-void Spline::copysymmetric(Spline const &spline)
+void Spline::copySymmetric(Spline const &spline)
 {
     m_CtrlPt.clear();
-    for(uint ic=0; ic<spline.m_CtrlPt.size(); ic++)
+    for(unsigned int ic=0; ic<spline.m_CtrlPt.size(); ic++)
     {
         m_CtrlPt.push_back(spline.m_CtrlPt.at(ic));
         m_CtrlPt[ic].y = -m_CtrlPt[ic].y;
@@ -206,7 +204,7 @@ void Spline::appendCtrlPoints(std::vector<Node2d> const & ptList, double w)
 {
     m_CtrlPt.insert(m_CtrlPt.end(), ptList.begin(), ptList.end());
 //    m_CtrlPt.push_back(ptList);
-    for(uint i=0; i<ptList.size(); i++) m_Weight.push_back(w);
+    for(unsigned int i=0; i<ptList.size(); i++) m_Weight.push_back(w);
 
     setModified(true);
 }
@@ -272,7 +270,7 @@ bool Spline::insertCtrlPoint(double x, double y, double w)
     double dmax2=1.e10;
     double d1(0), d2(0);
     if(m_CtrlPt.size()<=1) return false;
-    for (uint k=0; k<m_CtrlPt.size()-1; k++)
+    for (unsigned int k=0; k<m_CtrlPt.size()-1; k++)
     {
         Node2d const &p1 = m_CtrlPt.at(k);
         Node2d const &p2 = m_CtrlPt.at(k+1);
@@ -372,112 +370,6 @@ double Spline::yMax() const
 }
 
 
-bool Spline::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    int n(0), k(0);
-    int nIntSpares(0);
-    int nDbleSpares(0);
-    double dble(0);
-    double x(0), y(0), w(0);
-    int ArchiveFormat = 500001;
-    // 500001 : first version of the new fl5 format
-
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-
-        m_theStyle.serializeFl5(ar, bIsStoring);
-
-        ar << m_bShowNormals;
-        ar << int(m_Output.size());
-
-        ar << int(m_CtrlPt.size());
-        for (uint j=0; j<m_CtrlPt.size(); j++)
-        {
-            ar << m_CtrlPt.at(j).x << m_CtrlPt.at(j).y;
-        }
-
-        ar << int(m_Weight.size());
-        for (uint j=0; j<m_Weight.size(); j++)
-        {
-            ar << m_Weight.at(j);
-        }
-
-        ar << m_bClosed;
-        ar << m_bForcesymmetric;
-
-        ar << m_BunchAmp;
-
-        switch(m_BunchType)
-        {
-            default:
-            case NOBUNCH:    n=0;        break;
-            case UNIFORM:    n=1;        break;
-            case SIGMOID:    n=2;        break;
-            case DOUBLESIG:  n=3;        break;
-        }
-        ar << n << k; // ar << m_BunchDistrib;
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat!=500001) return false;
-
-        m_theStyle.serializeFl5(ar, bIsStoring);
-
-        ar >> m_bShowNormals;
-        ar >> n;  setOutputSize(n);
-
-        ar >> n;
-        m_CtrlPt.clear();
-        for (int j=0; j<n; j++)
-        {
-            ar>>x>>y;
-            m_CtrlPt.push_back(Node2d(x,y));
-        }
-
-        ar >> n;
-        m_Weight.clear();
-        for (int j=0; j<n; j++)
-        {
-            ar>>w;
-            m_Weight.push_back(w);
-        }
-
-        ar >> m_bClosed;
-        ar >> m_bForcesymmetric;
-
-        ar >> m_BunchAmp;
-
-        ar >> n  >> k;        // ar >> m_BunchDistrib;
-        switch(n)
-        {
-            default:
-            case 0: m_BunchType = NOBUNCH;    break;
-            case 1: m_BunchType = UNIFORM;    break;
-            case 2: m_BunchType = SIGMOID;    break;
-            case 3: m_BunchType = DOUBLESIG;  break;
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-    }
-    return true;
-}
-
-
 void Spline::setPointWeight(int p, double w)
 {
     if(p<int(m_Weight.size()))
@@ -507,8 +399,8 @@ double Spline::closest(double xin, double yin, float precision) const
 
     Vector2d pt;
 
-    float umin=0.0;
-    float umax=1.0;
+    double umin=0.0;
+    double umax=1.0;
     double uc = umin;
     double dt = (umax-umin)/double(nsplit-1);
 

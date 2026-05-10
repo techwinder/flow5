@@ -33,7 +33,7 @@
 #include <TColStd_Array1OfInteger.hxx>
 #include <BRepBuilderAPI_MakeShell.hxx>
 
-#define _MATH_DEFINES_DEFINED
+
 
 
 #include <sailnurbs.h>
@@ -187,7 +187,7 @@ void SailNurbs::makeSurface()
 //    m_nurbs.m_nvLines = m_nurbs.m_pFrame.front()->ctrlPointCount();//assumes all sections have the same number of control points--> TODO force
 
 
-    for(uint is=0; is<m_nurbs.m_Frame.size(); is++)
+    for(unsigned int is=0; is<m_nurbs.m_Frame.size(); is++)
     {
         m_nurbs.frame(is).setTipFrame((is==0)||(is==m_nurbs.m_Frame.size()-1));
     }
@@ -195,143 +195,6 @@ void SailNurbs::makeSurface()
     m_nurbs.setKnots();
 }
 
-
-bool SailNurbs::serializeSailFl5(QDataStream &ar, bool bIsStoring)
-{
-    Sail::serializeSailFl5(ar, bIsStoring);
-
-    int k(0), n(0);
-    float xf(0),yf(0),zf(0);
-    Vector3d V0, V1, V2;
-
-    //500001: first .fl5 format
-    //500002: added refpanels in beta19
-    //500003: added EdgeSplits in v7.03
-    int ArchiveFormat=500004;// identifies the format of the file
-
-    double dble(0);
-    int nIntSpares(0);
-    int nDbleSpares(0);
-
-    if(bIsStoring)
-    {
-        // storing code
-        ar << ArchiveFormat;
-
-        m_nurbs.serializeFl5(ar, bIsStoring);
-
-        ar << int(m_RefTriangles.size());
-        for(uint i=0; i<m_RefTriangles.size(); i++)
-        {
-            Triangle3d const &t3d = m_RefTriangles.at(i);
-            ar << t3d.vertexAt(0).xf() << t3d.vertexAt(0).yf() << t3d.vertexAt(0).zf();
-            ar << t3d.vertexAt(1).xf() << t3d.vertexAt(1).yf() << t3d.vertexAt(1).zf();
-            ar << t3d.vertexAt(2).xf() << t3d.vertexAt(2).yf() << t3d.vertexAt(2).zf();
-        }
-
-        ar << int(m_BotMidTEIndexes.size());
-        for(int idx : m_BotMidTEIndexes)   ar << idx;
-
-        ar << int(m_TopTEIndexes.size());
-        for (int idx : m_TopTEIndexes)      ar << idx;
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-
-        nDbleSpares=0;
-        ar << nDbleSpares;
-
-        return true;
-    }
-    else
-    {
-        // loading code
-        ar >> ArchiveFormat;
-
-        if (ArchiveFormat<500001 || ArchiveFormat>500100)  return false;
-
-        if(!m_nurbs.serializeFl5(ar, bIsStoring)) return false;
-        m_nurbs.setColor(color());
-
-
-        if( ArchiveFormat>=500002)
-        {
-            ar >> n;
-            m_RefTriangles.resize(n);
-            for(int i3=0; i3<n; i3++)
-            {
-                ar >> xf >> yf >> zf;
-                V0.set(double(xf), double(yf), double(zf));
-
-                ar >> xf >> yf >> zf;
-                V1.set(double(xf), double(yf), double(zf));
-
-                ar >> xf >> yf >> zf;
-                V2.set(double(xf), double(yf), double(zf));
-
-                m_RefTriangles[i3].setTriangle(V0, V1, V2);
-            }
-
-            m_Triangulation.setTriangles(m_RefTriangles);
-            m_Triangulation.makeNodes();
-            m_Triangulation.makeNodeNormals();
-
-            ar >> n;
-            for(int i=0; i<n; i++)
-            {
-                ar >> k;
-                m_BotMidTEIndexes.push_back(k);
-            }
-
-            ar >> n;
-            for(int i=0; i<n; i++)
-            {
-                ar >> k;
-                m_TopTEIndexes.push_back(k);
-            }
-            if(m_RefTriangles.size()==0) clearTEIndexes(); // clean-up past mistakes
-        }
-
-
-        if(ArchiveFormat<500004)
-        {
-            m_EdgeSplit.resize(1);
-            std::vector<EdgeSplit> & es = m_EdgeSplit.front();
-            es.resize(4);
-            for(int iEdge=0; iEdge<4; iEdge++)
-                es[iEdge].serialize(ar, bIsStoring);
-        }
-
-        // clean up past serialization errors
-        if(m_EdgeSplit.size()!=1) m_EdgeSplit.resize(1); // 1 face in the case of a NURBS sail
-        std::vector<EdgeSplit> & es = m_EdgeSplit.front();
-        if(es.size()!=4)
-        {
-            es.resize(4); // A nurbs has 4 edges
-            es[0].setSplit(m_NZPanels, xfl::UNIFORM);
-            es[1].setSplit(m_NXPanels, xfl::UNIFORM);
-            es[2].setSplit(m_NZPanels, xfl::UNIFORM);
-            es[3].setSplit(m_NXPanels, xfl::UNIFORM);
-        }
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-
-        makeSurface();
-        updateStations();
-
-        // compute luff angle
-        Vector3d LE = m_nurbs.leadingEdgeAxis();
-        m_LuffAngle = atan2(LE.x, LE.z) * 180./PI;
-
-        return true;
-    }
-}
 
 
 void SailNurbs::duplicate(const Sail *pSail)

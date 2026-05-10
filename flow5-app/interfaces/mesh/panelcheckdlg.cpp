@@ -32,6 +32,8 @@
 
 #include "panelcheckdlg.h"
 #include <api/units.h>
+
+#include <core/qunits.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 

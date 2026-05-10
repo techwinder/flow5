@@ -55,6 +55,7 @@
 
 
 #include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <globals/aboutf5.h>
@@ -216,11 +217,12 @@
 #include <api/sail.h>
 #include <api/sailobjects.h>
 #include <api/sailwing.h>
+#include <api/serialization.h>
 #include <api/splinefoil.h>
 #include <api/testpanels.h>
-#include <api/trace.h>
+#include <core/trace.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <api/wingxfl.h>
 #include <api/xfoiltask.h>
 
@@ -1631,7 +1633,7 @@ void MainFrame::onLoadPlrFile()
 
             std::vector<Foil*> foilList;
             std::vector<Polar*> polarList;
-            objects::readPolarFile(plrFile, foilList, polarList);
+            serial::readPolarFile(plrFile, foilList, polarList);
             plrFile.close();
 
             for(uint i=0; i<foilList.size(); i++)
@@ -2664,7 +2666,7 @@ void MainFrame::onSaveBoatAsProject()
     ar << 500001;
     // save the Boats...
     ar << 1;
-    pBoat->serializeBoatFl5(ar, true);
+    serial::serializeBoatFl5(pBoat, ar, true);
 
     // save the BtPolars
     int polarcount = 0;
@@ -2676,7 +2678,7 @@ void MainFrame::onSaveBoatAsProject()
     for (int i=0; i<polarcount;i++)
     {
         BoatPolar *pBtPolar = SailObjects::btPolar(i);
-        if(pBtPolar->boatName()==pBoat->name()) pBtPolar->serializeFl5v750(ar, true);
+        if(pBtPolar->boatName()==pBoat->name()) serial::serializeBoatPolarFl5v750(pBtPolar, ar, true);
     }
 
     // not forgetting their BtOpps
@@ -2689,7 +2691,7 @@ void MainFrame::onSaveBoatAsProject()
     for (int i=0; i<btoppcount; i++)
     {
         BoatOpp *pBOpp = SailObjects::btOpp(i);
-        if(pBOpp->boatName()==pBoat->name()) pBOpp->serializeBoatOppFl5(ar, true);
+        if(pBOpp->boatName()==pBoat->name()) serial::serializeBoatOppFl5(pBOpp, ar, true);
     }
 
     // dynamic space allocation for the future storage of more data, without need to change the format
@@ -4683,11 +4685,9 @@ int MainFrame::onTestRun()
             // get a reference to the main wing's flap controls
             AngleControl &mainwingctrls = pPlPolar->flapCtrls(0);
             {
-                // get a reference to the main wing
-                WingXfl &mainwing = *pPlaneXfl->wing(0);
                 // sanity check: the number of flap deflections should be the same
                 // as the main wing's number of flaps, i.e. 4
-                assert(mainwingctrls.nValues()==mainwing.nFlaps());
+                assert(mainwingctrls.nValues()==pPlaneXfl->wing(0)->nFlaps());
 
                 // Flaps are numbered from left to right
                 // Set their deflection, + is down, unit is degrees
@@ -4714,7 +4714,7 @@ int MainFrame::onTestRun()
         // Now that the polar's parameters have been defined,
         // it is possible to use flow5's default name maker
         PlanePolarNameMaker maker;
-        std::string polarname = PlanePolarNameMaker::makeName(pPlaneXfl, pPlPolar).toStdString();
+        std::string polarname = PlanePolarNameMaker::makeName(pPlaneXfl, pPlPolar);
         pPlPolar->setName(polarname);
         // Store the pointer to ensure that the object is not lost
         // This should be done after the polar has been given a name
@@ -4775,7 +4775,9 @@ int MainFrame::onTestRun()
         delete pPlaneTask;
     }
 
-    globals::saveFl5Project("/tmp/PlaneRun.fl5");
+    FileIO  saver;
+    std::string logmsg;
+    saver.saveProject("/tmp/PlaneRun.fl5", logmsg);
 
 
     // Must call! will delete the planes, foils and children objects

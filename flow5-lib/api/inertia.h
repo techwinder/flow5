@@ -26,7 +26,6 @@
 
 #include <vector>
 
-#include <QDataStream>
 
 #include <vector3d.h>
 #include <pointmass.h>
@@ -88,7 +87,7 @@ class FL5LIB_EXPORT Inertia
         double totalMass() const
         {
             double total = m_Mass_s;
-            for(uint i=0; i<m_PointMass.size(); i++)  total += m_PointMass.at(i).mass();
+            for(unsigned int i=0; i<m_PointMass.size(); i++)  total += m_PointMass.at(i).mass();
             return total;
         }
 
@@ -134,8 +133,6 @@ class FL5LIB_EXPORT Inertia
         void appendPointMass(PointMass const &pm) {m_PointMass.push_back(pm);}
         void appendPointMass(double mass, Vector3d const &pos, std::string tag) {m_PointMass.push_back({mass, pos, tag});}
         void removePointMass(int index) {m_PointMass.erase(m_PointMass.begin()+index);}
-
-        bool serializeFl5(QDataStream &ar, bool bIsStoring);
 
         void scaleMasses(double scalefactor);
 

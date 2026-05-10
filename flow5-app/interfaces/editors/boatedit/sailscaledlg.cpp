@@ -32,7 +32,9 @@
 
 #include "sailscaledlg.h"
 
+#include <core/qunits.h>
 #include <interfaces/widgets/customwts/floatedit.h>
+
 #include <api/wingxfl.h>
 #include <api/sail.h>
 #include <api/units.h>

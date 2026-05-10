@@ -23,7 +23,7 @@
 *****************************************************************************/
 
 
-#define _MATH_DEFINES_DEFINED
+
 
 
 // Visual studio bug override
@@ -76,12 +76,6 @@ Task3d::Task3d()
 Task3d::~Task3d()
 {
     if(m_pPA) delete m_pPA;
-}
-
-
-void Task3d::traceLog(const QString &str)
-{
-    traceStdLog(str.toStdString());
 }
 
 
@@ -181,12 +175,12 @@ void Task3d::advectVortons(double alpha, double beta, double QInf, int qrhs)
     {
         std::vector<std::thread> threads;
 
-        for(uint irow=0; irow<newvortons.size(); irow++)
+        for(unsigned int irow=0; irow<newvortons.size(); irow++)
         {
             threads.push_back(std::thread(&Task3d::advectVortonRow, this, &newvortons[irow]));
         }
 
-        for(uint irow=0; irow<newvortons.size(); irow++)
+        for(unsigned int irow=0; irow<newvortons.size(); irow++)
         {
             threads[irow].join();
         }
@@ -195,7 +189,7 @@ void Task3d::advectVortons(double alpha, double beta, double QInf, int qrhs)
     }
     else
     {
-        for(uint irow=0; irow<newvortons.size(); irow++)
+        for(unsigned int irow=0; irow<newvortons.size(); irow++)
         {
             advectVortonRow(&newvortons[irow]);
         }
@@ -204,7 +198,7 @@ void Task3d::advectVortons(double alpha, double beta, double QInf, int qrhs)
     // save the new vortons
     m_pPA->m_Vorton = newvortons;
 
-//    qDebug("Vorton advect %2d elapsed: %9.3f s", m_pPA->m_Vorton.size(), double(t.elapsed())/1000.0);
+//    qDebug("Vorton advect {:2d} elapsed: {:9.3f} s", m_pPA->m_Vorton.size(), double(t.elapsed())/1000.0);
 }
 
 
@@ -212,7 +206,7 @@ void Task3d::advectVortonRow(std::vector<Vorton> *thisrow)
 {
     Vector3d VT1, VT2, translation, P1;
 
-    for(uint iv=0; iv<thisrow->size(); iv++)
+    for(unsigned int iv=0; iv<thisrow->size(); iv++)
     {
         // convect-translate the vorton
         Vorton &vtn = (*thisrow)[iv];

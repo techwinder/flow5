@@ -22,8 +22,8 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
-#define _MATH_DEFINES_DEFINED
+
+
 
 
 #include <utils.h>
@@ -128,7 +128,7 @@ void objects::computeSurfaceInertia(Inertia &inertia, std::vector<Triangle3d> co
     // compute the inertia tensor in the body axis
     // using unit density, i.e. triangle mass = area
     double totalarea = 0.0;
-    for(uint it=0; it<triangles.size(); it++)
+    for(unsigned int it=0; it<triangles.size(); it++)
     {
         const Triangle3d &t3 = triangles.at(it);
         cog_s += t3.CoG_g() * t3.area();

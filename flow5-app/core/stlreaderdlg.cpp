@@ -32,13 +32,15 @@
 
 #include "stlreaderdlg.h"
 
+#include <core/qunits.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 
 #include <api/units.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
+#include <api/utils-io.h>
 
 int StlReaderDlg::s_LengthUnitIndex = 0;
 QByteArray StlReaderDlg::s_Geometry;

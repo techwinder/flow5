@@ -45,7 +45,7 @@
 #include <api/occ_globals.h>
 #include <api/fuse.h>
 #include <api/fusexfl.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 
 
 #include <core/displayoptions.h>

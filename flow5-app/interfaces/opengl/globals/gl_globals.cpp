@@ -35,7 +35,7 @@
 #include <api/nurbssurface.h>
 #include <api/quaternion.h>
 #include <api/mathelem.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 
 double t_lmin(0), t_range(0);
 QVector<QVector<Segment3d>> t_futuresegs;

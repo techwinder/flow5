@@ -36,7 +36,7 @@
 #include "xfoilanalysisdlg.h"
 
 
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 #include <api/foil.h>
 #include <api/fl5core.h>
 #include <api/objects2d.h>

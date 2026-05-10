@@ -49,6 +49,7 @@
 #include <api/units.h>
 
 #include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <interfaces/mesh/gmshctrlswt.h>
 #include <interfaces/opengl/controls/arcball.h>

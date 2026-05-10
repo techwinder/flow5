@@ -152,6 +152,7 @@ class FL5LIB_EXPORT WingXfl : public Part
 
 
         int nSections() const {return int(m_Section.size());}
+        std::vector<WingSection> &sections() {return m_Section;}
         std::vector<WingSection> const &sections() const {return m_Section;}
         void clearWingSections() {m_Section.clear();}
         void insertSection(int iSection);
@@ -247,7 +248,7 @@ class FL5LIB_EXPORT WingXfl : public Part
         double length() const override {return m_ProjectedSpan;}
 
         bool isSymmetric() const {return m_bSymmetric;}
-        void setsymmetric(bool bsymmetric){m_bSymmetric = bsymmetric;}
+        void setSymmetric(bool bsymmetric){m_bSymmetric = bsymmetric;}
 
         int nFlaps() const {return m_nFlaps;}
 
@@ -256,8 +257,6 @@ class FL5LIB_EXPORT WingXfl : public Part
         std::string rightFoilName(int iSection) const {if(iSection>=0 && iSection<nSections()) return m_Section.at(iSection).m_RightFoilName; else return "";}
         std::string leftFoilName(int iSection)  const {if(iSection>=0 && iSection<nSections()) return m_Section.at(iSection).m_LeftFoilName;  else return "";}
 
-        bool serializePartXFL(QDataStream &ar, bool bIsStoring);
-        bool serializePartFl5(QDataStream &ar, bool bIsStoring) override;
 
         double integralC2(double y1, double y2, double c1, double c2) const;
 
@@ -299,6 +298,9 @@ class FL5LIB_EXPORT WingXfl : public Part
 
         void makeMidWires(std::vector<std::vector<Node> > &midwires) const;
         void makeTopBotWires(std::vector<std::vector<Node> > &midwires) const;
+
+        int nXFlapPanels() const {return m_nXFlapPanels;}
+        void setnXFlapPanels(int n) {m_nXFlapPanels=n;}
 
         static double minSurfaceLength() {return s_MinSurfaceLength;}
         static void setMinSurfaceLength(double size) {s_MinSurfaceLength=size;}

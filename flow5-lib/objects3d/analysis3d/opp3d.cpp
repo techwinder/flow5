@@ -23,7 +23,7 @@
 *****************************************************************************/
 
 
-#define _MATH_DEFINES_DEFINED
+
 
 #include <opp3d.h>
 
@@ -55,9 +55,9 @@ void Opp3d::getVortonVelocity(Vector3d const &pt, double CoreSize, Vector3d &V) 
 {
     Vector3d vel;
     V.set(0.,0.,0.);
-    for(uint ir=0; ir<m_Vorton.size(); ir++)
+    for(unsigned int ir=0; ir<m_Vorton.size(); ir++)
     {
-        for(uint jc=0; jc<m_Vorton.at(ir).size(); jc++)
+        for(unsigned int jc=0; jc<m_Vorton.at(ir).size(); jc++)
         {
             Vorton const &vtn = m_Vorton.at(ir).at(jc);
             if(vtn.isActive())

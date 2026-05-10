@@ -22,7 +22,6 @@
 
 *****************************************************************************/
 
-#include <QDataStream>
 
 #include <vortex.h>
 #include <panelprecision.h>
@@ -51,32 +50,6 @@ void Vortex::getInducedVelocity(Vector3d const &C, Vector3d &vel,
     vel = vortexInducedVelocity(m_S[0], m_S[1], C, coreradius, vortexmodel);
     vel *= m_Circulation;
 }
-
-
-bool Vortex::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    int ArchiveFormat = 500001;
-
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-        ar << m_S[0].x<< m_S[0].y<< m_S[0].z;
-        ar << m_S[1].x<< m_S[1].y<< m_S[1].z;
-        ar << m_Circulation;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat!=500001) return false;
-        ar >> m_S[0].x>> m_S[0].y>> m_S[0].z;
-        ar >> m_S[1].x>> m_S[1].y>> m_S[1].z;
-        ar >> m_Circulation;
-
-        setNodes(m_S[0], m_S[1]);
-    }
-    return true;
-}
-
 
 
 /**

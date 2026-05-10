@@ -43,6 +43,8 @@
 #include <api/sailstl.h>
 #include <api/sailocc.h>
 #include <api/sailwing.h>
+#include <api/utils-io.h>
+
 
 #include <core/xflcore.h>
 #include <globals/mainframe.h>

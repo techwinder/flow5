@@ -26,9 +26,7 @@
 #pragma once
 
 #include <vector>
-
-#include <QString>
-#include <QDataStream>
+#include <string>
 
 #include <fl5lib_global.h>
 #include <geom_params.h>
@@ -52,28 +50,6 @@ class FL5LIB_EXPORT AngleControl
         inline void addValue(double g) {m_Value.push_back(g);}
 
         inline bool hasActiveAngle() const {for(int ig=0; ig<nValues(); ig++) {if(fabs(m_Value.at(ig))>FLAPANGLEPRECISION) return true;} return false;}
-
-        inline void serializeFl5(QDataStream &ar, bool bIsStoring)
-        {
-            int ArchiveFormat = 500750;
-            int n=0;
-            QString strange;
-            if(bIsStoring)
-            {
-                ar << ArchiveFormat;
-                ar << QString::fromStdString(m_Name);
-                ar << nValues();
-                for(int ig=0; ig<nValues(); ig++) ar<<m_Value.at(ig);
-            }
-            else
-            {
-                ar >> ArchiveFormat;
-                ar >> strange; m_Name = strange.toStdString();
-                ar >> n;
-                m_Value.resize(n);
-                for(int ig=0; ig<nValues(); ig++) ar>>m_Value[ig];
-            }
-        }
 
     private:
 

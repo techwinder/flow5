@@ -31,7 +31,7 @@
 #include "saveoptions.h"
 
 #include <api/fileio.h>
-#include <api/trace.h>
+#include <core/trace.h>
 
 xfl::enumTextFileType SaveOptions::s_ExportFileType;  /**< Defines if the list separator for the output text files should be a space or a comma. */
 QString SaveOptions::s_LastDirName       = QDir::homePath();

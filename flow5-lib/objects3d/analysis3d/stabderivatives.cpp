@@ -24,8 +24,6 @@
 
 #include <cmath>
 
-#include <QString>
-#include <QDataStream>
 
 #include <stabderivatives.h>
 
@@ -117,7 +115,7 @@ void StabDerivatives::computeNDStabDerivatives()
     //E&R p. 118, table 4.4
     CXu = (Xu - m_rho * u0*S*Cw0*sin(theta0))/(0.5*m_rho*u0*S);
     CZu = (Zu + m_rho * u0*S*Cw0*cos(theta0))/(0.5*m_rho*u0*S);
-//    qDebug("u0=%11g  Zu=%11g  Cw0=%11g  CZu=%11g", u0, Zu, Cw0, CZu);
+//    qDebug("u0={:11g}  Zu={:11g}  Cw0={:11g}  CZu={:11g}", u0, Zu, Cw0, CZu);
     Cmu = Mu /(0.5*m_rho*u0*mac*S);
     CXa = Xw /(0.5*m_rho*u0*S);
     CZa = Zw /(0.5*m_rho*u0*S);
@@ -144,7 +142,7 @@ void StabDerivatives::computeNDStabDerivatives()
     CLe.resize(Xde.size());
     CMe.resize(Xde.size());
     CNe.resize(Xde.size());
-    for(uint i=0; i<Xde.size(); i++)
+    for(unsigned int i=0; i<Xde.size(); i++)
     {
         CXe[i] = Xde.at(i)/(q*S);
         CYe[i] = Yde.at(i)/(q*S);
@@ -156,97 +154,3 @@ void StabDerivatives::computeNDStabDerivatives()
 }
 
 
-bool StabDerivatives::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    int k=0, n=0;
-    int nIntSpares=0;
-    int nDbleSpares=0;
-    QString strange;
-    double dble=0.0;
-
-    // 500001: new fl5 format
-    // 500002: beta 18 - added multiple control derivatives
-    int ArchiveFormat = 500002;
-
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-        ar << m_Span << m_Area << m_MAC;
-        ar << m_QInf << dble << dble;
-        ar << m_Mass;
-        ar << m_CoG_x;
-        ar << m_rho;
-
-
-        // DIMENSIONAL derivatives
-        // longitudinal
-        ar <<  Xu << Xw << Zu<< Zw << Xq << Zq << Mu << Mw << Mq;
-        ar <<  Zwp << Mwp;
-        // lateral
-        ar <<  Yv << Yp << Yr << Lv << Lp << Lr << Nv << Np << Nr;
-        // control
-        ar << int(Xde.size());
-        for(uint ie=0; ie<Xde.size(); ie++)
-        {
-            ar << QString::fromStdString(ControlNames.at(ie));
-            ar <<  Xde.at(ie) << Yde.at(ie) << Zde.at(ie) << Lde.at(ie) << Mde.at(ie) << Nde.at(ie);
-        }
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        k=0;
-        for (int i=0; i<nIntSpares; i++) ar << k;
-
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        dble=0.0;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if (ArchiveFormat<500000 || ArchiveFormat>500100) return false;
-
-        ar >> m_Span >> m_Area >> m_MAC;
-        ar >> m_QInf >> dble  >> dble;
-        ar >> m_Mass;
-        ar >> m_CoG_x;
-        ar >> m_rho;
-
-        // DIMENSIONAL derivatives
-        // longitudinal
-        ar >>  Xu >> Xw >> Zu >> Zw >> Xq >> Zq >> Mu >> Mw >> Mq;
-        ar >>  Zwp>> Mwp;
-        // lateral
-        ar >>  Yv >> Yp >> Yr >> Lv >> Lp >> Lr >> Nv >> Np >> Nr;
-
-        // control
-
-        if(ArchiveFormat<500002)
-        {
-            resizeControlDerivatives(1);
-            int ie = 0;
-            ar >>  Xde[ie] >> Yde[ie] >> Zde[ie] >> Lde[ie] >> Mde[ie] >> Nde[ie];
-        }
-        else
-        {
-            ar >> n;
-            resizeControlDerivatives(n);
-            for(int ie=0; ie<n; ie++)
-            {
-                ar >> strange; ControlNames[ie] = strange.toStdString();
-                ar >> Xde[ie] >> Yde[ie] >> Zde[ie] >> Lde[ie] >> Mde[ie] >> Nde[ie];
-            }
-        }
-
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> k;
-
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-        computeNDStabDerivatives();
-    }
-    return true;
-}

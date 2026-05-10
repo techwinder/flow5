@@ -22,6 +22,7 @@
 
 *****************************************************************************/
 
+#define _MATH_DEFINES_DEFINED
 
 
 
@@ -32,13 +33,14 @@
 
 #include "gl3daxesview.h"
 
+#include <api/objects_global.h>
+
 #include <core/xflcore.h>
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <interfaces/widgets/line/linebtn.h>
 #include <interfaces/widgets/line/linemenu.h>
-#include <api/objects_global.h>
 #include <test/test3d/gl3daxesview.h>
 
 

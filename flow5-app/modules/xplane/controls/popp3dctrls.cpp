@@ -43,7 +43,7 @@
 #include <modules/xplane/xplane.h>
 #include <interfaces/opengl/controls/fine3dcontrols.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <api/planeopp.h>
 #include <api/planepolar.h>
 #include <api/objects3d.h>

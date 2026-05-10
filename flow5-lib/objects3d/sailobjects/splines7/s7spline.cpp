@@ -37,7 +37,7 @@ s7Spline::s7Spline() : Spline()
 
 void s7Spline::makeCurve()
 {
-    for(uint i=0; i<m_Output.size(); i++)
+    for(unsigned int i=0; i<m_Output.size(); i++)
     {
         double di = double(i)/double(m_Output.size()-1);
         m_Output[i] = splinePoint(di);

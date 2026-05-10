@@ -22,9 +22,10 @@
 
 *****************************************************************************/
 
+#include <cassert>
 #include <cstring>
 #include <iostream>
-
+#include <format>
 
 #include <mathelem.h>
 #include <constants.h>
@@ -33,8 +34,8 @@
 
 /**
 * Bubble sort algorithm for complex numbers
-*@param array the array of complex numbers to sort
-*@param ub the size of the array
+* @param array the array of complex numbers to sort
+* @param ub the size of the array
 */
 void sortComplex(std::complex<double>*array, int n)
 {
@@ -416,9 +417,9 @@ void testPointDistribution()
     xfl::getPointDistribution(tanh,    nPanels, xfl::TANH);
     xfl::getPointDistribution(exp,     nPanels, xfl::EXP);
     xfl::getPointDistribution(invexp,  nPanels, xfl::INV_EXP);
-    qDebug("      COSINE         SINE      INVERSESINE   INVERSESINH        TANH          EXP       INVERSEEXP");
+    std::cout<<("      COSINE         SINE      INVERSESINE   INVERSESINH        TANH          EXP       INVERSEEXP");
     for(int i=0; i<=nPanels; i++)
-        qDebug("   %11.5g   %11.5g   %11.5g   %11.5g   %11.5g   %11.5g   %11.5g",
+        std::cout<<std::format("   {:11.5g}   {:11.5g}   {:11.5g}   {:11.5g}   {:11.5g}   {:11.5g}   {:11.5g}",
                cos[i], sine[i], invsine[i], invsinh[i], tanh[i], exp[i], invexp[i]);
 }
 
@@ -452,7 +453,7 @@ double err_func(double x)
 }
 
 /* compute inverse error functions with maximum error of 2.35793 ulp */
-double erf_inv(double a)
+double erf_inv(float a)
 {
     float p(0), r(0), t(0);
     t = fmaf (a, 0.0f - a, 1.0f);
@@ -521,7 +522,7 @@ double interpolatePolyLine(double x, std::vector<double> const &xp, std::vector<
         else        return yp.back();
     }
 
-    for(uint i=1; i<xp.size()-1; i++)
+    for(unsigned int i=1; i<xp.size()-1; i++)
     {
         if(xp[i]<=x && x<=xp[i+1]) return interpolateLine(x, xp[i], yp[i], xp[i+1], yp[i+1]);
     }

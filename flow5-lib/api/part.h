@@ -54,7 +54,8 @@ class FL5LIB_EXPORT Part
         void setName(std::string const &name) {m_Name=name;}
         void setDescription(std::string const &des) {m_Description=des;}
 
-        LineStyle theStyle() const {return m_theStyle;}
+        LineStyle const &theStyle() const {return m_theStyle;}
+        LineStyle &theStyle() {return m_theStyle;}
         void setTheStyle(LineStyle ls){m_theStyle=ls;}
 
         bool isVisible() const {return m_theStyle.m_bIsVisible;}
@@ -116,7 +117,6 @@ class FL5LIB_EXPORT Part
         int uniqueIndex() const {return m_UniqueIndex;}
         void setUniqueIndex();
 
-        virtual bool serializePartFl5(QDataStream &ar, bool bIsStoring);
 
         // INERTIA
         // all inertia properties are defined in the part's body axis

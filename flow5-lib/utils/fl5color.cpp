@@ -37,45 +37,6 @@ fl5Color fl5Color::darker(int f) const
 }
 
 
-unsigned int qt_div_257_floor(unsigned int x) { return  (x - (x >> 8)) >> 8; }
-unsigned int qt_div_257(unsigned int x) { return qt_div_257_floor(x + 128); }
-
-
-// in place replacement for QColor serialization
-void fl5Color::serialize(QDataStream &stream, bool bIsStoring)
-{
-    if(bIsStoring)
-    {
-        signed char s(0);
-        unsigned short a = m_Alpha * 0x101;
-        unsigned short r = m_Red   * 0x101;
-        unsigned short g = m_Green * 0x101;
-        unsigned short b = m_Blue  * 0x101;
-        unsigned short p(0);
-        stream << s;
-        stream << a;
-        stream << r;
-        stream << g;
-        stream << b;
-        stream << p;
-    }
-    else
-    {
-        signed char s(0);
-        unsigned short a(0), r(0), g(0), b(0), p(0);
-        stream >> s;
-        stream >> a;
-        stream >> r;
-        stream >> g;
-        stream >> b;
-        stream >> p;
-
-        m_Alpha = qt_div_257(a);
-        m_Red   = qt_div_257(r);
-        m_Green = qt_div_257(g);
-        m_Blue  = qt_div_257(b);
-    }
-}
 
 
 

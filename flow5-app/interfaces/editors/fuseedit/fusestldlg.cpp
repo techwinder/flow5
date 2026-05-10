@@ -34,14 +34,16 @@
 
 #include "fusestldlg.h"
 
-#include <core/saveoptions.h>
-#include <api/units.h>
-#include <api/geom_global.h>
-#include <interfaces/editors/inertia/partinertiadlg.h>
 #include <api/fusestl.h>
+#include <api/geom_global.h>
 #include <api/part.h>
-#include <interfaces/mesh/mesherwt.h>
+#include <api/units.h>
+
+#include <core/qunits.h>
+#include <core/saveoptions.h>
+#include <interfaces/editors/inertia/partinertiadlg.h>
 #include <interfaces/mesh/afmesher.h>
+#include <interfaces/mesh/mesherwt.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>

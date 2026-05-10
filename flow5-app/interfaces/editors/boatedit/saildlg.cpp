@@ -55,6 +55,7 @@
 #include <api/units.h>
 #include <api/xmlsailwriter.h>
 
+#include <core/qunits.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/w3dprefs.h>
@@ -1646,7 +1647,7 @@ void SailDlg::onConnectPanels()
     
     m_pSail->triMesh().makeConnectionsFromNodePosition(true, true);
     // duplicate the connections in the refpanels - will be used when defining the TE panels;
-    Q_ASSERT(int(m_pSail->refTriangles().size())==m_pSail->nPanel3());
+    Q_ASSERT(int(m_pSail->triangles().size())==m_pSail->nPanel3());
     m_pSail->saveConnections();
 
     QString log(" done\n\n");

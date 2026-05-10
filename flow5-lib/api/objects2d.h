@@ -32,7 +32,6 @@
 #include <string>
 
 
-#include <bldata.h>
 #include <enums_objects.h>
 #include <linestyle.h>
 #include <polar.h>
@@ -69,7 +68,7 @@ namespace Objects2d
     FL5LIB_EXPORT Foil*     setModFoil(Foil *pModFoil);
 
 
-    FL5LIB_EXPORT bool      foilExists(const std::string &FoilName, Qt::CaseSensitivity cs=Qt::CaseInsensitive);
+    FL5LIB_EXPORT bool      foilExists(const std::string &FoilName);
 
     FL5LIB_EXPORT std::vector<Foil*> sortedFoils();
 

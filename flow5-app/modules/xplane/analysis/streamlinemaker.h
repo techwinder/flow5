@@ -29,7 +29,7 @@
 #include <QRunnable>
 
 #include <api/vector3d.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 
 class PlaneOpp;
 class Vector3d;

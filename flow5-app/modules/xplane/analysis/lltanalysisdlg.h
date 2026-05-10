@@ -35,7 +35,7 @@
 #include <QSplitter>
 #include <QSettings>
 
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 
 class XPlane;
 class Graph;
@@ -50,7 +50,7 @@ class PlainTextOutput;
 
 /**
  *@class LLTAnalysisDlg
- *@brief The class is used to launch the LLT and to manage the progress of the analysis.
+ *@brief The class is used to launch the LLT and to manage the progress of the calculation.
 
  It successively :
   - creates a single instance of the LLTAnalysis object,
@@ -60,7 +60,7 @@ class PlainTextOutput;
   - stores the results in the OpPoint and Polar objects
   - updates the display in the Miarex view.
 
- The LLTAnalysis class performs the calculation of a signle OpPoint. The loop over a sequence of aoa, Cl, or Re values
+ The LLTAnalysis class performs the calculation of a single OpPoint. The loop over a sequence of aoa, Cl, or Re values
  are performed in the LLAnalysisDlg Class.
 */
 class LLTAnalysisDlg : public QDialog

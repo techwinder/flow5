@@ -567,7 +567,7 @@ void EditPlrDlg::onDeleteAllPoints()
     }
     else if(m_pWPolar)
     {
-        m_pWPolar->clearWPolarData();
+        m_pWPolar->clearPolarData();
         fillWPolarData();
         m_bDataChanged = true;
     }

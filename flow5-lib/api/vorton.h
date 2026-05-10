@@ -26,7 +26,6 @@
 
 #include <string>
 
-#include <QDataStream>
 
 /*
  * Implements a Vortex Particle Wake, i.a.w.:
@@ -82,14 +81,14 @@ class FL5LIB_EXPORT Vorton
 
         void translate(Vector3d const &T) {m_Position += T;}
 
-        bool serializeFl5(QDataStream &ar, bool bIsStoring);
-
         float xf() const {return m_Position.xf();}
         float yf() const {return m_Position.yf();}
         float zf() const {return m_Position.zf();}
 
         void listVorton(const std::string &prefix) const;
 
+        double volume() const {return m_Volume;}
+        void setVolume(double v) {m_Volume=v;}
 
     private:
         Vector3d m_Position;    /**< the vorton's position */

@@ -39,7 +39,7 @@
 
 #include "gmesherwt.h"
 
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 #include <api/frame.h>
 #include <api/fuse.h>
 #include <api/fuseocc.h>
@@ -53,10 +53,11 @@
 #include <api/sailstl.h>
 #include <api/sailwing.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <api/wingxfl.h>
 
 
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <interfaces/mesh/gmesh_globals.h>
 #include <interfaces/mesh/gmesher.h>

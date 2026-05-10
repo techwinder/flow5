@@ -22,11 +22,9 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
 
 
-#include <QCoreApplication>
-#include <QtConcurrent/QtConcurrent>
+
 
 
 
@@ -53,10 +51,7 @@ std::vector<PlaneOpp*>     Objects3d::s_oaPlaneOpp;
 int Objects3d::newUniquePartIndex()
 {
     // may be accessed by different threads simultaneously e.g. from MOPSO3d class
-    QMutex mutex;
-    mutex.lock();
     s_Index++;
-    mutex.unlock();
     return s_Index;
 }
 
@@ -401,7 +396,7 @@ void Objects3d::deletePlaneResults(const Plane *pPlane, bool bDeletePolars)
             }
             else
             {
-                pWPolar->clearWPolarData();
+                pWPolar->clearPolarData();
                 pWPolar->resetAngleRanges(pPlane);
             }
         }
@@ -428,7 +423,7 @@ void Objects3d::deleteExternalPolars(Plane const*pPlane)
 
 void Objects3d::deleteWPolarResults(PlanePolar *pWPolar)
 {
-    pWPolar->clearWPolarData();
+    pWPolar->clearPolarData();
     for(int i=Objects3d::nPOpps()-1; i>=0; --i)
     {
         PlaneOpp *pPOpp = Objects3d::POppAt(i);
@@ -756,7 +751,7 @@ void Objects3d::insertPlane(Plane *pModPlane)
 {
     bool bInserted = false;
 
-    QString planename = QString::fromStdString(pModPlane->name());
+    std::string planename = pModPlane->name();
 
     for (int l=0; l<nPlanes();l++)
     {
@@ -773,7 +768,7 @@ void Objects3d::insertPlane(Plane *pModPlane)
     for (int l=0; l<nPlanes();l++)
     {
         Plane *pPlane = planeAt(l);
-        if(QString::fromStdString(pPlane->name()).compare(planename, Qt::CaseInsensitive)>0)
+        if(pPlane->name().compare(planename)>0)
         {
             //then insert before
             insertPlane(l, pModPlane);
@@ -916,18 +911,18 @@ bool Objects3d::containsPOpp(PlaneOpp *pPOpp)
     return false;
 }
 
-
+/*
 PlaneOpp *Objects3d::storePlaneOpps(std::vector<PlaneOpp*> const &POppList)
 {
-    QList<PlaneOpp*> QPOppList;
+    std::vector<PlaneOpp*> QPOppList;
     for(PlaneOpp *pPOpp : POppList)
     {
-        QPOppList.append(pPOpp);
+        QPOppList.push_back(pPOpp);
     }
     return storePlaneOpps(QPOppList);
-}
+}*/
 
-
+/*
 PlaneOpp *Objects3d::storePlaneOpps(QList<PlaneOpp*> const &POppList)
 {
     PlaneOpp * pSelectedPOpp = nullptr;
@@ -947,7 +942,7 @@ PlaneOpp *Objects3d::storePlaneOpps(QList<PlaneOpp*> const &POppList)
     }
     return pSelectedPOpp;
 }
-
+*/
 
 
 

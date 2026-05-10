@@ -33,7 +33,7 @@
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/globals/wt_globals.h>
 #include <api/geom_global.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
 

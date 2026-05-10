@@ -83,7 +83,6 @@ class FL5LIB_EXPORT FuseXfl : public Fuse
         virtual void translateFrame(Vector3d T, int FrameID);
         virtual void translate(Vector3d const &T) override;
         virtual void makeFuseGeometry() override;
-        virtual bool serializePartFl5(QDataStream &ar, bool bIsStoring) override;
         virtual void makeNURBS() {return;}
 
         bool isClosedVolume(std::string &report) const;
@@ -159,9 +158,6 @@ class FL5LIB_EXPORT FuseXfl : public Fuse
         Panel4 const &panel4(int idx) const {return m_Panel4.at(idx);}
 
         void computeSurfaceProperties(std::string &msg, std::string const &prefx) override;
-
-
-        bool serializePartXFL(QDataStream &ar, bool bIsStoring, int format);
 
         const NURBSSurface &nurbs() const {return m_nurbs;}
         NURBSSurface& nurbs() {return m_nurbs;}

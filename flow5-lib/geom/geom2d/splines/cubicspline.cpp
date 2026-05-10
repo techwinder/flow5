@@ -22,8 +22,8 @@
 
 *****************************************************************************/
 
-
-#include <QDataStream>
+#include <iostream>
+#include <cassert>
 
 #include <cubicspline.h>
 #include <matrix.h>
@@ -371,7 +371,7 @@ double CubicSpline::totalLength() const
     if(nCtrlPoints()<2) return 0.0;
 
     double ll = 0.0;
-    for(uint j=0; j<m_ArcLengths.size(); j++)
+    for(unsigned int j=0; j<m_ArcLengths.size(); j++)
     {
         ll += m_ArcLengths.at(j);
     }
@@ -386,7 +386,7 @@ double CubicSpline::totalCurvature(double u0, double u1) const
     GaussQuadrature GQ(7);
     if(GQ.error())
     {
-        qDebug("Error in Gaussian quadrature");
+        std::cout<<"Error in Gaussian quadrature"<<std::endl;
         return 0.0;
     }
 
@@ -397,44 +397,6 @@ double CubicSpline::totalCurvature(double u0, double u1) const
         curvatureInt += GQ.weight(jq) * curvature(u) * (u1-u0);
     }
     return curvatureInt;
-}
-
-
-bool CubicSpline::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    Spline::serializeFl5(ar, bIsStoring);
-
-    int n=0;
-    int nIntSpares=0;
-    int nDbleSpares=0;
-    double dble=0.0;
-
-
-    if(bIsStoring)
-    {
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares; n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-
-        return true;
-    }
-    else
-    {
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-
-        updateSpline();
-        makeCurve();
-        return true;
-    }
 }
 
 
@@ -491,7 +453,7 @@ bool CubicSpline::approximate(int nCtrlPts, std::vector<Node2d> const& node)
     {
         //use them all
         m_CtrlPt.resize(node.size());
-        for(uint i=0; i<node.size(); i++)
+        for(unsigned int i=0; i<node.size(); i++)
         {
             m_CtrlPt[i].set(node.at(i));
         }
@@ -526,7 +488,7 @@ Vector2d CubicSpline::splinePoint(double u) const
 
     if(nCtrlPoints()<2) return Vector2d();
 
-    for(uint i=0; i<m_segVal.size()-1; i++)
+    for(unsigned int i=0; i<m_segVal.size()-1; i++)
     {
         if(u<=m_segVal.at(i+1))
         {
@@ -555,11 +517,11 @@ void CubicSpline::rePanel(int N)
 
     double l=0;
 
-    for(uint i=0; i<m_ArcLengths.size(); i++) l+=m_ArcLengths.at(i);
+    for(unsigned int i=0; i<m_ArcLengths.size(); i++) l+=m_ArcLengths.at(i);
 
     length[0] = 0.0;
-    for(uint i=1; i<length.size(); i++) length[i] = length[i-1] + m_ArcLengths.at(i-1);
-    for(uint i=1; i<length.size(); i++) length[i] *= 1.0/l;
+    for(unsigned int i=1; i<length.size(); i++) length[i] = length[i-1] + m_ArcLengths.at(i-1);
+    for(unsigned int i=1; i<length.size(); i++) length[i] *= 1.0/l;
 
     double u(0);
     for(int i=0; i<N; i++)
@@ -570,7 +532,7 @@ void CubicSpline::rePanel(int N)
         else if(m_BunchType==Spline::SIGMOID)   u = sigmoid(-m_BunchAmp, t);
         else                                    u = t; // UNIFORM length spacing
 
-        for(uint j=0; j<m_segVal.size()-1; j++)
+        for(unsigned int j=0; j<m_segVal.size()-1; j++)
         {
             if(u<=length.at(j+1))
             {

@@ -26,7 +26,7 @@
 
 #include <QGroupBox>
 #include <QHBoxLayout>
-#include<QHeaderView>
+#include <QHeaderView>
 #include <QMenu>
 #include <QPushButton>
 #include <QVBoxLayout>
@@ -36,12 +36,12 @@
 
 #include <api/fl5core.h>
 #include <api/analysisrange.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 #include <api/foil.h>
 #include <api/objects2d.h>
 #include <api/oppoint.h>
 #include <api/polar.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <api/xfoiltask.h>
 
 

@@ -29,7 +29,7 @@
 #include <interfaces/opengl/controls/gllightdlg.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <core/xflcore.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 
 Fine3dControls::Fine3dControls(gl3dView *pgl3dview) : QFrame()
 {

@@ -47,6 +47,7 @@ class FL5LIB_EXPORT SailWing : public Sail
         Sail* clone() const override {return new SailWing(*this);}
 
 
+        void resizeSections(int nSections);
         void resizeSections(int nSections, int nPoints) override;
         void makeDefaultSail() override;
 
@@ -70,7 +71,6 @@ class FL5LIB_EXPORT SailWing : public Sail
 
 
         void makeSurface() override;
-        bool serializeSailFl5(QDataStream &ar, bool bIsStoring) override;
 
         void createSection(int iSection) override;
         void deleteSection(int iSection) override;

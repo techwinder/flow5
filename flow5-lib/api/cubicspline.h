@@ -48,7 +48,6 @@ class FL5LIB_EXPORT CubicSpline : public Spline
         void makeCurve() override;
         bool updateSpline() override;
 
-        bool serializeFl5(QDataStream &ar, bool bIsStoring) override;
         Vector2d splinePoint(double u) const override;
         void splineDerivative(double u, double &dx, double &dy) const override;
 

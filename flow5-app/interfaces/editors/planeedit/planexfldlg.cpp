@@ -70,7 +70,10 @@
 #include <api/wingxfl.h>
 #include <api/xmlfusereader.h>
 #include <api/xmlwingreader.h>
+#include <api/utils-io.h>
 
+
+#include <core/qunits.h>
 #include <core/saveoptions.h>
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>

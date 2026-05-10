@@ -45,7 +45,9 @@
 #include <api/planepolar.h>
 #include <api/planexfl.h>
 #include <api/units.h>
+
 #include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/fl5views/gl3dxflview.h>

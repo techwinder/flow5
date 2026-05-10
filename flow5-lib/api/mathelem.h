@@ -67,7 +67,7 @@ bool cubicSplineInterpolation(int n, const double *x, const double *y, double *a
 void testPointDistribution();
 
 double err_func(double x);
-double erf_inv(double a);
+double erf_inv(float a);
 
 double interpolateLine(double x, double x0, double y0, double x1, double y1);
 

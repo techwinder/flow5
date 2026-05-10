@@ -31,7 +31,6 @@
 #include <sstream>
 #include <vector>
 
-#include <QDataStream>
 
 
 #define ALPHAstr      std::string("\u03B1")
@@ -46,27 +45,6 @@
 #define INFstr        std::string("\u221e")
 #define SQUAREstr     std::string("\u00b2")
 #define EOLstr        std::string("\n")
-
-#define PIch         QString(QChar(0x03C0))
-#define ALPHAch      QString(QChar(0x03B1))
-#define BETAch       QString(QChar(0x03B2))
-#define GAMMAch      QString(QChar(0x03B3))
-#define DELTAch      QString(QChar(0x03B4))
-#define DELTACAPch   QString(QChar(0x0394)) // Capital
-#define ZETAch       QString(QChar(0x03B6))
-#define LAMBDAch     QString(QChar(0x03BB))
-#define NUch         QString(QChar(0x03BD))
-#define PHIch        QString(QChar(0x03C6))
-#define RHOch        QString(QChar(0x03C1))
-#define SIGMAch      QString(QChar(0x03C3))
-#define THETAch      QString(QChar(0x03B8))
-#define XIch         QString(QChar(0x03BE))
-#define TAUch        QString(QChar(0x03C4))
-#define DEGch        QString(QChar(0x00B0))
-#define INFch        QString(QChar(0x221e))
-#define TIMESch      QString(QChar(0x00d7))
-#define SQUAREch     QString(QChar(0x00b2))
-#define EOLch        QString("\n")
 
 
 #include <fl5lib_global.h>
@@ -90,13 +68,7 @@ namespace xfl
     FL5LIB_EXPORT  extern fl5Color Turquoise;
 
 
-    FL5LIB_EXPORT fl5Color readQColor(QDataStream &ar);
 
-    FL5LIB_EXPORT  void readColor(QDataStream &ar, int &r, int &g, int &b);
-    FL5LIB_EXPORT  void writeColor(QDataStream &ar, int r, int g, int b);
-
-    FL5LIB_EXPORT  void readColor(QDataStream &ar, int &r, int &g, int &b, int &a);
-    FL5LIB_EXPORT  void writeColor(QDataStream &ar, int r, int g, int b, int a);
 
     FL5LIB_EXPORT  float getRed(float tau);
     FL5LIB_EXPORT  float getGreen(float tau);
@@ -105,21 +77,10 @@ namespace xfl
     FL5LIB_EXPORT  int   randomInt(int range);
     FL5LIB_EXPORT  float randomfloat(float fmax);
 
-
-    FL5LIB_EXPORT  void readString(QDataStream &ar, std::string &strong);
-    FL5LIB_EXPORT  void writeString(QDataStream &ar, QString const &strong);
-    FL5LIB_EXPORT  void writeString(QDataStream &ar, std::string const &strong);
-
     FL5LIB_EXPORT  int readValues(const std::string &theline, float val[], int nValues);
-    FL5LIB_EXPORT  void readFloat(QDataStream &inStream, float &f);
-    FL5LIB_EXPORT  void writeFloat(QDataStream &outStream, float f);
 
     FL5LIB_EXPORT  bool stringToFile(std::string const &string, std::string const &path);
     FL5LIB_EXPORT  bool stringFromFile(std::string &string, std::string const &path);
-
-
-    FL5LIB_EXPORT  bool stringToBool(QString const &str);
-    FL5LIB_EXPORT  QString boolToString(bool b);
 
     FL5LIB_EXPORT std::string MklVersion();
 

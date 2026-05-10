@@ -105,7 +105,6 @@ class FL5LIB_EXPORT XFoilTask
 
         void clearOpps() {m_OpPoints.clear();}
 
-        void traceLog(const QString &str);
         void traceStdLog(const std::string &str);
 
         static void setCancelled(bool b);

@@ -36,7 +36,7 @@
 #include <core/xflcore.h>
 #include <interfaces/script/xflexecutor.h>
 
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 #include <api/llttask.h>
 #include <api/objects3d.h>
 #include <api/planeopp.h>
@@ -471,7 +471,7 @@ void XflExecutor::makePlaneTasks(QString &logmsg)
 
                 if(pWPolar->name().length()==0)
                 {
-                    pWPolar->setName(PlanePolarNameMaker::makeName(pPlane, pWPolar).toStdString());
+                    pWPolar->setName(PlanePolarNameMaker::makeName(pPlane, pWPolar));
                 }
 
                 if(pWPolar && pWPolar->planeName().compare(pPlane->name())==0)

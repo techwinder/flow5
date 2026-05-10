@@ -34,8 +34,9 @@
 #include <interfaces/widgets/customwts/xfldelegate.h>
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
+#include <core/qunits.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 
 
 std::vector<T8Opp> T8RangeTable::s_T8Range;

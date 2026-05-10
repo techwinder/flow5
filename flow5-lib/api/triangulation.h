@@ -26,8 +26,6 @@
 
 #include <vector>
 
-#include <QDataStream>
-
 #include <triangle3d.h>
 #include <node.h>
 
@@ -91,7 +89,6 @@ class FL5LIB_EXPORT Triangulation
 
         void flipNormals();
 
-        bool serializeFl5(QDataStream &ar, bool bIsStoring);
 
     private:
         std::vector<Triangle3d> m_Triangle;

@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <QString>
+#include <string>
 
 #include <fl5lib_global.h>
 
@@ -39,9 +39,9 @@ class FL5LIB_EXPORT PlanePolarNameMaker
 
     public:
         PlanePolarNameMaker();
-        static QString makeName(const Plane *pPlane, const PlanePolar *pWPolar);
-        static QString rangeControlNames(const PlaneXfl *pPlane, const PlanePolar *pWPolar);
-        static QString stabilityControlNames(PlaneXfl const *pPlane, PlanePolar const *pWPolar);
+        static std::string makeName(const Plane *pPlane, const PlanePolar *pWPolar);
+        static std::string rangeControlNames(const PlaneXfl *pPlane, const PlanePolar *pWPolar);
+        static std::string stabilityControlNames(PlaneXfl const *pPlane, PlanePolar const *pWPolar);
 
     private:
 

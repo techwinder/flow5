@@ -29,9 +29,9 @@
 
 #include "gl2dfractal.h"
 
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <core/displayoptions.h>
-#include <api/trace.h>
+#include <core/trace.h>
 #include <core/xflcore.h>
 #include <interfaces/opengl/views/gl3dview.h> // for the static variables
 #include <interfaces/widgets/customwts/intedit.h>

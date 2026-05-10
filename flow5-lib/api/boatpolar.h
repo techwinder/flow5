@@ -55,8 +55,6 @@ class FL5LIB_EXPORT BoatPolar : public Polar3d
         double TrefftzDistance() const override {return m_TotalWakeLengthFactor;}
 
 
-        bool serializeFl5v726(QDataStream &ar, bool bIsStoring) override;
-        bool serializeFl5v750(QDataStream &ar, bool bIsStoring) override;
         void clearData();
 
         void addPoint(const BoatOpp *pBtOpp);
@@ -69,8 +67,18 @@ class FL5LIB_EXPORT BoatPolar : public Polar3d
         std::string const &boatName() const {return m_BoatName;}
         void setBoatName(std::string const &name) {m_BoatName=name;}
 
+        void resizePoints(int n) {m_AF.resize(n); m_Ctrl.resize(n); m_VInf.resize(n); m_Phi.resize(n); m_Beta.resize(n);}
         int dataSize() const {return int(m_Ctrl.size());}
         bool hasPoints() const {return m_Ctrl.size()>0;}
+
+        double ctrl(int i) const {if(i>=0 && i<int(m_Ctrl.size())) return m_Ctrl.at(i); else return 0.0;}
+        void setCtrl(int i, double ctrl) {if(i>=0 && i<int(m_Ctrl.size())) m_Ctrl[i]=ctrl;}
+
+        double beta(int i) const {if(i>=0 && i<int(m_Beta.size())) return m_Beta.at(i); else return 0.0;}
+        double phiPt(int i)  const {if(i>=0 && i<int(m_Phi.size()))  return m_Phi.at(i);  else return 0.0;}
+        double vInf(int i) const {if(i>=0 && i<int(m_VInf.size())) return m_VInf.at(i); else return 0.0;}
+
+        void setData(int i, double ctrl, double vinf, double beta, double phi);
 
         bool hasBtOpp(const BoatOpp *pBOpp) const;
 
@@ -147,6 +155,8 @@ class FL5LIB_EXPORT BoatPolar : public Polar3d
         BSpline const &windSpline() const {return m_WindSpline;}
         void setWindSpline(BSpline const &spline) {m_WindSpline=spline;}
 
+        AeroForces &AF(int i) {return m_AF[i];}
+
         static std::vector<std::string> const &variableNames() {return s_BtPolarVariableNames;}
         static std::string variableName(int iVar) {return s_BtPolarVariableNames.at(iVar);}
         static int variableCount() {return int(s_BtPolarVariableNames.size());}
@@ -177,7 +187,7 @@ class FL5LIB_EXPORT BoatPolar : public Polar3d
         std::vector<double>  m_VInf;
         std::vector<double>  m_Beta;
         std::vector<double>  m_Phi;
-        std::vector<AeroForces> m_AC;
+        std::vector<AeroForces> m_AF;
 
         BSpline m_WindSpline;
 

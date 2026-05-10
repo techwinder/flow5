@@ -27,7 +27,7 @@
 
 #include <QObject>
 
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 
 
 class GMesher : public QObject

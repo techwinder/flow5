@@ -34,8 +34,9 @@
 
 #include <api/wingxfl.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 
+#include <core/qunits.h>
 #include <core/xflcore.h>
 
 WingSectionModel::WingSectionModel(WingXfl *pWing, QObject *parent)

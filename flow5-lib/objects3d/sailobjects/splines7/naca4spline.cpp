@@ -26,7 +26,6 @@
 
 //Spline based on the mid line of the NACA 4 digit airfoil series
 
-#include <QDataStream>
 
 #include <naca4spline.h>
 
@@ -84,22 +83,6 @@ void Naca4Spline::getCamber(double &Camber, double &xc)
 }
 
 
-bool Naca4Spline::serialize(QDataStream &ar, bool bIsStoring)
-{
-    if(bIsStoring)
-    {
-        ar << m << p;
-    }
-    else
-    {
-        ar >> m >> p;
-        updateSpline();
-        makeCurve();
-    }
-    return true;
-}
-
-
 bool Naca4Spline::updateSpline()
 {
     p = m_CtrlPt.at(1).x;
@@ -110,7 +93,7 @@ bool Naca4Spline::updateSpline()
 
 void Naca4Spline::makeCurve()
 {
-    for(uint i=0; i<m_Output.size(); i++)
+    for(unsigned int i=0; i<m_Output.size(); i++)
     {
         double di = double(i)/double(m_Output.size()-1);
         m_Output[i] = splinePoint(di);
@@ -132,7 +115,7 @@ Vector2d Naca4Spline::splinePoint(double u) const
 
 void Naca4Spline::splineDerivative(double u, double &dx, double &dy) const
 {
-    Q_UNUSED(u);
+    (void)u;
     dx = dy =0.0;
 }
 

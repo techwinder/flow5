@@ -22,8 +22,9 @@
 
 *****************************************************************************/
 
-#include <QString>
-
+#include <format>
+#include <string>
+#include <iostream>
 
 
 #include <xflmesh.h>
@@ -36,25 +37,25 @@ std::vector<Vector3d> XflMesh::s_DebugPts;
 
 void XflMesh::listNodes()
 {
-    QString strange, str;
-    for(uint in=0; in<m_Node.size(); in++)
+    std::string strange, str;
+    for(unsigned int in=0; in<m_Node.size(); in++)
     {
         Node const &nd = m_Node.at(in);
-        strange = QString::asprintf("node[%3d] (%9g %9g %9g)\n", nd.index(), nd.x, nd.y,nd.z);
-        str = QString::asprintf("  normal (%9g %9g %9g)\n", nd.normal().x, nd.normal().y,nd.normal().z);
+        strange = std::format("node[{:3d}] ({:9g} {:9g} {:9g})\n", nd.index(), nd.x, nd.y,nd.z);
+        str = std::format("  normal ({:9g} {:9g} {:9g})\n", nd.normal().x, nd.normal().y,nd.normal().z);
         strange += str;
 
-        strange += "  " + QString::fromStdString(objects::surfacePosition(nd.surfacePosition())) + "\n";
+        strange += "  " + objects::surfacePosition(nd.surfacePosition()) + "\n";
 
         str = "  Connected nodes:";
         for(int i=0; i<nd.neighbourNodeCount(); i++)
-            str += QString::asprintf("  %d", nd.neigbourNodeIndex(i));
+            str += std::format("  {:d}", nd.neigbourNodeIndex(i));
         strange += str + "\n";
 
         str = "  Triangles:";
         for(int i=0; i<nd.triangleCount(); i++)
-            str += QString::asprintf("  %d", nd.triangleIndex(i));
+            str += std::format("  {:d}", nd.triangleIndex(i));
         strange += str + "\n";
-        qDebug("%s", strange.toStdString().c_str());
+        std::cout << strange << std::endl;
     }
 }

@@ -22,11 +22,11 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
+
 
 #include <iostream>
 #include <thread>
-#include <QString>
+#include <format>
 
 
 #include <panelanalysis.h>
@@ -82,9 +82,9 @@ PanelAnalysis::PanelAnalysis()
  */
 bool PanelAnalysis::allocateMatrix(int N)
 {
-    uint matSize = uint(N);
+    unsigned int matSize = unsigned(N);
 
-    uint size2 = matSize * matSize;
+    unsigned int size2 = matSize * matSize;
     double gb=0;
 
     try
@@ -95,7 +95,7 @@ bool PanelAnalysis::allocateMatrix(int N)
             memset(m_aijd.data(), 0, size2 * sizeof(double));
             m_aijf.clear();
 
-            gb = size2 * sizeof(double) /1024/1024;
+            gb = double(size2 * sizeof(double)) /1024.0/1024.0;
         }
         else
         {
@@ -103,22 +103,22 @@ bool PanelAnalysis::allocateMatrix(int N)
             memset(m_aijf.data(), 0, size2 * sizeof(float));
             m_aijd.clear();
 
-            gb = size2 * sizeof(float) /1024/1024;
+            gb = double(size2 * sizeof(float)) /1024.0/1024.0;
         }
     }
     catch(std::bad_alloc &exception)
     {
-        QString strong(exception.what());
+        std::string strong(exception.what());
         strong += ": error allocating memory for the influence matrix\n";
-        strong += QString::asprintf("Request for %7.2f Mb failed\n", gb);
-        traceLog(strong);
+        strong += std::format("Request for {:7.2f} Mb failed\n", gb);
+        traceStdLog(strong);
         return false;
     }
     catch(...)
     {
-        QString strong("Undetermined error during memory allocation for the influence matrix\n");
-        strong += QString::asprintf("Request for %7.2f Mb failed\n", gb);
-        traceLog(strong);
+        std::string strong("Undetermined error during memory allocation for the influence matrix\n");
+        strong += std::format("Request for {:7.2f} Mb failed\n", gb);
+        traceStdLog(strong);
         return false;
     }
 
@@ -127,10 +127,6 @@ bool PanelAnalysis::allocateMatrix(int N)
     return true;
 }
 
-void PanelAnalysis::traceLog(QString const &str) const
-{
-    traceStdLog(str.toStdString());
-}
 
 void PanelAnalysis::traceStdLog(std::string const &str) const
 {
@@ -432,7 +428,7 @@ bool PanelAnalysis::backSubRHS(std::vector<double> &RHS)
 /** Combines the unit RHS or unit solution vector to make respectively a unit RHS or solution vector */
 void PanelAnalysis::combineUnitRHS(std::vector<double> &RHS, Vector3d const &VInf, Vector3d const &Omega)
 {
-    for(uint i=0; i<RHS.size(); i++)
+    for(unsigned int i=0; i<RHS.size(); i++)
     {
         RHS[i]  = VInf.x  * m_uRHS[i] + VInf.y *m_vRHS[i] + VInf.z *m_wRHS[i];
         RHS[i] += Omega.x * m_pRHS[i] + Omega.y*m_qRHS[i] + Omega.z*m_rRHS[i];
@@ -649,7 +645,7 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
 
     std::vector<double> Sigma(7*N, 0);
     std::vector<std::vector<Vector3d>> VField(7);
-    for(uint i=0; i<VField.size(); i++)
+    for(unsigned int i=0; i<VField.size(); i++)
     {
         VField[i].resize(N); // uses the default constructor
     }
@@ -910,7 +906,7 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
 
     std::vector<double> Sigma(6*N);
     std::vector<std::vector<Vector3d>> VField(6);
-    for(uint i=0; i<VField.size(); i++)
+    for(unsigned int i=0; i<VField.size(); i++)
     {
         VField[i].resize(N);
         std::fill(VField[i].begin(), VField[i].end(), Vector3d());
@@ -1130,7 +1126,7 @@ void PanelAnalysis::getVortonVelocity(Vector3d const &C, double vtncorelength, V
         }
         std::cout << "PanelAnalysis::getVortonVelocity joined all " << m_nBlocks << " threads" <<std::endl;
 
-        for(uint iRow=0; iRow<VRow.size(); iRow++)
+        for(unsigned int iRow=0; iRow<VRow.size(); iRow++)
             VelVtn += VRow.at(iRow);
     }
     else
@@ -1143,7 +1139,7 @@ void PanelAnalysis::getVortonVelocity(Vector3d const &C, double vtncorelength, V
 
 
     Vector3d VNeg, V;
-    for(uint iv=0; iv<m_VortexNeg.size(); iv++)
+    for(unsigned int iv=0; iv<m_VortexNeg.size(); iv++)
     {
         m_VortexNeg.at(iv).getInducedVelocity(C, V, Vortex::coreRadius(), Vortex::vortexModel());
         VNeg += V;
@@ -1171,7 +1167,7 @@ void PanelAnalysis::getVortonRowVelocity(int iRow, Vector3d const &C, double vtn
     if     (m_pPolar3d->bGroundEffect())      coef=1.0;
     else if(m_pPolar3d->bFreeSurfaceEffect()) coef=-1.0;
 
-    for(uint iv=0; iv<vortons.size(); iv++)
+    for(unsigned int iv=0; iv<vortons.size(); iv++)
     {
         Vorton const & vtn = vortons.at(iv);
 
@@ -1209,16 +1205,16 @@ void PanelAnalysis::getVortonVelocityGradient(Vector3d const &C, double *G) cons
     for(int ic=0; ic<nVortonRows(); ic++)
     {
         std::vector<Vorton> const &vtnrow = m_Vorton.at(ic);
-        for(uint iv=0; iv<vtnrow.size(); iv++)
+        for(unsigned int iv=0; iv<vtnrow.size(); iv++)
         {
             Vorton const & vtn = vtnrow.at(iv);
             if(vtn.isActive())
             {
                 vtn.velocityGradient(C, vtncoresize, g);
-    //            if(bTrace)  qDebug("  %13g  %13g  %13g  %13g  %13g  %13g  %13g  %13g  %13g", -g[0], g[1], g[2], g[3], g[4], g[5], g[6], g[7], g[8]);
+    //            if(bTrace)  qDebug("  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}", -g[0], g[1], g[2], g[3], g[4], g[5], g[6], g[7], g[8]);
 
                 for(int i=0; i<9; i++) G[i] += g[i];
-    //            if(bTrace)   qDebug("  %13G  %13G  %13G  %13G  %13G  %13G  %13G  %13G  %13G", -G[0], G[1], G[2], G[3], G[4], G[5], G[6], G[7], G[8]);
+    //            if(bTrace)   qDebug("  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}", -G[0], G[1], G[2], G[3], G[4], G[5], G[6], G[7], G[8]);
             }
         }
     }
@@ -1292,14 +1288,14 @@ void PanelAnalysis::vortonDrag(double alpha, double beta, double QInf, int n0, i
         SpanResFF.m_Ai[m] = atan2(Wg.dot(vortexN), QInf)*180.0/PI;
 
 #ifdef QT_DEBUG
-//        qDebug("Vg[%d]  %11g  %11g", m, vortex.norm(), Wg.norm());
+//        qDebug("Vg[{:d}]  {:11g}  {:11g}", m, vortex.norm(), Wg.norm());
 
 /*        for(int k=0; k<5; k++)
         {
             s = double(k)/5.0;
             P.set(P0 *(1.0-s) + P1*s);
             getVortonVelocity(P, vtncorelength, Wg);
-            qDebug(" %13g  %13g  %13g", Wg.x, Wg.y, Wg.z);
+            qDebug(" {:13g}  {:13g}  {:13g}", Wg.x, Wg.y, Wg.z);
         }*/
 #endif
 

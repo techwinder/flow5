@@ -22,7 +22,7 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
+
 
 #include <wingsailsection.h>
 
@@ -82,101 +82,6 @@ void WingSailSection::sectionPoint(double t, xfl::enumSurfacePosition pos, doubl
 }
 
 
-bool WingSailSection::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    int n(0), k(0);
-    int ArchiveFormat=500001;// identifies the format of the file
-    double dble(0);
-    int nIntSpares(0);
-    int nDbleSpares(0);
-    QString strange;
-
-    if(bIsStoring)
-    {
-        // storing code
-        ar << ArchiveFormat;
-        ar << QString::fromStdString(m_FoilName);
-        ar << m_NXPanels << m_NZPanels;
-        ar << m_Chord << m_Twist;
-
-        switch(m_XPanelDist)
-        {
-            case xfl::COSINE:      ar <<  1;  break;
-            case xfl::SINE:        ar <<  2;  break;
-            case xfl::INV_SINE:    ar << -2;  break;
-            case xfl::INV_SINH:    ar <<  3;  break;
-            case xfl::TANH:        ar <<  4;  break;
-            case xfl::EXP:         ar <<  5;  break;
-            case xfl::INV_EXP:     ar <<  6;  break;
-            case xfl::UNIFORM:
-            default:               ar <<  0;  break;
-        }
-
-        switch(m_ZPanelDist)
-        {
-            case xfl::COSINE:      ar <<  1;  break;
-            case xfl::SINE:        ar <<  2;  break;
-            case xfl::INV_SINE:    ar << -2;  break;
-            case xfl::INV_SINH:    ar <<  3;  break;
-            case xfl::TANH:        ar <<  4;  break;
-            case xfl::EXP:         ar <<  5;  break;
-            case xfl::INV_EXP:     ar <<  6;  break;
-            case xfl::UNIFORM:
-            default:               ar <<  0;  break;
-        }
-
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares; n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-
-        return true;
-    }
-    else
-    {
-        // loading code
-        ar >> ArchiveFormat;
-
-        if (ArchiveFormat!=500001)  return false;
-
-        ar >> strange;  m_FoilName = strange.toStdString();
-        ar >> m_NXPanels >> m_NZPanels;
-        ar >> m_Chord >> m_Twist;
-
-        ar >> k;
-        if     (k==1)  m_XPanelDist = xfl::COSINE;
-        else if(k==2)  m_XPanelDist = xfl::SINE;
-        else if(k==-2) m_XPanelDist = xfl::INV_SINE;
-        else if(k==3)  m_XPanelDist = xfl::INV_SINH;
-        else if(k==4)  m_XPanelDist = xfl::TANH;
-        else if(k==5)  m_XPanelDist = xfl::EXP;
-        else if(k==6)  m_XPanelDist = xfl::INV_EXP;
-        else           m_XPanelDist = xfl::UNIFORM;
-
-        ar >> k;
-        if     (k==1)  m_ZPanelDist = xfl::COSINE;
-        else if(k==2)  m_ZPanelDist = xfl::SINE;
-        else if(k==-2) m_ZPanelDist = xfl::INV_SINE;
-        else if(k==3)  m_ZPanelDist = xfl::INV_SINH;
-        else if(k==4)  m_ZPanelDist = xfl::TANH;
-        else if(k==5)  m_ZPanelDist = xfl::EXP;
-        else if(k==6)  m_ZPanelDist = xfl::INV_EXP;
-        else           m_ZPanelDist = xfl::UNIFORM;
-
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-        return true;
-    }
-}
-
-
 void WingSailSection::getPoints(std::vector<Vector3d> &points, int nx, xfl::enumDistribution xdist) const
 {
     points.clear();
@@ -186,7 +91,7 @@ void WingSailSection::getPoints(std::vector<Vector3d> &points, int nx, xfl::enum
 
     Vector2d N;
     Vector2d fp;
-    for(uint i=0; i<fraclist.size(); i++)
+    for(unsigned int i=0; i<fraclist.size(); i++)
     {
         if(pFoil)
         {
@@ -211,6 +116,7 @@ void WingSailSection::getPoints(std::vector<Vector3d> &points, int nx, xfl::enum
         }
     }
 }
+
 
 
 

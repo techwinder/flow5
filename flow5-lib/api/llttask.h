@@ -73,42 +73,41 @@ class Foil;
 #define MAXSPANSTATIONS   1000     /**< The max number of stations for LLT. For a VLM analysis, this is the max number of panels in the spanwise direction. */
 
 
-class FL5LIB_EXPORT LLTTask : public Task3d
+class LLTTask : public Task3d
 {
     public:
-        LLTTask();
-        void clearPOppList();
-        void initializeAnalysis();
-        void initializeGeom();
+        FL5LIB_EXPORT LLTTask();
+        FL5LIB_EXPORT void clearPOppList();
+        FL5LIB_EXPORT void initializeAnalysis();
+        FL5LIB_EXPORT void initializeGeom();
 
-        void setLLTRange(const std::vector<double> &opplist) {m_AoAList = opplist;}
-        void setObjects(PlaneXfl *pPlane, PlanePolar *pWPolar);
+        FL5LIB_EXPORT void setLLTRange(const std::vector<double> &opplist) {m_AoAList = opplist;}
+        FL5LIB_EXPORT void setObjects(PlaneXfl *pPlane, PlanePolar *pWPolar);
 
-        void run() override;
-        void traceStdLog(std::string const &str) override;
-        void traceLog(QString const &str);
-        void traceOpp(double alpha, std::vector<double>const &max_a, std::string const &msg);
+        FL5LIB_EXPORT void run() override;
+        FL5LIB_EXPORT void traceStdLog(std::string const &str) override;
+        FL5LIB_EXPORT void traceOpp(double alpha, std::vector<double>const &max_a, std::string const &msg);
 
-        bool hasErrors() const override {return m_bError || m_bWarning;}
+        FL5LIB_EXPORT bool hasErrors() const override {return m_bError || m_bWarning;}
 
-        PlaneXfl *plane() {return m_pPlane;}
-        PlanePolar *wPolar() {return m_pPlPolar;}
+        FL5LIB_EXPORT PlaneXfl *plane() {return m_pPlane;}
+        FL5LIB_EXPORT PlanePolar *wPolar() {return m_pPlPolar;}
 
-        std::vector<PlaneOpp*> const & planeOppList() const {return m_PlaneOppList;}
-        void clearPlaneOppList();
+        FL5LIB_EXPORT std::vector<PlaneOpp*> const & planeOppList() const {return m_PlaneOppList;}
+        FL5LIB_EXPORT void clearPlaneOppList();
 
-        void makeVortonRow(int ) override {}
-        void loop() override {}
+        FL5LIB_EXPORT void makeVortonRow(int ) override {}
+        FL5LIB_EXPORT void loop() override {}
 
-        static void setMaxIter(int maxIter){s_IterLim = maxIter;}
-        static void setConvergencePrecision(double precision) {s_CvPrec = precision;}
-        static void setNSpanStations(int nStations){s_NLLTStations=nStations;}
-        static void setRelaxationFactor(double relax){s_RelaxMax = relax;}
+        FL5LIB_EXPORT static void setMaxIter(int maxIter){s_IterLim = maxIter;}
+        FL5LIB_EXPORT static void setConvergencePrecision(double precision) {s_CvPrec = precision;}
+        FL5LIB_EXPORT static void setNSpanStations(int nStations){s_NLLTStations=nStations;}
+        FL5LIB_EXPORT static void setRelaxationFactor(double relax){s_RelaxMax = relax;}
 
-        static int maxIter() {return s_IterLim;}
-        static double convergencePrecision() {return s_CvPrec;}
-        static int nSpanStations() {return s_NLLTStations;}
-        static double relaxationFactor() {return s_RelaxMax;}
+        FL5LIB_EXPORT static int maxIter() {return s_IterLim;}
+        FL5LIB_EXPORT static double convergencePrecision() {return s_CvPrec;}
+        FL5LIB_EXPORT static int nSpanStations() {return s_NLLTStations;}
+        FL5LIB_EXPORT static double relaxationFactor() {return s_RelaxMax;}
 
     private:
         double alphaInduced(int k) const;

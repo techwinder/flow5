@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include <QFile>
+
 
 class Foil;
 class Polar;
@@ -33,9 +33,5 @@ class Polar;
 
 namespace objects
 {
-FL5LIB_EXPORT bool readFoilFile(const std::string &filename, Foil *pFoil, int &iLineError);
-    FL5LIB_EXPORT bool readPolarFile(QFile &plrFile, std::vector<Foil *> &foilList, std::vector<Polar *> &polarList);
-
-    FL5LIB_EXPORT bool serializeFoil(Foil*pFoil, QDataStream &ar);
-    FL5LIB_EXPORT bool serializePolarv6(Polar *pPolar, QDataStream &ar, bool bIsStoring);
+    FL5LIB_EXPORT bool readFoilFile(const std::string &filename, Foil *pFoil, int &iLineError);
 }

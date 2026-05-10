@@ -41,20 +41,22 @@
 #include "partinertiadlg.h"
 #include "partinertiamodel.h"
 
-#include <core/saveoptions.h>
+#include <api/constants.h>
+#include <api/planexfl.h>
+#include <api/pointmass.h>
 #include <api/units.h>
+
+#include <core/qunits.h>
+#include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/inertia/pointmasstable.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <interfaces/opengl/fl5views/gl3dfuseview.h>
 #include <interfaces/opengl/fl5views/gl3dplanexflview.h>
 #include <interfaces/opengl/fl5views/gl3dwingview.h>
-#include <options/prefsdlg.h>
 #include <interfaces/widgets/customwts/cptableview.h>
 #include <interfaces/widgets/customwts/floatedit.h>
-#include <api/constants.h>
-#include <api/pointmass.h>
-#include <api/planexfl.h>
+#include <options/prefsdlg.h>
 
 
 QByteArray PartInertiaDlg::s_Geometry;

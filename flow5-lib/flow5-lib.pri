@@ -27,12 +27,10 @@ HEADERS += \
     api/enums_objects.h \
     api/externalsail.h \
     api/extradrag.h \
-    api/fileio.h \
     api/fl5color.h \
     api/fl5core.h \
     api/fl5lib_global.h \
     api/fl5object.h \
-    api/flow5events.h \
     api/foil.h \
     api/frame.h \
     api/fuse.h \
@@ -122,7 +120,6 @@ HEADERS += \
     api/t8opp.h \
     api/task3d.h \
     api/testpanels.h \
-    api/trace.h \
     api/triangle2d.h \
     api/triangle3d.h \
     api/triangulation.h \
@@ -139,29 +136,7 @@ HEADERS += \
     api/wingxfl.h \
     api/xflmesh.h \
     api/xflobject.h \
-    api/xflxmlreader.h \
-    api/xflxmlwriter.h \
     api/xfoiltask.h \
-    api/xml_globals.h \
-    api/xmlboatreader.h \
-    api/xmlboatwriter.h \
-    api/xmlbtpolarreader.h \
-    api/xmlbtpolarwriter.h \
-    api/xmlfusereader.h \
-    api/xmlfusewriter.h \
-    api/xmlplanepolarreader.h \
-    api/xmlplanepolarwriter.h \
-    api/xmlplanereader.h \
-    api/xmlplanewriter.h \
-    api/xmlpolarreader.h \
-    api/xmlpolarwriter.h \
-    api/xmlsailreader.h \
-    api/xmlsailwriter.h \
-    api/xmlwingreader.h \
-    api/xmlwingwriter.h \
-    api/xmlxplanereader.h \
-    api/xmlxsailreader.h \
-    api/xmlxsailwriter.h \
 
 SOURCES += \
     analysis3d/boattask.cpp \
@@ -275,34 +250,10 @@ SOURCES += \
     panels/panels/vorton.cpp \
     panels/shell/edgesplit.cpp \
     utils/apilog.cpp \
-    utils/fileio.cpp \
     utils/fl5color.cpp \
     utils/fl5core.cpp \
-    utils/trace.cpp \
     utils/units.cpp \
     utils/utils.cpp \
-    xml/foil/xmlpolarreader.cpp \
-    xml/foil/xmlpolarwriter.cpp \
-    xml/fuse/xmlfusereader.cpp \
-    xml/fuse/xmlfusewriter.cpp \
-    xml/xflxmlreader.cpp \
-    xml/xflxmlwriter.cpp \
-    xml/xml_globals.cpp \
-    xml/xplane/xmlplanepolarreader.cpp \
-    xml/xplane/xmlplanepolarwriter.cpp \
-    xml/xplane/xmlplanereader.cpp \
-    xml/xplane/xmlplanewriter.cpp \
-    xml/xplane/xmlwingreader.cpp \
-    xml/xplane/xmlwingwriter.cpp \
-    xml/xplane/xmlxplanereader.cpp \
-    xml/xsail/xmlboatreader.cpp \
-    xml/xsail/xmlboatwriter.cpp \
-    xml/xsail/xmlbtpolarreader.cpp \
-    xml/xsail/xmlbtpolarwriter.cpp \
-    xml/xsail/xmlsailreader.cpp \
-    xml/xsail/xmlsailwriter.cpp \
-    xml/xsail/xmlxsailreader.cpp \
-    xml/xsail/xmlxsailwriter.cpp \
 
 
 

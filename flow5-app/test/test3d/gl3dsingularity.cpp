@@ -22,20 +22,25 @@
 
 *****************************************************************************/
 
+#define _MATH_DEFINES_DEFINED
+
+
 #include <QVBoxLayout>
 
 #include "gl3dsingularity.h"
 
 
-#include <interfaces/controls/w3dprefs.h>
-#include <interfaces/opengl/globals/gl_globals.h>
-#include <api/trace.h>
-#include <core/displayoptions.h>
 #include <api/utils.h>
 #include <api/vortex.h>
+
+#include <core/displayoptions.h>
+#include <core/trace.h>
+#include <interfaces/controls/w3dprefs.h>
+#include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/globals/wt_globals.h>
+
 
 float gl3dSingularity::s_Progression(1.5f);
 float gl3dSingularity::s_Radius(0.1f);

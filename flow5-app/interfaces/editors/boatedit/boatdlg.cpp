@@ -48,7 +48,7 @@
 #include "boatdlg.h"
 
 #include <api/boat.h>
-#include <api/flow5events.h>
+#include <core/flow5events.h>
 #include <api/fuseocc.h>
 #include <api/fusestl.h>
 #include <api/fusexfl.h>
@@ -67,6 +67,7 @@
 #include <api/xmlfusereader.h>
 #include <api/xmlsailreader.h>
 
+#include <core/qunits.h>
 #include <core/saveoptions.h>
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>

@@ -36,9 +36,10 @@
 #include <api/boatpolar.h>
 #include <api/sail.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 
 #include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/analysis3ddef/aerodatadlg.h>
 #include <interfaces/editors/analysis3ddef/btpolarautonamedlg.h>

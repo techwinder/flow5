@@ -109,7 +109,6 @@ class FL5LIB_EXPORT Foil : public XflObject
         void setFlaps();
         void setLEFlapData(bool bFlap, double xhinge, double yhinge, double angle);
         void setTEFlapData(bool bFlap, double xhinge, double yhinge, double angle);
-        void setTEFlapAngle(double angle){m_TEFlapAngle=angle;}
 
 
         bool hasTEFlap() const {return m_bTEFlap;}
@@ -117,8 +116,11 @@ class FL5LIB_EXPORT Foil : public XflObject
         void setTEFlap(bool b) {m_bTEFlap=b;}
         void setLEFlap(bool b) {m_bLEFlap=b;}
 
-        double TEFlapAngle() const {return m_TEFlapAngle;}
+        void setLEFlapAngle(double angle){m_LEFlapAngle=angle;}
         double LEFlapAngle() const {return m_LEFlapAngle;}
+
+        void setTEFlapAngle(double angle){m_TEFlapAngle=angle;}
+        double TEFlapAngle() const {return m_TEFlapAngle;}
 
         void setTEHinge(double fracchord, double fracheight) {m_TEXHinge=fracchord; m_TEYHinge=fracheight;}
         void setTEXHinge(double fracchord) {m_TEXHinge=fracchord;}
@@ -127,14 +129,13 @@ class FL5LIB_EXPORT Foil : public XflObject
         double TEYHinge() const {return m_TEYHinge;}
         Vector2d TEHinge() const;
 
+        void setLEXHinge(double fracchord) {m_LEXHinge=fracchord;}
+        void setLEYHinge(double fracheight) {m_LEYHinge=fracheight;}
         double LEXHinge() const {return m_LEXHinge;}
         double LEYHinge() const {return m_LEYHinge;}
         Vector2d LEHinge() const;
 
         void scaleHingeLocations(); // cleaning old files
-
-        bool serializeXfl(QDataStream &ar, bool bIsStoring);
-        bool serializeFl5(QDataStream &ar, bool bIsStoring);
 
         void interpolate(Foil const *pFoil1, Foil const *pFoil2, double frac);
 
@@ -198,6 +199,9 @@ class FL5LIB_EXPORT Foil : public XflObject
         void makeModPermanent();
 
         double CSfracLE() const {return m_CSfracLE;}
+
+        double bunchAmp() const {return m_BunchAmp;}
+        Spline::enumBunch bunchType() const {return m_BunchType;}
 
         void setBunchParameters(Spline::enumBunch bunchtype, double bunchamp) {m_BunchType=bunchtype, m_BunchAmp=bunchamp;}
 

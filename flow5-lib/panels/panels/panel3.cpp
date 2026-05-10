@@ -22,7 +22,8 @@
 
 *****************************************************************************/
 
-#include <QString>
+#include <format>
+#include <string>
 
 
 #include <panel3.h>
@@ -206,7 +207,7 @@ void Panel3::setFrame()
 
     m_SignedArea = ((m_Sl[1].x-m_Sl[0].x)*(m_Sl[2].y-m_Sl[0].y) - (m_Sl[2].x-m_Sl[0].x)*(m_Sl[1].y-m_Sl[0].y)) / 2.0;
     assert(m_SignedArea>0.0); // positive orientations only
-//    if(m_SignedArea<0.0 || !m_bPositiveOrientation)  qDebug(" index=%3d   %1d  %g", m_index, m_bPositiveOrientation, m_SignedArea);
+//    if(m_SignedArea<0.0 || !m_bPositiveOrientation)  qDebug(" index={:3d}   %1d  {:g}", m_index, m_bPositiveOrientation, m_SignedArea);
 
     // calculate the integrals of x.b_i(x,y) and y.b_i(x,y) - needed later for distant field approximation
     GQTriangle gq(5); // x.basis functions are second order
@@ -317,7 +318,7 @@ void Panel3::sourceQuadraturePotential(Vector3d ptGlobal, double &phi) const
     Vector3d ptL = globalToLocalPosition(ptGlobal);
     double sumPhi = 0.0;
 
-    for(uint i=0; i<s_gq.points().size(); i++)
+    for(unsigned int i=0; i<s_gq.points().size(); i++)
     {
         double x = m_Sl[0].x*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].x*s_gq.points().at(i).x + m_Sl[2].x*s_gq.points().at(i).y;
         double y = m_Sl[0].y*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].y*s_gq.points().at(i).x + m_Sl[2].y*s_gq.points().at(i).y;
@@ -342,7 +343,7 @@ void Panel3::sourceQuadratureVelocity(Vector3d ptGlobal, Vector3d &V) const
     Vector3d ptL = globalToLocalPosition(ptGlobal);
     Vector3d sumV(0.0,0,0);
 
-    for(uint i=0; i<s_gq.points().size(); i++)
+    for(unsigned int i=0; i<s_gq.points().size(); i++)
     {
         double x = m_Sl[0].x*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].x*s_gq.points().at(i).x + m_Sl[2].x*s_gq.points().at(i).y;
         double y = m_Sl[0].y*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].y*s_gq.points().at(i).x + m_Sl[2].y*s_gq.points().at(i).y;
@@ -431,44 +432,44 @@ void Panel3::rotate(Vector3d const &HA, Vector3d const &Axis, double angle)
 
 std::string Panel3::properties(bool bLong) const
 {
-    QString props, strange;
+    std::string props, strange;
 
-    props = QString::asprintf("Triangular Panel %d\n", m_index);
+    props = std::format("Triangular Panel {:d}\n", m_index);
 
     if(m_bNullTriangle) props +="   ***** NULL triangle *****\n";
 
 
     for(int in=0; in<3; in++)
     {
-        strange = QString::asprintf("  Node(%4d) = (%9.3f, %9.3f, %9.3f) ", m_S[in].index(),
+        strange = std::format("  Node({:4d}) = ({:9.3f}, {:9.3f}, {:9.3f}) ", m_S[in].index(),
                                     round(m_S[in].x*Units::mtoUnit()*1000.0)/1000.0,
                                     round(m_S[in].y*Units::mtoUnit()*1000.0)/1000.0,
                                     round(m_S[in].z*Units::mtoUnit()*1000.0)/1000.0);
-        strange += Units::lengthUnitQLabel() + "\n";
+        strange += Units::lengthUnitLabel() + "\n";
         props += strange;
     }
 
-    strange = QString::asprintf("  Normal  = (%9.3f, %9.3f, %9.3f)\n", m_Normal.x, m_Normal.y, m_Normal.z);
+    strange = std::format("  Normal  = ({:9.3f}, {:9.3f}, {:9.3f})\n", m_Normal.x, m_Normal.y, m_Normal.z);
     props += strange;
 
-    strange = QString::asprintf("  CoG     = (%9.3f, %9.3f, %9.3f) ",
+    strange = std::format("  CoG     = ({:9.3f}, {:9.3f}, {:9.3f}) ",
                                 round(m_CoG_g.x*Units::mtoUnit()*1000.0)/1000.0,
                                 round(m_CoG_g.y*Units::mtoUnit()*1000.0)/1000.0,
                                 round(m_CoG_g.z*Units::mtoUnit()*1000.0)/1000.0);
-    strange += Units::lengthUnitQLabel() + "\n";
+    strange += Units::lengthUnitLabel() + "\n";
     props += strange;
 
-    strange = QString::asprintf("  Area    = %.5g ", m_SignedArea*Units::m2toUnit());
-    props += strange + Units::areaUnitQLabel() + "\n";
+    strange = std::format("  Area    = %.5g ", m_SignedArea*Units::m2toUnit());
+    props += strange + Units::areaUnitLabel() + "\n";
 
-    strange = QString::asprintf("  Angles  = (%5.1f, %5.1f, %5.1f)", m_Angle[0], m_Angle[1], m_Angle[2]);
-    props += strange + DEGch + "\n";
+    strange = std::format("  Angles  = (%5.1f, %5.1f, %5.1f)", m_Angle[0], m_Angle[1], m_Angle[2]);
+    props += strange + DEGstr + "\n";
 
-    strange = QString::asprintf("  Edges   = (%9.3f, %9.3f, %9.3f) ",
+    strange = std::format("  Edges   = ({:9.3f}, {:9.3f}, {:9.3f}) ",
                                 round(edge(0).length()*Units::mtoUnit()*1000.0)/1000.0,
                                 round(edge(1).length()*Units::mtoUnit()*1000.0)/1000.0,
                                 round(edge(2).length()*Units::mtoUnit()*1000.0)/1000.0);
-    strange += Units::lengthUnitQLabel();
+    strange += Units::lengthUnitLabel();
     props += strange;
 
     if(isSkinny())
@@ -477,10 +478,10 @@ std::string Panel3::properties(bool bLong) const
         double q=0,r=0,e=0;
         q = qualityFactor(r,e);
         props += "  Triangle is skinny:\n";
-        strange = QString::asprintf("    quality factor = %7g > %7g\n", q, s_Quality);
+        strange = std::format("    quality factor = {:7g} > {:7g}\n", q, s_Quality);
         props += strange;
-        strange = QString::asprintf("    circumradius   = %7g ", r*Units::mtoUnit());
-        strange += Units::lengthUnitQLabel();
+        strange = std::format("    circumradius   = {:7g} ", r*Units::mtoUnit());
+        strange += Units::lengthUnitLabel();
         props += strange;
     }
 
@@ -498,15 +499,15 @@ std::string Panel3::properties(bool bLong) const
     }
     props += strange;
 
-    strange = QString::asprintf("  Surface index= %d\n", m_SurfaceIndex);
+    strange = std::format("  Surface index= {:d}\n", m_SurfaceIndex);
     props += strange;
 
-    strange = QString::asprintf("  Vertex indexes:  %4d  %4d  %4d\n", m_S[0].index(), m_S[1].index(), m_S[2].index());
+    strange = std::format("  Vertex indexes:  {:4d}  {:4d}  {:4d}\n", m_S[0].index(), m_S[1].index(), m_S[2].index());
     props += strange;
 
-    strange = QString::asprintf("  Neighbours:      %4d  %4d  %4d\n", m_Neighbour[0], m_Neighbour[1], m_Neighbour[2]);
+    strange = std::format("  Neighbours:      {:4d}  {:4d}  {:4d}\n", m_Neighbour[0], m_Neighbour[1], m_Neighbour[2]);
     props += strange;
-    strange = QString::asprintf("                   PU=%d  PD=%d  PL=%d  PR=%d\n", m_iPU, m_iPD, m_iPL, m_iPR);
+    strange = std::format("                   PU={:d}  PD={:d}  PL={:d}  PR={:d}\n", m_iPU, m_iPD, m_iPL, m_iPR);
     props += strange;
 
     if(isPositiveOrientation()) props += "  Positive orientation";
@@ -516,9 +517,9 @@ std::string Panel3::properties(bool bLong) const
     {
         props += "\n";
         props += "  Panel is trailing:\n";
-        strange = QString::asprintf("    Downstream wake panel  index = %d\n", m_iWake);
+        strange = std::format("    Downstream wake panel  index = {:d}\n", m_iWake);
         props += strange;
-        strange = QString::asprintf("    Downstream wake column index = %d", m_iWakeColumn);
+        strange = std::format("    Downstream wake column index = {:d}", m_iWakeColumn);
         props += strange;
     }
     else if (isLeading())
@@ -529,21 +530,21 @@ std::string Panel3::properties(bool bLong) const
     if(m_bIsTrailing)
     {
         props +="\n";
-        strange = QString::asprintf("  Opposite index = %d", m_iOppositeIndex);
+        strange = std::format("  Opposite index = {:d}", m_iOppositeIndex);
         props += strange;
     }
 
-    if(!bLong) return props.toStdString();
+    if(!bLong) return props;
 
     props += "\n  Local frame:\n";
-    strange = QString::asprintf("    l      = (%7.2f, %7.2f, %7.2f)\n", m_l.x, m_l.y, m_l.z);
+    strange = std::format("    l      = ({:7.2f}, {:7.2f}, {:7.2f})\n", m_l.x, m_l.y, m_l.z);
     props += strange;
-    strange = QString::asprintf("    m      = (%7.2f, %7.2f, %7.2f)\n", m_m.x, m_m.y, m_m.z);
+    strange = std::format("    m      = ({:7.2f}, {:7.2f}, {:7.2f})\n", m_m.x, m_m.y, m_m.z);
     props += strange;
-    strange = QString::asprintf("    Normal = (%7.2f, %7.2f, %7.2f)", m_Normal.x, m_Normal.y, m_Normal.z);
+    strange = std::format("    Normal = ({:7.2f}, {:7.2f}, {:7.2f})", m_Normal.x, m_Normal.y, m_Normal.z);
     props += strange;
 
-    return props.toStdString();
+    return props;
 }
 
 
@@ -571,11 +572,11 @@ void Panel3::quadratureIntegrals(Vector3d Pt, double *I1, double *I3, double *I5
     I3[0]=I3[1]=I3[2]=I3[3]=I3[4]=I3[5]=0.0;
     I5[0]=I5[1]=I5[2]=I5[3]=I5[4]=I5[5]=0.0;
 
-    for(uint i=0; i<gq.points().size(); i++)
+    for(unsigned int i=0; i<gq.points().size(); i++)
     {
         double x = m_Sl[0].x*(1.0-gq.points().at(i).x-gq.points().at(i).y) + m_Sl[1].x*gq.points().at(i).x + m_Sl[2].x*gq.points().at(i).y;
         double y = m_Sl[0].y*(1.0-gq.points().at(i).x-gq.points().at(i).y) + m_Sl[1].y*gq.points().at(i).x + m_Sl[2].y*gq.points().at(i).y;
-        //qDebug(" %13.7f   %13.7f",x,y);
+        //qDebug(" {:13.7f}   {:13.7f}",x,y);
         R = Ptl - Vector3d(x,y,0.0);
         double r  = R.norm();
         double r3 = r*r*r;
@@ -662,7 +663,7 @@ void Panel3::computeNFIntegrals_ref(Vector3d const &FieldPt, double *G1, double 
     det = u2.x*u1.y - u2.y*u1.x;
     theta[2] = atan2(det, dot);
     // check that sum of internal angles = PI
-    //    qDebug(" anglesum = PI = %13.7f", theta[0]+theta[1]+theta[2]);
+    //    qDebug(" anglesum = PI = {:13.7f}", theta[0]+theta[1]+theta[2]);
 
     // implement eq. 21
     double alfa[3], cosa[3], sina[3];
@@ -682,9 +683,9 @@ void Panel3::computeNFIntegrals_ref(Vector3d const &FieldPt, double *G1, double 
     Vector3d l0 = CFe[0].globalToLocalPosition(ptGlobal);
     Vector3d l1 = CFe[1].globalToLocalPosition(ptGlobal);
     Vector3d l2 = CFe[2].globalToLocalPosition(ptGlobal);
-    qDebug("  %13.7f  %13.7f  %13.7f  %13.7f", l0.x, l0.y, ptl.x*cos(alfa[0]) + ptl.y*sin(alfa[0]), -ptl.x*sin(alfa[0]) + ptl.y*cos(alfa[0]));
-    qDebug("  %13.7f  %13.7f  %13.7f  %13.7f", l1.x, l1.y, ptl.x*cos(alfa[1]) + ptl.y*sin(alfa[1]), -ptl.x*sin(alfa[1]) + ptl.y*cos(alfa[1]));
-    qDebug("  %13.7f  %13.7f  %13.7f  %13.7f", l2.x, l2.y, ptl.x*cos(alfa[2]) + ptl.y*sin(alfa[2]), -ptl.x*sin(alfa[2]) + ptl.y*cos(alfa[2]));
+    qDebug("  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}", l0.x, l0.y, ptl.x*cos(alfa[0]) + ptl.y*sin(alfa[0]), -ptl.x*sin(alfa[0]) + ptl.y*cos(alfa[0]));
+    qDebug("  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}", l1.x, l1.y, ptl.x*cos(alfa[1]) + ptl.y*sin(alfa[1]), -ptl.x*sin(alfa[1]) + ptl.y*cos(alfa[1]));
+    qDebug("  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}", l2.x, l2.y, ptl.x*cos(alfa[2]) + ptl.y*sin(alfa[2]), -ptl.x*sin(alfa[2]) + ptl.y*cos(alfa[2]));
 */
 
     // check eq. 23
@@ -699,7 +700,7 @@ void Panel3::computeNFIntegrals_ref(Vector3d const &FieldPt, double *G1, double 
         rho[0] = vl[i][0].norm();
         rho[1] = vl[i][1].norm();
         rho[2] = vl[i][2].norm();
-        //        qDebug("  %13.7f  %13.7f  %13.7f ", rho[0], rho[1], rho[2]); // distance is independant of the reference frame
+        //        qDebug("  {:13.7f}  {:13.7f}  {:13.7f} ", rho[0], rho[1], rho[2]); // distance is independant of the reference frame
     }
     rho[3]=rho[0];
 
@@ -707,9 +708,9 @@ void Panel3::computeNFIntegrals_ref(Vector3d const &FieldPt, double *G1, double 
     for(int i=0; i<3; i++)  q[i] = vl[i][i].y;
     q[3] = q[0];
     /*    // check eq. 24
-    qDebug("q0=  %13.7f  %13.7f  ", q[0], vl[0][1].y); // q00=q01 = q1
-    qDebug("q1=  %13.7f  %13.7f  ", q[1], vl[1][2].y); // q11=q12 = q2
-    qDebug("q2=  %13.7f  %13.7f  ", q[2], vl[2][0].y); // q22=q00 = q3 */
+    qDebug("q0=  {:13.7f}  {:13.7f}  ", q[0], vl[0][1].y); // q00=q01 = q1
+    qDebug("q1=  {:13.7f}  {:13.7f}  ", q[1], vl[1][2].y); // q11=q12 = q2
+    qDebug("q2=  {:13.7f}  {:13.7f}  ", q[2], vl[2][0].y); // q22=q00 = q3 */
 
     double rho_t[3],d[4];
     for(int i=0; i<3; i++)
@@ -1041,7 +1042,7 @@ void Panel3::computeNFIntegrals(Vector3d const &FieldPtGlobal, double *G1, doubl
          assert(theta[i]>=0.0);
      }
      // check that sum of internal angles = PI
-     //    qDebug(" theta[] =  %13.7f  %13.7f  %13.7f", theta[0], theta[1], theta[2]);
+     //    qDebug(" theta[] =  {:13.7f}  {:13.7f}  {:13.7f}", theta[0], theta[1], theta[2]);
 
      assert(fabs(theta[0]+theta[1]+theta[2]-PI)<0.0001);
 
@@ -1060,9 +1061,9 @@ void Panel3::computeNFIntegrals(Vector3d const &FieldPtGlobal, double *G1, doubl
      Vector3d l0 = NFe[0].globalToLocalPosition(ptGlobal);
      Vector3d l1 = NFe[1].globalToLocalPosition(ptGlobal);
      Vector3d l2 = NFe[2].globalToLocalPosition(ptGlobal);
-     qDebug("  %13.7f  %13.7f  %13.7f  %13.7f", l0.x, l0.y, ptl.x*cos(alfa[0]) + ptl.y*sin(alfa[0]), -ptl.x*sin(alfa[0]) + ptl.y*cos(alfa[0]));
-     qDebug("  %13.7f  %13.7f  %13.7f  %13.7f", l1.x, l1.y, ptl.x*cos(alfa[1]) + ptl.y*sin(alfa[1]), -ptl.x*sin(alfa[1]) + ptl.y*cos(alfa[1]));
-     qDebug("  %13.7f  %13.7f  %13.7f  %13.7f", l2.x, l2.y, ptl.x*cos(alfa[2]) + ptl.y*sin(alfa[2]), -ptl.x*sin(alfa[2]) + ptl.y*cos(alfa[2]));*/
+     qDebug("  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}", l0.x, l0.y, ptl.x*cos(alfa[0]) + ptl.y*sin(alfa[0]), -ptl.x*sin(alfa[0]) + ptl.y*cos(alfa[0]));
+     qDebug("  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}", l1.x, l1.y, ptl.x*cos(alfa[1]) + ptl.y*sin(alfa[1]), -ptl.x*sin(alfa[1]) + ptl.y*cos(alfa[1]));
+     qDebug("  {:13.7f}  {:13.7f}  {:13.7f}  {:13.7f}", l2.x, l2.y, ptl.x*cos(alfa[2]) + ptl.y*sin(alfa[2]), -ptl.x*sin(alfa[2]) + ptl.y*cos(alfa[2]));*/
 
 
      // check eq. 23
@@ -1077,7 +1078,7 @@ void Panel3::computeNFIntegrals(Vector3d const &FieldPtGlobal, double *G1, doubl
          rho[0] = vl[i][0].norm();
          rho[1] = vl[i][1].norm();
          rho[2] = vl[i][2].norm();
-         //        qDebug("  %13.7f  %13.7f  %13.7f ", rho[0], rho[1], rho[2]); // check that distance is independant of the reference frame
+         //        qDebug("  {:13.7f}  {:13.7f}  {:13.7f} ", rho[0], rho[1], rho[2]); // check that distance is independant of the reference frame
      }
      rho[3]=rho[0];
 
@@ -1085,9 +1086,9 @@ void Panel3::computeNFIntegrals(Vector3d const &FieldPtGlobal, double *G1, doubl
      for(int i=0; i<3; i++)  q[i] = vl[i][i].y;
      q[3] = q[0];
      // check eq. 24
-     /*    qDebug("  q0=  %13.7f  %13.7f  ", q[0], vl[0][1].y); // q00=q01 = q1
-     qDebug("  q1=  %13.7f  %13.7f  ", q[1], vl[1][2].y); // q11=q12 = q2
-     qDebug("  q2=  %13.7f  %13.7f  %13.7f  ", q[2], vl[2][0].y, vl[2][3].y); // q22=q20=q23= q3*/
+     /*    qDebug("  q0=  {:13.7f}  {:13.7f}  ", q[0], vl[0][1].y); // q00=q01 = q1
+     qDebug("  q1=  {:13.7f}  {:13.7f}  ", q[1], vl[1][2].y); // q11=q12 = q2
+     qDebug("  q2=  {:13.7f}  {:13.7f}  {:13.7f}  ", q[2], vl[2][0].y, vl[2][3].y); // q22=q20=q23= q3*/
 
      double rho_t[] = {0,0,0};
      double d[] = {0,0,0,0};
@@ -2042,7 +2043,7 @@ void Panel3::doubletBasisPotential(Vector3d const &ptGlobal, bool bSelf, double 
         {
             double MC3[] = {0,0,0,0,0,0};
             computeMCIntegrals(ptGlobal, false, nullptr, MC3, nullptr, false);
-            for(int i=0; i<6; i++) qDebug("  MC=%13.7g  NF=%13.7g", MC3[i], G3[i]);
+            for(int i=0; i<6; i++) qDebug("  MC={:13.7g}  NF={:13.7g}", MC3[i], G3[i]);
         }*/
     }
     else
@@ -2179,7 +2180,7 @@ void Panel3::doubletQuadraturePotential(Vector3d Pt, double *phi) const
     double sumPotential[3];
     sumPotential[0] = sumPotential[1] = sumPotential[2] = 0.0;
 
-    for(uint i=0; i<s_gq.points().size(); i++)
+    for(unsigned int i=0; i<s_gq.points().size(); i++)
     {
         double x = m_Sl[0].x*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].x*s_gq.points().at(i).x + m_Sl[2].x*s_gq.points().at(i).y;
         double y = m_Sl[0].y*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].y*s_gq.points().at(i).x + m_Sl[2].y*s_gq.points().at(i).y;
@@ -2217,7 +2218,7 @@ void Panel3::doubletQuadratureVelocity(Vector3d Pt, Vector3d *V) const
     double b[]{0,0,0};
     Vector3d sumvelocity[3];
 
-    for(uint i=0; i<s_gq.points().size(); i++)
+    for(unsigned int i=0; i<s_gq.points().size(); i++)
     {
         double x = m_Sl[0].x*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].x*s_gq.points().at(i).x + m_Sl[2].x*s_gq.points().at(i).y;
         double y = m_Sl[0].y*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].y*s_gq.points().at(i).x + m_Sl[2].y*s_gq.points().at(i).y;
@@ -2301,7 +2302,7 @@ void Panel3::scalarProductSourcePotential(const Panel3 &SourcePanel, bool bSelf,
     double sum[]{0,0,0};
     double x(0), y(0);
 
-    for(uint i=0; i<s_gq.points().size(); i++)
+    for(unsigned int i=0; i<s_gq.points().size(); i++)
     {
         x = m_Sl[0].x*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].x*s_gq.points().at(i).x + m_Sl[2].x*s_gq.points().at(i).y;
         y = m_Sl[0].y*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].y*s_gq.points().at(i).x + m_Sl[2].y*s_gq.points().at(i).y;
@@ -2339,7 +2340,7 @@ void Panel3::scalarProductSourceVelocity(Panel3 const &SourcePanel, bool bSelf, 
     double integrand(0);
     double sum[]{0,0,0};
 
-    for(uint i=0; i<s_gq.points().size(); i++)
+    for(unsigned int i=0; i<s_gq.points().size(); i++)
     {
         double x = m_Sl[0].x*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].x*s_gq.points().at(i).x + m_Sl[2].x*s_gq.points().at(i).y;
         double y = m_Sl[0].y*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].y*s_gq.points().at(i).x + m_Sl[2].y*s_gq.points().at(i).y;
@@ -2375,7 +2376,7 @@ void Panel3::scalarProductDoubletPotential(Panel3 const &DoubletPanel, bool bSel
     double sum[]{0,0,0,0,0,0,0,0,0};
     double phi[]{0,0,0};
 
-    for(uint i=0; i<s_gq.points().size(); i++)
+    for(unsigned int i=0; i<s_gq.points().size(); i++)
     {
         double x = m_Sl[0].x*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].x*s_gq.points().at(i).x + m_Sl[2].x*s_gq.points().at(i).y;
         double y = m_Sl[0].y*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].y*s_gq.points().at(i).x + m_Sl[2].y*s_gq.points().at(i).y;
@@ -2410,7 +2411,7 @@ void Panel3::scalarProductDoubletVelocity(const Panel3 &DoubletPanel, double *sp
     double integrand(0);
     double sum[]{0,0,0,0,0,0,0,0,0};
 
-    for(uint i=0; i<s_gq.points().size(); i++)
+    for(unsigned int i=0; i<s_gq.points().size(); i++)
     {
         double x = m_Sl[0].x*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].x*s_gq.points().at(i).x + m_Sl[2].x*s_gq.points().at(i).y;
         double y = m_Sl[0].y*(1.0-s_gq.points().at(i).x-s_gq.points().at(i).y) + m_Sl[1].y*s_gq.points().at(i).x + m_Sl[2].y*s_gq.points().at(i).y;

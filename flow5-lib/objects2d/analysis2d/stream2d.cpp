@@ -22,8 +22,9 @@
 
 *****************************************************************************/
 
-#include <QString>
-
+#include <cstring>
+#include <format>
+#include <iostream>
 #include <algorithm>
 #include <thread>
 
@@ -148,10 +149,10 @@ bool Stream2d::solve()
     m_gam0.resize(m_matsize-1);  // no need for the stream function value
     m_gam90.resize(m_matsize-1);  // no need for the stream function value
 
-    for(uint i=0; i<m_gam0.size(); i++)
+    for(unsigned int i=0; i<m_gam0.size(); i++)
     {
         m_gam0[i] = m_gam90[i] = 0.0;
-        for(uint j=0; j<m_gam0.size(); j++)
+        for(unsigned int j=0; j<m_gam0.size(); j++)
         {
             m_gam0[i]  += m_aij[i*m_matsize + j] * rhs0[j];
             m_gam90[i] += m_aij[i*m_matsize + j] * rhs90[j];
@@ -173,7 +174,7 @@ bool Stream2d::calcSolution(double alpha, double Q)
 
     double cosa = cos(alpha*PI/180.0);
     double sina = sin(alpha*PI/180.0);
-    for(uint i=0; i<m_gam0.size(); i++)
+    for(unsigned int i=0; i<m_gam0.size(); i++)
     {
         m_gamma_inv[i] = m_gam0[i]*cosa + m_gam90[i]*sina;
         m_gamma_inv[i] *= Q;
@@ -191,14 +192,14 @@ bool Stream2d::calcSolution(double alpha, double Q)
         std::string out;
         matrix::display_mat(m_bpij.data(), m_matsize, int(m_Panel.size()), out);
         matrix::display_vec(m_srcBL.data(), int(m_Panel.size()), out);
-        qDebug("%s", out.c_str());
+        std::cout << std::format("{:s}", out.c_str()) << std::endl;
     }
 
-//    for(int ip=0; ip<m_Panel.size(); ip++)        qDebug(" %4d    %g", ip, m_Panel.at(ip).length());
+//    for(int ip=0; ip<m_Panel.size(); ip++)        qDebug(" {:4d}    {:g}", ip, m_Panel.at(ip).length());
 
     matrix::matVecMultLapack(m_bpij.data(), m_srcBL.data(), gamm, m_matsize, int(m_Panel.size()));
 
-    for(uint i=0; i<m_gamma_src.size(); i++)
+    for(unsigned int i=0; i<m_gamma_src.size(); i++)
         m_gamma_src[i] = gamm[i];
 
     delete gamm;
@@ -360,7 +361,7 @@ void Stream2d::makeAij()
         // However, in the code itself, the condition seems to be to
         // "set velocity component along bisector line" - See function ggcalc()
         //
-        memset(m_aij.data()+(m_matsize-2)*m_matsize, 0, ulong(m_matsize)*sizeof(double));
+        memset(m_aij.data()+(m_matsize-2)*m_matsize, 0, m_matsize*sizeof(double));
 
         // Drela eq.9
         m_aij[(m_matsize-2)*m_matsize  ] =  1.0;   //    gam(1)
@@ -514,7 +515,7 @@ void Stream2d::getVelocity(double alpha, double qinf, Vector2d const & pt, Vecto
 
     if(bSigma)
     {
-        for(uint ip=0; ip<m_Panel.size(); ip++)
+        for(unsigned int ip=0; ip<m_Panel.size(); ip++)
         {
             Panel2d const &p2 = m_Panel.at(ip);
             p2.uniformSource(pt, nullptr, nullptr, &VSigma);
@@ -542,7 +543,7 @@ double Stream2d::streamValue(double alpha, double qinf, Vector2d const &pt) cons
 
     // source contributions
     double psiSrc=0.0;
-    for(uint p=0; p<m_Panel.size(); p++)
+    for(unsigned int p=0; p<m_Panel.size(); p++)
     {
         Panel2d const &p2d = m_Panel.at(p);
         p2d.uniformSource(pt, nullptr, &psiSrc, nullptr);
@@ -644,8 +645,8 @@ void Stream2d::clearWakePanels()
 /** make source strengths from displacement thickness */
 void Stream2d::makeSigma(std::vector<float> const&dstar, float ue, int iLE)
 {
-    float ds(0);
-    float md0(0), md1(0);
+    double ds(0);
+    double md0(0), md1(0);
 
     for(int i=iLE-1; i>=0; i--)
     {
@@ -662,7 +663,7 @@ void Stream2d::makeSigma(std::vector<float> const&dstar, float ue, int iLE)
 
     m_srcBL[iLE] = 0.0;
     md0 = 0.0;
-    for(uint i=iLE+1; i<m_Node.size(); i++)
+    for(unsigned int i=iLE+1; i<m_Node.size(); i++)
     {
         if(i<dstar.size())
         {
@@ -823,7 +824,7 @@ Foil* Stream2d::makeBlasiusSigma(double alpha, double qinf, double coef, bool bM
         Node2d n2d = node2d(i);
         n2d += n2d.normal()*m_dstar[i];
         getVelocity(alpha, qinf, n2d, Vel, false);
-        float ue = Vel.dot(n2d.T());
+        double ue = Vel.dot(n2d.T());
 
         md[i]   = ue*m_dstar[i];
         sig[i]  = (md[i]- md[i+1])/ ds;
@@ -841,7 +842,7 @@ Foil* Stream2d::makeBlasiusSigma(double alpha, double qinf, double coef, bool bM
         Node2d n2d = node2d(i);
         n2d += n2d.normal()*m_dstar[i];
         getVelocity(alpha, qinf, n2d, Vel, false);
-        float ue = Vel.dot(n2d.T());
+        double ue = Vel.dot(n2d.T());
         //T points forward on bottom nodes --> inverse ue
         if(n2d.isAirfoilNode()) ue=-ue;
 
@@ -850,7 +851,7 @@ Foil* Stream2d::makeBlasiusSigma(double alpha, double qinf, double coef, bool bM
     }
 
 
-    for(uint ip=0; ip<sig.size(); ip++)
+    for(unsigned int ip=0; ip<sig.size(); ip++)
     {
         Ix[ip] = m_Panel[ip].I.x;
     }
@@ -860,19 +861,19 @@ Foil* Stream2d::makeBlasiusSigma(double alpha, double qinf, double coef, bool bM
     else  m_srcBL = sig;
 
     //    qDebug("   src  src_smoothed");
-    //    for(int ip=0; ip<m_src.size(); ip++) qDebug("   %11g  %11g", sig[ip], m_src[ip]);
+    //    for(int ip=0; ip<m_src.size(); ip++) qDebug("   {:11g}  {:11g}", sig[ip], m_src[ip]);
 
     // debug only: make a foil
 
     if(bMakeFoil)
     {
         Foil *pFoil = new Foil(&m_Foil);
-        QString strange = QString::asprintf("_%2f", alpha);
-        pFoil->setName("Blasius"+(strange+DEGch).toStdString());
+        std::string strange = std::format("_{:2f}", alpha);
+        pFoil->setName("Blasius"+(strange+DEGstr));
             pFoil->setLineStipple(Line::DASH);
         pFoil->setVisible(true);
 
-        for(uint in=0; in<m_Node.size(); in++)
+        for(unsigned int in=0; in<m_Node.size(); in++)
         {
             Node2d n2d = m_Node[in];
             if(n2d.isWakeNode()) break;
@@ -891,7 +892,7 @@ Foil* Stream2d::makeBlasiusSigma(double alpha, double qinf, double coef, bool bM
 
 void Stream2d::setAirfoilSourceStrengths(float src)
 {
-    for(uint ip=0; ip<m_Panel.size(); ip++)
+    for(unsigned int ip=0; ip<m_Panel.size(); ip++)
     {
         if(m_Panel.at(ip).isAirfoilPanel())
             m_srcBL[ip] = src;
@@ -901,7 +902,7 @@ void Stream2d::setAirfoilSourceStrengths(float src)
 
 void Stream2d::setWakeSourceStrengths(float src)
 {
-    for(uint ip=0; ip<m_Panel.size(); ip++)
+    for(unsigned int ip=0; ip<m_Panel.size(); ip++)
     {
         if(m_Panel.at(ip).isWakePanel())
             m_srcBL[ip] = src;
@@ -977,11 +978,11 @@ void Stream2d::checkSolution(double alpha, double qinf) const
     }
 
     // check that the stream function has a uniform value at nodes
-    qDebug(" panel       psiqinf          psisig          psigam          psitot");
-    for(uint i=0; i<psicalc.size(); i++)
+    std::cout << " panel       psiqinf          psisig          psigam          psitot" <<std::endl;
+    for(unsigned int i=0; i<psicalc.size(); i++)
     {
         psicalc[i] = psiinf[i] + psisig[i] + psigam [i]; // should be the same at all nodes
-        qDebug("  %3d   %13.7g   %13.7g   %13.7g   %13.7g", i, psiinf[i], psisig[i], psigam[i], psicalc[i]);
+        std::cout << std::format("  {:3d}   {:13.7g}   {:13.7g}   {:13.7g}   {:13.7g}", i, psiinf[i], psisig[i], psigam[i], psicalc[i]);
     }
 
     // check normal velocity at nodes
@@ -991,16 +992,16 @@ void Stream2d::checkSolution(double alpha, double qinf) const
         Node2d n2d = m_Foil.node(i);
         n2d += n2d.N()*2.e-6; // slight offset to avoid singularities - slightly more than LENGTHPRECISION
         getVelocity(n2d, vel);
-        qDebug(" %3d  %11g  %11g  %11g  %11g", i, n2d.x, n2d.y, vel.dot(n2d.N()), vel.dot(n2d.T()));
+        qDebug(" {:3d}  {:11g}  {:11g}  {:11g}  {:11g}", i, n2d.x, n2d.y, vel.dot(n2d.N()), vel.dot(n2d.T()));
     }*/
 }
 
 
 void Stream2d::listCirculations() const
 {
-    qDebug("  Node       gma_inv         gam_src");
+    std::cout << "  Node       gma_inv         gam_src" << std::endl;
     for(int i=0; i<m_Foil.nNodes(); i++)
-        qDebug("%4d    %13g    %13g ", i, m_gamma_inv.at(i), m_gamma_src.at(i));
+        std::cout << std::format("{:4d}    {:13g}    {:13g} ", i, m_gamma_inv.at(i), m_gamma_src.at(i));
 }
 
 

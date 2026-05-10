@@ -22,14 +22,14 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
 
 
-#include <QString>
+
+#include <format>
+
 
 #include "api.h"
 
-#include <fileio.h>
 #include <foil.h>
 #include <objects2d.h>
 #include <objects2d.h>
@@ -40,7 +40,6 @@
 #include <polar.h>
 #include <sailobjects.h>
 #include <planepolar.h>
-#include <xmlpolarreader.h>
 #include <xfoiltask.h>
 
 
@@ -63,29 +62,6 @@ std::string globals::poplog()
     }
     else
         return std::string();
-}
-
-
-
-bool globals::saveFl5Project(std::string const &pathname)
-{
-    FileIO saver;
-    std::string logmsg;
-    bool bResult = saver.saveProject(pathname, logmsg);
-
-    globals::pushToLog(logmsg);
-    return bResult;
-}
-
-
-bool globals::loadFl5Project(std::string const &pathname)
-{
-    FileIO loader;
-    std::string logmsg;
-    bool bResult = loader.loadProject(pathname, logmsg);
-
-    globals::pushToLog(logmsg);
-    return bResult;
 }
 
 
@@ -198,38 +174,6 @@ PlaneXfl *plane::makeEmptyPlane()
 }
 
 
-Polar *foil::importAnalysisFromXml(std::string const &pathname)
-{
-    Polar *pPolar = new Polar;
-
-    QFile xmlFile(QString::fromStdString(pathname));
-
-    XmlPolarReader polarReader(xmlFile, pPolar);
-    polarReader.readXMLPolarFile();
-
-    if(polarReader.hasError())
-    {
-        std::string errorMsg = polarReader.errorString().toStdString() +
-                               QString::asprintf("\nline %d column %d", int(polarReader.lineNumber()), int(polarReader.columnNumber())).toStdString();
-        globals::pushToLog(errorMsg);
-
-        delete pPolar;
-        return nullptr;
-    }
-    else
-    {
-        Foil *pFoil = Objects2d::foil(pPolar->foilName());
-        if(!pFoil)
-        {
-            globals::pushToLog("No foil with name " + pPolar->foilName() + "to which the polar can be attached\n");
-            delete pPolar;
-            return nullptr;
-        }
-    }
-
-    Objects2d::insertPolar(pPolar);
-    return pPolar;
-}
 
 
 

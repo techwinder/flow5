@@ -56,8 +56,6 @@ class FL5LIB_EXPORT SailNurbs : public Sail
         void createSection(int iSection) override;
         void deleteSection(int iSection) override;
 
-        bool serializeSailFl5(QDataStream &ar, bool bIsStoring) override;
-
         double length() const override;
 
         Node edgeNode(double xrel, double zrel, xfl::enumSurfacePosition pos=xfl::MIDSURFACE) const override;

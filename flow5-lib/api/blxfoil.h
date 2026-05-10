@@ -25,7 +25,6 @@
 #pragma once
 
 
-#include <QDataStream>
 
 #include <xfoil_params.h>
 
@@ -64,6 +63,5 @@ struct BLXFoil
 
         int itran[ISX];                  /**< bl array index of transition interval */
 
-        void serialize(QDataStream &ar, bool bIsStoring);
 };
 

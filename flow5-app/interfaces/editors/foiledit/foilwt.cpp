@@ -607,14 +607,14 @@ void FoilWt::dragSelectedPoint(double , double )
                 }
                 m_pSpline->setCtrlPoint(n, x, m_CursorPos.y());
 
-                if(n==0 && m_pSpline->issymmetric())
+                if(n==0 && m_pSpline->isSymmetric())
                 {
                     if(m_pSpline->firstCtrlPoint().y<0)
                     {
                         m_pSpline->setFirstCtrlPoint({m_pSpline->firstCtrlPoint().x, 0});
                     }
                 }
-                if(n==m_pSpline->ctrlPointCount()-1 && m_pSpline->issymmetric())
+                if(n==m_pSpline->ctrlPointCount()-1 && m_pSpline->isSymmetric())
                 {
                     m_pSpline->setLastCtrlPoint({m_pSpline->lastCtrlPoint().x, 0});
                 }
@@ -638,14 +638,14 @@ void FoilWt::dragSelectedPoint(double , double )
             {
                 m_pSF->spline(is)->setCtrlPoint(n, m_CursorPos.x(), m_CursorPos.y());
 
-                if(n==0 && m_pSF->spline(is)->issymmetric())
+                if(n==0 && m_pSF->spline(is)->isSymmetric())
                 {
                     if(m_pSF->spline(is)->firstCtrlPoint().y<0)
                     {
                         m_pSF->spline(is)->setFirstCtrlPoint({m_pSF->spline(is)->firstCtrlPoint().x, 0});
                     }
                 }
-                if(n==m_pSF->spline(is)->ctrlPointCount()-1 && m_pSF->spline(is)->issymmetric())
+                if(n==m_pSF->spline(is)->ctrlPointCount()-1 && m_pSF->spline(is)->isSymmetric())
                 {
                     m_pSF->spline(is)->setLastCtrlPoint({m_pSF->spline(is)->lastCtrlPoint().x, 0});
                 }

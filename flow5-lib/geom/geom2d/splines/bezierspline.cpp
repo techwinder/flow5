@@ -23,8 +23,6 @@
 *****************************************************************************/
 
 
-#include <QDataStream>
-
 
 #include <bezierspline.h>
 #include <constants.h>
@@ -70,11 +68,11 @@ void BezierSpline::splineDerivative(double u, double &dx, double &dy) const
 void BezierSpline::makeCurve()
 {
     double b(0), t(0);
-    for(uint j=0; j<m_Output.size(); j++)
+    for(unsigned int j=0; j<m_Output.size(); j++)
     {
         t = double(j)/double(m_Output.size()-1);
         m_Output[j].set(0.0,0.0);
-        for(uint ic=0; ic<m_CtrlPt.size(); ic++)
+        for(unsigned int ic=0; ic<m_CtrlPt.size(); ic++)
         {
             b = Bernstein(ic, int(m_CtrlPt.size()-1), t);
             m_Output[j].x +=  b *m_CtrlPt.at(ic).x;
@@ -140,7 +138,7 @@ Vector2d BezierSpline::getNormal(double const &x)
 
     if(x<=0.0 || x>=1.0) return Vector2d(0.0, 1.0);
 
-    for (uint i=0; i<m_Output.size()-1; i++)
+    for (unsigned int i=0; i<m_Output.size()-1; i++)
     {
         if (m_Output[i].x <m_Output[i+1].x  &&   m_Output[i].x <= x && x<=m_Output[i+1].x )
         {
@@ -159,7 +157,7 @@ void BezierSpline::getCamber(double &Camber, double &xc)
 {
     Camber = 0.0;
     xc = 0.0;
-    for(uint i=0; i<m_Output.size(); i++)
+    for(unsigned int i=0; i<m_Output.size(); i++)
     {
         if(fabs(m_Output[i].y)>fabs(Camber))
         {
@@ -178,41 +176,4 @@ void BezierSpline::getSlopes(double &s0, double &s1)
 }
 
 
-bool BezierSpline::serializeFl5(QDataStream &ar, bool bIsStoring)
-{
-    Spline::serializeFl5(ar, bIsStoring);
-
-    int n=0;
-    int nIntSpares=0;
-    int nDbleSpares=0;
-    double dble=0.0;
-
-
-    if(bIsStoring)
-    {
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-
-        return true;
-    }
-    else
-    {
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-
-        updateSpline();
-        makeCurve();
-        return true;
-    }
-}
 

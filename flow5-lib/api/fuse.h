@@ -89,12 +89,14 @@ class FL5LIB_EXPORT Fuse : public Part
         // Methods related to the Uncut shape
         void appendShape(TopoDS_Shape const &shape) {m_Shape.Append(shape);}
         int shapeCount() const {return m_Shape.Extent();}
+        int nShapes() const {return m_Shape.Extent();}
         void clearShapes() {m_Shape.Clear();}
 
         //	Methods related to the cut shells
         void makeShellsFromShapes();
         void clearShells() {m_Shell.Clear();}
         int shellCount() const {return m_Shell.Extent();}
+        int nShells() const {return m_Shell.Extent();}
         void appendShell(TopoDS_Shape const &shell) {m_Shell.Append(shell);}
         bool stitchShells(TopoDS_Shell &fusedshell, std::string &logmsg, std::string prefx);
         void clearOccTriangulation();
@@ -118,10 +120,9 @@ class FL5LIB_EXPORT Fuse : public Part
         virtual void computeSurfaceProperties(std::string &log, std::string const &prefix) = 0;
         virtual void computeWettedArea();
 
-        virtual bool serializePartFl5(QDataStream &ar, bool bIsStoring) override;
-
         virtual void getProperties(std::string &properties, const std::string &prefx, bool bFull=false);
 
+        OccMeshParams &occTessParams() {return m_OccTessParams;}
         OccMeshParams const &occTessParams() const {return m_OccTessParams;}
         void setOccTessParams(OccMeshParams const &params) {m_OccTessParams=params;}
 
@@ -130,7 +131,6 @@ class FL5LIB_EXPORT Fuse : public Part
 
         static Fuse::enumType bodyPanelType(std::string strPanelType);
         static std::string bodyPanelType(Fuse::enumType panelType);
-
 
         void listShells();
         void listShapes();

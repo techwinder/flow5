@@ -58,7 +58,7 @@ Frame::Frame(int nCtrlPts)
 */
 int Frame::isPoint(const Vector3d &Point, double deltax, double deltay, double deltaz) const
 {
-    for(uint l=0; l<m_CtrlPoint.size(); l++)
+    for(unsigned int l=0; l<m_CtrlPoint.size(); l++)
     {
         if (fabs(Point.x-m_CtrlPoint[l].x)<deltax &&
             fabs(Point.y-m_CtrlPoint[l].y)<deltay &&
@@ -68,90 +68,6 @@ int Frame::isPoint(const Vector3d &Point, double deltax, double deltay, double d
     return -10;
 }
 
-
-/**
- * Loads or Saves the data of this spline to a binary file
- * @param ar the QDataStream object from/to which the data should be serialized
- * @param bIsStoring true if saving the data, false if loading
- * @return true if the operation was successful, false otherwise
- */
-bool Frame::serializeFrameFl5(QDataStream &ar, bool bIsStoring)
-{
-    int ArchiveFormat=500001; //500001 : first xf7 format
-    int nIntSpares(0);
-    int nDbleSpares(0);
-    int n(0);
-    double dble(0);
-
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-        ar << m_Position.x << m_Position.y << m_Position.z;
-        ar << m_Ry;
-        ar << int(m_CtrlPoint.size());
-        for(uint k=0; k<m_CtrlPoint.size(); k++)
-        {
-            ar << m_CtrlPoint[k].x << m_CtrlPoint[k].y << m_CtrlPoint[k].z;
-        }
-        // dynamic space allocation for the future storage of more data, without need to change the format
-        nIntSpares=0;
-        ar << nIntSpares;
-        n=0;
-        for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
-        ar << nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat!=500001) return false;
-        ar >> m_Position.x >> m_Position.y >> m_Position.z;
-        ar >> m_Ry;
-        int nPts=0;
-        ar >> nPts;
-        m_CtrlPoint.clear();
-        double dx(0), dy(0), dz(0);
-        for(int k=0; k<nPts; k++)
-        {
-            ar >> dx >> dy >> dz;
-            m_CtrlPoint.push_back({dx, dy, dz});
-        }
-        // space allocation
-        ar >> nIntSpares;
-        for (int i=0; i<nIntSpares; i++) ar >> n;
-        ar >> nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
-    }
-    return true;
-}
-
-
-bool Frame::serializeFrameXfl(QDataStream &ar, bool bIsStoring)
-{
-    int ArchiveFormat(0);
-    int k(0),n(0);
-    float fx(0), fy(0), fz(0);
-
-    if(bIsStoring)
-    {
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        if(ArchiveFormat<1000 || ArchiveFormat>1100) return false;
-        ar >> n;
-        m_CtrlPoint.clear();
-        for(k=0; k<n; k++)
-        {
-            ar >> fx;
-            ar >> fy;
-            ar >> fz;
-            m_CtrlPoint.push_back({fx, fy, fz});
-        }
-    }
-    return true;
-}
 
 /**
 * Removes a point from the array of control points.
@@ -216,7 +132,7 @@ void Frame::insertPoint(int n, Vector3d const& Pt)
 */
 int Frame::insertPoint(const Vector3d &Real, int iAxis)
 {
-    uint k=0;
+    unsigned int k=0;
     if(iAxis==1)
     {
         if(Real.x>m_CtrlPoint.front().x)
@@ -290,7 +206,7 @@ double Frame::zPos() const
 {
     double hmin    =  10.0;
     double hmax = -10.0;
-    for(uint k=0; k<m_CtrlPoint.size(); k++)
+    for(unsigned int k=0; k<m_CtrlPoint.size(); k++)
     {
         if(m_CtrlPoint.at(k).z<hmin) hmin = m_CtrlPoint.at(k).z;
         if(m_CtrlPoint.at(k).z>hmax) hmax = m_CtrlPoint.at(k).z;
@@ -342,7 +258,7 @@ void Frame::setPosition(Vector3d const &Pos)
     else                        zpos = (m_CtrlPoint.front().z + m_CtrlPoint.back().z)/2.0;
 
     m_Position = Pos;
-    for(uint ic=0; ic<m_CtrlPoint.size(); ic++)
+    for(unsigned int ic=0; ic<m_CtrlPoint.size(); ic++)
     {
         m_CtrlPoint[ic].x  = Pos.x;
         m_CtrlPoint[ic].z += Pos.z - zpos;
@@ -355,7 +271,7 @@ void Frame::setPosition(Vector3d const &Pos)
 */
 void Frame::setuPosition(int uAxis)
 {
-    for(uint ic=0; ic<m_CtrlPoint.size(); ic++)
+    for(unsigned int ic=0; ic<m_CtrlPoint.size(); ic++)
     {
         m_CtrlPoint[ic][uAxis] = m_Position[uAxis];
     }
@@ -369,7 +285,7 @@ void Frame::setuPosition(int uAxis)
 void Frame::setuPosition(int uAxis, double u)
 {
     m_Position[uAxis] = u;
-    for(uint ic=0; ic<m_CtrlPoint.size(); ic++)
+    for(unsigned int ic=0; ic<m_CtrlPoint.size(); ic++)
     {
         m_CtrlPoint[ic][uAxis] = u;
     }
@@ -379,7 +295,7 @@ void Frame::setuPosition(int uAxis, double u)
 void Frame::translate(Vector3d const & T)
 {
     m_Position += T;
-    for(uint ic=0; ic<m_CtrlPoint.size(); ic++)
+    for(unsigned int ic=0; ic<m_CtrlPoint.size(); ic++)
     {
         m_CtrlPoint[ic] += T;
     }
@@ -388,7 +304,7 @@ void Frame::translate(Vector3d const & T)
 
 void Frame::scale(double ratio)
 {
-    for(uint ic=0; ic<m_CtrlPoint.size(); ic++)
+    for(unsigned int ic=0; ic<m_CtrlPoint.size(); ic++)
     {
         m_CtrlPoint[ic] *= ratio;
     }
@@ -404,7 +320,7 @@ void Frame::rotateFrameY(double Angle)
     if(!m_CtrlPoint.size()) return;
 
 //    Vector3d RotationCenter = m_CtrlPoint.front();
-    for(uint ic=0; ic<m_CtrlPoint.size(); ic++)
+    for(unsigned int ic=0; ic<m_CtrlPoint.size(); ic++)
     {
         m_CtrlPoint[ic].rotateY(m_Position, Angle);
     }
@@ -414,7 +330,7 @@ void Frame::rotateFrameY(double Angle)
 double Frame::developedLength() const
 {
     double l=0.0;
-    for(uint i=1; i<m_CtrlPoint.size(); i++)
+    for(unsigned int i=1; i<m_CtrlPoint.size(); i++)
     {
         l += sqrt( (m_CtrlPoint.at(i).y-(m_CtrlPoint.at(i-1).y)) * (m_CtrlPoint.at(i).y-(m_CtrlPoint.at(i-1).y))
                   +(m_CtrlPoint.at(i).z-(m_CtrlPoint.at(i-1).z)) * (m_CtrlPoint.at(i).z-(m_CtrlPoint.at(i-1).z)));

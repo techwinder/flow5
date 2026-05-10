@@ -24,7 +24,6 @@
 
 #pragma once
 
-#include <QDataStream>
 
 #include <TopoDS_Edge.hxx>
 
@@ -52,7 +51,6 @@ class FL5LIB_EXPORT EdgeSplit
         void makeUniformSplit(TopoDS_Edge const &Edge, double maxlength);
         void makeNodes(TopoDS_Edge const &Edge, std::vector<Node> &nodes);
 
-        void serialize(QDataStream &ar, bool bIsStoring);
 
     private:
         int m_nSegs; /**< the number of triangles on the edge = 1 less than the number of vertices */

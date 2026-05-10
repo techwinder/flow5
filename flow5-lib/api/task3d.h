@@ -92,9 +92,6 @@ class FL5LIB_EXPORT Task3d
 
 
         void traceVPWLog(double ctrl);
-        void traceLog(const QString &str);
-
-
 
         virtual void traceStdLog(const std::string &str);
 

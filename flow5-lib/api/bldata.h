@@ -27,7 +27,6 @@
 
 #include <vector>
 
-#include <QDataStream>
 
 #include <node2d.h>
 
@@ -40,7 +39,7 @@ namespace BL
 }
 
 
-struct BLData
+struct FL5LIB_EXPORT BLData
 {
     BLData()
     {
@@ -101,7 +100,6 @@ struct BLData
 
     /**<Resizes the arrays */
     void resizeData(int N, bool bResultsOnly);
-    void serializeFl5(QDataStream &ar, bool bIsStoring);
 
 
     BL::enumBLMethod BLMethod;

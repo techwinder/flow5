@@ -141,8 +141,8 @@ class FL5LIB_EXPORT NURBSSurface
 
         void translate(Vector3d const &T);
 
-        bool serializeFl5(QDataStream &ar, bool bIsStoring);
 
+        fl5Color &color() {return m_Color;}
         fl5Color const &color() const {return m_Color;}
         void setColor(fl5Color const &clr) {m_Color = clr;}
 
@@ -157,10 +157,9 @@ class FL5LIB_EXPORT NURBSSurface
         std::vector<double> m_uKnot;       /**< the array of knots in the u direction */
         std::vector<double> m_vKnot;       /**< the array of knots in the v direction */
 
-        int m_iOutput;                     /**< the number of curve points to draw the NURBS in both directions */
 
         double m_BunchAmp;  /** k=0.0 --> uniform bunching, k=1-->full varying bunch */
-        double m_BunchDist; /** k=0.0 --> uniform bunching, k=1 weigth on endpoints */
+        double m_BunchDist; /** k=0.0 --> uniform bunching, k=1 weight on endpoints */
 
         double m_EdgeWeightu;           /**< for a full NURBS. Unused, though, not practical */
         double m_EdgeWeightv;           /**< for a full NURBS. Unused, though, not practical */

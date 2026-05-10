@@ -29,8 +29,6 @@
 
 #include <vector>
 
-#include <QDataStream>
-
 #include <vector3d.h>
 
 class WingXfl;
@@ -43,7 +41,6 @@ struct FL5LIB_EXPORT SpanDistribs
         void resizeGeometry(int NStation);
         void setGeometry(WingXfl const*pWing);
 
-        bool serializeSpanResultsFl5(QDataStream &ar, bool bIsStoring);
 
         void clearGeometry();
 

@@ -46,6 +46,7 @@
 #include <api/quad3d.h>
 #include <api/units.h>
 
+#include <core/qunits.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fuseframewt.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fuselinewt.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>

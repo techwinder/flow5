@@ -22,11 +22,10 @@
 
 *****************************************************************************/
 
+#include <format>
+#include <string>
 
-#include <QString>
 
-
-#include <QDataStream>
 
 #include <occmeshparams.h>
 
@@ -51,22 +50,22 @@ void OccMeshParams::setDefaults()
 std::string OccMeshParams::listParams(std::string const &prefix)
 {
     std::string list;
-    QString strange;
+    std::string strange;
     if(m_bLinDefAbs)
     {
-        strange = QString::asprintf("Absolute lin. defl. = %.3f", m_LinDeflectionAbs*Units::mtoUnit());
-        strange += Units::lengthUnitQLabel() + "\n";
+        strange = std::format("Absolute lin. defl. = {:.3f}", m_LinDeflectionAbs*Units::mtoUnit());
+        strange += Units::lengthUnitLabel() + "\n";
     }
     else
     {
-        strange = QString::asprintf("Relative lin. defl. = %.1f", m_LinDeflectionRel*100.0);
-        strange += DEGch + "\n";
+        strange = std::format("Relative lin. defl. = {:.1f}", m_LinDeflectionRel*100.0);
+        strange += DEGstr + "\n";
     }
-    list += prefix + strange.toStdString();
+    list += prefix + strange;
 
-    strange = QString::asprintf("Angular deviation = %.1f", m_AngularDeviation);
-    strange+= DEGch+"\n";
-    list += prefix + strange.toStdString();
+    strange = std::format("Angular deviation = {:.1f}", m_AngularDeviation);
+    strange+= DEGstr+"\n";
+    list += prefix + strange;
 
     return list;
 }
@@ -79,48 +78,6 @@ void OccMeshParams::duplicate(OccMeshParams const &params)
     m_AngularDeviation = params.m_AngularDeviation; // in degrees
     m_MaxElementSize   = params.m_MaxElementSize;
 }
-
-
-void OccMeshParams::serializeParams(QDataStream &ar, bool bIsStoring)
-{
-    int k=0;
-    double dble=0;
-    int ArchiveFormat = 500001;
-    if(bIsStoring)
-    {
-        ar << ArchiveFormat;
-        ar << m_bLinDefAbs;
-        ar << m_LinDeflectionAbs;
-        ar << m_LinDeflectionRel;
-        ar << m_AngularDeviation;
-        ar << dble; //m_MinElementSize;
-        ar << dble; //m_MaxElementSize;
-        ar << dble; //m_AutoSize;
-        ar << k; //m_TreeMin;
-        ar << k; //m_TreeMax;
-
-        k=0;
-        ar << k;
-        ar << k;
-    }
-    else
-    {
-        ar >> ArchiveFormat;
-        ar >> m_bLinDefAbs;
-        ar >> m_LinDeflectionAbs;
-        ar >> m_LinDeflectionRel;
-        ar >> m_AngularDeviation;
-        ar >> dble; //m_MinElementSize;
-        ar >> m_MaxElementSize;
-        ar >> dble; //m_AutoSize;
-        ar >> k; //m_TreeMin;
-        ar >> k; //m_TreeMax;
-
-        ar >> k;
-        ar >> k;
-    }
-}
-
 
 
 

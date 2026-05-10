@@ -26,7 +26,6 @@
 #include <thread>
 #include <future>
 
-#include <QDebug>
 
 #include <geom_global.h>
 
@@ -616,7 +615,7 @@ void geom::makeSphere(double radius, int nSplit, std::vector<Triangle3d> &triang
         vtx[i+5].set(x,y,z);
     }
 
-    for(uint i=0; i<vtx.size(); i++) vtx[i].setNormal(vtx[i]);
+    for(unsigned int i=0; i<vtx.size(); i++) vtx[i].setNormal(vtx[i]);
 
     triangles.resize(20);
 
@@ -657,7 +656,7 @@ void geom::makeSphere(double radius, int nSplit, std::vector<Triangle3d> &triang
     for(int iter=0; iter<nSplit; iter++)
     {
         triangle.clear();
-        for(uint it=0; it<triangles.size(); it++)
+        for(unsigned int it=0; it<triangles.size(); it++)
         {
             Triangle3d const& t3d = triangles.at(it);
 
@@ -882,7 +881,7 @@ bool geom::intersectTriangles(std::vector<Triangle3d> const &triangles, const Ve
         {
 //            threads[iblock].join();
             boolean[iblock] = bIntersect[iblock].get();
-//            qDebug(" got future %d", iblock);
+//            qDebug(" got future {:d}", iblock);
         }
 //        qDebug()<<"Got all futures";
     }

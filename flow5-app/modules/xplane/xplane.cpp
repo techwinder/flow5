@@ -41,6 +41,7 @@
 
 
 #include <core/displayoptions.h>
+#include <core/qunits.h>
 #include <core/saveoptions.h>
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>
@@ -154,7 +155,7 @@
 #include <api/panel3.h>
 #include <api/panel4.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 
 QVector<OptObjective> XPlane::s_Objectives;
 bool XPlane::s_bStoreOpps3d(false);
@@ -6853,7 +6854,7 @@ PlanePolar *XPlane::importAnalysisFromXML(QFile &xmlFile)
     }
 
     if(pWPolar->name().length()==0)
-        pWPolar->setName(PlanePolarNameMaker::makeName(pPlane, pWPolar).toStdString());
+        pWPolar->setName(PlanePolarNameMaker::makeName(pPlane, pWPolar));
 
     PlaneXfl const*pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pCurPlane);
     if(pPlaneXfl)

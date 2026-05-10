@@ -22,11 +22,10 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
 
-#include <QDebug>
-#include <QString>
 
+#include <iostream>
+#include <format>
 
 #include <cubicinterpolation.h>
 #include <geom_global.h>
@@ -81,8 +80,8 @@ void P3UniAnalysis::makeMatrixBlock(int iBlock)
                 p3k.doubletBasisVelocity(p3i.CoG(), Vb);
 
                 vel = Vb[0]+Vb[1]+Vb[2];
-                if(s_bDoublePrecision) m_aijd[uint(i3*N+k3)] = vel.dot(p3i.normal()); // change sign to be consistent with VLM
-                else                   m_aijf[uint(i3*N+k3)] = float(vel.dot(p3i.normal()));
+                if(s_bDoublePrecision) m_aijd[unsigned(i3*N+k3)] = vel.dot(p3i.normal()); // change sign to be consistent with VLM
+                else                   m_aijf[unsigned(i3*N+k3)] = float(vel.dot(p3i.normal()));
 
                 if(m_pPolar3d->bGroundEffect() || m_pPolar3d->bFreeSurfaceEffect())
                 {
@@ -94,8 +93,8 @@ void P3UniAnalysis::makeMatrixBlock(int iBlock)
                     p3k.doubletBasisVelocity(CG, Vb);
                     velG = Vb[0]+Vb[1]+Vb[2];
                     velG.z = -velG.z;
-                    if(s_bDoublePrecision) m_aijd[uint(i3*N+k3)] += velG.dot(p3i.normal()) * coef;
-                    else                   m_aijf[uint(i3*N+k3)] += float(velG.dot(p3i.normal()))  * coef;
+                    if(s_bDoublePrecision) m_aijd[unsigned(i3*N+k3)] += velG.dot(p3i.normal()) * coef;
+                    else                   m_aijf[unsigned(i3*N+k3)] += float(velG.dot(p3i.normal()) * coef);
                 }
             }
             else if(m_pPolar3d->bDirichlet())
@@ -105,8 +104,8 @@ void P3UniAnalysis::makeMatrixBlock(int iBlock)
                 p3k.doubletBasisPotential(p3i.CoG(), i3==k3, phib, true);
                 phiNasa = phib[0]+phib[1]+phib[2];
 
-                if(s_bDoublePrecision) m_aijd[uint(i3*N+k3)] = phiNasa;
-                else                   m_aijf[uint(i3*N+k3)] = float(phiNasa);
+                if(s_bDoublePrecision) m_aijd[unsigned(i3*N+k3)] = phiNasa;
+                else                   m_aijf[unsigned(i3*N+k3)] = float(phiNasa);
 
                 if(m_pPolar3d->bGroundEffect() || m_pPolar3d->bFreeSurfaceEffect())
                 {
@@ -119,19 +118,19 @@ void P3UniAnalysis::makeMatrixBlock(int iBlock)
                     p3k.doubletBasisPotential(CG, false, phib, true);
                     phiNasa = phib[0]+phib[1]+phib[2];
 
-                    if(s_bDoublePrecision) m_aijd[uint(i3*N+k3)] += phiNasa * coef;
-                    else                   m_aijf[uint(i3*N+k3)] += float(phiNasa) *coef;
+                    if(s_bDoublePrecision) m_aijd[unsigned(i3*N+k3)] += phiNasa * coef;
+                    else                   m_aijf[unsigned(i3*N+k3)] += float(phiNasa*coef);
                 }
             }
 
             bool bError = false;
-            if(s_bDoublePrecision)  bError = std::isnan(m_aijd[uint(i3*N+k3)]);
-            else                    bError = std::isnan(m_aijf[uint(i3*N+k3)]);
+            if(s_bDoublePrecision)  bError = std::isnan(m_aijd[unsigned(i3*N+k3)]);
+            else                    bError = std::isnan(m_aijf[unsigned(i3*N+k3)]);
             if(bError)
             {
-                QString strange;
-                strange = QString::asprintf("      *** numerical error when calculating the influence of panel %d on panel %d ***\n", k3, i3);
-                traceLog(strange);
+                std::string strange;
+                strange = std::format("      *** numerical error when calculating the influence of panel {:d} on panel {:d} ***\n", k3, i3);
+                traceStdLog(strange);
                 m_bMatrixError = true;
                 return;
             }
@@ -200,20 +199,20 @@ void P3UniAnalysis::makeWakeMatrixBlock(int iBlock)
                 if(p3k.isMidPanel())
                 {
                     // add contribution to bot panel
-                    if(s_bDoublePrecision) m_aijd[uint(i3*N+k3)] += MatWakeContrib;
-                    else                   m_aijf[uint(i3*N+k3)] += float(MatWakeContrib);
+                    if(s_bDoublePrecision) m_aijd[unsigned(i3*N+k3)] += MatWakeContrib;
+                    else                   m_aijf[unsigned(i3*N+k3)] += float(MatWakeContrib);
                 }
                 else if(p3k.isBotPanel())
                 {
                     // add contribution to bot panel
-                    if(s_bDoublePrecision) m_aijd[uint(i3*N+k3)] += MatWakeContrib * (-1);
-                    else                   m_aijf[uint(i3*N+k3)] += float(MatWakeContrib) * (-1.0f);
+                    if(s_bDoublePrecision) m_aijd[unsigned(i3*N+k3)] += MatWakeContrib * (-1);
+                    else                   m_aijf[unsigned(i3*N+k3)] += float(MatWakeContrib) * (-1.0f);
 
                     // add opposite contribution to opposite top TE panel's contribution
                     int k3t = p3k.oppositeIndex();
                     assert(k3t>=0 && k3t<nPanels());
-                    if(s_bDoublePrecision) m_aijd[uint(i3*N+k3t)] += MatWakeContrib;
-                    else                   m_aijf[uint(i3*N+k3t)] += float(MatWakeContrib);
+                    if(s_bDoublePrecision) m_aijd[unsigned(i3*N+k3t)] += MatWakeContrib;
+                    else                   m_aijf[unsigned(i3*N+k3t)] += float(MatWakeContrib);
                 }
             }
         }
@@ -307,7 +306,7 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
                     double sinT = crossP.dot(H);
                     double cosT = p3.normal().dot(p3n.normal());
                     theta = atan2(sinT, cosT) * 180.0/PI;
-                    assert(!qIsNaN(theta));
+                    assert(!std::isnan(theta));
                     if(fabs(theta)>ANGLEPRECISION && crossP.norm()>LENGTHPRECISION)
                     {
                         CoGn.rotate(edge.vertexAt(0), H, theta);
@@ -416,9 +415,9 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
 
             if(info!=0)
             {
-                QString strange;
-                strange = QString::asprintf("         error making doublet derivative for panel %d\n", i3);
-                traceLog(strange);
+                std::string strange;
+                strange = std::format("         error making doublet derivative for panel {:d}\n", i3);
+                traceStdLog(strange);
                 continue;
             }
 
@@ -438,7 +437,7 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
     }
 
     Vector3d ug,vg, wg;
-    for(uint i3=0; i3<SingleNeighbourPanels.size(); i3++)
+    for(unsigned int i3=0; i3<SingleNeighbourPanels.size(); i3++)
     {
         int index = SingleNeighbourPanels.at(i3);
         Panel3 const &p3 = m_Panel3.at(index);
@@ -679,7 +678,7 @@ void P3UniAnalysis::checkThinSurfaceSolution()
             p3k.doubletN4023Velocity(p3i.CoG(), i3==k3, Vk, 0.0, true);
             Vsum += Vk *m_Mu.at(3*k3);
         }
-        qDebug("V.n(%2d)=%13.7f", i3, Vsum.dot(p3i.normal()));
+        std::cout << std::format("V.n({:2d})={:13.7f}", i3, Vsum.dot(p3i.normal()))<<EOLstr;
     }
 }
 
@@ -846,7 +845,7 @@ s_DebugVecs.clear();
         s_DebugPts.push_back(C);
         s_DebugVecs.push_back(Vel);
 
-        qDebug(" %13g  %13g", d, Vel.dot(p3.normal()));
+        std::cout << std::format(" {:13g}  {:13g}", d, Vel.dot(p3.normal())) << EOLstr;
     }
 }
 

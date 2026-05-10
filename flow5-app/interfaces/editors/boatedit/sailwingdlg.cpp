@@ -40,7 +40,7 @@
 #include <api/objects2d.h>
 #include <api/sailwing.h>
 #include <api/units.h>
-#include <api/utils.h>
+#include <api/utils-io.h>
 #include <api/wingsailsection.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/boatedit/sailsectionview.h>

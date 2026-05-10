@@ -32,12 +32,13 @@ class FL5LIB_EXPORT PlanePolarExt : public PlanePolar
     public:
         PlanePolarExt();
 
+        int nVariables() const {return int(m_data.size());}
+
         double getVariable(int iVariable, int index) const override;
         void setData(int iVariable, int index, double value) override;
+        double data(int iVariable, int index) const {return getVariable(iVariable, index);}
         int dataSize() const override;
         void resizeData(int newsize) override;
-        bool serializeFl5v726(QDataStream &ar, bool bIsStoring) override;
-        bool serializeFl5v750(QDataStream &ar, bool bIsStoring) override;
         void clearData();
         void copy(PlanePolar const *pWPolar) override;
         bool hasPoints() const override {return dataSize()>0;}
