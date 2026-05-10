@@ -165,7 +165,7 @@ void Polar::exportToString(std::string &outstring, bool bDataOnly, bool bCSV) co
     }
     out << "\n\n";
 
-    out >> outstring;
+    outstring = out.str();
 }
 
 

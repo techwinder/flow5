@@ -32,7 +32,7 @@
 #include <chrono>
 
 
-#if defined ACCELERATE
+#if defined ACCELERATE_NEW_LAPACK
   #include <Accelerate/Accelerate.h>
   #define lapack_int int
 #elif defined INTEL_MKL
@@ -383,7 +383,7 @@ void testLapacke(int dim)
     #endif
 #elif defined INTEL_MKL
     dgetrs_(&trans, &dim, &nrhs, A.data(), &LDA, ipiv, B.data(), &LDB, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
     dgetrs_(&trans, &dim, &nrhs, A.data(), &LDA, ipiv, B.data(), &LDB, &info);
 #endif
 
@@ -565,7 +565,7 @@ void testLapacke12()
     #endif
 #elif defined INTEL_MKL
     dgels_(&trans,&m,&n,&nrhs,a,&lda,mu,&ldb, work.data(), &lwork, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
     dgels_(&trans,&m,&n,&nrhs,a,&lda,mu,&ldb, work.data(), &lwork, &info);
 #endif
     if( info > 0 ) {

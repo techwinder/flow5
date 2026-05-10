@@ -42,12 +42,13 @@
 #include <api/node.h>
 #include <api/triangle3d.h>
 #include <api/units.h>
-#include <core/trace.h>
-#include <api/utils-io.h>
+#include <api/flow5-io.h>
+#include <api/xml_globals.h>
 
 #include <core/displayoptions.h>
 #include <core/qunits.h>
 #include <core/saveoptions.h>
+#include <core/trace.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/controls/gllightdlg.h>
@@ -180,6 +181,12 @@ void gl3dView::initializeGL()
     if(format().testOption(QSurfaceFormat::DeprecatedFunctions))
     {
     }
+
+/*    int max_geometry_output_vertices(0), max_geometry_total_output_components(0);
+    glGetIntegerv(GL_MAX_GEOMETRY_OUTPUT_VERTICES,         &max_geometry_output_vertices);
+    glGetIntegerv(GL_MAX_GEOMETRY_TOTAL_OUTPUT_COMPONENTS, &max_geometry_total_output_components);
+    qDebug() << "GL Max values" <<max_geometry_output_vertices<< max_geometry_total_output_components;*/
+
 
     if(xfl::g_bTrace)
     {
@@ -586,9 +593,9 @@ void gl3dView::printFormat(QSurfaceFormat const & ctxtFormat, QString &log, QStr
     log += prefix + QString("   OpenGL version: %1\n").arg(version).toStdString().c_str();
     log += prefix + QString("   GLSL version:   %1\n").arg(glslVersion).toStdString().c_str();
 
-    log += prefix + "Deprecated functions: "+xfl::boolToString(ctxtFormat.testOption(QSurfaceFormat::DeprecatedFunctions))+"\n";
-    log += prefix + "Debug context:        "+xfl::boolToString(ctxtFormat.testOption(QSurfaceFormat::DebugContext))       +"\n";
-    log += prefix + "Stereo buffers:       "+xfl::boolToString(ctxtFormat.testOption(QSurfaceFormat::StereoBuffers))      +"\n";
+    log += prefix + "Deprecated functions: "+xml::boolToString(ctxtFormat.testOption(QSurfaceFormat::DeprecatedFunctions))+"\n";
+    log += prefix + "Debug context:        "+xml::boolToString(ctxtFormat.testOption(QSurfaceFormat::DebugContext))       +"\n";
+    log += prefix + "Stereo buffers:       "+xml::boolToString(ctxtFormat.testOption(QSurfaceFormat::StereoBuffers))      +"\n";
 
     strange = QString::asprintf("Sampling frames for antialiasing: %d\n", ctxtFormat.samples());
     log += prefix + strange;

@@ -44,7 +44,6 @@ class FL5IOLIB_EXPORT FileIO : public QObject
 
     public:
 
-        bool saveProject(const std::string &stdPathName, std::string &logmsg);
         bool loadProject(const std::string &stdPathName, std::string &logmsg);
 
         bool serializeProjectFl5(QDataStream &ar, bool bIsStoring);
@@ -62,6 +61,7 @@ class FL5IOLIB_EXPORT FileIO : public QObject
 
 
         bool storePlaneFl5(Plane *pPlane, QDataStream &ar);
+
 
         static bool bOpps()   {return s_bSaveOpps;}
         static bool bPOpps()  {return s_bSavePOpps;}

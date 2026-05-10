@@ -128,34 +128,6 @@ void FileIO::onLoadProject(const QString &filename)
 }
 
 
-bool FileIO::saveProject(std::string const& stdPathName, std::string &logmsg)
-{
-    QString PathName = QString::fromStdString(stdPathName);
-
-    QFile fp(PathName);
-    if (!fp.open(QIODevice::WriteOnly))
-    {
-        logmsg = "Could not open the file: "+stdPathName+" for writing\n\n";
-
-
-        return false;
-    }
-
-    QDataStream ar(&fp);
-
-    if(!serializeProjectFl5(ar, true))
-    {
-        logmsg = "Unknown error saving the project file " + stdPathName;
-
-        return false;
-    }
-
-    fp.close(); // or let the destructor do it
-
-    return true;
-}
-
-
 bool FileIO::loadProject(std::string const& stdPathName, std::string &logmsg)
 {
     QString PathName = QString::fromStdString(stdPathName);

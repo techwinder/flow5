@@ -37,13 +37,13 @@
 #include <polar3d.h>
 
 
-#if defined ACCELERATE
+#if defined ACCELERATE_NEW_LAPACK
   #include <Accelerate/Accelerate.h>
   #define lapack_int int
 #elif defined INTEL_MKL
     #include <mkl.h>
 #elif defined OPENBLAS
-#include <openblas/lapack.h>
+    #include <openblas/lapack.h>
 #endif
 
 
@@ -687,7 +687,7 @@ void P3LinAnalysis::makeNodeDoubletSurfaceVelocity(int iNode, std::vector<double
     #endif
 #elif defined INTEL_MKL
     dgels_(&trans, &nnodes, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
     dgels_(&trans, &nnodes, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info);
 #endif
 
@@ -704,7 +704,7 @@ void P3LinAnalysis::makeNodeDoubletSurfaceVelocity(int iNode, std::vector<double
     #endif
 #elif defined INTEL_MKL
         dgels_(&trans, &nnodes, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info);
-#elif ACCELERATE
+#elif ACCELERATE_NEW_LAPACK
         dgels_(&trans, &nnodes, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info);
 #endif
     }

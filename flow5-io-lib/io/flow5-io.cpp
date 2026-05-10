@@ -23,12 +23,13 @@
 *****************************************************************************/
 
 
-
+#include <QFile>
 #include <QDataStream>
 
-#include <utils-io.h>
+#include <flow5-io.h>
+#include <fileio.h>
 
-fl5Color xfl::readQColor(QDataStream &ar)
+fl5Color io::readQColor(QDataStream &ar)
 {
     uchar byte=0;
 
@@ -54,7 +55,7 @@ fl5Color xfl::readQColor(QDataStream &ar)
 *@param g the green component
 *@param b the blue component
 */
-void xfl::readColor(QDataStream &ar, int &r, int &g, int &b)
+void io::readColor(QDataStream &ar, int &r, int &g, int &b)
 {
     qint32 colorref;
 
@@ -74,7 +75,7 @@ void xfl::readColor(QDataStream &ar, int &r, int &g, int &b)
 *@param b the blue component
 
 */
-void xfl::writeColor(QDataStream &ar, int r, int g, int b)
+void io::writeColor(QDataStream &ar, int r, int g, int b)
 {
     qint32 colorref;
 
@@ -91,7 +92,7 @@ void xfl::writeColor(QDataStream &ar, int r, int g, int b)
 *@param b the blue component
 *@param a the alpha component
 */
-void xfl::readColor(QDataStream &ar, int &r, int &g, int &b, int &a)
+void io::readColor(QDataStream &ar, int &r, int &g, int &b, int &a)
 {
     uchar byte=0;
 
@@ -115,7 +116,7 @@ void xfl::readColor(QDataStream &ar, int &r, int &g, int &b, int &a)
 *@param b the blue component
 *@param a the alpha component
 */
-void xfl::writeColor(QDataStream &ar, int r, int g, int b, int a)
+void io::writeColor(QDataStream &ar, int r, int g, int b, int a)
 {
     uchar byte;
 
@@ -134,7 +135,7 @@ void xfl::writeColor(QDataStream &ar, int r, int g, int b, int a)
 }
 
 
-void xfl::readString(QDataStream &ar, std::string &strong)
+void io::readString(QDataStream &ar, std::string &strong)
 {
     std::string str;
     qint8 qi(0), ch(0);
@@ -155,7 +156,7 @@ void xfl::readString(QDataStream &ar, std::string &strong)
 
 
 
-void xfl::readFloat(QDataStream &inStream, float &f)
+void io::readFloat(QDataStream &inStream, float &f)
 {
     char buffer[4];
     inStream.readRawData(buffer, 4);
@@ -163,7 +164,7 @@ void xfl::readFloat(QDataStream &inStream, float &f)
 }
 
 
-void xfl::writeFloat(QDataStream &outStream, float f)
+void io::writeFloat(QDataStream &outStream, float f)
 {
     char buffer[4];
     memcpy(buffer, &f, sizeof(float));
@@ -171,19 +172,7 @@ void xfl::writeFloat(QDataStream &outStream, float f)
 }
 
 
-bool xfl::stringToBool(const QString &str)
-{
-    return str.trimmed().compare("true", Qt::CaseInsensitive)==0 ? true : false;
-}
-
-
-QString xfl::boolToString(bool b)
-{
-    return b ? "true" : "false";
-}
-
-
-void xfl::writeString(QDataStream &ar, QString const &strong)
+void io::writeString(QDataStream &ar, QString const &strong)
 {
     qint8 qi = qint8(strong.length());
 
@@ -196,7 +185,7 @@ void xfl::writeString(QDataStream &ar, QString const &strong)
 }
 
 
-void xfl::writeString(QDataStream &ar, std::string const &strong)
+void io::writeString(QDataStream &ar, std::string const &strong)
 {
     qint8 qi = qint8(strong.length());
 
@@ -205,5 +194,59 @@ void xfl::writeString(QDataStream &ar, std::string const &strong)
 
     ar << qi;
     ar.writeRawData(text, qi);
+}
+
+
+bool io::saveProject(std::string const& stdPathName, std::string &logmsg)
+{
+    QString PathName = QString::fromStdString(stdPathName);
+
+    QFile fp(PathName);
+    if (!fp.open(QIODevice::WriteOnly))
+    {
+        logmsg = "Could not open the file: "+stdPathName+" for writing\n\n";
+        return false;
+    }
+
+    QDataStream ar(&fp);
+
+    FileIO saver;
+    if(!saver.serializeProjectFl5(ar, true))
+    {
+        logmsg = "Unknown error saving the project file " + stdPathName;
+        return false;
+    }
+
+    fp.close(); // or let the destructor do it
+
+    return true;
+}
+
+
+
+
+bool io::loadProject(std::string const& stdPathName, std::string &logmsg)
+{
+    QString PathName = QString::fromStdString(stdPathName);
+
+    QFile fp(PathName);
+    if (!fp.open(QIODevice::ReadOnly))
+    {
+        logmsg = "Could not open the file: "+stdPathName+" for reading\n\n";
+        return false;
+    }
+
+    QDataStream ar(&fp);
+
+    FileIO loader;
+    if(!loader.serializeProjectFl5(ar, false))
+    {
+        logmsg = "Unknown error loading the project file " + stdPathName;
+        return false;
+    }
+
+    fp.close(); // or let the destructor do it
+
+    return true;
 }
 

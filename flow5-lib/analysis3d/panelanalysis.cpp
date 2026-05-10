@@ -40,7 +40,7 @@
 
 
 
-#if defined ACCELERATE
+#if defined ACCELERATE_NEW_LAPACK
   #include <Accelerate/Accelerate.h>
   #define lapack_int int
 #elif defined INTEL_MKL
@@ -256,7 +256,7 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
         if(pRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), pRHS, &ldb, &info);
         if(qRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), qRHS, &ldb, &info);
         if(rRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), rRHS, &ldb, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
         if(uRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), uRHS, &ldb, &info);
         if(vRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), vRHS, &ldb, &info);
         if(wRHS) dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), wRHS, &ldb, &info);
@@ -286,7 +286,7 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
     #endif
 #elif defined INTEL_MKL
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
 #endif
             for(int i=0; i<n; i++) uRHS[i] = double(srhs.at(i));
@@ -303,7 +303,7 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
     #endif
 #elif defined INTEL_MKL
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
-#elif ACCELERATE
+#elif ACCELERATE_NEW_LAPACK
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
 #endif
             for(int i=0; i<n; i++) vRHS[i] = double(srhs.at(i));
@@ -320,7 +320,7 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
     #endif
 #elif defined INTEL_MKL
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
 #endif
             for(int i=0; i<n; i++) wRHS[i] = double(srhs.at(i));
@@ -337,7 +337,7 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
     #endif
 #elif defined INTEL_MKL
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
 #endif
             for(int i=0; i<n; i++) pRHS[i] = double(srhs.at(i));
@@ -354,7 +354,7 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
     #endif
 #elif defined INTEL_MKL
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
 #endif
             for(int i=0; i<n; i++) qRHS[i] = double(srhs.at(i));
@@ -371,7 +371,7 @@ void PanelAnalysis::backSubUnitRHS(double *uRHS, double *vRHS, double *wRHS, dou
     #endif
 #elif defined INTEL_MKL
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
             sgetrs_(&trans, &n, &nrhs, m_aijf.data(), &lda, m_ipiv.data(), srhs.data(), &ldb, &info);
 #endif
             for(int i=0; i<n; i++) rRHS[i] = double(srhs.at(i));
@@ -397,6 +397,8 @@ bool PanelAnalysis::backSubRHS(std::vector<double> &RHS)
             dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), RHS.data(), &ldb, &info);
     #endif
 #elif INTEL_MKL
+        dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), RHS.data(), &ldb, &info);
+#elif ACCELERATE_NEW_LAPACK
         dgetrs_(&trans, &n, &nrhs, m_aijd.data(), &lda, m_ipiv.data(), RHS.data(), &ldb, &info);
 #endif
     }

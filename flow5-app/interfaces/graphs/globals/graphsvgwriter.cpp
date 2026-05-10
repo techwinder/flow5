@@ -33,7 +33,7 @@
 #include <interfaces/graphs/containers/graphwt.h>
 #include <interfaces/graphs/graph/graph.h>
 #include <interfaces/view2d/paint2d.h>
-#include <api/utils-io.h>
+#include <api/flow5-io.h>
 
 
 bool GraphSVGWriter::s_bFillBackground=true;

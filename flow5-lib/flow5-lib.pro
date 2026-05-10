@@ -32,12 +32,12 @@ linux-g++ {
 
     DEFINES += LINUX_OS
 
+#-------Lib install ----------------
     isEmpty(PREFIX){
         PREFIX = /usr/local
     }
 
-
-    INCLUDEDIR = $$PREFIX/include/$$TARGET
+    INCLUDEDIR = $$PREFIX/include/flow5
     inc.path = $$INCLUDEDIR
     inc.files += api/*.h
 
@@ -129,21 +129,47 @@ win32-msvc {
     LIBS += -LD:\bin\OCCT-7_9_2\build\win64\vc14\lib
     LIBS += -LD:\bin\OCCT-7_9_2\build\win64\vc14\bin
 
+
+    QMAKE_CXXFLAGS += -utf-8
 }
 
 
 macx {
 
+    # app_bundle	Puts the executable into a bundle (this is the default).
     CONFIG -= app_bundle
 
+    # No Qt macro, make our own
     DEFINES += MAC_OS
-    DEFINES += GL_SILENCE_DEPRECATION   #Shame
 
+    # Specifies the hard minimum version of macOS that the application supports.
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 13.3   # needed for c++20 / std::format
 
+    # This variable is used on macOS when building universal binaries.
     QMAKE_MAC_SDK = macosx
+
+    # Specifies a list of architectures to build for.
     QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+
+    # If defined, the value of this variable is used as a path to be prepended to
+    # the built shared library's SONAME identifier.
+    # The SONAME is the identifier that the dynamic linker will later use to reference the library.
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
+
+
+    #-------Lib install ----------------
+    isEmpty(PREFIX){
+        PREFIX = /usr/local
+    }
+
+    INCLUDEDIR = $$PREFIX/include/flow5
+    inc.path = $$INCLUDEDIR
+    inc.files += api/*.h
+
+    target.path = $$PREFIX/lib
+
+    # MAKE INSTALL
+    INSTALLS += target inc
 
 
     #-------XFoil
@@ -157,8 +183,7 @@ macx {
 
 
     #-------------vecLib -----------------
-    DEFINES += ACCELERATE
-    #    QMAKE_LFLAGS += -framework Accelerate
+    DEFINES += ACCELERATE_NEW_LAPACK
     LIBS += -llapack -lcblas
 
 }

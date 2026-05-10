@@ -420,6 +420,7 @@ void OpenGlDlg::setupLayout()
                 QAction *pSpaceAct       = new QAction(tr("The final frontier"),       this);
 
 #ifdef Q_OS_MAC
+                pFlowAct->setEnabled(false);
                 pLorenz2Act->setEnabled(false);
                 pBoids2Act->setEnabled(false);
 #endif

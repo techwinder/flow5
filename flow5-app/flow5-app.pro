@@ -47,7 +47,7 @@ INCLUDEPATH += $$PWD/../flow5-io-lib/api
 
 linux-g++ {
 
-    # VARIABLES
+    # ----------------- Install-------------------------
     isEmpty(PREFIX):PREFIX = /usr/local
     BINDIR = $$PREFIX/bin
     SHAREDIR = $$PREFIX/share/flow5
@@ -66,6 +66,7 @@ linux-g++ {
     # MAKE INSTALL
     # .desktop file sould be added manually to desktop.path otherwise will have root as owner
     INSTALLS += target icon128 translations
+
 
     #comment out to use OpenBLAS
 #   CONFIG += INTEL_MKL
@@ -123,6 +124,11 @@ linux-g++ {
 
     #-----XFoil----
     LIBS += -L../XFoil-lib -lXFoil
+
+
+
+    #prevent sfinae warnings in the Qt libs
+    QMAKE_CXXFLAGS += -Wsfinae-incomplete=0
 }
 
 
@@ -153,19 +159,15 @@ win32-msvc {
     #    LIBS += -lmkl_sequential_dll
 
 
-
 #--------------------- GMSH ------------------------
     INCLUDEPATH += D:\bin\gmsh-4.14.1-Windows64-sdk/include/
     LIBS += -L"D:\bin\gmsh-4.14.1-Windows64-sdk/lib"
     LIBS += -lgmsh.dll  # the file name is gmsh.dll.lib
 
-
 #------------ OPEN CASCADE --------------------------
     INCLUDEPATH += D:\bin\OCCT-7_9_2\build\inc
     LIBS += -LD:\bin\OCCT-7_9_2\build\win64\vc14\lib
     LIBS += -LD:\bin\OCCT-7_9_2\build\win64\vc14\bin
-
-
 
 #---------------- OTHER WIN LIBS -------------------
     DEFINES += _UNICODE WIN64 QT_DLL QT_WIDGETS_LIB
@@ -178,19 +180,40 @@ win32-msvc {
 
 
 macx {
+    # Specifies the hard minimum version of macOS that the application supports.
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 13.3   # needed for c++20 / std::format and compatibility with flow5-libs
 
+    # This variable is used on macOS when building universal binaries.
     QMAKE_MAC_SDK = macosx
+
+    # Specifies a list of architectures to build for.
     QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
 
+    DEFINES += GL_SILENCE_DEPRECATION   #Shame
+
+    # ----------------- Install-------------------------
+    isEmpty(PREFIX):PREFIX = /usr/local
+    BINDIR = $$PREFIX/bin
+    SHAREDIR = $$PREFIX/share/flow5
+
+    icon128.path = $$SHAREDIR
+    icon128.files += ../meta/res/$${TARGET}.png
+
+    translations.path = $$SHAREDIR/translations
+    translations.files += ../meta/translations/*.qm
+
+    target.path = $$BINDIR
+
+    INSTALLS += target icon128 translations
+
+    #------------------- Bundle --------------------------
     # Add variables that will be used to build the info.plist file
     QMAKE_TARGET_BUNDLE_PREFIX = cere-aero.tech
 
     QMAKE_INFO_PLIST = ../meta/mac/info.plist
     ICON = ../meta/mac/flow5.icns
 
-    DEFINES += GL_SILENCE_DEPRECATION   #Shame
-
-    #-------XFoil
+    #----------XFoil--------------------------
     # link to the lib:
     LIBS += -L$$OUT_PWD/../XFoil-lib -lXFoil
     # deploy the libs:
@@ -198,7 +221,7 @@ macx {
     XFoil.path = Contents/Frameworks
     QMAKE_BUNDLE_DATA += XFoil
 
-    #-------flow5-lib
+    #----------flow5-lib--------------------------
     # link to the lib:
     LIBS += -L$$OUT_PWD/../flow5-lib -lflow5-lib
     # deploy the libs:
@@ -206,8 +229,15 @@ macx {
     flow5-lib.path = Contents/Frameworks
     QMAKE_BUNDLE_DATA += flow5-lib
 
+    #-------flow5-io-lib--------------------------
+    # link to the lib:
+    LIBS += -L$$OUT_PWD/../flow5-io-lib -lflow5-io-lib
+    # deploy the libs:
+    flow5-io-lib.files = $$OUT_PWD/../flow5-io-lib/libflow5-io-lib.1.dylib
+    flow5-io-lib.path = Contents/Frameworks
+    QMAKE_BUNDLE_DATA += flow5-io-lib
 
-    #-------------OPENCASCADE -----------------
+    #-------------OPENCASCADE--------------------------
     # set the paths to the OpenCascade header and lib directories
     INCLUDEPATH += /usr/local/include/opencascade
     LIBS += -L/usr/local/lib
@@ -217,14 +247,9 @@ macx {
     LIBS += -lgmsh
 
     #-------------vecLib -----------------
-    DEFINES += ACCELERATE
+    DEFINES += ACCELERATE_NEW_LAPACK
     #    QMAKE_LFLAGS += -framework Accelerate
     LIBS += -llapack -lcblas
-
-    # deploy the libs
-#    gmsh.files =/usr/local/lib/libgmsh.4.14.dylib
-#    gmsh.path = Contents/Frameworks
-#    QMAKE_BUNDLE_DATA += gmsh
 
 }
 
@@ -232,8 +257,8 @@ macx {
 #CONFIG += warn_on
 #QMAKE_CFLAGS_WARN_ON += -W3
 #QMAKE_CFLAGS_WARN_ON += -W4
-
 #QMAKE_CXXFLAGS += -WX   # warnings as errors
+
 
 include(flow5-app.pri)
 

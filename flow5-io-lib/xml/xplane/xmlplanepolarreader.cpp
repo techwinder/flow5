@@ -32,7 +32,7 @@
 #include <objects_global.h>
 #include <planepolar.h>
 #include <xmlplanepolarreader.h>
-#include <utils-io.h>
+#include <flow5-io.h>
 #include <xml_globals.h>
 
 
@@ -135,19 +135,19 @@ void XmlPlanePolarReader::readWPolar(PlanePolar *pPlPolar, double lengthunit, do
         }
         else if (name().compare(QString("Include_Fuse_Moments"), Qt::CaseInsensitive)==0)
         {
-            pPlPolar->setIncludeFuseMi(xfl::stringToBool(readElementText()));
+            pPlPolar->setIncludeFuseMi(xml::stringToBool(readElementText()));
         }
         else if (name().compare(QString("Thin_Surfaces"), Qt::CaseInsensitive)==0)
         {
-            pPlPolar->setThinSurfaces(xfl::stringToBool(readElementText()));
+            pPlPolar->setThinSurfaces(xml::stringToBool(readElementText()));
         }
         else if (name().compare(QString("Ground_Effect"), Qt::CaseInsensitive)==0)
         {
-            pPlPolar->setGroundEffect(xfl::stringToBool(readElementText()));
+            pPlPolar->setGroundEffect(xml::stringToBool(readElementText()));
         }
         else if (name().compare(QString("Free_Surface"), Qt::CaseInsensitive)==0)
         {
-            pPlPolar->setFreeSurfaceEffect(xfl::stringToBool(readElementText()));
+            pPlPolar->setFreeSurfaceEffect(xml::stringToBool(readElementText()));
         }
         else if (name().compare(QString("Ground_Height"), Qt::CaseInsensitive)==0)
         {
@@ -188,7 +188,7 @@ void XmlPlanePolarReader::readWPolar(PlanePolar *pPlPolar, double lengthunit, do
         }
         else if (name().compare(QString("Use_plane_inertia"), Qt::CaseInsensitive)==0)
         {
-            bool bInertia = xfl::stringToBool(readElementText());
+            bool bInertia = xml::stringToBool(readElementText());
             pPlPolar->setAutoInertia(bInertia);
         }
         else if (name().compare(QString("Inertia"), Qt::CaseInsensitive)==0)
@@ -255,7 +255,7 @@ void XmlPlanePolarReader::readReferenceDimensions(double lengthunit, double area
         }
         else if (name().compare(QString("Include_Other_Wing_Area"), Qt::CaseInsensitive)==0)
         {
-            m_pPlPolar->setIncludeOtherWingAreas(xfl::stringToBool(readElementText()));
+            m_pPlPolar->setIncludeOtherWingAreas(xml::stringToBool(readElementText()));
         }
         else
             skipCurrentElement();
@@ -434,7 +434,7 @@ void XmlPlanePolarReader::readOperatingRange(double velocityunit)
 
         if(name().toString().compare("Adjusted_velocity", Qt::CaseInsensitive)==0)
         {
-            m_pPlPolar->setAdjustedVelocity(xfl::stringToBool(readElementText()));
+            m_pPlPolar->setAdjustedVelocity(xml::stringToBool(readElementText()));
         }
         else if (name().toString().compare("Velocity", Qt::CaseInsensitive)==0)
         {
@@ -507,15 +507,15 @@ void XmlPlanePolarReader::readViscosity()
     {
         if (name().compare(QString("Is_Viscous_Analysis"), Qt::CaseInsensitive)==0)
         {
-            m_pPlPolar->setViscous(xfl::stringToBool(readElementText()));
+            m_pPlPolar->setViscous(xml::stringToBool(readElementText()));
         }
         else if (name().compare(QString("From_CL"), Qt::CaseInsensitive)==0)
         {
-            m_pPlPolar->setViscFromCl(xfl::stringToBool(readElementText()));
+            m_pPlPolar->setViscFromCl(xml::stringToBool(readElementText()));
         }
         else if (name().compare(QString("XFoil_OnTheFly"), Qt::CaseInsensitive)==0)
         {
-            m_pPlPolar->setViscOnTheFly(xfl::stringToBool(readElementText()));
+            m_pPlPolar->setViscOnTheFly(xml::stringToBool(readElementText()));
         }
         else if (name().compare(QString("NCrit"), Qt::CaseInsensitive)==0)
         {
@@ -531,7 +531,7 @@ void XmlPlanePolarReader::readViscosity()
         }       
         else if (name().compare(QString("TransAtHinge"), Qt::CaseInsensitive)==0)
         {
-            m_pPlPolar->setTransAtHinge(xfl::stringToBool(readElementText()));
+            m_pPlPolar->setTransAtHinge(xml::stringToBool(readElementText()));
         }
         else
             skipCurrentElement();
@@ -545,7 +545,7 @@ void XmlPlanePolarReader::readFuselageDrag()
     {
         if (name().compare(QString("Friction_Drag"), Qt::CaseInsensitive)==0)
         {
-            m_pPlPolar->setIncludeFuseDrag(xfl::stringToBool(readElementText()));
+            m_pPlPolar->setIncludeFuseDrag(xml::stringToBool(readElementText()));
         }
         else if (name().compare(QString("Friction_Drag_Method"), Qt::CaseInsensitive)==0)
         {

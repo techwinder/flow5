@@ -15,7 +15,7 @@
 #include <polar.h>
 #include <xfoiltask.h>
 #include <planepolarnamemaker.h>
-
+#include <flow5-io.h>
 
 
 int main()
@@ -23,41 +23,82 @@ int main()
     printf("flow5 plane run\n");
 
     // Preload some project file
-//  globals::loadFl5Project("/path/to/file.fl5");
+    /*
+    std::string logload;
+    std::string loadfilepath = "/path/to/file.fl5";
+    if(!io::loadProject(loadfilepath, logload))
+    {
+        std::cerr << logload << std::endl;
+    }
+    */
 
     // Start by creating the foils needed to build the wings
     // flow5 objects, i.e. foils, planes, boats and their polar and opp children
     // should always be allocated on the heap
 
-    Foil *pFoilN2413 = foil::makeNacaFoil(2413, "NACA 2413");
-    Foil *pFoilN0009 = foil::makeNacaFoil(9,    "NACA 0009");
+    Foil *pFoilN2413 = new Foil;
+    if(!Objects2d::makeNacaFoil(pFoilN2413, 2413, 200))
     {
-        if(!pFoilN0009 || !pFoilN2413)
-        {
-            // failsafe; this should not happen
-            std::cout <<"Error creating the foils ...aborting" << std::endl;
-            if(pFoilN0009) delete pFoilN0009;
-            if(pFoilN2413) delete pFoilN2413;
-            return 0;
-        }
-
-
-        // set the style for these foils and their children objects, i.e. polars and operating points
-        pFoilN0009->setTheStyle({true, Line::SOLID, 2, {31, 111, 231}, Line::NOSYMBOL});
-        pFoilN2413->setTheStyle({true, Line::SOLID, 2, {231, 111, 31}, Line::NOSYMBOL});
-
-
-        // repanel
-        int  npanels = 150;
-        double amp = 0.7; // 0.0: no bunching, 1.0: max. bunching
-        pFoilN0009->rePanel(npanels, amp);
-        pFoilN2413->rePanel(npanels, amp);
-
-        // define the flaps
-        pFoilN0009->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
-        pFoilN2413->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
-
+        // this should not happen
+        std::cerr << "Error making foil NACA 2413" << std::endl;
+        delete pFoilN2413;
+        return 0;
     }
+    pFoilN2413->setName("NACA 2413");
+    Objects2d::insertThisFoil(pFoilN2413);
+
+    Foil *pFoilN0009 = new Foil;
+    if(!Objects2d::makeNacaFoil(pFoilN0009, 9, 200))
+    {
+        // this should not happen
+        std::cerr << "Error making foil NACA 0009" << std::endl;
+        delete pFoilN0009;
+        return 0;
+    }
+    pFoilN0009->setName("NACA 0009");
+    Objects2d::insertThisFoil(pFoilN0009);
+
+
+    // set the style for these foils and their children objects, i.e. polars and operating points
+    pFoilN0009->setTheStyle({true, Line::SOLID, 2, {31, 111, 231}, Line::NOSYMBOL});
+    pFoilN2413->setTheStyle({true, Line::SOLID, 2, {231, 111, 31}, Line::NOSYMBOL});
+
+
+    // repanel
+    int  npanels = 150;
+    double amp = 0.7; // 0.0: no bunching, 1.0: max. bunching
+    pFoilN0009->rePanel(npanels, amp);
+    pFoilN2413->rePanel(npanels, amp);
+
+    // define the flaps
+    pFoilN0009->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
+    pFoilN2413->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
+
+
+    // Could also read a foil from file
+
+    Foil *pFoilClarkY = new Foil;
+    std::string pathname = "/path/to/CLARK Y.dat";
+    int iLineError(-1);
+    // readFoilFile() has been left in flow5-lib and not moved to flow5-io-lib
+    // since it is of common use and requires only the STL and not QtCore
+    bool bOK = objects::readFoilFile(pathname, pFoilClarkY, iLineError);
+
+    if(bOK)
+    {
+        pFoilClarkY->setLineWidth(2);
+        pFoilClarkY->setLineColor({255, 201, 51});
+        Objects2d::insertThisFoil(pFoilClarkY);
+
+        std::cout <<"The foil "<< pFoilClarkY-> name() <<" has been created and added to the database" << std::endl<< std::endl;
+    }
+    else
+    {
+        delete pFoilClarkY;
+        std::cerr <<  "Error reading the file " << pathname << " at line " << iLineError << std::endl;
+    }
+
+
 
     // Create and define a new xfl-type plane
     PlaneXfl* pPlaneXfl = new PlaneXfl;
@@ -309,16 +350,14 @@ int main()
         // Now that the polar's parameters have been defined,
         // it is possible to use flow5's default name maker
         PlanePolarNameMaker maker;
-        std::string polarname = PlanePolarNameMaker::makeName(pPlaneXfl, pPlPolar).toStdString();
+        std::string polarname = PlanePolarNameMaker::makeName(pPlaneXfl, pPlPolar);
         pPlPolar->setName(polarname);
         // Store the pointer to ensure that the object is not lost
         // This should be done after the polar has been given a name
         // since objects are referenced by their name and are stored
         // in alphabetical order
         Objects3d::insertPlPolar(pPlPolar);
-
     }
-
 
     // Define and run the analysis
     PlaneTask *pPlaneTask = new PlaneTask;
@@ -370,12 +409,26 @@ int main()
         delete pPlaneTask;
     }
 
-    globals::saveFl5Project("/tmp/PlaneRun.fl5");
 
+    // save the project; requires link to flow5-io-lib
+    std::string logmsg;
+    std::string projectfilepath = "/tmp/PlaneRun.fl5";
+    io::saveProject(projectfilepath, logmsg);
+
+    if(logmsg.size()>0)
+    {
+        // error saving
+        std::cerr << logmsg << std::endl << std::endl;
+    }
+    else
+    {
+        std::cout << "Successfully saved the project file to " << projectfilepath << std::endl << std::endl;
+    }
 
     // Must call! will delete the planes, foils and children objects
     // Memory leak otherwise
     globals::deleteObjects();
+
 
     std::cout << "done" << std::endl;
 

@@ -24,13 +24,11 @@
 
 #include <fstream>
 #include <iostream>
-#include <format>
 #include <iterator>
-
 #include <format>
 
 
-#if defined ACCELERATE
+#if defined ACCELERATE_NEW_LAPACK
   #include <Accelerate/Accelerate.h>
   #define lapack_int int
 #elif defined INTEL_MKL
@@ -81,7 +79,6 @@ int xfl::readValues(std::string const &theline, float val[], int nValues)
 
     std::string::size_type sz(0);
 
-
     try
     {
         for(unsigned int is=0; is<split.size() && nread<nValues; is++)
@@ -89,17 +86,17 @@ int xfl::readValues(std::string const &theline, float val[], int nValues)
             val[nread++] = std::stof(split.at(is), &sz);
         }
     }
-    catch (const std::invalid_argument& ia)
+    catch (const std::invalid_argument&)
     {
-          std::cerr << "Invalid argument: " << ia.what() << '\n';
+//          std::cerr << "Invalid argument: " << ia.what() << '\n';
     }
-    catch (const std::out_of_range& oor)
+    catch (const std::out_of_range& )
     {
-        std::cerr << "Out of Range error: " << oor.what() << '\n';
+//        std::cerr << "Out of Range error: " << oor.what() << '\n';
     }
     catch(...)
     {
-        std::cerr << "Unknown error reading floats"<< '\n';
+//        std::cerr << "Unknown error reading floats"<< '\n';
     }
 
     return nread;

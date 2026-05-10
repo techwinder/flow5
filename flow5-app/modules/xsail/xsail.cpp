@@ -1792,6 +1792,7 @@ void XSail::onEditSail()
         }
         if(dlg.bDescriptionChanged() && !dlg.bChanged())
         {
+            emit projectModified();
             return; // save the meta data = colour + description without deleting the results
         }
     }
@@ -1811,6 +1812,7 @@ void XSail::onEditSail()
         }
         if(dlg.bDescriptionChanged() && !dlg.bChanged())
         {
+            emit projectModified();
             return; // save the meta data = colour + description without deleting the results
         }
     }
@@ -1828,6 +1830,7 @@ void XSail::onEditSail()
         }
         if(dlg.bDescriptionChanged() && !dlg.bChanged())
         {
+            emit projectModified();
             return; // save the meta data = colour + description without deleting the results
         }
     }
@@ -1845,6 +1848,7 @@ void XSail::onEditSail()
         }
         if(dlg.bDescriptionChanged() && !dlg.bChanged())
         {
+            emit projectModified();
             return; // save the meta data = colour + description without deleting the results
         }
     }
@@ -1862,6 +1866,7 @@ void XSail::onEditSail()
         }
         if(dlg.bDescriptionChanged() && !dlg.bChanged())
         {
+            emit projectModified();
             return; // save the meta data = colour + description without deleting the results
         }
     }

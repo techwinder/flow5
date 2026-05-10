@@ -222,7 +222,7 @@
 #include <api/testpanels.h>
 #include <core/trace.h>
 #include <api/units.h>
-#include <api/utils-io.h>
+#include <api/flow5-io.h>
 #include <api/wingxfl.h>
 #include <api/xfoiltask.h>
 
@@ -4429,42 +4429,81 @@ int MainFrame::onTestRun()
 {
     printf("flow5 plane run\n");
 
-    // preload some project file
-//    globals::loadFl5Project("/path/to/file.fl5");
+    // Preload some project file
+    /*    std::string logload;
+     s td::stri*ng loadfilepath = "/path/to/file.fl5";
+     if(!io::loadProject(loadfilepath, logload))
+     {
+     std::cerr << logload << std::endl;
+}*/
 
     // Start by creating the foils needed to build the wings
     // flow5 objects, i.e. foils, planes, boats and their polar and opp children
     // should always be allocated on the heap
 
-    Foil *pFoilN2413 = foil::makeNacaFoil(2413, "NACA 2413");
-    Foil *pFoilN0009 = foil::makeNacaFoil(9,    "NACA 0009");
+    Foil *pFoilN2413 = new Foil;
+    if(!Objects2d::makeNacaFoil(pFoilN2413, 2413, 200))
     {
-        if(!pFoilN0009 || !pFoilN2413)
-        {
-            // failsafe; this should not happen
-            std::cout <<"Error creating the foils ...aborting" << std::endl;
-            if(pFoilN0009) delete pFoilN0009;
-            if(pFoilN2413) delete pFoilN2413;
-            return 0;
-        }
-
-
-        // set the style for these foils and their children objects, i.e. polars and operating points
-        pFoilN0009->setTheStyle({true, Line::SOLID, 2, {31, 111, 231}, Line::NOSYMBOL});
-        pFoilN2413->setTheStyle({true, Line::SOLID, 2, {231, 111, 31}, Line::NOSYMBOL});
-
-
-        // repanel
-        int  npanels = 150;
-        double amp = 0.7; // 0.0: no bunching, 1.0: max. bunching
-        pFoilN0009->rePanel(npanels, amp);
-        pFoilN2413->rePanel(npanels, amp);
-
-        // define the flaps
-        pFoilN0009->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
-        pFoilN2413->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
-
+        // this should not happen
+        std::cerr << "Error making foil NACA 2413" << std::endl;
+        delete pFoilN2413;
+        return 0;
     }
+    pFoilN2413->setName("NACA 2413");
+    Objects2d::insertThisFoil(pFoilN2413);
+
+    Foil *pFoilN0009 = new Foil;
+    if(!Objects2d::makeNacaFoil(pFoilN0009, 9, 200))
+    {
+        // this should not happen
+        std::cerr << "Error making foil NACA 0009" << std::endl;
+        delete pFoilN0009;
+        return 0;
+    }
+    pFoilN0009->setName("NACA 0009");
+    Objects2d::insertThisFoil(pFoilN0009);
+
+
+    // set the style for these foils and their children objects, i.e. polars and operating points
+    pFoilN0009->setTheStyle({true, Line::SOLID, 2, {31, 111, 231}, Line::NOSYMBOL});
+    pFoilN2413->setTheStyle({true, Line::SOLID, 2, {231, 111, 31}, Line::NOSYMBOL});
+
+
+    // repanel
+    int  npanels = 150;
+    double amp = 0.7; // 0.0: no bunching, 1.0: max. bunching
+    pFoilN0009->rePanel(npanels, amp);
+    pFoilN2413->rePanel(npanels, amp);
+
+    // define the flaps
+    pFoilN0009->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
+    pFoilN2413->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters
+
+
+    // Could also read a foil from file
+
+    Foil *pFoilClarkY = new Foil;
+    std::string pathname = "/path/to/CLARK Y.dat";
+    int iLineError(-1);
+    // readFoilFile() has been left in flow5-lib and not moved to flow5-io-lib
+    // since it is of common use and requires only the STL and not QtCore
+    bool bOK = objects::readFoilFile(pathname, pFoilClarkY, iLineError);
+
+    if(bOK)
+    {
+        pFoilClarkY->setLineWidth(2);
+        pFoilClarkY->setLineColor({255, 201, 51});
+        Objects2d::insertThisFoil(pFoilClarkY);
+
+        std::cout <<"The foil "<< pFoilClarkY-> name() <<" has been created and added to the database" << std::endl<< std::endl;
+    }
+    else
+    {
+        delete pFoilClarkY;
+        std::cerr <<  "Error reading the file " << pathname << " at line " << iLineError << std::endl;
+    }
+
+
 
     // Create and define a new xfl-type plane
     PlaneXfl* pPlaneXfl = new PlaneXfl;
@@ -4685,9 +4724,11 @@ int MainFrame::onTestRun()
             // get a reference to the main wing's flap controls
             AngleControl &mainwingctrls = pPlPolar->flapCtrls(0);
             {
+                // get a reference to the main wing
+                WingXfl &mainwing = *pPlaneXfl->wing(0);
                 // sanity check: the number of flap deflections should be the same
                 // as the main wing's number of flaps, i.e. 4
-                assert(mainwingctrls.nValues()==pPlaneXfl->wing(0)->nFlaps());
+                assert(mainwingctrls.nValues()==mainwing.nFlaps());
 
                 // Flaps are numbered from left to right
                 // Set their deflection, + is down, unit is degrees
@@ -4721,14 +4762,12 @@ int MainFrame::onTestRun()
         // since objects are referenced by their name and are stored
         // in alphabetical order
         Objects3d::insertPlPolar(pPlPolar);
-
     }
 
-
-    // Run the analysis
+    // Define and run the analysis
     PlaneTask *pPlaneTask = new PlaneTask;
     {
-        PanelAnalysis::setMaxThreadCount(16);
+        PanelAnalysis::setMaxThreadCount(16); // 1 by default
 
         pPlaneTask->outputToStdIO(true);
         pPlaneTask->setKeepOpps(true);
@@ -4775,16 +4814,26 @@ int MainFrame::onTestRun()
         delete pPlaneTask;
     }
 
-    FileIO  saver;
-    std::string logmsg;
-    saver.saveProject("/tmp/PlaneRun.fl5", logmsg);
 
+    // save the project; requires link to flow5-io-lib
+    std::string logmsg;
+    std::string projectfilepath = "/tmp/PlaneRun.fl5";
+    io::saveProject(projectfilepath, logmsg);
+
+    if(logmsg.size()>0)
+    {
+        // error saving
+        std::cerr << logmsg << std::endl << std::endl;
+    }
+    else
+    {
+        std::cout << "Successfully saved the project file to " << projectfilepath << std::endl << std::endl;
+    }
 
     // Must call! will delete the planes, foils and children objects
     // Memory leak otherwise
-//    globals::deleteObjects();
+    globals::deleteObjects();
 
-    onXPlane();
 
     std::cout << "done" << std::endl;
 

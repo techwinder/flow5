@@ -6,7 +6,7 @@ project(XFoilRun LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(INTEL_MKL "Activate if flow5 has been built with Intel MKL" ON)
+option(INTEL_MKL "Activate if flow5 has been built with Intel MKL" OFF)
 
 if (WIN32)
 include_directories(D:/dev/flow5/XFoil-lib)
@@ -22,6 +22,7 @@ set(CMAKE_CXX_FLAGS /Zc:__cplusplus)
 else ()
 include_directories(/usr/local/include/XFoil/)
 include_directories(/usr/local/include/flow5-lib/)
+include_directories(/usr/local/include/flow5-io-lib/)
 include_directories(/usr/include/qt6)
 include_directories(/usr/include/qt6/QtCore)
 
@@ -39,9 +40,9 @@ add_executable(XFoilRun xfoilrun.cpp)
 
 
 if(INTEL_MKL)
-target_link_libraries(XFoilRun XFoil flow5-lib Qt6Core mkl_core mkl_intel_lp64 mkl_gnu_thread)
+target_link_libraries(XFoilRun XFoil flow5-lib flow5-io-lib Qt6Core mkl_core mkl_intel_lp64 mkl_gnu_thread)
 else()
-target_link_libraries(XFoilRun XFoil flow5-lib Qt6Core)
+target_link_libraries(XFoilRun XFoil flow5-lib flow5-io-lib Qt6Core)
 endif()
 
 

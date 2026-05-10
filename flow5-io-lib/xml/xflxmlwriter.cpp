@@ -44,7 +44,7 @@
 #include <pointmass.h>
 #include <polar3d.h>
 #include <units.h>
-#include <utils-io.h>
+#include <flow5-io.h>
 #include <utils.h>
 #include <vector3d.h>
 #include <wingxfl.h>
@@ -336,7 +336,7 @@ void XflXmlWriter::writeWakeData(Polar3d const &polar3d)
     {
         writeComment("Set the following field to true for a conventional flat panel wake, and to false for a vorton wake. "
                      "The default is true. All lengths are in reference chord units.");
-        writeTextElement("FlatPanelWake", xfl::boolToString(!polar3d.bVortonWake()));
+        writeTextElement("FlatPanelWake", xml::boolToString(!polar3d.bVortonWake()));
         if(!polar3d.bVortonWake())
         {
             writeComment("These parameters define the wake panels;\n"
@@ -378,12 +378,12 @@ void XflXmlWriter::writeWing(WingXfl const &wing, Vector3d WingLE, double Rx, do
         writeTextElement("Tip_Strips",        QString::asprintf("%d", wing.nTipStrips()));
         writeTextElement("Rx_angle",          QString("%1").arg(Rx,7,'f',3));
         writeTextElement("Ry_angle",          QString("%1").arg(Ry,7,'f',3));
-        writeTextElement("symmetric",         xfl::boolToString(wing.isSymmetric()));
-        writeTextElement("Two_Sided",         xfl::boolToString(wing.isTwoSided()));
-        writeTextElement("Closed_Inner_Side", xfl::boolToString(wing.isClosedInnerSide()));
+        writeTextElement("symmetric",         xml::boolToString(wing.isSymmetric()));
+        writeTextElement("Two_Sided",         xml::boolToString(wing.isTwoSided()));
+        writeTextElement("Closed_Inner_Side", xml::boolToString(wing.isClosedInnerSide()));
 
         writeComment("If the field AUTOINERTIA is set to TRUE, the fields COG and COG_I** will be ignored");
-        writeTextElement("AutoInertia", xfl::boolToString(wing.bAutoInertia()));
+        writeTextElement("AutoInertia", xml::boolToString(wing.bAutoInertia()));
         writeInertia(wing.inertia());
 
         writeStartElement("Sections");

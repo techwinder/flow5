@@ -932,10 +932,11 @@ void gl3dXPlaneView::initializeGL()
         QString strange = QString::asprintf("OpenGL context version is %d.%d.\n"
                                             "Set an OpenGL context version >=4.3 to enable flow animations.\n\n", oglMajor(), oglMinor());
         xfl::trace(strange);
-        s_pXPlane->displayMessage(strange, true, false);
+        s_pXPlane->displayMessage(strange, false, false);
         return;
     }
 
+#ifndef Q_OS_MAC
     // flow Compute shader
     QString csrc = ":/shaders/flow/flow3d_CS.glsl";
     m_shadFlow.addShaderFromSourceFile(QOpenGLShader::Compute, csrc);
@@ -973,6 +974,7 @@ void gl3dXPlaneView::initializeGL()
         }
         m_shadFlow.release();
     }
+#endif
 }
 
 

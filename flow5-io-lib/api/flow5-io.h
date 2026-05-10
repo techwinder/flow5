@@ -27,7 +27,7 @@
 #include <QString>
 
 #include <flow5-io-lib_global.h>
-#include <api/fl5color.h>
+#include <fl5color.h>
 
 #define PIch         QString(QChar(0x03C0))
 #define ALPHAch      QString(QChar(0x03B1))
@@ -51,16 +51,12 @@
 #define EOLch        QString("\n")
 
 
-namespace xfl
+namespace io
 {
     FL5IOLIB_EXPORT  fl5Color readQColor(QDataStream &ar);
     FL5IOLIB_EXPORT  void readString(QDataStream &ar, std::string &strong);
     FL5IOLIB_EXPORT  void readFloat(QDataStream &inStream, float &f);
     FL5IOLIB_EXPORT  void writeFloat(QDataStream &outStream, float f);
-
-
-    FL5IOLIB_EXPORT  bool stringToBool(QString const &str);
-    FL5IOLIB_EXPORT  QString boolToString(bool b);
 
     FL5IOLIB_EXPORT  void writeString(QDataStream &ar, QString const &strong);
     FL5IOLIB_EXPORT  void writeString(QDataStream &ar, std::string const &strong);
@@ -70,5 +66,8 @@ namespace xfl
 
     FL5IOLIB_EXPORT  void readColor(QDataStream &ar, int &r, int &g, int &b, int &a);
     FL5IOLIB_EXPORT  void writeColor(QDataStream &ar, int r, int g, int b, int a);
+
+    FL5IOLIB_EXPORT  bool saveProject(const std::string &stdPathName, std::string &logmsg);
+    FL5IOLIB_EXPORT  bool loadProject(const std::string &stdPathName, std::string &logmsg);
 
 }

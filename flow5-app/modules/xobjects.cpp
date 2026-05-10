@@ -43,7 +43,7 @@
 #include <api/sailstl.h>
 #include <api/sailocc.h>
 #include <api/sailwing.h>
-#include <api/utils-io.h>
+#include <api/flow5-io.h>
 
 
 #include <core/xflcore.h>
@@ -661,7 +661,7 @@ int Objects3d::exportTriMesh(QDataStream &outStream, double scalefactor, TriMesh
 
     QString strong =     "--- STL file ---                                                               ";
 
-    xfl::writeString(outStream, strong);
+    io::writeString(outStream, strong);
 
     outStream << trimesh.nPanels();
 
@@ -672,37 +672,37 @@ int Objects3d::exportTriMesh(QDataStream &outStream, double scalefactor, TriMesh
     for (int it=0; it<trimesh.nPanels(); it++)
     {
         Panel3 const &p3 = trimesh.panelAt(it);
-        xfl::writeFloat(outStream, p3.normal().xf());
-        xfl::writeFloat(outStream, p3.normal().yf());
-        xfl::writeFloat(outStream, p3.normal().zf());
+        io::writeFloat(outStream, p3.normal().xf());
+        io::writeFloat(outStream, p3.normal().yf());
+        io::writeFloat(outStream, p3.normal().zf());
 
         if(p3.isPositiveOrientation())
         {
-            xfl::writeFloat(outStream, float(p3.vertexAt(0).x*scalefactor));
-            xfl::writeFloat(outStream, float(p3.vertexAt(0).y*scalefactor));
-            xfl::writeFloat(outStream, float(p3.vertexAt(0).z*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(0).x*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(0).y*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(0).z*scalefactor));
 
-            xfl::writeFloat(outStream, float(p3.vertexAt(1).x*scalefactor));
-            xfl::writeFloat(outStream, float(p3.vertexAt(1).y*scalefactor));
-            xfl::writeFloat(outStream, float(p3.vertexAt(1).z*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(1).x*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(1).y*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(1).z*scalefactor));
 
-            xfl::writeFloat(outStream, float(p3.vertexAt(2).x*scalefactor));
-            xfl::writeFloat(outStream, float(p3.vertexAt(2).y*scalefactor));
-            xfl::writeFloat(outStream, float(p3.vertexAt(2).z*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(2).x*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(2).y*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(2).z*scalefactor));
         }
         else
         {
-            xfl::writeFloat(outStream, float(p3.vertexAt(0).x*scalefactor));
-            xfl::writeFloat(outStream, float(p3.vertexAt(0).y*scalefactor));
-            xfl::writeFloat(outStream, float(p3.vertexAt(0).z*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(0).x*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(0).y*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(0).z*scalefactor));
 
-            xfl::writeFloat(outStream, float(p3.vertexAt(2).x*scalefactor));
-            xfl::writeFloat(outStream, float(p3.vertexAt(2).y*scalefactor));
-            xfl::writeFloat(outStream, float(p3.vertexAt(2).z*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(2).x*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(2).y*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(2).z*scalefactor));
 
-            xfl::writeFloat(outStream, float(p3.vertexAt(1).x*scalefactor));
-            xfl::writeFloat(outStream, float(p3.vertexAt(1).y*scalefactor));
-            xfl::writeFloat(outStream, float(p3.vertexAt(1).z*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(1).x*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(1).y*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(1).z*scalefactor));
         }
 
         outStream.writeRawData(buffer, 2);
@@ -760,7 +760,7 @@ int Objects3d::exportTriangulation(QDataStream &outStream, double scalefactor, s
 
     QString strong =     "--- STL file ---                                                               ";
 
-    xfl::writeString(outStream, strong);
+    io::writeString(outStream, strong);
 
     outStream << int(triangle.size()); /// @todo check STL format
 
@@ -771,21 +771,21 @@ int Objects3d::exportTriangulation(QDataStream &outStream, double scalefactor, s
     for (uint it=0; it<triangle.size(); it++)
     {
         Triangle3d const & t3 = triangle.at(it);
-        xfl::writeFloat(outStream, t3.normal().xf());
-        xfl::writeFloat(outStream, t3.normal().yf());
-        xfl::writeFloat(outStream, t3.normal().zf());
+        io::writeFloat(outStream, t3.normal().xf());
+        io::writeFloat(outStream, t3.normal().yf());
+        io::writeFloat(outStream, t3.normal().zf());
 
-        xfl::writeFloat(outStream, float(t3.vertexAt(0).x*scalefactor));
-        xfl::writeFloat(outStream, float(t3.vertexAt(0).y*scalefactor));
-        xfl::writeFloat(outStream, float(t3.vertexAt(0).z*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(0).x*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(0).y*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(0).z*scalefactor));
 
-        xfl::writeFloat(outStream, float(t3.vertexAt(1).x*scalefactor));
-        xfl::writeFloat(outStream, float(t3.vertexAt(1).y*scalefactor));
-        xfl::writeFloat(outStream, float(t3.vertexAt(1).z*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(1).x*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(1).y*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(1).z*scalefactor));
 
-        xfl::writeFloat(outStream, float(t3.vertexAt(2).x*scalefactor));
-        xfl::writeFloat(outStream, float(t3.vertexAt(2).y*scalefactor));
-        xfl::writeFloat(outStream, float(t3.vertexAt(2).z*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(2).x*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(2).y*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(2).z*scalefactor));
 
         outStream.writeRawData(buffer, 2);
     }

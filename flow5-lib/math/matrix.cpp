@@ -30,7 +30,7 @@
 #include <cassert>
 #include <thread>
 
-#if defined ACCELERATE
+#if defined ACCELERATE_NEW_LAPACK
   #include <Accelerate/Accelerate.h>
   #define lapack_int int
 #elif defined INTEL_MKL
@@ -931,7 +931,7 @@ void matrix::matMultLAPACK(double const *A, double const *B, double* AB, int m, 
     double beta=0.0;
 
 
-#ifdef MAC_OS
+#ifdef ACCELERATE_NEW_LAPACK
     cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, m, n, k, alpha, A, k, B, n, beta, AB, n);
 #elif defined WIN_OS
     cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, m, n, k, alpha, A, k, B, n, beta, AB, n);
@@ -1578,7 +1578,7 @@ int matrix::solveLinearSystem(int rank, float *M, int nrhs, float *rhs, int nThr
     #endif
 #elif defined INTEL_MKL
         sgetrs_(&trans, &nl, &ldb, M, &lda, ipiv.data(), rhs+k*rank, &nl, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
         sgetrs_(&trans, &nl, &ldb, M, &lda, ipiv.data(), rhs+k*rank, &nl, &info);
 #endif
 
@@ -1636,7 +1636,7 @@ int matrix::solveLinearSystem(int rank, double *M, int nrhs, double *rhs, int nT
     #endif
 #elif defined INTEL_MKL
         dgetrs_(&trans, &nl, &ldb, M, &lda, ipiv.data(), rhs+k*rank, &nl, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
         dgetrs_(&trans, &nl, &ldb, M, &lda, ipiv.data(), rhs+k*rank, &nl, &info);
 #endif
 

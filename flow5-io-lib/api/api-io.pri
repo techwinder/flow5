@@ -2,7 +2,9 @@
 
 
 HEADERS += \
+    $$PWD/flow5-io.h \
     api/fileio.h \
+    api/flow5-io-lib_global.h \
     api/serialization.h \
     api/serialization.h \
     api/xflxmlreader.h \
@@ -27,4 +29,3 @@ HEADERS += \
     api/xmlxplanereader.h \
     api/xmlxsailreader.h \
     api/xmlxsailwriter.h \
-    api/utils-io.h

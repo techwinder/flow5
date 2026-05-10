@@ -54,7 +54,7 @@
 #include <api/sailwing.h>
 #include <api/triangle3d.h>
 #include <api/units.h>
-#include <api/utils-io.h>
+#include <api/flow5-io.h>
 
 #include <core/displayoptions.h>
 #include <core/qunits.h>
@@ -727,10 +727,11 @@ void gl3dXSailView::initializeGL()
         QString strange = QString::asprintf("OpenGL context version is %d.%d.\n"
                                             "Set an OpenGL context version >=4.3 to enable flow animations.\n\n", oglMajor(), oglMinor());
         xfl::trace(strange);
-        s_pXSail->displayMessage(strange, true);
+        s_pXSail->displayMessage(strange, false);
         return;
     }
 
+#ifndef Q_OS_MAC
     // flow Compute shader
     QString csrc = ":/shaders/flow/flow3d_CS.glsl";
     m_shadFlow.addShaderFromSourceFile(QOpenGLShader::Compute, csrc);
@@ -763,6 +764,7 @@ void gl3dXSailView::initializeGL()
         }
         m_shadFlow.release();
     }
+#endif
 }
 
 

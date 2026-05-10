@@ -40,7 +40,7 @@
 
 #include <api/units.h>
 #include <core/flow5events.h>
-#include <api/utils-io.h>
+#include <api/flow5-io.h>
 
 int StlReaderDlg::s_LengthUnitIndex = 0;
 QByteArray StlReaderDlg::s_Geometry;
@@ -334,17 +334,17 @@ bool StlReaderDlg::importStlBinaryFile(QDataStream &binstream, double unitfactor
     for (int j=0; j<nTriangles; j++)
     {
         // the normal
-        xfl::readFloat(binstream, nx);
-        xfl::readFloat(binstream, ny);
-        xfl::readFloat(binstream, nz);
+        io::readFloat(binstream, nx);
+        io::readFloat(binstream, ny);
+        io::readFloat(binstream, nz);
         N.set(double(nx), double(ny), double(nz));
 
         for(int iv=0; iv<3; iv++)
         {
             //vertex 0
-            xfl::readFloat(binstream, x);
-            xfl::readFloat(binstream, y);
-            xfl::readFloat(binstream, z);
+            io::readFloat(binstream, x);
+            io::readFloat(binstream, y);
+            io::readFloat(binstream, z);
             x *= float(unitfactor);
             y *= float(unitfactor);
             z *= float(unitfactor);

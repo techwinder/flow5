@@ -40,7 +40,7 @@
 #include <objects2d_globals.h>
 #include <pointmass.h>
 #include <polar3d.h>
-#include <utils-io.h>
+#include <flow5-io.h>
 #include <wingxfl.h>
 #include <xml_globals.h>
 
@@ -354,7 +354,7 @@ bool XflXmlReader::readWakeData(Polar3d &polar3d)
     {
         if (name().compare(QString("FlatPanelWake"),                    Qt::CaseInsensitive)==0)
         {
-            polar3d.setVortonWake(!xfl::stringToBool(readElementText()));
+            polar3d.setVortonWake(!xml::stringToBool(readElementText()));
         }
         else if (name().compare(QString("NX"),                          Qt::CaseInsensitive)==0)
         {

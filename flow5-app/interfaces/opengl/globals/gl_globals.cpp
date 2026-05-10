@@ -31,11 +31,13 @@
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/globals/gl_globals.h>
 #include <core/xflcore.h>
+
 #include <api/geom_global.h>
 #include <api/nurbssurface.h>
 #include <api/quaternion.h>
 #include <api/mathelem.h>
-#include <api/utils-io.h>
+#include <api/flow5-io.h>
+#include <api/xml_globals.h>
 
 double t_lmin(0), t_range(0);
 QVector<QVector<Segment3d>> t_futuresegs;
@@ -79,9 +81,9 @@ void gl::printFormat(QSurfaceFormat const & ctxtFormat, QString &log, QString co
     log += prefix + QString("   OpenGL version: %1\n").arg(version).toStdString().c_str();
     log += prefix + QString("   GLSL version:   %1\n").arg(glslVersion).toStdString().c_str();
 
-    log += prefix + "Deprecated functions: "+xfl::boolToString(ctxtFormat.testOption(QSurfaceFormat::DeprecatedFunctions))+"\n";
-    log += prefix + "Debug context:        "+xfl::boolToString(ctxtFormat.testOption(QSurfaceFormat::DebugContext))       +"\n";
-    log += prefix + "Stereo buffers:       "+xfl::boolToString(ctxtFormat.testOption(QSurfaceFormat::StereoBuffers))      +"\n";
+    log += prefix + "Deprecated functions: "+xml::boolToString(ctxtFormat.testOption(QSurfaceFormat::DeprecatedFunctions))+"\n";
+    log += prefix + "Debug context:        "+xml::boolToString(ctxtFormat.testOption(QSurfaceFormat::DebugContext))       +"\n";
+    log += prefix + "Stereo buffers:       "+xml::boolToString(ctxtFormat.testOption(QSurfaceFormat::StereoBuffers))      +"\n";
 
     strange = QString::asprintf("Sampling frames for antialiasing: %d\n", ctxtFormat.samples());
     log += prefix + strange;

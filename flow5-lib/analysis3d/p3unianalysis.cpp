@@ -34,7 +34,7 @@
 
 
 
-#if defined ACCELERATE
+#if defined ACCELERATE_NEW_LAPACK
   #include <Accelerate/Accelerate.h>
   #define lapack_int int
 #elif defined INTEL_MKL
@@ -388,7 +388,7 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
     #endif
 #elif defined INTEL_MKL
             dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
             dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info);
 #endif
             lwork = int(wkopt);
@@ -407,7 +407,7 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
     #endif
 #elif defined INTEL_MKL
                 dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info);
-#elif defined ACCELERATE
+#elif defined ACCELERATE_NEW_LAPACK
                 dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info);
 #endif
             }

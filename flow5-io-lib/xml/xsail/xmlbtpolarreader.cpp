@@ -33,7 +33,7 @@
 #include <objects_global.h>
 #include <units.h>
 #include <xml_globals.h>
-#include <utils-io.h>
+#include <flow5-io.h>
 
 XmlBtPolarReader::XmlBtPolarReader(QFile &file) : XflXmlReader(file)
 {
@@ -128,7 +128,7 @@ bool XmlBtPolarReader::readBtPolar(BoatPolar *pBtPolar, double lengthunit, doubl
         }
         else if (name().compare(QString("Ground_Effect"), Qt::CaseInsensitive)==0)
         {
-            pBtPolar->setGroundEffect(xfl::stringToBool(readElementText()));
+            pBtPolar->setGroundEffect(xml::stringToBool(readElementText()));
         }
         else if (name().compare(QString("Wake"), Qt::CaseInsensitive)==0)
         {

@@ -192,3 +192,15 @@ Polar *xml::importAnalysisFromXml(std::string const &pathname)
     Objects2d::insertPolar(pPolar);
     return pPolar;
 }
+
+
+bool xml::stringToBool(const QString &str)
+{
+    return str.trimmed().compare("true", Qt::CaseInsensitive)==0 ? true : false;
+}
+
+
+QString xml::boolToString(bool b)
+{
+    return b ? "true" : "false";
+}

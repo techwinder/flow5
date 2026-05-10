@@ -54,4 +54,7 @@ namespace xml
 
     Polar *importAnalysisFromXml(std::string const &pathname);
 
+    FL5IOLIB_EXPORT  bool stringToBool(QString const &str);
+    FL5IOLIB_EXPORT  QString boolToString(bool b);
+
 }

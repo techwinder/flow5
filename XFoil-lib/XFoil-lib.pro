@@ -60,5 +60,19 @@ macx{
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     QMAKE_MAC_SDK = macosx
     QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+
+
+    isEmpty(PREFIX){
+        PREFIX = /usr/local
+    }
+
+    inc.path = $$PREFIX/include/$$TARGET
+    inc.files += *.h
+
+
+    target.path = $$PREFIX/lib
+
+    # MAKE INSTALL
+    INSTALLS += target inc
 }
 

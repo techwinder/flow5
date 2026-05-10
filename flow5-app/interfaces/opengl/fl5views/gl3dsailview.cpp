@@ -147,7 +147,7 @@ void gl3dSailView::glMake3dObjects()
 
 
         gl::makeTriangulation3Vtx(m_pSail->triangulation(), Vector3d(), m_vboTriangulation, false);
-        gl::makeTrianglesOutline(m_pSail->triangles(), Vector3d(), m_vboTess);
+        gl::makeTrianglesOutline(m_pSail->triangulation().triangles(), Vector3d(), m_vboTess);
 
 //        glMakeTriangleNormals(m_pSail->triangulation().triangles(), m_RefLength/10.0, m_vboTriangleNormals);
 //        glMakeNodeNormals(m_pSail->triangulation().nodes(), Vector3d(), float(m_RefLength)/10.0f, m_vboTriangleNormals);

@@ -30,7 +30,8 @@
 #include <frame.h>
 #include <fusexfl.h>
 #include <units.h>
-#include <utils-io.h>
+#include <flow5-io.h>
+#include <xml_globals.h>
 
 XmlFuseWriter::XmlFuseWriter(QFile &XFile) : XflXmlWriter(XFile)
 {
@@ -64,7 +65,7 @@ void XmlFuseWriter::writeXMLFuse(FuseXfl const *pFuse)
         writeTextElement("Description", QString::fromStdString(pFuse->description()));
 
         writeComment("If the field AUTOINERTIA is set to TRUE, the fields COG and COG_I** will be ignored");
-        writeTextElement("AutoInertia", xfl::boolToString(pFuse->bAutoInertia()));
+        writeTextElement("AutoInertia", xml::boolToString(pFuse->bAutoInertia()));
         writeInertia(pFuse->inertia());
 
         writeEndElement();

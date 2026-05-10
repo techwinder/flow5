@@ -82,7 +82,7 @@
 #include <api/wingsailsection.h>
 #include <api/wingxfl.h>
 
-#include <utils-io.h>
+#include <flow5-io.h>
 
 
 bool serial::serializePolarFl5(Polar *pPolar, QDataStream &ar, bool bIsStoring)
@@ -303,7 +303,7 @@ bool serial::serializePolarXFL(Polar *pPolar, QDataStream &ar, bool bIsStoring)
             pPolar->setLineStipple(LineStyle::convertLineStyle(s));
             pPolar->setLineWidth(w);
             int r(0),g(0),b(0),a(0);
-            xfl::readColor(ar, r,g,b,a);
+            io::readColor(ar, r,g,b,a);
             pPolar->setLineColor(fl5Color(r,g,b,a));
             ar >> boolean; pPolar->setVisible(boolean);
             ar >>  boolean;
@@ -568,8 +568,8 @@ bool serial::serializePolarv6(Polar *pPolar, QDataStream &ar, bool bIsStoring)
         // 1005: added Trim Polar parameters
         // 1004: added XCp
         // 1003: re-instated NCrit, XTopTr and XBotTr with polar
-        xfl::writeString(ar, pPolar->m_FoilName);
-        xfl::writeString(ar, pPolar->name());
+        io::writeString(ar, pPolar->m_FoilName);
+        io::writeString(ar, pPolar->name());
 
         if     (pPolar->isFixedSpeedPolar())  ar<<1;
         else if(pPolar->isFixedLiftPolar())   ar<<2;
@@ -583,7 +583,7 @@ bool serial::serializePolarv6(Polar *pPolar, QDataStream &ar, bool bIsStoring)
         ar << float(pPolar->m_aoaSpec);
         ar << n << float(pPolar->m_ACrit);
         ar << float(pPolar->m_XTripTop) << float(pPolar->m_XTripBot);
-        xfl::writeColor(ar, pPolar->lineColor().red(), pPolar->lineColor().green(), pPolar->lineColor().blue());
+        io::writeColor(ar, pPolar->lineColor().red(), pPolar->lineColor().green(), pPolar->lineColor().blue());
 
         ar << pPolar->theStyle().m_Stipple << pPolar->theStyle().m_Width;
         if (pPolar->isVisible())  ar<<1; else ar<<0;
@@ -622,8 +622,8 @@ bool serial::serializePolarv6(Polar *pPolar, QDataStream &ar, bool bIsStoring)
             return false;
         }
 
-        xfl::readString(ar, strange); pPolar->setFoilName(strange);
-        xfl::readString(ar, strange); pPolar->setName(strange);
+        io::readString(ar, strange); pPolar->setFoilName(strange);
+        io::readString(ar, strange); pPolar->setName(strange);
 
         if(pPolar->m_FoilName.length()==0 || pPolar->name().length()==0)
         {
@@ -663,7 +663,7 @@ bool serial::serializePolarv6(Polar *pPolar, QDataStream &ar, bool bIsStoring)
         if(ArchiveFormat<1005)
         {
             int r(0),g(0),b(0);
-            xfl::readColor(ar, r, g, b);
+            io::readColor(ar, r, g, b);
             pPolar->setLineColor(fl5Color(r, g, b));
             ar >>n;
             pPolar->setLineStipple(LineStyle::convertLineStyle(n));
@@ -762,11 +762,11 @@ bool serial::serializeFoil(Foil *pFoil, QDataStream &ar)
             return false;
 
         std::string strange;
-        xfl::readString(ar, strange);
+        io::readString(ar, strange);
         pFoil->setName(strange);
         if(ArchiveFormat>=1006)
         {
-            xfl::readString(ar, strange);
+            io::readString(ar, strange);
             pFoil->setDescription(strange);
         }
         if(ArchiveFormat>=1002)
@@ -775,7 +775,7 @@ bool serial::serializeFoil(Foil *pFoil, QDataStream &ar)
             pFoil->setLineStipple(LineStyle::convertLineStyle(p));
             ar >> p; pFoil->setLineWidth(p);
             int r=0,g=0,b=0;
-            xfl::readColor(ar, r, g, b);
+            io::readColor(ar, r, g, b);
             pFoil->setLineColor(fl5Color(r,g,b));
         }
         if(ArchiveFormat>=1003)
@@ -890,7 +890,7 @@ bool serial::serializeOppXFL(OpPoint* pOpp, QDataStream &ar, bool bIsStoring, in
             pOpp->theStyle().setStipple(k);
             ar >> k;
             pOpp->theStyle().setWidth(k);
-            pOpp->theStyle().setColor(xfl::readQColor(ar));
+            pOpp->theStyle().setColor(io::readQColor(ar));
             ar >> boolean; pOpp->theStyle().setVisible(boolean);
             ar >> boolean;
         }
@@ -3865,7 +3865,7 @@ bool serial::serializeSailSTLFl5(SailStl*pSail, QDataStream &ar, bool bIsStoring
 
 bool serial::serializeSailSplineFl5(SailSpline *pSail, QDataStream &ar, bool bIsStoring)
 {
-    serial::serializeSailFl5(pSail, ar, bIsStoring);
+    if(!serial::serializeSailFl5(pSail, ar, bIsStoring)) return false;
 
     int k(0), n(0);
     float xf(0), yf(0), zf(0);
@@ -3888,7 +3888,7 @@ bool serial::serializeSailSplineFl5(SailSpline *pSail, QDataStream &ar, bool bIs
         switch(pSail->splineType())
         {
                 default:
-                case Spline::BSPLINE:         ar<<0;    break;
+                case Spline::BSPLINE:   ar<<0;    break;
                 case Spline::CUBIC:     ar<<1;    break;
                 case Spline::BEZIER:    ar<<2;    break;
                 case Spline::POINT:     ar<<3;    break;
@@ -3899,11 +3899,30 @@ bool serial::serializeSailSplineFl5(SailSpline *pSail, QDataStream &ar, bool bIs
         ar<<pSail->nSections();
         for(int i=0; i<pSail->sectionCount(); i++)
         {
-            if      (pSail->spline(i)->isBSpline())      ar<<1;
-            else if (pSail->spline(i)->isBezierSpline()) ar<<2;
-            else if (pSail->spline(i)->isCubicSpline())  ar<<3;
-            else if (pSail->spline(i)->isPointSpline())  ar<<4;
-            //            pSail->spline(i)->serializeFl5(ar, bIsStoring);
+            if      (pSail->spline(i)->isBSpline())
+            {
+                ar<<1;
+                BSpline *pBS = dynamic_cast<BSpline*>(pSail->spline(i));
+                serial::serializeBSplineFl5(pBS, ar, bIsStoring);
+            }
+            else if (pSail->spline(i)->isBezierSpline())
+            {
+                ar<<2;
+                BezierSpline *pBzS = dynamic_cast<BezierSpline*>(pSail->spline(i));
+                serial::serializeBezierSplineFl5(pBzS, ar, bIsStoring);
+            }
+            else if (pSail->spline(i)->isCubicSpline())
+            {
+                ar<<3;
+                CubicSpline *pC3S = dynamic_cast<CubicSpline*>(pSail->spline(i));
+                serial::serializeCubicSplineFl5(pC3S, ar, bIsStoring);
+            }
+            else if (pSail->spline(i)->isPointSpline())
+            {
+                ar<<4;
+                PointSpline *pPtS = dynamic_cast<PointSpline*>(pSail->spline(i));
+                serial::serializePointSplineFl5(pPtS, ar, bIsStoring);
+            }
 
             ar << pSail->sectionPosition(i).x<<pSail->sectionPosition(i).y<<pSail->sectionPosition(i).z;
             ar << pSail->sectionAngle(i);
@@ -3961,35 +3980,39 @@ bool serial::serializeSailSplineFl5(SailSpline *pSail, QDataStream &ar, bool bIs
         {
             int type=0;
             ar >> type;
-            switch (type) {
+            switch (type)
+            {
                 case 1:
                 {
-                    BSpline *pbs = new BSpline;
-                    pSail->setSpline(i, pbs);
+                    BSpline *pBS = new BSpline;
+                    serial::serializeBSplineFl5(pBS, ar, bIsStoring);
+                    pSail->setSpline(i, pBS);
                     break;
                 }
                 case 2:
                 {
-                    BezierSpline *pbzs = new BezierSpline;
-                    pSail->setSpline(i, pbzs);
+                    BezierSpline *pBzS = new BezierSpline;
+                    serial::serializeBezierSplineFl5(pBzS, ar, bIsStoring);
+                    pSail->setSpline(i, pBzS);
                     break;
                 }
                 case 3:
                 {
-                    CubicSpline *pcs = new CubicSpline;
-                    pSail->setSpline(i, pcs);
+                    CubicSpline *pC3S = new CubicSpline;
+                    serial::serializeCubicSplineFl5(pC3S, ar, bIsStoring);
+                    pSail->setSpline(i, pC3S);
                     break;
                 }
                 case 4:
                 {
-                    PointSpline *pps = new PointSpline;
-                    pSail->setSpline(i, pps);
+                    PointSpline *pPtS = new PointSpline;
+                    serial::serializePointSplineFl5(pPtS, ar, bIsStoring);
+                    pSail->setSpline(i, pPtS);
                     break;
                 }
                 default:
                     return false;
             }
-            ///            m_Spline[i]->serializeFl5(ar, bIsStoring);
 
             ar>> d0 >> d1 >> d2;
             pSail->setSectionPosition(i, {d0, d1, d2});
@@ -7151,7 +7174,7 @@ bool serial::serializePlaneOppFl5(PlaneOpp *pPOpp, QDataStream &ar, bool bIsStor
                 {
                     ar >> n;
                     pPOpp->vortonRow(ir).resize(n);
-                    for(int ic=0; ic<pPOpp->vortonRow(ir).size(); ic++)
+                    for(int ic=0; ic<int(pPOpp->vortonRow(ir).size()); ic++)
                     {
                         serial::serializeVortonFl5(pPOpp->vortons()[ir][ic], ar, bIsStoring);
                     }
