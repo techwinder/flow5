@@ -1999,12 +1999,6 @@ void MainFrame::onSaveProjectAs()
 }
 
 
-void MainFrame::onProcessFinished()
-{
-    qDebug()<<"xflr5 exit";
-}
-
-
 void MainFrame::onInsertProject()
 {
     QFileDialog fd;

@@ -3505,7 +3505,6 @@ void XPlane::onExporttoAVL()
     out << "# \n";
     out << "# TODO: check consistency of area unit and length units in this file\n";
     out << "# TODO: check consistency with inertia units of the .mass file\n";
-    out << "# TODO: remove duplicate sections in wing definitions\n";
     out << "# \n";
     out << "# \n";
 

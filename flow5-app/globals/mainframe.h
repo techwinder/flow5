@@ -204,7 +204,6 @@ class MainFrame : public QMainWindow
         void onOpenGraphInNewWindow();
         void onOpenGraphInNewWindow(Graph *pGraph);
         void onLoadRecentFile();
-        void onProcessFinished();
         void onPreferences();
         void onProjectModified();
         void onOnlineDoc();

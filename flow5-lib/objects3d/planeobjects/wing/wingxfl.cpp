@@ -2267,7 +2267,6 @@ int WingXfl::uniformizeXPanelNumber()
 void WingXfl::exportToAVL(std::string &avlstring, int index, Vector3d const &T, double ry, double lengthunit) const
 {
     std::string strong, str;
-    std::string strange;
     std::stringstream out;
 
     out << EOLstr;
@@ -2400,7 +2399,7 @@ void WingXfl::exportToAVL(std::string &avlstring, int index, Vector3d const &T, 
     }
     out << EOLstr << EOLstr;
 
-    avlstring.append(strange);
+    avlstring.append(out.str());
 }
 
 

@@ -2722,7 +2722,10 @@ void gl3dView::setBackground()
 
 void gl3dView::paintBackImage()
 {
-    if(!m_pglTexture) return;
+    if(!m_pglTexture)
+    {
+        return;
+    }
 
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
 
@@ -4146,7 +4149,7 @@ void gl3dView::onSaveImage()
 
     m_pfboOff->bind();
     {
-        qDebug()<<"fbo3d:"<<m_pfboOff->isValid()<<m_pfboOff->isBound();
+//        qDebug()<<"fbo3d:"<<m_pfboOff->isValid()<<m_pfboOff->isBound();
 
         // Enable blending
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
