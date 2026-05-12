@@ -414,7 +414,7 @@ void gl3dXflView::setPlaneReferenceLength(Plane const *pPlane)
     if(pPlane->isSTLType())
     {
         PlaneSTL const *pPlaneSTL = dynamic_cast<PlaneSTL const*>(pPlane);
-        m_RefLength =  pPlaneSTL->maxSize()/2.0; // use the half span
+        m_RefLength =  pPlaneSTL->maxSize(); // use the span
     }
     else if(pPlane->isXflType())
     {

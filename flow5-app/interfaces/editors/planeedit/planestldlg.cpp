@@ -390,7 +390,8 @@ void PlaneSTLDlg::initDialog(Plane *pPlane, bool bAcceptName)
 
     m_pPlaneSTL = dynamic_cast<PlaneSTL*>(pPlane);
 
-    m_pcbColor->setColor(xfl::fromfl5Clr(m_pPlaneSTL->surfaceColor()));
+    QColor clr = xfl::fromfl5Clr(m_pPlaneSTL->surfaceColor());
+    m_pcbColor->setColor(clr);
 
     gl3dPlaneSTLView *pglPlaneSTLView = dynamic_cast<gl3dPlaneSTLView*>(m_pglPlaneView);
     pglPlaneSTLView->setPlane(m_pPlaneSTL);
@@ -880,7 +881,7 @@ void PlaneSTLDlg::onCheckTEPanels()
 
 void PlaneSTLDlg::onSetColor()
 {
-    QColor clr = QColorDialog::getColor(xfl::fromfl5Clr(m_pPlaneSTL->lineColor()), this, "Panel colour", QColorDialog::ShowAlphaChannel);
+    QColor clr = QColorDialog::getColor(xfl::fromfl5Clr(m_pPlaneSTL->surfaceColor()), this, "Panel colour", QColorDialog::ShowAlphaChannel);
     if(clr.isValid())
     {
         m_pPlaneSTL->setSurfaceColor(xfl::tofl5Clr(clr));

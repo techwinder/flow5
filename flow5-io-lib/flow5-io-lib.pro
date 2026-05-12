@@ -51,6 +51,7 @@ linux-g++ {
     INCLUDEPATH += /usr/local/include/opencascade/  #make install location
     INCLUDEPATH += /usr/include/opencascade/        #fedora install location
     LIBS += -L/usr/local/lib/
+    LIBS += -L/usr/lib64/            #fedora install location
 
 
     #prevent sfinae warnings in the Qt libs
@@ -135,6 +136,8 @@ LIBS += \
     -lTKBool \
     -lTKCDF \
     -lTKDESTEP \
+    -lTKDEOBJ \
+    -lTKDESTL \
     -lTKFillet \
     -lTKG2d \
     -lTKG3d \

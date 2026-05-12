@@ -22,12 +22,25 @@
 
 *****************************************************************************/
 
+#include <filesystem>
+
+#include <RWObj.hxx>
+#include <RWStl.hxx>
+#include <gp_Trsf.hxx>
+#include <Bnd_Box.hxx>
 
 #include <QFile>
 #include <QDataStream>
 
-#include <flow5-io.h>
+
 #include <fileio.h>
+#include <flow5-io.h>
+#include <occ_globals.h>
+#include <planestl.h>
+#include <triangle3d.h>
+#include <vector3d.h>
+#include <units.h>
+#include <utils.h>
 
 fl5Color io::readQColor(QDataStream &ar)
 {
@@ -223,8 +236,6 @@ bool io::saveProject(std::string const& stdPathName, std::string &logmsg)
 }
 
 
-
-
 bool io::loadProject(std::string const& stdPathName, std::string &logmsg)
 {
     QString PathName = QString::fromStdString(stdPathName);
@@ -249,4 +260,75 @@ bool io::loadProject(std::string const& stdPathName, std::string &logmsg)
 
     return true;
 }
+
+
+bool io::readSTLFile(std::string const&FilePath, double FileUnitsToMeter, double theMergeAngle,
+                     std::vector<Triangle3d> &triangles, Vector3d &botleft, Vector3d &topright)
+{
+    Standard_CString STLFile = FilePath.c_str();
+
+    Handle(Poly_Triangulation) polyTriangulation = RWStl::ReadFile(STLFile, theMergeAngle); // not sure how to set the merge angle
+
+    occ::polyTriangulationToTriangles(polyTriangulation, FileUnitsToMeter, triangles, botleft, topright);
+
+    return true;
+}
+
+
+bool io::readOBJFile(std::string const&FilePath, double FileUnitsToMeter,
+                     std::vector<Triangle3d> &triangles, Vector3d &botleft, Vector3d &topright)
+{
+    Standard_CString ObjFile = FilePath.c_str();
+
+    Handle(Poly_Triangulation) polyTriangulation = RWObj::ReadFile(ObjFile); // not sure how to set the merge angle
+
+    occ::polyTriangulationToTriangles(polyTriangulation, FileUnitsToMeter, triangles, botleft, topright);
+
+    return true;
+}
+
+
+PlaneSTL *io::importPlaneFromMesh(std::string const&FilePath, enumMeshFileType type, double FileUnitsToMeter, std::string &logmsg)
+{
+    if(!std::filesystem::exists(FilePath))
+    {
+        logmsg += "File " + FilePath + " does not exist\n";
+        return nullptr;
+    }
+
+    std::vector<Triangle3d> triangles;
+    Vector3d botleft, topright;
+
+    switch (type)
+    {
+        case io::STL:
+            readSTLFile(FilePath, FileUnitsToMeter, 0.0, triangles, botleft, topright);
+            break;
+        case io::OBJ:
+            readOBJFile(FilePath, FileUnitsToMeter, triangles, botleft, topright);
+            break;
+    }
+
+    if(triangles.size()==0)
+    {
+        logmsg += "No triangles found in file\n";
+        return nullptr;
+    }
+
+    PlaneSTL *pPlaneSTL = new PlaneSTL;
+    pPlaneSTL->setBaseTriangles(triangles);
+    pPlaneSTL->setInitialized(false);
+
+    botleft  *= Units::mtoUnit();
+    topright *= Units::mtoUnit();
+
+    logmsg += std::format("Imported {:d} triangles\n", triangles.size());
+    logmsg +=             "Bounding box limits:                     x           y           z\n";
+    logmsg += std::format("                     botleft = {:11g} {:11g} {:11g} ", botleft.x,  botleft.y,  botleft.z)  + Units::lengthUnitLabel() + EOLstr;
+    logmsg += std::format("                     topright= {:11g} {:11g} {:11g} ", topright.x, topright.y, topright.z) + Units::lengthUnitLabel() + EOLstr;
+
+    return pPlaneSTL;
+}
+
+
 

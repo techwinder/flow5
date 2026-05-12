@@ -29,6 +29,10 @@
 #include <flow5-io-lib_global.h>
 #include <fl5color.h>
 
+class Vector3d;
+class Triangle3d;
+class PlaneSTL;
+
 #define PIch         QString(QChar(0x03C0))
 #define ALPHAch      QString(QChar(0x03B1))
 #define BETAch       QString(QChar(0x03B2))
@@ -53,6 +57,10 @@
 
 namespace io
 {
+
+
+    typedef enum {STL, OBJ} enumMeshFileType;
+
     FL5IOLIB_EXPORT  fl5Color readQColor(QDataStream &ar);
     FL5IOLIB_EXPORT  void readString(QDataStream &ar, std::string &strong);
     FL5IOLIB_EXPORT  void readFloat(QDataStream &inStream, float &f);
@@ -70,4 +78,8 @@ namespace io
     FL5IOLIB_EXPORT  bool saveProject(const std::string &stdPathName, std::string &logmsg);
     FL5IOLIB_EXPORT  bool loadProject(const std::string &stdPathName, std::string &logmsg);
 
+    FL5IOLIB_EXPORT  bool readSTLFile(const std::string &FilePath, double FileUnitsToMeter, double theMergeAngle, std::vector<Triangle3d> &triangles, Vector3d &botleft, Vector3d &topright);
+    FL5IOLIB_EXPORT  bool readOBJFile(const std::string &FilePath, double FileUnitsToMeter, std::vector<Triangle3d> &triangles, Vector3d &botleft, Vector3d &topright);
+
+    FL5IOLIB_EXPORT PlaneSTL* importPlaneFromMesh(std::string const&FilePath, enumMeshFileType type, double FileUnitsToMeter, std::string &logmsg);
 }

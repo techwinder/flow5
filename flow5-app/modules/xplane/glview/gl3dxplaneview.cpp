@@ -40,8 +40,6 @@
 
 
 
-
-
 #include <api/bspline3d.h>
 #include <api/fuseocc.h>
 #include <api/fusesections.h>

@@ -47,9 +47,7 @@ class StlReaderDlg : public QDialog
 
         std::vector<Triangle3d> const & triangleList() const {return m_Triangle;}
 
-        bool importTrianglesFromStlFile(const QString &FileName, double unitfactor);
-        bool importStlBinaryFile(QDataStream &binstream, double unitfactor, std::vector<Triangle3d> &trianglelist, QString &solidname);
-        bool importStlTextFile(QTextStream &textstream, double unitfactor, std::vector<Triangle3d> &trianglelist, QString &solidname);
+        bool importTrianglesFromMeshFile(const QString &FileName, double unitfactor);
 
         static void loadSettings(QSettings &settings);
         static void saveSettings(QSettings &settings);
@@ -61,15 +59,16 @@ class StlReaderDlg : public QDialog
         void hideEvent(QHideEvent *pEvent) override;
         QSize sizeHint() const override {return QSize(750,500);}
 
-        void postMessageEvent(QString const &msg);
+        bool importStlTextFile(QTextStream &textstream, double unitfactor, std::vector<Triangle3d> &trianglelist, QString &solidname);
+        bool importStlBinaryFile(QDataStream &binstream, double unitfactor, std::vector<Triangle3d> &trianglelist, QString &solidname);
 
     signals:
         void outputMsg(QString);
 
     private slots:
-        void onImportFromStlFile();
+        void onImportMeshFile();
         void onButton(QAbstractButton *pButton);
-        void onMessage(QString const &msg);
+
 
     private:
         QDialogButtonBox *m_pButtonBox;
@@ -78,8 +77,6 @@ class StlReaderDlg : public QDialog
         QPushButton *m_ppbImport;
 
         std::vector<Triangle3d> m_Triangle;
-        bool m_bCancel;
-        bool m_bIsRunning;
 
 
         static QByteArray s_Geometry;

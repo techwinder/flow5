@@ -653,7 +653,7 @@ void PlaneXflDlg::makeActions()
     m_pInsertFuseXml         = new QAction(tr("from XML file"),                   this);
     m_pInsertFuseOther       = new QAction(tr("from other plane"),                this);
     m_pInsertFuseOcc         = new QAction(tr("from CAD file"),                   this);
-    m_pInsertFuseStl         = new QAction(tr("from STL file"),                   this);
+    m_pInsertFuseStl         = new QAction(tr("from mesh file (OBJ or STL)"),     this);
     m_pInsertEllWing         = new QAction(tr("Insert elliptical wing"),          this);
     m_pInsertSTLSphere       = new QAction(tr("Insert STL sphere fuselage"),      this);
     m_pInsertSTLCylinder     = new QAction(tr("Insert STL cylinder fuselage"),    this);
@@ -1186,6 +1186,8 @@ void PlaneXflDlg::onInsertFuseStl()
         return; // nothing imported
     }
 
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
     updateOutput(dlg.logMsg());
 
     Fuse *pFuse = m_pPlaneXfl->makeNewFuse(Fuse::Stl);
@@ -1198,7 +1200,7 @@ void PlaneXflDlg::onInsertFuseStl()
     pFuse->makeNodeNormals();
 
     std::string logmsg;
-    updateOutput("   Making mesh panels from stl triangles\n");
+    updateOutput("   Making mesh panels from triangles\n");
     pFuse->makeDefaultTriMesh(logmsg, "");
     updateStdOutput(logmsg);
 
@@ -1209,6 +1211,7 @@ void PlaneXflDlg::onInsertFuseStl()
     onUpdatePlane();
 
     m_bChanged = true;
+    QApplication::restoreOverrideCursor();
 }
 
 

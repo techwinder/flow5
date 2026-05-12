@@ -38,6 +38,7 @@
 #include <Geom_Surface.hxx>
 #include <Geom_BSplineCurve.hxx>
 #include <Geom_BSplineSurface.hxx>
+#include <Poly_Triangulation.hxx>
 
 #include <triangle3d.h>
 #include <bspline3d.h>
@@ -107,6 +108,7 @@ namespace occ
 
     FL5LIB_EXPORT int shellTriangulationWithOcc(TopoDS_Shell const &shell, OccMeshParams const &params, std::vector<Triangle3d> &triangles);
     FL5LIB_EXPORT int shapeTriangulationWithOcc(TopoDS_Shape const &shape, OccMeshParams const &params, std::vector<Triangle3d> &triangles);
+    FL5LIB_EXPORT int polyTriangulationToTriangles(opencascade::handle<Poly_Triangulation> hTri, double scalefactor, std::vector<Triangle3d> &triangles, Vector3d &botleft, Vector3d &topright);
 
     FL5LIB_EXPORT bool importCADShapes(const std::string &filename, TopoDS_ListOfShape &shapes, double &dimension, std::string &logmsg);
     FL5LIB_EXPORT bool importBRep(std::string const &filename, TopoDS_ListOfShape &shapes, double &dimension, std::string &logmsg);

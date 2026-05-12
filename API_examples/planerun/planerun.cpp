@@ -55,7 +55,7 @@ int main()
         case 0: strange = "OpenBlas: single-threaded library";   break;
         case 1:
         {
-            strange = "OpenBlas: multi-threading with OMP";
+            strange = "OpenBlas: multi-threading without OMP";
             break;
         }
         case 2: strange = "OpenBlas: built with USE_OPENMP=1";   break;

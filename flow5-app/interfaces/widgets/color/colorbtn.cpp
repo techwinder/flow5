@@ -22,6 +22,8 @@
 
 *****************************************************************************/
 
+#include <iostream>
+
 #include <QMenu>
 #include <QPainter>
 #include <QStyleOption>

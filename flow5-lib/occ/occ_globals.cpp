@@ -59,6 +59,7 @@
 #include <IntCurvesFace_ShapeIntersector.hxx>
 #include <Interface_EntityIterator.hxx>
 #include <Interface_Static.hxx>
+#include <Poly_Triangulation.hxx>
 #include <STEPControl_Reader.hxx>
 #include <ShapeAnalysis_FreeBounds.hxx>
 #include <StdFail_NotDone.hxx>
@@ -1746,6 +1747,63 @@ int occ::shellTriangulationWithOcc(const TopoDS_Shell &shell, OccMeshParams cons
         nFace++;
     }
     (void)nFace;
+    return int(triangles.size());
+}
+
+
+int occ::polyTriangulationToTriangles(Handle(Poly_Triangulation) hTri, double scalefactor,
+                                      std::vector<Triangle3d>&triangles, Vector3d &botleft, Vector3d &topright)
+{
+    if(hTri.IsNull())
+    {
+        return 0;
+    }
+
+    double xmin=LARGEVALUE, xmax=-LARGEVALUE;
+    double ymin=LARGEVALUE, ymax=-LARGEVALUE;
+    double zmin=LARGEVALUE, zmax=-LARGEVALUE;
+
+    Node vtx[3];
+    triangles.resize(hTri->NbTriangles());
+    for (int i=1; i<=hTri->NbTriangles(); i++)
+    {
+        const Poly_Triangle& tri = hTri->Triangle(i);
+
+        vtx[0] = Vector3d(hTri->Node(tri(1)).X()*scalefactor, hTri->Node(tri(1)).Y()*scalefactor, hTri->Node(tri(1)).Z()*scalefactor);
+        vtx[1] = Vector3d(hTri->Node(tri(2)).X()*scalefactor, hTri->Node(tri(2)).Y()*scalefactor, hTri->Node(tri(2)).Z()*scalefactor);
+        vtx[2] = Vector3d(hTri->Node(tri(3)).X()*scalefactor, hTri->Node(tri(3)).Y()*scalefactor, hTri->Node(tri(3)).Z()*scalefactor);
+
+        int idx = i-1;
+        triangles[idx].setTriangle(vtx[0], vtx[1], vtx[2]);
+
+
+        xmin = std::min(vtx[0].x, xmin);
+        xmin = std::min(vtx[1].x, xmin);
+        xmin = std::min(vtx[2].x, xmin);
+        xmax = std::max(vtx[0].x, xmax);
+        xmax = std::max(vtx[1].x, xmax);
+        xmax = std::max(vtx[2].x, xmax);
+
+        ymin = std::min(vtx[0].y, ymin);
+        ymin = std::min(vtx[1].y, ymin);
+        ymin = std::min(vtx[2].y, ymin);
+        ymax = std::max(vtx[0].y, ymax);
+        ymax = std::max(vtx[1].y, ymax);
+        ymax = std::max(vtx[2].y, ymax);
+
+        zmin = std::min(vtx[0].z, zmin);
+        zmin = std::min(vtx[1].z, zmin);
+        zmin = std::min(vtx[2].z, zmin);
+        zmax = std::max(vtx[0].z, zmax);
+        zmax = std::max(vtx[1].z, zmax);
+        zmax = std::max(vtx[2].z, zmax);
+
+    }
+
+
+    botleft.set(xmin, ymin, zmin);
+    topright.set(xmax, ymax, zmax);
+
     return int(triangles.size());
 }
 

@@ -77,7 +77,7 @@ linux-g++ {
         # Fedora libs in /usr/lib64:
         #   openblas:  single-threaded library
         #   openblaso: built with USE_OPENMP=1
-        #   openblasp: multi-threading with OMP
+        #   openblasp: multi-threading without OMP
 #        LIBS += -lopenblas
 #        LIBS += -lopenblaso
         LIBS += -lopenblasp

@@ -163,6 +163,9 @@ class FL5LIB_EXPORT PlaneSTL : public Plane
         double height() const {return m_Height;}
         void setHeight(double h) {m_Height=h;}
 
+        bool guessTEPanels(float TEMaxAngle, std::string &logmsg);
+
+
     private:
         Triangulation m_Triangulation;
         bool m_bReversed;

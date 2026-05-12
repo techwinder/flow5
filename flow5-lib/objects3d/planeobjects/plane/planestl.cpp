@@ -273,7 +273,98 @@ double PlaneSTL::maxSize() const
 }
 
 
+bool PlaneSTL::guessTEPanels(float TEMaxAngle, std::string &logmsg)
+{
+    if(nPanel3()<=0)
+    {
+        logmsg += "Plane has no triangles\n";
+        return 0;
+    }
 
+    Panel3 &p3t = refTriMesh().panel(0);
+    if(p3t.neighbourCount()==0)
+    {
+        logmsg += "Connect the panels before attempting to guess the T.E.\n";
+        return 0;
+    }
+
+    double ccrit = cos((180.0-TEMaxAngle)*PI/180.0);
+
+    int iTE=0;
+    for(int i3=0; i3<refTriMesh().nPanels(); i3++)
+    {
+        Panel3 &p3 = refTriMesh().panel(i3);
+        p3.setTrailing(false);
+        p3.setSurfacePosition(xfl::NOSURFACE);
+        p3.setOppositeIndex(-1);
+    }
+
+    double zcrit = 0.1;
+
+    for(int i3t=0; i3t<refTriMesh().nPanels(); i3t++)
+    {
+        Panel3 &p3t = refTriMesh().panel(i3t);
+
+        for(int i3b=0; i3b<p3t.neighbourCount(); i3b++)
+        {
+            int idx = p3t.neighbour(i3b);
+            if(idx>=0 && idx<refTriMesh().nPanels())
+            {
+                Panel3 &p3b = refTriMesh().panel(idx);
+                double cos = p3t.normal().dot(p3b.normal());
+                if(p3b.oppositeIndex()<0 && cos<ccrit)
+                {
+                    // we have a TE
+                    p3t.setTrailing(true);
+                    p3t.setOppositeIndex(p3b.index());
+                    p3b.setTrailing(true);
+                    p3b.setOppositeIndex(p3t.index());
+
+                    if(p3t.normal().z>zcrit && p3b.normal().z<-zcrit)
+                    {
+                        p3t.setSurfacePosition(xfl::TOPSURFACE);
+                        p3b.setSurfacePosition(xfl::BOTSURFACE);
+                    }
+                    else if(p3b.normal().z>zcrit && p3t.normal().z<-zcrit)
+                    {
+                        p3t.setSurfacePosition(xfl::BOTSURFACE);
+                        p3b.setSurfacePosition(xfl::TOPSURFACE);
+                    }
+                    else if(p3t.normal().y>zcrit && p3b.normal().y<-zcrit)
+                    {
+                        p3t.setSurfacePosition(xfl::TOPSURFACE);
+                        p3b.setSurfacePosition(xfl::BOTSURFACE);
+                    }
+                    else if(p3b.normal().y>zcrit && p3t.normal().y<-zcrit)
+                    {
+                        p3t.setSurfacePosition(xfl::BOTSURFACE);
+                        p3b.setSurfacePosition(xfl::TOPSURFACE);
+                    }
+                    else
+                    {
+                        //anything
+                        p3t.setSurfacePosition(xfl::TOPSURFACE);
+                        p3b.setSurfacePosition(xfl::BOTSURFACE);
+                    }
+                    iTE++;
+                    break;
+                }
+            }
+        }
+    }
+
+    std::vector<int> errorlist;
+    refTriMesh().connectTrailingEdges(errorlist); // re-orders vertices
+
+    logmsg += std::format("Found {:d} pairs of TE panels.\n", iTE);
+    for(int idx : errorlist)
+    {
+        logmsg += std::format("   TE error at index = {:d}\n", idx);
+    }
+
+    if(errorlist.size()) return false;
+    else                 return true;
+}
 
 
 
