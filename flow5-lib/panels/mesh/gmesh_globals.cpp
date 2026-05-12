@@ -22,12 +22,9 @@
 
 *****************************************************************************/
 
-#define _MATH_DEFINES_DEFINED
 
 
-#include <QDebug>
-#include <QThread>
-
+#include <format>
 #include <filesystem>
 
 
@@ -39,16 +36,14 @@
 
 
 
-
-
-#include <interfaces/mesh/gmesh_globals.h>
+#include <api/gmesh_globals.h>
 
 #include <api/fuse.h>
 #include <api/fuseflatfaces.h>
 #include <api/fusenurbs.h>
 #include <api/gmshparams.h>
 #include <api/triangle3d.h>
-#include <api/flow5-io.h>
+
 #include <api/vector3d.h>
 #include <api/wingxfl.h>
 #include <api/sailocc.h>
@@ -92,8 +87,8 @@ std::string gmesh::getNumberOption(std::string name)
     double number(0);
     gmsh::option::getNumber(name, number);
     name.resize(nchar, ' ');
-    QString str = QString::fromStdString(name) + QString::asprintf(":  %g", number);
-    return str.toStdString();
+    std::string str = name + std::format(":  {:g}", number);
+    return str;
 
 }
 
@@ -110,7 +105,7 @@ std::string gmesh::getStringOption(std::string name)
 
 
 /*
- void gmesh::listModelEntities(QString &list)
+ void gmesh::listModelEntities(std::string &list)
 {
     list = "Model entities:\n";
 
@@ -118,16 +113,16 @@ std::string gmesh::getStringOption(std::string name)
     gmsh::vectorpair modelenditiesdimTags;
     gmsh::model::getEntities(modelenditiesdimTags);
     std::string entityType;
-    for(uint k=0; k<modelenditiesdimTags.size(); k++)
+    for(unsigned int k=0; k<modelenditiesdimTags.size(); k++)
     {
         std::pair<int, int> const &entity = modelenditiesdimTags.at(k);
         gmsh::model::getEntityType(entity.first, entity.second, entityType);
-        list += QString::asprintf("   entity dim=%d, tag=%d, name=",entity.first, entity.second)+QString::fromStdString(entityType)+EOLch;
+        list += std::format("   entity dim={:d}, tag={:d}, name=",entity.first, entity.second)+std::string::fromStdString(entityType)+EOLch;
     }
 }*/
 
 
-void gmesh::listModel(QString &list)
+void gmesh::listModel(std::string &list)
 {
     std::vector<std::pair<int, int> > entities;
     gmsh::model::getEntities(entities);
@@ -138,9 +133,9 @@ void gmesh::listModel(QString &list)
         return;
     }
 
-    QString strange;
+    std::string strange;
 
-    for(uint i=0; i<entities.size(); i++)
+    for(unsigned int i=0; i<entities.size(); i++)
     {
         // get the mesh nodes for each elementary entity
         std::vector<std::size_t> nodeTags;
@@ -155,43 +150,43 @@ void gmesh::listModel(QString &list)
 
         // report some statistics
         int numElem = 0;
-        for(uint j=0; j<elemTags.size(); j++)
+        for(unsigned int j=0; j<elemTags.size(); j++)
             numElem += int(elemTags[j].size());
         std::string type;
         gmsh::model::getType(dim, tag, type);
 
-        strange  = QString::asprintf("entity %d: dim=%d, tag%d, ", i, dim, tag)+ QString::fromStdString(type);
-        strange += QString::asprintf(" nNodes=%d, nElements=%d", int(nodeTags.size()), numElem);
-        list += strange+EOLch;
+        strange  = std::format("entity {:d}: dim={:d}, tag{:d}, ", i, dim, tag)+ type;
+        strange += std::format(" nNodes={:d}, nElements={:d}", int(nodeTags.size()), numElem);
+        list += strange+EOLstr;
 
 
         if(elemTypes.size())  list += "Element types:\n";
-        for(uint j=0; j<elemTypes.size(); j++)
+        for(unsigned int j=0; j<elemTypes.size(); j++)
         {
             std::string name;
             int d, order, numv, numpv;
             std::vector<double> param;
             gmsh::model::mesh::getElementProperties(elemTypes[j], name, d, order,
                                                     numv, param, numpv);
-            list += "Element type:" + QString::fromStdString(name);
-            list += QString::asprintf(", order %d with %d nodes in param coord:", order, numv);
-            for(uint k=0; k<param.size(); k++)  list += QString::asprintf("   %11g", param[k]);
-            list += EOLch;
+            list += "Element type: " + name;
+            list += std::format(", order {:d} with {:d} nodes in param coord:", order, numv);
+            for(unsigned int k=0; k<param.size(); k++)  list += std::format("   %11g", param[k]);
+            list += EOLstr;
         }
     }
 }
 
 
-void gmesh::convertFromGmsh(std::vector<Triangle3d> &triangles, QString &log)
+void gmesh::convertFromGmsh(std::vector<Triangle3d> &triangles, std::string &log)
 {
-    QString strange;
+    std::string strange;
     std::vector<std::size_t> elementTags;
     std::vector<std::size_t> nodeTags;
     const int ElementType = 2; // triangles
 
     gmsh::model::mesh::getElementsByType(ElementType, elementTags, nodeTags);
 
-    strange = QString::asprintf("Built %d type 2 elements\n", int(elementTags.size()));
+    strange = std::format("Built {:d} type 2 elements\n", int(elementTags.size()));
     log += strange;
 
     if(elementTags.size()<=0)
@@ -210,7 +205,7 @@ void gmesh::convertFromGmsh(std::vector<Triangle3d> &triangles, QString &log)
                                 parametricCoord,
                                 dim, tag,
                                 false, false);
-    strange = QString::asprintf("Built %d nodes and %d coordinates\n", int(nodetags.size()), int(coord.size()));
+    strange = std::format("Built {:d} nodes and {:d} coordinates\n", int(nodetags.size()), int(coord.size()));
     log += strange;
     assert(coord.size() == 3*nodetags.size());
 
@@ -225,7 +220,7 @@ void gmesh::convertFromGmsh(std::vector<Triangle3d> &triangles, QString &log)
     // option 2: make an array with index=tag;
     size_t maxtag = *std::max_element(nodetags.begin(), nodetags.end());
     std::vector<Vector3d> node(maxtag+1);
-    for(uint j=0; j<nodetags.size(); j++)
+    for(unsigned int j=0; j<nodetags.size(); j++)
     {
         int inode = int(nodetags.at(j));
         node[inode].set(&coord.at(3*j+0));
@@ -236,7 +231,7 @@ void gmesh::convertFromGmsh(std::vector<Triangle3d> &triangles, QString &log)
 
 
 void gmesh::convertTriangles(std::vector<std::size_t>const&elementTags,
-                             std::vector<Vector3d> const &node, std::vector<Triangle3d> &m_Triangles, QString &log)
+                             std::vector<Vector3d> const &node, std::vector<Triangle3d> &m_Triangles, std::string &log)
 {
     std::vector<std::size_t> elementnodetags;
     int elementtype = -1;
@@ -244,7 +239,7 @@ void gmesh::convertTriangles(std::vector<std::size_t>const&elementTags,
     int dim(0), tag(0);
 
     double minsize(LARGEVALUE), maxsize(0);
-    for(uint i=0; i<elementTags.size(); i++)
+    for(unsigned int i=0; i<elementTags.size(); i++)
     {
         int ielementtag = int(elementTags.at(i));
         gmsh::model::mesh::getElement(ielementtag,
@@ -256,7 +251,7 @@ void gmesh::convertTriangles(std::vector<std::size_t>const&elementTags,
         assert(dim==2); // Surface type element
 
         Triangle3d &t3d = triangles[i];
-        for(uint j=0; j<elementnodetags.size(); j++)
+        for(unsigned int j=0; j<elementnodetags.size(); j++)
         {
             int nodetag = int(elementnodetags.at(j));
             t3d.setVertex(j, node.at(nodetag));
@@ -267,8 +262,8 @@ void gmesh::convertTriangles(std::vector<std::size_t>const&elementTags,
     }
     m_Triangles.insert(m_Triangles.end(), triangles.begin(), triangles.end());
 
-    log += QString::asprintf("Min. element size = %g\n", minsize);
-    log += QString::asprintf("Max. element size = %g\n", maxsize);
+    log += std::format("Min. element size = %g\n", minsize);
+    log += std::format("Max. element size = %g\n", maxsize);
 }
 
 
@@ -278,17 +273,17 @@ void gmesh::makeModelCurves(std::vector<std::vector<Vector3d>> &curves)
     const int RES = 20;
     std::vector<double> param(RES+1);
     std::vector<double> coord;
-    for(uint i=0; i<=RES; i++) param[i] = double(i)/double(RES);
+    for(unsigned int i=0; i<=RES; i++) param[i] = double(i)/double(RES);
 
     gmsh::model::occ::synchronize();
     gmsh::vectorpair modelenditiesdimTags;
     gmsh::model::getEntities(modelenditiesdimTags);
 
-    for(uint k=0; k<modelenditiesdimTags.size(); k++)
+    for(unsigned int k=0; k<modelenditiesdimTags.size(); k++)
     {
         std::pair<int, int> const &entity = modelenditiesdimTags.at(k);
 //        gmsh::model::getEntityType(entity.first, entity.second, entityType);
-//        m_pptoF5->onAppendQText("   entity dim=%d, tag=%d, name="+std::string::fromStdString(entityType)+EOLCHAR);
+//        m_pptoF5->onAppendQText("   entity dim={:d}, tag={:d}, name="+std::string::fromStdString(entityType)+EOLCHAR);
         if(entity.first==DIM) // lines
         {
             gmsh::model::getValue(entity.first, entity.second, param, coord);
@@ -296,7 +291,7 @@ void gmesh::makeModelCurves(std::vector<std::vector<Vector3d>> &curves)
             curves.push_back(std::vector<Vector3d>(RES+1));
             std::vector<Vector3d>& Curve = curves.back();
 
-            for(uint l=0; l<param.size(); l++)
+            for(unsigned int l=0; l<param.size(); l++)
             {
                 Vector3d &pt = Curve[l];
                 pt.x = coord[3*l];
@@ -321,7 +316,7 @@ bool gmesh::getLine(int tag, Vector3d &v0, Vector3d &v1)
     gmsh::model::getEntities(pointdimtags, DIM0);
     gmsh::model::getEntities(linedimtags, DIM1);
 
-    for(uint k=0; k<linedimtags.size(); k++)
+    for(unsigned int k=0; k<linedimtags.size(); k++)
     {
         std::pair<int, int> const &line = linedimtags.at(k);
         assert(line.first==DIM1);
@@ -348,7 +343,7 @@ bool gmesh::getVertex(int tag, Vector3d &vertex)
     gmsh::vectorpair pointdimtags;
     gmsh::model::getEntities(pointdimtags, DIM0);
 
-    for(uint k=0; k<pointdimtags.size(); k++)
+    for(unsigned int k=0; k<pointdimtags.size(); k++)
     {
         std::pair<int, int> const &point = pointdimtags.at(k);
         assert(point.first==DIM0);
@@ -372,7 +367,7 @@ void gmesh::makeModelVertices(std::vector<Vector3d> &vertices)
     gmsh::vectorpair modelenditiesdimTags;
     gmsh::model::getEntities(modelenditiesdimTags);
 
-    for(uint k=0; k<modelenditiesdimTags.size(); k++)
+    for(unsigned int k=0; k<modelenditiesdimTags.size(); k++)
     {
         std::pair<int, int> const &entity = modelenditiesdimTags.at(k);
         if(entity.first==DIM) // point
@@ -400,7 +395,7 @@ bool gmesh::importBRepList(std::vector<std::string> const &breps, std::string &b
     // so write them one by one to a file and import back
     std::string temppath = tempFile();
 
-    for(uint i=0; i<breps.size(); i++)
+    for(unsigned int i=0; i<breps.size(); i++)
     {
         if(!xfl::stringToFile(breps.at(i), temppath))
             return false;
@@ -464,7 +459,7 @@ double gmesh::wettedArea()
     double totalmass = 0.0;
     double mass(0);
 
-    for(uint k=0; k<modelenditiesdimTags.size(); k++)
+    for(unsigned int k=0; k<modelenditiesdimTags.size(); k++)
     {
         std::pair<int, int> const &entity = modelenditiesdimTags.at(k);
         if(entity.first==DIM) // Faces
@@ -532,7 +527,7 @@ bool gmesh::BRepstoGmsh(const std::vector<std::string> &brep)
 {
     std::string temppath = tempFile();
 
-    for(uint i=0; i<brep.size(); i++)
+    for(unsigned int i=0; i<brep.size(); i++)
     {
         if(!xfl::stringToFile(brep.at(i), temppath)) return false;
 
@@ -590,7 +585,7 @@ void gmesh::getBoundingBox(Vector3d &botleft, Vector3d &topright)
     gmsh::vectorpair modelenditiesdimTags;
     gmsh::model::getEntities(modelenditiesdimTags, DIM);
 
-    for(uint k=0; k<modelenditiesdimTags.size(); k++)
+    for(unsigned int k=0; k<modelenditiesdimTags.size(); k++)
     {
         std::pair<int, int> const &entity = modelenditiesdimTags.at(k);
 
@@ -702,7 +697,7 @@ bool gmesh::translateBrep(std::string const&brep, Vector3d const &T, std::string
 
 
 // untested
-bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, QString &log)
+bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, std::string &log)
 {
     if(!pWing) return false;
 
@@ -719,7 +714,7 @@ bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, QString &log)
         linetags.clear();
         Surface const &surf = pWing->surfaceAt(is);
         //LEFT SIDE TIP
-        for(uint i=0; i<surf.m_SideA_Bot.size(); i++)
+        for(unsigned int i=0; i<surf.m_SideA_Bot.size(); i++)
         {
             Node const& nd = surf.m_SideA_Bot.at(i);
             pointtags.push_back(gmsh::model::occ::addPoint(nd.x, nd.y, nd.z));
@@ -731,7 +726,7 @@ bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, QString &log)
         }
 
 
-        for(uint i=0; i<pointtags.size()-1; i++)
+        for(unsigned int i=0; i<pointtags.size()-1; i++)
         {
             linetags.push_back(gmsh::model::occ::addLine(pointtags.at(i), pointtags.at(i+1)));
         }
@@ -747,18 +742,18 @@ bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, QString &log)
         }
         catch(std::runtime_error &e)
         {
-            log += QString(e.what()) + QString::asprintf(" making wing section %d... aborting\n", is);
+            log += std::string(e.what()) + std::format(" making wing section {:d}... aborting\n", is);
             return false;
         }
         catch(std::exception &e)
         {
-            log += QString(e.what()) + QString::asprintf(" making wing section %d... aborting\n", is);
+            log += std::string(e.what()) + std::format(" making wing section {:d}... aborting\n", is);
             return false;
         }
 
         catch(...)
         {
-            log += QString::asprintf("Unknown error making wing section %d... aborting\n", is);
+            log += std::format("Unknown error making wing section {:d}... aborting\n", is);
             return false;
         }
     }
@@ -767,7 +762,7 @@ bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, QString &log)
     Surface const &surf = pWing->lastSurface();
     pointtags.clear();
     linetags.clear();
-    for(uint i=0; i<surf.m_SideA_Bot.size(); i++)
+    for(unsigned int i=0; i<surf.m_SideA_Bot.size(); i++)
     {
         Node const& nd = surf.m_SideB_Bot.at(i);
         pointtags.push_back(gmsh::model::occ::addPoint(nd.x, nd.y, nd.z));
@@ -779,7 +774,7 @@ bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, QString &log)
     }
 
     linetags.clear();
-    for(uint i=0; i<pointtags.size()-1; i++)
+    for(unsigned int i=0; i<pointtags.size()-1; i++)
     {
         linetags.push_back(gmsh::model::occ::addLine(pointtags.at(i), pointtags.at(i+1)));
     }
@@ -795,17 +790,17 @@ bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, QString &log)
     }
     catch(std::runtime_error &e)
     {
-        log += QString(e.what()) + QString(" while making right tip section %d... aborting\n");
+        log += std::string(e.what()) + std::string(" while making right tip section {:d}... aborting\n");
         return false;
     }
     catch(std::exception &e)
     {
-        log += QString(e.what()) + QString(" while making right tip section %d... aborting\n");
+        log += std::string(e.what()) + std::string(" while making right tip section {:d}... aborting\n");
         return false;
     }
     catch(...)
     {
-        log += "Error making right tip section %d... aborting\n";
+        log += "Error making right tip section {:d}... aborting\n";
         return false;
     }
 
@@ -817,18 +812,18 @@ bool gmesh::wingToBRep(const WingXfl *pWing, std::string &brep, QString &log)
         gmsh::model::occ::addThruSections(sectiontags, out, wingtag, true);
 
         gmsh::vectorpair sections;
-        for(uint i=0; i<sectiontags.size(); i++)
+        for(unsigned int i=0; i<sectiontags.size(); i++)
             sections.push_back({2, sectiontags.at(i)});
         gmsh::model::occ::remove(sections);
     }
     catch(std::runtime_error &e)
     {
-        log += QString(e.what()) + QString(" while sweeping through the sections... aborting\n\n");
+        log += std::string(e.what()) + std::string(" while sweeping through the sections... aborting\n\n");
         return false;
     }
     catch(std::exception &e)
     {
-        log += QString(e.what()) + QString(" while sweeping through the sections... aborting\n\n");
+        log += std::string(e.what()) + std::string(" while sweeping through the sections... aborting\n\n");
         return false;
     }
     catch(...)
@@ -1005,7 +1000,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
 
     // add the points
     std::vector<int> Adimtags, Bdimtags;
-    for(uint l=0; l<A.size(); l++)
+    for(unsigned int l=0; l<A.size(); l++)
     {
         Adimtags.push_back(gmsh::model::occ::addPoint(A.at(l).x, A.at(l).y, A.at(l).z));
         Bdimtags.push_back(gmsh::model::occ::addPoint(B.at(l).x, B.at(l).y, B.at(l).z));
@@ -1013,7 +1008,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
 
     // make the lines
     gmsh::vectorpair Ldimtags(Adimtags.size());
-    for(uint k=0; k<Adimtags.size(); k++)
+    for(unsigned int k=0; k<Adimtags.size(); k++)
     {
         Ldimtags[k].first  = DIM1;
         Ldimtags[k].second = gmsh::model::occ::addLine(Adimtags.at(k), Bdimtags.at(k));
@@ -1036,15 +1031,15 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
 
     auto t1 = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    qDebug() << QString::asprintf("gmesh::fragment: %7g ms\n", float(duration)/1000.0);
+    std::cout << std::format("gmesh::fragment: %7g ms\n", float(duration)/1000.0) << std::endl;
 
     gmsh::model::occ::synchronize();
-    for(uint l=0; l<outDimTags.size(); l++)
+    for(unsigned int l=0; l<outDimTags.size(); l++)
     {
         std::pair<int,int> const &frag = outDimTags.at(l);
         if(frag.first != DIM1) continue;
         getLine(frag.second, v0, v1);
-        for(uint k=0; k<A.size(); k++)
+        for(unsigned int k=0; k<A.size(); k++)
         {
             if(v0.isSame(A.at(k), 1.0e-4))
             {
@@ -1062,7 +1057,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
     }
 
 /*    // fragment lines one by one to ensure identification
-    for(uint k=0; k<Ldimtags.size(); k++)
+    for(unsigned int k=0; k<Ldimtags.size(); k++)
     {
         auto t0 = std::chrono::high_resolution_clock::now();
         gmsh::model::occ::fragment(Facedimtags, {Ldimtags[k]}, outDimTags, outDimTagsMap, -1, false, false);
@@ -1071,7 +1066,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
         qDebug("gmesh::fragment: %7g ms", float(duration)/1000.0);
 
         gmsh::model::occ::synchronize();// slow...
-        for(uint l=0; l<outDimTags.size(); l++)
+        for(unsigned int l=0; l<outDimTags.size(); l++)
         {
             std::pair<int,int> const &frag = outDimTags.at(l);
             if(frag.first != DIM1) continue;
@@ -1096,12 +1091,12 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
 /*    std::string strange;
     qDebug()<<"dim 1 fragments:";
     int index = 0;
-    for(uint k=0; k<Idimtags.size(); k++)
+    for(unsigned int k=0; k<Idimtags.size(); k++)
     {
         std::pair<int,int> const &frag = Idimtags.at(k);
         if(frag.first != DIM1) continue;
         getLine(frag.second, v0, v1);
-        strange = std::string::asprintf("tag=%d:  (%9.3g %9.3g %9.3g) <--> (%9.3g %9.3g %9.3g) ", frag.second, v0.x, v0.y, v0.z, v1.x, v1.y, v1.z);
+        strange = std::format("tag={:d}:  (%9.3g %9.3g %9.3g) <--> (%9.3g %9.3g %9.3g) ", frag.second, v0.x, v0.y, v0.z, v1.x, v1.y, v1.z);
         qDebug("%s",strange.toStdString().c_str());
 
         if(isEven(k))
@@ -1114,7 +1109,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
 
 /*    qDebug()<<"Mapping:";
     Vector3d vi0, vi1, vo0, vo1;
-    for(uint k=0; k<outDimTagsMap.size(); k++)
+    for(unsigned int k=0; k<outDimTagsMap.size(); k++)
     {
         gmsh::vectorpair const &map = outDimTagsMap.at(k);
         if(map.size()==2)
@@ -1125,11 +1120,11 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
 
             if(in.first==DIM1 && out.first==DIM1)
             {
-                strange = std::string::asprintf("  In(%d, %d) --> out(%d, %d)", in.first, in.second, out.first, out.second);
+                strange = std::format("  In({:d}, {:d}) --> out({:d}, {:d})", in.first, in.second, out.first, out.second);
                 qDebug()<<strange;
                 getLine(in.second,  vi0, vi1);
                 getLine(out.second, vo0, vo1);
-                strange = std::string::asprintf("      (%.3g %.3g %.3g)(%.3g %.3g %.3g) --> (%.3g %.3g %.3g)(%.3g %.3g %.3g)",
+                strange = std::format("      (%.3g %.3g %.3g)(%.3g %.3g %.3g) --> (%.3g %.3g %.3g)(%.3g %.3g %.3g)",
                                             vi0.x, vi0.y, vi0.z, vi1.x, vi1.y, vi1.z,
                                             vo0.x, vo0.y, vo0.z, vo1.x, vo1.y, vo1.z);
                 qDebug()<<strange;
@@ -1145,7 +1140,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
 }
 
 
-void gmesh::tessellateBRep(std::string const&BRep, GmshParams const &params, std::vector<Triangle3d> &triangles, QString &log)
+void gmesh::tessellateBRep(std::string const&BRep, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log)
 {
     gmsh::clear();
     gmsh::model::add("BRep");
@@ -1165,12 +1160,12 @@ void gmesh::tessellateBRep(std::string const&BRep, GmshParams const &params, std
     }
     catch(std::runtime_error &e)
     {
-        log += QString(e.what()) + QString(" while making triangulation... aborting\n\n");
+        log += std::string(e.what()) + std::string(" while making triangulation... aborting\n\n");
         return;
     }
     catch(std::exception &e)
     {
-        log += QString(e.what()) + QString(" while making triangulation... aborting\n\n");
+        log += std::string(e.what()) + std::string(" while making triangulation... aborting\n\n");
         return;
     }
 
@@ -1185,7 +1180,8 @@ void gmesh::tessellateBRep(std::string const&BRep, GmshParams const &params, std
 }
 
 
-void gmesh::tessellateShape(TopoDS_Shape const&Shape, GmshParams const &params, std::vector<Triangle3d> &triangles, QString &log)
+/** @unused */
+void gmesh::tessellateShape(TopoDS_Shape const&Shape, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log)
 {
     gmsh::clear();
     gmsh::model::add("TopoDS_Shape");
@@ -1201,7 +1197,7 @@ void gmesh::tessellateShape(TopoDS_Shape const&Shape, GmshParams const &params, 
 
 
 /** @todo unusable: importShapesNativePointer throws an unknown exception */
-void gmesh::tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std::vector<Triangle3d> &triangles, QString &log)
+void gmesh::tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log)
 {
     gmsh::clear();
     gmsh::model::add("Face");
@@ -1222,12 +1218,12 @@ void gmesh::tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std
     }
     catch(std::runtime_error &e)
     {
-        log += QString(e.what()) + QString(" while making triangulation... aborting\n\n");
+        log += std::string(e.what()) + std::string(" while making triangulation... aborting\n\n");
         return;
     }
     catch(std::exception &e)
     {
-        log += QString(e.what()) + QString(" while making triangulation... aborting\n\n");
+        log += std::string(e.what()) + std::string(" while making triangulation... aborting\n\n");
         return;
     }
     catch(...)
@@ -1241,24 +1237,24 @@ void gmesh::tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std
 /** alternative to using the in-class makeShellTriangulation method */
 void gmesh::makeSailOccTriangulation(SailOcc *pSailOcc)
 {
-    QString strong, prefix;
+    std::string strong, prefix;
 
-    QString logmsg;
+    std::string logmsg;
 
     pSailOcc->clearTriangles();
 
     std::vector<Triangle3d> triangles;
 
-    for(uint i=0; i<pSailOcc->bReps().size(); i++)
+    for(unsigned int i=0; i<pSailOcc->bReps().size(); i++)
         gmesh::tessellateBRep(pSailOcc->bReps().at(i), pSailOcc->gmshTessParams(), triangles, logmsg);
 
     pSailOcc->setTriangles(triangles);
 
-    strong = QString::asprintf("Made %d triangles\n", pSailOcc->nTriangles());
+    strong = std::format("Made {:d} triangles\n", pSailOcc->nTriangles());
     logmsg +=prefix + strong;
     int nnodes = pSailOcc->triangulation().makeNodes();
 
-    strong = QString::asprintf("Made %d nodes\n", nnodes);
+    strong = std::format("Made {:d} nodes\n", nnodes);
     logmsg +=prefix + strong;
     pSailOcc->makeNodeNormals(false);
 
@@ -1267,9 +1263,9 @@ void gmesh::makeSailOccTriangulation(SailOcc *pSailOcc)
 }
 
 
-int gmesh::makeFuseTriangulation(Fuse *pFuse, QString &logmsg, const QString &prefix)
+int gmesh::makeFuseTriangulation(Fuse *pFuse, std::string &logmsg, const std::string &prefix)
 {
-    QString strong;
+    std::string strong;
     logmsg.clear();
 
     pFuse->clearTriangles();
@@ -1301,7 +1297,7 @@ int gmesh::makeFuseTriangulation(Fuse *pFuse, QString &logmsg, const QString &pr
             }
             else
             {
-                logmsg += prefix + QString::asprintf("Error tessellating shell %d\n", iShell);
+                logmsg += prefix + std::format("Error tessellating shell {:d}\n", iShell);
             }
         }
         iShell++;
@@ -1311,11 +1307,11 @@ int gmesh::makeFuseTriangulation(Fuse *pFuse, QString &logmsg, const QString &pr
 
     if(pFuseXfl) pFuseXfl->triangulation().makeXZsymmetric();
 
-    strong = QString::asprintf("Made %d triangles\n", pFuse->nTriangles());
+    strong = std::format("Made {:d} triangles\n", pFuse->nTriangles());
     logmsg +=prefix + strong;
     int nnodes = pFuse->makeTriangleNodes();
 
-    strong = QString::asprintf("Made %d nodes\n", nnodes);
+    strong = std::format("Made {:d} nodes\n", nnodes);
     logmsg +=prefix + strong;
     pFuse->makeNodeNormals(false);
 
@@ -1325,6 +1321,350 @@ int gmesh::makeFuseTriangulation(Fuse *pFuse, QString &logmsg, const QString &pr
     return pFuse->nTriangles();
 }
 
+
+
+void gmesh::setGmshParams(double emin, double emax, int iAlgo, int iCurvature)
+{
+    gmsh::option::setNumber("Mesh.Algorithm", iAlgo);
+    gmsh::option::setNumber("Mesh.MeshSizeMin", emin);
+    gmsh::option::setNumber("Mesh.MeshSizeMax", emax);
+    gmsh::option::setNumber("Mesh.MeshSizeFromCurvature", iCurvature);
+}
+
+
+
+void gmesh::meshFuseShellsThinSurfaces(Fuse *pFuse, const std::vector<WingXfl> &wings)
+{
+    if(!pFuse) return;
+
+    //    const int DIM0 = 0; // points
+    //    const int DIM1 = 1; // lines
+    const int DIM2 = 2; // faces
+
+    gmsh::logger::start();
+
+    gmsh::clear();
+    gmsh::model::mesh::clear();
+
+    gmsh::model::add("Occ Surfaces");
+
+
+    // converting to BREP and export+import
+    TopoDS_ListOfShape const *pShells(nullptr);
+    FuseXfl const*pFuseXfl = dynamic_cast<FuseXfl const*>(pFuse);
+    if(pFuseXfl) pShells = &pFuseXfl->rightSideShells();
+    else         pShells = &pFuse->shells();
+    std::vector<std::string> brepstr;
+    occ::shapesToBreps(*pShells, brepstr);
+    gmesh::BRepstoGmsh(brepstr);
+
+
+    if(!wings.size())
+    {
+    }
+    else
+    {
+        // get all the fuse faces
+        gmsh::vectorpair fusedimtags;
+        gmsh::model::occ::getEntities(fusedimtags, DIM2);
+
+        // embed wings
+        // make the fragmenting tools
+
+        gmsh::vectorpair wingDimTags;
+
+        for (unsigned int iw=0; iw<wings.size(); iw++)
+        {
+            WingXfl const &wing = wings.at(iw);
+
+            //        Vector3d wingLE = pWing->position(); // no need, surfaces are built in position
+            Vector3d fuseLE = pFuse->position();
+            Vector3d t = Vector3d()-fuseLE;
+
+            std::vector<int> wiretags;
+            std::vector<std::vector<Node>> midwires;
+            wing.makeMidWires(midwires);
+
+            for(std::vector<Node> const &wire : midwires)
+            {
+                std::vector<int> pointtags;
+                for(Node const &nd : wire)
+                {
+                    pointtags.push_back(gmsh::model::occ::addPoint(nd.x+t.x, nd.y+t.y, nd.z+t.z));
+                }
+
+                std::vector<int> linetags;
+                for(unsigned int it=0; it<pointtags.size()-1; it++)
+                {
+                    linetags.push_back(gmsh::model::occ::addLine(pointtags.at(it), pointtags.at(it+1)));
+                }
+
+                wiretags.push_back(gmsh::model::occ::addWire(linetags));
+            }
+
+            gmsh::vectorpair surfDimTags;
+            gmsh::model::occ::addThruSections(wiretags, surfDimTags, -1, false, true);
+
+            for(std::pair<int,int> pair : surfDimTags)
+                wingDimTags.push_back(pair);
+        }
+
+        gmsh::vectorpair outDimTags;
+        std::vector<gmsh::vectorpair> outDimTagsMap;
+
+        // Fragment and embed automatically
+        // Note: remove tools does not remove the wings from the model, needs manual removal
+        gmsh::model::occ::fragment(fusedimtags, wingDimTags, outDimTags, outDimTagsMap, -1, true, true);
+
+        // Remove all dim 2 objects except the original fuse faces.
+        gmsh::vectorpair RedundantDimTags;
+        for(std::pair<int,int> dimtag : outDimTags)
+        {
+            if(dimtag.first==DIM2)
+            {
+                bool bIsFuseDimTag = false;
+                for(unsigned int kf=0; kf<fusedimtags.size(); kf++)
+                {
+                    if(dimtag.second==fusedimtags.at(kf).second)
+                    {
+                        bIsFuseDimTag = true;
+                        break;
+                    }
+                }
+
+                if(!bIsFuseDimTag) RedundantDimTags.push_back(dimtag);
+            }
+        }
+        gmsh::model::occ::remove(RedundantDimTags, true);
+    }
+
+    gmsh::model::occ::synchronize();
+
+}
+
+
+void gmesh::meshFuseShellsThickSurfaces(Fuse *pFuse, const std::vector<WingXfl> &wings)
+{
+    if(!pFuse) return;
+
+    //    const int DIM0 = 0; // points
+    //    const int DIM1 = 1; // lines
+    const int DIM2 = 2; // faces
+
+    gmsh::logger::start();
+
+    gmsh::clear();
+    gmsh::model::mesh::clear();
+
+    gmsh::model::add("Occ Surfaces");
+
+
+    // converting to BREP and export+import
+    TopoDS_ListOfShape const *pShells(nullptr);
+    FuseXfl const*pFuseXfl = dynamic_cast<FuseXfl const*>(pFuse);
+    if(pFuseXfl) pShells = &pFuseXfl->rightSideShells();
+    else         pShells = &pFuse->shells();
+    std::vector<std::string> brepstr;
+    occ::shapesToBreps(*pShells, brepstr);
+    gmesh::BRepstoGmsh(brepstr);
+
+
+    if(!wings.size())
+    {
+        // the fuselage has been cut, no need to embed the wings
+    }
+    else
+    {
+        // get all the fuse faces
+        gmsh::vectorpair fusedimtags;
+        gmsh::model::occ::getEntities(fusedimtags, DIM2);
+
+        // embed wings
+        // make the cutting tools
+
+        gmsh::vectorpair wingDimTags;
+
+        for (unsigned int iw=0; iw<wings.size(); iw++)
+        {
+            WingXfl const &wing = wings.at(iw);
+
+            //        Vector3d wingLE = pWing->position(); // no need, surfaces are built in position
+            Vector3d fuseLE = pFuse->position();
+            Vector3d t = Vector3d()-fuseLE;
+
+            std::vector<int> wiretags;
+            std::vector<std::vector<Node>> sectionwires;
+            wing.makeTopBotWires(sectionwires);
+
+            for(std::vector<Node> const &wire : sectionwires)
+            {
+                std::vector<int> pointtags;
+                for(Node const &nd : wire)
+                {
+                    pointtags.push_back(gmsh::model::occ::addPoint(nd.x+t.x, nd.y+t.y, nd.z+t.z));
+                }
+
+                std::vector<int> linetags;
+                for(unsigned int it=0; it<pointtags.size()-1; it++)
+                {
+                    linetags.push_back(gmsh::model::occ::addLine(pointtags.at(it), pointtags.at(it+1)));
+                }
+
+                wiretags.push_back(gmsh::model::occ::addCurveLoop(linetags));
+            }
+
+            gmsh::vectorpair surfDimTags;
+            //            gmsh::model::occ::addThruSections(wiretags, surfDimTags, -1, true, true, -1, "C1", "ChordLength", true);
+            gmsh::model::occ::addThruSections(wiretags, surfDimTags, -1, true, true);
+
+            for(std::pair<int,int> pair : surfDimTags)
+                wingDimTags.push_back(pair);
+        }
+
+        gmsh::vectorpair outDimTags;
+        std::vector<gmsh::vectorpair> outDimTagsMap;
+
+        // Fragment and embed automatically
+        // Note: remove tools does not remove the wings from the model, needs manual removal
+        gmsh::model::occ::cut(fusedimtags, wingDimTags, outDimTags, outDimTagsMap, -1, true, true);
+
+        // Remove all dim 2 objects except the original fuse faces.
+        gmsh::vectorpair RedundantDimTags;
+        for(std::pair<int,int> dimtag : outDimTags)
+        {
+            if(dimtag.first==DIM2)
+            {
+                bool bIsFuseDimTag = false;
+                for(unsigned int kf=0; kf<fusedimtags.size(); kf++)
+                {
+                    if(dimtag.second==fusedimtags.at(kf).second)
+                    {
+                        bIsFuseDimTag = true;
+                        break;
+                    }
+                }
+
+                if(!bIsFuseDimTag) RedundantDimTags.push_back(dimtag);
+            }
+        }
+        gmsh::model::occ::remove(RedundantDimTags, true);
+    }
+
+    gmsh::model::occ::synchronize();
+
+}
+
+
+/** unused */
+void gmesh::convertTrianglesAndNodesFromGmsh(std::vector<Triangle3d> &triangles, std::vector<Node> &nodes, std::string &log)
+{
+    std::string strange;
+    std::vector<std::size_t> elementTags;
+    std::vector<std::size_t> nodeTags;
+    const int ElementType = 2; // triangles
+
+    gmsh::model::mesh::getElementsByType(ElementType, elementTags, nodeTags);
+
+    strange = std::format("Built %d type 2 elements\n", int(elementTags.size()));
+    log += strange;
+
+    if(elementTags.size()<=0)
+    {
+        log += "No triangles to convert\n\n";
+        return;
+    }
+
+    std::vector<std::size_t> nodetags;
+    std::vector<double> coord;
+    std::vector<double> parametricCoord;
+    int dim = -1;
+    int tag = -1;
+    gmsh::model::mesh::getNodes(nodetags,
+                                coord,
+                                parametricCoord,
+                                dim, tag,
+                                false, false);
+    strange = std::format("Built %d nodes and %d coordinates\n", int(nodetags.size()), int(coord.size()));
+    log += strange;
+
+    assert(coord.size() == 3*nodetags.size());
+
+    if(nodetags.size()<=0)
+    {
+        log += "Aborting\n\n";
+        return;
+    }
+
+    // need to make an array of nodes for quick access
+    // option 1: make a map (tag, position); slow?
+    // option 2: make an array with index=tag;
+    size_t maxtag = *std::max_element(nodetags.begin(), nodetags.end());
+
+    nodes.resize(maxtag+1);
+    for(unsigned int j=0; j<nodetags.size(); j++)
+    {
+        int inode = int(nodetags.at(j));
+        nodes[inode].set(&coord.at(3*j+0));
+        nodes[inode].setIndex(inode);
+        nodes[inode].clearNeighbourNodes();
+        nodes[inode].clearTriangles();
+    }
+
+    //    convertTriangles(elementTags, node);
+
+    std::vector<std::size_t> elementnodetags;
+    int elementtype = -1;
+
+    triangles.resize(elementTags.size());
+
+    double minsize(LARGEVALUE), maxsize(0);
+    for(unsigned int i=0; i<elementTags.size(); i++)
+    {
+        int ielementtag = int(elementTags.at(i));
+        gmsh::model::mesh::getElement(ielementtag,
+                                      elementtype,
+                                      elementnodetags,
+                                      dim,
+                                      tag);
+        assert(elementtype==2); // Triangle
+        assert(dim==2); // Surface type element
+
+        Triangle3d &t3d = triangles[i];
+        for(unsigned int j=0; j<elementnodetags.size(); j++)
+        {
+            int nodetag = int(elementnodetags.at(j));
+            nodes[nodetag].addTriangleIndex(i);
+            t3d.setVertex(j, nodes.at(nodetag));
+            t3d.setVertexIndex(j, nodetag);
+        }
+        t3d.setTriangle();
+        minsize = std::min(minsize, t3d.minEdgeLength());
+        maxsize = std::max(maxsize, t3d.maxEdgeLength());
+    }
+
+    // make the connections using the node information
+    for(Triangle3d &t3d : triangles)
+    {
+        t3d.clearConnections();
+        for(int iedge=0; iedge<3; iedge++)
+        {
+            Node const &nd0 = nodes.at(t3d.nodeIndex(iedge));
+            Node const &nd1 = nodes.at(t3d.nodeIndex(iedge+1));
+            for(int nd0t=0; nd0t<nd0.triangleCount(); nd0t++)
+            {
+                int t3dindex = nd0.triangleIndex(nd0t);
+                if(nd1.hasTriangleIndex(t3dindex))
+                {
+                    t3d.setNeighbour(t3dindex, iedge);
+                    break;
+                }
+            }
+        }
+    }
+
+    log += std::format("Min. element size = %g\n", minsize);
+    log += std::format("Max. element size = %g\n", maxsize);
+}
 
 
 

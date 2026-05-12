@@ -121,5 +121,9 @@ namespace plane
      */
     FL5LIB_EXPORT PlaneXfl *makeEmptyPlane();
 
+
+    /** @todo duplicate with GMesherWt::onHandleMeshResults */
+    FL5LIB_EXPORT void meshFuse(PlaneXfl *pPlaneXfl, std::vector<int>selectedWings, bool bThickSurfaces, std::string &log);
+
 }
 

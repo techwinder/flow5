@@ -25,7 +25,6 @@
 
 #pragma once
 
-#include <QString>
 
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Face.hxx>
@@ -33,7 +32,7 @@
 #include <gmsh.h>
 
 
-#include <api/fl5lib_global.h>
+#include <fl5lib_global.h>
 
 
 class Vector3d;
@@ -49,15 +48,15 @@ struct GmshParams;
 
 namespace gmesh
 {
-    void listMainOptions(std::string &list);
+    FL5LIB_EXPORT void listMainOptions(std::string &list);
     std::string getNumberOption(std::string name);
     std::string getStringOption(std::string name);
 
-//    void listModelEntities(QString &list);
-    void listModel(QString &list);
+//    void listModelEntities(std::string &list);
+    void listModel(std::string &list);
 
-    void convertFromGmsh(std::vector<Triangle3d> &triangles, QString &log);
-    void convertTriangles(std::vector<std::size_t>const&elementTags, std::vector<Vector3d> const &node, std::vector<Triangle3d> &m_Triangles, QString &log);
+    void convertFromGmsh(std::vector<Triangle3d> &triangles, std::string &log);
+    void convertTriangles(std::vector<std::size_t>const&elementTags, std::vector<Vector3d> const &node, std::vector<Triangle3d> &m_Triangles, std::string &log);
     void makeModelCurves(std::vector<std::vector<Vector3d> > &curves);
     void makeModelVertices(std::vector<Vector3d>&vertices);
     bool getVertex(int tag, Vector3d &vertex);
@@ -66,8 +65,8 @@ namespace gmesh
     bool importBRepList(std::vector<std::string> const &breps, std::string &brep);
 
     bool gmshtoBRep(std::string &brep);
-    bool BReptoGmsh(const std::string &brep);
-    bool BRepstoGmsh(std::vector<std::string> const &brep);
+    FL5LIB_EXPORT bool BReptoGmsh(const std::string &brep);
+    FL5LIB_EXPORT bool BRepstoGmsh(std::vector<std::string> const &brep);
 
     void bRepToStepFile(std::string const &brep, const std::string &pathname);
 
@@ -75,7 +74,7 @@ namespace gmesh
     double wettedArea();
 
 
-    bool wingToBRep(WingXfl const*pWing, std::string &brep, QString &log);
+    bool wingToBRep(WingXfl const*pWing, std::string &brep, std::string &log);
     bool fuseNurbsToBRep(FuseNurbs const*pFuse, std::string &brep, std::string &log);
     bool fuseQuadsToBRep(FuseFlatFaces const*pFuse, std::string &brep, std::string &log);
 
@@ -85,13 +84,23 @@ namespace gmesh
 
     bool intersectBrep(const std::string &brep, const std::vector<Node> &A, const std::vector<Node> &B, std::vector<Vector3d> &I, std::vector<bool> &bIntersect);
 
-    void tessellateBRep(const std::string &BRep, GmshParams const &params, std::vector<Triangle3d> &triangles, QString &log);
-    void tessellateShape(TopoDS_Shape const&Shape, GmshParams const &params, std::vector<Triangle3d> &triangles, QString &log);
-    void tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std::vector<Triangle3d> &triangles, QString &log);
+    void tessellateBRep(const std::string &BRep, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log);
+    void tessellateShape(TopoDS_Shape const&Shape, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log);
+    void tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log);
 
-    void makeSailOccTriangulation(SailOcc *pSailOcc);
-    int makeFuseTriangulation(Fuse *pFuse, QString &logmsg, const QString &prefix="");
+    FL5LIB_EXPORT void makeSailOccTriangulation(SailOcc *pSailOcc);
+    FL5LIB_EXPORT int makeFuseTriangulation(Fuse *pFuse, std::string &logmsg, const std::string &prefix="");
 
     std::string tempFile();
+
+
+    //_________________ imported from GMesher ___________
+
+    void setGmshParams(double emin, double emax, int iAlgo, int iCurvature);
+
+    void meshFuseShellsThinSurfaces( Fuse *pFuse, std::vector<WingXfl> const &wings);
+    void meshFuseShellsThickSurfaces(Fuse *pFuse, std::vector<WingXfl> const &wings);
+
+    void convertTrianglesAndNodesFromGmsh(std::vector<Triangle3d> &triangles, std::vector<Node> &nodes, std::string &log);
 }
 

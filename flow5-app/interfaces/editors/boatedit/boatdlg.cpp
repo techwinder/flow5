@@ -81,7 +81,7 @@
 #include <interfaces/editors/fuseedit/fuseoccdlg.h>
 #include <interfaces/editors/fuseedit/fusestldlg.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.h>
-#include <interfaces/mesh/gmesh_globals.h>
+#include <api/gmesh_globals.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <interfaces/opengl/fl5views/gl3dboatview.h>
 #include <interfaces/widgets/customdlg/newnamedlg.h>
@@ -707,7 +707,7 @@ void BoatDlg::onImportHullXML()
 void BoatDlg::onImportHullCAD()
 {
     double dimension=0;
-    QString logmsg;
+    std::string logmsg;
     std::string strlog;
 
     m_ppto->appendPlainText("Importing CAD file...\n");
@@ -738,8 +738,8 @@ void BoatDlg::onImportHullCAD()
     gmesh::makeFuseTriangulation(pNewHullOcc, logmsg, "   ");
 
     pNewHullOcc->computeSurfaceProperties(strlog, "   ");
-    logmsg += QString::fromStdString(strlog);
-    m_ppto->onAppendQText(logmsg+"\n");
+    logmsg += strlog;
+    m_ppto->onAppendStdText(logmsg+"\n");
 
     m_ppto->onAppendStdText("Making default triangular mesh\n");
     logmsg.clear();

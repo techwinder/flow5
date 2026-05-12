@@ -34,7 +34,7 @@
 #include <TopExp_Explorer.hxx>
 #include <BRepTools.hxx>
 
-#include <interfaces/mesh/gmesh_globals.h>
+#include <api/gmesh_globals.h>
 
 
 #include "gmesherwt.h"
@@ -59,7 +59,7 @@
 
 #include <core/qunits.h>
 #include <core/xflcore.h>
-#include <interfaces/mesh/gmesh_globals.h>
+#include <api/gmesh_globals.h>
 #include <interfaces/mesh/gmesher.h>
 #include <interfaces/mesh/meshevent.h>
 #include <interfaces/opengl/globals/gl_globals.h>
@@ -68,7 +68,6 @@
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <interfaces/widgets/globals/wt_globals.h>
-
 
 int GMesherWt::s_idxAlgo = 0;
 

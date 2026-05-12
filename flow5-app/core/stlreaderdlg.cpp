@@ -32,6 +32,7 @@
 
 #include "stlreaderdlg.h"
 
+#include <core/flow5events.h>
 #include <core/qunits.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
@@ -39,7 +40,6 @@
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 
 #include <api/units.h>
-#include <core/flow5events.h>
 #include <api/flow5-io.h>
 
 int StlReaderDlg::s_LengthUnitIndex = 0;
@@ -68,8 +68,8 @@ void StlReaderDlg::setupLayout()
         m_pcbLengthUnitSel->setCurrentIndex(s_LengthUnitIndex);
         m_pcbLengthUnitSel->setToolTip(tr("Select the length unit to read the STL file"));
 
-        QLabel *pLabTol = new QLabel(tr("Tolerance on node position:"));
-        pLabTol->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
+        QLabel *plabTol = new QLabel(tr("Tolerance on node position:"));
+        plabTol->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
 
         pUnitLayout->addWidget(plabUnit);
         pUnitLayout->addWidget(m_pcbLengthUnitSel);

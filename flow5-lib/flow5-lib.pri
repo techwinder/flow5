@@ -1,5 +1,6 @@
 
 HEADERS += \
+    api/gmesh_globals.h \
     api/aeroforces.h \
     api/analysisrange.h \
     api/anglecontrol.h \
@@ -139,6 +140,7 @@ HEADERS += \
     api/xfoiltask.h \
 
 SOURCES += \
+    panels/mesh/gmesh_globals.cpp \
     analysis3d/boattask.cpp \
     analysis3d/llttask.cpp \
     analysis3d/p3analysis.cpp \

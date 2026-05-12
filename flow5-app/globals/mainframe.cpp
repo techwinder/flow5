@@ -92,7 +92,6 @@
 #include <interfaces/graphs/globals/graphsvgwriter.h>
 #include <interfaces/graphs/graph/curve.h>
 #include <interfaces/mesh/afmesher.h>
-#include <interfaces/mesh/gmesh_globals.h>
 #include <interfaces/mesh/gmesherwt.h>
 #include <interfaces/mesh/mesherwt.h>
 #include <interfaces/opengl/globals/opengldlg.h>
@@ -197,7 +196,9 @@
 #include <api/fileio.h>
 #include <api/fl5core.h>
 #include <api/foil.h>
+#include <api/fusenurbs.h>
 #include <api/geom_global.h>
+#include <api/gmesh_globals.h>
 #include <api/objects2d.h>
 #include <api/objects2d_globals.h>
 #include <api/objects3d.h>
@@ -335,6 +336,22 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
     displayMessage(strange + EOLch, false);
 
 
+    if(SaveOptions::bAutoSave())
+    {
+        m_SaveTimer.setInterval(SaveOptions::saveInterval()*60*1000);
+        m_SaveTimer.start();
+        connect(&m_SaveTimer, SIGNAL(timeout()), SLOT(onSaveTimer()));
+    }
+
+    s_bSaved     = true;
+    s_iApp = xfl::NOAPP;
+
+    setMenus();
+
+    m_pFastGraphWt = new FastGraphWt();
+    GraphOptions::resetGraphSettings(*m_pFastGraphWt->graph());
+
+    connectSignals();
 
 #ifdef OPENBLAS
     strange.clear();
@@ -374,30 +391,8 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
     displayMessage(strange + EOLch + EOLch, false);
 #endif
 
-
-
-    if(SaveOptions::bAutoSave())
-    {
-        m_SaveTimer.setInterval(SaveOptions::saveInterval()*60*1000);
-        m_SaveTimer.start();
-        connect(&m_SaveTimer, SIGNAL(timeout()), SLOT(onSaveTimer()));
-    }
-
-    s_bSaved     = true;
-
-    s_iApp = xfl::NOAPP;
-
-
-    setMenus();
-
-
-    m_pFastGraphWt = new FastGraphWt();
-    GraphOptions::resetGraphSettings(*m_pFastGraphWt->graph());
-
-    connectSignals();
-
     gmsh::initialize();
-    gmsh::option::setNumber("General.Terminal", 0);  
+    gmsh::option::setNumber("General.Terminal", 0);
     gmsh::option::setNumber("Geometry.OCCParallel", 1.0);
     gmsh::option::setNumber("General.NumThreads", QThread::idealThreadCount());
 //    gmsh::option::setNumber("Mesh.MaxNumThreads2D", QThread::idealThreadCount()); //Default value: 0; 0: use General.NumThreads
@@ -4418,23 +4413,37 @@ void MainFrame::resetCpCurves()
     m_pXSail->resetCurves();
 }
 
+#ifdef WIN32
+    #include <Windows.h>
+#endif
 
 int MainFrame::onTestRun()
 {
-    printf("flow5 plane run\n");
+#ifdef WIN32
+    // enable UTF8 characters
+    SetConsoleOutputCP(65001);
+#endif
+
+    // flow5 works internally in IS units
+    // All inputs should be provided in the IS system, i.e. meters and kilograms
+
+    printf("flow5 plane run\n\n");
 
     // Preload some project file
-    /*    std::string logload;
-     s td::stri*ng loadfilepath = "/path/to/file.fl5";
-     if(!io::loadProject(loadfilepath, logload))
-     {
-     std::cerr << logload << std::endl;
-}*/
+    /*
+    std::string logload;
+    std::string loadfilepath = "/path/to/file.fl5";
+    if(!io::loadProject(loadfilepath, logload))
+    {
+        std::cerr << logload << std::endl;
+    }
+    */
 
     // Start by creating the foils needed to build the wings
     // flow5 objects, i.e. foils, planes, boats and their polar and opp children
     // should always be allocated on the heap
 
+    std::cout << "Making the foils" << std::endl;
     Foil *pFoilN2413 = new Foil;
     if(!Objects2d::makeNacaFoil(pFoilN2413, 2413, 200))
     {
@@ -4475,9 +4484,9 @@ int MainFrame::onTestRun()
 
 
     // Could also read a foil from file
-
+    /*
     Foil *pFoilClarkY = new Foil;
-    std::string pathname = "/path/to/CLARK Y.dat";
+    std::string pathname = "/home/techwinder/flow5/studies/airfoils/clarky.dat";
     int iLineError(-1);
     // readFoilFile() has been left in flow5-lib and not moved to flow5-io-lib
     // since it is of common use and requires only the STL and not QtCore
@@ -4497,9 +4506,12 @@ int MainFrame::onTestRun()
         std::cerr <<  "Error reading the file " << pathname << " at line " << iLineError << std::endl;
     }
 
+    */
+    std::cout << std::endl;
 
 
     // Create and define a new xfl-type plane
+    std::cout << "Building the plane" << std::endl;
     PlaneXfl* pPlaneXfl = new PlaneXfl;
     {
         //Set the plane's name now to ensure the plane is inserted in alphabetical order
@@ -4517,29 +4529,20 @@ int MainFrame::onTestRun()
         // pPlaneXfl->makeDefaultPlane();
 
         // Build from scratch
-        WingXfl *pWing = pPlaneXfl->addWing();
-        pWing->setName("Main wing"); // for user information only
-        pWing->makeDefaultWing();
+        std::cout << "    Buiding the wings" << std::endl;
+        {
+            WingXfl *pWing = pPlaneXfl->addWing();
+            pWing->setName("Main wing"); // for user information only
+            pWing->makeDefaultWing();
 
-        pWing = pPlaneXfl->addWing();
-        pWing->setName("Elevator");
-        pWing->makeDefaultStab();
+            WingXfl *pStab = pPlaneXfl->addWing();
+            pStab->setName("Elevator");
+            pStab->makeDefaultStab();
 
-        pWing = pPlaneXfl->addWing();
-        pWing->setName("Fin");
-        pWing->makeDefaultFin();
-
-        //position the mainwing
-        //flow5 works internally in IS units
-        pPlaneXfl->wing(0)->setPosition(0.400, 0.000, 0.000);
-
-        //position the elevator
-        pPlaneXfl->wing(1)->setPosition(1.350, 0.000, 0.025);
-        pPlaneXfl->wing(1)->setRy(-1.5);
-
-        //position the fin
-        pPlaneXfl->wing(2)->setPosition(1.350, 0.000, 0.050);
-        pPlaneXfl->wing(2)->setRx(-90.0);
+            WingXfl *pFin = pPlaneXfl->addWing();
+            pFin->setName("Fin");
+            pFin->makeDefaultFin();
+        }
 
 
         // Set the inertia properties
@@ -4553,6 +4556,7 @@ int MainFrame::onTestRun()
         inertia.appendPointMass(0.20, { 0.65,0,0},  "Fuse aft");
 
         // Define the main wing
+        std::cout << "    Defining the main wing" << std::endl;
         {
             // Get a reference to the main wing object for ease of access
             WingXfl &mainwing = *pPlaneXfl->mainWing(); // or pPlaneXfl->wing(0);
@@ -4613,6 +4617,7 @@ int MainFrame::onTestRun()
         }
 
         // Define the elevator
+        std::cout << "    Defining the elevator" << std::endl;
         {
             WingXfl *pElev = pPlaneXfl->stab(); // or pPlaneXfl->wing(1);
             pElev->setColor({173, 111, 57});
@@ -4644,6 +4649,7 @@ int MainFrame::onTestRun()
         }
 
         // Define the Fin
+        std::cout << "    Defining the fin" << std::endl;
         {
             // get a convenience reference or a pointer for ease of access
             WingXfl &fin = *pPlaneXfl->fin();
@@ -4653,6 +4659,9 @@ int MainFrame::onTestRun()
 
 
             fin.setPosition(0.930, 0.0, 0.010);
+            fin.setRx(-90.0);
+
+
             // Make double sure that the fin is closed on its inner section
             fin.setClosedInnerSide(true);
 
@@ -4679,8 +4688,10 @@ int MainFrame::onTestRun()
         bool bMakeTriMesh = true;
         pPlaneXfl->makePlane(bThickSurfaces, bIgnoreFusePanels, bMakeTriMesh);
     }
+    std::cout << std::endl;
 
     // Define an analysis
+    std::cout << "Defining the polar" << std::endl;
     PlanePolar *pPlPolar = new PlanePolar;
     {
         // give the polar a temporary name
@@ -4757,14 +4768,16 @@ int MainFrame::onTestRun()
         // in alphabetical order
         Objects3d::insertPlPolar(pPlPolar);
     }
+    std::cout << std::endl;
 
     // Define and run the analysis
+    std::cout << "Defining the plane calculation task" << std::endl;
     PlaneTask *pPlaneTask = new PlaneTask;
     {
         PanelAnalysis::setMaxThreadCount(16); // 1 by default
 
-        pPlaneTask->outputToStdIO(true);
-        pPlaneTask->setKeepOpps(true);
+        pPlaneTask->outputToStdIO(true); // output to the terminal
+        pPlaneTask->setKeepOpps(true); // keep the operating points
 
         pPlaneTask->setObjects(pPlaneXfl, pPlPolar);
         pPlaneTask->setComputeDerivatives(false);
@@ -4790,6 +4803,8 @@ int MainFrame::onTestRun()
 
         // we are running the task in this thread, so there's
         // no stopping it once it's launched,
+        std::cout << "Launching the task" << std::endl;
+
         pPlaneTask->run();
 
         // Results are automatically stored in the polar and
@@ -4808,31 +4823,39 @@ int MainFrame::onTestRun()
         delete pPlaneTask;
     }
 
-
     // save the project; requires link to flow5-io-lib
-    std::string logmsg;
-    std::string projectfilepath = "/tmp/PlaneRun.fl5";
-    io::saveProject(projectfilepath, logmsg);
+    std::cout << "Saving the project to file" << std::endl;
+    {
+        std::string logmsg;
+        std::string projectfilepath;
+        projectfilepath  = std::filesystem::temp_directory_path().string();
+        projectfilepath += std::filesystem::path::preferred_separator;
+        projectfilepath += "PlaneRun2.fl5";
 
-    if(logmsg.size()>0)
-    {
-        // error saving
-        std::cerr << logmsg << std::endl << std::endl;
+
+        io::saveProject(projectfilepath, logmsg);
+
+        if(logmsg.size()>0)
+        {
+            // error saving
+            std::cerr << logmsg << std::endl << std::endl;
+        }
+        else
+        {
+            std::cout << "Successfully saved the project file to " << projectfilepath << std::endl << std::endl;
+        }
     }
-    else
-    {
-        std::cout << "Successfully saved the project file to " << projectfilepath << std::endl << std::endl;
-    }
+    std::cout << std::endl;
 
     // Must call! will delete the planes, foils and children objects
     // Memory leak otherwise
+    std::cout << "Deleting objects"<<std::endl<<std::endl;
     globals::deleteObjects();
 
 
-    std::cout << "done" << std::endl;
+    std::cout << "_________done_____________" << std::endl  << std::endl ;
 
-    return 0;
-}
+    return 0;}
 
 
 

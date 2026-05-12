@@ -85,7 +85,7 @@
 #include <interfaces/graphs/controls/graphtilevariableset.h>
 #include <interfaces/graphs/graph/curve.h>
 #include <interfaces/graphs/graph/graph.h>
-#include <interfaces/mesh/gmesh_globals.h>
+#include <api/gmesh_globals.h>
 #include <interfaces/mesh/panelcheckdlg.h>
 #include <interfaces/opengl/controls/fine3dcontrols.h>
 #include <interfaces/opengl/controls/gllightdlg.h>
@@ -2634,7 +2634,7 @@ void XPlane::onEditCurFuse()
         pFuse->setColor(pModFuse->color());
         pFuse->setOccTessParams(pModFuse->occTessParams());
         pFuse->setGmshTessParams(pModFuse->gmshTessParams());
-        QString strange;
+        std::string strange;
 //        pFuse->makeShellTriangulation(strange, QString());
         gmesh::makeFuseTriangulation(pFuse, strange);
         m_pgl3dXPlaneView->resetglGeom();

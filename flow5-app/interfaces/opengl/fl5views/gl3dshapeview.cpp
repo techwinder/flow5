@@ -50,7 +50,7 @@
 
 #include <core/displayoptions.h>
 #include <interfaces/controls/w3dprefs.h>
-#include <interfaces/mesh/gmesh_globals.h>
+#include <api/gmesh_globals.h>
 #include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/opengl/globals/gl_occ.h>
 
@@ -231,7 +231,7 @@ void gl3dShapeView::glMake3dObjects()
         gl::glMakeEdges(*m_pShape, m_vboEdges, m_EdgeLabelPts);
 //        glMakeWires();
 
-        QString log;
+        std::string log;
         gmesh::makeFuseTriangulation(m_pFuse, log);
         gl::makeTriangles3Vtx(m_pFuse->triangles(), false, m_vboFaces);
 

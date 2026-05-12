@@ -94,6 +94,15 @@ linux-g++ {
     LIBS += -L/usr/local/lib/ #make install location
     LIBS += -L/usr/lib64/     #fedora install location
 
+
+    #--------------------- GMSH ------------------------
+    INCLUDEPATH += /usr/local/include/  #make install location
+    INCLUDEPATH += /usr/include/        #fedora install location
+    LIBS += -L/usr/local/lib64           # redundant
+    LIBS += -L/usr/lib64           # redundant
+    LIBS += -lgmsh
+
+
 }
 
 
@@ -104,7 +113,6 @@ win32-msvc {
     CONFIG -= debug_and_release debug_and_release_target
 
 
-
 #-----XFoil-----
 
     LIBS += -L../XFoil-lib -lXFoil1
@@ -113,21 +121,33 @@ win32-msvc {
     DEFINES += INTEL_MKL
     INCLUDEPATH += "C:\Program Files (x86)\Intel\oneAPI\mkl\latest\include"
 
-    LIBS += -L"C:\Program Files (x86)\Intel\oneAPI\mkl\latest\bin"
-    LIBS += -L"C:\Program Files (x86)\Intel\oneAPI\mkl\latest\lib"
-    LIBS += -L"C:\Program Files (x86)\Intel\oneAPI\compiler\latest\bin"
-    LIBS += -L"C:\Program Files (x86)\Intel\oneAPI\compiler\latest\lib"
-    LIBS += -lmkl_intel_lp64_dll
-    LIBS += -lmkl_core_dll
-    LIBS += -lmkl_intel_thread_dll -llibiomp5md  # for multithreading
-    #    LIBS += -lmkl_sequential_dll
 
+    LIBS += -L"C:/Program Files (x86)/Intel/oneAPI/mkl/latest/lib"
+#    LIBS += -L"C:/Program Files (x86)/Intel/oneAPI/compiler/latest/lib"   # to link with libiomp5md
+    LIBS += -L"C:/Program Files (x86)/Intel/oneAPI/tbb/latest/lib"        # to link with tbb12
+#https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-windows/2025-2/selecting-libraries-to-link-with.html
+#    LIBS += -lmkl_intel_lp64_dll
+#    LIBS += -lmkl_core_dll
+#    LIBS += -lmkl_intel_thread_dll -llibiomp5md  # for multithreading
+#    LIBS += -lmkl_sequential_dll
+#https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-windows/2023-0/using-the-single-dynamic-library.html
+#You can simplify your link line through the use of the Intel® oneAPI Math Kernel Library Single Dynamic Library (SDL).
+    LIBS += -lmkl_rt
+#    LIBS += -llibiomp5md  # uses the OpenMP threading technology
+    LIBS += -ltbb12        # uses the Intel TBB threading technology
 
 
 #------------ OPEN CASCADE --------------------------
     INCLUDEPATH += D:\bin\OCCT-7_9_2\build\inc
     LIBS += -LD:\bin\OCCT-7_9_2\build\win64\vc14\lib
     LIBS += -LD:\bin\OCCT-7_9_2\build\win64\vc14\bin
+
+
+#--------------------- GMSH ------------------------
+    INCLUDEPATH += D:\bin\gmsh-4.14.1-Windows64-sdk/include/
+    LIBS += -L"D:\bin\gmsh-4.14.1-Windows64-sdk/lib"
+    LIBS += -lgmsh.dll  # the file name is gmsh.dll.lib
+
 
 
     QMAKE_CXXFLAGS += -utf-8
@@ -182,9 +202,14 @@ macx {
     LIBS += -L/usr/local/lib
 
 
+    #_____________GMSH__________________
+    INCLUDEPATH += /usr/local/include
+    LIBS += -lgmsh
+
+
     #-------------vecLib -----------------
     DEFINES += ACCELERATE_NEW_LAPACK
-    LIBS += -llapack -lcblas
+    LIBS += -llapack -lcblas   #todo cblas may not be necessary
 
 }
 

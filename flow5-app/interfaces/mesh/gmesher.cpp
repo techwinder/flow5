@@ -31,7 +31,7 @@
 #include <api/sail.h>
 #include <api/sailnurbs.h>
 
-#include <interfaces/mesh/gmesh_globals.h>
+#include <api/gmesh_globals.h>
 
 
 GMesher::GMesher(QObject *parent) : QObject{parent}
@@ -63,7 +63,6 @@ void GMesher::onMeshCurrentModel()
     }
     emit meshDone(bError);
 }
-
 
 
 

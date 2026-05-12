@@ -11,7 +11,6 @@
 
 HEADERS += \
     $$PWD/afmesher.h \
-    $$PWD/gmesh_globals.h \
     $$PWD/gmesher.h \
     $$PWD/gmesherwt.h \
     $$PWD/gmshctrlswt.h \
@@ -26,7 +25,6 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/afmesher.cpp \
-    $$PWD/gmesh_globals.cpp \
     $$PWD/gmesher.cpp \
     $$PWD/gmesherwt.cpp \
     $$PWD/gmshctrlswt.cpp \

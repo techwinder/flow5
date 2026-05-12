@@ -42,8 +42,9 @@
                     </li>
                     <li>Source code and API
                         <ul>
-                            <li>removed the dependency of <tt>flow5-lib</tt> on Qt6Core so that it relies only on the STL and OpenCascade</li>
+                            <li>removed the dependency of <tt>flow5-lib</tt> on Qt6Core so that it uses instead the STL</li>
                             <li>moved Qt-based I/O operations to <tt>flow5-io-lib</tt></li>
+                            <li>moved Gmsh meshing module to the API</li>
                             <li>updated the API examples with the new interfaces</li>
                         </ul>
                     </li>
@@ -57,6 +58,8 @@
                     </li>
                     <li>Other
                         <ul>
+                            <li>packaged the windows binaries with Intel's MKL TBB threading library instead of the OpenMP library
+                            to possibly avoid threading conflicts with Gmsh</li>
                         </ul>
                     </li>
                 </ul>

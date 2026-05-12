@@ -2963,6 +2963,8 @@ bool serial::serializePolar3dFl5v726(Polar3d *pPolar, QDataStream &ar, bool bIsS
         ar >> format;
         if((format < 500000) || (format>500100)) return false;
 
+        pPolar->setPolarFormat(format);
+
         // METADATA
         ar >> strange; pPolar->setName(strange.toStdString());
 
@@ -3211,6 +3213,8 @@ bool serial::serializePolar3dFl5v750(Polar3d *pPolar, QDataStream &ar, bool bIsS
         //input the variables from the stream
         ar >> format;
         if((format < 500750) || (format>501000)) return false; // failsafe
+
+        pPolar->setPolarFormat(format);
 
         // METADATA
         ar >> strange;   pPolar->setName(strange.toStdString());

@@ -41,7 +41,7 @@
 #include <interfaces/editors/fuseedit/shapefixerdlg.h>
 #include <interfaces/exchange/cadexportdlg.h>
 #include <interfaces/mesh/afmesher.h>
-#include <interfaces/mesh/gmesh_globals.h>
+#include <api/gmesh_globals.h>
 #include <interfaces/mesh/gmesherwt.h>
 #include <interfaces/mesh/mesherwt.h>
 #include <interfaces/mesh/meshevent.h>
@@ -466,7 +466,7 @@ void FuseOccDlg::onShapeFix()
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
     QString strange;
-    QString prefix("   ");
+    std::string prefix("   ");
     updateOutput("Updating fuselage with fixed shapes:\n");
 
     m_pFuse->clearShapes();
@@ -477,7 +477,7 @@ void FuseOccDlg::onShapeFix()
         m_pFuse->appendShape(iterator.Value());
 
         std::string str;
-        occ::listShapeContent(iterator.Value(), str, prefix.toStdString());
+        occ::listShapeContent(iterator.Value(), str, prefix);
         strange = QString::asprintf("Shape %d:\n", ishape) + QString::fromStdString(str) + "\n";
         m_ppto->onAppendQText(strange);
         ishape++;
@@ -487,9 +487,9 @@ void FuseOccDlg::onShapeFix()
     m_pFuse->makeShellsFromShapes();
 
     updateOutput("Making shell triangulation\n");
-    QString str;
+    std::string str;
     gmesh::makeFuseTriangulation(m_pFuse, str, prefix);
-    updateOutput("Tessellation:\n"+str+"\n");
+    updateStdOutput("Tessellation:\n"+str+"\n");
 
     updateProperties();
 

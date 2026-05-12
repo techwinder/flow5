@@ -3,10 +3,11 @@ cmake_minimum_required(VERSION 3.16)
 
 project(PlaneRun LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(INTEL_MKL "Activate if flow5 has been built with Intel MKL" OFF)
+unset(USING_INTEL_MKL CACHE)
+option(USING_INTEL_MKL "Activate if flow5 has been built with Intel MKL" OFF)
 option(FLOW5_IO  "Activate to link to flow5-io.\nRequired for data serialization and use of xml files" ON)
 
 if (WIN32)
@@ -16,7 +17,8 @@ if (WIN32)
     link_directories(D:/dev/build/flow5/release/XFoil-lib)
     link_directories(C:/Qt/6.9.1/msvc2022_64/lib)
     link_directories("C:/Program Files (x86)/Intel/oneAPI/mkl/latest/lib")
-    link_directories("C:/Program Files (x86)/Intel/oneAPI/compiler/latest/lib")
+    link_directories("C:/Program Files (x86)/Intel/oneAPI/compiler/latest/lib") # to link to libiomp5md
+    link_directories("C:/Program Files (x86)/Intel/oneAPI/tbb/latest/lib" )     # to link to tbb12
 
     include_directories(D:/dev/flow5/XFoil-lib)
     include_directories(D:/dev/flow5/flow5-lib)
@@ -25,6 +27,7 @@ if (WIN32)
     include_directories(C:/Qt/6.9.1/msvc2022_64/include)
     include_directories(C:/Qt/6.9.1/msvc2022_64/include/QtCore)
     include_directories(D:/bin/build/OCC_792/inc)
+    include_directories("C:/Program Files (x86)/Intel/oneAPI/mkl/latest/include")
     
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
@@ -32,8 +35,9 @@ if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STANDARD} /permissive- ")
 
-    
-else ()
+    set(USING_INTEL_MKL true CACHE BOOL "Activate if flow5 has been built with Intel MKL")
+
+elseif (LINUX)
 
     include_directories(/usr/local/include/XFoil/)
     include_directories(/usr/local/include/flow5/)
@@ -44,11 +48,15 @@ else ()
 
     link_directories(/usr/local/lib/)
     link_directories(/usr/lib64/)
-    if(INTEL_MKL)
+    if(USING_INTEL_MKL)
         link_directories(/opt/intel/oneapi/mkl/latest/lib/)
-    endif (INTEL_MKL)
+    endif (USING_INTEL_MKL)
 
-endif (WIN32)
+elseif (APPLE)
+
+#todo
+
+endif ()
 
 add_executable(PlaneRun planerun.cpp)
 
@@ -60,15 +68,26 @@ endif(FLOW5_IO)
 
 if(WIN32)
     target_link_libraries(PlaneRun XFoil1 flow5-lib)
-    if(INTEL_MKL)
-        target_link_libraries(PlaneRun  mkl_core_dll mkl_intel_thread_dll mkl_intel_lp64_dll libiomp5md )
+    if(USING_INTEL_MKL)
+        target_link_libraries(PlaneRun mkl_rt)         # Intel® oneAPI Math Kernel Library Single Dynamic Library (SDL)
+#         target_link_libraries(PlaneRun  libiomp5md ) # uses the OpenMP threading technology
+        target_link_libraries(PlaneRun  tbb12 )        # uses the Intel TBB threading technology
+
+        target_compile_definitions(PlaneRun PUBLIC INTEL_MKL)
     endif()
-else ()
+elseif (LINUX)
     target_link_libraries(PlaneRun XFoil flow5-lib)
-    if(INTEL_MKL)
+    if(USING_INTEL_MKL)
         target_link_libraries(PlaneRun mkl_core mkl_intel_lp64 mkl_gnu_thread)
-    endif(INTEL_MKL)
-endif (WIN32)
+        target_compile_definitions(PlaneRun PUBLIC INTEL_MKL)
+    else()
+        target_link_libraries(PlaneRun openblas)
+        target_compile_definitions(PlaneRun PUBLIC OPENBLAS)
+    endif()
+elseif (APPLE)
+    target_link_libraries(PlaneRun XFoil lapack cblas)
+    target_compile_definitions(PlaneRun PUBLIC ACCELERATE_NEW_LAPACK)
+endif ()
 
 
 

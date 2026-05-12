@@ -25,7 +25,7 @@
 #include <complex>
 #include <cstring>
 #include <format>
-
+#include <iostream>
 #include <fstream>
 #include <cassert>
 #include <thread>
@@ -1569,6 +1569,8 @@ int matrix::solveLinearSystem(int rank, float *M, int nrhs, float *rhs, int nThr
     for(int k=0; k<nrhs; k++)
     {
         ldb = 1;
+        try
+        {
 #ifdef OPENBLAS
     #ifdef LAPACK_FORTRAN_STRLEN_END
             // https://github.com/OpenMathLib/OpenBLAS/issues/3877
@@ -1581,6 +1583,22 @@ int matrix::solveLinearSystem(int rank, float *M, int nrhs, float *rhs, int nThr
 #elif defined ACCELERATE_NEW_LAPACK
         sgetrs_(&trans, &nl, &ldb, M, &lda, ipiv.data(), rhs+k*rank, &nl, &info);
 #endif
+        }
+        catch(std::runtime_error &e)
+        {
+            std::cerr <<e.what() << std::endl << std::endl;
+            return false;
+        }
+        catch(std::exception &e)
+        {
+            std::cerr <<e.what() << std::endl << std::endl;
+            return false;
+        }
+        catch(...)
+        {
+            std::cerr <<"dgetrs_ error" << std::endl << std::endl;
+            return false;
+        }
 
 
         if(info!=0)
@@ -1626,6 +1644,8 @@ int matrix::solveLinearSystem(int rank, double *M, int nrhs, double *rhs, int nT
     for(int k=0; k<nrhs; k++)
     {
         ldb = 1;
+        try
+        {
 #ifdef OPENBLAS
     #ifdef LAPACK_FORTRAN_STRLEN_END
             // https://github.com/OpenMathLib/OpenBLAS/issues/3877
@@ -1639,7 +1659,22 @@ int matrix::solveLinearSystem(int rank, double *M, int nrhs, double *rhs, int nT
 #elif defined ACCELERATE_NEW_LAPACK
         dgetrs_(&trans, &nl, &ldb, M, &lda, ipiv.data(), rhs+k*rank, &nl, &info);
 #endif
-
+        }
+        catch(std::runtime_error &e)
+        {
+            std::cerr <<e.what() << std::endl << std::endl;
+            return false;
+        }
+        catch(std::exception &e)
+        {
+            std::cerr <<e.what() << std::endl << std::endl;
+            return false;
+        }
+        catch(...)
+        {
+            std::cerr <<"dgetrs_ error" << std::endl << std::endl;
+            return false;
+        }
 
         if(info!=0)
         {

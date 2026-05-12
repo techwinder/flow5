@@ -49,7 +49,7 @@
 #include <core/xflcore.h>
 #include <globals/mainframe.h>
 #include <interfaces/controls/w3dprefs.h>
-#include <interfaces/mesh/gmesh_globals.h>
+#include <api/gmesh_globals.h>
 #include <interfaces/widgets/customdlg/renamedlg.h>
 
 
@@ -1059,7 +1059,7 @@ void Objects3d::fillSectionCp3Linear(Boat const *pBoat, BoatOpp const *pBtOpp, i
 
 void Objects3d::makePlaneTriangulation(Plane *pPlane)
 {
-    QString logmsg;
+    std::string logmsg;
     for(int i=0; i<pPlane->nFuse(); i++)
     {
         Fuse *pFuse =  pPlane->fuse(i);
@@ -1080,7 +1080,7 @@ void Objects3d::makePlaneTriangulation(Plane *pPlane)
 
 void Objects3d::makeBoatTriangulation(Boat *pBoat)
 {
-    QString logmsg;
+    std::string logmsg;
     for(int i=0; i<pBoat->nHulls(); i++)
     {
         Fuse *pFuse =  pBoat->hull(i);

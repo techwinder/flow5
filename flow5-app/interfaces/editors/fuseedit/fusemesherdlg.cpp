@@ -59,7 +59,7 @@
 #include <core/xflcore.h>
 #include <interfaces/mesh/afmesher.h>
 #include <interfaces/mesh/gmesherwt.h>
-#include <interfaces/mesh/gmesh_globals.h>
+#include <api/gmesh_globals.h>
 #include <interfaces/mesh/mesherwt.h>
 #include <interfaces/mesh/meshevent.h>
 #include <interfaces/mesh/panelcheckdlg.h>

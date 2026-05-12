@@ -45,7 +45,5 @@ class GMesher : public QObject
         void meshDone(bool bError);
         void displayMessage(QString const &msg);
 
-    private:
-
 };
 

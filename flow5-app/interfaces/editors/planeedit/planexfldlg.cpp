@@ -24,6 +24,7 @@
 
 #define _MATH_DEFINES_DEFINED
 
+#include <format>
 
 #include <QApplication>
 #include <QVBoxLayout>
@@ -93,7 +94,7 @@
 #include <interfaces/editors/wingedit/wingscaledlg.h>
 #include <interfaces/exchange/stlwriterdlg.h>
 #include <interfaces/mesh/afmesher.h>
-#include <interfaces/mesh/gmesh_globals.h>
+#include <api/gmesh_globals.h>
 #include <interfaces/mesh/gmesherwt.h>
 #include <interfaces/mesh/mesherwt.h>
 #include <interfaces/mesh/meshevent.h>
@@ -1110,7 +1111,7 @@ void PlaneXflDlg::onImportOtherWing()
 void PlaneXflDlg::onInsertFuseOcc()
 {
     double dimension(0);
-    QString logmsg;
+    std::string logmsg;
     std::string str;
     updateOutput("Importing CAD file...\n");
 
@@ -1157,7 +1158,7 @@ void PlaneXflDlg::onInsertFuseOcc()
         gmesh::makeFuseTriangulation(pFuseOcc, logmsg, "   ");
 
         pFuseOcc->computeSurfaceProperties(str, "   ");
-        updateStdOutput(logmsg.toStdString() + str+"\n");
+        updateStdOutput(logmsg + str+"\n");
         m_ppto->appendPlainText("---updating plane-----\n");
         onUpdatePlane();
     }
@@ -2354,9 +2355,9 @@ qDebug("%s", str.c_str());*/
     pFuse->clearTriangleNodes();
 
 
-    QString logg;
+    std::string logg;
     gmesh::makeFuseTriangulation(pFuse, logg, "   ");
-    updateOutput(logg);
+    updateStdOutput(logg);
 
     strong = QString::asprintf("   New triangulation has %d elements\n", pFuse->nTriangles());
     updateOutput(strong+"\n\n");
@@ -2470,10 +2471,10 @@ void PlaneXflDlg::cutFuseShapes(Fuse *pFuse, Vector3d const &fusepos, TopoDS_Lis
     pFuse->clearTriangles();
     pFuse->clearTriangleNodes();
 
-    QString logmsg;
+    std::string logmsg;
 
     gmesh::makeFuseTriangulation(pFuse, logmsg, "   ");
-    updateOutput(logmsg);
+    updateStdOutput(logmsg);
 
     strong = QString::asprintf("   New triangulation has %d elements\n", pFuse->nTriangles());
     updateOutput(strong+"\n\n");
@@ -2491,7 +2492,7 @@ void PlaneXflDlg::cutFuseXflRightShapes(Fuse *pFuse, Vector3d const &fusepos, To
     QString strong, strange;
     FuseXfl *pFuseXfl = dynamic_cast<FuseXfl*>(pFuse);
 
-    QString logmsg;
+    std::string logmsg;
     // remake the shells which may have been modified by a previous cut
 //    logmsg = "Making fuse shape\n";
 //    pFuseXfl->makeShape(logmsg);
@@ -2590,7 +2591,7 @@ void PlaneXflDlg::cutFuseXflRightShapes(Fuse *pFuse, Vector3d const &fusepos, To
 
     gmesh::makeFuseTriangulation(pFuse, logmsg, "   ");
 
-    updateOutput(logmsg);
+    updateStdOutput(logmsg);
 
     strong = QString::asprintf("   The new fuse tessellation has %d elements\n", pFuseXfl->nTriangles());
     strong += "\n______\n\n";
@@ -2637,8 +2638,6 @@ void PlaneXflDlg::onInsertFuseXfl()
 {
     QApplication::setOverrideCursor(Qt::BusyCursor);
 
-    QElapsedTimer t; t.start();
-
     QAction *pSenderAction = qobject_cast<QAction *>(sender());
     if (!pSenderAction) return;
 
@@ -2646,44 +2645,24 @@ void PlaneXflDlg::onInsertFuseXfl()
     if     (pSenderAction==m_pInsertFuseXflFlat)     type=Fuse::FlatFace;
     else if(pSenderAction==m_pInsertFuseXflSections) type=Fuse::Sections;
 
-
-    QString strange = QString::asprintf("   fuse xfl 0: %.3f s\n", double(t.elapsed())/1000.0);
-    updateOutput(strange);
-
     Fuse *pFuse = m_pPlaneXfl->makeNewFuse(type);
 
-
-    strange = QString::asprintf("   fuse xfl 1: %.3f s\n", double(t.elapsed())/1000.0);
-    updateOutput(strange);
-
-    QString strong;
-    strong = QString::asprintf("xfl_fuse_%d", m_pPlaneXfl->xflFuseCount());
-    pFuse->setName(strong.toStdString());
+    std::string strong;
+    strong = std::format("xfl_fuse_{:d}", m_pPlaneXfl->xflFuseCount());
+    pFuse->setName(strong);
     pFuse->makeFuseGeometry();
 
-    strange = QString::asprintf("   fuse xfl 2: %.3f s\n", double(t.elapsed())/1000.0);
-    updateOutput(strange);
-
-    QString logg;
+    std::string logg;
     gmesh::makeFuseTriangulation(pFuse, logg, "   ");
-
-    strange = QString::asprintf("   fuse xfl 3: %.3f s\n", double(t.elapsed())/1000.0);
-    updateOutput(strange);
 
     std::string logmsg;
     pFuse->makeDefaultTriMesh(logmsg, "");
-
-    strange = QString::asprintf("   fuse xfl 4: %.3f s\n", double(t.elapsed())/1000.0);
-    updateOutput(strange);
 
     setControls();
 
     updateData();
 
     onUpdatePlane();
-
-    strange = QString::asprintf("   fuse xfl 5: %.3f s\n", double(t.elapsed())/1000.0);
-    updateOutput(strange);
 
     m_bChanged = true;
     QApplication::restoreOverrideCursor();
@@ -2707,10 +2686,10 @@ void PlaneXflDlg::onTessellation()
         pFuse->setGmshTessParams(dlg.gmshParameters());
         m_bChanged = true;
 
-        QString strange;
+        std::string strange;
         gmesh::makeFuseTriangulation(pFuse, strange, "   ");
 
-        updateOutput(strange);
+        updateStdOutput(strange);
 
         gl3dPlaneXflView*pglPlaneXflView = dynamic_cast<gl3dPlaneXflView*>(m_pglPlaneView);
         pglPlaneXflView->resetgl3dFuse();
@@ -2805,7 +2784,7 @@ void PlaneXflDlg::onResetFuse()
     m_pPlaneXfl->makeTriMesh(m_pPlaneXfl->isThickBuild());
     gl3dPlaneXflView*pglPlaneXflView = dynamic_cast<gl3dPlaneXflView*>(m_pglPlaneView);
     pglPlaneXflView->resetgl3dFuse();
-    QString str;
+    std::string str;
     gmesh::makeFuseTriangulation(pFuse, str, "   ");
 
     strange = "The fuse " + pFuse->name() + " has been reset.\n";
@@ -3370,9 +3349,8 @@ void PlaneXflDlg::onInsertCADShape()
     else
     {
         m_ppto->appendPlainText("---Making shell triangulation-----\n");
-        QString logmsg;
+        std::string logmsg;
         updateOutput("Making shell triangulation\n");
-//        pFuseOcc->makeShellTriangulation(logmsg, "   ");
         gmesh::makeFuseTriangulation(pFuseOcc, logmsg, "   ");
 
         std::string str;

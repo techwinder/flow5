@@ -1,26 +1,89 @@
 
 #include <iostream>
+#include <filesystem>
 
 #include <api.h>
 #include <constants.h>
+#include <flow5-io.h>
 #include <foil.h>
 #include <objects2d.h>
+#include <objects2d_globals.h>
 #include <objects3d.h>
 #include <oppoint.h>
 #include <panelanalysis.h>
 #include <planeopp.h>
 #include <planepolar.h>
+#include <planepolarnamemaker.h>
 #include <planetask.h>
 #include <planexfl.h>
 #include <polar.h>
 #include <xfoiltask.h>
-#include <planepolarnamemaker.h>
-#include <flow5-io.h>
 
+#ifdef WIN32
+    #include <Windows.h>
+#endif
+
+
+
+
+#if defined ACCELERATE_NEW_LAPACK
+    #include <Accelerate/Accelerate.h>
+    #define lapack_int int
+#elif defined INTEL_MKL
+    #include <mkl.h>
+#elif defined OPENBLAS
+    #include <openblas/cblas.h>
+#endif
 
 int main()
 {
+#ifdef WIN32
+    // enable UTF8 characters
+    SetConsoleOutputCP(65001);
+#endif
+
     printf("flow5 plane run\n");
+
+    // Configure LAPACK
+    std::string strange;
+#ifdef OPENBLAS
+    strange.clear();
+    switch(openblas_get_parallel())
+    {
+        //        https://github.com/OpenMathLib/OpenBLAS/wiki/Faq/a15b786986841d2e4e4e84e3f2ecff9c3b263b32
+        //openblas_get_parallel() will return 0 for a single-threaded library, 1 if multithreading without OpenMP, 2 if built with USE_OPENMP=1
+        case 0: strange = "OpenBlas: single-threaded library";   break;
+        case 1:
+        {
+            strange = "OpenBlas: multi-threading with OMP";
+            break;
+        }
+        case 2: strange = "OpenBlas: built with USE_OPENMP=1";   break;
+        default:
+            strange = "openblas_get_parallel() return error";
+    }
+
+    std::cout << strange << std::endl << std::endl;
+#elif defined INTEL_MKL
+    strange.clear();
+    int nt = mkl_get_max_threads();
+
+    mkl_set_dynamic(0);
+
+    if (1 == mkl_get_dynamic())
+    {
+        strange += "MKL dynamic threading is enabled\n";
+        strange += std::format("Intel MKL may use less than {:d} threads for a large problem", nt);
+    }
+    else
+    {
+        strange += "MKL dynamic threading is disabled\n";
+        strange += std::format("Intel MKL should use {:d} threads for a large problem", nt);
+    }
+
+    std::cout << strange << std::endl << std::endl;
+#endif
+
 
     // Preload some project file
     /*
@@ -76,12 +139,11 @@ int main()
 
 
     // Could also read a foil from file
-
-    Foil *pFoilClarkY = new Foil;
-    std::string pathname = "/path/to/CLARK Y.dat";
+/*    Foil *pFoilClarkY = new Foil;
+    std::string pathname = "/path/to/clarky.dat";
     int iLineError(-1);
     // readFoilFile() has been left in flow5-lib and not moved to flow5-io-lib
-    // since it is of common use and requires only the STL and not QtCore
+    // because it is of common use and requires only the STL and not QtCore
     bool bOK = objects::readFoilFile(pathname, pFoilClarkY, iLineError);
 
     if(bOK)
@@ -96,7 +158,7 @@ int main()
     {
         delete pFoilClarkY;
         std::cerr <<  "Error reading the file " << pathname << " at line " << iLineError << std::endl;
-    }
+    }*/
 
 
 
@@ -409,10 +471,14 @@ int main()
         delete pPlaneTask;
     }
 
-
     // save the project; requires link to flow5-io-lib
     std::string logmsg;
-    std::string projectfilepath = "/tmp/PlaneRun.fl5";
+    std::string projectfilepath;
+    projectfilepath  = std::filesystem::temp_directory_path().string();
+    projectfilepath += std::filesystem::path::preferred_separator;
+    projectfilepath += "PlaneRun2.fl5";
+
+
     io::saveProject(projectfilepath, logmsg);
 
     if(logmsg.size()>0)

@@ -210,11 +210,11 @@ bool PlaneTask::initializeTask()
 
     if (1 == mkl_get_dynamic())
     {
-        traceStdLog(std::format("MKL dynamic threading is enabled: MKL may use less than %i threads for a large problem\n", nt));
+        traceStdLog(std::format("MKL dynamic threading is enabled: MKL may use less than {:d} threads for a large problem\n", nt));
     }
     else
     {
-        traceStdLog(std::format("MKL dynamic threading is disabled: MKL should use %i threads for a large problem\n", nt));
+        traceStdLog(std::format("MKL dynamic threading is disabled: MKL should use {:d} threads for a large problem\n", nt));
     }
 #endif
 
@@ -2667,7 +2667,7 @@ bool PlaneTask::computeViscousDrag(WingXfl *pWing, double alpha, double beta, do
 
             strong = "           " + std::format("     Span position {:9.2f} ", sd.m_StripPos.at(m)*Units::mtoUnit());
             strong += Units::lengthUnitLabel();
-            strong += std::format(",  Re = %9.0f", sd.m_Re.at(m));
+            strong += std::format(",  Re = {:9.0f}", sd.m_Re.at(m));
 
             if(bOutVar)
             {
