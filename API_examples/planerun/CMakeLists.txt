@@ -81,7 +81,11 @@ elseif (LINUX)
         target_link_libraries(PlaneRun mkl_core mkl_intel_lp64 mkl_gnu_thread)
         target_compile_definitions(PlaneRun PUBLIC INTEL_MKL)
     else()
-        target_link_libraries(PlaneRun openblas)
+        # Fedora libs in /usr/lib64:
+        #   openblas:  single-threaded library
+        #   openblaso: built with USE_OPENMP=1
+        #   openblasp: multi-threading without OMP
+        target_link_libraries(PlaneRun openblasp)
         target_compile_definitions(PlaneRun PUBLIC OPENBLAS)
     endif()
 elseif (APPLE)

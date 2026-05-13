@@ -25,6 +25,7 @@
 
 
 #include <format>
+#include <sstream>
 
 
 #include <planepolar.h>
@@ -496,20 +497,20 @@ void PlanePolar::setVariableNames()
     s_VariableNames.clear();
 
     s_VariableNames = std::vector<std::string>({
-                                    "Ctrl", ALPHAstr + " ("+DEGstr+")", BETAstr + " ("+DEGstr+")", PHIstr + " ("+DEGstr+")",
-                                    "CL", "CD", "CD_viscous", "CD_induced", "CY", "Cm", "Cm_viscous",
-                                    "Cm_pressure","Cl","Cn","Cn_viscous","Cn_pressure","CL/CD", "CL^(3/2)/CD", "1/sqrt(CL)",
-                                    "Lift ("+strForce+")", "Drag ("+strForce+")",
-                                    "Fx_FF ("+strForce+")", "Fy_FF ("+strForce+")", "Fz_FF ("+strForce+")",
-                                    "Fx_sum ("+strForce+")", "Fy_sum ("+strForce+")", "Fz_sum ("+strForce+")",
-                                    "Extra drag ("+strForce+")", "Fuse drag ("+strForce+")", "Cf_Fuse",
-                                    "Vx ("+strSpeed+")","Vz ("+strSpeed+")",
-                                    "V ("+strSpeed+")", "Gamma", "L ("+ strMoment+")", "M ("+ strMoment+")",
-                                    "N ("+ strMoment+")", "CPx ("+ strLength+")", "CPy ("+ strLength+")", "CPz ("+ strLength+")",
-                                    "BM ("+ strMoment+")", "m.g.Vz (W)", "Drag x V (W)", "Efficiency", "XCp.Cl",
-                                    "XNP ("+ strLength+")", "Phugoid Freq. (Hz)", "Phugoid Damping", "Short Period Freq. (Hz)",
-                                    "Short Period Damping Ratio", "Dutch Roll Freq. (Hz)", "Dutch Roll Damping", "Roll Damping",
-                                    "Spiral Damping", "Mass ("+strMass+")","CoG_x ("+ strLength+")", "CoG_z ("+ strLength+")"});
+                                                "Ctrl", ALPHAstr + " ("+DEGstr+")", BETAstr + " ("+DEGstr+")", PHIstr + " ("+DEGstr+")",
+                                                "CL", "CD", "CD_viscous", "CD_induced", "CY", "Cm", "Cm_viscous",
+                                                "Cm_pressure","Cl","Cn","Cn_viscous","Cn_pressure","CL/CD", "CL"+EXPstr+"(3/2)/CD", "1/sqrt(CL)",
+                                                "Lift ("+strForce+")", "Drag ("+strForce+")",
+                                                "Fx_FF ("+strForce+")", "Fy_FF ("+strForce+")", "Fz_FF ("+strForce+")",
+                                                "Fx_sum ("+strForce+")", "Fy_sum ("+strForce+")", "Fz_sum ("+strForce+")",
+                                                "Extra drag ("+strForce+")", "Fuse drag ("+strForce+")", "Cf_Fuse",
+                                                "Vx ("+strSpeed+")","Vz ("+strSpeed+")",
+                                                "V ("+strSpeed+")", "Gamma", "L ("+ strMoment+")", "M ("+ strMoment+")",
+                                                "N ("+ strMoment+")", "CPx ("+ strLength+")", "CPy ("+ strLength+")", "CPz ("+ strLength+")",
+                                                "BM ("+ strMoment+")", "m.g.Vz (W)", "Drag x V (W)", "Efficiency", "XCp.Cl",
+                                                "XNP ("+ strLength+")", "Phugoid Freq. (Hz)", "Phugoid Damping", "Short Period Freq. (Hz)",
+                                                "Short Period Damping Ratio", "Dutch Roll Freq. (Hz)", "Dutch Roll Damping", "Roll Damping",
+                                                "Spiral Damping", "Mass ("+strMass+")","CoG_x ("+ strLength+")", "CoG_z ("+ strLength+")"});
 }
 
 
@@ -1431,12 +1432,13 @@ std::string PlanePolar::exportToString(const std::string &separator) const
     std::string polardata;
     std::string sep = separator;
     std::string strong, strange, str;
+    std::stringstream out;
 
     strong = planeName() + EOLstr;
-    polardata += strong;
+    out <<  strong;
 
     strong = m_Name + EOLstr;
-    polardata += strong;
+    out <<  strong;
 
     str = Units::speedUnitLabel() + EOLstr + EOLstr;
 
@@ -1447,34 +1449,31 @@ std::string PlanePolar::exportToString(const std::string &separator) const
     }
     else if(isFixedaoaPolar())
     {
-        strong = std::format("Alpha = {:.3f}",alphaSpec());
+        strong = std::format("Alpha = {:.3f}", alphaSpec());
         strong += DEGstr+ EOLstr;
     }
     else strong = EOLstr + EOLstr;
-    polardata += strong;
+    out <<  strong;
 
-
-    for(int in=0; in<PlanePolar::variableCount(); in++)
+    for(int in=0; in<variableCount(); in++)
     {
-        strange =  PlanePolar::variableName(in);
+        strange =  variableName(in);
         if(in==0) strange = " "+strange;// start with a blank space for consistency with polar data
         for(int il=int(strange.length()); il<11; il++) strange+=" ";
-        polardata += strange+sep;
+        out <<  strange+sep;
     }
-    polardata += "\n";
-
 
     for(int i=0; i<dataSize(); i++)
     {
-        for(int iVar=0; iVar<PlanePolar::variableCount(); iVar++)
+        for(int iVar=0; iVar<variableCount(); iVar++)
         {
             strange = std::format("{:11.5g}", variable(iVar, i));
-            polardata += strange+sep;
+            out <<  strange+sep;
         }
-        polardata += "\n";
+        out <<  "\n";
     }
 
-    return polardata;
+    return out.str();
 }
 
 

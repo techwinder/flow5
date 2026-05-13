@@ -44,6 +44,7 @@
 #define DEGstr        std::string("\u00B0")
 #define INFstr        std::string("\u221e")
 #define SQUAREstr     std::string("\u00b2")
+#define EXPstr        std::string("\u005E")
 #define EOLstr        std::string("\n")
 
 
