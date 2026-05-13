@@ -105,7 +105,7 @@ int main()
 }
 */
 
-    std::string STLFilePath = "/home/techwinder/flow5/studies/STL/plane_mesh.stl";
+    std::string STLFilePath = "/path/to/mesh.stl";
 //    std::string OBJFilePath = "/path/to/file.obj";
     std::string logmsg;
 

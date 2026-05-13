@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-project(PlaneRun LANGUAGES CXX)
+project(PlaneRun1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -58,39 +58,39 @@ elseif (APPLE)
 
 endif ()
 
-add_executable(PlaneRun planerun.cpp)
+add_executable(PlaneRun1 planerun1.cpp)
 
 
 if(FLOW5_IO)
-    target_link_libraries(PlaneRun flow5-io-lib Qt6Core)
+    target_link_libraries(PlaneRun1 flow5-io-lib Qt6Core)
 endif(FLOW5_IO)
 
 
 if(WIN32)
-    target_link_libraries(PlaneRun XFoil1 flow5-lib)
+    target_link_libraries(PlaneRun1 XFoil1 flow5-lib)
     if(USING_INTEL_MKL)
-        target_link_libraries(PlaneRun mkl_rt)         # Intel® oneAPI Math Kernel Library Single Dynamic Library (SDL)
-#         target_link_libraries(PlaneRun  libiomp5md ) # uses the OpenMP threading technology
-        target_link_libraries(PlaneRun  tbb12 )        # uses the Intel TBB threading technology
+        target_link_libraries(PlaneRun1 mkl_rt)         # Intel® oneAPI Math Kernel Library Single Dynamic Library (SDL)
+#         target_link_libraries(PlaneRun1  libiomp5md ) # uses the OpenMP threading technology
+        target_link_libraries(PlaneRun1  tbb12 )        # uses the Intel TBB threading technology
 
-        target_compile_definitions(PlaneRun PUBLIC INTEL_MKL)
+        target_compile_definitions(PlaneRun1 PUBLIC INTEL_MKL)
     endif()
 elseif (LINUX)
-    target_link_libraries(PlaneRun XFoil flow5-lib)
+    target_link_libraries(PlaneRun1 XFoil flow5-lib)
     if(USING_INTEL_MKL)
-        target_link_libraries(PlaneRun mkl_core mkl_intel_lp64 mkl_gnu_thread)
-        target_compile_definitions(PlaneRun PUBLIC INTEL_MKL)
+        target_link_libraries(PlaneRun1 mkl_core mkl_intel_lp64 mkl_gnu_thread)
+        target_compile_definitions(PlaneRun1 PUBLIC INTEL_MKL)
     else()
         # Fedora libs in /usr/lib64:
         #   openblas:  single-threaded library
         #   openblaso: built with USE_OPENMP=1
         #   openblasp: multi-threading without OMP
-        target_link_libraries(PlaneRun openblasp)
-        target_compile_definitions(PlaneRun PUBLIC OPENBLAS)
+        target_link_libraries(PlaneRun1 openblasp)
+        target_compile_definitions(PlaneRun1 PUBLIC OPENBLAS)
     endif()
 elseif (APPLE)
-    target_link_libraries(PlaneRun XFoil lapack cblas)
-    target_compile_definitions(PlaneRun PUBLIC ACCELERATE_NEW_LAPACK)
+    target_link_libraries(PlaneRun1 XFoil lapack cblas)
+    target_compile_definitions(PlaneRun1 PUBLIC ACCELERATE_NEW_LAPACK)
 endif ()
 
 
@@ -98,7 +98,7 @@ endif ()
 
 
 include(GNUInstallDirs)
-install(TARGETS PlaneRun
+install(TARGETS PlaneRun1
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

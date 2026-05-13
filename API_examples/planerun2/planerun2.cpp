@@ -350,7 +350,7 @@ int main()
             //            std::string logmsg;
             //            pFuse->makeDefaultTriMesh(logmsg, "");
 
-            // Optional: make the fuselage's triangulation; for display only
+            // Optional: make the fuselage's tessellation; for display only
             std::string logg;
             gmesh::makeFuseTriangulation(pFuse, logg, "   ");
         }
@@ -383,7 +383,7 @@ int main()
         {
             // select the wings connected to the fuselage,
             // i.e. main wing and fin in the present case
-            std::vector<int> indexes = {0,2};
+            std::vector<int> indexes = {0,2}; // indexes in addition order: 0=main wing, 1=elevator, 2=fin
 
             // make a conforming mesh for the fuselage
             // this will overwrite the default fuselage mesh
