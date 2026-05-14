@@ -24,22 +24,19 @@
 
 #pragma once
 
-#include <QString>
+#include <string>
 
-#include <api/fl5lib_global.h>
+#include <fl5lib_global.h>
 
 class Polar;
 
-class PolarNameMaker
+class FL5LIB_EXPORT PolarNameMaker
 {
-    friend class  PolarAutoNameDlg;
+    public:
+        PolarNameMaker();
+        static std::string makeName(const Polar *pPolar);
 
     public:
-        PolarNameMaker(Polar *pPolar);
-        static QString makeName(const Polar *pPolar);
-
-    private:
-        Polar *m_pPolar;
 
         static bool s_bType;
         static bool s_bBLMethod;

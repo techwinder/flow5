@@ -5,7 +5,6 @@ HEADERS += \
     $$PWD/analysis/batchdlg.h \
     $$PWD/analysis/batchxfoildlg.h \
     $$PWD/analysis/xfoilanalysisdlg.h \
-    $$PWD/analysis/polarnamemaker.h \
     $$PWD/controls/analysis2dctrls.h \
     $$PWD/controls/foilexplorer.h \
     $$PWD/controls/foiltable.h \
@@ -30,7 +29,6 @@ SOURCES += \
     $$PWD/analysis/batchdlg.cpp \
     $$PWD/analysis/batchxfoildlg.cpp \
     $$PWD/analysis/xfoilanalysisdlg.cpp \
-    $$PWD/analysis/polarnamemaker.cpp \
     $$PWD/controls/analysis2dctrls.cpp \
     $$PWD/controls/foilexplorer.cpp \
     $$PWD/controls/foiltable.cpp \

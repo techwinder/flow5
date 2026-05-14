@@ -59,7 +59,7 @@
 #include <interfaces/widgets/mvc/objecttreedelegate.h>
 #include <interfaces/widgets/mvc/objecttreeitem.h>
 #include <interfaces/widgets/mvc/objecttreemodel.h>
-#include <modules/xdirect/analysis/polarnamemaker.h>
+#include <api/polarnamemaker.h>
 #include <modules/xdirect/xdirect.h>
 
 

@@ -22,14 +22,15 @@
 
 *****************************************************************************/
 
-#
+#include <string>
+#include <format>
 
 #include "polarnamemaker.h"
 
 
 #include <api/geom_params.h>
 #include <api/polar.h>
-#include <api/utils-io.h>
+#include <api/utils.h>
 
 bool PolarNameMaker::s_bType        = true;
 bool PolarNameMaker::s_bBLMethod    = true;
@@ -40,19 +41,18 @@ bool PolarNameMaker::s_bXTrTop      = false;
 bool PolarNameMaker::s_bXTrBot      = false;
 
 
-PolarNameMaker::PolarNameMaker(Polar *pPolar)
+PolarNameMaker::PolarNameMaker()
 {
-    m_pPolar = pPolar;
 }
 
 
-QString PolarNameMaker::makeName(Polar const*pPolar)
+std::string PolarNameMaker::makeName(Polar const*pPolar)
 {
-    QString plrname;
+    std::string plrname;
     Polar samplepolar;
     if(!pPolar) pPolar = &samplepolar;
 
-    QString strong;
+    std::string strong;
 
 //    if(s_bType)
     {
@@ -94,17 +94,17 @@ QString PolarNameMaker::makeName(Polar const*pPolar)
 
     if(s_bReynolds)
     {
-        strong = "-" + ALPHAch;
+        strong = "-" + ALPHAstr;
         if(pPolar->isFixedaoaPolar())
         {
-            strong.append(QString::asprintf("%.2f", pPolar->aoaSpec())+DEGch);
+            strong.append(std::format("{:g}", pPolar->aoaSpec())+DEGstr);
         }
         else if(pPolar->isType123())
-            strong = QString::asprintf("-Re%.3f", pPolar->Reynolds()/1.0e6);
+            strong = std::format("-Re{:.3f}", pPolar->Reynolds()/1.0e6);
         else if(pPolar->isType6())
         {
-            strong.append(QString::asprintf("%.2f",   pPolar->aoaSpec())+DEGch);
-            strong.append(QString::asprintf("-Re%.3f", pPolar->Reynolds()/1.0e6));
+            strong.append(std::format("{:g}",   pPolar->aoaSpec())+DEGstr);
+            strong.append(std::format("-Re{:.3f}", pPolar->Reynolds()/1.0e6));
         }
 
         plrname.append(strong);
@@ -112,25 +112,25 @@ QString PolarNameMaker::makeName(Polar const*pPolar)
 
     if(s_bMach)
     {
-        strong = QString::asprintf("-Ma%.2f", pPolar->Mach());
+        strong = std::format("-Ma{:.2f}", pPolar->Mach());
         plrname.append(strong);
     }
 
     if(s_bNCrit && pPolar->isXFoil())
     {
-        strong = QString::asprintf("-N%.1f", pPolar->NCrit());
+        strong = std::format("-N{:.1f}", pPolar->NCrit());
         plrname.append(strong);
     }
 
     if(s_bXTrTop && pPolar->XTripTop()<1.0)
     {
-        strong = QString::asprintf("-TopTr%.2f", pPolar->XTripTop());
+        strong = std::format("-TopTr{:.2f}", pPolar->XTripTop());
         plrname.append(strong);
     }
 
     if(s_bXTrBot && pPolar->XTripBot()<1.0)
     {
-        strong = QString::asprintf("-BotTr%.2f", pPolar->XTripBot());
+        strong = std::format("-BotTr{:.2f}", pPolar->XTripBot());
         plrname.append(strong);
     }
 
@@ -146,8 +146,8 @@ QString PolarNameMaker::makeName(Polar const*pPolar)
 
     if(!pPolar->isType6() && fabs(pPolar->TEFlapAngle())>ANGLEPRECISION)
     {
-        plrname.append("-"+THETAch);
-        plrname.append(QString::asprintf("%.2f°", pPolar->TEFlapAngle()));
+        plrname.append("-"+THETAstr);
+        plrname.append(std::format("{:g}", pPolar->TEFlapAngle()) + DEGstr);
     }
 
 //    plrname.remove(0,1); //remove first '-' character

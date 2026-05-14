@@ -33,12 +33,12 @@
 #include <api/foil.h>
 #include <api/geom_params.h>
 #include <api/polar.h>
+#include <api/polarnamemaker.h>
 #include <api/utils-io.h>
 
 #include <core/xflcore.h>
 #include <interfaces/editors/analysis2ddef/polarautonamedlg.h>
 #include <interfaces/widgets/customwts/floatedit.h>
-#include <modules/xdirect/analysis/polarnamemaker.h>
 
 
 QByteArray FoilPolarDlg::s_WindowGeometry;
@@ -441,7 +441,7 @@ void FoilPolarDlg::setPlrName()
 {
     if(m_bAutoName)
     {
-        s_Polar.setName(PolarNameMaker::makeName(&s_Polar).toStdString());
+        s_Polar.setName(PolarNameMaker::makeName(&s_Polar));
         m_pleAnalysisName->setText(QString::fromStdString(s_Polar.name()));
     }
 }

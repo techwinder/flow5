@@ -27,11 +27,7 @@ CONFIG(release, debug|release) {
     CONFIG += optimize_full
 }
 
-greaterThan(QT_MAJOR_VERSION, 5) {
-    CONFIG += c++20
-} else {
-    CONFIG += c++17
-}
+CONFIG += c++20
 
 # The path to the libraries' header files required by the code at compile time
 INCLUDEPATH += $$PWD/../XFoil-lib/

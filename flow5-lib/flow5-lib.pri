@@ -92,6 +92,7 @@ HEADERS += \
     api/pointmass.h \
     api/pointspline.h \
     api/polar.h \
+    api/polarnamemaker.h \
     api/polar3d.h \
     api/pslg2d.h \
     api/qrleastsquares.h \
@@ -182,6 +183,7 @@ SOURCES += \
     math/qrleastsquares.cpp \
     math/rungekutta.cpp \
     math/sgsmooth.cpp \
+    objects2d/analysis2d/polarnamemaker.cpp \
     objects2d/analysis2d/stream2d.cpp \
     objects2d/analysis2d/xfoiltask.cpp \
     objects2d/foilobjects/bldata.cpp \

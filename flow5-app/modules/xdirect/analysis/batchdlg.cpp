@@ -56,7 +56,7 @@
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <interfaces/widgets/customwts/xfldelegate.h>
-#include <modules/xdirect/analysis/polarnamemaker.h>
+#include <api/polarnamemaker.h>
 #include <modules/xdirect/xdirect.h>
 
 

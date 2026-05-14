@@ -44,7 +44,7 @@
 #include <api/polar.h>
 #include <api/flow5-io.h>
 #include <api/xfoiltask.h>
-#include <modules/xdirect/analysis/polarnamemaker.h>
+#include <api/polarnamemaker.h>
 
 
 #include <core/displayoptions.h>
@@ -766,7 +766,7 @@ void BatchXFoilDlg::onCalculate()
                                                               s_ReList.at(iRe), s_MachList.at(iRe), s_NCritList.at(iRe),
                                                               XtrTop, XtrBot);
 
-                    pNewPolar->setName(PolarNameMaker::makeName(pNewPolar).toStdString());
+                    pNewPolar->setName(PolarNameMaker::makeName(pNewPolar));
 
                     Polar *pOldPolar = Objects2d::polar(pFoil, pNewPolar->name());
 

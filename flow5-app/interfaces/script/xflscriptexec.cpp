@@ -71,7 +71,7 @@
 
 #include <core/xflcore.h>
 #include <globals/mainframe.h>
-#include <modules/xdirect/analysis/polarnamemaker.h>
+#include <api/polarnamemaker.h>
 #include <modules/xobjects.h>
 
 
@@ -1042,7 +1042,7 @@ Polar * XflScriptExec::createPolar(Foil const *pFoil, double Re, double Mach, do
     if(polarType!=xfl::T4POLAR)  pNewPolar->setReynolds(Re);
     else                               pNewPolar->setAoaSpec(0.0);
 
-    pNewPolar->setName(PolarNameMaker::makeName(pNewPolar).toStdString());
+    pNewPolar->setName(PolarNameMaker::makeName(pNewPolar));
     return pNewPolar;
 }
 

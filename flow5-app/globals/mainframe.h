@@ -60,6 +60,7 @@ class XDirect;
 class XPlane;
 class GraphTiles;
 class XflScriptExec;
+class XFoilTask;
 class XSail;
 
 /**

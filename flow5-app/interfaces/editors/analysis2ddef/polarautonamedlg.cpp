@@ -33,7 +33,7 @@
 
 #include <api/polar.h>
 #include <api/units.h>
-#include <modules/xdirect/analysis/polarnamemaker.h>
+#include <api/polarnamemaker.h>
 
 
 PolarAutoNameDlg::PolarAutoNameDlg() : QDialog()
@@ -156,7 +156,7 @@ void PolarAutoNameDlg::initDialog(Polar *pPolar)
     m_pchXTrTop->setChecked(PolarNameMaker::s_bXTrTop);
     m_pchXTrBot->setChecked(PolarNameMaker::s_bXTrBot);
 
-    m_plePolarName->setText(PolarNameMaker::makeName(m_pPolar));
+    m_plePolarName->setText(QString::fromStdString(PolarNameMaker::makeName(m_pPolar)));
 }
 
 
@@ -180,7 +180,7 @@ void PolarAutoNameDlg::readData()
 void PolarAutoNameDlg::onOptionChanged()
 {
     readData();
-    QString name = PolarNameMaker::makeName(m_pPolar);
+    QString name = QString::fromStdString(PolarNameMaker::makeName(m_pPolar));
     m_plePolarName->setText(name);
 }
 
