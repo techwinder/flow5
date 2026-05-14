@@ -26,7 +26,6 @@
 
 #include <vector>
 
-
 #include <opp3d.h>
 
 class Boat;
@@ -60,6 +59,9 @@ class FL5LIB_EXPORT BoatOpp : public Opp3d
         std::string name() const override {return title(false);}
         std::string title(bool bLong=false) const override;
 
+        void exportMainDataToString(Boat const*, std::string &data, xfl::enumTextFileType filetype, std::string const &textsep) const;
+        void exportPanel3DataToString(Boat const*pBoat, xfl::enumTextFileType exporttype, std::string &data) const;
+
         Vector3d windDir() const;
 
         std::vector<Vector3d> &sailForceFF() {return m_SailForceFF;}
@@ -73,9 +75,6 @@ class FL5LIB_EXPORT BoatOpp : public Opp3d
 
         void setSailForceFF(std::vector<Vector3d>const &forcesFF)   {m_SailForceFF  = forcesFF;}
         void setSailForceSum(std::vector<Vector3d>const &forcesSum) {m_SailForceSum = forcesSum;}
-
-        void exportMainDataToString(const Boat *pBoat, std::string &data, xfl::enumTextFileType filetype, const std::string &textsep) const;
-        void exportPanel3DataToString(const Boat *pBoat, xfl::enumTextFileType exporttype, std::string &data) const;
 
         void setTrefftz(bool b) {m_bTrefftz=b;}
         bool bTrefftz() const {return m_bTrefftz;}

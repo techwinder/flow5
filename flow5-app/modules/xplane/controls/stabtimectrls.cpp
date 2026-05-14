@@ -48,7 +48,8 @@
 #include <api/flow5-io.h>
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/xflcore.h>
 #include <interfaces/graphs/controls/graphoptions.h>
 #include <interfaces/graphs/graph/curve.h>

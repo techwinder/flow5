@@ -35,7 +35,7 @@
 #include <api/objects2d.h>
 #include <api/oppoint.h>
 #include <api/polar.h>
-#include <api/flow5-io.h>
+#include <api/utils-io.h>
 
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
@@ -200,7 +200,7 @@ void FoilExplorer::setObjectProperties()
         {
             if(XDirect::curOpp())
             {
-                props = XDirect::curOpp()->properties(SaveOptions::textSeparator().toStdString());
+                props = XDirect::curOpp()->properties(xfl::textSeparator());
                 break;
             }
             break;

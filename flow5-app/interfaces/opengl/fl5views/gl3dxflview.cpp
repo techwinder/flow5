@@ -67,7 +67,8 @@
 #include <api/wingxfl.h>
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/xflcore.h>
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/opengl/controls/colourlegend.h>

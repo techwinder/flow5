@@ -40,15 +40,6 @@ GMesher::GMesher(QObject *parent) : QObject{parent}
 }
 
 
-void setGmshParams(double emin, double emax, int iAlgo, int iCurvature)
-{
-    gmsh::option::setNumber("Mesh.Algorithm", iAlgo);
-    gmsh::option::setNumber("Mesh.MeshSizeMin", emin);
-    gmsh::option::setNumber("Mesh.MeshSizeMax", emax);
-    gmsh::option::setNumber("Mesh.MeshSizeFromCurvature", iCurvature);
-}
-
-
 void GMesher::onMeshCurrentModel()
 {
     bool bError = false;

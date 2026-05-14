@@ -126,8 +126,6 @@ class XPlane : public QObject
         void fillWPlrCurve(Curve *pCurve, PlanePolar const*pWPolar, int XVar, int YVar);
         void fillStabCurve(Curve *pCurve, PlanePolar const*pWPolar, int iMode);
         void fillWOppCurve(PlanePolar const *pWPolar, const PlaneOpp *pPOpp, int iw, int iVar, Curve *pCurve);
-        PlaneXfl *importPlaneFromXML(QFile &xmlFile);
-        PlanePolar *importAnalysisFromXML(QFile &xmlFile);
         bool loadSettings(QSettings &settings);
         void makeLegend();
         void outputNodeProperties(int nodeindex, double pickedval);
@@ -189,9 +187,6 @@ class XPlane : public QObject
 
         Plane * duplicatePlane(Plane *pPlane) const;
 
-        void exportMainDataToString(PlaneOpp const *pPOpp, const Plane *pPlane, QString &poppdata, xfl::enumTextFileType filetype, const QString &textsep) const;
-        void exportPanel4DataToString(PlaneOpp const *pPOpp, const Plane *pPlane, const PlanePolar *pWPolar, xfl::enumTextFileType exporttype, QString &paneldata) const;
-        void exportPanel3DataToString(PlaneOpp const *pPOpp, const Plane *pPlane, const PlanePolar *pWPolar, xfl::enumTextFileType exporttype, const QString &textsep, QString &paneldata) const;
 
         static bool bStoreOpps3d()   {return s_bStoreOpps3d;}
         static void setStoreOpps3d(bool bStore) {s_bStoreOpps3d=bStore;}

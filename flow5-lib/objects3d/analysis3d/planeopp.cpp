@@ -25,7 +25,7 @@
 
 
 #include <format>
-
+#include <iomanip>
 
 #include <plane.h>
 #include <planestl.h>
@@ -412,7 +412,7 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
             props += "  " + WOpp(iwo).wingName() +"\n";
             for(int i=0; i<WOpp(iwo).m_nFlaps; i++)
             {
-                strange = std::format("    Flap_{:d} = %8.4f ", i+1, WOpp(iwo).m_FlapMoment[i]*Units::NmtoUnit());
+                strange = std::format("    Flap_{:d} = {:8.4f} ", i+1, WOpp(iwo).m_FlapMoment[i]*Units::NmtoUnit());
                 props += strange + Units::momentUnitLabel() + EOLstr;
             }
         }
@@ -599,9 +599,9 @@ std::string PlaneOpp::name() const
     switch(m_PolarType)
     {
         case xfl::T8POLAR:
-            strange  = std::format("%.2f", alpha()) + DEGstr + " ";
-            strange += std::format("%.2f", beta()) + DEGstr + " ";
-            strange += std::format("%.2f", QInf()*Units::mstoUnit()) + " " + Units::speedUnitLabel();
+            strange  = std::format("{:.2f}", alpha()) + DEGstr + " ";
+            strange += std::format("{:.2f}", beta()) + DEGstr + " ";
+            strange += std::format("{:.2f}", QInf()*Units::mstoUnit()) + " " + Units::speedUnitLabel();
             break;
         case xfl::T7POLAR:
             strange = std::format("{:.3f}", alpha())  + DEGstr;
@@ -962,4 +962,505 @@ void PlaneOpp::outputEigen(std::string &logmsg)
         log += str;
     }
     logmsg = log;
+}
+
+
+void PlaneOpp::exportMainDataToString(Plane const*pPlane, std::string &poppdata, xfl::enumTextFileType filetype, const std::string &textsep) const
+{
+    std::stringstream sstr;
+
+    std::string strange;
+    std::string title;
+    std::string len = Units::lengthUnitLabel();
+    std::string inertia = Units::inertiaUnitLabel();
+
+    std::string sep = "  ";
+    if(filetype==xfl::CSV) sep = textsep+ " ";
+
+    sstr << std::string(planeName())+"\n";
+    sstr << std::string(polarName())+"\n\n";
+    sstr << std::setw(17) << ALPHAstr;
+    sstr << sep;
+    sstr << std::setw(17) << BETAstr;
+    sstr << sep;
+    sstr << std::setw(17) << PHIstr;
+    sstr << sep;
+    sstr << std::setw(17)<< std::string("ctrl") + sep;
+    sstr << sep;
+    sstr << std::setw(17)<< std::string("VInf("+Units::speedUnitLabel()+")") +"\n";
+
+    strange = std::format("{:17g}", m_Alpha);                     sstr << strange+sep;
+    strange = std::format("{:17g}", m_Beta);                      sstr << strange+sep;
+    strange = std::format("{:17g}", m_Phi);                       sstr << strange+sep;
+    strange = std::format("{:17g}", m_Ctrl);                      sstr << strange+sep;
+    strange = std::format("{:17g}", m_QInf*Units::mstoUnit());    sstr << strange;
+
+    sstr << "\n\n";
+
+    sstr << std::setw(17) <<    std::string("CL")          ;   sstr << sep;
+    sstr << std::setw(17) <<    std::string("CX")          ;   sstr << sep;
+    sstr << std::setw(17) <<    std::string("CY")          ;   sstr << sep;
+    sstr << std::setw(17) <<    std::string("CD_inviscid") ;   sstr << sep;
+    sstr << std::setw(17) <<    std::string("CD_viscous")  ;   sstr << sep;
+    sstr << std::setw(17) <<    std::string("Cl")          ;   sstr << sep;
+    sstr << std::setw(17) <<    std::string("Cm_inviscid") ;   sstr << sep;
+    sstr << std::setw(17) <<    std::string("Cm_viscous")  ;   sstr << sep;
+    sstr << std::setw(17) <<    std::string("Cn_inviscid") ;   sstr << sep;
+    sstr << std::setw(17) <<    std::string("Cn_viscous")  + "\n";
+
+
+    strange = std::format("{:17g}", m_AF.CL());     sstr << strange+sep;
+    strange = std::format("{:17g}", m_AF.CD());     sstr << strange+sep;
+    strange = std::format("{:17g}", m_AF.Cy());     sstr << strange+sep;
+    strange = std::format("{:17g}", m_AF.CDi());    sstr << strange+sep;
+    strange = std::format("{:17g}", m_AF.CDv());    sstr << strange+sep;
+    strange = std::format("{:17g}", m_AF.Cli());    sstr << strange+sep;
+    strange = std::format("{:17g}", m_AF.Cmi());    sstr << strange+sep;
+    strange = std::format("{:17g}", m_AF.Cmv());    sstr << strange+sep;
+    strange = std::format("{:17g}", m_AF.Cni());    sstr << strange+sep;
+    strange = std::format("{:17g}", m_AF.Cnv());    sstr << strange;
+
+    sstr << "\n\n";
+
+
+    sstr << std::setw(17) <<  std::string("CP.x("+len+")");         sstr << sep;
+    sstr << std::setw(17) <<  std::string("CP.y("+len+")");         sstr << sep;
+    sstr << std::setw(17) <<  std::string("CP.z("+len+")");         sstr << sep;
+    sstr << std::setw(17) <<  std::string("NP.x("+len+")");         sstr << sep;
+    sstr << "\n";
+
+    strange = std::format("{:17g}", m_AF.centreOfPressure().x*Units::mtoUnit());    sstr << strange+sep;
+    strange = std::format("{:17g}", m_AF.centreOfPressure().y*Units::mtoUnit());    sstr << strange+sep;
+    strange = std::format("{:17g}", m_AF.centreOfPressure().z*Units::mtoUnit());    sstr << strange+sep;
+    strange = std::format("{:17g}", m_SD.XNP   *Units::mtoUnit());    sstr << strange+sep;
+    sstr << "\n\n";
+
+    sstr << std::setw(17) <<  std::string("mass("+Units::massUnitLabel()+")");     sstr << sep;
+    sstr << std::setw(17) <<  std::string("CoG.x("+len+")");                       sstr << sep;
+    sstr << std::setw(17) <<  std::string("CoG.y("+len+")");                       sstr << sep;
+    sstr << std::setw(17) <<  std::string("CoG.z("+len+")");                       sstr << sep;
+    sstr << std::setw(17) <<  std::string("CoG_Ixx("+inertia+")");                 sstr << sep;
+    sstr << std::setw(17) <<  std::string("CoG_Iyy("+inertia+")");                 sstr << sep;
+    sstr << std::setw(17) <<  std::string("CoG_Izz("+inertia+")");                 sstr << sep;
+    sstr << std::setw(17) <<  std::string("CoG_Ixz("+inertia+")");                 sstr << sep;
+    poppdata +="\n";
+
+    strange = std::format("{:17g}", m_Mass*Units::kgtoUnit());            sstr << strange+sep;
+    strange = std::format("{:17g}", m_CoG.x*Units::mtoUnit());            sstr << strange+sep;
+    strange = std::format("{:17g}", m_CoG.y*Units::mtoUnit());            sstr << strange+sep;
+    strange = std::format("{:17g}", m_CoG.z*Units::mtoUnit());            sstr << strange+sep;
+    strange = std::format("{:17g}", m_Inertia[0]*Units::kgm2toUnit());    sstr << strange+sep;
+    strange = std::format("{:17g}", m_Inertia[1]*Units::kgm2toUnit());    sstr << strange+sep;
+    strange = std::format("{:17g}", m_Inertia[2]*Units::kgm2toUnit());    sstr << strange+sep;
+    strange = std::format("{:17g}", m_Inertia[3]*Units::kgm2toUnit());    sstr << strange + "\n\n";
+
+
+    if(isType12358() || isType7())
+    {
+        StabDerivatives const &SD = m_SD;
+
+        sstr << std::setw(17) << std::string("CXu");   sstr << sep;
+        sstr << std::setw(17) << std::string("CZu");   sstr << sep;
+        sstr << std::setw(17) << std::string("Cmu");   sstr << sep;
+        sstr << std::setw(17) << std::string("CXa");   sstr << sep;
+        sstr << std::setw(17) << std::string("CZa");   sstr << sep;
+        sstr << std::setw(17) << std::string("Cma");   sstr << sep;
+        sstr << std::setw(17) << std::string("CXq");   sstr << sep;
+        sstr << std::setw(17) << std::string("CZq");   sstr << sep;
+        sstr << std::setw(17) << std::string("Cmq");   sstr << sep;
+        sstr << EOLstr;
+        sstr << std::format("{:17g}", SD.CXu);   sstr << sep;
+        sstr << std::format("{:17g}", SD.CZu);   sstr << sep;
+        sstr << std::format("{:17g}", SD.Cmu);   sstr << sep;
+        sstr << std::format("{:17g}", SD.CXa);   sstr << sep;
+        sstr << std::format("{:17g}", SD.CZa);   sstr << sep;
+        sstr << std::format("{:17g}", SD.Cma);   sstr << sep;
+        sstr << std::format("{:17g}", SD.CXq);   sstr << sep;
+        sstr << std::format("{:17g}", SD.CZq);   sstr << sep;
+        sstr << std::format("{:17g}", SD.Cmq);   sstr << sep;
+        sstr << EOLstr + EOLstr;
+
+        sstr << std::setw(17) << std::string("Cyb");   sstr << sep;
+        sstr << std::setw(17) << std::string("Clb");   sstr << sep;
+        sstr << std::setw(17) << std::string("Cnb");   sstr << sep;
+        sstr << std::setw(17) << std::string("Cyp");   sstr << sep;
+        sstr << std::setw(17) << std::string("Clp");   sstr << sep;
+        sstr << std::setw(17) << std::string("Cnp");   sstr << sep;
+        sstr << std::setw(17) << std::string("Cyr");   sstr << sep;
+        sstr << std::setw(17) << std::string("Clr");   sstr << sep;
+        sstr << std::setw(17) << std::string("Cnr");   sstr << sep;
+        sstr << EOLstr;
+        sstr << std::format("{:17g}", SD.CYb);   sstr << sep;
+        sstr << std::format("{:17g}", SD.Clb);   sstr << sep;
+        sstr << std::format("{:17g}", SD.Cnb);   sstr << sep;
+        sstr << std::format("{:17g}", SD.CYp);   sstr << sep;
+        sstr << std::format("{:17g}", SD.Clp);   sstr << sep;
+        sstr << std::format("{:17g}", SD.Cnp);   sstr << sep;
+        sstr << std::format("{:17g}", SD.CYr);   sstr << sep;
+        sstr << std::format("{:17g}", SD.Clr);   sstr << sep;
+        sstr << std::format("{:17g}", SD.Cnr);   sstr << sep;
+        sstr << EOLstr + EOLstr;
+
+        for(uint i=0; i<SD.ControlNames.size(); i++)
+        {
+            sstr << "  " + std::string(SD.ControlNames.at(i)) + EOLstr;
+
+            sstr << std::setw(17) << std::string("CXd");   sstr << sep;
+            sstr << std::setw(17) << std::string("CYd");   sstr << sep;
+            sstr << std::setw(17) << std::string("CZd");   sstr << sep;
+            sstr << std::setw(17) << std::string("Cld");   sstr << sep;
+            sstr << std::setw(17) << std::string("Cmd");   sstr << sep;
+            sstr << std::setw(17) << std::string("Cnd");   sstr << sep;
+            sstr << EOLstr;
+            sstr << std::format("{:17g}", SD.CXe.at(i));   sstr << sep;
+            sstr << std::format("{:17g}", SD.CYe.at(i));   sstr << sep;
+            sstr << std::format("{:17g}", SD.CZe.at(i));   sstr << sep;
+            sstr << std::format("{:17g}", SD.CLe.at(i));   sstr << sep;
+            sstr << std::format("{:17g}", SD.CMe.at(i));   sstr << sep;
+            sstr << std::format("{:17g}", SD.CNe.at(i));   sstr << sep;
+            sstr << EOLstr + EOLstr;
+        }
+
+
+    }
+    sstr << "\n\n";
+
+
+    if(pPlane->isXflType())
+    {
+        PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+
+
+        for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
+        {
+            if(iw<nWOpps())
+            {
+                //if there are any flaps
+                if(WOpp(iw).m_FlapMoment.size())
+                {
+                    sstr << std::string(pPlaneXfl->wingAt(iw)->name()) +" - flap moments ("+ Units::momentUnitLabel() +")\n";
+                    for (int l=0; l<WOpp(iw).m_nFlaps; l++)
+                    {
+                        sstr << std::setw(17) << std::format("Flap_{:d}", l+1);
+                        sstr << sep;
+
+                    }
+                    sstr << EOLstr;
+                    for (int l=0; l<WOpp(iw).m_nFlaps; l++)
+                    {
+                        strange = std::format("{:17g}", WOpp(iw).m_FlapMoment.at(l)*Units::NmtoUnit()) + sep;
+                        sstr << strange;
+                    }
+                    sstr << EOLstr;
+                }
+            }
+        }
+    }
+    sstr << "\n\n";
+
+    std::stringstream sstitle;
+
+    sstitle << std::string("y("+Units::lengthUnitLabel()+")");   sstitle << sep;;
+    sstitle << std::string("Re");          sstitle << sep;;
+    sstitle << std::string("Ai");          sstitle << sep;;
+    sstitle << std::string("Cd_i");        sstitle << sep;;
+    sstitle << std::string("Cd_v");        sstitle << sep;;
+    sstitle << std::string("Cl");          sstitle << sep;;
+    sstitle << std::string("CP.x(%)");     sstitle << sep;;
+    sstitle << std::string("Trans.top");   sstitle << sep;;
+    sstitle << std::string("Trans.bot");   sstitle << sep;;
+    sstitle << std::string("Cm_i");        sstitle << sep;;
+    sstitle << std::string("Cm_v");        sstitle << sep;;
+    sstitle << std::string("Bending.mom"); sstitle << sep;;
+    sstitle << std::string("Vd.x");        sstitle << sep;;
+    sstitle << std::string("Vd.y");        sstitle << sep;;
+    sstitle << std::string("Vd.z");        sstitle << sep;;
+    sstitle << std::string("F.x");         sstitle << sep;;
+    sstitle << std::string("F.y");         sstitle << sep;;
+    sstitle << std::string("F.z");         sstitle << sep;;
+    sstitle << GAMMAstr;
+    sstitle << '\n';
+
+    title = sstitle.str();
+
+    if(pPlane->isXflType())
+    {
+        PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+
+        for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
+        {
+            if(iw>=nWOpps()) break; // error somewhere
+
+            WingOpp const &aWOpp = WOpp(iw);
+
+            sstr << std::string(pPlaneXfl->wingAt(iw)->name())+'\n';
+            sstr << title;
+            for(int i=0; i<aWOpp.m_NStation; i++)
+            {
+                strange = std::format("{:17g}", aWOpp.spanResults().m_StripPos.at(i)*Units::mtoUnit());     sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_Re.at(i));             sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_Ai.at(i));             sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_ICd.at(i));            sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_PCd.at(i));            sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_Cl.at(i));             sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_XCPSpanRel.at(i));     sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_XTrTop.at(i));         sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_XTrBot.at(i));         sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_CmC4.at(i));           sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_CmViscous.at(i));      sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_BendingMoment.at(i));  sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_Vd.at(i).x);           sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_Vd.at(i).y);           sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_Vd.at(i).z);           sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_F.at(i).x);            sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_F.at(i).y);            sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_F.at(i).z);            sstr << strange+sep;
+                strange = std::format("{:17g}", aWOpp.spanResults().m_Gamma.at(i));          sstr << strange+sep;
+
+                sstr << '\n';
+            }
+            sstr << '\n';
+        }
+    }
+
+    poppdata = sstr.str();
+}
+
+
+
+void PlaneOpp::exportPanel4DataToString(Plane const *pPlane, PlanePolar const *pWPolar,
+                                        xfl::enumTextFileType exporttype,
+                                        std::string &paneldata) const
+{
+    paneldata.clear();
+    if(!pPlane->isXflType())
+    {
+        return;
+    }
+
+    if(!pWPolar->isQuadMethod()) return;
+
+    PlaneXfl const *pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+
+    std::string strong, Format;
+    std::stringstream out;
+
+    out << "Main Wing Cp Coefficients\n";
+
+    int coef = 1;
+
+    if(!pWPolar->bThinSurfaces())
+    {
+        coef = 2;
+    }
+    if(exporttype==xfl::TXT) out << " Panel     CtrlPt.x        CtrlPt.y        CtrlPt.z       Nx      Ny       Nz        Area       Cp\n";
+    else                     out << "Panel,CtrlPt.x,CtrlPt.y,CtrlPt.z,Nx,Ny,Nz,Area,Cp\n";
+
+
+    std::string sep;
+    if(exporttype==xfl::TXT) sep = "     ";
+    else                     sep = ", ";
+
+
+    for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
+    {
+        if(pPlaneXfl->wingAt(iw))
+        {
+            out << pPlaneXfl->wingAt(iw)->name() + "Cp Coefficients"+"\n";
+            int p=0;
+            int iStrip = 0;
+            for (int j=0; j<pPlaneXfl->wingAt(iw)->nSurfaces(); j++)
+            {
+                Surface const & surf = pPlaneXfl->wingAt(iw)->surfaceAt(j);
+                if(surf.isTipLeft() && !pWPolar->bThinSurfaces())
+                {
+                    while (pPlaneXfl->panel4(pPlaneXfl->wingAt(iw)->firstPanel4Index() + p).isSidePanel())
+                        p++;
+                }
+
+                for(int k=0; k<surf.NYPanels(); k++)
+                {
+                    iStrip++;
+                    strong = std::format("Strip {:d}\n", iStrip);
+                    out << strong;
+
+                    for(int l=0; l<surf.NXPanels() * coef; l++)
+                    {
+                        Panel4 const &p4 = pPlaneXfl->panel4(pPlaneXfl->wingAt(iw)->firstPanel4Index() + p);
+
+                        out << std::format("{:7d}", p) << sep;
+                        out << std::format("{:11f}", p4.ctrlPt(isVLMMethod()).x) << sep;
+                        out << std::format("{:11f}", p4.ctrlPt(isVLMMethod()).y) << sep;
+                        out << std::format("{:11f}", p4.ctrlPt(isVLMMethod()).z) << sep;
+
+                        out << std::format("{:11f}", p4.normal().x) << sep;
+                        out << std::format("{:11f}", p4.normal().y) << sep;
+                        out << std::format("{:11f}", p4.normal().z) << sep;
+
+                        out << std::format("{:11f}", p4.area()) << sep;
+                        out << std::format("{:11f}", WOpp(iw).m_dCp[p]) << EOLstr;
+                        p++;
+                    }
+                }
+            }
+        }
+        out << ("\n\n");
+    }
+
+    paneldata = out.str();
+}
+
+
+void PlaneOpp::exportPanel3DataToString(Plane const *pPlane, PlanePolar const *pWPolar,
+                                        xfl::enumTextFileType exporttype, std::string const &textsep,
+                                        std::string &paneldata) const
+{
+
+    paneldata.clear();
+    if(!pPlane || !pWPolar) return;
+    if(!pWPolar->isTriangleMethod()) return;
+
+    std::string sep = "  ";
+    if(exporttype==xfl::CSV) sep = textsep + " ";
+
+    std::string strong, strange;
+    std::stringstream out;
+
+    PlaneXfl const *pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+
+    if(pPlaneXfl)
+    {
+        int coef = 1;
+        if(!pWPolar->bThinSurfaces())  coef = 2;
+
+        out << std::setw(17) <<  "Panel";       out << sep;
+        out << std::setw(17) << "CtrlPt.x";     out << sep;
+        out << std::setw(17) << "CtrlPt.y";     out << sep;
+        out << std::setw(17) << "CtrlPt.z";     out << sep;
+        out << std::setw(17) << "N.x";          out << sep;
+        out << std::setw(17) << "N.y";          out << sep;
+        out << std::setw(17) << "N.z";          out << sep;
+        out << std::setw(17) << "Area";         out << sep;
+        out << std::setw(17) << "Cp" << "\n";
+
+        for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
+        {
+            out << pPlaneXfl->wingAt(iw)->name() + " - Cp Coefficients"+"\n";
+            int p=0;
+            int iStrip = 0;
+            for (int j=0; j<pPlaneXfl->wingAt(iw)->nSurfaces(); j++)
+            {
+                Surface const & surf = pPlaneXfl->wingAt(iw)->surfaceAt(j);
+                if(surf.isTipLeft() && !pWPolar->bThinSurfaces())
+                {
+                    while (pPlaneXfl->panel3At(pPlaneXfl->wingAt(iw)->firstPanel3Index() + p).isSidePanel())
+                        p++;
+                }
+
+                for(int k=0; k<surf.NYPanels(); k++)
+                {
+                    iStrip++;
+                    out << std::format("Strip {:d}\n", iStrip);
+
+                    for(int l=0; l<surf.NXPanels() * coef *2; l++)
+                    {
+                        Panel3 const &p3 = pPlaneXfl->panel3At(pPlaneXfl->wingAt(iw)->firstPanel3Index() + p);
+
+                        double cp=0;
+                        for(int in=0; in<3; in++) cp += m_Cp.at(p3.index()*3+in);
+                        cp /= 3.0;
+
+                        strong = std::format("{:17d}", p3.index())        +sep;
+                        strong += std::format("{:17g}", p3.CoG().x)       +sep;
+                        strong += std::format("{:17g}", p3.CoG().y)       +sep;
+                        strong += std::format("{:17g}", p3.CoG().z)       +sep;
+                        strong += std::format("{:17g}", p3.normal().x)    +sep;
+                        strong += std::format("{:17g}", p3.normal().y)    +sep;
+                        strong += std::format("{:17g}", p3.normal().z)    +sep;
+                        strong += std::format("{:17g}", p3.area())        +sep;
+                        strong += std::format("{:17g}", cp)               +"\n";
+
+                        out << strong;
+                        p++;
+                    }
+                }
+            }
+            out << ("\n\n");
+        }
+
+        for(int ifuse=0; ifuse<pPlaneXfl->nFuse(); ifuse++)
+        {
+            Fuse const *pFuse = pPlaneXfl->fuseAt(ifuse);
+            out << pFuse->name() + " - Cp Coefficients"+"\n";
+
+            for(int p=0; p<pFuse->nPanel3(); p++)
+            {
+                Panel3 const &p3 = pPlaneXfl->panel3At(pFuse->firstPanel3Index() + p);
+
+                double cp=0;
+                for(int in=0; in<3; in++) cp += m_Cp.at(p3.index()*3+in);
+                cp /= 3.0;
+
+                strong =  std::format("{:17d}", p3.index())       +sep;
+                strong += std::format("{:17g}", p3.CoG().x)       +sep;
+                strong += std::format("{:17g}", p3.CoG().y)       +sep;
+                strong += std::format("{:17g}", p3.CoG().z)       +sep;
+                strong += std::format("{:17g}", p3.normal().x)    +sep;
+                strong += std::format("{:17g}", p3.normal().y)    +sep;
+                strong += std::format("{:17g}", p3.normal().z)    +sep;
+                strong += std::format("{:17g}", p3.area())        +sep;
+                strong += std::format("{:17g}", cp)               +"\n";
+
+
+                out << strong;
+            }
+            out <<"\n\n";
+        }
+    }
+    else
+    {
+        PlaneSTL const *pPlaneSTL = dynamic_cast<PlaneSTL const*>(pPlane);
+        if(!pPlaneSTL) return;
+
+
+        out << pPlane->name() + " - Cp Coefficients"+"\n";
+
+        out << std::setw(17) << "Panel";   out << sep;
+        out << std::setw(17) << "CtrlPt.x";   out << sep;
+        out << std::setw(17) << "CtrlPt.y";   out << sep;
+        out << std::setw(17) << "CtrlPt.z";   out << sep;
+        out << std::setw(17) << "N.x";        out << sep;
+        out << std::setw(17) << "N.y";        out << sep;
+        out << std::setw(17) << "N.z";        out << sep;
+        out << std::setw(17) << "Area";       out << sep;
+        out << std::setw(17) << "Cp" << "\n";
+
+
+
+        for(int k=0; k<nPanel3(); k++)
+        {
+            Panel3 const &p3 = pPlaneSTL->panel3At(k);
+
+            double cp=0;
+            for(int in=0; in<3; in++) cp += m_Cp.at(p3.index()*3+in);
+            cp /= 3.0;
+
+            strong = std::format("{:17d}", p3.index())        +sep;
+            strong += std::format("{:17g}", p3.CoG().x)       +sep;
+            strong += std::format("{:17g}", p3.CoG().y)       +sep;
+            strong += std::format("{:17g}", p3.CoG().z)       +sep;
+            strong += std::format("{:17g}", p3.normal().x)    +sep;
+            strong += std::format("{:17g}", p3.normal().y)    +sep;
+            strong += std::format("{:17g}", p3.normal().z)    +sep;
+            strong += std::format("{:17g}", p3.area())        +sep;
+            strong += std::format("{:17g}", cp)               +"\n";
+
+
+            out << strong;
+
+        }
+
+        out << ("\n\n");
+    }
+    paneldata = out.str();
 }

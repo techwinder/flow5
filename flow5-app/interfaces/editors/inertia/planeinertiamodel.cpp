@@ -37,7 +37,8 @@
 #include <api/planexfl.h>
 #include <api/units.h>
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 
 
 PlaneInertiaModel::PlaneInertiaModel(PlaneXfl *pPlane, QObject *parent)

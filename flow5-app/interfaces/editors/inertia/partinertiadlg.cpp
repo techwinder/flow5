@@ -46,7 +46,8 @@
 #include <api/pointmass.h>
 #include <api/units.h>
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/inertia/pointmasstable.h>
@@ -315,7 +316,7 @@ void PartInertiaDlg::onCopyInertiaToClipboard()
 {
     QClipboard *pClipBoard = QApplication::clipboard();
 
-    QString sep = SaveOptions::textSeparator() + " ";
+    QString sep = QString::fromStdString(xfl::textSeparator()) + " ";
     QString strInertia, strange;
 
     strInertia = "Inertia properties for "+QString::fromStdString(m_pPart->name())+"\n\n";

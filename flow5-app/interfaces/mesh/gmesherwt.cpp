@@ -57,7 +57,8 @@
 #include <api/wingxfl.h>
 
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/xflcore.h>
 #include <api/gmesh_globals.h>
 #include <interfaces/mesh/gmesher.h>
@@ -69,7 +70,7 @@
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <interfaces/widgets/globals/wt_globals.h>
 
-int GMesherWt::s_idxAlgo = 0;
+gmesh::enumGmshAlgo GMesherWt::s_eAlgorithm = gmesh::MESHADAPT;
 
 GMesherWt::GMesherWt(QWidget *pParent) : QFrame{pParent}
 {
@@ -156,10 +157,18 @@ void GMesherWt::setupLayout()
                 m_pcbMeshAlgo->addItem("Frontal-Delaunay",           6);
                 m_pcbMeshAlgo->addItem("BAMG",                       7);
                 m_pcbMeshAlgo->addItem("Frontal-Delaunay for Quads", 8);
-                m_pcbMeshAlgo->addItem("Packing of Parallelograms",  9);
-                m_pcbMeshAlgo->addItem("Quasi-structured Quad",     11);
 
-                m_pcbMeshAlgo->setCurrentIndex(s_idxAlgo);
+                switch(s_eAlgorithm)
+                {
+                    default:
+                    case gmesh::MESHADAPT:            m_pcbMeshAlgo->setCurrentIndex(0);   break;
+                    case gmesh::AUTOMATIC:            m_pcbMeshAlgo->setCurrentIndex(1);   break;
+                    case gmesh::INITIALMESH:          m_pcbMeshAlgo->setCurrentIndex(2);   break;
+                    case gmesh::DELAUNAY:             m_pcbMeshAlgo->setCurrentIndex(3);   break;
+                    case gmesh::FRONTALDELAUNAY:      m_pcbMeshAlgo->setCurrentIndex(4);   break;
+                    case gmesh::BAMG:                 m_pcbMeshAlgo->setCurrentIndex(5);   break;
+                    case gmesh::FRONTALDELAUNAYQUADS: m_pcbMeshAlgo->setCurrentIndex(6);   break;
+                }
 
                 QString strange = "<p>"
                                   "Extract from https://gmsh.info/doc/texinfo/gmsh.html#Choosing-the-right-unstructured-algorithm"
@@ -228,7 +237,7 @@ void GMesherWt::setupLayout()
 
 bool GMesherWt::readMeshSize()
 {
-    GmshParams m_GmshParams;
+    GmshParams params;
 
     double const MINSIZE = 0.0001;
     double size = m_pfeMinSize->value()/Units::mtoUnit();
@@ -242,15 +251,15 @@ bool GMesherWt::readMeshSize()
         return false;
     }
 
-    m_GmshParams.m_MinSize = m_pfeMinSize->value()/Units::mtoUnit();
-    m_GmshParams.m_MaxSize = m_pfeMaxSize->value()/Units::mtoUnit();
-    m_GmshParams.m_nCurvature = m_pieFromCurvature->value();
-    if     (m_pFuse) m_pFuse->setGmshParams(m_GmshParams);
-    else if(m_pSail) m_pSail->setGmshParams(m_GmshParams);
+    params.m_MinSize = m_pfeMinSize->value()/Units::mtoUnit();
+    params.m_MaxSize = m_pfeMaxSize->value()/Units::mtoUnit();
+    params.m_nCurvature = m_pieFromCurvature->value();
+    if     (m_pFuse) m_pFuse->setGmshParams(params);
+    else if(m_pSail) m_pSail->setGmshParams(params);
 
-    gmsh::option::setNumber("Mesh.MeshSizeMin", m_GmshParams.m_MinSize);
-    gmsh::option::setNumber("Mesh.MeshSizeMax", m_GmshParams.m_MaxSize);
-    gmsh::option::setNumber("Mesh.MeshSizeFromCurvature", m_GmshParams.m_nCurvature);
+    gmsh::option::setNumber("Mesh.MeshSizeMin", params.m_MinSize);
+    gmsh::option::setNumber("Mesh.MeshSizeMax", params.m_MaxSize);
+    gmsh::option::setNumber("Mesh.MeshSizeFromCurvature", params.m_nCurvature);
 
     return true;
 }
@@ -284,7 +293,17 @@ void GMesherWt::loadSettings(QSettings &settings)
 {
     settings.beginGroup("GMesherWt");
     {
-        s_idxAlgo = settings.value("Algorithm", s_idxAlgo).toInt();
+        int iAlgo = settings.value("Algorithm", 1).toInt();
+        switch(iAlgo)
+        {
+            case 1:  s_eAlgorithm = gmesh::MESHADAPT;             break;
+            case 2:  s_eAlgorithm = gmesh::AUTOMATIC;             break;
+            case 3:  s_eAlgorithm = gmesh::INITIALMESH;           break;
+            case 5:  s_eAlgorithm = gmesh::DELAUNAY;              break;
+            case 6:  s_eAlgorithm = gmesh::FRONTALDELAUNAY;       break;
+            case 7:  s_eAlgorithm = gmesh::BAMG;                  break;
+            case 8:  s_eAlgorithm = gmesh::FRONTALDELAUNAYQUADS;  break;
+        }
     }
     settings.endGroup();
 }
@@ -294,7 +313,16 @@ void GMesherWt::saveSettings(QSettings &settings)
 {
     settings.beginGroup("GMesherWt");
     {
-        settings.setValue("Algorithm", s_idxAlgo);
+        switch(s_eAlgorithm)
+        {
+            case gmesh::MESHADAPT:              settings.setValue("Algorithm",  1);   break;
+            case gmesh::AUTOMATIC:              settings.setValue("Algorithm",  2);   break;
+            case gmesh::INITIALMESH:            settings.setValue("Algorithm",  3);   break;
+            case gmesh::DELAUNAY:               settings.setValue("Algorithm",  5);   break;
+            case gmesh::FRONTALDELAUNAY:        settings.setValue("Algorithm",  6);   break;
+            case gmesh::BAMG:                   settings.setValue("Algorithm",  7);   break;
+            case gmesh::FRONTALDELAUNAYQUADS:   settings.setValue("Algorithm",  8);   break;
+        }
     }
     settings.endGroup();
 }
@@ -315,21 +343,24 @@ void GMesherWt::onKillMeshThread()
 }
 
 
-int GMesherWt::meshAlgo()
+gmesh::enumGmshAlgo GMesherWt::readMeshAlgo()
 {
     bool bOK(false);
     int iAlgo = m_pcbMeshAlgo->currentData().toInt(&bOK);
 
-    s_idxAlgo = m_pcbMeshAlgo->currentIndex();
-
-    if(!bOK)
+    switch(iAlgo)
     {
-        s_idxAlgo = 0;
-        iAlgo = 1;
+        case  1: s_eAlgorithm = gmesh::MESHADAPT;             break;
+        case  2: s_eAlgorithm = gmesh::AUTOMATIC;             break;
+        case  3: s_eAlgorithm = gmesh::INITIALMESH;           break;
+        case  5: s_eAlgorithm = gmesh::DELAUNAY;              break;
+        case  6: s_eAlgorithm = gmesh::FRONTALDELAUNAY;       break;
+        case  7: s_eAlgorithm = gmesh::BAMG;                  break;
+        case  8: s_eAlgorithm = gmesh::FRONTALDELAUNAYQUADS;  break;
     }
 
     emit outputMsg("Using mesh algo.: " + m_pcbMeshAlgo->currentText()+EOLch);
-    return iAlgo;
+    return s_eAlgorithm;
 }
 
 
@@ -538,9 +569,6 @@ void GMesherWt::meshNURBSSail()
 
     gmsh::model::add("NURBS Surface");
 
-    gmsh::option::setNumber("Mesh.Algorithm", meshAlgo());
-
-    readMeshSize();
     onCheckLogger();
 
     std::vector<int> PointsU;
@@ -596,7 +624,6 @@ void GMesherWt::meshSplineSail()
     gmsh::model::mesh::clear();
 
     gmsh::model::add("Spline surface");
-    gmsh::option::setNumber("Mesh.Algorithm", meshAlgo());
 
     onCheckLogger();
 
@@ -708,7 +735,6 @@ void GMesherWt::meshOccSail()
 
     gmsh::model::add("Occ Surfaces");
 
-    gmsh::option::setNumber("Mesh.Algorithm", meshAlgo());
 
     for(uint i=0; i<pOccSail->bReps().size(); i++)
         gmesh::BReptoGmsh(pOccSail->bReps().at(i));
@@ -743,7 +769,6 @@ void GMesherWt::meshFuseShellsThinSurfaces()
 
     gmsh::model::add("Occ Surfaces");
 
-    gmsh::option::setNumber("Mesh.Algorithm", meshAlgo());
 
     onCheckLogger();
 
@@ -862,8 +887,6 @@ void GMesherWt::meshFuseShellsThickSurfaces()
 
     gmsh::model::add("Occ Surfaces");
 
-    gmsh::option::setNumber("Mesh.Algorithm", meshAlgo());
-
     onCheckLogger();
 
     // converting to BREP and export+import
@@ -968,6 +991,19 @@ void GMesherWt::meshFuseShellsThickSurfaces()
 void GMesherWt::onMesh()
 {
     if(!readMeshSize()) return;
+    readMeshAlgo();
+/*    switch(s_eAlgorithm)
+    {
+        case gmesh::MESHADAPT:             qInfo("Setting Mesh.Algorithm %d",  1);   break;
+        case gmesh::AUTOMATIC:             qInfo("Setting Mesh.Algorithm %d",  2);   break;
+        case gmesh::INITIALMESH:           qInfo("Setting Mesh.Algorithm %d",  3);   break;
+        case gmesh::DELAUNAY:              qInfo("Setting Mesh.Algorithm %d",  5);   break;
+        case gmesh::FRONTALDELAUNAY:       qInfo("Setting Mesh.Algorithm %d",  6);   break;
+        case gmesh::BAMG:                  qInfo("Setting Mesh.Algorithm %d",  7);   break;
+        case gmesh::FRONTALDELAUNAYQUADS:  qInfo("Setting Mesh.Algorithm %d",  8);   break;
+    }*/
+    gmesh::setAlgorithm(s_eAlgorithm);
+
 
     m_ppto->clear();
 

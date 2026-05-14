@@ -47,6 +47,7 @@
 #include "saildlg.h"
 
 #include <api/constants.h>
+#include <api/flow5-io.h>
 #include <api/objects_global.h>
 #include <api/occ_globals.h>
 #include <api/sail.h>
@@ -55,7 +56,8 @@
 #include <api/units.h>
 #include <api/xmlsailwriter.h>
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/w3dprefs.h>
@@ -1335,7 +1337,7 @@ void SailDlg::onExportMeshToStl()
     Sail *pExportSail = m_pSail->clone();
 
     pExportSail->makeTriPanels(Vector3d());
-    Objects3d::exportMeshToSTLFile(filename, pExportSail->triMesh(), 1.0);
+    io::exportMeshToSTLFile(filename, pExportSail->triMesh(), 1.0);
     delete pExportSail;
 }
 
@@ -1360,7 +1362,6 @@ void SailDlg::onExportTrianglesToStl()
     if(!FileName.length()) return;
 
 
-    bool bBinary = true;
 
     int pos = FileName.lastIndexOf("/");
     if(pos>0) SaveOptions::setLastDirName(FileName.left(pos));
@@ -1368,27 +1369,15 @@ void SailDlg::onExportTrianglesToStl()
     pos = FileName.indexOf(".stl", Qt::CaseInsensitive);
     if(pos<0) FileName += ".stl";
 
-    QFile XFile(FileName);
-
-    if (!XFile.open(QIODevice::WriteOnly))
-    {
-        QMessageBox::warning(window(), tr("Warning"), tr("Could not open the file for writing"));
-        return;
-    }
-
+    bool bBinary = true;
     if(bBinary)
     {
-        QDataStream out(&XFile);
-        out.setByteOrder(QDataStream::LittleEndian);
-//        m_pFuse->exportStlTriangulation(out,1);
-        Objects3d::exportTriangulation(out, 1.0, m_pSail->triangles());
+        io::exportTriangulationToSTL(FileName, 1.0, m_pSail->triangles());
     }
     else
     {
 //        QTextStream out(&XFile);
     }
-
-    XFile.close();
 }
 
 

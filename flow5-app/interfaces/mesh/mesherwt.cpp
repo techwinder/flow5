@@ -40,7 +40,8 @@
 #include <api/units.h>
 #include <api/xflmesh.h>
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <interfaces/mesh/afmesher.h>
 #include <interfaces/mesh/meshevent.h>
 #include <interfaces/mesh/panelcheckdlg.h>

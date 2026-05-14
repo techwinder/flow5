@@ -60,7 +60,8 @@
 #include <api/wingopp.h>
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/trace.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/poppctrls/crossflowctrls.h>

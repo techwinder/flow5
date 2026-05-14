@@ -37,7 +37,8 @@
 #include "planestldlg.h"
 
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/inertia/planestlinertiadlg.h>

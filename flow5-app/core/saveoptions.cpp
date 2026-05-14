@@ -31,9 +31,10 @@
 #include "saveoptions.h"
 
 #include <api/fileio.h>
+#include <api/utils.h>
+
 #include <core/trace.h>
 
-xfl::enumTextFileType SaveOptions::s_ExportFileType;  /**< Defines if the list separator for the output text files should be a space or a comma. */
 QString SaveOptions::s_LastDirName       = QDir::homePath();
 QString SaveOptions::s_datFoilDirName    = QDir::homePath();
 QString SaveOptions::s_plrPolarDirName   = QDir::homePath();
@@ -56,7 +57,9 @@ bool SaveOptions::s_bUseLastDir=true;
 
 
 int SaveOptions::s_SaveInterval= 17;
-QString SaveOptions::s_CsvSeparator = ",";
+
+//QString SaveOptions::s_CsvSeparator = ",";
+//xfl::enumTextFileType SaveOptions::s_ExportFileType;  /**< Defines if the list separator for the output text files should be a space or a comma. */
 
 
 void SaveOptions::resetDefaultDirNames()
@@ -103,9 +106,9 @@ void SaveOptions::loadSettings(QSettings &settings)
         FileIO::saveBtOpps(settings.value("SaveBtOpps",          FileIO::bBtOpps()).toBool());
 
         int k = settings.value("ExportFormat", 0).toInt();
-        if(k) s_ExportFileType = xfl::CSV;
-        else  s_ExportFileType = xfl::TXT;
-        s_CsvSeparator   = settings.value("CSVSeparator", s_CsvSeparator).toString();
+        if(k) xfl::setExportFileType(xfl::CSV);
+        else  xfl::setExportFileType(xfl::TXT);
+        xfl::setCsvSeparator(settings.value("CSVSeparator", QString::fromStdString(xfl::csvSeparator())).toString().toStdString());
 
         s_bCleanOnExit = settings.value("CleanLogOnExit", s_bCleanOnExit).toBool();
     }
@@ -141,9 +144,9 @@ void SaveOptions::saveSettings(QSettings &settings)
         settings.setValue("SavePOpps",           FileIO::bPOpps());
         settings.setValue("SaveBtOpps",          FileIO::bBtOpps());
 
-        if(s_ExportFileType==xfl::TXT) settings.setValue("ExportFormat", 0);
-        else                           settings.setValue("ExportFormat", 1);
-        settings.setValue("CSVSeparator",   s_CsvSeparator);
+        if(xfl::exportFileType()==xfl::TXT) settings.setValue("ExportFormat", 0);
+        else                                settings.setValue("ExportFormat", 1);
+        settings.setValue("CSVSeparator",   QString::fromStdString(xfl::csvSeparator()));
         settings.setValue("CleanLogOnExit", s_bCleanOnExit);
     }
     settings.endGroup();
@@ -178,12 +181,6 @@ QString SaveOptions::newLogFileName()
     return s_TempDirName + "/fl5_"+QTime::currentTime().toString("hhmmss")+".log";
 }
 
-
-QString SaveOptions::textSeparator()
-{
-    if(s_ExportFileType==xfl::TXT) return " ";
-    else                           return s_CsvSeparator;
-}
 
 void SaveOptions::setLastDirName(QString const &lastDirName)
 {

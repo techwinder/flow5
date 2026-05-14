@@ -109,7 +109,7 @@ int main()
 //    std::string OBJFilePath = "/path/to/file.obj";
     std::string logmsg;
 
-    // Create and define a new xfl-type plane
+    // Create and define a new stl-type plane
     std::cout << "Importing the STL plane: " << STLFilePath << std::endl;
     double FileUnitsToMeter = 1.0; // the factor by which the file units should be multiplied to produce meters
     PlaneSTL* pPlane = io::importPlaneFromMesh(STLFilePath, io::STL, FileUnitsToMeter, logmsg);
@@ -145,7 +145,7 @@ int main()
 
         pPlane->makePlane(false, false, false); // parameters are ignored
 
-        pPlane->rotate(Vector3d(), {1.0, 0.0, 0.0}, 90.0);
+//        pPlane->rotate(Vector3d(), {1.0, 0.0, 0.0}, 90.0);
 
         // need to connect the panels before attempting to guess the T.E.
         std::cout << "Connecting triangles... ";

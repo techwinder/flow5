@@ -70,11 +70,6 @@ namespace Objects3d
     QStringList polarNames(Plane const*pPlane);
 
 
-    bool readVSPFoilFile(const QString &FoilFileName, Foil *pFoil);
-    int exportTriMesh(QDataStream &outstream, double scalefactor, TriMesh const &trimesh);
-    bool exportMeshToSTLFile(const QString &filename, TriMesh const &trimesh, double mtounit);
-    int exportTriangulation(QDataStream &outStream, double scalefactor, const std::vector<Triangle3d> &triangle);
-
     void fillSectionCp3Uniform(PlaneXfl const *pPlaneXfl, PlaneOpp const *pPOpp, int iWing, int iStrip, std::vector<double> &Cp, std::vector<Node> &pts);
     void fillSectionCp3Linear( PlaneXfl const *pPlaneXfl, PlaneOpp const *pPOpp, int iWing, int iStrip, std::vector<double> &Cp, std::vector<Node> &pts);
     void fillSectionCp4(       PlaneXfl const *pPlaneXfl, PlaneOpp const *pPOpp, int iWing, int iStrip, std::vector<double> &Cp, std::vector<Node> &pts);

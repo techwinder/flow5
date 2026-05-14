@@ -45,7 +45,8 @@
 #include <api/pointmass.h>
 #include <api/units.h>
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/inertia/partinertiadelegate.h>

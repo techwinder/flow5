@@ -56,6 +56,7 @@
 #include <api/occ_globals.h>
 #include <api/units.h>
 #include <api/gmesh_globals.h>
+#include <api/flow5-io.h>
 
 bool FuseDlg::s_bOutline    = true;
 bool FuseDlg::s_bSurfaces   = true;
@@ -382,34 +383,21 @@ void FuseDlg::onExportMeshToSTLFile()
 
     if(!FileName.length()) return;
 
-
-    bool bBinary = true;
-
     int pos = FileName.lastIndexOf("/");
     if(pos>0) SaveOptions::setLastDirName(FileName.left(pos));
 
     pos = FileName.indexOf(".stl", Qt::CaseInsensitive);
     if(pos<0) FileName += ".stl";
 
-    QFile XFile(FileName);
 
-    if (!XFile.open(QIODevice::WriteOnly))
-    {
-        QMessageBox::warning(window(), "Warning", "Could not open the file for writing");
-        return;
-    }
-
+    bool bBinary = true;
     if(bBinary)
     {
-        QDataStream out(&XFile);
-        Objects3d::exportTriMesh(out,1.0, m_pFuse->triMesh());
+        io::exportTriMeshToSTL(FileName, 1.0, m_pFuse->triMesh());
     }
     else
     {
-//        QTextStream out(&XFile);
     }
-
-    XFile.close();
 }
 
 
@@ -438,35 +426,21 @@ void FuseDlg::onExportTrianglesToSTLFile()
     if(!FileName.length()) return;
 
 
-    bool bBinary = true;
-
     int pos = FileName.lastIndexOf("/");
     if(pos>0) SaveOptions::setLastDirName(FileName.left(pos));
 
     pos = FileName.indexOf(".stl", Qt::CaseInsensitive);
     if(pos<0) FileName += ".stl";
 
-    QFile XFile(FileName);
-
-    if (!XFile.open(QIODevice::WriteOnly))
-    {
-        QMessageBox::warning(window(), tr("Warning"), tr("Could not open the file for writing"));
-        return;
-    }
-
+    bool bBinary = true;
     if(bBinary)
     {
-        QDataStream out(&XFile);
-        out.setByteOrder(QDataStream::LittleEndian);
-//        m_pFuse->exportStlTriangulation(out,1);
-        Objects3d::exportTriangulation(out, 1.0, m_pFuse->triangles());
+        io::exportTriangulationToSTL(FileName, 1.0, m_pFuse->triangles());
     }
     else
     {
 //        QTextStream out(&XFile);
     }
-
-    XFile.close();
 }
 
 

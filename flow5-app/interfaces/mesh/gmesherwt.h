@@ -60,7 +60,7 @@ class GMesherWt : public QFrame
 
         std::vector<Triangle3d> const &triangles() const {return m_Triangles;}
 
-        void setAlgo(int iAlgo) {s_idxAlgo=iAlgo;}
+        void setAlgorithm(gmesh::enumGmshAlgo algorithm) {s_eAlgorithm=algorithm;}
 
         void setWings(QVector<WingXfl> const &wings) {m_Wings=wings;}
         void clearWings() {m_Wings.clear();}
@@ -86,8 +86,9 @@ class GMesherWt : public QFrame
         void meshFuseShellsThinSurfaces();
         void meshFuseShellsThickSurfaces();
 
-        int  meshAlgo();
+        gmesh::enumGmshAlgo readMeshAlgo();
         bool readMeshSize();
+
         void convertFromGmsh();
 
     signals:
@@ -127,6 +128,6 @@ class GMesherWt : public QFrame
 
         QVector<WingXfl> m_Wings; /** if not empty, used to embed mid lines in the fuse mesh */
 
-        static int s_idxAlgo;
+        static gmesh::enumGmshAlgo s_eAlgorithm;
 };
 

@@ -29,18 +29,36 @@
 #include <gp_Trsf.hxx>
 #include <Bnd_Box.hxx>
 
-#include <QFile>
 #include <QDataStream>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QTextStream>
 
-
+#include <boat.h>
+#include <boatopp.h>
+#include <boatpolar.h>
 #include <fileio.h>
 #include <flow5-io.h>
+#include <foil.h>
+#include <objects2d.h>
+#include <objects3d.h>
 #include <occ_globals.h>
+#include <planeopp.h>
+#include <planepolar.h>
+#include <planepolarnamemaker.h>
 #include <planestl.h>
+#include <planexfl.h>
+#include <sailobjects.h>
+#include <serialization.h>
 #include <triangle3d.h>
-#include <vector3d.h>
+#include <trimesh.h>
 #include <units.h>
+#include <utils-io.h>
 #include <utils.h>
+#include <vector3d.h>
+#include <xmlplanepolarreader.h>
+#include <xmlplanereader.h>
 
 fl5Color io::readQColor(QDataStream &ar)
 {
@@ -331,4 +349,838 @@ PlaneSTL *io::importPlaneFromMesh(std::string const&FilePath, enumMeshFileType t
 }
 
 
+int io::exportTriMeshToSTL(QString const &pathname, double scalefactor, TriMesh const &trimesh)
+{
+    QFile XFile(pathname);
+
+    if (!XFile.open(QIODevice::WriteOnly))
+    {
+        return -1;
+    }
+
+    QDataStream outStream(&XFile);
+    outStream.setByteOrder(QDataStream::LittleEndian);
+
+    /***
+     *  UINT8[80] – Header
+     *     UINT32 – Number of triangles
+     *
+     *     foreach triangle
+     *     REAL32[3] – Normal vector
+     *     REAL32[3] – Vertex 1
+     *     REAL32[3] – Vertex 2
+     *     REAL32[3] – Vertex 3
+     *     UINT16 – Attribute byte count
+     *     end
+    */
+
+    //    80 character header, avoid word "solid"
+    // leave 1 extra character for end zero
+    //                   0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
+
+    QString strong =     "--- STL file ---                                                               ";
+
+    io::writeString(outStream, strong);
+
+    outStream << trimesh.nPanels();
+
+    short zero = 0;
+    char buffer[12];
+    memcpy(buffer, &zero, sizeof(short));
+
+    for (int it=0; it<trimesh.nPanels(); it++)
+    {
+        Panel3 const &p3 = trimesh.panelAt(it);
+        io::writeFloat(outStream, p3.normal().xf());
+        io::writeFloat(outStream, p3.normal().yf());
+        io::writeFloat(outStream, p3.normal().zf());
+
+        if(p3.isPositiveOrientation())
+        {
+            io::writeFloat(outStream, float(p3.vertexAt(0).x*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(0).y*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(0).z*scalefactor));
+
+            io::writeFloat(outStream, float(p3.vertexAt(1).x*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(1).y*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(1).z*scalefactor));
+
+            io::writeFloat(outStream, float(p3.vertexAt(2).x*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(2).y*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(2).z*scalefactor));
+        }
+        else
+        {
+            io::writeFloat(outStream, float(p3.vertexAt(0).x*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(0).y*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(0).z*scalefactor));
+
+            io::writeFloat(outStream, float(p3.vertexAt(2).x*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(2).y*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(2).z*scalefactor));
+
+            io::writeFloat(outStream, float(p3.vertexAt(1).x*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(1).y*scalefactor));
+            io::writeFloat(outStream, float(p3.vertexAt(1).z*scalefactor));
+        }
+
+        outStream.writeRawData(buffer, 2);
+    }
+
+    XFile.close();
+
+    return trimesh.nPanels();
+}
+
+
+bool io::exportMeshToSTLFile(const QString &filename, TriMesh const &trimesh, double mtounit)
+{
+    if(!filename.length()) return false;
+
+    bool bBinary = true;
+
+    if(bBinary)
+    {
+        exportTriMeshToSTL(filename,mtounit, trimesh);
+    }
+    else
+    {
+        //        QTextStream out(&XFile);
+    }
+
+    return true;
+}
+
+
+int io::exportTriangulationToSTL(QString const &pathname, double scalefactor, std::vector<Triangle3d> const &triangle)
+{
+    QFile XFile(pathname);
+
+    if (!XFile.open(QIODevice::WriteOnly))
+    {
+        return -1;
+    }
+
+    QDataStream outStream(&XFile);
+    // stl format uses Little-Endian byte order
+    outStream.setByteOrder(QDataStream::LittleEndian);
+
+    /***
+     *  UINT8[80] – Header
+     *     UINT32 – Number of triangles
+     *
+     *     foreach triangle
+     *     REAL32[3] – Normal vector
+     *     REAL32[3] – Vertex 1
+     *     REAL32[3] – Vertex 2
+     *     REAL32[3] – Vertex 3
+     *     UINT16 – Attribute byte count
+     *     end
+    */
+
+    //    80 character header, avoid word "solid"
+    // leave 1 extra character for end zero
+    //                   0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
+
+    QString strong =     "--- STL file ---                                                               ";
+
+    io::writeString(outStream, strong);
+
+    outStream << int(triangle.size()); /// @todo check STL format
+
+    short zero = 0;
+    char buffer[12];
+    memcpy(buffer, &zero, sizeof(short));
+
+    for (uint it=0; it<triangle.size(); it++)
+    {
+        Triangle3d const & t3 = triangle.at(it);
+        io::writeFloat(outStream, t3.normal().xf());
+        io::writeFloat(outStream, t3.normal().yf());
+        io::writeFloat(outStream, t3.normal().zf());
+
+        io::writeFloat(outStream, float(t3.vertexAt(0).x*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(0).y*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(0).z*scalefactor));
+
+        io::writeFloat(outStream, float(t3.vertexAt(1).x*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(1).y*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(1).z*scalefactor));
+
+        io::writeFloat(outStream, float(t3.vertexAt(2).x*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(2).y*scalefactor));
+        io::writeFloat(outStream, float(t3.vertexAt(2).z*scalefactor));
+
+        outStream.writeRawData(buffer, 2);
+    }
+
+    XFile.close();
+    return int(triangle.size());
+}
+
+
+bool io::importVSPWing(QString const &filename, QVector<WingXfl*> &winglist, QString &logmsg)
+{
+    QFileInfo fi(filename);
+
+    QFile VSPFile(filename);
+    if(!VSPFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        logmsg += "Could not read the file - aborting\n";
+        return false;
+    }
+
+    QStringList wingnames;
+    QTextStream instream(&VSPFile);
+
+    QString strVSP = instream.readAll(); // need a copy to parse multiple times
+    VSPFile.close();
+
+    QTextStream stream(&strVSP);
+    QString strange;
+    do
+    {
+        strange = stream.readLine();
+        if(strange.isNull()) break;
+        if(strange.contains("Geom Name", Qt::CaseSensitive))
+        {
+            QStringList fields = strange.split(",");
+            if(fields.count()>=2)
+            {
+                if(!wingnames.contains(fields.at(1)))
+                    wingnames.append(fields.at(1));
+            }
+        }
+
+    }while (!strange.isNull());
+
+
+    logmsg += QString::asprintf("Found %d wings:\n", int(wingnames.size()));
+    for(int i=0; i<wingnames.size(); i++)
+    {
+        logmsg += QString("   ")+wingnames.at(i)+"\n";
+    }
+    /*    QVector<Wing*> wings;
+    for(int i=0; i<wingnames.size(); i++)
+    {
+        wings.append(new WingXfl(xfl::OtherWing));
+        wings.back()->setName(wingnames.at(i));
+    }
+*/
+
+    //read all the foil names
+    stream.seek(0);
+    QStringList airfoilfilenames;
+    do
+    {
+        strange = stream.readLine();
+        if(strange.isNull()) break;
+        if(strange.contains("Airfoil File Name", Qt::CaseSensitive))
+        {
+            QStringList fields = strange.split(",");
+            if(fields.count()>=2)
+            {
+                if(!airfoilfilenames.contains(fields.at(1)))
+                    airfoilfilenames.append(fields.at(1));
+            }
+        }
+
+    }while (!strange.isNull());
+
+    logmsg += QString::asprintf("Found %d airfoil files to load:\n", int(airfoilfilenames.size()));
+    for(int i=0; i<airfoilfilenames.size(); i++)
+    {
+        logmsg += QString("   ")+airfoilfilenames.at(i)+"\n";
+    }
+
+
+    QStringList filter = {"*.dat"};
+    QStringList files = io::findFiles(fi.absolutePath(), filter, false);
+    for(int i=0; i<files.size(); i++)
+    {
+        Foil *pFoil = new Foil;
+        if(io::readVSPFoilFile(files.at(i), pFoil))
+            Objects2d::insertThisFoil(pFoil);
+        else
+            delete  pFoil;
+    }
+
+    /*    do
+    {
+        strange = stream.readLine();
+        if(strange.isNull()) break;
+        if(strange.contains("########################################", Qt::CaseSensitive))
+        {
+            QString wingname;
+            int index(0);
+            WingSection *ws = new WingSection;
+            readVSPSection(stream, wingname, index, ws);
+        }
+
+    }while (!strange.isNull());*/
+    return true;
+}
+
+
+bool io::readVSPFoilFile(QString const &FoilFileName, Foil *pFoil)
+{
+    QString strong;
+    QString FoilName;
+
+    int pos(0);
+    double x(0), y(0);
+    double xp(0), yp(0);
+    bool bRead=false;
+
+    QFileInfo fi(FoilFileName);
+    if(!fi.exists()) return false;
+
+    QFile xFoilFile(FoilFileName);
+    if(!xFoilFile.open(QIODevice::ReadOnly)) return false;
+
+    QTextStream inStream(&xFoilFile);
+
+    QFileInfo fileInfo(xFoilFile);
+
+    QString fileName = fileInfo.fileName();
+    int suffixLength = fileInfo.suffix().length()+1;
+    fileName = fileName.left(fileName.size()-suffixLength);
+
+    FoilName = inStream.readLine();
+    pos = FoilName.length()-FoilName.lastIndexOf("/");
+    FoilName = FoilName.right(pos-1);
+    pos = FoilName.lastIndexOf(".dat");
+    FoilName.truncate(pos);
+    pFoil->setName(FoilName.toStdString());
+
+    std::vector<Node2d> basenodes;
+
+    bRead = true;
+    xp=-9999.0;
+    yp=-9999.0;
+    do
+    {
+        strong = inStream.readLine().trimmed();
+        QStringList fields = strong.split(",");
+        if(fields.size()==2)
+        {
+            x = fields.at(0).trimmed().toDouble();
+            y = fields.at(1).trimmed().toDouble();
+            //add values only if the point is not coincident with the previous one
+            double dist = sqrt((x-xp)*(x-xp) + (y-yp)*(y-yp));
+            if(dist>0.000001)
+            {
+                basenodes.push_back({x,y});
+
+                xp = x;
+                yp = y;
+            }
+        }
+        else bRead = false;
+
+    }while (bRead && !strong.isNull());
+
+    xFoilFile.close();
+
+    /*    pFoil->m_Node.resize(pFoil->nBaseNodes());
+    for(int i=0; i<pFoil->nBaseNodes(); i++)
+    {
+        pFoil->m_Node[i].x = pFoil->xb(i);
+        pFoil->m_Node[i].y = pFoil->yb(i);
+    }*/
+
+    pFoil->setBaseNodes(basenodes);
+
+    pFoil->initGeometry();
+    return true;
+}
+
+
+void io::readVSPSection(QTextStream &stream, QString &wingname, int &index, WingSection &ws)
+{
+    QString strange;
+    do
+    {
+        strange = stream.readLine();
+        QStringList fields = strange.split(",");
+        if(fields.count()>2)
+        {
+            if     (fields.front().contains("Geom Name"))          wingname = fields.at(1);
+            else if(fields.front().contains("Airfoil Index"))      index = fields.at(1).toInt();
+            else if(fields.front().contains("Leading Edge Point") && fields.size()==4)
+            {
+                //                ws.setOffset(fields.at(1).toDouble(), fields.at(1).toDouble(), fields.at(3).toDouble());
+            }
+            else if(fields.front().contains("Airfoil File Name"))
+            {
+                ws.setLeftFoilName(fields.at(1).toStdString());
+                ws.setRightFoilName(fields.at(1).toStdString());
+            }
+        }
+    }
+    while(!strange.contains("#######"));
+}
+
+
+bool io::exportAllStlMesh(QString const &pathname)
+{
+    for(int p=0; p<Objects3d::nPlanes(); p++)
+    {
+        Plane const *pPlane = Objects3d::planeAt(p);
+        if(pPlane && pPlane->isXflType())
+        {
+            PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+
+            QString fileName = QString::fromStdString(pPlaneXfl->name())+".stl";
+            fileName.replace("/", "_");
+            fileName = pathname + QDir::separator() +fileName;
+
+            if(io::exportTriMeshToSTL(fileName, 1.0, pPlaneXfl->triMesh())<0) return false;
+        }
+    }
+    return true;
+}
+
+
+bool io::exportAllPolars(QString const &pathname, xfl::enumTextFileType fileType)
+{
+    QFile XFile;
+    QTextStream out(&XFile);
+    QString fileName;
+
+    bool bCSV = fileType==xfl::CSV;
+
+    for(int l=0; l<Objects2d::nPolars(); l++)
+    {
+        Polar const *pPolar = Objects2d::polarAt(l);
+        Foil  const *pFoil  = Objects2d::foil(pPolar->foilName());
+        if(!pFoil) continue;
+
+        QString FoilSubDirPath = pathname + QDir::separator() + QString::fromStdString(pFoil->name());
+        QDir ExportFoilDir(FoilSubDirPath);
+        if(!ExportFoilDir.exists())
+        {
+            if(!ExportFoilDir.mkpath(FoilSubDirPath))  continue;
+        }
+
+        fileName = QString::fromStdString(pPolar->name());
+        if(fileType==xfl::TXT) fileName += ".txt";
+        else                   fileName += ".csv";
+
+        XFile.setFileName(ExportFoilDir.absolutePath() + QDir::separator() + fileName);
+
+        if (XFile.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            std::string str;
+            pPolar->exportToString(str, false, bCSV);
+            out << QString::fromStdString(str);
+            XFile.close();
+        }
+        else return false;
+    }
+    return true;
+}
+
+
+bool io::exportAllWPolars(QString const &pathname, bool bCSV)
+{
+    QFile XFile;
+    QTextStream out(&XFile);
+    QString fileName;
+
+    xfl::enumTextFileType fileType = bCSV? xfl::CSV : xfl::TXT;
+
+    for(int p=0; p<Objects3d::nPlanes(); p++)
+    {
+        Plane const *pPlane = Objects3d::planeAt(p);
+        if(pPlane && pPlane->isXflType())
+        {
+            PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+            QString PlaneSubDirPath = pathname + QDir::separator() + QString::fromStdString(pPlaneXfl->name());
+            QDir ExportPlaneDir(PlaneSubDirPath);
+            if(!ExportPlaneDir.exists())
+            {
+                if(!ExportPlaneDir.mkpath(PlaneSubDirPath))
+                {
+                    return false;
+                }
+            }
+
+            for(int l=0; l<Objects3d::nPolars(); l++)
+            {
+                PlanePolar const *pWPolar = Objects3d::plPolarAt(l);
+                if(!pWPolar) continue;
+                if(pWPolar->planeName().compare(pPlaneXfl->name())!=0) continue;
+
+                fileName = QString::fromStdString(pWPolar->name());
+                fileName.replace("/", "_");
+                fileName.replace(".", "_");
+                fileName = PlaneSubDirPath + QDir::separator() +fileName;
+                if(fileType==xfl::TXT) fileName += ".txt";
+                else                   fileName += ".csv";
+
+                XFile.setFileName(fileName);
+                if (XFile.open(QIODevice::WriteOnly | QIODevice::Text))
+                {
+                    out.setDevice(&XFile);
+                    std::string props;
+
+                    QString lenlab, arealab, masslab, speedlab;
+                    lenlab = Units::lengthUnitQLabel();
+                    arealab = Units::areaUnitQLabel();
+                    masslab = Units::massUnitQLabel();
+                    speedlab = Units::speedUnitQLabel();
+
+                    pWPolar->getProperties(props, pPlane);
+                    out << QString::fromStdString(props);
+
+                    std::string sep = "  ";
+                    if(bCSV) sep = xfl::textSeparator()+ " ";
+                    std::string exportdata = pWPolar->exportToString(sep);
+                    out << QString::fromStdString(exportdata);
+                    XFile.close();
+                }
+                else return false;
+            }
+        }
+    }
+    return true;
+}
+
+
+bool io::exportAllBtPolars(QString const &pathname, bool bCSV)
+{
+    QFile XFile;
+    QTextStream out(&XFile);
+    QString fileName;
+
+    xfl::enumTextFileType fileType = bCSV? xfl::CSV : xfl::TXT;
+
+    for(int p=0; p<SailObjects::nBoats(); p++)
+    {
+        Boat const *pBoat = SailObjects::boat(p);
+
+        QString BoatSubDirPath = pathname + QDir::separator() + QString::fromStdString(pBoat->name());
+        QDir ExportBoatDir(BoatSubDirPath);
+        if(!ExportBoatDir.exists())
+        {
+            if(!ExportBoatDir.mkpath(BoatSubDirPath))
+            {
+                return false;
+            }
+        }
+
+        for(int l=0; l<SailObjects::nBtPolars(); l++)
+        {
+            BoatPolar const *pBtPolar = SailObjects::btPolar(l);
+            if(!pBtPolar) continue;
+            if(pBtPolar->boatName().compare(pBoat->name())!=0) continue;
+
+            fileName = QString::fromStdString(pBtPolar->name());
+            fileName.replace("/", "_");
+            fileName.replace(".", "_");
+            fileName = BoatSubDirPath + QDir::separator() +fileName;
+            if(fileType==xfl::TXT) fileName += ".txt";
+            else                   fileName += ".csv";
+
+            XFile.setFileName(fileName);
+            if (XFile.open(QIODevice::WriteOnly | QIODevice::Text))
+            {
+                out.setDevice(&XFile);
+                std::string props;
+
+                pBtPolar->getProperties(props, fileType);
+                out << QString::fromStdString(props);
+
+                std::string sep = "  ";
+                if(xfl::exportFileType()==xfl::CSV) sep = xfl::textSeparator()+ " ";
+                std::string data;
+                pBtPolar->getBtPolarData(data, sep);
+                out << QString::fromStdString(data);
+                XFile.close();
+            }
+            else return false;
+        }
+    }
+    return true;
+}
+
+
+bool io::exportAllBtOpps(const QString &pathname, bool bCSV, bool bPanelData)
+{
+    QFile XFile;
+    QTextStream out(&XFile);
+    QString fileName;
+
+    xfl::enumTextFileType fileType = bCSV? xfl::CSV : xfl::TXT;
+
+    for(int p=0; p<SailObjects::nBoats(); p++)
+    {
+        Boat const *pBoat = SailObjects::boat(p);
+        if(pBoat)
+        {
+            QString BoatSubDirPath = pathname + QDir::separator() + QString::fromStdString(pBoat->name());
+            QDir ExportBoatDir(BoatSubDirPath);
+            if(!ExportBoatDir.exists())
+            {
+                if(!ExportBoatDir.mkpath(BoatSubDirPath))
+                {
+                    return false;
+                }
+            }
+
+            for(int l=0; l<SailObjects::nBtPolars(); l++)
+            {
+                BoatPolar const *pBtPolar = SailObjects::btPolar(l);
+                if(!pBtPolar) continue;
+                if(pBtPolar->boatName().compare(pBoat->name())!=0) continue;
+                QString PolarName = QString::fromStdString(pBtPolar->name());
+                PolarName.replace("/", "_");
+                PolarName.replace(".", "_");
+                QString BtPolarSubDirPath = BoatSubDirPath + QDir::separator() + PolarName;
+                QDir ExportWPolarDir(BtPolarSubDirPath);
+                if(!ExportWPolarDir.exists())
+                {
+                    if(!ExportWPolarDir.mkpath(BtPolarSubDirPath))
+                    {
+                        return false;
+                    }
+                }
+                for(int k=0; k<SailObjects::nBtOpps(); k++)
+                {
+                    BoatOpp const *pBtOpp = SailObjects::btOpp(k);
+                    fileName = QString::fromStdString(pBtOpp->title(false));
+                    fileName.replace("/", "_");
+                    fileName.replace(".", "_");
+                    fileName = BtPolarSubDirPath + QDir::separator() +fileName;
+                    if(fileType==xfl::TXT) fileName += ".txt";
+                    else                   fileName += ".csv";
+
+                    XFile.setFileName(fileName);
+                    if (XFile.open(QIODevice::WriteOnly | QIODevice::Text))
+                    {
+                        out.setDevice(&XFile);
+                        std::string props;
+
+                        pBtOpp->exportMainDataToString(pBoat, props, xfl::exportFileType(), xfl::textSeparator());
+                        out << QString::fromStdString(props);
+                        if(bPanelData)
+                        {
+                            props.clear();
+                            if(pBtOpp->isTriangleMethod())
+                                pBtOpp->exportPanel3DataToString(pBoat, xfl::exportFileType(), props);
+                            out << QString::fromStdString(props);
+                        }
+                        XFile.close();
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+
+bool io::exportAllPOpps(const QString &pathname, bool bCSV, bool bPanelData)
+{
+    QFile XFile;
+    QTextStream out(&XFile);
+    QString fileName;
+
+    xfl::enumTextFileType fileType = bCSV? xfl::CSV : xfl::TXT;
+
+    for(int p=0; p<Objects3d::nPlanes(); p++)
+    {
+        Plane const *pPlane = Objects3d::planeAt(p);
+        if(pPlane && pPlane->isXflType())
+        {
+            PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+            QString PlaneSubDirPath = pathname + QDir::separator() + QString::fromStdString(pPlaneXfl->name());
+            QDir ExportPlaneDir(PlaneSubDirPath);
+            if(!ExportPlaneDir.exists())
+            {
+                if(!ExportPlaneDir.mkpath(PlaneSubDirPath))
+                {
+                    return false;
+                }
+            }
+
+            for(int l=0; l<Objects3d::nPolars(); l++)
+            {
+                PlanePolar const *pWPolar = Objects3d::plPolarAt(l);
+                if(!pWPolar) continue;
+                if(pWPolar->planeName().compare(pPlaneXfl->name())!=0) continue;
+                QString PolarName = QString::fromStdString(pWPolar->name());
+                PolarName.replace("/", "_");
+                PolarName.replace(".", "_");
+                QString WPolarSubDirPath = PlaneSubDirPath + QDir::separator() + PolarName;
+                QDir ExportWPolarDir(WPolarSubDirPath);
+                if(!ExportWPolarDir.exists())
+                {
+                    if(!ExportWPolarDir.mkpath(WPolarSubDirPath))
+                    {
+                        return false;
+                    }
+                }
+                for(int k=0; k<Objects3d::nPOpps(); k++)
+                {
+                    PlaneOpp const *pPOpp = Objects3d::POppAt(k);
+                    fileName = QString::fromStdString(pPOpp->title(false));
+                    fileName.replace("/", "_");
+                    fileName.replace(".", "_");
+                    fileName = WPolarSubDirPath + QDir::separator() +fileName;
+                    if(fileType==xfl::TXT) fileName += ".txt";
+                    else                   fileName += ".csv";
+
+                    XFile.setFileName(fileName);
+                    if (XFile.open(QIODevice::WriteOnly | QIODevice::Text))
+                    {
+                        out.setDevice(&XFile);
+                        std::string props;
+
+                        pPOpp->exportMainDataToString(pPlane, props, xfl::exportFileType(), xfl::textSeparator());
+                        out << QString::fromStdString(props);
+                        if(bPanelData)
+                        {
+                            props.clear();
+                            if(pPOpp->isQuadMethod())
+                                pPOpp->exportPanel4DataToString(pPlaneXfl, pWPolar, xfl::exportFileType(), props);
+                            else if(pPOpp->isTriangleMethod())
+                                pPOpp->exportPanel3DataToString(pPlaneXfl, pWPolar, xfl::exportFileType(), xfl::textSeparator(), props);
+                            out << QString::fromStdString(props);
+                        }
+                        XFile.close();
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+
+
+bool io::writeFoilPolars(QString const &pathname, Foil *pFoil)
+{
+    QFile XFile(pathname);
+    if (!XFile.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        return false;
+    }
+
+    QDataStream ar(&XFile);
+    ar.setVersion(QDataStream::Qt_4_5);
+    ar.setByteOrder(QDataStream::LittleEndian);
+
+
+    // 100003 : added foil comment
+    // 100002 : means we are serializings opps in the new numbered format
+    // 100001 : transferred NCrit, XTopTr, XBotTr to polar file
+    // 500001 : v7 format
+    int ArchiveFormat = 500001;
+    ar << ArchiveFormat;
+
+    //first write the foil
+    ar << 1; //only one foil to write
+    serial::serializeFoilFl5(pFoil, ar,true);
+
+    //count polars associated to the foil
+    Polar * pPolar =nullptr;
+    int n=0;
+    for (int i=0; i<Objects2d::nPolars();i++)
+    {
+        pPolar = Objects2d::polarAt(i);
+        if (pPolar->foilName() == pFoil->name()) n++;
+    }
+
+    //then write the polars
+    ar << n;
+    for (int i=0; i<Objects2d::nPolars();i++)
+    {
+        pPolar = Objects2d::polarAt(i);
+        if (pPolar->foilName() == pFoil->name())
+            serial::serializePolarFl5(pPolar, ar, true);
+    }
+
+    XFile.close();
+    return true;
+}
+
+
+PlaneXfl *io::importPlaneFromXML(std::string const &xmlfilepath, std::string &logmsg)
+{
+    QFile xmlFile(QString::fromStdString(xmlfilepath));
+    if (!xmlFile.open(QIODevice::ReadOnly))
+    {
+        logmsg = "Could not open the file "+xmlfilepath+"\n";
+        return nullptr;
+    }
+
+    XmlPlaneReader planereader(xmlFile);
+    if(!planereader.readFile())
+    {
+        logmsg = "Failed to read the file "+xmlfilepath+"\n";
+        logmsg += std::format("   error at line {:d} column {:d}\n",int(planereader.lineNumber()),int(planereader.columnNumber()));
+
+        xmlFile.close();
+        return nullptr;
+    }
+
+    PlaneXfl *pPlaneXfl  = planereader.plane();
+    if(!pPlaneXfl)
+    {
+        logmsg = "No plane definition found in the file " + xmlfilepath +"\n";
+        xmlFile.close();
+        return nullptr;
+    }
+
+    logmsg = "The plane "+ pPlaneXfl->name()+" has been imported successfully\n";
+
+    xmlFile.close();
+    return pPlaneXfl;
+}
+
+
+PlanePolar* io::importAnalysisFromXML(std::string const &xmlfilepath, std::string &logmsg)
+{
+    QFile xmlFile(QString::fromStdString(xmlfilepath));
+    if (!xmlFile.open(QIODevice::ReadOnly))
+    {
+        logmsg = "Could not open the file " + xmlfilepath +"\n";
+        return nullptr;
+    }
+
+    QFileInfo fi(xmlFile);
+
+    XmlPlanePolarReader wpolarreader(xmlFile);
+    wpolarreader.readXMLPolarFile();
+
+    if(wpolarreader.hasError())
+    {
+        logmsg = wpolarreader.errorString().toStdString() + std::format("\nline {:d} column {:d}", wpolarreader.lineNumber(), wpolarreader.columnNumber());
+        logmsg +="\n";
+        xmlFile.close();
+        return nullptr;
+    }
+    PlanePolar *pWPolar = wpolarreader.wpolar();
+
+    Plane *pPlane = Objects3d::plane(pWPolar->planeName());
+    if(!pPlane)
+    {
+        logmsg = "leaving plane name blank...\n";
+    }
+
+    if(pWPolar->name().length()==0)
+        pWPolar->setName(PlanePolarNameMaker::makeName(pPlane, pWPolar));
+
+    PlaneXfl const*pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+    if(pPlaneXfl)
+    {
+        for(int ie=0; ie<pWPolar->nAVLCtrls(); ie++)
+            pWPolar->AVLCtrl(ie).resizeValues(pPlaneXfl->nAVLGains());
+    }
+
+    xmlFile.close();
+    return pWPolar;
+}
 

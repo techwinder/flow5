@@ -32,7 +32,8 @@
 
 #include <api/units.h>
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 
 UnitsWt::UnitsWt(QWidget *parent): QWidget(parent)
 {

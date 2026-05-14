@@ -34,7 +34,8 @@
 #include <interfaces/widgets/customwts/xfldelegate.h>
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <api/units.h>
 #include <api/flow5-io.h>
 

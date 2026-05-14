@@ -44,7 +44,7 @@
 #include <api/sailocc.h>
 #include <api/sailwing.h>
 #include <api/flow5-io.h>
-
+#include <api/utils-io.h>
 
 #include <core/xflcore.h>
 #include <globals/mainframe.h>
@@ -75,15 +75,15 @@ Polar *Objects3d::importXFoilPolar(QFile &txtFile, QString &logmsg)
     int Line = 0;
     bool bOK=false, bOK2=false;
 
-    xfl::readAVLString(in, Line, strong);    // XFoil or XFLR5 version
-    xfl::readAVLString(in, Line, strong);    // Foil Name
+    io::readAVLString(in, Line, strong);    // XFoil or XFLR5 version
+    io::readAVLString(in, Line, strong);    // Foil Name
 
     FoilName = strong.right(strong.length()-22).trimmed();
 //    FoilName = FoilName.trimmed();
 
     pPolar->setFoilName(FoilName.toStdString());
 
-    xfl::readAVLString(in, Line, strong);// analysis type
+    io::readAVLString(in, Line, strong);// analysis type
 
     int retype = strong.mid(0,2).toInt(&bOK);
     if(bOK) pPolar->setReType(retype);
@@ -103,7 +103,7 @@ Polar *Objects3d::importXFoilPolar(QFile &txtFile, QString &logmsg)
     else if(pPolar->ReType() ==3 && pPolar->MaType() ==1) pPolar->setType(xfl::T3POLAR);
     else                                                  pPolar->setType(xfl::T1POLAR);
 
-    bRead = xfl::readAVLString(in, Line, strong);
+    bRead = io::readAVLString(in, Line, strong);
     if(!bRead || strong.length() < 34)
     {
         str = QString::asprintf("Error reading line %d. The polar(s) will not be stored.",Line);
@@ -136,7 +136,7 @@ Polar *Objects3d::importXFoilPolar(QFile &txtFile, QString &logmsg)
     }
 
     // Mach     Re     NCrit
-    bRead = xfl::readAVLString(in, Line, strong);// blank line
+    bRead = io::readAVLString(in, Line, strong);// blank line
     if(!bRead || strong.length() < 50)
     {
         str = QString::asprintf("Error reading line %d. The polar(s) will not be stored.",Line);
@@ -177,13 +177,13 @@ Polar *Objects3d::importXFoilPolar(QFile &txtFile, QString &logmsg)
         return nullptr;
     }
 
-    xfl::readAVLString(in, Line, strong);// column titles
-    bRead = xfl::readAVLString(in, Line, strong);// underscores
+    io::readAVLString(in, Line, strong);// column titles
+    bRead = io::readAVLString(in, Line, strong);// underscores
 
 
     while(bRead && !in.atEnd())
     {
-        bRead = xfl::readAVLString(in, Line, strong);// polar data
+        bRead = io::readAVLString(in, Line, strong);// polar data
         if(strong.length())
         {
             if(strong.length())
@@ -561,235 +561,6 @@ void Objects3d::renamePlPolar(PlanePolar *pWPolar, Plane const *pPlane)
     pWPolar->setName(dlg.newName().toStdString());
 
     Objects3d::insertPlPolar(pWPolar);
-}
-
-
-bool Objects3d::readVSPFoilFile(QString const &FoilFileName, Foil *pFoil)
-{
-    QString strong;
-    QString FoilName;
-
-    int pos(0);
-    double x(0), y(0);
-    double xp(0), yp(0);
-    bool bRead=false;
-
-    QFileInfo fi(FoilFileName);
-    if(!fi.exists()) return false;
-
-    QFile xFoilFile(FoilFileName);
-    if(!xFoilFile.open(QIODevice::ReadOnly)) return false;
-
-    QTextStream inStream(&xFoilFile);
-
-    QFileInfo fileInfo(xFoilFile);
-
-    QString fileName = fileInfo.fileName();
-    int suffixLength = fileInfo.suffix().length()+1;
-    fileName = fileName.left(fileName.size()-suffixLength);
-
-    FoilName = inStream.readLine();
-    pos = FoilName.length()-FoilName.lastIndexOf("/");
-    FoilName = FoilName.right(pos-1);
-    pos = FoilName.lastIndexOf(".dat");
-    FoilName.truncate(pos);
-    pFoil->setName(FoilName.toStdString());
-
-    std::vector<Node2d> basenodes;
-
-    bRead = true;
-    xp=-9999.0;
-    yp=-9999.0;
-    do
-    {
-        strong = inStream.readLine().trimmed();
-        QStringList fields = strong.split(",");
-        if(fields.size()==2)
-        {
-            x = fields.at(0).trimmed().toDouble();
-            y = fields.at(1).trimmed().toDouble();
-            //add values only if the point is not coincident with the previous one
-            double dist = sqrt((x-xp)*(x-xp) + (y-yp)*(y-yp));
-            if(dist>0.000001)
-            {
-                basenodes.push_back({x,y});
-
-                xp = x;
-                yp = y;
-            }
-        }
-        else bRead = false;
-
-    }while (bRead && !strong.isNull());
-
-    xFoilFile.close();
-
-/*    pFoil->m_Node.resize(pFoil->nBaseNodes());
-    for(int i=0; i<pFoil->nBaseNodes(); i++)
-    {
-        pFoil->m_Node[i].x = pFoil->xb(i);
-        pFoil->m_Node[i].y = pFoil->yb(i);
-    }*/
-
-    pFoil->setBaseNodes(basenodes);
-
-    pFoil->initGeometry();
-    return true;
-}
-
-
-int Objects3d::exportTriMesh(QDataStream &outStream, double scalefactor, TriMesh const &trimesh)
-{
-    outStream.setByteOrder(QDataStream::LittleEndian);
-
-    /***
-     *  UINT8[80] – Header
-     *     UINT32 – Number of triangles
-     *
-     *     foreach triangle
-     *     REAL32[3] – Normal vector
-     *     REAL32[3] – Vertex 1
-     *     REAL32[3] – Vertex 2
-     *     REAL32[3] – Vertex 3
-     *     UINT16 – Attribute byte count
-     *     end
-    */
-
-    //    80 character header, avoid word "solid"
-    // leave 1 extra character for end zero
-    //                   0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
-
-    QString strong =     "--- STL file ---                                                               ";
-
-    io::writeString(outStream, strong);
-
-    outStream << trimesh.nPanels();
-
-    short zero = 0;
-    char buffer[12];
-    memcpy(buffer, &zero, sizeof(short));
-
-    for (int it=0; it<trimesh.nPanels(); it++)
-    {
-        Panel3 const &p3 = trimesh.panelAt(it);
-        io::writeFloat(outStream, p3.normal().xf());
-        io::writeFloat(outStream, p3.normal().yf());
-        io::writeFloat(outStream, p3.normal().zf());
-
-        if(p3.isPositiveOrientation())
-        {
-            io::writeFloat(outStream, float(p3.vertexAt(0).x*scalefactor));
-            io::writeFloat(outStream, float(p3.vertexAt(0).y*scalefactor));
-            io::writeFloat(outStream, float(p3.vertexAt(0).z*scalefactor));
-
-            io::writeFloat(outStream, float(p3.vertexAt(1).x*scalefactor));
-            io::writeFloat(outStream, float(p3.vertexAt(1).y*scalefactor));
-            io::writeFloat(outStream, float(p3.vertexAt(1).z*scalefactor));
-
-            io::writeFloat(outStream, float(p3.vertexAt(2).x*scalefactor));
-            io::writeFloat(outStream, float(p3.vertexAt(2).y*scalefactor));
-            io::writeFloat(outStream, float(p3.vertexAt(2).z*scalefactor));
-        }
-        else
-        {
-            io::writeFloat(outStream, float(p3.vertexAt(0).x*scalefactor));
-            io::writeFloat(outStream, float(p3.vertexAt(0).y*scalefactor));
-            io::writeFloat(outStream, float(p3.vertexAt(0).z*scalefactor));
-
-            io::writeFloat(outStream, float(p3.vertexAt(2).x*scalefactor));
-            io::writeFloat(outStream, float(p3.vertexAt(2).y*scalefactor));
-            io::writeFloat(outStream, float(p3.vertexAt(2).z*scalefactor));
-
-            io::writeFloat(outStream, float(p3.vertexAt(1).x*scalefactor));
-            io::writeFloat(outStream, float(p3.vertexAt(1).y*scalefactor));
-            io::writeFloat(outStream, float(p3.vertexAt(1).z*scalefactor));
-        }
-
-        outStream.writeRawData(buffer, 2);
-    }
-    return trimesh.nPanels();
-}
-
-
-bool Objects3d::exportMeshToSTLFile(const QString &filename, TriMesh const &trimesh, double mtounit)
-{
-    if(!filename.length()) return false;
-
-    bool bBinary = true;
-
-    QFile XFile(filename);
-
-    if (!XFile.open(QIODevice::WriteOnly))
-    {
-        return false;
-    }
-
-    if(bBinary)
-    {
-        QDataStream out(&XFile);
-        exportTriMesh(out,mtounit, trimesh);
-    }
-    else
-    {
-//        QTextStream out(&XFile);
-    }
-
-    XFile.close();
-    return true;
-}
-
-
-int Objects3d::exportTriangulation(QDataStream &outStream, double scalefactor, std::vector<Triangle3d> const &triangle)
-{
-    /***
-     *  UINT8[80] – Header
-     *     UINT32 – Number of triangles
-     *
-     *     foreach triangle
-     *     REAL32[3] – Normal vector
-     *     REAL32[3] – Vertex 1
-     *     REAL32[3] – Vertex 2
-     *     REAL32[3] – Vertex 3
-     *     UINT16 – Attribute byte count
-     *     end
-    */
-
-    //    80 character header, avoid word "solid"
-    // leave 1 extra character for end zero
-    //                   0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
-
-    QString strong =     "--- STL file ---                                                               ";
-
-    io::writeString(outStream, strong);
-
-    outStream << int(triangle.size()); /// @todo check STL format
-
-    short zero = 0;
-    char buffer[12];
-    memcpy(buffer, &zero, sizeof(short));
-
-    for (uint it=0; it<triangle.size(); it++)
-    {
-        Triangle3d const & t3 = triangle.at(it);
-        io::writeFloat(outStream, t3.normal().xf());
-        io::writeFloat(outStream, t3.normal().yf());
-        io::writeFloat(outStream, t3.normal().zf());
-
-        io::writeFloat(outStream, float(t3.vertexAt(0).x*scalefactor));
-        io::writeFloat(outStream, float(t3.vertexAt(0).y*scalefactor));
-        io::writeFloat(outStream, float(t3.vertexAt(0).z*scalefactor));
-
-        io::writeFloat(outStream, float(t3.vertexAt(1).x*scalefactor));
-        io::writeFloat(outStream, float(t3.vertexAt(1).y*scalefactor));
-        io::writeFloat(outStream, float(t3.vertexAt(1).z*scalefactor));
-
-        io::writeFloat(outStream, float(t3.vertexAt(2).x*scalefactor));
-        io::writeFloat(outStream, float(t3.vertexAt(2).y*scalefactor));
-        io::writeFloat(outStream, float(t3.vertexAt(2).z*scalefactor));
-
-        outStream.writeRawData(buffer, 2);
-    }
-    return int(triangle.size());
 }
 
 

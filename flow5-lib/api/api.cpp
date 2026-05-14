@@ -42,7 +42,7 @@
 #include <polar.h>
 #include <sailobjects.h>
 #include <xfoiltask.h>
-
+#include <gmesh_globals.h>
 
 std::queue<std::string> globals::g_log;
 
@@ -165,6 +165,7 @@ Polar * foil::createAnalysis(std::string const &foilname)
     return pPolar;
 }
 
+
 /** @deprecated Deprecated in v7.56: No benefit
  *  Use preferably the code snippet below directly in the source code.
  */
@@ -176,14 +177,12 @@ PlaneXfl *plane::makeEmptyPlane()
 }
 
 
-
-
-/** @todo duplicate with GMesherWt::onHandleMeshResults */
-void plane::meshFuse(PlaneXfl *pPlaneXfl, std::vector<int>selectedWings, bool bThickSurfaces, std::string &log)
+/** @todo partial duplicate with GMesherWt::onHandleMeshResults */
+void plane::meshFuse(PlaneXfl *pPlaneXfl, std::vector<int>selectedWings, bool bThickSurfaces, gmesh::enumGmshAlgo algorithm, std::string &log, std::string prefix)
 {
     if(!pPlaneXfl)
     {
-        log += "PlaneXfl is a null object\n";
+        log += prefix + "PlaneXfl is a null object\n";
         return;
     }
 
@@ -191,9 +190,16 @@ void plane::meshFuse(PlaneXfl *pPlaneXfl, std::vector<int>selectedWings, bool bT
 
     if(!pFuse)
     {
-        log += "No fuselage to mesh\n";
+        log += prefix + "No fuselage to mesh\n";
         return;
     }
+
+    gmesh::setGmshParams(pFuse->gmshMinSize(), pFuse->gmshMaxSize(), pFuse->gmshNCurvature(), algorithm);
+
+/*    gmsh::option::setNumber("Mesh.MeshSizeMin", pFuse->gmshMinSize());
+    gmsh::option::setNumber("Mesh.MeshSizeMax", pFuse->gmshMaxSize());
+    gmsh::option::setNumber("Mesh.MeshSizeFromCurvature", pFuse->gmshNCurvature());
+    gmsh::option::setNumber("Mesh.Algorithm", iAlgorithm);*/
 
     std::vector<WingXfl> winglist;
 
@@ -226,19 +232,19 @@ void plane::meshFuse(PlaneXfl *pPlaneXfl, std::vector<int>selectedWings, bool bT
     }
     catch(...)
     {
-        log += "Gmsh error... aborting\n";
+        log += prefix + "Gmsh error... aborting\n";
         return;
     }
 
 
-    log += "Handling mesh results...\n";
+    log += prefix + "Handling mesh results...\n";
 
     std::string error;
     gmsh::logger::getLastError(error);
 
     if(error.length())
     {
-        log += "---ERROR---\n" + error +EOLstr+EOLstr;
+        log += prefix + "---ERROR---\n" + error +EOLstr+EOLstr;
     }
 
     gmsh::logger::stop();
@@ -246,7 +252,7 @@ void plane::meshFuse(PlaneXfl *pPlaneXfl, std::vector<int>selectedWings, bool bT
     std::vector<Triangle3d> triangles;
     std::vector<Node> nodes;
 
-    gmesh::convertTrianglesAndNodesFromGmsh(triangles, nodes, log);
+    gmesh::convertTrianglesAndNodesFromGmsh(triangles, nodes, log, prefix);
 
 
     std::string strange;
@@ -256,33 +262,34 @@ void plane::meshFuse(PlaneXfl *pPlaneXfl, std::vector<int>selectedWings, bool bT
     gmsh::option::getNumber("Mesh.NbTriangles", nT3d);
     gmsh::option::getNumber("Mesh.NbNodes", nNodes);
     strange = std::format("Gmsh count: {:.0f} triangles and {:.0f} nodes\n", nT3d, nNodes);
-    log += strange;
+    log += prefix + strange;
 
     bool m_bMakeXZSymmetric = true;
     if(m_bMakeXZSymmetric)
     {
         int nt = int(triangles.size());
-        strange = std::format("   Right side triangle count = {:d}\n", nt);
-        log += "\n" + strange + "   Making symmetric left side panels\n";
+        strange = std::format("Right side triangle count = {:d}\n", nt);
+        log += prefix + strange;
+        log += prefix +"Making symmetric left side panels\n";
         for(int it=0; it<nt; it++)
         {
             Triangle3d t3 = triangles.at(it);
             t3.makeXZsymmetric();
             triangles.push_back(t3);
         }
-        strange = std::format("   Total triangle count = {:d}\n", int(triangles.size()));
-        log += strange;
+        strange = std::format("Total triangle count = {:d}\n", int(triangles.size()));
+        log += prefix + strange;
     }
 
 
     std::string str;
-    str = "   Making mesh from triangles\n";
-    pFuse->triMesh().makeMeshFromTriangles(triangles, 0, xfl::FUSESURFACE, str, "      ");
-    log += str;
+    str = prefix + "Making mesh from triangles\n";
+    pFuse->triMesh().makeMeshFromTriangles(triangles, 0, xfl::FUSESURFACE, str, prefix + "  ");
+    log += str + EOLstr;
 
-    strange  = std::format("\nTriangle count = {:d}\n", pFuse->nPanel3());
-    strange += std::format("Node count     = {:d}\n", int(pFuse->nodes().size()));
-    strange += "\n_______\n\n";
+    strange  = prefix + std::format("Triangle count = {:d}\n", pFuse->nPanel3());
+    strange += prefix + std::format("Node count     = {:d}\n", int(pFuse->nodes().size()));
+    strange += prefix + "\n_______\n\n";
     log += strange;
 
     pPlaneXfl->makeTriMesh(bThickSurfaces);

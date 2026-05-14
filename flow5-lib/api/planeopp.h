@@ -107,6 +107,9 @@ class FL5LIB_EXPORT PlaneOpp : public Opp3d
 
         void getProperties(const Plane *pPlane, const PlanePolar *pWPolar, std::string &properties) const;
 
+        void exportMainDataToString(Plane const*pPlane, std::string &poppdata, xfl::enumTextFileType filetype, std::string const &textsep) const;
+        void exportPanel4DataToString(const Plane *pPlane, const PlanePolar *pWPolar, xfl::enumTextFileType exporttype, std::string &paneldata) const;
+        void exportPanel3DataToString(const Plane *pPlane, const PlanePolar *pWPolar, xfl::enumTextFileType exporttype, const std::string &textsep, std::string &paneldata) const;
 
         std::string name() const override;
         std::string title(bool bLong) const override;

@@ -67,7 +67,8 @@
 #include <api/xmlfusereader.h>
 #include <api/xmlsailreader.h>
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>

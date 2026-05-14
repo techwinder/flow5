@@ -143,7 +143,6 @@ class MainFrame : public QMainWindow
         void createXSailToolbars();
         void createXSailDockWindows();
         void deleteProject();
-        bool exportAllPolars(const QString &pathName, xfl::enumTextFileType fileType) const;
         void hideDockWindows();
         void setActiveCentralWidget();
         void setColorListFromFile();
@@ -156,12 +155,6 @@ class MainFrame : public QMainWindow
 
         void setDefaultStaticFonts();
         void startTrace(bool bTrace);
-
-        bool exportAllStlMesh(QString const &pathname);
-        bool exportAllWPolars(const QString &pathName, bool bCSV);
-        bool exportAllBtPolars(QString const &pathname, bool bCSV);
-        bool exportAllPOpps(QString const &pathName, bool bCSV, bool bPanelData);
-        bool exportAllBtOpps(const QString &pathname, bool bCSV, bool bPanelData) const;
 
     signals:
         void loadFile(QString);

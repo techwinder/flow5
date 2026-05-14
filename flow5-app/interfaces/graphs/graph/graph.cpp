@@ -1833,7 +1833,8 @@ void Graph::toClipboard()
     QString curveData;
     QString strange;
 
-    //    const char *separator = SaveOptions::csvSeparator().toStdString().c_str();
+    QString csvsep = QString::fromStdString(xfl::csvSeparator());
+
     bool bAtEnd = false;
     int i=0;
     for(int ic=0; ic<curveCount(); ic++)
@@ -1841,7 +1842,7 @@ void Graph::toClipboard()
         Curve*pCurve = curve(ic);
         strange = pCurve->name();
         if(!strange.length()) strange = QString::asprintf("Curve_%d",ic+1);
-        curveData += " " + xTitle() + SaveOptions::csvSeparator() + " " + strange + SaveOptions::csvSeparator() + " ";
+        curveData += " " + xTitle() + csvsep + " " + strange + csvsep + " ";
     }
     curveData += "\n";
 
@@ -1854,14 +1855,14 @@ void Graph::toClipboard()
             if(i<pCurve->count())
             {
                 strange = QString::asprintf(" %11.5g", pCurve->x(i));
-                curveData += strange + SaveOptions::csvSeparator();
+                curveData += strange + csvsep;
                 strange = QString::asprintf(" %11.5g", pCurve->y(i));
-                curveData += strange + SaveOptions::csvSeparator() + " ";
+                curveData += strange + csvsep + " ";
                 bAtEnd = false;
             }
             else
             {
-                curveData += "             " + SaveOptions::csvSeparator() +"             "+SaveOptions::csvSeparator()+" ";
+                curveData += "             " + csvsep +"             "+csvsep+" ";
             }
         }
         curveData +="\n";

@@ -22,6 +22,11 @@ INCLUDEPATH += ./api
 INCLUDEPATH += $$PWD/../XFoil-lib/
 
 
+OBJECTS_DIR = ./objects
+MOC_DIR     = ./moc
+RCC_DIR     = ./rcc
+
+
 linux-g++ {
 
 

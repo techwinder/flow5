@@ -25,40 +25,25 @@
 #pragma once
 
 #include <QString>
+#include <QTextStream>
+#include <QDataStream>
 
 #include <flow5-io-lib_global.h>
 #include <fl5color.h>
+#include <utils.h>
 
+class Foil;
 class Vector3d;
 class Triangle3d;
 class PlaneSTL;
-
-#define PIch         QString(QChar(0x03C0))
-#define ALPHAch      QString(QChar(0x03B1))
-#define BETAch       QString(QChar(0x03B2))
-#define GAMMAch      QString(QChar(0x03B3))
-#define DELTAch      QString(QChar(0x03B4))
-#define DELTACAPch   QString(QChar(0x0394)) // Capital
-#define ZETAch       QString(QChar(0x03B6))
-#define LAMBDAch     QString(QChar(0x03BB))
-#define NUch         QString(QChar(0x03BD))
-#define PHIch        QString(QChar(0x03C6))
-#define RHOch        QString(QChar(0x03C1))
-#define SIGMAch      QString(QChar(0x03C3))
-#define THETAch      QString(QChar(0x03B8))
-#define XIch         QString(QChar(0x03BE))
-#define TAUch        QString(QChar(0x03C4))
-#define DEGch        QString(QChar(0x00B0))
-#define INFch        QString(QChar(0x221e))
-#define TIMESch      QString(QChar(0x00d7))
-#define SQUAREch     QString(QChar(0x00b2))
-#define EOLch        QString("\n")
-
+class TriMesh;
+class WingXfl;
+class WingSection;
+class PlanePolar;
+class PlaneXfl;
 
 namespace io
 {
-
-
     typedef enum {STL, OBJ} enumMeshFileType;
 
     FL5IOLIB_EXPORT  fl5Color readQColor(QDataStream &ar);
@@ -82,4 +67,27 @@ namespace io
     FL5IOLIB_EXPORT  bool readOBJFile(const std::string &FilePath, double FileUnitsToMeter, std::vector<Triangle3d> &triangles, Vector3d &botleft, Vector3d &topright);
 
     FL5IOLIB_EXPORT PlaneSTL* importPlaneFromMesh(std::string const&FilePath, enumMeshFileType type, double FileUnitsToMeter, std::string &logmsg);
+
+
+    FL5IOLIB_EXPORT bool exportMeshToSTLFile(const QString &filename, TriMesh const &trimesh, double mtounit);
+    FL5IOLIB_EXPORT int exportTriangulationToSTL(const QString &pathname, double scalefactor, std::vector<Triangle3d> const &triangle);
+
+    FL5IOLIB_EXPORT int exportTriMeshToSTL(QString const &pathname, double scalefactor, TriMesh const &trimesh);
+
+    FL5IOLIB_EXPORT bool importVSPWing(QString const &filename, QVector<WingXfl *> &winglist, QString &logmsg);
+    FL5IOLIB_EXPORT bool readVSPFoilFile(QString const &FoilFileName, Foil *pFoil);
+    FL5IOLIB_EXPORT void readVSPSection(QTextStream &stream, QString &wingname, int &index, WingSection &ws);
+
+    FL5IOLIB_EXPORT bool exportAllStlMesh(QString const &pathname);
+
+    FL5IOLIB_EXPORT bool exportAllPolars(const QString &pathName, xfl::enumTextFileType fileType);
+    FL5IOLIB_EXPORT bool exportAllWPolars(const QString &pathName, bool bCSV);
+    FL5IOLIB_EXPORT bool exportAllBtPolars(QString const &pathname, bool bCSV);
+    FL5IOLIB_EXPORT bool exportAllPOpps(QString const &pathName, bool bCSV, bool bPanelData);
+    FL5IOLIB_EXPORT bool exportAllBtOpps(const QString &pathname, bool bCSV, bool bPanelData);
+
+    FL5IOLIB_EXPORT bool writeFoilPolars(QString const &pathname, Foil *pFoil);
+
+    FL5IOLIB_EXPORT PlaneXfl*  importPlaneFromXML(const std::string &xmlfilepath, std::string &logmsg);
+    FL5IOLIB_EXPORT PlanePolar* importAnalysisFromXML(std::string const &xmlfilepath, std::string &logmsg);
 }

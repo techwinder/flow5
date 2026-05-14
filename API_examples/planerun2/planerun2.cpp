@@ -345,6 +345,13 @@ int main()
             // convert spec to geometry
             pFuse->makeFuseGeometry();
 
+
+            // define the mesh parameters
+            // careful with the parameters
+            pFuse->setGmshNCurvature(30); // 30 elements / 2.pi in the curvature
+            pFuse->setGmshMinSize(0.030); // m
+            pFuse->setGmshMaxSize(0.1); // m
+
             // Optional: make a triangular mesh
             // In the present case, would be overwritten by the conforming mesh at the next step
             //            std::string logmsg;
@@ -388,7 +395,7 @@ int main()
             // make a conforming mesh for the fuselage
             // this will overwrite the default fuselage mesh
             std::string log;
-            plane::meshFuse(pPlaneXfl, indexes, bThickSurfaces, log);
+            plane::meshFuse(pPlaneXfl, indexes, bThickSurfaces, gmesh::FRONTALDELAUNAY, log);
             std::cout << "    done Fuse mesh" << std::endl;
         }
         std::cout << "done Plane creation" << std::endl<< std::endl;

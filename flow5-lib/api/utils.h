@@ -35,6 +35,7 @@
 
 #define ALPHAstr      std::string("\u03B1")
 #define BETAstr       std::string("\u03B2")
+#define GAMMAstr      std::string("\u03B3")
 #define LAMBDAstr     std::string("\u03BB")
 #define NUstr         std::string("\u03BD")
 #define PHIstr        std::string("\u03C6")
@@ -88,7 +89,6 @@ namespace xfl
     /** @enum The status of the 3d analysis */
     enum enumAnalysisStatus {PENDING, RUNNING, CANCELLED, FINISHED};
 
-    /** @todo nothing to do here */
     /** @enum The different formats usable to export data to text format files*/
     enum enumTextFileType {TXT, CSV};
 
@@ -127,4 +127,13 @@ namespace xfl
 
         return result;
     }
+
+    extern xfl::enumTextFileType s_ExportFileType;  /**< Defines if the list separator for the output text files should be a space or a comma. */
+    extern std::string s_CsvSeparator;
+    FL5LIB_EXPORT  inline std::string csvSeparator() {return s_CsvSeparator;}
+    FL5LIB_EXPORT  inline void setCsvSeparator(std::string sep) {s_CsvSeparator=sep;}
+    FL5LIB_EXPORT  inline std::string textSeparator() {if(s_ExportFileType==xfl::TXT) return " ";  else return s_CsvSeparator;}
+    FL5LIB_EXPORT  inline xfl::enumTextFileType exportFileType() {return s_ExportFileType;}
+    FL5LIB_EXPORT  inline void setExportFileType(xfl::enumTextFileType exportformat) {s_ExportFileType=exportformat;}
+
 }

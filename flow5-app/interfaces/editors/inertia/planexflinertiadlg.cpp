@@ -40,7 +40,8 @@
 #include <api/planexfl.h>
 #include <api/units.h>
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <interfaces/editors/inertia/partinertiadelegate.h>
 #include <interfaces/editors/inertia/partinertiadlg.h>
@@ -335,7 +336,7 @@ void PlaneXflInertiaDlg::onCopyInertiaToClipboard()
 
     QClipboard *pClipBoard = QApplication::clipboard();
 
-    QString sep = SaveOptions::textSeparator() + " ";
+    QString sep = QString::fromStdString(xfl::textSeparator()) + " ";
     QString strInertia, strange;
 
     strInertia = "Inertia properties for "+QString::fromStdString(m_pPlaneXfl->name())+"\n\n";

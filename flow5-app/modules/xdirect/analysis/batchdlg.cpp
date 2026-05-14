@@ -36,18 +36,17 @@
 
 #include "batchdlg.h"
 
-#include <api/fl5core.h>
 #include <api/analysisrange.h>
-#include <core/flow5events.h>
+#include <api/fl5core.h>
 #include <api/foil.h>
 #include <api/objects2d.h>
 #include <api/oppoint.h>
 #include <api/polar.h>
-#include <api/flow5-io.h>
+#include <api/utils-io.h>
 #include <api/xfoiltask.h>
 
-
 #include <core/displayoptions.h>
+#include <core/flow5events.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/analysisrangetable.h>
@@ -57,8 +56,8 @@
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <interfaces/widgets/customwts/xfldelegate.h>
-#include <modules/xdirect/xdirect.h>
 #include <modules/xdirect/analysis/polarnamemaker.h>
+#include <modules/xdirect/xdirect.h>
 
 
 bool BatchDlg::s_bAlpha    = true;

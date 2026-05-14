@@ -33,7 +33,8 @@
 #include "stlreaderdlg.h"
 
 #include <core/flow5events.h>
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/widgets/customwts/floatedit.h>

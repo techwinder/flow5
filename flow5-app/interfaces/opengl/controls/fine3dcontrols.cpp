@@ -29,7 +29,10 @@
 #include <interfaces/opengl/controls/gllightdlg.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <core/xflcore.h>
-#include <api/flow5-io.h>
+
+
+#include <api/utils-io.h>
+
 
 Fine3dControls::Fine3dControls(gl3dView *pgl3dview) : QFrame()
 {
@@ -102,11 +105,11 @@ void Fine3dControls::setupLayout()
         {
             m_pchZAnimate   = new QCheckBox("Auto z-rotation");
             m_pdeZAnimAngle = new FloatEdit(gl3dView::zAnimAngle());
-            QLabel *pLabDeg = new QLabel(DEGch + "@60Hz");
+            QLabel *plabDeg = new QLabel(DEGch + "@60Hz");
 
             pZAnimLayout->addWidget(m_pchZAnimate);
             pZAnimLayout->addWidget(m_pdeZAnimAngle);
-            pZAnimLayout->addWidget(pLabDeg);
+            pZAnimLayout->addWidget(plabDeg);
             pZAnimLayout->addStretch();
         }
 

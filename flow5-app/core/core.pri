@@ -13,7 +13,6 @@ HEADERS += \
     $$PWD/enums_core.h \
     $$PWD/flow5events.h \
     $$PWD/fontstruct.h \
-    $$PWD/qunits.h \
     $$PWD/saveoptions.h \
     $$PWD/stlreaderdlg.h \
     $$PWD/xflcore.h \

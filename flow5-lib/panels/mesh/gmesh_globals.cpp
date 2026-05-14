@@ -170,7 +170,7 @@ void gmesh::listModel(std::string &list)
                                                     numv, param, numpv);
             list += "Element type: " + name;
             list += std::format(", order {:d} with {:d} nodes in param coord:", order, numv);
-            for(unsigned int k=0; k<param.size(); k++)  list += std::format("   %11g", param[k]);
+            for(unsigned int k=0; k<param.size(); k++)  list += std::format("   {:11g}", param[k]);
             list += EOLstr;
         }
     }
@@ -262,8 +262,8 @@ void gmesh::convertTriangles(std::vector<std::size_t>const&elementTags,
     }
     m_Triangles.insert(m_Triangles.end(), triangles.begin(), triangles.end());
 
-    log += std::format("Min. element size = %g\n", minsize);
-    log += std::format("Max. element size = %g\n", maxsize);
+    log += std::format("Min. element size = {:g}\n", minsize);
+    log += std::format("Max. element size = {:g}\n", maxsize);
 }
 
 
@@ -1031,7 +1031,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
 
     auto t1 = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    std::cout << std::format("gmesh::fragment: %7g ms\n", float(duration)/1000.0) << std::endl;
+    std::cout << std::format("gmesh::fragment: {:7g} ms\n", float(duration)/1000.0) << std::endl;
 
     gmsh::model::occ::synchronize();
     for(unsigned int l=0; l<outDimTags.size(); l++)
@@ -1063,7 +1063,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
         gmsh::model::occ::fragment(Facedimtags, {Ldimtags[k]}, outDimTags, outDimTagsMap, -1, false, false);
         auto t1 = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-        qDebug("gmesh::fragment: %7g ms", float(duration)/1000.0);
+        qDebug("gmesh::fragment: {:7g} ms", float(duration)/1000.0);
 
         gmsh::model::occ::synchronize();// slow...
         for(unsigned int l=0; l<outDimTags.size(); l++)
@@ -1096,7 +1096,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
         std::pair<int,int> const &frag = Idimtags.at(k);
         if(frag.first != DIM1) continue;
         getLine(frag.second, v0, v1);
-        strange = std::format("tag={:d}:  (%9.3g %9.3g %9.3g) <--> (%9.3g %9.3g %9.3g) ", frag.second, v0.x, v0.y, v0.z, v1.x, v1.y, v1.z);
+        strange = std::format("tag={:d}:  ({:9.3g} {:9.3g} {:9.3g}) <--> ({:9.3g} {:9.3g} {:9.3g}) ", frag.second, v0.x, v0.y, v0.z, v1.x, v1.y, v1.z);
         qDebug("%s",strange.toStdString().c_str());
 
         if(isEven(k))
@@ -1124,7 +1124,7 @@ bool gmesh::intersectBrep(std::string const &brep, std::vector<Node> const &A, s
                 qDebug()<<strange;
                 getLine(in.second,  vi0, vi1);
                 getLine(out.second, vo0, vo1);
-                strange = std::format("      (%.3g %.3g %.3g)(%.3g %.3g %.3g) --> (%.3g %.3g %.3g)(%.3g %.3g %.3g)",
+                strange = std::format("      ({:.3g} {:.3g} {:.3g})({:.3g} {:.3g} {:.3g}) --> ({:.3g} {:.3g} {:.3g})({:.3g} {:.3g} {:.3g})",
                                             vi0.x, vi0.y, vi0.z, vi1.x, vi1.y, vi1.z,
                                             vo0.x, vo0.y, vo0.z, vo1.x, vo1.y, vo1.z);
                 qDebug()<<strange;
@@ -1155,7 +1155,7 @@ void gmesh::tessellateBRep(std::string const&BRep, GmshParams const &params, std
 
 //        gmsh::option::setNumber("General.NumThreads", QThread::idealThreadCount());
 //        gmsh::option::setNumber("Mesh.MaxNumThreads2D", QThread::idealThreadCount());
-        gmsh::option::setNumber("Mesh.Algorithm", 1);
+        gmsh::option::setNumber("Mesh.Algorithm", 1); // use the robust MeshAdapt to tessellate
         gmsh::model::mesh::generate(2);
     }
     catch(std::runtime_error &e)
@@ -1322,13 +1322,31 @@ int gmesh::makeFuseTriangulation(Fuse *pFuse, std::string &logmsg, const std::st
 }
 
 
-
-void gmesh::setGmshParams(double emin, double emax, int iAlgo, int iCurvature)
+void gmesh::setGmshParams(double emin, double emax, int iCurvature, gmesh::enumGmshAlgo algorithm)
 {
-    gmsh::option::setNumber("Mesh.Algorithm", iAlgo);
     gmsh::option::setNumber("Mesh.MeshSizeMin", emin);
     gmsh::option::setNumber("Mesh.MeshSizeMax", emax);
     gmsh::option::setNumber("Mesh.MeshSizeFromCurvature", iCurvature);
+
+    setAlgorithm(algorithm);
+}
+
+//2D mesh algorithm  (1: MeshAdapt, 2: Automatic, 3: Initial mesh only, 5: Delaunay,
+//                     6: Frontal-Delaunay, 7: BAMG, 8: Frontal-Delaunay for Quads,
+//                     9: Packing of Parallelograms, 11: Quasi-structured Quad)
+void gmesh::setAlgorithm(enumGmshAlgo algorithm)
+{
+    switch(algorithm)
+    {
+        default:
+        case gmesh::MESHADAPT:             gmsh::option::setNumber("Mesh.Algorithm",  1);   break;
+        case gmesh::AUTOMATIC:             gmsh::option::setNumber("Mesh.Algorithm",  2);   break;
+        case gmesh::INITIALMESH:           gmsh::option::setNumber("Mesh.Algorithm",  3);   break;
+        case gmesh::DELAUNAY:              gmsh::option::setNumber("Mesh.Algorithm",  5);   break;
+        case gmesh::FRONTALDELAUNAY:       gmsh::option::setNumber("Mesh.Algorithm",  6);   break;
+        case gmesh::BAMG:                  gmsh::option::setNumber("Mesh.Algorithm",  7);   break;
+        case gmesh::FRONTALDELAUNAYQUADS:  gmsh::option::setNumber("Mesh.Algorithm",  8);   break;
+    }
 }
 
 
@@ -1556,7 +1574,7 @@ void gmesh::meshFuseShellsThickSurfaces(Fuse *pFuse, const std::vector<WingXfl> 
 
 
 /** unused */
-void gmesh::convertTrianglesAndNodesFromGmsh(std::vector<Triangle3d> &triangles, std::vector<Node> &nodes, std::string &log)
+void gmesh::convertTrianglesAndNodesFromGmsh(std::vector<Triangle3d> &triangles, std::vector<Node> &nodes, std::string &log, std::string prefix)
 {
     std::string strange;
     std::vector<std::size_t> elementTags;
@@ -1565,8 +1583,8 @@ void gmesh::convertTrianglesAndNodesFromGmsh(std::vector<Triangle3d> &triangles,
 
     gmsh::model::mesh::getElementsByType(ElementType, elementTags, nodeTags);
 
-    strange = std::format("Built %d type 2 elements\n", int(elementTags.size()));
-    log += strange;
+    strange = std::format("Built {:d} type 2 elements\n", int(elementTags.size()));
+    log += prefix + strange;
 
     if(elementTags.size()<=0)
     {
@@ -1584,14 +1602,14 @@ void gmesh::convertTrianglesAndNodesFromGmsh(std::vector<Triangle3d> &triangles,
                                 parametricCoord,
                                 dim, tag,
                                 false, false);
-    strange = std::format("Built %d nodes and %d coordinates\n", int(nodetags.size()), int(coord.size()));
-    log += strange;
+    strange = std::format("Built {:d} nodes and {:d} coordinates\n", int(nodetags.size()), int(coord.size()));
+    log += prefix + strange;
 
     assert(coord.size() == 3*nodetags.size());
 
     if(nodetags.size()<=0)
     {
-        log += "Aborting\n\n";
+        log += prefix + "Aborting\n\n";
         return;
     }
 
@@ -1662,8 +1680,8 @@ void gmesh::convertTrianglesAndNodesFromGmsh(std::vector<Triangle3d> &triangles,
         }
     }
 
-    log += std::format("Min. element size = %g\n", minsize);
-    log += std::format("Max. element size = %g\n", maxsize);
+    log += prefix + std::format("Min. edge length = {:g}\n", minsize);
+    log += prefix + std::format("Max. edge length = {:g}\n", maxsize);
 }
 
 

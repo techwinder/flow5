@@ -45,6 +45,7 @@
 #include <api/boattask.h>
 #include <api/fileio.h>
 #include <api/fl5core.h>
+#include <api/flow5-io.h>
 #include <api/foil.h>
 #include <api/objects2d.h>
 #include <api/objects2d_globals.h>
@@ -60,7 +61,7 @@
 #include <api/polar.h>
 #include <api/sailobjects.h>
 #include <api/serialization.h>
-#include <api/flow5-io.h>
+#include <api/utils-io.h>
 #include <api/xfoiltask.h>
 #include <api/xmlboatreader.h>
 #include <api/xmlbtpolarreader.h>
@@ -153,7 +154,7 @@ void XflScriptExec::makeFoilAnalysisList()
         {
             // list file
             QStringList filter = {"*.xml"};
-            QStringList xmlFileList = xfl::findFiles(m_pScriptReader->xmlPolarDirPath(), filter, m_pScriptReader->bRecursiveDirScan());
+            QStringList xmlFileList = io::findFiles(m_pScriptReader->xmlPolarDirPath(), filter, m_pScriptReader->bRecursiveDirScan());
             m_pScriptReader->m_XmlFoilAnalysisList.append(xmlFileList);
         }
     }
@@ -307,7 +308,7 @@ bool XflScriptExec::loadFoilPolarFiles()
             //try the relative path
 
             QStringList filter = {"*.plr"};
-            bool bFound = xfl::findFile(m_pScriptReader->m_PolarFileList.at(ifo), m_pScriptReader->binPolarDirPath(), filter, true, polarPathName);
+            bool bFound = io::findFile(m_pScriptReader->m_PolarFileList.at(ifo), m_pScriptReader->binPolarDirPath(), filter, true, polarPathName);
             if(!bFound) polarPathName.clear();
 
         }
@@ -379,7 +380,7 @@ bool XflScriptExec::loadXFoilPolarFiles()
     else
     {
         QStringList filter = {"*.txt"};
-        QStringList XFoilFileList = xfl::findFiles(m_pScriptReader->xfoilPolarDirPath(), filter, true);
+        QStringList XFoilFileList = io::findFiles(m_pScriptReader->xfoilPolarDirPath(), filter, true);
         for(int i=0; i<XFoilFileList.size(); i++)
         {
             if(!XFoilPolarList.contains(XFoilFileList.at(i)))
@@ -438,7 +439,7 @@ bool XflScriptExec::makeFoils()
         else
         {
             QStringList filter = {"*.dat"};
-            QStringList datFileList = xfl::findFiles(m_pScriptReader->datFoilDirPath(), filter, true);
+            QStringList datFileList = io::findFiles(m_pScriptReader->datFoilDirPath(), filter, true);
             for(int i=0; i<datFileList.size(); i++)
             {
                 if(!m_pScriptReader->m_FoilDatList.contains(datFileList.at(i)))
@@ -461,7 +462,7 @@ bool XflScriptExec::makeFoils()
         {
             //try the relative path
             QStringList filter = {"*.dat"};
-            bool bFound = xfl::findFile(m_pScriptReader->m_FoilDatList.at(ifo), m_pScriptReader->m_datFoilDirPath, filter, true, datPathName);
+            bool bFound = io::findFile(m_pScriptReader->m_FoilDatList.at(ifo), m_pScriptReader->m_datFoilDirPath, filter, true, datPathName);
             if(!bFound) datPathName.clear();
         }
 
@@ -521,7 +522,7 @@ void XflScriptExec::makePlanes()
         else
         {
             QStringList filter = {"*.xml"};
-            QStringList xmlFileList = xfl::findFiles(m_pScriptReader->xmlPlaneDirPath(), filter, m_pScriptReader->bRecursiveDirScan());
+            QStringList xmlFileList = io::findFiles(m_pScriptReader->xmlPlaneDirPath(), filter, m_pScriptReader->bRecursiveDirScan());
             for(int i=0; i<xmlFileList.size(); i++)
             {
                 if(!m_pScriptReader->m_PlaneFileList.contains(xmlFileList.at(i)))
@@ -666,30 +667,8 @@ bool XflScriptExec::preLoadProject()
         return false;
     }
 
-    QDataStream ar(&XFile);
-    bool bRead =  false;
-    //        QString end = m_pScriptReader->m_PreLoadProjectFilePath.right(4).toLower();
-
-    // dummy arguments;
-    Polar plr;
-    PlanePolar wplr;
-
-    FileIO loader;
-
-    if(fi.suffix().toLower()=="fl5")
-    {
-        bRead = loader.serializeProjectFl5(ar, false);
-    }
-    else if (fi.suffix().toLower()=="xfl")
-    {
-        bRead = loader.serializeProjectXfl(ar, false, &wplr);
-    }
-    else
-    {
-        bRead = false;
-    }
-
-    if(!bRead)
+    std::string logmsg;
+    if(!io::loadProject(m_pScriptReader->m_PreLoadProjectFilePath.toStdString(), logmsg))
     {
         QString strange = "Error reading the project file: "+m_pScriptReader->m_PreLoadProjectFilePath+"\n\n";
         traceLog(strange);
@@ -1073,7 +1052,7 @@ void XflScriptExec::makeBoats()
     if(m_pScriptReader->m_bLoadAllBoats)
     {
         QStringList filter = {"*.xml"};
-        QStringList xmlFileList = xfl::findFiles(m_pScriptReader->xmlBoatDirPath(), filter, m_pScriptReader->bRecursiveDirScan());
+        QStringList xmlFileList = io::findFiles(m_pScriptReader->xmlBoatDirPath(), filter, m_pScriptReader->bRecursiveDirScan());
         for(int i=0; i<xmlFileList.size(); i++)
         {
             if(!m_pScriptReader->m_BoatFileList.contains(xmlFileList.at(i)))
@@ -1157,7 +1136,7 @@ void XflScriptExec::makeBtPolarArray()
     {
         // list file
         QStringList filter = {"*.xml"};
-        QStringList xmlFileList = xfl::findFiles(m_pScriptReader->xmlBtPolarDirPath(), filter, m_pScriptReader->bRecursiveDirScan());
+        QStringList xmlFileList = io::findFiles(m_pScriptReader->xmlBtPolarDirPath(), filter, m_pScriptReader->bRecursiveDirScan());
         for(int i=0; i<xmlFileList.size(); i++)
         {
             if(!m_pScriptReader->m_BtPolarFileList.contains(xmlFileList.at(i)))

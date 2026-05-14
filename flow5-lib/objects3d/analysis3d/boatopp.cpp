@@ -252,7 +252,6 @@ std::string BoatOpp::title(bool bLong) const
 }
 
 
-
 void BoatOpp::exportMainDataToString(Boat const*, std::string &data, xfl::enumTextFileType filetype, std::string const &textsep) const
 {
     std::string btoppdata;

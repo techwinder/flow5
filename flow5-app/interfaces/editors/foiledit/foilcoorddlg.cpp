@@ -36,6 +36,8 @@
 #include <interfaces/widgets/customwts/actionitemmodel.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <core/xflcore.h>
+
+#include <utils-io.h>
 #include <api/foil.h>
 
 QByteArray FoilCoordDlg::s_HSplitterSizes;
@@ -146,7 +148,7 @@ void FoilCoordDlg::readCoordinates()
     m_pBufferFoil->clearPointArrays();
     for(int i=0; i<coords.size(); i++)
     {
-        if(xfl::readValues(coords[i], x, y, z)>=2)
+        if(io::readValues(coords[i], x, y, z)>=2)
         {
             basenodes.push_back({x,y});
         }

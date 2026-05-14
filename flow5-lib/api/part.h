@@ -180,11 +180,25 @@ class FL5LIB_EXPORT Part
         void setRy(double r) {m_ry=r;}
         void setRz(double r) {m_rz=r;}
 
-        GmshParams const &gmshTessParams() const {return m_GmshTessParams;}
-        void setGmshTessParams(GmshParams const &params) {m_GmshTessParams=params;}
-
+        // meshing parameters
         GmshParams const &gmshParams() const {return m_GmshParams;}
         void setGmshParams(GmshParams const &params) {m_GmshParams=params;}
+        int gmshNCurvature() const {return m_GmshParams.m_nCurvature;}
+        void setGmshNCurvature(int n) {m_GmshParams.m_nCurvature=n;}
+        double gmshMinSize() const {return m_GmshParams.m_MinSize;}
+        void setGmshMinSize(double min) {m_GmshParams.m_MinSize=min;}
+        double gmshMaxSize() const {return m_GmshParams.m_MaxSize;}
+        void setGmshMaxSize(double max) {m_GmshParams.m_MaxSize=max;}
+
+        // tessellation parameters
+        GmshParams const &gmshTessParams() const {return m_GmshTessParams;}
+        void setGmshTessParams(GmshParams const &params) {m_GmshTessParams=params;}
+        int gmshTessNCurvature() const {return m_GmshTessParams.m_nCurvature;}
+        void setGmshTessNCurvature(int n) {m_GmshTessParams.m_nCurvature=n;}
+        double gmshTessMinSize() const {return m_GmshTessParams.m_MinSize;}
+        void setGmshTessMinSize(double min) {m_GmshTessParams.m_MinSize=min;}
+        double gmshTessMaxSize() const {return m_GmshTessParams.m_MaxSize;}
+        void setGmshTessMaxSize(double max) {m_GmshTessParams.m_MaxSize=max;}
 
         void flipTriangulationNormals() {m_Triangulation.flipNormals();}
         int nTriangles() const {return m_Triangulation.nTriangles();}

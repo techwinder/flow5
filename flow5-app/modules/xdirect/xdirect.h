@@ -130,7 +130,6 @@ class XDirect : public QObject
 
         xfl::enumGraphView blView() const {return m_iBLView;}
 
-        void writeFoilPolars(QDataStream &ar, Foil *pFoil);
         Polar *insertNewPolar(Polar *pNewPolar);
 
         bool bShowInviscid() const {return m_bShowInviscid;}

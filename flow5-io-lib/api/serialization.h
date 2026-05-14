@@ -179,11 +179,6 @@ namespace serial
     FL5IOLIB_EXPORT void serializePanelsFl5(TriMesh &mesh, QDataStream &ar, bool bIsStoring);
     FL5IOLIB_EXPORT void serializeMeshFl5(TriMesh &mesh, QDataStream &ar, bool bIsStoring);
 
-    FL5IOLIB_EXPORT void savePanels(TriMesh &mesh, QDataStream &ar);
-    FL5IOLIB_EXPORT void loadPanels(TriMesh &mesh, QDataStream &ar);
-    FL5IOLIB_EXPORT void saveMesh(TriMesh &mesh, QDataStream &ar);
-    FL5IOLIB_EXPORT void loadMesh(TriMesh &mesh, QDataStream &ar);
-
     FL5IOLIB_EXPORT void serializeOccParams(OccMeshParams &params, QDataStream &ar, bool bIsStoring);
     FL5IOLIB_EXPORT void serializeAngleControlFl5(AngleControl &ctrl, QDataStream &ar, bool bIsStoring);
     FL5IOLIB_EXPORT void serializeEigenFl5(EigenValues &EV, QDataStream &ar, bool bIsStoring);

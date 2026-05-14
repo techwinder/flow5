@@ -43,6 +43,7 @@
 #include <api/boatopp.h>
 #include <api/boatpolar.h>
 #include <api/boattask.h>
+#include <api/flow5-io.h>
 #include <api/fuseocc.h>
 #include <api/fusestl.h>
 #include <api/fusexfl.h>
@@ -62,7 +63,8 @@
 
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <globals/mainframe.h>
@@ -2085,7 +2087,7 @@ void XSail::onExportSailToSTL() const
     Sail *pExportSail = pSail->clone();
 
     pExportSail->makeTriPanels(Vector3d());
-    Objects3d::exportMeshToSTLFile(filename, pExportSail->triMesh(), 1.0);
+    io::exportMeshToSTLFile(filename, pExportSail->triMesh(), 1.0);
     delete pExportSail;
 }
 
@@ -2617,7 +2619,7 @@ void XSail::onExportBtPolarToClipboard()
     if(!m_pCurBtPolar) return;
     std::string polardata;
     std::string sep = "  ";
-    if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator().toStdString() + " ";
+    if(xfl::exportFileType()==xfl::CSV) sep = xfl::textSeparator() + " ";
     m_pCurBtPolar->getBtPolarData(polardata, sep);
     QClipboard *pClipBoard = QApplication::clipboard();
     pClipBoard->setText(QString::fromStdString(polardata));
@@ -2630,7 +2632,7 @@ void XSail::onExportBtPolarToFile()
 
     QString FileName, filter;
 
-    if(SaveOptions::exportFileType()==xfl::TXT) filter = "Text File (*.txt)";
+    if(xfl::exportFileType()==xfl::TXT) filter = "Text File (*.txt)";
     else                                        filter = "Comma Separated Values (*.csv)";
 
     FileName = QString::fromStdString(m_pCurBtPolar->name());
@@ -2648,12 +2650,12 @@ void XSail::onExportBtPolarToFile()
 
     if(filter.indexOf("*.txt")>0)
     {
-        SaveOptions::setExportFileType(xfl::TXT);
+        xfl::setExportFileType(xfl::TXT);
         if(FileName.indexOf(".txt")<0) FileName +=".txt";
     }
     else if(filter.indexOf("*.csv")>0)
     {
-        SaveOptions::setExportFileType(xfl::CSV);
+        xfl::setExportFileType(xfl::CSV);
         if(FileName.indexOf(".csv")<0) FileName +=".csv";
     }
 
@@ -2663,10 +2665,10 @@ void XSail::onExportBtPolarToFile()
     QTextStream out(&XFile);
     std::string polardata;
     std::string sep = "  ";
-    if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator().toStdString()+ " ";
+    if(xfl::exportFileType()==xfl::CSV) sep = xfl::textSeparator() + " ";
     m_pCurBtPolar->getBtPolarData(polardata, sep);
     out << QString::fromStdString(polardata);
-    //    exportWPolarToTextStream(m_pCurWPolar, out, SaveOptions::exportFileType());
+    //    exportWPolarToTextStream(m_pCurWPolar, out, xfl::exportFileType());
     XFile.close();
 
     updateView();
@@ -2953,7 +2955,7 @@ void XSail::onExportBtOppToFile()
 
     xfl::enumTextFileType exporttype;
     QString filter;
-    if(SaveOptions::exportFileType()==xfl::TXT) filter = "Text File (*.txt)";
+    if(xfl::exportFileType()==xfl::TXT) filter = "Text File (*.txt)";
     else                                        filter = "Comma Separated Values (*.csv)";
 
     QString FileName, sep, str, strong;
@@ -2973,9 +2975,9 @@ void XSail::onExportBtOppToFile()
     int pos = FileName.lastIndexOf("/");
     if(pos>0) SaveOptions::setLastDirName(FileName.left(pos));
     pos = FileName.lastIndexOf(".csv");
-    if (pos>0) SaveOptions::setExportFileType(xfl::CSV);
-    else       SaveOptions::setExportFileType(xfl::TXT);
-    exporttype = SaveOptions::exportFileType();
+    if (pos>0) xfl::setExportFileType(xfl::CSV);
+    else       xfl::setExportFileType(xfl::TXT);
+    exporttype = xfl::exportFileType();
 
 
     QFile XFile(FileName);
@@ -2984,10 +2986,10 @@ void XSail::onExportBtOppToFile()
 
     QTextStream out(&XFile);
 
-    sep = SaveOptions::textSeparator();
+    sep = QString::fromStdString(xfl::textSeparator());
 
     std::string strange;
-    m_pCurBtOpp->exportMainDataToString(m_pCurBoat, strange, SaveOptions::exportFileType(), SaveOptions::textSeparator().toStdString());
+    m_pCurBtOpp->exportMainDataToString(m_pCurBoat, strange, xfl::exportFileType(), xfl::textSeparator());
     out <<QString::fromStdString(strange);
 
     m_pCurBtOpp->exportPanel3DataToString(m_pCurBoat, exporttype, strange);
@@ -3005,9 +3007,9 @@ void XSail::onExportBtOppToClipboard()
 
     QClipboard *pClipBoard = QApplication::clipboard();
     std::string strange, strong;
-    m_pCurBtOpp->exportMainDataToString(m_pCurBoat, strange, SaveOptions::exportFileType(), SaveOptions::textSeparator().toStdString());
+    m_pCurBtOpp->exportMainDataToString(m_pCurBoat, strange, xfl::exportFileType(), xfl::textSeparator());
 
-    m_pCurBtOpp->exportPanel3DataToString(m_pCurBoat, SaveOptions::exportFileType(), strong);
+    m_pCurBtOpp->exportPanel3DataToString(m_pCurBoat, xfl::exportFileType(), strong);
 
     strange += "\n\n" + strong;
     pClipBoard->setText(QString::fromStdString(strange));
@@ -3076,7 +3078,7 @@ void XSail::onExportAllBtPolars()
         polarname.replace(".", "_");
         filename = polarname;
         filename = DirName + "/" +filename;
-        if(SaveOptions::exportFileType()==xfl::TXT) filename += ".txt";
+        if(xfl::exportFileType()==xfl::TXT) filename += ".txt";
         else                                          filename += ".csv";
 
         XFile.setFileName(filename);
@@ -3085,7 +3087,7 @@ void XSail::onExportAllBtPolars()
             out.setDevice(&XFile);
 
             std::string sep = "  ";
-            if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator().toStdString()+ " ";
+            if(xfl::exportFileType()==xfl::CSV) sep = xfl::textSeparator()+ " ";
             std::string data;
             pWPolar->getBtPolarData(data, sep);
             out << QString::fromStdString(data);

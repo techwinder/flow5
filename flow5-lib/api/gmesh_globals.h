@@ -33,7 +33,7 @@
 
 
 #include <fl5lib_global.h>
-
+#include <gmshparams.h>
 
 class Vector3d;
 class Node;
@@ -44,7 +44,6 @@ class FuseNurbs;
 class FuseFlatFaces;
 class SailOcc;
 
-struct GmshParams;
 
 namespace gmesh
 {
@@ -96,11 +95,12 @@ namespace gmesh
 
     //_________________ imported from GMesher ___________
 
-    void setGmshParams(double emin, double emax, int iAlgo, int iCurvature);
+    void setGmshParams(double emin, double emax, int iCurvature, gmesh::enumGmshAlgo algorithm);
+    void setAlgorithm(enumGmshAlgo algorithm);
 
     void meshFuseShellsThinSurfaces( Fuse *pFuse, std::vector<WingXfl> const &wings);
     void meshFuseShellsThickSurfaces(Fuse *pFuse, std::vector<WingXfl> const &wings);
 
-    void convertTrianglesAndNodesFromGmsh(std::vector<Triangle3d> &triangles, std::vector<Node> &nodes, std::string &log);
+    void convertTrianglesAndNodesFromGmsh(std::vector<Triangle3d> &triangles, std::vector<Node> &nodes, std::string &log, std::string prefix);
 }
 

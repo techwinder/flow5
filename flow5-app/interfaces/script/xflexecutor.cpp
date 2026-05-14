@@ -46,7 +46,7 @@
 #include <api/trimesh.h>
 #include <api/planepolar.h>
 #include <api/planepolarnamemaker.h>
-
+#include <api/utils-io.h>
 
 #include <api/xmlplanepolarreader.h>
 
@@ -232,7 +232,7 @@ void XflExecutor::makeWPolarArray(bool bRunAllPlaneAnalyses, QStringList &WPolar
         else
         {
             QStringList filter = {"*.xml"};
-            QStringList xmlFileList = xfl::findFiles(xmlWPolarDirPath, filter, bRecursiveDirScan);
+            QStringList xmlFileList = io::findFiles(xmlWPolarDirPath, filter, bRecursiveDirScan);
             for(int i=0; i<xmlFileList.size(); i++)
             {
                 if(!WPolarFileList.contains(xmlFileList.at(i)))

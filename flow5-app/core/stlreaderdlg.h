@@ -59,8 +59,6 @@ class StlReaderDlg : public QDialog
         void hideEvent(QHideEvent *pEvent) override;
         QSize sizeHint() const override {return QSize(750,500);}
 
-        bool importStlTextFile(QTextStream &textstream, double unitfactor, std::vector<Triangle3d> &trianglelist, QString &solidname);
-        bool importStlBinaryFile(QDataStream &binstream, double unitfactor, std::vector<Triangle3d> &trianglelist, QString &solidname);
 
     signals:
         void outputMsg(QString);

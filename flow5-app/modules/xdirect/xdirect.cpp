@@ -34,6 +34,7 @@
 #include "xdirect.h"
 
 #include <core/displayoptions.h>
+#include <core/flow5events.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <globals/mainframe.h>
@@ -87,23 +88,23 @@
 #include <modules/xdirect/view2d/oppointwt.h>
 #include <modules/xobjects.h>
 
+
+
 #include <api/constants.h>
-#include <api/serialization.h>
 #include <api/fl5core.h>
-#include <core/flow5events.h>
+#include <api/flow5-io.h>
 #include <api/foil.h>
 #include <api/objects2d.h>
 #include <api/objects2d_globals.h>
 #include <api/objects3d.h>
 #include <api/oppoint.h>
+#include <api/oppoint.h>
 #include <api/polar.h>
-#include <api/flow5-io.h>
+#include <api/serialization.h>
+#include <api/utils-io.h>
 #include <api/xfoiltask.h>
 #include <api/xmlpolarreader.h>
 #include <api/xmlpolarwriter.h>
-
-
-#include <api/oppoint.h>
 
 
 Foil* XDirect::s_pCurFoil(nullptr);
@@ -1648,7 +1649,7 @@ void XDirect::onExportAllPolars()
     //select the directory for output
     QString dirPathName = QFileDialog::getExistingDirectory(s_pMainFrame, "Export Directory",
                                                             SaveOptions::lastDirName());
-    s_pMainFrame->exportAllPolars(dirPathName, SaveOptions::exportFileType());
+    io::exportAllPolars(dirPathName, xfl::exportFileType());
 }
 
 
@@ -1715,7 +1716,7 @@ void XDirect::onExportCurOpp()
 
     QFileDialog fd(s_pMainFrame);
 
-    if(SaveOptions::exportFileType()==xfl::TXT)
+    if(xfl::exportFileType()==xfl::TXT)
     {
         filter = "Text File (*.txt)";
 
@@ -1724,7 +1725,7 @@ void XDirect::onExportCurOpp()
     {
         filter = "Comma Separated Values (*.csv)";
     }
-    fd.setDefaultSuffix(SaveOptions::textSeparator());
+    fd.setDefaultSuffix(QString::fromStdString(xfl::textSeparator()));
 
     FileName = fd.getSaveFileName(s_pMainFrame, "Export the operating point",
                                   SaveOptions::lastDirName() + "/"+FileName+".stl",
@@ -1736,8 +1737,8 @@ void XDirect::onExportCurOpp()
     int pos = FileName.lastIndexOf("/");
     if(pos>0) SaveOptions::setLastDirName(FileName.left(pos));
     pos = FileName.lastIndexOf(".csv");
-    if (pos>0) SaveOptions::setExportFileType(xfl::CSV);
-    else       SaveOptions::setExportFileType(xfl::TXT);
+    if (pos>0) xfl::setExportFileType(xfl::CSV);
+    else       xfl::setExportFileType(xfl::TXT);
 
     QFile XFile(FileName);
 
@@ -1763,7 +1764,7 @@ void XDirect::onExportPolarOpps()
     QString FileName;
 
     QString filter;
-    if(SaveOptions::exportFileType()==xfl::TXT) filter = "Text File (*.txt)";
+    if(xfl::exportFileType()==xfl::TXT) filter = "Text File (*.txt)";
     else                                       filter = "Comma Separated Values (*.csv)";
 
     FileName = QFileDialog::getSaveFileName(s_pMainFrame, "Export operating point",
@@ -1777,8 +1778,8 @@ void XDirect::onExportPolarOpps()
     int pos = FileName.lastIndexOf("/");
     if(pos>0) SaveOptions::setLastDirName(FileName.left(pos));
     pos = FileName.lastIndexOf(".csv");
-    if (pos>0) SaveOptions::setExportFileType(xfl::CSV);
-    else       SaveOptions::setExportFileType(xfl::TXT);
+    if (pos>0) xfl::setExportFileType(xfl::CSV);
+    else       xfl::setExportFileType(xfl::TXT);
 
     QFile XFile(FileName);
     if (!XFile.open(QIODevice::WriteOnly | QIODevice::Text)) return ;
@@ -1798,7 +1799,7 @@ void XDirect::onExportPolarOpps()
         pOpPoint = Objects2d::opPointAt(i);
         if(pOpPoint->foilName() == s_pCurPolar->foilName() && pOpPoint->polarName() == s_pCurPolar->name() )
         {
-            if(SaveOptions::exportFileType()==xfl::TXT)
+            if(xfl::exportFileType()==xfl::TXT)
                 strong = QString("Reynolds = %1   Mach = %2  NCrit = %3\n")
                         .arg(pOpPoint->Reynolds(), 7, 'f', 0)
                         .arg(pOpPoint->m_Mach, 4,'f',0)
@@ -1810,11 +1811,11 @@ void XDirect::onExportPolarOpps()
                         .arg(pOpPoint->m_NCrit, 3, 'f',1);
 
             out<<strong;
-            if(SaveOptions::exportFileType()==1) Header = QString("  Alpha        Cd        Cl        Cm        XTr1      XTr2   TEHMom    Cpmn\n");
+            if(xfl::exportFileType()==1) Header = QString("  Alpha        Cd        Cl        Cm        XTr1      XTr2   TEHMom    Cpmn\n");
             else        Header = QString("Alpha,Cd,Cl,Cm,XTr1,XTr2,TEHMom,Cpmn\n");
             out<<Header;
 
-            if(SaveOptions::exportFileType()==xfl::TXT)
+            if(xfl::exportFileType()==xfl::TXT)
                 strong = QString("%1   %2   %3   %4   %5   %6   %7  %8\n")
                         .arg(pOpPoint->aoa(),7,'f',3)
                         .arg(pOpPoint->m_Cd,9,'f',3)
@@ -1836,14 +1837,14 @@ void XDirect::onExportPolarOpps()
                         .arg(pOpPoint->m_Cpmn,7,'f',4);
 
             out<<strong;
-            if(SaveOptions::exportFileType()==xfl::TXT) out<< " Cpi          Cpv\n-----------------\n";
+            if(xfl::exportFileType()==xfl::TXT) out<< " Cpi          Cpv\n-----------------\n";
             else                                       out << "Cpi,Cpv\n";
 
             for (int j=0; j<s_pCurFoil->nNodes(); j++)
             {
                 if(pOpPoint->bViscResults())
                 {
-                    if(SaveOptions::exportFileType()==xfl::TXT) strong = QString("%1   %2\n").arg(pOpPoint->m_Cpi.at(j), 7,'f',4)
+                    if(xfl::exportFileType()==xfl::TXT) strong = QString("%1   %2\n").arg(pOpPoint->m_Cpi.at(j), 7,'f',4)
                             .arg(pOpPoint->m_Cpv.at(j), 7, 'f',4);
                     else                                        strong = QString("%1,%2\n").arg(pOpPoint->m_Cpi.at(j), 7,'f',4)
                             .arg(pOpPoint->m_Cpv.at(j), 7, 'f',4);
@@ -1868,7 +1869,7 @@ void XDirect::onExportCurPolar()
 
     QString FileName, filter;
 
-    if(SaveOptions::exportFileType()==xfl::TXT) filter = "Text File (*.txt)";
+    if(xfl::exportFileType()==xfl::TXT) filter = "Text File (*.txt)";
     else                                       filter = "Comma Separated Values (*.csv)";
 
     FileName = QString::fromStdString(s_pCurPolar->name());
@@ -1882,15 +1883,15 @@ void XDirect::onExportCurPolar()
     int pos = FileName.lastIndexOf("/");
     if(pos>0) SaveOptions::setLastDirName(FileName.left(pos));
     pos = FileName.lastIndexOf(".csv");
-    if (pos>0) SaveOptions::setExportFileType(xfl::CSV);
-    else       SaveOptions::setExportFileType(xfl::TXT);
+    if (pos>0) xfl::setExportFileType(xfl::CSV);
+    else       xfl::setExportFileType(xfl::TXT);
 
     QFile XFile(FileName);
 
     if (!XFile.open(QIODevice::WriteOnly | QIODevice::Text)) return ;
 
     QTextStream out(&XFile);
-    //    s_pCurPolar->exportPolar(out, VERSIONNAME, SaveOptions::exportFileType());
+    //    s_pCurPolar->exportPolar(out, VERSIONNAME, xfl::exportFileType());
     out << onCopyCurPolarData();
     XFile.close();
 }
@@ -1902,10 +1903,10 @@ QString XDirect::onCopyCurOppData()
 
     OpPoint *pOpp = s_pCurOpp;
     QString sep = "  ";
-    if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator()+ " ";
+    if(xfl::exportFileType()==xfl::CSV) sep = QString::fromStdString(xfl::textSeparator())+ " ";
 
     std::string strout;
-    s_pCurOpp->exportOpp(strout, fl5::versionName(true), SaveOptions::exportFileType()==xfl::CSV, SaveOptions::textSeparator().toStdString());
+    s_pCurOpp->exportOpp(strout, fl5::versionName(true), xfl::exportFileType()==xfl::CSV, xfl::textSeparator());
     QString oppdata = QString::fromStdString(strout);
 
     QString strange;
@@ -1935,14 +1936,14 @@ QString XDirect::onCopyCurPolarData()
 {
     if(!s_pCurFoil || !s_pCurPolar)    return QString();
     QString sep = "  ";
-    if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator();
+    if(xfl::exportFileType()==xfl::CSV) sep = QString::fromStdString(xfl::textSeparator());
 
     Polar *pPolar = s_pCurPolar;
     QString polardata;
     QString strange;
 
 //    QTextStream out;
-//    pPolar->exportPolar(out, xfl::versionName(true), true, SaveOptions::exportFileType()==xfl::CSV);
+//    pPolar->exportPolar(out, xfl::versionName(true), true, xfl::exportFileType()==xfl::CSV);
 
     polardata += "\n";
 
@@ -2223,7 +2224,7 @@ void XDirect::onImportJavaFoilPolar()
     double alpha(0), CL(0), CD(0), CM(0), Xt(0), Xb(0);
 
     Line = 0;
-    if(!xfl::readAVLString(in, Line, FoilName)) return;
+    if(!io::readAVLString(in, Line, FoilName)) return;
 
 
     FoilName = FoilName.trimmed();
@@ -2237,11 +2238,11 @@ void XDirect::onImportJavaFoilPolar()
 
         return;
     }
-    if(!xfl::readAVLString(in, Line, strong)) return; //blank line
+    if(!io::readAVLString(in, Line, strong)) return; //blank line
 
     while(bIsReading)
     {
-        if(!xfl::readAVLString(in, Line, strong)) break; //Re number
+        if(!io::readAVLString(in, Line, strong)) break; //Re number
 
         strong = strong.right(strong.length()-4);
         Re = strong.toDouble(&bOK);
@@ -2272,13 +2273,13 @@ void XDirect::onImportJavaFoilPolar()
             insertNewPolar(pPolar);
             setCurPolar(pPolar);
 
-            if(!xfl::readAVLString(in, Line, strong)) break;//?    Cl    Cd    Cm 0.25    TU    TL    SU    SL    L/D
-            if(!xfl::readAVLString(in, Line, strong)) break;//[?]    [-]    [-]    [-]    [-]    [-]    [-]    [-]    [-]
+            if(!io::readAVLString(in, Line, strong)) break;//?    Cl    Cd    Cm 0.25    TU    TL    SU    SL    L/D
+            if(!io::readAVLString(in, Line, strong)) break;//[?]    [-]    [-]    [-]    [-]    [-]    [-]    [-]    [-]
 
             res = 6;
             while(res==6)
             {
-                bIsReading  = xfl::readAVLString(in, Line, strong);//values
+                bIsReading  = io::readAVLString(in, Line, strong);//values
                 if(!bIsReading) break;
                 strong = strong.trimmed();
                 if(strong.length())
@@ -2981,7 +2982,7 @@ void XDirect::onOpPointProps()
     if(!s_pCurOpp) return;
     ObjectPropsDlg *pOPDlg = new ObjectPropsDlg(s_pMainFrame);
     std::string strangeProps;
-    strangeProps = s_pCurOpp->properties(SaveOptions::textSeparator().toStdString());
+    strangeProps = s_pCurOpp->properties(xfl::textSeparator());
     pOPDlg->initDialog("Operating point properties", strangeProps);
     pOPDlg->show();
 }
@@ -3044,21 +3045,7 @@ void XDirect::onSavePolars()
     QString strong = FileName.right(4);
     if(strong !=".plr" && strong !=".PLR") FileName += ".plr";
 
-    QFile XFile(FileName);
-    if (!XFile.open(QIODevice::WriteOnly)) return;
-
-//    QFileInfo fi(FileName);
-
-    QDataStream ar(&XFile);
-
-#if QT_VERSION >= 0x040500
-    ar.setVersion(QDataStream::Qt_4_5);
-#endif
-    ar.setByteOrder(QDataStream::LittleEndian);
-
-    writeFoilPolars(ar, s_pCurFoil);
-
-    XFile.close();
+    io::writeFoilPolars(FileName, s_pCurFoil);
 }
 
 
@@ -4058,39 +4045,6 @@ void XDirect::resetPrefs()
 void XDirect::onShowCpLegend()
 {
     m_pOpPointWt->CpGraph()->setLegendVisible(m_pActions->m_pShowCpLegend->isChecked());
-}
-
-
-void XDirect::writeFoilPolars(QDataStream &ar, Foil *pFoil)
-{
-    // 100003 : added foil comment
-    // 100002 : means we are serializings opps in the new numbered format
-    // 100001 : transferred NCrit, XTopTr, XBotTr to polar file
-    // 500001 : v7 format
-    int ArchiveFormat = 500001;
-    ar << ArchiveFormat;
-
-    //first write the foil
-    ar << 1; //only one foil to write
-    serial::serializeFoilFl5(pFoil, ar,true);
-
-    //count polars associated to the foil
-    Polar * pPolar =nullptr;
-    int n=0;
-    for (int i=0; i<Objects2d::nPolars();i++)
-    {
-        pPolar = Objects2d::polarAt(i);
-        if (pPolar->foilName() == pFoil->name()) n++;
-    }
-
-    //then write the polars
-    ar << n;
-    for (int i=0; i<Objects2d::nPolars();i++)
-    {
-        pPolar = Objects2d::polarAt(i);
-        if (pPolar->foilName() == pFoil->name())
-            serial::serializePolarFl5(pPolar, ar, true);
-    }
 }
 
 

@@ -35,7 +35,8 @@
 #include <api/part.h>
 #include <api/units.h>
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <interfaces/widgets/customwts/xfldelegate.h>
 
 

@@ -8,7 +8,7 @@ It is version 7 of the legacy project xflr5.
 - Fix bugs and implement minor improvements depending on user requests
 - ~~Add fuselage conforming mesh capability to flow5-lib and to the API~~
 - ~~Remove the dependency of flow5-lib on Qt6-core~~
-- ~~Added plane imports from STL or OBJ meshes to the API~~
+- ~~Add plane imports from STL or OBJ meshes to the API~~
 - Add fuselage imports from STL or OBJ meshes to the API
 - Add fuselage imports from STEP files to the API
 - Either complete or remove currently inoperative features, e.g. plane optimization, advanced editors

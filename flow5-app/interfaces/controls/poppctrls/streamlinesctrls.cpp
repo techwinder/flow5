@@ -36,7 +36,8 @@
 
 #include "streamlinesctrls.h"
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <globals/mainframe.h>
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/widgets/customwts/exponentialslider.h>

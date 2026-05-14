@@ -30,7 +30,8 @@
 
 #include "partinertiamodel.h"
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 
 
 #include <api/inertia.h>

@@ -46,6 +46,7 @@
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/view2d/foilsvgwriter.h>
 
+#include <api/utils.h>
 #include <api/fileio.h>
 
 SaveOptionsWt::SaveOptionsWt(QWidget *parent) : QWidget{parent}
@@ -459,11 +460,11 @@ void SaveOptionsWt::initWidget()
     m_pleApplicationDir->setReadOnly(true);
     m_pleApplicationDir->setEnabled(false);
 
-    m_pCSV->setChecked(SaveOptions::s_ExportFileType==xfl::CSV);
-    m_pTXT->setChecked(SaveOptions::s_ExportFileType==xfl::TXT);
+    m_pCSV->setChecked(xfl::exportFileType()==xfl::CSV);
+    m_pTXT->setChecked(xfl::exportFileType()==xfl::TXT);
 
-    m_pleCsvSeparator->setText(SaveOptions::s_CsvSeparator);
-    m_pleCsvSeparator->setEnabled(SaveOptions::s_ExportFileType==xfl::CSV);
+    m_pleCsvSeparator->setText(QString::fromStdString(xfl::csvSeparator()));
+    m_pleCsvSeparator->setEnabled(xfl::exportFileType()==xfl::CSV);
 
     m_pchXmlWingFoils->setChecked(SaveOptions::s_bXmlWingFoils);
 
@@ -500,9 +501,9 @@ void SaveOptionsWt::readData()
     SaveOptions::s_STLDirName       = m_pleSTLDir->text();
     SaveOptions::s_TempDirName      = m_pleTempDir->text();
 
-    if(m_pCSV->isChecked()) SaveOptions::s_ExportFileType = xfl::CSV;
-    else                    SaveOptions::s_ExportFileType = xfl::TXT;
-    SaveOptions::s_CsvSeparator = m_pleCsvSeparator->text();
+    if(m_pCSV->isChecked()) xfl::setExportFileType(xfl::CSV);
+    else                    xfl::setExportFileType(xfl::TXT);
+    xfl::setCsvSeparator(m_pleCsvSeparator->text().toStdString());
 
     FoilSVGWriter::setSVGClosedTE(m_pchSVGCloseTE->isChecked());
     FoilSVGWriter::setSVGFillFoil(m_pchSVGFillFoil->isChecked());
@@ -697,7 +698,9 @@ bool SaveOptionsWt::onCheckTempDir()
 
 void SaveOptionsWt::onExportFormat()
 {
-    if(m_pCSV->isChecked()) SaveOptions::s_ExportFileType = xfl::CSV;
-    else                    SaveOptions::s_ExportFileType = xfl::TXT;
-    m_pleCsvSeparator->setEnabled(SaveOptions::s_ExportFileType==xfl::CSV);
+    if(m_pCSV->isChecked()) xfl::setExportFileType(xfl::CSV);
+    else                    xfl::setExportFileType(xfl::TXT);
+    m_pleCsvSeparator->setEnabled(xfl::exportFileType()==xfl::CSV);
 }
+
+

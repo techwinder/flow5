@@ -36,7 +36,6 @@ class GMesher : public QObject
     public:
         GMesher(QObject *parent = nullptr);
 
-        void setGmshParams(double emin, double emax, int iAlgo, int iCurvature);
 
     public slots:
         void onMeshCurrentModel();

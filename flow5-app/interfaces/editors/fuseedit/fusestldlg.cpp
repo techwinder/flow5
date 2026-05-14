@@ -39,7 +39,8 @@
 #include <api/part.h>
 #include <api/units.h>
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <interfaces/editors/inertia/partinertiadlg.h>
 #include <interfaces/mesh/afmesher.h>

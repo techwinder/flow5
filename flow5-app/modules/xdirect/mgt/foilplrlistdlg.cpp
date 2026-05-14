@@ -42,6 +42,7 @@
 #include <api/polar.h>
 #include <api/serialization.h>
 #include <api/flow5-io.h>
+#include <api/utils-io.h>
 
 #include <core/xflcore.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
@@ -292,7 +293,7 @@ void FoilPlrListDlg::onScanDirectory()
     m_ppto->onAppendQText("Scanning directory "+ m_DirName+EOLch);
 
     bool bRecursive = m_pchRecursive->isChecked();
-    QStringList files = xfl::findFiles(m_DirName, {"*.plr"}, bRecursive);
+    QStringList files = io::findFiles(m_DirName, {"*.plr"}, bRecursive);
 
     m_ppto->onAppendQText(QString::asprintf("Reading %d files\n", int(files.size())));
 

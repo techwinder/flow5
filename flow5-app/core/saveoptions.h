@@ -41,7 +41,6 @@ namespace SaveOptions
 
     extern bool s_bCleanOnExit;
 
-    extern xfl::enumTextFileType s_ExportFileType;  /**< Defines if the list separator for the output text files should be a space or a comma. */
     extern QString s_LastDirName, s_TempDirName;
     extern QString s_xmlPlaneDirName, s_xmlWPolarDirName, s_xmlScriptDirName;
     extern QString s_datFoilDirName, s_xmlPolarDirName, s_plrPolarDirName;
@@ -49,7 +48,6 @@ namespace SaveOptions
     extern QString s_LastExportDirName; /** Directory wher .csv, .svg etc files are exported */
     extern QString s_CADDirName;
     extern QString s_STLDirName;
-    extern QString s_CsvSeparator;
 
     extern bool s_bXmlWingFoils;
 
@@ -61,7 +59,7 @@ namespace SaveOptions
     void cleanLogFiles();
     void setLastDirName(QString const &lastDirName);
     void resetDefaultDirNames();
-    QString textSeparator();
+
 
     inline QString const &lastDirName()      {return s_LastDirName;}
     inline QString const &datFoilDirName()   {return s_datFoilDirName;}
@@ -88,8 +86,6 @@ namespace SaveOptions
     inline void setLastLogFileName(QString const &logFileName)    {s_LastLogFileName   = logFileName;}
     inline void setLastExportDirName(QString const &dirName)      {s_LastExportDirName = dirName;}
 
-    inline xfl::enumTextFileType exportFileType() {return s_ExportFileType;}
-    inline void setExportFileType(xfl::enumTextFileType exportformat) {s_ExportFileType=exportformat;}
 
     inline void setAutoLoadLast(bool bAuto) {s_bAutoLoadLast=bAuto;}
     inline void setAutoSave(bool bAuto) {s_bAutoSave=bAuto;}
@@ -99,10 +95,6 @@ namespace SaveOptions
     inline bool bXmlWingFoils()   {return s_bXmlWingFoils;}
 
     inline int saveInterval()     {return s_SaveInterval;}
-
-    inline QString csvSeparator() {return s_CsvSeparator;}
-
-
 
 }
 

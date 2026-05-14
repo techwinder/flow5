@@ -50,6 +50,7 @@
 
 
 #include <api/constants.h>
+#include <api/flow5-io.h>
 #include <api/frame.h>
 #include <api/fuse.h>
 #include <api/fuseocc.h>
@@ -57,7 +58,6 @@
 #include <api/fusestl.h>
 #include <api/fusexfl.h>
 #include <api/geom_global.h>
-#include <api/units.h>
 #include <api/objects2d.h>
 #include <api/objects3d.h>
 #include <api/objects_global.h>
@@ -67,14 +67,15 @@
 #include <api/planexfl.h>
 #include <api/quad3d.h>
 #include <api/segment2d.h>
+#include <api/units.h>
 #include <api/vector3d.h>
 #include <api/wingxfl.h>
 #include <api/xmlfusereader.h>
 #include <api/xmlwingreader.h>
-#include <api/flow5-io.h>
 
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>
@@ -1482,129 +1483,9 @@ void PlaneXflDlg::onInsertWingFromVSP()
         return;
     }
 
-    QFile VSPFile(pathname);
-    if(!VSPFile.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        m_ppto->onAppendQText("Could not read the file - aborting\n");
-        return;
-    }
-
-    SaveOptions::setLastDirName(fi.absolutePath());
-
-    QStringList wingnames;
-    QTextStream instream(&VSPFile);
-
-    QString strVSP = instream.readAll(); // need a copy to parse multiple times
-    VSPFile.close();
-
-    QTextStream stream(&strVSP);
-    QString strange;
-    do
-    {
-        strange = stream.readLine();
-        if(strange.isNull()) break;
-        if(strange.contains("Geom Name", Qt::CaseSensitive))
-        {
-            QStringList fields = strange.split(",");
-            if(fields.count()>=2)
-            {
-                if(!wingnames.contains(fields.at(1)))
-                    wingnames.append(fields.at(1));
-            }
-        }
-
-    }while (!strange.isNull());
-
-
-    m_ppto->onAppendQText(QString::asprintf("Found %d wings:\n", int(wingnames.size())));
-    for(int i=0; i<wingnames.size(); i++)
-    {
-        m_ppto->onAppendQText(QString("   ")+wingnames.at(i)+"\n");
-    }
-/*    QVector<Wing*> wings;
-    for(int i=0; i<wingnames.size(); i++)
-    {
-        wings.append(new WingXfl(xfl::OtherWing));
-        wings.back()->setName(wingnames.at(i));
-    }
-*/
-
-    //read all the foil names
-    stream.seek(0);
-    QStringList airfoilfilenames;
-    do
-    {
-        strange = stream.readLine();
-        if(strange.isNull()) break;
-        if(strange.contains("Airfoil File Name", Qt::CaseSensitive))
-        {
-            QStringList fields = strange.split(",");
-            if(fields.count()>=2)
-            {
-                if(!airfoilfilenames.contains(fields.at(1)))
-                    airfoilfilenames.append(fields.at(1));
-            }
-        }
-
-    }while (!strange.isNull());
-
-    m_ppto->onAppendQText(QString::asprintf("Found %d airfoil files to load:\n", int(airfoilfilenames.size())));
-    for(int i=0; i<airfoilfilenames.size(); i++)
-    {
-        m_ppto->onAppendQText(QString("   ")+airfoilfilenames.at(i)+"\n");
-    }
-
-
-    QStringList filter = {"*.dat"};
-    QStringList files = xfl::findFiles(fi.absolutePath(), filter, false);
-    for(int i=0; i<files.size(); i++)
-    {
-        Foil *pFoil = new Foil;
-        if(Objects3d::readVSPFoilFile(files.at(i), pFoil))
-            Objects2d::insertThisFoil(pFoil);
-        else
-            delete  pFoil;
-    }
-
-/*    do
-    {
-        strange = stream.readLine();
-        if(strange.isNull()) break;
-        if(strange.contains("########################################", Qt::CaseSensitive))
-        {
-            QString wingname;
-            int index(0);
-            WingSection *ws = new WingSection;
-            readVSPSection(stream, wingname, index, ws);
-        }
-
-    }while (!strange.isNull());*/
-}
-
-
-void PlaneXflDlg::readVSPSection(QTextStream &stream, QString &wingname, int &index, WingSection &ws)
-{
-    QString strange;
-    do
-    {
-        strange = stream.readLine();
-        QStringList fields = strange.split(",");
-        if(fields.count()>2)
-        {
-            if     (fields.front().contains("Geom Name"))          wingname = fields.at(1);
-            else if(fields.front().contains("Airfoil Index"))      index = fields.at(1).toInt();
-            else if(fields.front().contains("Leading Edge Point") && fields.size()==4)
-            {
-//                ws.setOffset(fields.at(1).toDouble(), fields.at(1).toDouble(), fields.at(3).toDouble());
-            }
-            else if(fields.front().contains("Airfoil File Name"))
-            {
-                ws.setLeftFoilName(fields.at(1).toStdString());
-                ws.setRightFoilName(fields.at(1).toStdString());
-            }
-        }
-    }
-    while(!strange.contains("#######"));
+    QVector<WingXfl*> winglist;
+    QString log;
+    io::importVSPWing(pathname, winglist, log);
 }
 
 

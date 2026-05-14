@@ -42,12 +42,13 @@
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <modules/xobjects.h>
+
+#include <api/flow5-io.h>
+#include <api/fusexfl.h>
 #include <api/objects_global.h>
 #include <api/planexfl.h>
-#include <api/fusexfl.h>
-#include <api/wingxfl.h>
 #include <api/sail.h>
-
+#include <api/wingxfl.h>
 
 
 QByteArray STLWriterDlg::s_Geometry;
@@ -313,25 +314,11 @@ void STLWriterDlg::onExporttoSTL()
     int pos = FileName.indexOf(".stl", Qt::CaseInsensitive);
     if(pos<0) FileName += ".stl";
 
-    QFile XFile(FileName);
-
-
-    if (!XFile.open(QIODevice::WriteOnly))
-    {
-        QMessageBox::warning(window(), tr("Warning"), tr("Could not open the file for writing"));
-        return;
-    }
-
     int nTriangles = 0;
     if(m_pPlane)
     {
         if(bBinary)
         {
-            QDataStream out(&XFile);
-            // stl format uses Little-Endian byte order
-            out.setByteOrder(QDataStream::LittleEndian);
-//            nTriangles = exportWingToSTLBinary(m_pWing, out, STLWriterDlg::s_iChordPanels, STLWriterDlg::s_iSpanPanels, m_UnitFactor);
-
             std::vector<Triangle3d> triangles;
             for(int i=0; i<m_SelectedList.size(); i++)
             {
@@ -346,38 +333,31 @@ void STLWriterDlg::onExporttoSTL()
                     triangles.insert(triangles.end(), pFuse->triangles().begin(), pFuse->triangles().end());
                 }
             }
-            nTriangles = Objects3d::exportTriangulation(out, 1.0, triangles);
+            nTriangles = io::exportTriangulationToSTL(FileName, 1.0, triangles);
         }
         else
         {
-            QTextStream out(&XFile);
-            nTriangles = exportWingToSTLText(m_pWing, out, STLWriterDlg::s_iChordPanels, STLWriterDlg::s_iSpanPanels, 1.0);
+            nTriangles = exportWingToSTLText(m_pWing, FileName, STLWriterDlg::s_iChordPanels, STLWriterDlg::s_iSpanPanels, 1.0);
         }
     }
     else if(m_pWing)
     {
         if(bBinary)
         {
-            QDataStream out(&XFile);
-            // stl format uses Little-Endian byte order
-            out.setByteOrder(QDataStream::LittleEndian);
             std::vector<Triangle3d> triangles;
             makeSTLTriangulation(m_pWing, triangles, s_iChordPanels, s_iSpanPanels, 1.0);
-            nTriangles = Objects3d::exportTriangulation(out, 1.0, triangles);
+            nTriangles = io::exportTriangulationToSTL(FileName, 1.0, triangles);
         }
         else
         {
-            QTextStream out(&XFile);
-            nTriangles = exportWingToSTLText(m_pWing, out, STLWriterDlg::s_iChordPanels, STLWriterDlg::s_iSpanPanels, 1.0);
+            nTriangles = exportWingToSTLText(m_pWing, FileName, STLWriterDlg::s_iChordPanels, STLWriterDlg::s_iSpanPanels, 1.0);
         }
     }
     else if(m_pFuse)
     {
         if(bBinary)
         {
-            QDataStream out(&XFile);
-            out.setByteOrder(QDataStream::LittleEndian);
-            nTriangles = Objects3d::exportTriangulation(out, m_UnitFactor, m_pFuse->triangles());
+            nTriangles = io::exportTriangulationToSTL(FileName, m_UnitFactor, m_pFuse->triangles());
         }
         else
         {
@@ -388,10 +368,7 @@ void STLWriterDlg::onExporttoSTL()
     {
         if(bBinary)
         {
-            QDataStream out(&XFile);
-            // stl format uses Little-Endian byte order
-            out.setByteOrder(QDataStream::LittleEndian);
-            nTriangles = exportSailToSTLBinary(m_pSail, out, STLWriterDlg::s_iChordPanels, STLWriterDlg::s_iSpanPanels, m_UnitFactor);
+            nTriangles = exportSailToSTLBinary(m_pSail, FileName, STLWriterDlg::s_iChordPanels, STLWriterDlg::s_iSpanPanels, m_UnitFactor);
         }
     }
 
@@ -400,14 +377,20 @@ void STLWriterDlg::onExporttoSTL()
     QString strong;
     strong = QString::asprintf("Total triangles: %d", nTriangles);
     m_pptoOutputLog->insertPlainText(strong);
-    XFile.close();
+
 }
 
 
 
-int STLWriterDlg::exportWingToSTLText(WingXfl const *pWing, QTextStream &outstream, int CHORDPANELS, int SPANPANELS, double scalefactor) const
+int STLWriterDlg::exportWingToSTLText(WingXfl const *pWing, QString const &pathname, int CHORDPANELS, int SPANPANELS, double scalefactor) const
 {
     Q_UNUSED(scalefactor)
+
+    QFile XFile(pathname);
+    QDataStream outstream(&XFile);
+    // stl format uses Little-Endian byte order
+    outstream.setByteOrder(QDataStream::LittleEndian);
+
     /***
      * solid name
      *
@@ -641,13 +624,13 @@ int STLWriterDlg::exportWingToSTLText(WingXfl const *pWing, QTextStream &outstre
 }
 
 
-int STLWriterDlg::exportSailToSTLBinary(Sail *pSail, QDataStream &outStream, int CHORDPANELS, int SPANPANELS, double scalefactor) const
+int STLWriterDlg::exportSailToSTLBinary(Sail *pSail, QString const &pathname, int CHORDPANELS, int SPANPANELS, double scalefactor) const
 {
     // make a triangulation for export
 //    pSail->makeTriangulation(CHORDPANELS, SPANPANELS);
     Objects3d::makeSailTriangulation(pSail, CHORDPANELS, SPANPANELS);
 
-    return Objects3d::exportTriangulation(outStream, scalefactor, pSail->triangles());
+    return io::exportTriangulationToSTL(pathname, scalefactor, pSail->triangles());
 }
 
 

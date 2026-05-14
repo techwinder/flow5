@@ -25,6 +25,10 @@
 #pragma once
 
 
+namespace gmesh
+{
+    enum enumGmshAlgo {MESHADAPT, AUTOMATIC, INITIALMESH, DELAUNAY, FRONTALDELAUNAY, BAMG, FRONTALDELAUNAYQUADS};
+}
 
 struct GmshParams
 {
@@ -47,3 +51,5 @@ struct GmshParams
         double m_MaxSize;
         int m_nCurvature;
 };
+
+

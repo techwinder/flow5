@@ -38,7 +38,8 @@
 #include <interfaces/widgets/globals/wt_globals.h>
 #include <interfaces/widgets/line/linebtn.h>
 #include <interfaces/widgets/line/linemenu.h>
-#include <api/flow5-io.h>
+
+#include <api/utils-io.h>
 
 Vector3d gl3dLorenz::s_P = Vector3d(13, 15, 30);
 double gl3dLorenz::s_Sigma = 10.0;
@@ -104,27 +105,27 @@ gl3dLorenz::gl3dLorenz(QWidget *pParent) : gl3dTestGLView (pParent)
                     m_plbStyle  = new LineBtn(s_ls);
                     connect(m_plbStyle, SIGNAL(clickedLB(LineStyle)), SLOT(onLineStyle(LineStyle)));
 
-                    QLabel *pLabSigma     = new QLabel(SIGMAch+"=");
-                    QLabel *pLabRho       = new QLabel(RHOch+"=");
-                    QLabel *pLabBeta      = new QLabel(BETAch+"=");
-                    QLabel *pLabX0        = new QLabel("X<sub>0</sub>=");
-                    QLabel *pLabY0        = new QLabel("Y<sub>0</sub>=");
-                    QLabel *pLabZ0        = new QLabel("Z<sub>0</sub>=");
-                    QLabel *pLabdt        = new QLabel("dt=");
-                    QLabel *pLabMaxPts    = new QLabel("Max. points=");
-                    QLabel *pLabLineStyle = new QLabel("Line style:");
-                    QLabel *pLabRefresh   = new QLabel("Refresh interval (ms)=");
+                    QLabel *plabSigma     = new QLabel(SIGMAch+"=");
+                    QLabel *plabRho       = new QLabel(RHOch+"=");
+                    QLabel *plabBeta      = new QLabel(BETAch+"=");
+                    QLabel *plabX0        = new QLabel("X<sub>0</sub>=");
+                    QLabel *plabY0        = new QLabel("Y<sub>0</sub>=");
+                    QLabel *plabZ0        = new QLabel("Z<sub>0</sub>=");
+                    QLabel *plabdt        = new QLabel("dt=");
+                    QLabel *plabMaxPts    = new QLabel("Max. points=");
+                    QLabel *plabLineStyle = new QLabel("Line style:");
+                    QLabel *plabRefresh   = new QLabel("Refresh interval (ms)=");
 
-                    pParamsLayout->addWidget(pLabSigma,      1, 1, Qt::AlignRight | Qt::AlignVCenter);
-                    pParamsLayout->addWidget(pLabRho,        2, 1, Qt::AlignRight | Qt::AlignVCenter);
-                    pParamsLayout->addWidget(pLabBeta,       3, 1, Qt::AlignRight | Qt::AlignVCenter);
-                    pParamsLayout->addWidget(pLabX0,         4, 1, Qt::AlignRight | Qt::AlignVCenter);
-                    pParamsLayout->addWidget(pLabY0,         5, 1, Qt::AlignRight | Qt::AlignVCenter);
-                    pParamsLayout->addWidget(pLabZ0,         6, 1, Qt::AlignRight | Qt::AlignVCenter);
-                    pParamsLayout->addWidget(pLabdt,         7, 1, Qt::AlignRight | Qt::AlignVCenter);
-                    pParamsLayout->addWidget(pLabMaxPts,     8, 1, Qt::AlignRight | Qt::AlignVCenter);
-                    pParamsLayout->addWidget(pLabLineStyle,  9, 1, Qt::AlignRight | Qt::AlignVCenter);
-                    pParamsLayout->addWidget(pLabRefresh,   10, 1, Qt::AlignRight | Qt::AlignVCenter);
+                    pParamsLayout->addWidget(plabSigma,      1, 1, Qt::AlignRight | Qt::AlignVCenter);
+                    pParamsLayout->addWidget(plabRho,        2, 1, Qt::AlignRight | Qt::AlignVCenter);
+                    pParamsLayout->addWidget(plabBeta,       3, 1, Qt::AlignRight | Qt::AlignVCenter);
+                    pParamsLayout->addWidget(plabX0,         4, 1, Qt::AlignRight | Qt::AlignVCenter);
+                    pParamsLayout->addWidget(plabY0,         5, 1, Qt::AlignRight | Qt::AlignVCenter);
+                    pParamsLayout->addWidget(plabZ0,         6, 1, Qt::AlignRight | Qt::AlignVCenter);
+                    pParamsLayout->addWidget(plabdt,         7, 1, Qt::AlignRight | Qt::AlignVCenter);
+                    pParamsLayout->addWidget(plabMaxPts,     8, 1, Qt::AlignRight | Qt::AlignVCenter);
+                    pParamsLayout->addWidget(plabLineStyle,  9, 1, Qt::AlignRight | Qt::AlignVCenter);
+                    pParamsLayout->addWidget(plabRefresh,   10, 1, Qt::AlignRight | Qt::AlignVCenter);
 
                     pParamsLayout->addWidget(m_pdeSigma,       1, 2);
                     pParamsLayout->addWidget(m_pdeRho,         2, 2);

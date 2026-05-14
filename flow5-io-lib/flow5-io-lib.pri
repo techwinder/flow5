@@ -5,7 +5,8 @@ include (api/api-io.pri)
 include (serialization/serialization.pri)
 
 SOURCES += \
-    $$PWD/io/flow5-io.cpp
+    $$PWD/io/flow5-io.cpp \
+    $$PWD/io/utils-io.cpp
 
 HEADERS +=
 

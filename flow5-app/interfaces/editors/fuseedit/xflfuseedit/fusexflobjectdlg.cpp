@@ -42,7 +42,8 @@
 #include <api/xmlfusewriter.h>
 
 #include <core/enums_core.h>
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <interfaces/editors/editobjectdelegate.h>
 #include <interfaces/editors/fuseedit/bodyscaledlg.h>

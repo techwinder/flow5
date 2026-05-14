@@ -35,7 +35,8 @@
 #include <api/planestl.h>
 #include <api/units.h>
 
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <interfaces/editors/inertia/partinertiamodel.h>
 #include <interfaces/editors/inertia/pointmasstable.h>

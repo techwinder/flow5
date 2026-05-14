@@ -29,6 +29,7 @@
 #include <queue>
 
 #include <fl5lib_global.h>
+#include <gmesh_globals.h>
 
 class Foil;
 class Polar;
@@ -123,7 +124,7 @@ namespace plane
 
 
     /** @todo duplicate with GMesherWt::onHandleMeshResults */
-    FL5LIB_EXPORT void meshFuse(PlaneXfl *pPlaneXfl, std::vector<int>selectedWings, bool bThickSurfaces, std::string &log);
+    FL5LIB_EXPORT void meshFuse(PlaneXfl *pPlaneXfl, std::vector<int>selectedWings, bool bThickSurfaces, gmesh::enumGmshAlgo algorithm, std::string &log, std::string prefix);
 
 }
 

@@ -60,10 +60,6 @@ namespace xfl
     void saveLineSettings(QSettings &settings, LineStyle const &ls, QString const &name);
 
 
-    QStringList findFiles(const QString &startDir, const QStringList &filters, bool bRecursive);
-    bool findFile(QString const &filename, QString const &startDir, const QStringList &filters, bool bRecursive, QString &filePathName);
-
-
     QColor randomColor(bool bLightColor=true);
     fl5Color randomfl5Color(bool bLightColor=true);
 
@@ -76,8 +72,6 @@ namespace xfl
 
     void expFormat(double &f, int &exp);
 
-    int readValues(QString const &theline, double &x, double &y, double &z);
-    bool readAVLString(QTextStream &in, int &Line, QString &strong);
 
     QList<QStandardItem *> prepareRow(const QString &first, const QString &second=QString(), const QString &third=QString(),  const QString &fourth=QString());
     QList<QStandardItem *> prepareBoolRow(const QString &first, const QString &second, const bool &third);

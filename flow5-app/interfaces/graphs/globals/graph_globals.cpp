@@ -83,12 +83,12 @@ void exportGraphDataToFile(Graph const*pGraph)
     bool bCSV = false;
     if(m_GraphExportFilter.indexOf("*.txt")>0)
     {
-        SaveOptions::setExportFileType(xfl::TXT);
+        xfl::setExportFileType(xfl::TXT);
         if(FileName.indexOf(".txt")<0) FileName +=".txt";
     }
     else if(m_GraphExportFilter.indexOf("*.csv")>0)
     {
-        SaveOptions::setExportFileType(xfl::CSV);
+        xfl::setExportFileType(xfl::CSV);
         if(FileName.indexOf(".csv")<0) FileName +=".csv";
         bCSV = true;
     }

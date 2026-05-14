@@ -41,7 +41,7 @@
 
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+
 #include <core/saveoptions.h>
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>
@@ -85,7 +85,7 @@
 #include <interfaces/graphs/controls/graphtilevariableset.h>
 #include <interfaces/graphs/graph/curve.h>
 #include <interfaces/graphs/graph/graph.h>
-#include <api/gmesh_globals.h>
+
 #include <interfaces/mesh/panelcheckdlg.h>
 #include <interfaces/opengl/controls/fine3dcontrols.h>
 #include <interfaces/opengl/controls/gllightdlg.h>
@@ -122,40 +122,45 @@
 #include <test/tests/panelanalysistest.h>
 #include <test/tests/vortontestdlg.h>
 
-#include <api/llttask.h>
-#include <api/p3analysis.h>
-#include <api/panelanalysis.h>
-#include <api/planetask.h>
-#include <api/polar.h>
-#include <api/objects2d.h>
-#include <api/planeopp.h>
-#include <api/wingopp.h>
-#include <api/planepolar.h>
-#include <api/planepolarext.h>
-#include <api/planepolarnamemaker.h>
-#include <api/objects3d.h>
+
+#include <api/flow5-io.h>
 #include <api/fuseocc.h>
 #include <api/fusesections.h>
 #include <api/fusestl.h>
 #include <api/fusexfl.h>
-#include <api/pointmass.h>
+#include <api/gmesh_globals.h>
+#include <api/llttask.h>
+#include <api/mctriangle.h>
+#include <api/mesh_globals.h>
+#include <api/objects2d.h>
+#include <api/objects3d.h>
+#include <api/occ_globals.h>
+#include <api/p3analysis.h>
+#include <api/panel3.h>
+#include <api/panel4.h>
+#include <api/panelanalysis.h>
+#include <api/planeopp.h>
+#include <api/planepolar.h>
+#include <api/planepolarext.h>
+#include <api/planepolarnamemaker.h>
 #include <api/planestl.h>
+#include <api/planetask.h>
 #include <api/planexfl.h>
+#include <api/pointmass.h>
+#include <api/polar.h>
 #include <api/surface.h>
+#include <api/units.h>
+#include <api/utils-io.h>
+#include <api/wingopp.h>
 #include <api/wingxfl.h>
 #include <api/xmlfusewriter.h>
+#include <api/xmlplanepolarreader.h>
+#include <api/xmlplanepolarwriter.h>
 #include <api/xmlplanereader.h>
 #include <api/xmlplanewriter.h>
 #include <api/xmlwingwriter.h>
-#include <api/xmlplanepolarreader.h>
-#include <api/xmlplanepolarwriter.h>
-#include <api/occ_globals.h>
-#include <api/mesh_globals.h>
-#include <api/mctriangle.h>
-#include <api/panel3.h>
-#include <api/panel4.h>
-#include <api/units.h>
-#include <api/flow5-io.h>
+
+
 
 QVector<OptObjective> XPlane::s_Objectives;
 bool XPlane::s_bStoreOpps3d(false);
@@ -3298,14 +3303,14 @@ void XPlane::onCopyCurPOppData()
     if (!m_pCurPOpp) return;
 
     QClipboard *pClipBoard = QApplication::clipboard();
-    QString strange, strong;
-    exportMainDataToString(m_pCurPOpp, m_pCurPlane, strange, SaveOptions::exportFileType(), SaveOptions::textSeparator());
+    std::string strange, strong;
+    m_pCurPOpp->exportMainDataToString(m_pCurPlane, strange, xfl::exportFileType(), xfl::textSeparator());
     if(m_pCurPOpp->isQuadMethod())
-        exportPanel4DataToString(m_pCurPOpp,  m_pCurPlane, m_pCurPlPolar, SaveOptions::exportFileType(), strong);
+        m_pCurPOpp->exportPanel4DataToString(m_pCurPlane, m_pCurPlPolar, xfl::exportFileType(), strong);
     else if(m_pCurPOpp->isTriangleMethod())
-        exportPanel3DataToString(m_pCurPOpp, m_pCurPlane, m_pCurPlPolar, SaveOptions::exportFileType(), SaveOptions::textSeparator(), strong);
+        m_pCurPOpp->exportPanel3DataToString(m_pCurPlane, m_pCurPlPolar, xfl::exportFileType(), xfl::textSeparator(), strong);
 
-    pClipBoard->setText(strange +  strong);
+    pClipBoard->setText(QString::fromStdString(strange +  strong));
     displayMessage("The data of the operating point has been copied to the clipboard", false, true);
 }
 
@@ -3318,10 +3323,10 @@ void XPlane::onExportCurPOpp()
     if(!m_pCurPOpp)return ;// is there anything to export?
 
     QString filter;
-    if(SaveOptions::exportFileType()==xfl::TXT) filter = "Text File (*.txt)";
+    if(xfl::exportFileType()==xfl::TXT) filter = "Text File (*.txt)";
     else                                        filter = "Comma Separated Values (*.csv)";
 
-    QString FileName, sep, str, strong, strange;
+    QString FileName, str, strong;
 
     strong = QString("a=%1_v=%2").arg(m_pCurPOpp->alpha(), 5,'f',2).arg(m_pCurPOpp->QInf()*Units::mstoUnit(),6,'f',2);
     str = Units::speedUnitQLabel();
@@ -3338,8 +3343,8 @@ void XPlane::onExportCurPOpp()
     int pos = FileName.lastIndexOf("/");
     if(pos>0) SaveOptions::setLastDirName(FileName.left(pos));
     pos = FileName.lastIndexOf(".csv");
-    if (pos>0) SaveOptions::setExportFileType(xfl::CSV);
-    else       SaveOptions::setExportFileType(xfl::TXT);
+    if (pos>0) xfl::setExportFileType(xfl::CSV);
+    else       xfl::setExportFileType(xfl::TXT);
 
     QFile XFile(FileName);
 
@@ -3347,16 +3352,15 @@ void XPlane::onExportCurPOpp()
 
     QTextStream out(&XFile);
 
-    sep = SaveOptions::textSeparator();
-
-    exportMainDataToString(m_pCurPOpp, m_pCurPlane, strange, SaveOptions::exportFileType(), SaveOptions::textSeparator());
-    out <<strange;
-    strong.clear();
+    std::string strange, strg;
+    m_pCurPOpp->exportMainDataToString(m_pCurPlane, strange, xfl::exportFileType(), xfl::textSeparator());
+    out << QString::fromStdString(strange);
+    strg.clear();
     if(m_pCurPOpp->isQuadMethod())
-        exportPanel4DataToString(m_pCurPOpp, m_pCurPlane, m_pCurPlPolar, SaveOptions::exportFileType(), strong);
+        m_pCurPOpp->exportPanel4DataToString(m_pCurPlane, m_pCurPlPolar, xfl::exportFileType(), strg);
     else if(m_pCurPOpp->isTriangleMethod())
-        exportPanel3DataToString(m_pCurPOpp, m_pCurPlane, m_pCurPlPolar, SaveOptions::exportFileType(), SaveOptions::textSeparator(), strong);
-    out << strong;
+        m_pCurPOpp->exportPanel3DataToString(m_pCurPlane, m_pCurPlPolar, xfl::exportFileType(), xfl::textSeparator(), strg);
+    out << QString::fromStdString(strg);
 
     out << ("\n\n");
 
@@ -3370,7 +3374,7 @@ void XPlane::onExportWPolarToFile()
 
     QString FileName, filter;
 
-    if(SaveOptions::exportFileType()==xfl::TXT) filter = "Text File (*.txt)";
+    if(xfl::exportFileType()==xfl::TXT) filter = "Text File (*.txt)";
     else                                        filter = "Comma Separated Values (*.csv)";
 
     FileName = QString::fromStdString(m_pCurPlPolar->name());
@@ -3385,12 +3389,12 @@ void XPlane::onExportWPolarToFile()
 
     if(filter.indexOf("*.txt")>0)
     {
-        SaveOptions::setExportFileType(xfl::TXT);
+        xfl::setExportFileType(xfl::TXT);
         if(FileName.indexOf(".txt")<0) FileName +=".txt";
     }
     else if(filter.indexOf("*.csv")>0)
     {
-        SaveOptions::setExportFileType(xfl::CSV);
+        xfl::setExportFileType(xfl::CSV);
         if(FileName.indexOf(".csv")<0) FileName +=".csv";
     }
 
@@ -3399,7 +3403,7 @@ void XPlane::onExportWPolarToFile()
 
     std::string polardata;
     std::string sep = "  ";
-    if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator().toStdString()+ " ";
+    if(xfl::exportFileType()==xfl::CSV) sep = xfl::textSeparator() + " ";
     polardata = m_pCurPlPolar->exportToString(sep);
 
     QTextStream out(&XFile);
@@ -3416,7 +3420,7 @@ QString XPlane::onExportPlPolarToClipboard()
     if(!m_pCurPlPolar) return QString();
     std::string polardata;
     std::string sep = "  ";
-    if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator().toStdString()+ " ";
+    if(xfl::exportFileType()==xfl::CSV) sep = xfl::textSeparator()+ " ";
     polardata = m_pCurPlPolar->exportToString(sep);
     QClipboard *pClipBoard = QApplication::clipboard();
     pClipBoard->setText(QString::fromStdString(polardata));
@@ -3450,7 +3454,7 @@ void XPlane::onExportAllPlPolars()
         polarname.replace(".", "_");
         filename = polarname;
         filename = DirName + "/" +filename;
-        if(SaveOptions::exportFileType()==xfl::TXT) filename += ".txt";
+        if(xfl::exportFileType()==xfl::TXT) filename += ".txt";
         else                                          filename += ".csv";
 
         XFile.setFileName(filename);
@@ -3459,7 +3463,7 @@ void XPlane::onExportAllPlPolars()
             out.setDevice(&XFile);
 
             std::string sep = "  ";
-            if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator().toStdString() + " ";
+            if(xfl::exportFileType()==xfl::CSV) sep = xfl::textSeparator() + " ";
             std::string exportstr = pWPolar->exportToString(sep);
             out << QString::fromStdString(exportstr);
             XFile.close();
@@ -5443,7 +5447,7 @@ void XPlane::onExportFuseMeshToSTL()
                                             &filter);
     if(!filename.length()) return;
 
-    Objects3d::exportMeshToSTLFile(filename, pFuse->triMesh(), Units::mtoUnit());
+    io::exportMeshToSTLFile(filename, pFuse->triMesh(), Units::mtoUnit());
 }
 
 
@@ -5464,7 +5468,7 @@ void XPlane::onExportMeshToSTLFile()
                                             &filter);
     if(!filename.length()) return;
 
-    Objects3d::exportMeshToSTLFile(filename, m_pCurPlane->triMesh(), Units::mtoUnit());
+    io::exportMeshToSTLFile(filename, m_pCurPlane->triMesh(), Units::mtoUnit());
 }
 
 
@@ -5477,66 +5481,36 @@ void XPlane::onImportPlanesfromXML()
     if(!pathNames.size()) return;
 //    QFileInfo fileInfo(pathNames.at(0));
 
-    PlaneXfl *pPlane = nullptr;
+    PlaneXfl *pPlaneXfl(nullptr);
     for(int iFile=0; iFile<pathNames.size(); iFile++)
     {
-        QFile XFile(pathNames.at(iFile));
-        pPlane = importPlaneFromXML(XFile);
+        std::string logmsg;
+
+        pPlaneXfl = io::importPlaneFromXML(pathNames.at(iFile).toStdString(), logmsg);
+
+        if(pPlaneXfl)
+        {
+            if(Objects3d::planeExists(pPlaneXfl->name())) Objects3d::setModifiedPlane(pPlaneXfl);
+            else                                          Objects3d::insertPlane(pPlaneXfl);
+        }
+        else
+        {
+            displayMessage(QString::fromStdString(logmsg), true, false);
+        }
     }
 
     updateTreeView();
 
-    if(pPlane)
+    if(pPlaneXfl)
     {
-        setPlane(pPlane);
-        m_pPlaneExplorer->selectPlane(pPlane);
+        setPlane(pPlaneXfl);
+        m_pPlaneExplorer->selectPlane(pPlaneXfl);
     }
 
     emit projectModified();
 
     setControls();
     updateView();
-}
-
-
-/**
- * Imports the plane geometry from an XML file
- */
-PlaneXfl *XPlane::importPlaneFromXML(QFile &xmlFile)
-{
-    if (!xmlFile.open(QIODevice::ReadOnly))
-    {
-        QString strange = "Could not open the file "+xmlFile.fileName()+"\n";
-        displayMessage(strange, true, false);
-        return nullptr;
-    }
-
-    XmlPlaneReader planereader(xmlFile);
-    if(!planereader.readFile())
-    {
-        QString strong;
-        QString errormsg;
-        errormsg = "Failed to read the file "+xmlFile.fileName()+"\n";
-        strong = QString::asprintf("   error at line %d column %d\n",int(planereader.lineNumber()),int(planereader.columnNumber()));
-        errormsg += strong;
-        displayMessage(errormsg, true, false);
-        return nullptr;
-    }
-
-    PlaneXfl *pPlane  = planereader.plane();
-    if(!pPlane)
-    {
-        QString strong = "No plane definition found in the file " + xmlFile.fileName() +"\n";
-        displayMessage(strong, true, false);
-        return nullptr;
-    }
-
-    displayMessage("Plane "+QString::fromStdString(pPlane->name())+" imported successfully\n", false, true);
-
-    if(Objects3d::planeExists(pPlane->name())) Objects3d::setModifiedPlane(pPlane);
-    else                                       Objects3d::insertPlane(pPlane);
-
-    return pPlane;
 }
 
 
@@ -5635,7 +5609,7 @@ void XPlane::onExportWingMeshToSTL()
 
     pWing->makeTriPanels(0, 0, true);
 
-    Objects3d::exportMeshToSTLFile(filename, pWing->triMesh(), Units::mtoUnit());
+    io::exportMeshToSTLFile(filename, pWing->triMesh(), Units::mtoUnit());
 }
 
 
@@ -5774,27 +5748,13 @@ void XPlane::onExportFuseToSTL()
     pos = FileName.indexOf(".stl", Qt::CaseInsensitive);
     if(pos<0) FileName += ".stl";
 
-    QFile XFile(FileName);
-
-    if (!XFile.open(QIODevice::WriteOnly))
-    {
-        displayMessage("Could not open the file for writing\n", true, false);
-        return;
-    }
-
     if(bBinary)
     {
-        QDataStream out(&XFile);
-        out.setByteOrder(QDataStream::LittleEndian);
-//        m_pFuse->exportStlTriangulation(out,1);
-        Objects3d::exportTriangulation(out,1.0, pFuse->triangles());
+        io::exportTriangulationToSTL(FileName,1.0, pFuse->triangles());
     }
     else
     {
-//        QTextStream out(&XFile);
     }
-
-    XFile.close();
 }
 
 
@@ -6753,10 +6713,14 @@ void XPlane::onImportAnalysesFromXML()
     QString strange;
     for(int iFile=0; iFile<PathNameList.size(); iFile++)
     {
-        QFile XFile(PathNameList.at(iFile));
-        pWPolar = importAnalysisFromXML(XFile);
+        std::string logmsg;
+        pWPolar = io::importAnalysisFromXML(PathNameList.at(iFile).toStdString(), logmsg);
 
-        if(pWPolar)
+        if(!pWPolar)
+        {
+            displayMessage(QString::fromStdString(logmsg), true, true);
+        }
+        else
         {
             m_pCurPOpp = nullptr;
 
@@ -6808,61 +6772,6 @@ void XPlane::onImportAnalysesFromXML()
     m_pgl3dXPlaneView->resetglMesh();
     m_pgl3dXPlaneView->resetglPOpp();
     updateView();
-}
-
-
-PlanePolar *XPlane::importAnalysisFromXML(QFile &xmlFile)
-{
-    displayMessage("\n\n", false, false);
-    if (!xmlFile.open(QIODevice::ReadOnly))
-    {
-        QString strange = "Could not open the file " + xmlFile.fileName() +"\n";
-        displayMessage(strange, true, false);
-        return nullptr;
-    }
-
-    QFileInfo fi(xmlFile);
-    displayMessage("Importing xml file " + fi.fileName() + "\n", false, false);
-
-    XmlPlanePolarReader wpolarreader(xmlFile);
-    wpolarreader.readXMLPolarFile();
-
-    if(wpolarreader.hasError())
-    {
-        QString errorMsg = wpolarreader.errorString() + QString("\nline %1 column %2").arg(wpolarreader.lineNumber()).arg(wpolarreader.columnNumber());
-        errorMsg +="\n";
-        displayMessage(errorMsg, true, false);
-        return nullptr;
-    }
-    PlanePolar *pWPolar = wpolarreader.wpolar();
-
-    Plane *pPlane = Objects3d::plane(pWPolar->planeName());
-    if(!pPlane && m_pCurPlane)
-    {
-        displayMessage("Attaching the analysis to the active plane.\n", false, false);
-        pWPolar->setPlaneName(m_pCurPlane->name());
-        pPlane = m_pCurPlane;
-    }
-    else if(!pPlane)
-    {
-        QString strange;
-        strange = QString::asprintf("No plane with the name %s\n", pWPolar->planeName().c_str());
-        displayMessage(strange, true, false);
-        delete pWPolar;
-        return nullptr;
-    }
-
-    if(pWPolar->name().length()==0)
-        pWPolar->setName(PlanePolarNameMaker::makeName(pPlane, pWPolar));
-
-    PlaneXfl const*pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pCurPlane);
-    if(pPlaneXfl)
-    {
-        for(int ie=0; ie<pWPolar->nAVLCtrls(); ie++)
-            pWPolar->AVLCtrl(ie).resizeValues(pPlaneXfl->nAVLGains());
-    }
-
-    return pWPolar;
 }
 
 
@@ -6918,493 +6827,4 @@ void XPlane::displayStdMessage(std::string const &msg, bool bShowWindow, bool bS
 void XPlane::displayMessage(QString const &msg, bool bShowWindow, bool bStatusBar, int duration)
 {
     s_pMainFrame->displayMessage(msg, bShowWindow, bStatusBar, duration);
-}
-
-
-void XPlane::exportMainDataToString(PlaneOpp const *pPOpp, Plane const*pPlane, QString &poppdata, xfl::enumTextFileType filetype, QString const &textsep) const
-{
-    QString strange;
-    QString title;
-    QString len = Units::lengthUnitQLabel();
-    QString inertia = Units::inertiaUnitQLabel();
-
-    QString sep = "  ";
-    if(filetype==xfl::CSV) sep = textsep+ " ";
-
-
-    poppdata += QString::fromStdString(pPOpp->planeName())+"\n";
-    poppdata += QString::fromStdString(pPOpp->polarName())+"\n\n";
-    poppdata +=   ALPHAch.rightJustified(17, ' ') + sep
-                + BETAch.rightJustified(17, ' ') + sep
-                + PHIch.rightJustified(17, ' ') + sep
-                + QString("ctrl").rightJustified(17, ' ') + sep
-                + QString("VInf("+Units::speedUnitQLabel()+")").rightJustified(17, ' ') +"\n";
-
-    strange = QString::asprintf("%17g", pPOpp->m_Alpha);                     poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_Beta);                      poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_Phi);                       poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_Ctrl);                      poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_QInf*Units::mstoUnit());    poppdata += strange;
-
-    poppdata += "\n\n";
-
-    strange =   QString("CL").rightJustified(17, ' ')          + sep
-              + QString("CX").rightJustified(17, ' ')          + sep
-              + QString("CY").rightJustified(17, ' ')          + sep
-              + QString("CD_inviscid").rightJustified(17, ' ') + sep
-              + QString("CD_viscous").rightJustified(17, ' ')  + sep
-              + QString("Cl").rightJustified(17, ' ')          + sep
-              + QString("Cm_inviscid").rightJustified(17, ' ') + sep
-              + QString("Cm_viscous").rightJustified(17, ' ')  + sep
-              + QString("Cn_inviscid").rightJustified(17, ' ') + sep
-              + QString("Cn_viscous").rightJustified(17, ' ') + "\n";
-    poppdata += strange;
-
-
-    strange = QString::asprintf("%17g", pPOpp->m_AF.CL());     poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_AF.CD());     poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_AF.Cy());     poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_AF.CDi());    poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_AF.CDv());    poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_AF.Cli());    poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_AF.Cmi());    poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_AF.Cmv());    poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_AF.Cni());    poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_AF.Cnv());    poppdata += strange;
-
-    poppdata += "\n\n";
-
-
-    strange = QString("CP.x("+len+")").rightJustified(17, ' ');         poppdata += strange+sep;
-    strange = QString("CP.y("+len+")").rightJustified(17, ' ');         poppdata += strange+sep;
-    strange = QString("CP.z("+len+")").rightJustified(17, ' ');         poppdata += strange+sep;
-    strange = QString("NP.x("+len+")").rightJustified(17, ' ');         poppdata += strange+sep;
-    poppdata += "\n";
-
-    strange = QString::asprintf("%17g", pPOpp->m_AF.centreOfPressure().x*Units::mtoUnit());    poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_AF.centreOfPressure().y*Units::mtoUnit());    poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_AF.centreOfPressure().z*Units::mtoUnit());    poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_SD.XNP   *Units::mtoUnit());    poppdata += strange+sep;
-    poppdata += "\n\n";
-
-    strange = QString("mass("+Units::massUnitQLabel()+")").rightJustified(17, ' ');     poppdata += strange+sep;
-    strange = QString("CoG.x("+len+")").rightJustified(17, ' ');                       poppdata += strange+sep;
-    strange = QString("CoG.y("+len+")").rightJustified(17, ' ');                       poppdata += strange+sep;
-    strange = QString("CoG.z("+len+")").rightJustified(17, ' ');                       poppdata += strange+sep;
-    strange = QString("CoG_Ixx("+inertia+")").rightJustified(17, ' ');                 poppdata += strange+sep;
-    strange = QString("CoG_Iyy("+inertia+")").rightJustified(17, ' ');                 poppdata += strange+sep;
-    strange = QString("CoG_Izz("+inertia+")").rightJustified(17, ' ');                 poppdata += strange+sep;
-    strange = QString("CoG_Ixz("+inertia+")").rightJustified(17, ' ');                 poppdata += strange+sep;
-    poppdata +="\n";
-
-    strange = QString::asprintf("%17g", pPOpp->m_Mass*Units::kgtoUnit());            poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_CoG.x*Units::mtoUnit());            poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_CoG.y*Units::mtoUnit());            poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_CoG.z*Units::mtoUnit());            poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_Inertia[0]*Units::kgm2toUnit());    poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_Inertia[1]*Units::kgm2toUnit());    poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_Inertia[2]*Units::kgm2toUnit());    poppdata += strange+sep;
-    strange = QString::asprintf("%17g", pPOpp->m_Inertia[3]*Units::kgm2toUnit());    poppdata += strange + "\n\n";
-
-
-    if(pPOpp->isType12358() || pPOpp->isType7())
-    {
-        StabDerivatives const &SD = pPOpp->m_SD;
-        QString props;
-
-        props += QString("CXu").rightJustified(17, ' ') + sep;
-        props += QString("CZu").rightJustified(17, ' ') + sep;
-        props += QString("Cmu").rightJustified(17, ' ') + sep;
-        props += QString("CXa").rightJustified(17, ' ') + sep;
-        props += QString("CZa").rightJustified(17, ' ') + sep;
-        props += QString("Cma").rightJustified(17, ' ') + sep;
-        props += QString("CXq").rightJustified(17, ' ') + sep;
-        props += QString("CZq").rightJustified(17, ' ') + sep;
-        props += QString("Cmq").rightJustified(17, ' ') + sep;
-        props += EOLch;
-        props += QString::asprintf("%17g", SD.CXu) + sep;
-        props += QString::asprintf("%17g", SD.CZu) + sep;
-        props += QString::asprintf("%17g", SD.Cmu) + sep;
-        props += QString::asprintf("%17g", SD.CXa) + sep;
-        props += QString::asprintf("%17g", SD.CZa) + sep;
-        props += QString::asprintf("%17g", SD.Cma) + sep;
-        props += QString::asprintf("%17g", SD.CXq) + sep;
-        props += QString::asprintf("%17g", SD.CZq) + sep;
-        props += QString::asprintf("%17g", SD.Cmq) + sep;
-        props += EOLch + EOLch;
-
-        props += QString("Cyb").rightJustified(17, ' ') + sep;
-        props += QString("Clb").rightJustified(17, ' ') + sep;
-        props += QString("Cnb").rightJustified(17, ' ') + sep;
-        props += QString("Cyp").rightJustified(17, ' ') + sep;
-        props += QString("Clp").rightJustified(17, ' ') + sep;
-        props += QString("Cnp").rightJustified(17, ' ') + sep;
-        props += QString("Cyr").rightJustified(17, ' ') + sep;
-        props += QString("Clr").rightJustified(17, ' ') + sep;
-        props += QString("Cnr").rightJustified(17, ' ') + sep;
-        props += EOLch;
-        props += QString::asprintf("%17g", SD.CYb) + sep;
-        props += QString::asprintf("%17g", SD.Clb) + sep;
-        props += QString::asprintf("%17g", SD.Cnb) + sep;
-        props += QString::asprintf("%17g", SD.CYp) + sep;
-        props += QString::asprintf("%17g", SD.Clp) + sep;
-        props += QString::asprintf("%17g", SD.Cnp) + sep;
-        props += QString::asprintf("%17g", SD.CYr) + sep;
-        props += QString::asprintf("%17g", SD.Clr) + sep;
-        props += QString::asprintf("%17g", SD.Cnr) + sep;
-        props += EOLch + EOLch;
-
-        for(uint i=0; i<SD.ControlNames.size(); i++)
-            {
-                props += "  " + QString::fromStdString(SD.ControlNames.at(i)) + EOLch;
-
-                props += QString("CXd").rightJustified(17, ' ') + sep;
-                props += QString("CYd").rightJustified(17, ' ') + sep;
-                props += QString("CZd").rightJustified(17, ' ') + sep;
-                props += QString("Cld").rightJustified(17, ' ') + sep;
-                props += QString("Cmd").rightJustified(17, ' ') + sep;
-                props += QString("Cnd").rightJustified(17, ' ') + sep;
-                props += EOLch;
-                props += QString::asprintf("%17g", SD.CXe.at(i)) + sep;
-                props += QString::asprintf("%17g", SD.CYe.at(i)) + sep;
-                props += QString::asprintf("%17g", SD.CZe.at(i)) + sep;
-                props += QString::asprintf("%17g", SD.CLe.at(i)) + sep;
-                props += QString::asprintf("%17g", SD.CMe.at(i)) + sep;
-                props += QString::asprintf("%17g", SD.CNe.at(i)) + sep;
-                props += EOLch + EOLch;
-            }
-
-
-        poppdata += props;
-    }
-    poppdata += "\n\n";
-
-
-    if(pPlane->isXflType())
-    {
-        PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
-
-        for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
-        {
-            if(iw<pPOpp->nWOpps())
-            {
-                //if there are any flaps
-                if(pPOpp->WOpp(iw).m_FlapMoment.size())
-                {
-                    poppdata += QString::fromStdString(pPlaneXfl->wingAt(iw)->name()) +" - flap moments ("+ Units::momentUnitQLabel() +")\n";
-                    for (int l=0; l<pPOpp->WOpp(iw).m_nFlaps; l++)
-                    {
-                        strange = QString::asprintf("Flap_%d", l+1).rightJustified(17, ' ') + sep;
-                        poppdata += strange;
-                    }
-                    poppdata += EOLch;
-                    for (int l=0; l<pPOpp->WOpp(iw).m_nFlaps; l++)
-                    {
-                        strange = QString::asprintf("%17g", pPOpp->WOpp(iw).m_FlapMoment.at(l)*Units::NmtoUnit()) + sep;
-                        poppdata += strange;
-                    }
-                    poppdata += EOLch;
-                }
-            }
-        }
-    }
-    poppdata += "\n\n";
-
-
-    title  = QString("y("+Units::lengthUnitQLabel()+")").rightJustified(17, ' ') + sep;
-    title += QString("Re").rightJustified(17, ' ') + sep;
-    title += QString("Ai").rightJustified(17, ' ') + sep;
-    title += QString("Cd_i").rightJustified(17, ' ') + sep;
-    title += QString("Cd_v").rightJustified(17, ' ') + sep;
-    title += QString("Cl").rightJustified(17, ' ') + sep;
-    title += QString("CP.x(%)").rightJustified(17, ' ') + sep;
-    title += QString("Trans.top").rightJustified(17, ' ') + sep;
-    title += QString("Trans.bot").rightJustified(17, ' ') + sep;
-    title += QString("Cm_i").rightJustified(17, ' ') + sep;
-    title += QString("Cm_v").rightJustified(17, ' ') + sep;
-    title += QString("Bending.mom").rightJustified(17, ' ') + sep;
-    title += QString("Vd.x").rightJustified(17, ' ') + sep;
-    title += QString("Vd.y").rightJustified(17, ' ') + sep;
-    title += QString("Vd.z").rightJustified(17, ' ') + sep;
-    title += QString("F.x").rightJustified(17, ' ') + sep;
-    title += QString("F.y").rightJustified(17, ' ') + sep;
-    title += QString("F.z").rightJustified(17, ' ') + sep;
-    title += GAMMAch.rightJustified(17, ' ');
-    title += '\n';
-
-    if(pPlane->isXflType())
-    {
-        PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
-
-        for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
-        {
-            if(iw>=pPOpp->nWOpps()) break; // error somewhere
-
-            WingOpp const &aWOpp = pPOpp->WOpp(iw);
-
-            poppdata += QString::fromStdString(pPlaneXfl->wingAt(iw)->name())+'\n';
-            poppdata += title;
-            for(int i=0; i<aWOpp.m_NStation; i++)
-            {
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_StripPos.at(i)*Units::mtoUnit());     poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_Re.at(i));             poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_Ai.at(i));             poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_ICd.at(i));            poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_PCd.at(i));            poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_Cl.at(i));             poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_XCPSpanRel.at(i));     poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_XTrTop.at(i));         poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_XTrBot.at(i));         poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_CmC4.at(i));           poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_CmViscous.at(i));      poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_BendingMoment.at(i));  poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_Vd.at(i).x);           poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_Vd.at(i).y);           poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_Vd.at(i).z);           poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_F.at(i).x);            poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_F.at(i).y);            poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_F.at(i).z);            poppdata += strange+sep;
-                strange = QString::asprintf("%17g", aWOpp.spanResults().m_Gamma.at(i));          poppdata += strange+sep;
-
-                poppdata += '\n';
-            }
-            poppdata += '\n';
-        }
-    }
-}
-
-
-void XPlane::exportPanel4DataToString(PlaneOpp const *pPOpp, Plane const *pPlane, PlanePolar const *pWPolar,
-                                       xfl::enumTextFileType exporttype,
-                                       QString &paneldata) const
-{
-    paneldata.clear();
-    if(!pPlane->isXflType())
-    {
-        return;
-    }
-
-    if(!pWPolar->isQuadMethod()) return;
-
-    PlaneXfl const *pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
-
-    QString strong, Format;
-    QTextStream out;
-    out.setString(&paneldata);
-    out << "Main Wing Cp Coefficients\n";
-
-    int coef = 1;
-
-    if(!pWPolar->bThinSurfaces())
-    {
-        coef = 2;
-    }
-    if(exporttype==xfl::TXT) out << " Panel     CtrlPt.x        CtrlPt.y        CtrlPt.z       Nx      Ny       Nz        Area       Cp\n";
-    else                     out << "Panel,CtrlPt.x,CtrlPt.y,CtrlPt.z,Nx,Ny,Nz,Area,Cp\n";
-
-    if(exporttype==xfl::TXT) Format = "%1     %2     %3     %4     %5     %6     %7     %8     %9\n";
-    else                     Format = "%1, %2, %3, %4, %5, %6, %7, %8, %9\n";
-
-
-    for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
-    {
-        if(pPlaneXfl->wingAt(iw))
-        {
-            out << QString::fromStdString(pPlaneXfl->wingAt(iw)->name()) + "Cp Coefficients"+"\n";
-            int p=0;
-            int iStrip = 0;
-            for (int j=0; j<pPlaneXfl->wingAt(iw)->nSurfaces(); j++)
-            {
-                Surface const & surf = pPlaneXfl->wingAt(iw)->surfaceAt(j);
-                if(surf.isTipLeft() && !pWPolar->bThinSurfaces())
-                {
-                    while (pPlaneXfl->panel4(pPlaneXfl->wingAt(iw)->firstPanel4Index() + p).isSidePanel())
-                        p++;
-                }
-
-                for(int k=0; k<surf.NYPanels(); k++)
-                {
-                    iStrip++;
-                    strong = QString("Strip %1\n").arg(iStrip);
-                    out << strong;
-
-                    for(int l=0; l<surf.NXPanels() * coef; l++)
-                    {
-                        Panel4 const &p4 = pPlaneXfl->panel4(pPlaneXfl->wingAt(iw)->firstPanel4Index() + p);
-                        strong = QString(Format).arg(p,7)
-                                     .arg(p4.ctrlPt(pPOpp->isVLMMethod()).x,11,'f')
-                                     .arg(p4.ctrlPt(pPOpp->isVLMMethod()).y,11,'f')
-                                     .arg(p4.ctrlPt(pPOpp->isVLMMethod()).z,11,'f')
-                                     .arg(p4.normal().x,11,'f')
-                                     .arg(p4.normal().y,11,'f')
-                                     .arg(p4.normal().z,11,'f')
-                                     .arg(p4.area(),11,'f')
-                                     .arg(pPOpp->WOpp(iw).m_dCp[p],11,'f');
-
-                        out << strong;
-                        p++;
-                    }
-                }
-            }
-        }
-        out << ("\n\n");
-    }
-}
-
-
-void XPlane::exportPanel3DataToString(PlaneOpp const *pPOpp, Plane const *pPlane, PlanePolar const *pWPolar,
-                                        xfl::enumTextFileType exporttype, QString const &textsep,
-                                        QString &paneldata) const
-{
-
-    paneldata.clear();
-    if(!pPlane || !pWPolar) return;
-    if(!pWPolar->isTriangleMethod()) return;
-
-    QString sep = "  ";
-    if(exporttype==xfl::CSV) sep = textsep + " ";
-
-    QString strong, strange;
-    QTextStream out;
-    out.setString(&paneldata);
-
-    PlaneXfl const *pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
-
-    if(pPlaneXfl)
-    {
-        int coef = 1;
-        if(!pWPolar->bThinSurfaces())  coef = 2;
-
-        strange =   QString("Panel").rightJustified(17, ' ')        + sep
-                  + QString("CtrlPt.x").rightJustified(17, ' ')     + sep
-                  + QString("CtrlPt.y").rightJustified(17, ' ')     + sep
-                  + QString("CtrlPt.z").rightJustified(17, ' ')     + sep
-                  + QString("N.x").rightJustified(17, ' ')          + sep
-                  + QString("N.y").rightJustified(17, ' ')          + sep
-                  + QString("N.z").rightJustified(17, ' ')          + sep
-                  + QString("Area").rightJustified(17, ' ')         + sep
-                  + QString("Cp").rightJustified(17, ' ') + "\n";
-        out << strange;
-
-        for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
-        {
-            out << QString::fromStdString(pPlaneXfl->wingAt(iw)->name()) + " - Cp Coefficients"+"\n";
-            int p=0;
-            int iStrip = 0;
-            for (int j=0; j<pPlaneXfl->wingAt(iw)->nSurfaces(); j++)
-            {
-                Surface const & surf = pPlaneXfl->wingAt(iw)->surfaceAt(j);
-                if(surf.isTipLeft() && !pWPolar->bThinSurfaces())
-                {
-                    while (pPlaneXfl->panel3At(pPlaneXfl->wingAt(iw)->firstPanel3Index() + p).isSidePanel())
-                        p++;
-                }
-
-                for(int k=0; k<surf.NYPanels(); k++)
-                {
-                    iStrip++;
-                    strong = QString("Strip %1\n").arg(iStrip);
-                    out << strong;
-
-                    for(int l=0; l<surf.NXPanels() * coef *2; l++)
-                    {
-                        Panel3 const &p3 = pPlaneXfl->panel3At(pPlaneXfl->wingAt(iw)->firstPanel3Index() + p);
-
-                        double cp=0;
-                        for(int in=0; in<3; in++) cp += pPOpp->m_Cp.at(p3.index()*3+in);
-                        cp /= 3.0;
-
-                        strong = QString::asprintf("%17d", p3.index())        +sep;
-                        strong += QString::asprintf("%17g", p3.CoG().x)       +sep;
-                        strong += QString::asprintf("%17g", p3.CoG().y)       +sep;
-                        strong += QString::asprintf("%17g", p3.CoG().z)       +sep;
-                        strong += QString::asprintf("%17g", p3.normal().x)    +sep;
-                        strong += QString::asprintf("%17g", p3.normal().y)    +sep;
-                        strong += QString::asprintf("%17g", p3.normal().z)    +sep;
-                        strong += QString::asprintf("%17g", p3.area())        +sep;
-                        strong += QString::asprintf("%17g", cp)               +"\n";
-
-                        out << strong;
-                        p++;
-                    }
-                }
-            }
-            out << ("\n\n");
-        }
-
-        for(int ifuse=0; ifuse<pPlaneXfl->nFuse(); ifuse++)
-        {
-            Fuse const *pFuse = pPlaneXfl->fuseAt(ifuse);
-            out << QString::fromStdString(pFuse->name()) + " - Cp Coefficients"+"\n";
-
-            for(int p=0; p<pFuse->nPanel3(); p++)
-            {
-                Panel3 const &p3 = pPlaneXfl->panel3At(pFuse->firstPanel3Index() + p);
-
-                double cp=0;
-                for(int in=0; in<3; in++) cp += pPOpp->m_Cp.at(p3.index()*3+in);
-                cp /= 3.0;
-
-                strong = QString::asprintf("%17d", p3.index())        +sep;
-                strong += QString::asprintf("%17g", p3.CoG().x)       +sep;
-                strong += QString::asprintf("%17g", p3.CoG().y)       +sep;
-                strong += QString::asprintf("%17g", p3.CoG().z)       +sep;
-                strong += QString::asprintf("%17g", p3.normal().x)    +sep;
-                strong += QString::asprintf("%17g", p3.normal().y)    +sep;
-                strong += QString::asprintf("%17g", p3.normal().z)    +sep;
-                strong += QString::asprintf("%17g", p3.area())        +sep;
-                strong += QString::asprintf("%17g", cp)               +"\n";
-
-
-                out << strong;
-            }
-            out <<"\n\n";
-        }
-    }
-    else
-    {
-        PlaneSTL const *pPlaneSTL = dynamic_cast<PlaneSTL const*>(pPlane);
-        if(!pPlaneSTL) return;
-
-
-        out << QString::fromStdString(pPlane->name()) + " - Cp Coefficients"+"\n";
-
-        strange =   QString("Panel").rightJustified(17, ' ')        + sep
-                  + QString("CtrlPt.x").rightJustified(17, ' ')     + sep
-                  + QString("CtrlPt.y").rightJustified(17, ' ')     + sep
-                  + QString("CtrlPt.z").rightJustified(17, ' ')     + sep
-                  + QString("N.x").rightJustified(17, ' ')          + sep
-                  + QString("N.y").rightJustified(17, ' ')          + sep
-                  + QString("N.z").rightJustified(17, ' ')          + sep
-                  + QString("Area").rightJustified(17, ' ')         + sep
-                  + QString("Cp").rightJustified(17, ' ') + "\n";
-        out << strange;
-
-
-
-        for(int k=0; k<pPOpp->nPanel3(); k++)
-        {
-            Panel3 const &p3 = pPlaneSTL->panel3At(k);
-
-            double cp=0;
-            for(int in=0; in<3; in++) cp += pPOpp->m_Cp.at(p3.index()*3+in);
-            cp /= 3.0;
-
-            strong = QString::asprintf("%17d", p3.index())        +sep;
-            strong += QString::asprintf("%17g", p3.CoG().x)       +sep;
-            strong += QString::asprintf("%17g", p3.CoG().y)       +sep;
-            strong += QString::asprintf("%17g", p3.CoG().z)       +sep;
-            strong += QString::asprintf("%17g", p3.normal().x)    +sep;
-            strong += QString::asprintf("%17g", p3.normal().y)    +sep;
-            strong += QString::asprintf("%17g", p3.normal().z)    +sep;
-            strong += QString::asprintf("%17g", p3.area())        +sep;
-            strong += QString::asprintf("%17g", cp)               +"\n";
-
-
-            out << strong;
-
-        }
-
-        out << ("\n\n");
-    }
 }

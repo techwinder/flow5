@@ -33,7 +33,8 @@
 #include <QColorDialog>
 
 #include "attractor2d.h"
-#include <api/flow5-io.h>
+#include <api/utils-io.h>
+
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/opengl/globals/gl_globals.h>

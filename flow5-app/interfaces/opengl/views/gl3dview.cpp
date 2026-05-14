@@ -46,7 +46,8 @@
 #include <api/xml_globals.h>
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <core/trace.h>
 #include <core/xflcore.h>

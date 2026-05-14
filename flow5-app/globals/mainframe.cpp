@@ -55,7 +55,8 @@
 
 
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <globals/aboutf5.h>
@@ -2019,6 +2020,7 @@ void MainFrame::onInsertProject()
 
     if(end==".xfl")
     {
+
         QDataStream ar(&XFile);
         bool bIsStoring = false;
         PlanePolar wplr; // dummy
@@ -2445,8 +2447,8 @@ bool MainFrame::saveProject(const QString &filepath)
         return false;
     }
 
-
     displayMessage(EOLch + "Saving project "+filepath + EOLch, false);
+
     QDataStream ar(&fpb);
     FileIO saver;
     connect(&saver, SIGNAL(displayMessage(QString)), m_pLogMessageDlg, SLOT(onAppendPlainText(QString)));
@@ -2715,8 +2717,8 @@ bool MainFrame::loadSettings()
         DisplayOptions::setStyleSheetOverride(settings.value("bStyleSheet", DisplayOptions::bStyleSheetOverride()).toBool());
 
         int k = settings.value("ExportFileType", 0).toInt();
-        if (k==0) SaveOptions::setExportFileType(xfl::TXT);
-        else      SaveOptions::setExportFileType(xfl::CSV);
+        if (k==0) xfl::setExportFileType(xfl::TXT);
+        else      xfl::setExportFileType(xfl::CSV);
 
         m_GraphExportFilter = settings.value("GraphExportFilter",".csv").toString();
 
@@ -2885,7 +2887,7 @@ void MainFrame::saveSettings()
         settings.setValue("Style",       PrefsDlg::styleName());
         settings.setValue("bStyleSheet", DisplayOptions::bStyleSheetOverride());
 
-        if (SaveOptions::exportFileType()==xfl::TXT) settings.setValue("ExportFileType", 0);
+        if (xfl::exportFileType()==xfl::TXT) settings.setValue("ExportFileType", 0);
         else                                         settings.setValue("ExportFileType", 1);
 
         settings.setValue("GraphExportFilter", m_GraphExportFilter);
@@ -3538,376 +3540,21 @@ void MainFrame::onSetNoApp()
 /** Make one .plr file for each foil and save it to the path name*/
 void MainFrame::onMakePlrFiles(const QString &pathname) const
 {
-    QFile XFile;
     QString fileName;
 
     for(int l=0; l<Objects2d::nFoils(); l++)
     {
         Foil *pFoil = Objects2d::foil(l);
         fileName = pathname + QDir::separator() + QString::fromStdString(pFoil->name()) +".plr";
-        XFile.setFileName(fileName);
-        if (XFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            QDataStream ar(&XFile);
-            ar.setVersion(QDataStream::Qt_4_5);
-            ar.setByteOrder(QDataStream::LittleEndian);
-            m_pXDirect->writeFoilPolars(ar, pFoil);
-            XFile.close();
-        }
+
+        io::writeFoilPolars(fileName, pFoil);
     }
 }
 
 
 bool MainFrame::onExportAllPolars(QString const &pathName, bool bCSV) const
 {
-    return exportAllPolars(pathName, bCSV? xfl::CSV : xfl::TXT);
-}
-
-
-bool MainFrame::exportAllPolars(QString const &pathname, xfl::enumTextFileType fileType) const
-{
-    QFile XFile;
-    QTextStream out(&XFile);
-    QString fileName;
-
-    bool bCSV = SaveOptions::exportFileType()==xfl::CSV;
-
-    for(int l=0; l<Objects2d::nPolars(); l++)
-    {
-        Polar const *pPolar = Objects2d::polarAt(l);
-        Foil  const *pFoil  = Objects2d::foil(pPolar->foilName());
-        if(!pFoil) continue;
-
-        QString FoilSubDirPath = pathname + QDir::separator() + QString::fromStdString(pFoil->name());
-        QDir ExportFoilDir(FoilSubDirPath);
-        if(!ExportFoilDir.exists())
-        {
-            if(!ExportFoilDir.mkpath(FoilSubDirPath))  continue;
-        }
-
-        fileName = QString::fromStdString(pPolar->name());
-        if(fileType==xfl::TXT) fileName += ".txt";
-        else                   fileName += ".csv";
-
-        XFile.setFileName(ExportFoilDir.absolutePath() + QDir::separator() + fileName);
-
-        if (XFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        {
-            std::string str;
-            pPolar->exportToString(str, false, bCSV);
-            out << QString::fromStdString(str);
-            XFile.close();
-        }
-        else return false;
-    }
-    return true;
-}
-
-
-bool MainFrame::exportAllWPolars(QString const &pathname, bool bCSV)
-{
-    QFile XFile;
-    QTextStream out(&XFile);
-    QString fileName;
-
-    xfl::enumTextFileType fileType = bCSV? xfl::CSV : xfl::TXT;
-
-    for(int p=0; p<Objects3d::nPlanes(); p++)
-    {
-        Plane const *pPlane = Objects3d::planeAt(p);
-        if(pPlane && pPlane->isXflType())
-        {
-            PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
-            QString PlaneSubDirPath = pathname + QDir::separator() + QString::fromStdString(pPlaneXfl->name());
-            QDir ExportPlaneDir(PlaneSubDirPath);
-            if(!ExportPlaneDir.exists())
-            {
-                if(!ExportPlaneDir.mkpath(PlaneSubDirPath))
-                {
-                    return false;
-                }
-            }
-
-            for(int l=0; l<Objects3d::nPolars(); l++)
-            {
-                PlanePolar const *pWPolar = Objects3d::plPolarAt(l);
-                if(!pWPolar) continue;
-                if(pWPolar->planeName().compare(pPlaneXfl->name())!=0) continue;
-
-                fileName = QString::fromStdString(pWPolar->name());
-                fileName.replace("/", "_");
-                fileName.replace(".", "_");
-                fileName = PlaneSubDirPath + QDir::separator() +fileName;
-                if(fileType==xfl::TXT) fileName += ".txt";
-                else                   fileName += ".csv";
-
-                XFile.setFileName(fileName);
-                if (XFile.open(QIODevice::WriteOnly | QIODevice::Text))
-                {
-                    out.setDevice(&XFile);
-                    std::string props;
-
-                    QString lenlab, arealab, masslab, speedlab;
-                    lenlab = Units::lengthUnitQLabel();
-                    arealab = Units::areaUnitQLabel();
-                    masslab = Units::massUnitQLabel();
-                    speedlab = Units::speedUnitQLabel();
-
-                    pWPolar->getProperties(props, pPlane);
-                    out << QString::fromStdString(props);
-
-                    QString sep = "  ";
-                    if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator()+ " ";
-                    std::string exportdata = pWPolar->exportToString(sep.toStdString());
-                    out << QString::fromStdString(exportdata);
-                    XFile.close();
-                }
-                else return false;
-            }
-        }
-    }
-    return true;
-}
-
-
-bool MainFrame::exportAllBtPolars(QString const &pathname, bool bCSV)
-{
-    QFile XFile;
-    QTextStream out(&XFile);
-    QString fileName;
-
-    xfl::enumTextFileType fileType = bCSV? xfl::CSV : xfl::TXT;
-
-    for(int p=0; p<SailObjects::nBoats(); p++)
-    {
-        Boat const *pBoat = SailObjects::boat(p);
-
-        QString BoatSubDirPath = pathname + QDir::separator() + QString::fromStdString(pBoat->name());
-        QDir ExportBoatDir(BoatSubDirPath);
-        if(!ExportBoatDir.exists())
-        {
-            if(!ExportBoatDir.mkpath(BoatSubDirPath))
-            {
-                return false;
-            }
-        }
-
-        for(int l=0; l<SailObjects::nBtPolars(); l++)
-        {
-            BoatPolar const *pBtPolar = SailObjects::btPolar(l);
-            if(!pBtPolar) continue;
-            if(pBtPolar->boatName().compare(pBoat->name())!=0) continue;
-
-            fileName = QString::fromStdString(pBtPolar->name());
-            fileName.replace("/", "_");
-            fileName.replace(".", "_");
-            fileName = BoatSubDirPath + QDir::separator() +fileName;
-            if(fileType==xfl::TXT) fileName += ".txt";
-            else                   fileName += ".csv";
-
-            XFile.setFileName(fileName);
-            if (XFile.open(QIODevice::WriteOnly | QIODevice::Text))
-            {
-                out.setDevice(&XFile);
-                std::string props;
-
-                pBtPolar->getProperties(props, fileType);
-                out << QString::fromStdString(props);
-
-                QString sep = "  ";
-                if(SaveOptions::exportFileType()==xfl::CSV) sep = SaveOptions::textSeparator()+ " ";
-                std::string data;
-                pBtPolar->getBtPolarData(data, sep.toStdString());
-                out << QString::fromStdString(data);
-                XFile.close();
-            }
-            else return false;
-        }
-    }
-    return true;
-}
-
-
-bool MainFrame::exportAllBtOpps(const QString &pathname, bool bCSV, bool bPanelData) const
-{
-    QFile XFile;
-    QTextStream out(&XFile);
-    QString fileName;
-
-    xfl::enumTextFileType fileType = bCSV? xfl::CSV : xfl::TXT;
-
-    for(int p=0; p<SailObjects::nBoats(); p++)
-    {
-        Boat const *pBoat = SailObjects::boat(p);
-        if(pBoat)
-        {
-            QString BoatSubDirPath = pathname + QDir::separator() + QString::fromStdString(pBoat->name());
-            QDir ExportBoatDir(BoatSubDirPath);
-            if(!ExportBoatDir.exists())
-            {
-                if(!ExportBoatDir.mkpath(BoatSubDirPath))
-                {
-                    return false;
-                }
-            }
-
-            for(int l=0; l<SailObjects::nBtPolars(); l++)
-            {
-                BoatPolar const *pBtPolar = SailObjects::btPolar(l);
-                if(!pBtPolar) continue;
-                if(pBtPolar->boatName().compare(pBoat->name())!=0) continue;
-                QString PolarName = QString::fromStdString(pBtPolar->name());
-                PolarName.replace("/", "_");
-                PolarName.replace(".", "_");
-                QString BtPolarSubDirPath = BoatSubDirPath + QDir::separator() + PolarName;
-                QDir ExportWPolarDir(BtPolarSubDirPath);
-                if(!ExportWPolarDir.exists())
-                {
-                    if(!ExportWPolarDir.mkpath(BtPolarSubDirPath))
-                    {
-                        return false;
-                    }
-                }
-                for(int k=0; k<SailObjects::nBtOpps(); k++)
-                {
-                    BoatOpp const *pBtOpp = SailObjects::btOpp(k);
-                    fileName = QString::fromStdString(pBtOpp->title(false));
-                    fileName.replace("/", "_");
-                    fileName.replace(".", "_");
-                    fileName = BtPolarSubDirPath + QDir::separator() +fileName;
-                    if(fileType==xfl::TXT) fileName += ".txt";
-                    else                   fileName += ".csv";
-
-                    XFile.setFileName(fileName);
-                    if (XFile.open(QIODevice::WriteOnly | QIODevice::Text))
-                    {
-                        out.setDevice(&XFile);
-                        std::string props;
-
-                        pBtOpp->exportMainDataToString(pBoat, props, SaveOptions::exportFileType(), SaveOptions::textSeparator().toStdString());
-                        out << QString::fromStdString(props);
-                        if(bPanelData)
-                        {
-                            props.clear();
-                            if(pBtOpp->isTriangleMethod())
-                                pBtOpp->exportPanel3DataToString(pBoat, SaveOptions::exportFileType(), props);
-                            out << QString::fromStdString(props);
-                        }
-                        XFile.close();
-                    }
-                }
-            }
-        }
-    }
-    return true;
-}
-
-
-bool MainFrame::exportAllPOpps(const QString &pathname, bool bCSV, bool bPanelData)
-{
-    QFile XFile;
-    QTextStream out(&XFile);
-    QString fileName;
-
-    xfl::enumTextFileType fileType = bCSV? xfl::CSV : xfl::TXT;
-
-    for(int p=0; p<Objects3d::nPlanes(); p++)
-    {
-        Plane const *pPlane = Objects3d::planeAt(p);
-        if(pPlane && pPlane->isXflType())
-        {
-            PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
-            QString PlaneSubDirPath = pathname + QDir::separator() + QString::fromStdString(pPlaneXfl->name());
-            QDir ExportPlaneDir(PlaneSubDirPath);
-            if(!ExportPlaneDir.exists())
-            {
-                if(!ExportPlaneDir.mkpath(PlaneSubDirPath))
-                {
-                    return false;
-                }
-            }
-
-            for(int l=0; l<Objects3d::nPolars(); l++)
-            {
-                PlanePolar const *pWPolar = Objects3d::plPolarAt(l);
-                if(!pWPolar) continue;
-                if(pWPolar->planeName().compare(pPlaneXfl->name())!=0) continue;
-                QString PolarName = QString::fromStdString(pWPolar->name());
-                PolarName.replace("/", "_");
-                PolarName.replace(".", "_");
-                QString WPolarSubDirPath = PlaneSubDirPath + QDir::separator() + PolarName;
-                QDir ExportWPolarDir(WPolarSubDirPath);
-                if(!ExportWPolarDir.exists())
-                {
-                    if(!ExportWPolarDir.mkpath(WPolarSubDirPath))
-                    {
-                        return false;
-                    }
-                }
-                for(int k=0; k<Objects3d::nPOpps(); k++)
-                {
-                    PlaneOpp const *pPOpp = Objects3d::POppAt(k);
-                    fileName = QString::fromStdString(pPOpp->title(false));
-                    fileName.replace("/", "_");
-                    fileName.replace(".", "_");
-                    fileName = WPolarSubDirPath + QDir::separator() +fileName;
-                    if(fileType==xfl::TXT) fileName += ".txt";
-                    else                   fileName += ".csv";
-
-                    XFile.setFileName(fileName);
-                    if (XFile.open(QIODevice::WriteOnly | QIODevice::Text))
-                    {
-                        out.setDevice(&XFile);
-                        QString props;
-
-                        m_pXPlane->exportMainDataToString(pPOpp, pPlane, props, SaveOptions::exportFileType(), SaveOptions::textSeparator());
-                        out << props;
-                        if(bPanelData)
-                        {
-                            props.clear();
-                            if(pPOpp->isQuadMethod())
-                                m_pXPlane->exportPanel4DataToString(pPOpp, pPlaneXfl, pWPolar, SaveOptions::exportFileType(), props);
-                            else if(pPOpp->isTriangleMethod())
-                                m_pXPlane->exportPanel3DataToString(pPOpp, pPlaneXfl, pWPolar, SaveOptions::exportFileType(), SaveOptions::textSeparator(), props);
-                            out <<props;
-                        }
-                        XFile.close();
-                    }
-                }
-            }
-        }
-    }
-    return true;
-}
-
-
-bool MainFrame::exportAllStlMesh(QString const &pathname)
-{
-    for(int p=0; p<Objects3d::nPlanes(); p++)
-    {
-        Plane const *pPlane = Objects3d::planeAt(p);
-        if(pPlane && pPlane->isXflType())
-        {
-            PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
-
-            QString fileName = QString::fromStdString(pPlaneXfl->name())+".stl";
-            fileName.replace("/", "_");
-            fileName = pathname + QDir::separator() +fileName;
-
-            QFile XFile;
-            QDataStream out(&XFile);
-            XFile.setFileName(fileName);
-            if (XFile.open(QIODevice::WriteOnly | QIODevice::Text))
-            {
-                out.setDevice(&XFile);
-                Objects3d::exportTriMesh(out, 1.0, pPlaneXfl->triMesh());
-
-                XFile.close();
-            }
-            else return false;
-        }
-    }
-    return true;
+    return io::exportAllPolars(pathName, bCSV? xfl::CSV : xfl::TXT);
 }
 
 
@@ -4309,7 +3956,7 @@ void MainFrame::handleScriptResults()
 
     if(m_pScriptExecutor->outputWPolarText())
     {
-        if(exportAllWPolars(m_pScriptExecutor->outputDirPath(), bCSV))
+        if(io::exportAllWPolars(m_pScriptExecutor->outputDirPath(), bCSV))
         {
             m_pLogWt->onOutputMessage("The plane polars have been exported to text files\n");
         }
@@ -4318,7 +3965,7 @@ void MainFrame::handleScriptResults()
             m_pLogWt->onOutputMessage("Error exporting the plane polars to text files\n");
         }
 
-        if(exportAllBtPolars(m_pScriptExecutor->outputDirPath(), bCSV))
+        if(io::exportAllBtPolars(m_pScriptExecutor->outputDirPath(), bCSV))
         {
             m_pLogWt->onOutputMessage("The boat polars have been exported to text files\n");
         }
@@ -4330,7 +3977,7 @@ void MainFrame::handleScriptResults()
 
     if(m_pScriptExecutor->outputPOppText())
     {
-        if(exportAllPOpps(m_pScriptExecutor->outputDirPath(), bCSV, m_pScriptExecutor->exportPanelCp()))
+        if(io::exportAllPOpps(m_pScriptExecutor->outputDirPath(), bCSV, m_pScriptExecutor->exportPanelCp()))
         {
             m_pLogWt->onOutputMessage("The plane operating points have been exported to text files\n");
         }
@@ -4339,7 +3986,7 @@ void MainFrame::handleScriptResults()
             m_pLogWt->onOutputMessage("Error exporting the plane operating points to text files\n");
         }
 
-        if(exportAllBtOpps(m_pScriptExecutor->outputDirPath(), bCSV, m_pScriptExecutor->exportPanelCp()))
+        if(io::exportAllBtOpps(m_pScriptExecutor->outputDirPath(), bCSV, m_pScriptExecutor->exportPanelCp()))
         {
             m_pLogWt->onOutputMessage("The boat operating points have been exported to text files\n");
         }
@@ -4363,7 +4010,7 @@ void MainFrame::handleScriptResults()
         if(stldir.exists())
         {
            m_pLogWt->onOutputMessage("Exporting STL meshes to directory: "+stldir.path()+EOLch);
-           exportAllStlMesh(stldir.path());
+           io::exportAllStlMesh(stldir.path());
         }
     }
 

@@ -39,7 +39,6 @@
 #include "batchxmldlg.h"
 
 #include <api/fl5core.h>
-#include <core/flow5events.h>
 #include <api/llttask.h>
 #include <api/objects3d.h>
 #include <api/plane.h>
@@ -50,9 +49,12 @@
 #include <api/units.h>
 #include <api/xmlplanepolarreader.h>
 #include <api/xmlplanepolarwriter.h>
+#include <api/utils-io.h>
 
+#include <core/flow5events.h>
 #include <core/displayoptions.h>
-#include <core/qunits.h>
+#include <utils-io.h>
+
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/analysisrangetable.h>
@@ -852,7 +854,7 @@ void BatchXmlDlg::onEditAnalysis()
 void BatchXmlDlg::onListDirAnalyses()
 {
     SaveOptions::setXmlWPolarDirName(m_pleWPolarDir->text());
-    QStringList files = xfl::findFiles(SaveOptions::xmlWPolarDirName(), {"*.xml"}, false);
+    QStringList files = io::findFiles(SaveOptions::xmlWPolarDirName(), {"*.xml"}, false);
 
     // read the files, just to check if they are valid WPolars
     QStringList validnames;

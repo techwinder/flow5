@@ -92,8 +92,6 @@ class PlaneXflDlg : public PlaneDlg
         void editFuse(int iFuse, bool bAdvanced=false);
         void readParams();
 
-        void readVSPSection(QTextStream &stream, QString &wingname, int &index, WingSection &ws);
-
         void setControls() override;
 
         void updateData();

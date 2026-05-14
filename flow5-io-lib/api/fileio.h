@@ -44,8 +44,6 @@ class FL5IOLIB_EXPORT FileIO : public QObject
 
     public:
 
-        bool loadProject(const std::string &stdPathName, std::string &logmsg);
-
         bool serializeProjectFl5(QDataStream &ar, bool bIsStoring);
         int serializeProjectMetaDataFl5(QDataStream &ar, bool bIsStoring);
 

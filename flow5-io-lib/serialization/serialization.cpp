@@ -7405,229 +7405,213 @@ bool serial::serializeVortonFl5(Vorton &vtn, QDataStream &ar, bool bIsStoring)
 
 void serial::serializePanelsFl5(TriMesh &mesh, QDataStream &ar, bool bIsStoring)
 {
-    if(bIsStoring) serial::savePanels(mesh, ar);
-    else           serial::loadPanels(mesh, ar);
+    if(bIsStoring)
+    {
+        int nIntSpares=0;
+        int nDbleSpares=0;
+        int n=0;
+        double dble=0.0;
+
+        // 500001: new v7 format
+        int ArchiveFormat = 500001;
+
+        ar << ArchiveFormat;
+        ar << mesh.panelCount();
+
+        for(int i3=0; i3<mesh.panelCount(); i3++)
+        {
+            Panel3 const &p3 = mesh.panel(i3);
+            for(int in=0; in<3; in++)
+            {
+                ar << p3.node(in).xf() << p3.node(in).yf() << p3.node(in).zf();
+            }
+            ar << p3.isPositiveOrientation();
+        }
+
+        // dynamic space allocation for the future storage of more data, without need to change the format
+        nIntSpares=0;
+        ar << nIntSpares;
+        n=0;
+        for (int i=0; i<nIntSpares; i++) ar << n;
+        nDbleSpares=0;
+        ar << nDbleSpares;
+        for (int i=0; i<nDbleSpares; i++) ar << dble;
+    }
+    else
+    {
+        int nIntSpares=0;
+        int nDbleSpares=0;
+        int n=0;
+        double dble=0.0;
+        int ArchiveFormat=0;// identifies the format of the file
+        bool bPositiveOrientation=false;
+        int n3=0;
+        float f0=0,f1=0,f2=0;
+        Vector3d S[3];
+        ar >> ArchiveFormat;
+        ar >> n3;
+
+        mesh.clearMesh();
+        for(int i3=0; i3<n3; i3++)
+        {
+            for(int in=0; in<3; in++)
+            {
+                ar >> f0 >> f1 >> f2;
+                S[in].set(double(f0), double(f1), double(f2));
+            }
+            ar >> bPositiveOrientation;
+            mesh.addPanel({S[0], S[1], S[2]});
+            mesh.lastPanel().setSurfacePosition(xfl::FUSESURFACE);
+        }
+
+        // space allocation
+        ar >> nIntSpares;
+        for (int i=0; i<nIntSpares; i++) ar >> n;
+        ar >> nDbleSpares;
+        for (int i=0; i<nDbleSpares; i++) ar >> dble;
+
+        std::string logmsg;
+
+        mesh.makeNodeArrayFromPanels(0, logmsg, "   "); //node and panel indexes are set later at plane assembly time
+
+    }
 }
 
 
 void serial::serializeMeshFl5(TriMesh &mesh, QDataStream &ar, bool bIsStoring)
 {
-    if(bIsStoring) serial::saveMesh(mesh, ar);
-    else           serial::loadMesh(mesh, ar);
-}
-
-
-void serial::savePanels(TriMesh &mesh, QDataStream &ar)
-{
-    int nIntSpares=0;
-    int nDbleSpares=0;
-    int n=0;
-    double dble=0.0;
-
-    // 500001: new v7 format
-    int ArchiveFormat = 500001;
-
-    ar << ArchiveFormat;
-    ar << mesh.panelCount();
-
-    for(int i3=0; i3<mesh.panelCount(); i3++)
+    if(bIsStoring)
     {
-        Panel3 const &p3 = mesh.panel(i3);
-        for(int in=0; in<3; in++)
+        // 500001: new fl5 format
+        // 500002: addded TE opposite indexes
+        int ArchiveFormat = 500002;
+
+
+        ar << ArchiveFormat;
+
+        ar << mesh.nNodes();
+        for(int in=0; in<mesh.nNodes(); in++)
         {
-            ar << p3.node(in).xf() << p3.node(in).yf() << p3.node(in).zf();
-        }
-        ar << p3.isPositiveOrientation();
-    }
+            Node const &nd = mesh.node(in);
+            ar << nd.index();
 
-    // dynamic space allocation for the future storage of more data, without need to change the format
-    nIntSpares=0;
-    ar << nIntSpares;
-    n=0;
-    for (int i=0; i<nIntSpares; i++) ar << n;
-    nDbleSpares=0;
-    ar << nDbleSpares;
-    for (int i=0; i<nDbleSpares; i++) ar << dble;
-}
-
-
-void serial::loadPanels(TriMesh &mesh, QDataStream &ar)
-{
-    int nIntSpares=0;
-    int nDbleSpares=0;
-    int n=0;
-    double dble=0.0;
-    int ArchiveFormat=0;// identifies the format of the file
-    bool bPositiveOrientation=false;
-    int n3=0;
-    float f0=0,f1=0,f2=0;
-    Vector3d S[3];
-    ar >> ArchiveFormat;
-    ar >> n3;
-
-    mesh.clearMesh();
-    for(int i3=0; i3<n3; i3++)
-    {
-        for(int in=0; in<3; in++)
-        {
-            ar >> f0 >> f1 >> f2;
-            S[in].set(double(f0), double(f1), double(f2));
-        }
-        ar >> bPositiveOrientation;
-        mesh.addPanel({S[0], S[1], S[2]});
-        mesh.lastPanel().setSurfacePosition(xfl::FUSESURFACE);
-    }
-
-    // space allocation
-    ar >> nIntSpares;
-    for (int i=0; i<nIntSpares; i++) ar >> n;
-    ar >> nDbleSpares;
-    for (int i=0; i<nDbleSpares; i++) ar >> dble;
-
-    std::string logmsg;
-
-//    auto t0 = std::chrono::high_resolution_clock::now();
-
-    mesh.makeNodeArrayFromPanels(0, logmsg, "   "); //node and panel indexes are set later at plane assembly time
-/*    auto t1 = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    qDebug("TriMesh::loadTriMesh::makeNodeArrayFromPanels: {:g}ms", double(duration)/1000.0);*/
-}
-
-
-void serial::saveMesh(TriMesh &mesh, QDataStream &ar)
-{
-    // 500001: new fl5 format
-    // 500002: addded TE opposite indexes
-    int ArchiveFormat = 500002;
-
-
-    ar << ArchiveFormat;
-
-    ar << mesh.nNodes();
-    for(int in=0; in<mesh.nNodes(); in++)
-    {
-        Node const &nd = mesh.node(in);
-        ar << nd.index();
-
-        ar << nd.xf() << nd.yf() << nd.zf();
-        ar << nd.normal().xf() << nd.normal().yf() << nd.normal().zf();
-        ar << nd.isTrailing();
-        ar << int(nd.neighbourNodeCount());
-        for(int ine=0; ine<nd.neighbourNodeCount(); ine++)
-            ar << nd.nodeNeighbourIndex(ine);
-        ar << int(nd.triangleCount());
-        for(int ine=0; ine<nd.triangleCount(); ine++)
-            ar << nd.triangleIndex(ine);
-    }
-
-    ar << mesh.panelCount();
-    for(int i3=0; i3<mesh.panelCount(); i3++)
-    {
-        Panel3 const &p3 = mesh.panel(i3);
-        ar << p3.index();
-        ar << p3.nodeIndex(0) << p3.nodeIndex(1) << p3.nodeIndex(2);
-
-        ar << p3.neighbour(0) << p3.neighbour(1) << p3.neighbour(2);
-        ar << p3.isPositiveOrientation();
-        ar << p3.isTrailing();
-        ar << p3.oppositeIndex();
-        switch(p3.surfacePosition())
-        {
-            case xfl::BOTSURFACE:   ar<<0;     break;
-            case xfl::MIDSURFACE:   ar<<1;     break;
-            case xfl::TOPSURFACE:   ar<<2;     break;
-            case xfl::SIDESURFACE:  ar<<3;     break;
-            case xfl::FUSESURFACE:  ar<<4;     break;
-            case xfl::WAKESURFACE:  ar<<5;     break;
-            case xfl::NOSURFACE:    ar<<6;     break;
-        }
-    }
-}
-
-
-void serial::loadMesh(TriMesh &mesh, QDataStream &ar)
-{
-    bool boolean(false);
-    int n(0), ne(0), k(0);
-    int ArchiveFormat(0);// identifies the format of the file
-    int n3(0);
-    int i0(0), i1(0), i2(0);
-    float f0(0),f1(0),f2(0);
-
-    mesh.clearMesh();
-
-    ar >> ArchiveFormat;
-
-    ar >>n;
-    mesh.nodes().resize(n);
-    for(int in=0; in<n; in++)
-    {
-        Node &nd = mesh.node(in);
-        ar >> k;                     nd.setIndex(k);
-        ar >> f0 >> f1 >> f2;        nd.set(double(f0), double(f1), double(f2));
-        ar >> f0 >> f1 >> f2;        nd.setNormal(double(f0), double(f1), double(f2));
-        ar >> boolean;               nd.setTrailing(boolean);
-
-        ar >> ne;
-        nd.resizeNodeNeighbours(ne);
-        for(int j=0; j<ne; j++)
-        {
-            ar >> k;                 nd.setNodeNeighbourIndex(j,k);
+            ar << nd.xf() << nd.yf() << nd.zf();
+            ar << nd.normal().xf() << nd.normal().yf() << nd.normal().zf();
+            ar << nd.isTrailing();
+            ar << int(nd.neighbourNodeCount());
+            for(int ine=0; ine<nd.neighbourNodeCount(); ine++)
+                ar << nd.nodeNeighbourIndex(ine);
+            ar << int(nd.triangleCount());
+            for(int ine=0; ine<nd.triangleCount(); ine++)
+                ar << nd.triangleIndex(ine);
         }
 
-        ar >> ne;
-        nd.resizeTriangles(ne);
-        for(int j=0; j<ne; j++)
+        ar << mesh.panelCount();
+        for(int i3=0; i3<mesh.panelCount(); i3++)
         {
-            ar >> k;                 nd.setTriangleIndex(j,k);
+            Panel3 const &p3 = mesh.panel(i3);
+            ar << p3.index();
+            ar << p3.nodeIndex(0) << p3.nodeIndex(1) << p3.nodeIndex(2);
+
+            ar << p3.neighbour(0) << p3.neighbour(1) << p3.neighbour(2);
+            ar << p3.isPositiveOrientation();
+            ar << p3.isTrailing();
+            ar << p3.oppositeIndex();
+            switch(p3.surfacePosition())
+            {
+                case xfl::BOTSURFACE:   ar<<0;     break;
+                case xfl::MIDSURFACE:   ar<<1;     break;
+                case xfl::TOPSURFACE:   ar<<2;     break;
+                case xfl::SIDESURFACE:  ar<<3;     break;
+                case xfl::FUSESURFACE:  ar<<4;     break;
+                case xfl::WAKESURFACE:  ar<<5;     break;
+                case xfl::NOSURFACE:    ar<<6;     break;
+            }
         }
     }
-
-    ar >> n3;
-    mesh.panels().resize(n3);
-    for(int i3=0; i3<n3; i3++)
+    else
     {
-        Panel3 &p3 = mesh.panel(i3);
-        ar >> k;  p3.setIndex(k);
-        ar >> i0 >> i1 >> i2;
-        p3.setVertex(0, mesh.node(i0));
-        p3.setVertex(1, mesh.node(i1));
-        p3.setVertex(2, mesh.node(i2));
+        bool boolean(false);
+        int n(0), ne(0), k(0);
+        int ArchiveFormat(0);// identifies the format of the file
+        int n3(0);
+        int i0(0), i1(0), i2(0);
+        float f0(0),f1(0),f2(0);
 
-        ar >> i0 >> i1 >> i2;
-        p3.setNeighbour(0, i0);
-        p3.setNeighbour(1, i1);
-        p3.setNeighbour(2, i2);
+        mesh.clearMesh();
 
-        ar >> boolean; // p3.m_bPositiveOrientation;
-        ar >> p3.m_bIsTrailing;
-        if(ArchiveFormat>=500002)
+        ar >> ArchiveFormat;
+
+        ar >>n;
+        mesh.nodes().resize(n);
+        for(int in=0; in<n; in++)
         {
+            Node &nd = mesh.node(in);
+            ar >> k;                     nd.setIndex(k);
+            ar >> f0 >> f1 >> f2;        nd.set(double(f0), double(f1), double(f2));
+            ar >> f0 >> f1 >> f2;        nd.setNormal(double(f0), double(f1), double(f2));
+            ar >> boolean;               nd.setTrailing(boolean);
+
+            ar >> ne;
+            nd.resizeNodeNeighbours(ne);
+            for(int j=0; j<ne; j++)
+            {
+                ar >> k;                 nd.setNodeNeighbourIndex(j,k);
+            }
+
+            ar >> ne;
+            nd.resizeTriangles(ne);
+            for(int j=0; j<ne; j++)
+            {
+                ar >> k;                 nd.setTriangleIndex(j,k);
+            }
+        }
+
+        ar >> n3;
+        mesh.panels().resize(n3);
+        for(int i3=0; i3<n3; i3++)
+        {
+            Panel3 &p3 = mesh.panel(i3);
+            ar >> k;  p3.setIndex(k);
+            ar >> i0 >> i1 >> i2;
+            p3.setVertex(0, mesh.node(i0));
+            p3.setVertex(1, mesh.node(i1));
+            p3.setVertex(2, mesh.node(i2));
+
+            ar >> i0 >> i1 >> i2;
+            p3.setNeighbour(0, i0);
+            p3.setNeighbour(1, i1);
+            p3.setNeighbour(2, i2);
+
+            ar >> boolean; // p3.m_bPositiveOrientation;
+            ar >> p3.m_bIsTrailing;
+            if(ArchiveFormat>=500002)
+            {
+                ar >> k;
+                p3.setOppositeIndex(k);
+            }
+
             ar >> k;
-            p3.setOppositeIndex(k);
-        }
+            switch(k)
+            {
+                case 0:   p3.setSurfacePosition(xfl::BOTSURFACE);   break;
+                case 1:   p3.setSurfacePosition(xfl::MIDSURFACE);   break;
+                case 2:   p3.setSurfacePosition(xfl::TOPSURFACE);   break;
+                case 3:   p3.setSurfacePosition(xfl::SIDESURFACE);  break;
+                case 4:   p3.setSurfacePosition(xfl::FUSESURFACE);  break;
+                case 5:   p3.setSurfacePosition(xfl::WAKESURFACE);  break;
+                default:
+                case 6:   p3.setSurfacePosition(xfl::NOSURFACE);    break;
+            }
 
-        ar >> k;
-        switch(k)
+            p3.setFrame();
+        }
+        if(ArchiveFormat<500002)
         {
-            case 0:   p3.setSurfacePosition(xfl::BOTSURFACE);   break;
-            case 1:   p3.setSurfacePosition(xfl::MIDSURFACE);   break;
-            case 2:   p3.setSurfacePosition(xfl::TOPSURFACE);   break;
-            case 3:   p3.setSurfacePosition(xfl::SIDESURFACE);  break;
-            case 4:   p3.setSurfacePosition(xfl::FUSESURFACE);  break;
-            case 5:   p3.setSurfacePosition(xfl::WAKESURFACE);  break;
-            default:
-            case 6:   p3.setSurfacePosition(xfl::NOSURFACE);    break;
+            // cleaning up past errors
+            std::vector<int> errorlist;
+            mesh.connectTrailingEdges(errorlist);
         }
-
-        p3.setFrame();
-    }
-    if(ArchiveFormat<500002)
-    {
-        // cleaning up past errors
-        std::vector<int> errorlist;
-        mesh.connectTrailingEdges(errorlist);
     }
 }
 

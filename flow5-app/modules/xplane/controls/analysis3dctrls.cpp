@@ -33,20 +33,23 @@
 
 #include "analysis3dctrls.h"
 
+#include <core/displayoptions.h>
+#include <core/xflcore.h>
+#include <core/xflcore.h>
+#include <globals/mainframe.h>
 #include <interfaces/controls/analysisrangetable.h>
 #include <interfaces/controls/t8rangetable.h>
-#include <globals/mainframe.h>
+#include <interfaces/widgets/customwts/floatedit.h>
+#include <interfaces/widgets/customwts/intedit.h>
 #include <modules/xplane/analysis/analysis3dsettings.h>
 #include <modules/xplane/xplane.h>
 
-#include <api/planetask.h>
-#include <core/xflcore.h>
-#include <api/flow5-io.h>
-#include <api/units.h>
 #include <api/planeopp.h>
 #include <api/planepolar.h>
-#include <interfaces/widgets/customwts/floatedit.h>
-#include <interfaces/widgets/customwts/intedit.h>
+#include <api/planetask.h>
+#include <api/units.h>
+#include <api/utils-io.h>
+
 
 XPlane *Analysis3dCtrls::s_pXPlane = nullptr;
 

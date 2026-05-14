@@ -54,9 +54,9 @@ class STLWriterDlg : public QDialog
         STLWriterDlg(QWidget *pParent);
         void initDialog(PlaneXfl *pPlane, WingXfl *pWing, Fuse *pFuse, Sail *pSail);
 
-        int exportWingToSTLText(const WingXfl *pWing, QTextStream &outStream, int CHORDPANELS, int SPANPANELS, double scalefactor) const;
+        int exportWingToSTLText(const WingXfl *pWing, const QString &pathname, int CHORDPANELS, int SPANPANELS, double scalefactor) const;
 
-        int exportSailToSTLBinary(Sail *pSail, QDataStream &outStream, int CHORDPANELS, int SPANPANELS, double scalefactor) const;
+        int exportSailToSTLBinary(Sail *pSail, const QString &pathname, int CHORDPANELS, int SPANPANELS, double scalefactor) const;
 
         void makeSTLTriangulation(WingXfl const *pWingXfl, std::vector<Triangle3d> &triangles, int CHORDPANELS, int SPANPANELS, double scalefactor=1.0) const;
 

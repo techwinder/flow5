@@ -29,7 +29,8 @@
 
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
-#include <api/flow5-io.h>
+
+#include <api/utils-io.h>
 
 
 FormatTextOutput::FormatTextOutput(QWidget *pWidget) : QTextEdit(pWidget)
