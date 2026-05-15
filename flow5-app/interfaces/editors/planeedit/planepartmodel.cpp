@@ -146,15 +146,15 @@ QVariant PlanePartModel::data(const QModelIndex &index, int role) const
                     }
                     case 2:
                     {
-                        return m_pPlane->wingLE(row).x * Units::mtoUnit();
+                        return m_pPlane->wingPosition(row).x * Units::mtoUnit();
                     }
                     case 3:
                     {
-                        return m_pPlane->wingLE(row).y * Units::mtoUnit();
+                        return m_pPlane->wingPosition(row).y * Units::mtoUnit();
                     }
                     case 4:
                     {
-                        return m_pPlane->wingLE(row).z * Units::mtoUnit();
+                        return m_pPlane->wingPosition(row).z * Units::mtoUnit();
                     }
                     case 5:
                     {
@@ -362,33 +362,33 @@ bool PlanePartModel::setData(const QModelIndex& index, const QVariant& value, in
                 }
                 case 2:
                 {
-                    if(fabs(m_pPlane->wingLE(index.row()).x-value.toDouble()/Units::mtoUnit())>PRECISION)
+                    if(fabs(m_pPlane->wingPosition(index.row()).x-value.toDouble()/Units::mtoUnit())>PRECISION)
                     {
-                        Vector3d LE = m_pPlane->wingLE(index.row());
+                        Vector3d LE = m_pPlane->wingPosition(index.row());
                         LE.x = value.toDouble() / Units::mtoUnit();
-                        m_pPlane->setWingLE(index.row(), LE);
+                        m_pPlane->setWingPosition(index.row(), LE);
                         bChanged = true;
                     }
                     break;
                 }
                 case 3:
                 {
-                if(fabs(m_pPlane->wingLE(index.row()).y-value.toDouble()/Units::mtoUnit())>PRECISION)
+                if(fabs(m_pPlane->wingPosition(index.row()).y-value.toDouble()/Units::mtoUnit())>PRECISION)
                     {
-                        Vector3d LE = m_pPlane->wingLE(index.row());
+                        Vector3d LE = m_pPlane->wingPosition(index.row());
                         LE.y = value.toDouble() / Units::mtoUnit();
-                        m_pPlane->setWingLE(index.row(), LE);
+                        m_pPlane->setWingPosition(index.row(), LE);
                         bChanged = true;
                     }
                     break;
                 }
                 case 4:
                 {
-                if(fabs(m_pPlane->wingLE(index.row()).z-value.toDouble()/Units::mtoUnit())>PRECISION)
+                if(fabs(m_pPlane->wingPosition(index.row()).z-value.toDouble()/Units::mtoUnit())>PRECISION)
                     {
-                        Vector3d LE = m_pPlane->wingLE(index.row());
+                        Vector3d LE = m_pPlane->wingPosition(index.row());
                         LE.z = value.toDouble() / Units::mtoUnit();
-                        m_pPlane->setWingLE(index.row(), LE);
+                        m_pPlane->setWingPosition(index.row(), LE);
                         bChanged = true;
                     }
                     break;

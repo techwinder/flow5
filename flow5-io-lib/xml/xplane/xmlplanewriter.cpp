@@ -93,7 +93,7 @@ void XmlPlaneWriter::writeXMLPlane(PlaneXfl const &plane, bool bWriteFoils)
                 {
                     if(plane.wingAt(iw))
                     {
-                        writeWing(*plane.wingAt(iw), plane.wingLE(iw), plane.rxAngle(iw), plane.ryAngle(iw), bWriteFoils);
+                        writeWing(*plane.wingAt(iw), plane.wingPosition(iw), plane.rxAngle(iw), plane.ryAngle(iw), bWriteFoils);
                     }
                 }
             }

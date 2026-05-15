@@ -504,7 +504,7 @@ bool XFoilTask::alphaSequence(bool bAlpha)
 
             if(m_XFoilInstance.lvconv)
             {
-                str = std::format("   ...converged after {:3d} iterations / Cl=%9.5f  Cd=%9.5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
+                str = std::format("   ...converged after {:3d} iterations / Cl={:9.5f}  Cd={:9.5f}\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
                 traceStdLog(str);
 
                 if(m_XFoilInstance.cd<s_CdError)

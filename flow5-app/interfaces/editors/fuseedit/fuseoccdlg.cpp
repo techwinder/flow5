@@ -124,15 +124,15 @@ void FuseOccDlg::setupLayout()
                         {
                             QVBoxLayout *pShapeFixLayout = new QVBoxLayout;
                             {
-                                QLabel *pFlow5Link = new QLabel;
-                                pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Modelling/Fuse_CAD.html#stepbystep>https://flow5.tech/docs/flow5_doc/Modelling/Fuse_CAD.html</a>");
-                                pFlow5Link->setOpenExternalLinks(true);
-                                pFlow5Link->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
-                                pFlow5Link->setAlignment(Qt::AlignVCenter| Qt::AlignLeft);
+                                QLabel *plabFlow5Link = new QLabel;
+                                plabFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Modelling/Fuse_CAD.html#stepbystep>https://flow5.tech/docs/flow5_doc/Modelling/Fuse_CAD.html</a>");
+                                plabFlow5Link->setOpenExternalLinks(true);
+                                plabFlow5Link->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
+                                plabFlow5Link->setAlignment(Qt::AlignVCenter| Qt::AlignLeft);
                                 m_ppbShapeFix = new QPushButton(tr("Fix shapes"));
                                 m_ppbShapeFix->setShortcut(QKeySequence(Qt::CTRL | Qt::Key_F));
                                 pShapeFixLayout->addWidget(m_ppbShapeFix);
-                                pShapeFixLayout->addWidget(pFlow5Link);
+                                pShapeFixLayout->addWidget(plabFlow5Link);
                             }
                             pShapeFixBox->setLayout(pShapeFixLayout);
                         }

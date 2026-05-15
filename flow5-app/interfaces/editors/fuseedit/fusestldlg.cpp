@@ -124,24 +124,24 @@ void FuseStlDlg::setupLayout()
                                 m_ppbRestoreDefaultMesh->setToolTip(tip);
                                 QLabel *plabMaxEdgeLength = new QLabel(tr("Max. edge length"));
                                 plabMaxEdgeLength->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                                QLabel *pLabUnit = new QLabel(Units::lengthUnitQLabel());
+                                QLabel *plabUnit = new QLabel(Units::lengthUnitQLabel());
                                 m_pfeMaxEdgeLength = new FloatEdit;
                                 m_pfeMaxEdgeLength->setToolTip(tip);
 
-                                QLabel *pLabMaxPanelCount = new QLabel(tr("Max. panel count"));
-                                pLabMaxPanelCount->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+                                QLabel *plabMaxPanelCount = new QLabel(tr("Max. panel count"));
+                                plabMaxPanelCount->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
                                 tip = tr("<p>The split operation will stop if the total number of panels exceeds this value</p>");
                                 m_pieMaxPanelCount = new IntEdit;
                                 m_pieMaxPanelCount->setToolTip(tip);
 
-                                pSplitLayout->addWidget(plabMaxEdgeLength,1,1);
-                                pSplitLayout->addWidget(m_pfeMaxEdgeLength,1,2);
-                                pSplitLayout->addWidget(pLabUnit,1,3);
-                                pSplitLayout->addWidget(pLabMaxPanelCount,2,1);
-                                pSplitLayout->addWidget(m_pieMaxPanelCount,2,2);
+                                pSplitLayout->addWidget(plabMaxEdgeLength,       1, 1);
+                                pSplitLayout->addWidget(m_pfeMaxEdgeLength,      1, 2);
+                                pSplitLayout->addWidget(plabUnit,                1, 3);
+                                pSplitLayout->addWidget(plabMaxPanelCount,       2, 1);
+                                pSplitLayout->addWidget(m_pieMaxPanelCount,      2, 2);
 
-                                pSplitLayout->addWidget(m_ppbSplitTriangles,3,1,1,3);
-                                pSplitLayout->addWidget(m_ppbRestoreDefaultMesh,4,1,1,3);
+                                pSplitLayout->addWidget(m_ppbSplitTriangles,     3, 1, 1, 3);
+                                pSplitLayout->addWidget(m_ppbRestoreDefaultMesh, 4, 1, 1, 3);
                             }
                             pSplitTriangleBox->setLayout(pSplitLayout);
                         }

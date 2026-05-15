@@ -31,7 +31,14 @@ class Polar;
 
 #include <fl5lib_global.h>
 
-namespace objects
+namespace foil
 {
     FL5LIB_EXPORT bool readFoilFile(const std::string &filename, Foil *pFoil, int &iLineError);
+
+    FL5LIB_EXPORT void deRotate(Foil *pFoil);
+    FL5LIB_EXPORT void normalize(Foil *pFoil);
+    FL5LIB_EXPORT void scaleFoil(Foil *pFoil, double camber, double xCamber, double thickness, double xThickness);
+    FL5LIB_EXPORT void interpolateFoils(Foil*pFoil, Foil* const pFoil1, Foil *const pFoil2, double frac);
+    FL5LIB_EXPORT void setTEGap(Foil *pFoil, double targetgap, double blendinglength);
+
 }

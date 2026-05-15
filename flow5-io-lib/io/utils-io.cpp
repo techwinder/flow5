@@ -173,3 +173,171 @@ bool io::readAVLString(QTextStream &in, int &Line, QString &strong)
 }
 
 
+fl5Color io::readQColor(QDataStream &ar)
+{
+    uchar byte=0;
+
+    ar>>byte; // a format identifier?
+
+    ar>>byte>>byte;
+    int a = int(byte);
+    ar>>byte>>byte;
+    int r = int(byte);
+    ar>>byte>>byte;
+    int g = int(byte);
+    ar>>byte>>byte;
+    int b = int(byte);
+
+    return fl5Color(r,g,b,a);
+}
+
+
+/**
+* Reads the RGB int values of a color from binary datastream and returns a QColor. Inherited from the MFC versions of XFLR5.
+*@param ar the binary datastream
+*@param r the red component
+*@param g the green component
+*@param b the blue component
+*/
+void io::readColor(QDataStream &ar, int &r, int &g, int &b)
+{
+    qint32 colorref;
+
+    ar >> colorref;
+    b = colorref/256/256;
+    colorref -= b*256*256;
+    g = colorref/256;
+    r = colorref - g*256;
+}
+
+
+/**
+* Writes the RGB int values of a color to a binary datastream. Inherited from the MFC versions of XFLR5.
+*@param ar the binary datastream
+*@param r the red component
+*@param g the green component
+*@param b the blue component
+
+*/
+void io::writeColor(QDataStream &ar, int r, int g, int b)
+{
+    qint32 colorref;
+
+    colorref = b*256*256+g*256+r;
+    ar << colorref;
+}
+
+
+/**
+* Reads the RGB int values of a color from binary datastream and returns a QColor. Inherited from the MFC versions of XFLR5.
+*@param ar the binary datastream
+*@param r the red component
+*@param g the green component
+*@param b the blue component
+*@param a the alpha component
+*/
+void io::readColor(QDataStream &ar, int &r, int &g, int &b, int &a)
+{
+    uchar byte=0;
+
+    ar>>byte;//probably a format identificator
+    ar>>byte>>byte;
+    a = int(byte);
+    ar>>byte>>byte;
+    r = int(byte);
+    ar>>byte>>byte;
+    g = int(byte);
+    ar>>byte>>byte;
+    b = int(byte);
+    ar>>byte>>byte; //
+}
+
+/**
+* Writes the RGB int values of a color to a binary datastream. Inherited from the MFC versions of XFLR5.
+*@param ar the binary datastream
+*@param r the red component
+*@param g the green component
+*@param b the blue component
+*@param a the alpha component
+*/
+void io::writeColor(QDataStream &ar, int r, int g, int b, int a)
+{
+    uchar byte;
+
+    byte = 1;
+    ar<<byte;
+    byte = a & 0xFF;
+    ar << byte<<byte;
+    byte = r & 0xFF;
+    ar << byte<<byte;
+    byte = g & 0xFF;
+    ar << byte<<byte;
+    byte = b & 0xFF;
+    ar << byte<<byte;
+    byte = 0;
+    ar << byte<<byte;
+}
+
+
+void io::readString(QDataStream &ar, std::string &strong)
+{
+    std::string str;
+    qint8 qi(0), ch(0);
+    char c(0);
+
+    ar >> qi;
+    str.clear();
+    for(int j=0; j<qi;j++)
+    {
+        str += " ";
+        ar >> ch;
+        c = char(ch);
+        str[j] = c;
+    }
+
+    strong = str;
+}
+
+
+
+void io::readFloat(QDataStream &inStream, float &f)
+{
+    char buffer[4];
+    inStream.readRawData(buffer, 4);
+    memcpy(&f, buffer, sizeof(float));
+}
+
+
+void io::writeFloat(QDataStream &outStream, float f)
+{
+    char buffer[4];
+    memcpy(buffer, &f, sizeof(float));
+    outStream.writeRawData(buffer, 4);
+}
+
+
+void io::writeString(QDataStream &ar, QString const &strong)
+{
+    qint8 qi = qint8(strong.length());
+
+    QByteArray textline;
+    char *text;
+    textline = strong.toLatin1();
+    text = textline.data();
+    ar << qi;
+    ar.writeRawData(text, qi);
+}
+
+
+void io::writeString(QDataStream &ar, std::string const &strong)
+{
+    qint8 qi = qint8(strong.length());
+
+    QByteArray textline;
+    char *text= textline.data();;
+
+    ar << qi;
+    ar.writeRawData(text, qi);
+}
+
+

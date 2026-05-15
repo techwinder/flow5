@@ -479,7 +479,7 @@ bool XflScriptExec::makeFoils()
             int iLineError(0);
 
             Foil *pFoil = new Foil();
-            if(objects::readFoilFile(datPathName.toStdString(), pFoil, iLineError))
+            if(foil::readFoilFile(datPathName.toStdString(), pFoil, iLineError))
             {
                 pFoil->setLineWidth(Curve::defaultLineWidth());
                 pFoil->setLineColor(xfl::randomfl5Color());

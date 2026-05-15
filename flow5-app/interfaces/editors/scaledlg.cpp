@@ -40,20 +40,20 @@ void ScaleDlg::setupLayout()
     {
         QGridLayout *pScaleLayout = new QGridLayout;
         {
-            m_pdeXFactor = new FloatEdit(1.0);
-            m_pdeYFactor = new FloatEdit(1.0);
-            m_pdeZFactor = new FloatEdit(1.0);
+            m_pfeXFactor = new FloatEdit(1.0);
+            m_pfeYFactor = new FloatEdit(1.0);
+            m_pfeZFactor = new FloatEdit(1.0);
             QLabel *plab0 = new QLabel(tr("Scale factor"));
             QLabel *plab1 = new QLabel(tr("X Scale:"));
             QLabel *plab2 = new QLabel(tr("Y Scale:"));
             QLabel *plab3 = new QLabel(tr("Z Scale:"));
-            pScaleLayout->addWidget(plab0,        1,2, Qt::AlignCenter);
-            pScaleLayout->addWidget(plab1,        2,1, Qt::AlignRight | Qt::AlignVCenter);
-            pScaleLayout->addWidget(plab2,        3,1, Qt::AlignRight | Qt::AlignVCenter);
-            pScaleLayout->addWidget(plab3,        4,1, Qt::AlignRight | Qt::AlignVCenter);
-            pScaleLayout->addWidget(m_pdeXFactor, 2,2);
-            pScaleLayout->addWidget(m_pdeYFactor, 3,2);
-            pScaleLayout->addWidget(m_pdeZFactor, 4,2);
+            pScaleLayout->addWidget(plab0,        1, 2, Qt::AlignCenter);
+            pScaleLayout->addWidget(plab1,        2, 1, Qt::AlignRight );
+            pScaleLayout->addWidget(plab2,        3, 1, Qt::AlignRight );
+            pScaleLayout->addWidget(plab3,        4, 1, Qt::AlignRight );
+            pScaleLayout->addWidget(m_pfeXFactor, 2, 2);
+            pScaleLayout->addWidget(m_pfeYFactor, 3, 2);
+            pScaleLayout->addWidget(m_pfeZFactor, 4, 2);
         }
         m_pButtonBox->setStandardButtons(QDialogButtonBox::Ok |QDialogButtonBox::Cancel);
 
@@ -64,9 +64,9 @@ void ScaleDlg::setupLayout()
 }
 
 
-double ScaleDlg::XFactor() const {return m_pdeXFactor->value();}
-double ScaleDlg::YFactor() const {return m_pdeYFactor->value();}
-double ScaleDlg::ZFactor() const {return m_pdeZFactor->value();}
+double ScaleDlg::XFactor() const {return m_pfeXFactor->value();}
+double ScaleDlg::YFactor() const {return m_pfeYFactor->value();}
+double ScaleDlg::ZFactor() const {return m_pfeZFactor->value();}
 
 
 

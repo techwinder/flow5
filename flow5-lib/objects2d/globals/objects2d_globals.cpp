@@ -35,7 +35,7 @@
 
 
 
-bool objects::readFoilFile(const std::string &filename, Foil *pFoil, int &iLineError)
+bool foil::readFoilFile(const std::string &filename, Foil *pFoil, int &iLineError)
 {
     std::string line;
     std::string FoilName;
@@ -128,5 +128,77 @@ bool objects::readFoilFile(const std::string &filename, Foil *pFoil, int &iLineE
 
     return true;
 }
+
+
+void foil::deRotate(Foil *pFoil)
+{
+    pFoil->deRotate();
+    pFoil->initGeometry();
+}
+
+
+void foil::normalize(Foil *pFoil)
+{
+    pFoil->normalizeGeometry();
+    pFoil->initGeometry();
+}
+
+
+void foil::scaleFoil(Foil *pFoil, double camber, double xCamber, double thickness, double xThickness)
+{
+    xCamber    = pFoil->baseCbLine().front().x + (pFoil->baseCbLine().back().x-pFoil->baseCbLine().front().x) * xCamber;
+    xThickness = pFoil->baseCbLine().front().x + (pFoil->baseCbLine().back().x-pFoil->baseCbLine().front().x) * xThickness;
+
+    pFoil->setThickness(xThickness, thickness);
+
+    pFoil->setCamber(xCamber, camber);
+
+    pFoil->makeBaseFromCamberAndThickness();
+    pFoil->rebuildPointSequenceFromBase();
+    pFoil->applyBase();
+}
+
+
+void foil::interpolateFoils(Foil*pFoil, Foil* const pFoil1, Foil *const pFoil2, double frac)
+{
+    if(pFoil1->nNodes()>pFoil2->nNodes()) pFoil->copy(pFoil1, false);
+    else                                  pFoil->copy(pFoil2, false);
+
+    pFoil->interpolate(pFoil1, pFoil2, frac);
+    pFoil->makeBaseFromCamberAndThickness();
+    pFoil->rebuildPointSequenceFromBase();
+    pFoil->applyBase();
+}
+
+
+void foil::setTEGap(Foil *pFoil, double targetgap, double blendinglength)
+{
+
+    double dg = (targetgap - pFoil->TEGap());
+    double length = pFoil->length();
+
+    CubicSpline const &CS = pFoil->cubicSpline();
+
+    for(int i=0; i<CS.ctrlPointCount(); i++)
+    {
+        double arg = pFoil->TE().x - CS.controlPoint(i).x;
+        //decay exponentially
+        double dth = exp(-arg/(1.0-blendinglength)*length);
+        double u = double(i) / double(CS.ctrlPointCount()-1);
+        if(u<pFoil->CSfracLE())
+        {
+            // top surface
+            pFoil->setBaseNode(i, pFoil->xb(i), pFoil->yb(i) + dth * dg/2.0);
+        }
+        else
+        {
+            // bot surface
+            pFoil->setBaseNode(i, pFoil->xb(i), pFoil->yb(i) - dth * dg/2.0);
+        }
+    }
+
+    pFoil->initGeometry();
+}
+
 
 

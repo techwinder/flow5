@@ -30,10 +30,10 @@
 #include "foilscaledlg.h"
 #include <core/displayoptions.h>
 #include <interfaces/widgets/customwts/floatedit.h>
-#include <api/foil.h>
 #include <interfaces/editors/foiledit/foilwt.h>
-#include <QDebug>
 
+#include <api/foil.h>
+#include <api/objects2d_globals.h>
 
 
 FoilScaleDlg::FoilScaleDlg(QWidget *pParent) : FoilDlg(pParent)
@@ -84,41 +84,28 @@ void FoilScaleDlg::setupLayout()
                     m_pslXCamberSlide->setMinimumWidth(DisplayOptions::tableFontStruct().averageCharWidth()*50);
                     m_pslXCamberSlide->setPalette(m_SliderPalette);
                     m_pfeXCamber = new FloatEdit;
-                    QLabel *lab1 = new QLabel(tr("Value"));
-                    QLabel *lab2 = new QLabel("%");
-                    QLabel *lab3 = new QLabel("0%");
-                    QLabel *lab4 = new QLabel("10%");
-                    QLabel *lab5 = new QLabel(tr("x-pos"));
-                    QLabel *lab6 = new QLabel("%");
-                    QLabel *lab7 = new QLabel("0%");
-                    QLabel *lab8 = new QLabel("100%");
-                    lab1->setPalette(m_Palette);
-                    lab2->setPalette(m_Palette);
-                    lab3->setPalette(m_Palette);
-                    lab4->setPalette(m_Palette);
-                    lab5->setPalette(m_Palette);
-                    lab6->setPalette(m_Palette);
-                    lab7->setPalette(m_Palette);
-                    lab8->setPalette(m_Palette);
-                    lab1->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                    lab3->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                    lab5->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                    lab7->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+                    QLabel *plab1 = new QLabel(tr("Value"));
+                    QLabel *plab2 = new QLabel("%");
+                    QLabel *plab3 = new QLabel("0%");
+                    QLabel *plab4 = new QLabel("10%");
+                    QLabel *plab5 = new QLabel(tr("x-pos"));
+                    QLabel *plab6 = new QLabel("%");
+                    QLabel *plab7 = new QLabel("0%");
+                    QLabel *plab8 = new QLabel("100%");
 
+                    pCamberLayout->addWidget(plab1,                1, 1, Qt::AlignRight);
+                    pCamberLayout->addWidget(m_pfeCamber,          1, 2);
+                    pCamberLayout->addWidget(plab2,                1, 3);
+                    pCamberLayout->addWidget(plab3,                1, 5, Qt::AlignRight);
+                    pCamberLayout->addWidget(m_pslCamberSlide,     1, 6);
+                    pCamberLayout->addWidget(plab4,                1, 7);
 
-                    pCamberLayout->addWidget(lab1,                1,1);
-                    pCamberLayout->addWidget(m_pfeCamber,         1,2);
-                    pCamberLayout->addWidget(lab2,                1,3);
-                    pCamberLayout->addWidget(lab3,                1,5);
-                    pCamberLayout->addWidget(m_pslCamberSlide,    1,6);
-                    pCamberLayout->addWidget(lab4,                1,7);
-
-                    pCamberLayout->addWidget(lab5,                2,1);
-                    pCamberLayout->addWidget(m_pfeXCamber,        2,2);
-                    pCamberLayout->addWidget(lab6,                2,3);
-                    pCamberLayout->addWidget(lab7,                2,5);
-                    pCamberLayout->addWidget(m_pslXCamberSlide,   2,6);
-                    pCamberLayout->addWidget(lab8,                2,7);
+                    pCamberLayout->addWidget(plab5,                2, 1, Qt::AlignRight);
+                    pCamberLayout->addWidget(m_pfeXCamber,         2, 2);
+                    pCamberLayout->addWidget(plab6,                2, 3);
+                    pCamberLayout->addWidget(plab7,                2, 5, Qt::AlignRight);
+                    pCamberLayout->addWidget(m_pslXCamberSlide,    2, 6);
+                    pCamberLayout->addWidget(plab8,                2, 7);
                     pCamberLayout->setColumnMinimumWidth(4, DisplayOptions::tableFontStruct().averageCharWidth()*5);
 
                 }
@@ -138,7 +125,7 @@ void FoilScaleDlg::setupLayout()
                     m_pslThickSlide->setOrientation(Qt::Horizontal);
                     m_pslThickSlide->setTickPosition(QSlider::TicksBelow);
                     m_pslThickSlide->setMinimumWidth(DisplayOptions::tableFontStruct().averageCharWidth()*50);
-                    m_pfeThickness =new FloatEdit;
+                    m_pfeThickness = new FloatEdit;
                     m_pslXThickSlide = new QSlider;
                     m_pslXThickSlide->setAutoFillBackground(true);
                     m_pslXThickSlide->setPalette(m_SliderPalette);
@@ -146,41 +133,28 @@ void FoilScaleDlg::setupLayout()
                     m_pslXThickSlide->setTickPosition(QSlider::TicksBelow);
                     m_pslXThickSlide->setMinimumWidth(DisplayOptions::tableFontStruct().averageCharWidth()*50);
                     m_pfeXThickness = new FloatEdit;
-                    QLabel *lab11 = new QLabel(tr("Value"));
-                    QLabel *lab12 = new QLabel("%");
-                    QLabel *lab13 = new QLabel("0%");
-                    QLabel *lab14 = new QLabel("20%");
-                    QLabel *lab15 = new QLabel(tr("x-pos"));
-                    QLabel *lab16 = new QLabel("%");
-                    QLabel *lab17 = new QLabel("0%");
-                    QLabel *lab18 = new QLabel("100%");
-                    lab11->setPalette(m_Palette);
-                    lab12->setPalette(m_Palette);
-                    lab13->setPalette(m_Palette);
-                    lab14->setPalette(m_Palette);
-                    lab15->setPalette(m_Palette);
-                    lab16->setPalette(m_Palette);
-                    lab17->setPalette(m_Palette);
-                    lab18->setPalette(m_Palette);
+                    QLabel *plab11 = new QLabel(tr("Value"));
+                    QLabel *plab12 = new QLabel("%");
+                    QLabel *plab13 = new QLabel("0%");
+                    QLabel *plab14 = new QLabel("20%");
+                    QLabel *plab15 = new QLabel(tr("x-pos"));
+                    QLabel *plab16 = new QLabel("%");
+                    QLabel *plab17 = new QLabel("0%");
+                    QLabel *plab18 = new QLabel("100%");
 
-                    lab11->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                    lab15->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                    lab13->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                    lab17->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+                    pThicknessLayout->addWidget(plab11,              1,1, Qt::AlignRight);
+                    pThicknessLayout->addWidget(m_pfeThickness,      1,2);
+                    pThicknessLayout->addWidget(plab12,              1,3);
+                    pThicknessLayout->addWidget(plab13,              1,5, Qt::AlignRight);
+                    pThicknessLayout->addWidget(m_pslThickSlide,     1,6);
+                    pThicknessLayout->addWidget(plab14,              1,7);
 
-                    pThicknessLayout->addWidget(lab11,              1,1);
-                    pThicknessLayout->addWidget(m_pfeThickness,   1,2);
-                    pThicknessLayout->addWidget(lab12,              1,3);
-                    pThicknessLayout->addWidget(lab13,              1,5);
-                    pThicknessLayout->addWidget(m_pslThickSlide,  1,6);
-                    pThicknessLayout->addWidget(lab14,              1,7);
-
-                    pThicknessLayout->addWidget(lab15,              2,1);
-                    pThicknessLayout->addWidget(m_pfeXThickness,  2,2);
-                    pThicknessLayout->addWidget(lab16,              2,3);
-                    pThicknessLayout->addWidget(lab17,              2,5);
-                    pThicknessLayout->addWidget(m_pslXThickSlide, 2,6);
-                    pThicknessLayout->addWidget(lab18,              2,7);
+                    pThicknessLayout->addWidget(plab15,              2,1, Qt::AlignRight);
+                    pThicknessLayout->addWidget(m_pfeXThickness,     2,2);
+                    pThicknessLayout->addWidget(plab16,              2,3);
+                    pThicknessLayout->addWidget(plab17,              2,5, Qt::AlignRight);
+                    pThicknessLayout->addWidget(m_pslXThickSlide,    2,6);
+                    pThicknessLayout->addWidget(plab18,              2,7);
 
                     pThicknessLayout->setColumnMinimumWidth(4, DisplayOptions::tableFontStruct().averageCharWidth()*5);
                 }
@@ -372,23 +346,14 @@ void FoilScaleDlg::onApply()
 
     double thickness  = m_pfeThickness->value() /100.0;
     double camber     = m_pfeCamber->value()    /100.0;
-    double Xthickness = m_pfeXThickness->value()/100.0;
-    double Xcamber    = m_pfeXCamber->value()   /100.0;
+    double xThickness = m_pfeXThickness->value()/100.0;
+    double xCamber    = m_pfeXCamber->value()   /100.0;
     m_pslCamberSlide->setSliderPosition( int(camber    *100.0*10.0));
     m_pslThickSlide->setSliderPosition(  int(thickness *100.0*10.0));
-    m_pslXCamberSlide->setSliderPosition(int(Xcamber   *100.0*10.0));
-    m_pslXThickSlide->setSliderPosition( int(Xthickness*100.0*10.0));
+    m_pslXCamberSlide->setSliderPosition(int(xCamber   *100.0*10.0));
+    m_pslXThickSlide->setSliderPosition( int(xThickness*100.0*10.0));
 
-    Xcamber    = m_pBufferFoil->baseCbLine().front().x + (m_pBufferFoil->baseCbLine().back().x-m_pBufferFoil->baseCbLine().front().x) * Xcamber;
-    Xthickness = m_pBufferFoil->baseCbLine().front().x + (m_pBufferFoil->baseCbLine().back().x-m_pBufferFoil->baseCbLine().front().x) * Xthickness;
-
-    m_pBufferFoil->setThickness(Xthickness, thickness);
-
-    m_pBufferFoil->setCamber(Xcamber, camber);
-
-    m_pBufferFoil->makeBaseFromCamberAndThickness();
-    m_pBufferFoil->rebuildPointSequenceFromBase();
-    m_pBufferFoil->applyBase();
+    foil::scaleFoil(m_pBufferFoil, camber, xCamber, thickness, xThickness);
 
     m_bModified = true;
 

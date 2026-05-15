@@ -713,7 +713,7 @@ void XPlane::createCpCurves()
 
         for(uint i=0; i<pts.size(); i++)
         {
-            pCurve->appendPoint((pts.at(i).x-pPlaneXfl->wingLE(0).x) * Units::mtoUnit(), Cp.at(i));
+            pCurve->appendPoint((pts.at(i).x-pPlaneXfl->wingPosition(0).x) * Units::mtoUnit(), Cp.at(i));
         }
         if(m_pXPlaneWt)
             gl::makeCpSection(pts, Cp, s_pMainFrame->m_pCpGraphCtrl->CpSectionScale(), m_pXPlaneWt->gl3dFloatView()->m_CpSections);
@@ -3210,7 +3210,7 @@ void XPlane::onTranslateWing()
 
     PlaneXfl *pModPlane  = new PlaneXfl;
     pModPlane->duplicate(m_pCurPlane);
-    pModPlane->setWingLE(iWing, pModPlane->wingLE(iWing)+dlg.translationVector());
+    pModPlane->setWingPosition(iWing, pModPlane->wingPosition(iWing)+dlg.translationVector());
 
     setModPlane(pModPlane, Objects3d::hasResults(m_pCurPlane), false);
     updateView();
@@ -4311,7 +4311,7 @@ void XPlane::onWingInertia()
     workwing.createSurfaces(Vector3d(), pPlaneXfl->rxAngle(iWing), pPlaneXfl->ryAngle(iWing));
 
     //update the inertia
-    workwing.computeStructuralInertia(pPlaneXfl->wingLE(iWing)); //wing surfaces are defined in the plane's body axis
+    workwing.computeStructuralInertia(pPlaneXfl->wingPosition(iWing)); //wing surfaces are defined in the plane's body axis
 
     PartInertiaDlg dlg(&workwing, nullptr, s_pMainFrame);
     dlg.setPlaneName(QString::fromStdString(pPlaneXfl->name()));

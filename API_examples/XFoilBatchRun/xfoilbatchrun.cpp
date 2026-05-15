@@ -5,14 +5,14 @@
 
 #include <api.h>
 #include <constants.h>
-#include <objects2d.h>
-#include <polar.h>
-#include <foil.h>
-#include <oppoint.h>
-#include <xfoiltask.h>
-#include <objects2d_globals.h>
-#include <polarnamemaker.h>
 #include <flow5-io.h>
+#include <foil.h>
+#include <objects2d.h>
+#include <objects2d_globals.h>
+#include <oppoint.h>
+#include <polar.h>
+#include <polarnamemaker.h>
+#include <xfoiltask.h>
 
 int main()
 {
@@ -65,7 +65,7 @@ int main()
         threads.push_back(std::thread(&XFoilTask::run, pTask));
     }
 
-    for(unsigned int itask=0; itask<polarlist.size(); itask++)
+    for(unsigned int itask=0; itask<threads.size(); itask++)
     {
         threads[itask].join();
         std::cout << std::format("... joined task {:d}", itask) <<std::endl;
@@ -76,7 +76,10 @@ int main()
 
     // save the project; requires link to flow5-io-lib
     std::string logmsg;
-    std::string projectfilepath = "/tmp/XFoilBatchRun.fl5";
+    std::string projectfilepath;
+    projectfilepath  = std::filesystem::temp_directory_path().string();
+    projectfilepath += std::filesystem::path::preferred_separator;
+    projectfilepath += "XFoilBatchRun.fl5";
     io::saveProject(projectfilepath, logmsg);
 
     if(logmsg.size()>0)

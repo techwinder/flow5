@@ -55,11 +55,11 @@ BodyTransDlg::BodyTransDlg(QWidget *pParent): QDialog(pParent)
 
 void BodyTransDlg::initDialog()
 {
-    m_pdeXTransFactor->setValue(m_XTrans);
-    m_pdeYTransFactor->setValue(m_YTrans);
-    m_pdeZTransFactor->setValue(m_ZTrans);
+    m_pfeXTransFactor->setValue(m_XTrans);
+    m_pfeYTransFactor->setValue(m_YTrans);
+    m_pfeZTransFactor->setValue(m_ZTrans);
 
-    m_pdeYTransFactor->setEnabled(false);
+    m_pfeYTransFactor->setEnabled(false);
 
     m_pchFrameOnly->setChecked(m_bFrameOnly);
     m_pieFrameID->setValue(m_FrameID+1);
@@ -69,9 +69,9 @@ void BodyTransDlg::initDialog()
 
 void BodyTransDlg::enableDirections(bool bx, bool by, bool bz)
 {
-    m_pdeXTransFactor->setEnabled(bx);
-    m_pdeYTransFactor->setEnabled(by);
-    m_pdeZTransFactor->setEnabled(bz);
+    m_pfeXTransFactor->setEnabled(bx);
+    m_pfeYTransFactor->setEnabled(by);
+    m_pfeZTransFactor->setEnabled(bz);
 }
 
 
@@ -130,9 +130,9 @@ void BodyTransDlg::onOK()
 {
     m_bFrameOnly = m_pchFrameOnly->isChecked();
     m_FrameID    = m_pieFrameID->value()-1;
-    m_XTrans     = m_pdeXTransFactor->value() / Units::mtoUnit();
-    m_YTrans     = m_pdeYTransFactor->value() / Units::mtoUnit();
-    m_ZTrans     = m_pdeZTransFactor->value() / Units::mtoUnit();
+    m_XTrans     = m_pfeXTransFactor->value() / Units::mtoUnit();
+    m_YTrans     = m_pfeYTransFactor->value() / Units::mtoUnit();
+    m_ZTrans     = m_pfeZTransFactor->value() / Units::mtoUnit();
     accept();
 }
 
@@ -158,27 +158,27 @@ void BodyTransDlg::setupLayout()
 
     QGridLayout *pTransLayout = new QGridLayout;
     {
-        QLabel * XTrans = new QLabel(tr("dX="));
-        QLabel * YTrans = new QLabel(tr("dY="));
-        QLabel * ZTrans = new QLabel(tr("dZ="));
-        m_pdeXTransFactor = new FloatEdit(0.0,3);
-        m_pdeYTransFactor = new FloatEdit(0.0,3);
-        m_pdeZTransFactor = new FloatEdit(0.0,3);
+        QLabel * plabXTrans = new QLabel(tr("dX="));
+        QLabel * plabYTrans = new QLabel(tr("dY="));
+        QLabel * plabZTrans = new QLabel(tr("dZ="));
+        m_pfeXTransFactor = new FloatEdit(0.0,3);
+        m_pfeYTransFactor = new FloatEdit(0.0,3);
+        m_pfeZTransFactor = new FloatEdit(0.0,3);
         QString length;
         length = Units::lengthUnitQLabel();
-        QLabel *pchLength1 = new QLabel(length);
-        QLabel *pchLength2 = new QLabel(length);
-        QLabel *pchLength3 = new QLabel(length);
+        QLabel *plabLength1 = new QLabel(length);
+        QLabel *plabLength2 = new QLabel(length);
+        QLabel *plabLength3 = new QLabel(length);
 
-        pTransLayout->addWidget(XTrans,1,1, Qt::AlignRight | Qt::AlignVCenter);
-        pTransLayout->addWidget(YTrans,2,1, Qt::AlignRight | Qt::AlignVCenter);
-        pTransLayout->addWidget(ZTrans,3,1, Qt::AlignRight | Qt::AlignVCenter);
-        pTransLayout->addWidget(m_pdeXTransFactor,1,2);
-        pTransLayout->addWidget(m_pdeYTransFactor,2,2);
-        pTransLayout->addWidget(m_pdeZTransFactor,3,2);
-        pTransLayout->addWidget(pchLength1,1,3);
-        pTransLayout->addWidget(pchLength2,2,3);
-        pTransLayout->addWidget(pchLength3,3,3);
+        pTransLayout->addWidget(plabXTrans,         1, 1, Qt::AlignRight);
+        pTransLayout->addWidget(plabYTrans,         2, 1, Qt::AlignRight);
+        pTransLayout->addWidget(plabZTrans,         3, 1, Qt::AlignRight);
+        pTransLayout->addWidget(m_pfeXTransFactor,  1, 2);
+        pTransLayout->addWidget(m_pfeYTransFactor,  2, 2);
+        pTransLayout->addWidget(m_pfeZTransFactor,  3, 2);
+        pTransLayout->addWidget(plabLength1,        1, 3);
+        pTransLayout->addWidget(plabLength2,        2, 3);
+        pTransLayout->addWidget(plabLength3,        3, 3);
     }
 
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);

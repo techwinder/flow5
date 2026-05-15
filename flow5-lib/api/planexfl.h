@@ -134,19 +134,22 @@ class FL5LIB_EXPORT PlaneXfl : public Plane
         Vector3d const &fusePos(int idx) const { return m_Fuse.at(idx)->position(); }
         void setFusePos(int idx, Vector3d const &pos){m_Fuse[idx]->setPosition(pos);}
 
-        Vector3d const &wingLE(int iWing) const{return m_Wing.at(iWing).position();}
-        void setWingLE(int iWing, Vector3d const &LE) {m_Wing[iWing].setPosition(LE);}
+        Vector3d const &wingPosition(int iWing) const{return m_Wing.at(iWing)->position();}
+        void setWingPosition(int iWing, Vector3d const &LE) {m_Wing[iWing]->setPosition(LE);}
 
-        double rxAngle(int iWing) const {return m_Wing[iWing].rx();}
-        void setRxAngle(int iWing, double rx) {m_Wing[iWing].setRx(rx);}
+        Vector3d wingPosition(WingXfl const *pWing);
+        void setWingPosition(WingXfl *pWing, Vector3d const &LE);
 
-        double ryAngle(int iWing) const {return m_Wing[iWing].ry();}
-        void setRyAngle(int iWing, double ry) {m_Wing[iWing].setRy(ry);}
+        double rxAngle(int iWing) const {return m_Wing[iWing]->rx();}
+        void setRxAngle(int iWing, double rx) {m_Wing[iWing]->setRx(rx);}
+
+        double ryAngle(int iWing) const {return m_Wing[iWing]->ry();}
+        void setRyAngle(int iWing, double ry) {m_Wing[iWing]->setRy(ry);}
 
 
         void clearWings();
-        std::vector<WingXfl> &wings() {return m_Wing;}
-        std::vector<WingXfl> const &wings() const {return m_Wing;}
+        std::vector<WingXfl*> &wings() {return m_Wing;}
+        std::vector<WingXfl*> const &wings() const {return m_Wing;}
         WingXfl *wing(int iw) override;
         WingXfl const*wingAt(int iw) const override;
         WingXfl *wing(xfl::enumType wingType);
@@ -253,7 +256,8 @@ class FL5LIB_EXPORT PlaneXfl : public Plane
 
         bool m_bThickBuild;
 
-        std::vector<WingXfl> m_Wing;                       /**< the array of Wing objects used to define this Plane */
+        /// @todo allocate on the heap and store the pointers... copy-on-write will invalidate pointers?
+        std::vector<WingXfl*> m_Wing;                       /**< the array of Wing objects used to define this Plane */
 
         std::vector<Fuse *>m_Fuse;                                /**< the fuse object */
 

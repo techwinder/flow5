@@ -239,7 +239,6 @@ void FoilDlg::onReset()
 {
     resetFoil();
 
-
     m_bModified = false;
     update();
 }

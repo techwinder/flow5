@@ -77,6 +77,7 @@
 #include <api/spandistribs.h>
 #include <api/splinefoil.h>
 #include <api/utils.h>
+#include <api/utils-io.h>
 #include <api/vorton.h>
 #include <api/wingopp.h>
 #include <api/wingsailsection.h>
@@ -5474,7 +5475,7 @@ bool serial::serializePlaneXflXfl(PlaneXfl *pPlane, QDataStream &ar, bool bIsSto
             std::vector<int> &indexes = pPlane->partIndexes();
             if(!bFin)
             {
-                int index = pPlane->wings().back().uniqueIndex();
+                int index = pPlane->wings().back()->uniqueIndex();
 
                 std::vector<int>::iterator it = std::find(indexes.begin(), indexes.end(), index);
                 if(it!=indexes.end()) indexes.erase(it);

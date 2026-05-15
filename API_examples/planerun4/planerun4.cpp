@@ -287,7 +287,6 @@ int main()
     projectfilepath += std::filesystem::path::preferred_separator;
     projectfilepath += "PlaneRun4.fl5";
 
-
     io::saveProject(projectfilepath, logmsg);
 
     if(logmsg.size()>0)

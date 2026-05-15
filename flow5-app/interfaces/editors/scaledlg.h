@@ -42,6 +42,6 @@ class ScaleDlg : public XflDialog
 
     private:
 
-        FloatEdit *m_pdeXFactor, *m_pdeYFactor, *m_pdeZFactor;
+        FloatEdit *m_pfeXFactor, *m_pfeYFactor, *m_pfeZFactor;
 };
 

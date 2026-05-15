@@ -29,6 +29,7 @@
 #include <QString>
 
 #include <flow5-io-lib_global.h>
+#include <fl5color.h>
 #include <units.h>
 
 namespace io
@@ -39,6 +40,19 @@ namespace io
     FL5IOLIB_EXPORT int readValues(QString const &theline, double &x, double &y, double &z);
     FL5IOLIB_EXPORT bool readAVLString(QTextStream &in, int &Line, QString &strong);
 
+    FL5IOLIB_EXPORT  fl5Color readQColor(QDataStream &ar);
+    FL5IOLIB_EXPORT  void readString(QDataStream &ar, std::string &strong);
+    FL5IOLIB_EXPORT  void readFloat(QDataStream &inStream, float &f);
+    FL5IOLIB_EXPORT  void writeFloat(QDataStream &outStream, float f);
+
+    FL5IOLIB_EXPORT  void writeString(QDataStream &ar, QString const &strong);
+    FL5IOLIB_EXPORT  void writeString(QDataStream &ar, std::string const &strong);
+
+    FL5IOLIB_EXPORT  void readColor(QDataStream &ar, int &r, int &g, int &b);
+    FL5IOLIB_EXPORT  void writeColor(QDataStream &ar, int r, int g, int b);
+
+    FL5IOLIB_EXPORT  void readColor(QDataStream &ar, int &r, int &g, int &b, int &a);
+    FL5IOLIB_EXPORT  void writeColor(QDataStream &ar, int r, int g, int b, int a);
 }
 
 namespace Units

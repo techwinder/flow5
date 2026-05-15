@@ -31,6 +31,7 @@
 
 #include <api/constants.h>
 #include <api/foil.h>
+#include <api/objects2d_globals.h>
 #include <api/utils-io.h>
 
 #include <core/xflcore.h>
@@ -53,14 +54,11 @@ void FoilNormalizeDlg::setupLayout()
     {
         m_pOverlayFrame->setCursor(Qt::ArrowCursor);
         m_pOverlayFrame->setFrameShape(QFrame::NoFrame);
-//        m_pOverlayFrame->setPalette(m_Palette);
         m_pOverlayFrame->setAutoFillBackground(true);
-//        m_pOverlayFrame->setAttribute(Qt::WA_NoSystemBackground);
 
         QVBoxLayout *pFrameLayout = new QVBoxLayout;
         {
             m_ppto = new PlainTextOutput;
-//            m_ppto->updateColors(false);
             m_ppto->setCharDimensions(50,15);
 
             QHBoxLayout *pBtnLayout = new QHBoxLayout;
@@ -124,6 +122,7 @@ void FoilNormalizeDlg::resizeEvent(QResizeEvent *pEvent)
     m_pOverlayFrame->move(pos1);
 }
 
+
 void FoilNormalizeDlg::updateProperties()
 {
     // find current angle
@@ -142,8 +141,7 @@ void FoilNormalizeDlg::updateProperties()
 void FoilNormalizeDlg::onNormalize()
 {
     m_ppto->onAppendQText("Normalizing...\n");
-    m_pBufferFoil->normalizeGeometry();
-    m_pBufferFoil->initGeometry();
+    foil::normalize(m_pBufferFoil);
     m_ppto->onAppendQText("New properties:\n");
     updateProperties();
     m_pFoilWt->update();
@@ -153,8 +151,7 @@ void FoilNormalizeDlg::onNormalize()
 void FoilNormalizeDlg::onDerotate()
 {
     m_ppto->onAppendQText("Derotating...\n");
-    m_pBufferFoil->deRotate();
-    m_pBufferFoil->initGeometry();
+    foil::deRotate(m_pBufferFoil);
     m_ppto->onAppendQText("New properties:\n");
     updateProperties();
     m_pFoilWt->update();

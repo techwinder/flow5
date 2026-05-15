@@ -146,6 +146,8 @@ void FoilWt::onOverlayFoil()
         for(int i=0; i<Objects2d::nFoils(); i++)
         {
             Foil *pFoil = Objects2d::foil(i);
+//            m_oaFoil[i]->setVisible(dlg.selectedList().contains(QString::fromStdString(pFoil->name())));
+
             if(dlg.selectedList().contains(QString::fromStdString(pFoil->name())))
             {
                 // add to list if not yet present
@@ -159,9 +161,11 @@ void FoilWt::onOverlayFoil()
                         break;
                     }
                 }
+
+                pFoil->setVisible(true);
+
                 if(!bFound)
                 {
-                    pFoil->setVisible(true);
                     m_oaFoil.append(pFoil);
                 }
             }

@@ -170,8 +170,8 @@ class FL5LIB_EXPORT Part
         void appendPointMass(PointMass const &pm) {m_Inertia.appendPointMass(pm);}
 
         Vector3d const &position() const {return m_LE;}
-        void setPosition(Vector3d const &pos){m_LE = pos;}
-        void setPosition(double x, double y, double z){m_LE.set(x,y,z);}
+        void setPosition(Vector3d const &pos){m_LE = pos;}               /// @deprecated use Plane::setPosition() instead
+        void setPosition(double x, double y, double z){m_LE.set(x,y,z);} /// @deprecated use Plane::setPosition() instead
 
         double rx() const {return m_rx;}
         double ry() const {return m_ry;}

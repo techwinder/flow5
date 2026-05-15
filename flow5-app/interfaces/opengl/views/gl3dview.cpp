@@ -2713,7 +2713,15 @@ void gl3dView::setBackground()
 
             if(m_pglTexture) delete m_pglTexture;
             if(!m_BackImage.isNull())
-                m_pglTexture = new QOpenGLTexture(m_BackImage);
+            {
+                try{
+                    m_pglTexture = new QOpenGLTexture(m_BackImage);
+                }
+                catch(...)
+                {
+                    m_pglTexture = nullptr;
+                }
+            }
 
             break;
         }

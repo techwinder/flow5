@@ -79,25 +79,25 @@ void PlaneXfl::makeDefaultPlane()
     m_Wing.clear();
     for(int iw=0; iw<NWings; iw++) addWing();
 
-    m_Wing[0].setName("Main wing");
-    m_Wing[0].makeDefaultWing();
-    m_Wing[0].computeGeometry();
+    m_Wing[0]->setName("Main wing");
+    m_Wing[0]->makeDefaultWing();
+    m_Wing[0]->computeGeometry();
 
-    m_Wing[1].setName("Elevator");
-    m_Wing[1].makeDefaultStab();
-    m_Wing[1].computeGeometry();
+    m_Wing[1]->setName("Elevator");
+    m_Wing[1]->makeDefaultStab();
+    m_Wing[1]->computeGeometry();
 
-    m_Wing[2].setName("Fin");
-    m_Wing[2].makeDefaultFin();
-    m_Wing[2].computeGeometry();
+    m_Wing[2]->setName("Fin");
+    m_Wing[2]->makeDefaultFin();
+    m_Wing[2]->computeGeometry();
 
-    m_Wing[0].setPosition(0.400, 0.000, 0.000);
+    m_Wing[0]->setPosition(0.400, 0.000, 0.000);
 
-    m_Wing[1].setPosition(1.350, 0.000, 0.025);
-    m_Wing[1].setRy(-1.5);
+    m_Wing[1]->setPosition(1.350, 0.000, 0.025);
+    m_Wing[1]->setRy(-1.5);
 
-    m_Wing[2].setPosition(1.350, 0.000, 0.050);
-    m_Wing[2].setRx(m_Wing[2].isFin() ? -90 : 0.0);
+    m_Wing[2]->setPosition(1.350, 0.000, 0.050);
+    m_Wing[2]->setRx(m_Wing[2]->isFin() ? -90 : 0.0);
 
     m_Inertia.reset();
 
@@ -112,17 +112,22 @@ void PlaneXfl::makeDefaultPlane()
 PlaneXfl::~PlaneXfl()
 {
     clearPointMasses();
+    for(int iwing=0; iwing<nWings(); iwing++)
+    {
+        delete m_Wing[iwing];
+    }
     for(int ifuse=0; ifuse<nFuse(); ifuse++)
     {
         delete m_Fuse[ifuse];
     }
 }
 
+
 int PlaneXfl::nStations() const
 {
     int n = 0;
     for(int is=0; is<nWings(); is++)
-        n += m_Wing.at(is).nStations();
+        n += m_Wing.at(is)->nStations();
     return n;
 }
 
@@ -139,16 +144,16 @@ double PlaneXfl::tailVolumeHorizontal() const
     Vector3d MainWingLE, StabLE;
     for(int iw=0; iw<nWings(); iw++)
     {
-        if (m_Wing[iw].wingType()==xfl::Main)
+        if (m_Wing[iw]->wingType()==xfl::Main)
         {
-            pMainWing = &m_Wing[iw];
-            MainWingLE = m_Wing[iw].position();
+            pMainWing = m_Wing[iw];
+            MainWingLE = m_Wing[iw]->position();
         }
 
-        if (m_Wing[iw].wingType()==xfl::Elevator)
+        if (m_Wing[iw]->wingType()==xfl::Elevator)
         {
-            pStab = &m_Wing[iw];
-            StabLE = m_Wing[iw].position();
+            pStab = m_Wing[iw];
+            StabLE = m_Wing[iw]->position();
         }
     }
 
@@ -237,8 +242,8 @@ void PlaneXfl::duplicate(Plane const*pPlane)
     m_Wing.resize(pPlaneXfl->nWings());
     for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
     {
-        m_Wing[iw].setUniqueIndex();
-        m_Wing[iw].duplicate(pPlaneXfl->m_Wing.at(iw));
+        m_Wing[iw]->setUniqueIndex();
+        m_Wing[iw]->duplicate(pPlaneXfl->m_Wing.at(iw));
     }
 //    m_Wing.detach();
 
@@ -374,7 +379,7 @@ int PlaneXfl::VLMPanelTotal() const
     for(int iw=0; iw<nWings(); iw++)
     {
 
-        total += m_Wing[iw].quadTotal(true);
+        total += m_Wing[iw]->quadTotal(true);
     }
 
     for(int ifuse=0; ifuse<nFuse(); ifuse++)
@@ -394,7 +399,7 @@ int PlaneXfl::quadCount() const
     int total = 0;
     for(int iw=0; iw<nWings(); iw++)
     {
-        total += m_Wing[iw].quadTotal(false);
+        total += m_Wing[iw]->quadTotal(false);
     }
 
     for(int ifuse=0; ifuse<nFuse(); ifuse++)
@@ -415,7 +420,7 @@ int PlaneXfl::triangleCount() const
     int tricount = 0;
     for(int iw=0; iw<nWings(); iw++)
     {
-        tricount += m_Wing.at(iw).nTriangles();
+        tricount += m_Wing.at(iw)->nTriangles();
     }
     for(int ifuse=0; ifuse<nFuse(); ifuse++)
     {
@@ -447,14 +452,14 @@ WingXfl *PlaneXfl::wing(xfl::enumType wingType)
 WingXfl *PlaneXfl::wing(int iw)
 {
     if(iw<0 || iw>=nWings()) return nullptr;
-    return &m_Wing[iw];
+    return m_Wing[iw];
 }
 
 /** Returns a pointer to the Plane's wing with index iw, or NULL if none has been defined.  */
 WingXfl const *PlaneXfl::wingAt(int iw) const
 {
     if(iw<0 || iw>=nWings()) return nullptr;
-    return &m_Wing.at(iw);
+    return m_Wing.at(iw);
 }
 
 
@@ -462,7 +467,7 @@ WingXfl *PlaneXfl::mainWing()
 {
     for(int iw=0; iw<nWings(); iw++)
     {
-        if(m_Wing.at(iw).isMainWing())   return &m_Wing[iw];
+        if(m_Wing.at(iw)->isMainWing())   return m_Wing[iw];
     }
     return nullptr;
 }
@@ -472,7 +477,7 @@ WingXfl const *PlaneXfl::mainWing() const
 {
     for(int iw=0; iw<nWings(); iw++)
     {
-        if(m_Wing.at(iw).isMainWing())   return &m_Wing[iw];
+        if(m_Wing.at(iw)->isMainWing())   return m_Wing[iw];
     }
     return nullptr;
 }
@@ -590,27 +595,28 @@ void PlaneXfl::clearWings()
 
 WingXfl* PlaneXfl::addWing(xfl::enumType wingtype)
 {
-    m_Wing.push_back({wingtype});
+    WingXfl *pWing = new WingXfl(wingtype);
+    m_Wing.push_back(pWing);
 
-    m_Wing.back().setUniqueIndex();
+    m_Wing.back()->setUniqueIndex();
     makeUniqueIndexList();
 
     std::string strange;
     strange = std::format("Wing_{:d}", nWings());
-    m_Wing.back().setName(strange);
+    m_Wing.back()->setName(strange);
 
-    return &m_Wing.back();
+    return m_Wing.back();
 }
 
 
 WingXfl *PlaneXfl::addWing(WingXfl *pNewWing)
 {
-    m_Wing.push_back(*pNewWing);
-    delete pNewWing;
-    m_Wing.back().setUniqueIndex();
+    m_Wing.push_back(pNewWing);
+
+    m_Wing.back()->setUniqueIndex();
     makeUniqueIndexList();
 
-    return &m_Wing.back();
+    return m_Wing.back();
 }
 
 
@@ -654,14 +660,14 @@ WingXfl* PlaneXfl::duplicateWing(int iWing)
     if(!wing(iWing)) return nullptr;
 
     m_Wing.push_back(m_Wing[iWing]);
-    if(m_Wing[iWing].isMainWing()) m_Wing.back().setWingType(xfl::OtherWing);
+    if(m_Wing[iWing]->isMainWing()) m_Wing.back()->setWingType(xfl::OtherWing);
 
     std::string strange;
     strange = std::format("Wing_{:d}", nWings());
-    m_Wing.back().setName(strange);
+    m_Wing.back()->setName(strange);
 
     createSurfaces();
-    return &m_Wing.back();
+    return m_Wing.back();
 }
 
 
@@ -830,7 +836,7 @@ Part const*PlaneXfl::partFromIndex(int UniqueIndex) const
 
     for(int iw=0; iw<nWings(); iw++)
     {
-        if(m_Wing.at(iw).uniqueIndex()==UniqueIndex) return wingAt(iw);
+        if(m_Wing.at(iw)->uniqueIndex()==UniqueIndex) return wingAt(iw);
     }
     return nullptr;
 }
@@ -998,10 +1004,10 @@ void PlaneXfl::makeTriMesh(bool bThickSurfaces)
 
     for(int iw=0; iw<nWings(); iw++)
     {
-        WingXfl &wing = m_Wing[iw];
-        wing.makeTriPanels(m_RefTriMesh.nPanels(), m_RefTriMesh.nNodes(), bThickSurfaces);
-        m_RefTriMesh.appendMesh(wing.triMesh());
-        if(wing.isFin()) m_RefTriMesh.lastPanel().m_iPD = -1; // because there is no right tip patch
+        WingXfl *pWing = m_Wing[iw];
+        pWing->makeTriPanels(m_RefTriMesh.nPanels(), m_RefTriMesh.nNodes(), bThickSurfaces);
+        m_RefTriMesh.appendMesh(pWing->triMesh());
+        if(pWing->isFin()) m_RefTriMesh.lastPanel().m_iPD = -1; // because there is no right tip patch
     }
 
     for(int in=0; in<m_RefTriMesh.nodeCount(); in++) m_RefTriMesh.node(in).setIndex(in);
@@ -1077,9 +1083,9 @@ bool PlaneXfl::connectTriMesh(bool bRefTriMesh, bool bConnectTE, bool )
     for(int iw=0; iw<nWings(); iw++)
     {
         // first the surface
-        WingXfl const &wing = m_Wing.at(iw);
-        int i1 = wing.firstPanel3Index();
-        int n1 = wing.nPanel3();
+        WingXfl const *pWing = m_Wing.at(iw);
+        int i1 = pWing->firstPanel3Index();
+        int n1 = pWing->nPanel3();
         pTriMesh->makeConnectionsFromNodePosition2(i1, n1, 1.0e-4);
     }
 
@@ -1308,9 +1314,9 @@ void PlaneXfl::computeStructuralInertia()
 
     for(int iw=0; iw<nWings(); iw++)
     {
-        WingXfl const &aWing = m_Wing.at(iw);
-        cogs += (aWing.CoG_t()+aWing.position()) * aWing.totalMass();
-        mass_s += aWing.totalMass();
+        WingXfl const *pWing = m_Wing.at(iw);
+        cogs += (pWing->CoG_t()+pWing->position()) * pWing->totalMass();
+        mass_s += pWing->totalMass();
     }
 
     for(int ifuse=0; ifuse<nFuse(); ifuse++)
@@ -1329,15 +1335,15 @@ void PlaneXfl::computeStructuralInertia()
 
     for(int iw=0; iw<nWings(); iw++)
     {
-        WingXfl const &aWing = m_Wing.at(iw);
-        Vector3d d = (aWing.CoG_t()+aWing.position()) - cogs;
+        WingXfl const *pWing = m_Wing.at(iw);
+        Vector3d d = (pWing->CoG_t()+pWing->position()) - cogs;
 
-        ixx_s += aWing.Ixx_t() + aWing.totalMass()*(d.y*d.y+d.z*d.z);
-        ixy_s += aWing.Ixy_t() + aWing.totalMass()*(d.x*d.y);
-        ixz_s += aWing.Ixz_t() + aWing.totalMass()*(d.x*d.z);
-        iyy_s += aWing.Iyy_t() + aWing.totalMass()*(d.x*d.x+d.z*d.z);
-        iyz_s += aWing.Iyz_t() + aWing.totalMass()*(d.y*d.z);
-        izz_s += aWing.Izz_t() + aWing.totalMass()*(d.x*d.x+d.y*d.y);
+        ixx_s += pWing->Ixx_t() + pWing->totalMass()*(d.y*d.y+d.z*d.z);
+        ixy_s += pWing->Ixy_t() + pWing->totalMass()*(d.x*d.y);
+        ixz_s += pWing->Ixz_t() + pWing->totalMass()*(d.x*d.z);
+        iyy_s += pWing->Iyy_t() + pWing->totalMass()*(d.x*d.x+d.z*d.z);
+        iyz_s += pWing->Iyz_t() + pWing->totalMass()*(d.y*d.z);
+        izz_s += pWing->Izz_t() + pWing->totalMass()*(d.x*d.x+d.y*d.y);
     }
 
     for(int ifuse=0; ifuse<nFuse(); ifuse++)
@@ -1418,12 +1424,12 @@ double PlaneXfl::projectedArea(bool bOtherWings)  const
 
     for(int iw=0; iw<nWings(); iw++)
     {
-        if(m_Wing.at(iw).isMainWing() )
-            area += m_Wing.at(iw).m_ProjectedArea;
+        if(m_Wing.at(iw)->isMainWing() )
+            area += m_Wing.at(iw)->m_ProjectedArea;
         if(bOtherWings)
         {
-            if(m_Wing.at(iw).isOtherWing())
-            area += m_Wing.at(iw).m_ProjectedArea;
+            if(m_Wing.at(iw)->isOtherWing())
+            area += m_Wing.at(iw)->m_ProjectedArea;
         }
     }
 
@@ -1437,12 +1443,12 @@ double PlaneXfl::planformArea(bool bOtherWings)   const
 
     for(int iw=0; iw<nWings(); iw++)
     {
-        if(m_Wing.at(iw).isMainWing() )
-            area += m_Wing.at(iw).m_PlanformArea;
+        if(m_Wing.at(iw)->isMainWing() )
+            area += m_Wing.at(iw)->m_PlanformArea;
         if(bOtherWings)
         {
-            if(m_Wing.at(iw).isOtherWing())
-            area += m_Wing.at(iw).m_PlanformArea;
+            if(m_Wing.at(iw)->isOtherWing())
+            area += m_Wing.at(iw)->m_PlanformArea;
         }
     }
 
@@ -1452,7 +1458,7 @@ double PlaneXfl::planformArea(bool bOtherWings)   const
 
 Vector3d PlaneXfl::rootQuarterPoint(int iw) const
 {
-    return wingLE(iw) + Vector3d(wingAt(iw)->rootChord()/4,0,0);
+    return wingPosition(iw) + Vector3d(wingAt(iw)->rootChord()/4,0,0);
 }
 
 
@@ -1460,7 +1466,7 @@ void PlaneXfl::translate(Vector3d const &T)
 {
     for(int iw=0; iw<nWings(); iw++)
     {
-        setWingLE(iw, wingLE(iw)+T);
+        setWingPosition(iw, wingPosition(iw)+T);
     }
     for(int ifuse=0; ifuse<nFuse(); ifuse++)
     {
@@ -1479,16 +1485,16 @@ void PlaneXfl::scale(double scalefactor)
 {
     for(int iw=0; iw<nWings(); iw++)
     {
-        WingXfl &wing = m_Wing[iw];
-        wing.scaleSpan(wing.planformSpan()*scalefactor);
-        wing.scaleChord(wing.rootChord()*scalefactor);
+        WingXfl *pWing = m_Wing[iw];
+        pWing->scaleSpan(pWing->planformSpan()*scalefactor);
+        pWing->scaleChord(pWing->rootChord()*scalefactor);
 
-        wing.setPosition(wing.position()*scalefactor);
+        pWing->setPosition(pWing->position()*scalefactor);
 
-        wing.inertia().scaleMassPositions(scalefactor);
-        wing.createSurfaces(wing.position(), wing.rx(), wing.ry());
-        wing.computeGeometry();
-        if(wing.bAutoInertia()) wing.computeStructuralInertia(wing.position());
+        pWing->inertia().scaleMassPositions(scalefactor);
+        pWing->createSurfaces(pWing->position(), pWing->rx(), pWing->ry());
+        pWing->computeGeometry();
+        if(pWing->bAutoInertia()) pWing->computeStructuralInertia(pWing->position());
     }
 
     for(int ifuse=0; ifuse<nFuse(); ifuse++)
@@ -1515,9 +1521,9 @@ int PlaneXfl::nAVLGains() const
     int iCtrl = 0;
     for(int iw=0; iw<nWings(); iw++)
     {
-        WingXfl const &wing = m_Wing.at(iw);
+        WingXfl const *pWing = m_Wing.at(iw);
 
-        for(int ic=0; ic<wing.nFlaps(); ic++)
+        for(int ic=0; ic<pWing->nFlaps(); ic++)
         {
             iCtrl++;
         }
@@ -1531,11 +1537,11 @@ std::string PlaneXfl::flapName(int iFlap) const
     int ic = 0;
     for(int iw=0; iw<nWings(); iw++)
     {
-        WingXfl const &wing = m_Wing.at(iw);
+        WingXfl const *pWing = m_Wing.at(iw);
 
-        for(int iflap=0; iflap<wing.nFlaps(); iflap++)
+        for(int iflap=0; iflap<pWing->nFlaps(); iflap++)
         {
-            if(iFlap==ic) return wing.name() + std::format("_flap_{:d}", iflap+1);
+            if(iFlap==ic) return pWing->name() + std::format("_flap_{:d}", iflap+1);
             ic++;
         }
     }
@@ -1545,11 +1551,11 @@ std::string PlaneXfl::flapName(int iFlap) const
 
 double PlaneXfl::flapAngle(int iWing, int iFlap) const
 {
-    WingXfl const &wing = m_Wing.at(iWing);
+    WingXfl const *pWing = m_Wing.at(iWing);
     int ifl=0;
-    for (int jSurf=0; jSurf<wing.nSurfaces(); jSurf++)
+    for (int jSurf=0; jSurf<pWing->nSurfaces(); jSurf++)
     {
-        Surface const &surf = wing.surfaceAt(jSurf);
+        Surface const &surf = pWing->surfaceAt(jSurf);
         if(surf.hasTEFlap())
         {
             if(ifl==iFlap)
@@ -1566,11 +1572,11 @@ int PlaneXfl::nFlaps(int iWing) const
 {
     int ifl=0;
 
-    WingXfl const &wing = m_Wing.at(iWing);
+    WingXfl const *pWing = m_Wing.at(iWing);
 
-    for (int jSurf=0; jSurf<wing.nSurfaces(); jSurf++)
+    for (int jSurf=0; jSurf<pWing->nSurfaces(); jSurf++)
     {
-        Surface const &surf = wing.surfaceAt(jSurf);
+        Surface const &surf = pWing->surfaceAt(jSurf);
         if(surf.hasTEFlap())
         {
             ifl++;
@@ -1586,11 +1592,11 @@ int PlaneXfl::nFlaps() const
     int ifl=0;
     for(int iw=0; iw<nWings(); iw++)
     {
-        WingXfl const &wing = m_Wing.at(iw);
+        WingXfl const *pWing = m_Wing.at(iw);
 
-        for (int jSurf=0; jSurf<wing.nSurfaces(); jSurf++)
+        for (int jSurf=0; jSurf<pWing->nSurfaces(); jSurf++)
         {
-            Surface const &surf = wing.surfaceAt(jSurf);
+            Surface const &surf = pWing->surfaceAt(jSurf);
             if(surf.hasTEFlap())
             {
                 ifl++;
@@ -1606,10 +1612,10 @@ std::string PlaneXfl::controlSurfaceName(int iCtrl) const
     int ic = 0;
     for(int iw=0; iw<nWings(); iw++)
     {
-        WingXfl const &wing = m_Wing.at(iw);
-        for(int iflap=0; iflap<wing.nFlaps(); iflap++)
+        WingXfl const *pWing = m_Wing.at(iw);
+        for(int iflap=0; iflap<pWing->nFlaps(); iflap++)
         {
-            if(iCtrl==ic) return wing.name() + std::format("_flap_{:d}", iflap+1);
+            if(iCtrl==ic) return pWing->name() + std::format("_flap_{:d}", iflap+1);
             ic++;
         }
     }
@@ -1644,7 +1650,7 @@ void PlaneXfl::setRangePositions4(PlanePolar const *pWPolar, double t, std::stri
             strange = "      Rotating " + pWing->name();
             outstring += strange +  std::format(" by {:f}°, total angle is {:f}", deltaangle, totalAngle) + DEGstr + EOLstr;
 
-            Origin = wingLE(iw);
+            Origin = wingPosition(iw);
 
             if(pWPolar->isQuadMethod())
             {
@@ -1731,7 +1737,7 @@ void PlaneXfl::setRangePositions3(PlanePolar const *pWPolar, double t, std::stri
             strange = "      Rotating " + pWing->name();
             outstring += strange + std::format(" by {:.3f}°, total angle is {:.3f}°\n", deltaangle, totalAngle);
 
-            Origin = wingLE(iw);
+            Origin = wingPosition(iw);
             rotateWingNodes(triPanels(), nodes, pWing, Origin, YVector, deltaangle);
         }
 
@@ -1938,4 +1944,24 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstr)
 
 }
 
+
+Vector3d PlaneXfl::wingPosition(WingXfl const *pWing)
+{
+    for(unsigned int iw=0; iw<m_Wing.size(); iw++)
+    {
+        if(m_Wing.at(iw) == pWing)
+            return m_Wing.at(iw)->position();
+    }
+    return Vector3d();
+}
+
+
+void PlaneXfl::setWingPosition(WingXfl *pWing, Vector3d const &LE)
+{
+    for(unsigned int iw=0; iw<m_Wing.size(); iw++)
+    {
+        if(m_Wing.at(iw) == pWing)
+            m_Wing[iw]->setPosition(LE);
+    }
+}
 

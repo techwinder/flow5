@@ -31,11 +31,14 @@
 
 #include <core/displayoptions.h>
 #include <interfaces/editors/foiledit/foilwt.h>
-#include <api/foil.h>
-#include <api/objects2d.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/line/linebtn.h>
 #include <interfaces/widgets/line/linemenu.h>
+
+#include <api/foil.h>
+#include <api/objects2d.h>
+#include <api/objects2d_globals.h>
+
 
 #define SLIDERSCALE 10000
 
@@ -73,12 +76,11 @@ void InterpolateFoilsDlg::showEvent(QShowEvent *pEvent)
 
 void InterpolateFoilsDlg::setupLayout()
 {
-    QFrame *pCtrlFrame = new QFrame;
+    QFrame *pfrCtrl = new QFrame;
     {
-        pCtrlFrame->setCursor(Qt::ArrowCursor);
+        pfrCtrl->setCursor(Qt::ArrowCursor);
         QVBoxLayout *pCtrlLayout = new QVBoxLayout;
         {
-
             QHBoxLayout *pTopLayout = new QHBoxLayout;
             {
                 QVBoxLayout *pFoil1Layout = new QVBoxLayout;
@@ -101,12 +103,12 @@ void InterpolateFoilsDlg::setupLayout()
 
                 QVBoxLayout *pFoil3Layout = new QVBoxLayout;
                 {
-                    QLabel *pInterLab = new QLabel(tr("Buffer foil"));
+                    QLabel *plabInter = new QLabel(tr("Buffer foil"));
 
                     m_plabProps3 = new QLabel(tr("properties"));
                     m_plabProps3->setFont(DisplayOptions::tableFontStruct().font());
 
-                    pFoil3Layout->addWidget(pInterLab);
+                    pFoil3Layout->addWidget(plabInter);
                     pFoil3Layout->addWidget(m_plabProps3);
                 }
 
@@ -120,7 +122,7 @@ void InterpolateFoilsDlg::setupLayout()
             QHBoxLayout *pSliderLayout = new QHBoxLayout;
             {
                 m_pfeFrac = new FloatEdit;
-                QLabel *pLab = new QLabel("%");
+                QLabel *plabPercent = new QLabel("%");
                 m_pslMix = new QSlider(Qt::Horizontal);
                 m_pslMix->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum));
                 m_pslMix->setMinimum(0);
@@ -128,20 +130,20 @@ void InterpolateFoilsDlg::setupLayout()
                 m_pslMix->setTickInterval(SLIDERSCALE/10);
                 m_pslMix->setTickPosition(QSlider::TicksBelow);
                 pSliderLayout->addWidget(m_pfeFrac);
-                pSliderLayout->addWidget(pLab);
+                pSliderLayout->addWidget(plabPercent);
                 pSliderLayout->addWidget(m_pslMix);
             }
             pCtrlLayout->addLayout(pTopLayout);
             pCtrlLayout->addSpacing(15);
             pCtrlLayout->addLayout(pSliderLayout);
         }
-        pCtrlFrame->setLayout(pCtrlLayout);
+        pfrCtrl->setLayout(pCtrlLayout);
     }
 
 
     QVBoxLayout *pMainLayout = new QVBoxLayout;
     {
-        pMainLayout->addWidget(pCtrlFrame);
+        pMainLayout->addWidget(pfrCtrl);
         pMainLayout->addSpacing(15);
         pMainLayout->addWidget(m_pFoilWt);
     }
@@ -262,16 +264,11 @@ void InterpolateFoilsDlg::onSlider(int val)
 
 void InterpolateFoilsDlg::onApply()
 {
-    if(m_pFoil1->nNodes()>m_pFoil2->nNodes()) m_pBufferFoil->copy(m_pFoil1, false);
-    else                            m_pBufferFoil->copy(m_pFoil2, false);
+    foil::interpolateFoils(m_pBufferFoil, m_pFoil1, m_pFoil2, m_Frac/100.0);
+
     m_pBufferFoil->setTheStyle(FoilWt::bufferFoilStyle());
     m_pBufferFoil->show();
     m_pBufferFoil->setFilled(FoilWt::isFilledBufferFoil());
-    m_pBufferFoil->interpolate(m_pFoil1, m_pFoil2, m_Frac/100.0);
-    m_pBufferFoil->makeBaseFromCamberAndThickness();
-    m_pBufferFoil->rebuildPointSequenceFromBase();
-    m_pBufferFoil->applyBase();
-
     m_plabProps3->setText(QString::fromStdString(m_pBufferFoil->properties(false)));
 
     update();

@@ -67,9 +67,9 @@ class BodyTransDlg : public QDialog
 
         QDialogButtonBox *m_pButtonBox;
 
-        FloatEdit *m_pdeXTransFactor;
-        FloatEdit *m_pdeYTransFactor;
-        FloatEdit *m_pdeZTransFactor;
+        FloatEdit *m_pfeXTransFactor;
+        FloatEdit *m_pfeYTransFactor;
+        FloatEdit *m_pfeZTransFactor;
         IntEdit *m_pieFrameID;
         QCheckBox *m_pchFrameOnly;
 

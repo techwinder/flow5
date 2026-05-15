@@ -1831,8 +1831,8 @@ void Foil::interpolate(Foil const *pFoil1, Foil const *pFoil2, double frac)
 
     for(unsigned int i=0; i<m_BaseCbLine.size(); i++)
     {
-        m_BaseCbLine[i].y = (1.0-frac) * cline1[i].y + frac*cline2[i].y;
-        m_Thickness[i] = (1.0-frac) * th1[i] + frac*th2[i];
+        m_BaseCbLine[i].y = (1.0-frac) * cline1[i].y + frac* cline2[i].y;
+         m_Thickness[i] = (1.0-frac) * th1[i] + frac*th2[i];
     }
 }
 

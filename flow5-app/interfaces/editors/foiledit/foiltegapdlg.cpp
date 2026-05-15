@@ -30,9 +30,10 @@
 
 #include "foiltegapdlg.h"
 #include <interfaces/widgets/customwts/floatedit.h>
-#include <api/foil.h>
 #include <interfaces/editors/foiledit/foilwt.h>
 
+#include <api/foil.h>
+#include <api/objects2d_globals.h>
 
 double FoilTEGapDlg::s_BlendLength = 0.2;
 
@@ -61,33 +62,21 @@ void FoilTEGapDlg::setupLayout()
         QGridLayout *pParamsLayout = new QGridLayout;
         {
             QLabel *plab1 = new QLabel(tr("T.E. Gap Value="));
-            plab1->setPalette(m_Palette);
-            plab1->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            plab1->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-
             QLabel *plab2 = new QLabel(tr("% chord"));
-            plab2->setPalette(m_Palette);
-            plab2->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
-            m_pfeGap = new FloatEdit(0,3);
+            m_pfeGap = new FloatEdit;
 
             QLabel *plab3 = new QLabel(tr("Characteristic blending distance from T.E.="));
-            plab3->setPalette(m_Palette);
-            plab3->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-            plab3->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-
             QLabel *plab4 = new QLabel(tr("% chord"));
-            plab4->setPalette(m_Palette);
-            plab4->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
             m_pfeBlend = new FloatEdit;
 
-            pParamsLayout->addWidget(plab1,      1,1);
-            pParamsLayout->addWidget(m_pfeGap,   1,2);
-            pParamsLayout->addWidget(plab2,      1,3);
-            pParamsLayout->addWidget(plab3,      2,1);
-            pParamsLayout->addWidget(m_pfeBlend, 2,2);
-            pParamsLayout->addWidget(plab4,      2,3);
+            pParamsLayout->addWidget(plab1,      1, 1, Qt::AlignRight);
+            pParamsLayout->addWidget(m_pfeGap,   1, 2);
+            pParamsLayout->addWidget(plab2,      1, 3, Qt::AlignLeft);
+            pParamsLayout->addWidget(plab3,      2, 1, Qt::AlignRight);
+            pParamsLayout->addWidget(m_pfeBlend, 2, 2);
+            pParamsLayout->addWidget(plab4,      2, 3, Qt::AlignLeft);
         }
         m_pOverlayFrame->setLayout(pParamsLayout);
     }
@@ -96,7 +85,6 @@ void FoilTEGapDlg::setupLayout()
     QVBoxLayout *pMainLayout = new QVBoxLayout;
     {
         pMainLayout->addWidget(m_pFoilWt);
-        //        pMainLayout->addWidget(m_pButtonBox);
     }
 
     setLayout(pMainLayout);
@@ -126,6 +114,7 @@ void FoilTEGapDlg::resizeEvent(QResizeEvent *)
 void FoilTEGapDlg::initDialog(Foil *pFoil)
 {
     FoilDlg::initDialog(pFoil);
+    pFoil->setVisible(true);
     m_pFoilWt->addFoil(pFoil);
 
     m_pfeBlend->setMin(  0.0);
@@ -143,9 +132,11 @@ void FoilTEGapDlg::onApply()
     resetFoil();
 
     double gap = m_pfeGap->value()/100.0;
-    s_BlendLength  = m_pfeBlend->value()/100;
+    s_BlendLength  = m_pfeBlend->value()/100.0;
 
-    double dg = (gap-m_pRefFoil->TEGap());
+    foil::setTEGap(m_pBufferFoil, gap, s_BlendLength);
+
+/*    double dg = (gap-m_pRefFoil->TEGap());
     double length = m_pRefFoil->length();
 
     CubicSpline CS = m_pRefFoil->cubicSpline(); //  make it non-const
@@ -169,7 +160,7 @@ void FoilTEGapDlg::onApply()
         }
     }
 
-    m_pBufferFoil->initGeometry();
+    m_pBufferFoil->initGeometry();*/
 
     m_pBufferFoil->setName(m_pRefFoil->name()+QString::asprintf("_TEgap %.2f%%", m_pBufferFoil->TEGap()*100.0).toStdString());
 

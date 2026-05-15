@@ -87,9 +87,9 @@ void BodyScaleDlg::setupLayout()
         m_prbFrame = new QRadioButton(tr("Frame only"));
         m_pieFrameID = new IntEdit(10);
 
-        pTopLayout->addWidget(m_prbBody,1,1);
-        pTopLayout->addWidget(m_prbFrame,2,1);
-        pTopLayout->addWidget(m_pieFrameID,2,2);
+        pTopLayout->addWidget(m_prbBody,    1, 1);
+        pTopLayout->addWidget(m_prbFrame,   2, 1);
+        pTopLayout->addWidget(m_pieFrameID, 2, 2);
     }
 
     QGridLayout *pScaleLayout = new QGridLayout;
@@ -100,17 +100,17 @@ void BodyScaleDlg::setupLayout()
         m_pfeXScaleFactor->setDigits(3);
         m_pfeYScaleFactor->setDigits(3);
         m_pfeZScaleFactor->setDigits(3);
-        QLabel *lab0 = new QLabel("Scale factor");
-        QLabel *lab1 = new QLabel("X scale");
-        QLabel *lab2 = new QLabel("Y scale");
-        QLabel *lab3 = new QLabel("Z scale");
-        pScaleLayout->addWidget(lab0,1,2, Qt::AlignCenter);
-        pScaleLayout->addWidget(lab1,2,1, Qt::AlignRight | Qt::AlignVCenter);
-        pScaleLayout->addWidget(lab2,3,1, Qt::AlignRight | Qt::AlignVCenter);
-        pScaleLayout->addWidget(lab3,4,1, Qt::AlignRight | Qt::AlignVCenter);
-        pScaleLayout->addWidget(m_pfeXScaleFactor,2,2);
-        pScaleLayout->addWidget(m_pfeYScaleFactor,3,2);
-        pScaleLayout->addWidget(m_pfeZScaleFactor,4,2);
+        QLabel *plab0 = new QLabel("Scale factor");
+        QLabel *plab1 = new QLabel("X scale");
+        QLabel *plab2 = new QLabel("Y scale");
+        QLabel *plab3 = new QLabel("Z scale");
+        pScaleLayout->addWidget(plab0,             1, 2);
+        pScaleLayout->addWidget(plab1,             2, 1, Qt::AlignRight);
+        pScaleLayout->addWidget(plab2,             3, 1, Qt::AlignRight);
+        pScaleLayout->addWidget(plab3,             4, 1, Qt::AlignRight);
+        pScaleLayout->addWidget(m_pfeXScaleFactor, 2, 2);
+        pScaleLayout->addWidget(m_pfeYScaleFactor, 3, 2);
+        pScaleLayout->addWidget(m_pfeZScaleFactor, 4, 2);
     }
 
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);

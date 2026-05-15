@@ -531,10 +531,10 @@ void PlaneXflInertiaDlg::onExportToAVL()
         WingXfl *pWing = m_pPlaneXfl->wing(iw);
         if(!pWing) continue;
 
-        if(pWing->bAutoInertia()) pWing->computeStructuralInertia(m_pPlaneXfl->wingLE(iw));
+        if(pWing->bAutoInertia()) pWing->computeStructuralInertia(m_pPlaneXfl->wingPosition(iw));
 
         // Apply Huyghens/Steiner theorem
-        Vector3d const &T = m_pPlaneXfl->wingLE(iw);
+        Vector3d const &T = m_pPlaneXfl->wingPosition(iw);
         double d2 = T.x*T.x+T.y*T.y+T.z*T.z;
         CoG += T;
         CoGIxx += pWing->structuralMass() *(d2-T.x*T.x);
@@ -601,7 +601,7 @@ void PlaneXflInertiaDlg::onExportToAVL()
     for(int iw=0; iw<m_pPlaneXfl->nWings(); iw++)
     {
         WingXfl *pWing = m_pPlaneXfl->wing(iw);
-        Vector3d const &T = m_pPlaneXfl->wingLE(iw);
+        Vector3d const &T = m_pPlaneXfl->wingPosition(iw);
         if(pWing)
         {
             for (int i=0; i<pWing->pointMassCount(); i++)
@@ -657,7 +657,7 @@ void PlaneXflInertiaDlg::editWingInertia(int iWing)
     workwing.createSurfaces(Vector3d(), m_pPlaneXfl->rxAngle(iWing), m_pPlaneXfl->ryAngle(iWing));
 
     //update the inertia
-    workwing.computeStructuralInertia(m_pPlaneXfl->wingLE(iWing)); //wing surfaces are defined in the plane's body axis
+    workwing.computeStructuralInertia(m_pPlaneXfl->wingPosition(iWing)); //wing surfaces are defined in the plane's body axis
 
     PartInertiaDlg dlg(&workwing, nullptr, this);
     if(dlg.exec()!=QDialog::Accepted)

@@ -58,6 +58,7 @@
 #include <api/fusestl.h>
 #include <api/fusexfl.h>
 #include <api/geom_global.h>
+#include <api/gmesh_globals.h>
 #include <api/objects2d.h>
 #include <api/objects3d.h>
 #include <api/objects_global.h>
@@ -95,7 +96,6 @@
 #include <interfaces/editors/wingedit/wingscaledlg.h>
 #include <interfaces/exchange/stlwriterdlg.h>
 #include <interfaces/mesh/afmesher.h>
-#include <api/gmesh_globals.h>
 #include <interfaces/mesh/gmesherwt.h>
 #include <interfaces/mesh/mesherwt.h>
 #include <interfaces/mesh/meshevent.h>
@@ -1558,8 +1558,8 @@ void PlaneXflDlg::onInsertFin()
             pWing->scaleChord(chord/2.0);
             pWing->scaleSpan(span/5.0);
         }
-        m_pPlaneXfl->m_Wing[n].setRx(-90.0);
-        m_pPlaneXfl->m_Wing[n].setPosition(span/3.0, 0.0, 0.0);
+        m_pPlaneXfl->wing(n)->setRx(-90.0);
+        m_pPlaneXfl->wing(n)->setPosition(span/3.0, 0.0, 0.0);
     }
 
     updateData();

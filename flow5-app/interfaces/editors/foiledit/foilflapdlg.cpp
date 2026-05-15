@@ -95,18 +95,6 @@ void FoilFlapDlg::setupLayout()
             QLabel *plab4 = new QLabel(tr("% Chord"));
             QLabel *plab5 = new QLabel(tr("Hinge y position"));
             QLabel *plab6 = new QLabel(tr("% thickness"));
-            plab1->setPalette(m_Palette);
-            plab2->setPalette(m_Palette);
-            plab3->setPalette(m_Palette);
-            plab4->setPalette(m_Palette);
-            plab5->setPalette(m_Palette);
-            plab6->setPalette(m_Palette);
-            plab1->setAttribute(Qt::WA_NoSystemBackground);
-            plab2->setAttribute(Qt::WA_NoSystemBackground);
-            plab3->setAttribute(Qt::WA_NoSystemBackground);
-            plab4->setAttribute(Qt::WA_NoSystemBackground);
-            plab5->setAttribute(Qt::WA_NoSystemBackground);
-            plab6->setAttribute(Qt::WA_NoSystemBackground);
 
             m_pchMakePermanent = new QCheckBox(tr("Make deflection permanent"));
             QString tip(tr("<p>"

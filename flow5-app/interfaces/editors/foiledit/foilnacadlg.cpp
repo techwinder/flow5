@@ -63,20 +63,19 @@ void NacaFoilDlg::setupLayout()
         m_pOverlayFrame->setAutoFillBackground(false);
         QGridLayout *pFormLayout = new QGridLayout;
         {
-            QLabel *pDigitsLab = new QLabel(tr("4 or 5 digits:"));
-            pDigitsLab->setPalette(m_Palette);
+            QLabel *plabDigits = new QLabel(tr("4 or 5 digits:"));
+            plabDigits->setPalette(m_Palette);
             m_pleNumber = new QLineEdit(this);
 
-            QLabel *pNPanelsLab = new QLabel(tr("Number of Panels:"));
-            pNPanelsLab->setPalette(m_Palette);
+            QLabel *plabNPanels = new QLabel(tr("Number of Panels:"));
+            plabNPanels->setPalette(m_Palette);
             m_piePanels = new IntEdit(100, this);
             m_piePanels->setMax(10000);
 
-            pFormLayout->addWidget(pDigitsLab,1,1, Qt::AlignRight|Qt::AlignVCenter);
+            pFormLayout->addWidget(plabDigits,1,1, Qt::AlignRight|Qt::AlignVCenter);
             pFormLayout->addWidget(m_pleNumber,1,2);
-            pFormLayout->addWidget(pNPanelsLab,2,1);
+            pFormLayout->addWidget(plabNPanels,2,1);
             pFormLayout->addWidget(m_piePanels,2,2);
- //            pFormLayout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
         }
         m_pOverlayFrame->setLayout(pFormLayout);
     }

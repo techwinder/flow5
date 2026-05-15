@@ -643,7 +643,7 @@ bool XflXmlReader::readWing(WingXfl *pWing, Vector3d &WingLE, double &Rx, double
                                 Foil *pFoil = new Foil();
                                 int iLineError(0);
 
-                                if(objects::readFoilFile(filename.toStdString(), pFoil, iLineError))
+                                if(foil::readFoilFile(filename.toStdString(), pFoil, iLineError))
                                 {
                                     pWingSec->m_LeftFoilName = pFoil->name();
                                     Objects2d::insertThisFoil(pFoil);
@@ -670,7 +670,7 @@ bool XflXmlReader::readWing(WingXfl *pWing, Vector3d &WingLE, double &Rx, double
                                 int iLineError(0);
 
                                 Foil *pFoil = new Foil();
-                                if(objects::readFoilFile(filename.toStdString(), pFoil, iLineError))
+                                if(foil::readFoilFile(filename.toStdString(), pFoil, iLineError))
                                 {
                                     pWingSec->m_RightFoilName = pFoil->name();
                                     Objects2d::insertThisFoil(pFoil);

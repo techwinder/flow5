@@ -136,7 +136,7 @@ bool XmlPlaneReader::readPlane(PlaneXfl *pPlane, double lengthUnit, double massU
             if(!hasError())
             {
                 pPlane->wing(iWing)->duplicate(&newWing);
-                pPlane->setWingLE(iWing, wingLE);
+                pPlane->setWingPosition(iWing, wingLE);
                 pPlane->setRxAngle(iWing, Rx);
                 pPlane->setRyAngle(iWing, Ry);
             }

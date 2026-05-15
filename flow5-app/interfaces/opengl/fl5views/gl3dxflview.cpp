@@ -368,7 +368,7 @@ void gl3dXflView::glDrawMasses(Plane const *pPlane)
         {
             if(pPlaneXfl->wingAt(iw))
             {
-                paintPartMasses(pPlaneXfl->wingLE(iw), pPlaneXfl->wingAt(iw)->structuralMass(), QString::fromStdString(pPlaneXfl->wingAt(iw)->name()),
+                paintPartMasses(pPlaneXfl->wingPosition(iw), pPlaneXfl->wingAt(iw)->structuralMass(), QString::fromStdString(pPlaneXfl->wingAt(iw)->name()),
                                 pPlaneXfl->wingAt(iw)->pointMasses(), -1);
             }
         }

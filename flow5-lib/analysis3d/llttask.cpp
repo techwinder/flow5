@@ -258,8 +258,8 @@ void LLTTask::computeWing(double QInf, double Alpha, std::string &ErrMessage)
 
         // v6.48
         // added wingLE position to the calculation of lever arms - cf. Ticket 147
-        c4   = m_pPlane->wingLE(0).x + m_pWing->C4(yob)                                     - m_pPlPolar->CoG().x; //m
-        zpos = m_pPlane->wingLE(0).z + m_pWing->ZPosition(yob*m_pWing->m_PlanformSpan/2.0)  - m_pPlPolar->CoG().z; //m
+        c4   = m_pPlane->wing(0)->position().x + m_pWing->C4(yob)                                     - m_pPlPolar->CoG().x; //m
+        zpos = m_pPlane->wing(0)->position().z + m_pWing->ZPosition(yob*m_pWing->m_PlanformSpan/2.0)  - m_pPlPolar->CoG().z; //m
         Vector3d LeverArm(c4, 0, zpos); //m
         Vector3d Finv(m_ICd[m], 0.0, m_Cl[m]); // Inviscid force,  N/qS
         Vector3d Fvisc(m_PCd[m],0,0);          // Viscous force,   N/qS

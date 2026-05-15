@@ -395,7 +395,7 @@ int main()
             // make a conforming mesh for the fuselage
             // this will overwrite the default fuselage mesh
             std::string log;
-            plane::meshFuse(pPlaneXfl, indexes, bThickSurfaces, gmesh::FRONTALDELAUNAY, log);
+            plane::meshFuse(pPlaneXfl, indexes, bThickSurfaces, gmesh::FRONTALDELAUNAY, log, "   ");
             std::cout << "    done Fuse mesh" << std::endl;
         }
         std::cout << "done Plane creation" << std::endl<< std::endl;

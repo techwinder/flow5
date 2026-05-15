@@ -63,46 +63,31 @@ void FoilLEDlg::setupLayout()
 
         QGridLayout *pParamsLayout = new QGridLayout;
         {
-            m_pfeDisplayRadius = new FloatEdit(0.1f,3);
+            m_pfeDisplayRadius = new FloatEdit(0.1f, 3);
             m_pfeDisplayRadius->setToolTip(tr("<p>The radius of the LE Circle to display, for information only</p>"));
             connect(m_pfeDisplayRadius, SIGNAL(floatChanged(float)), this, SLOT(onLERadiusDisplay()));
 
-            QLabel *pLabr = new QLabel(tr("L.E. display circle radius="));
-            pLabr->setPalette(m_Palette);
-
-            QLabel *pLabChord = new QLabel(tr("% Chord"));
-            pLabChord->setPalette(m_Palette);
-            pLabr->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-
-
-            QLabel *pLab1 = new QLabel(tr("Approximate new/old ratio for L.E. radius"));
-            pLab1->setPalette(m_Palette);
-            pLab1->setAlignment(Qt::AlignRight);
-
-            QLabel *pLab2 = new QLabel("ratio");
-            pLab2->setPalette(m_Palette);
+            QLabel *plabr = new QLabel(tr("L.E. display circle radius="));
+            QLabel *plabChord = new QLabel(tr("% Chord"));
+            QLabel *plab1 = new QLabel(tr("Approximate new/old ratio for L.E. radius"));
+            QLabel *plab2 = new QLabel("ratio");
 
             m_pfeLEfactor = new FloatEdit;
 
-
-            QLabel *pLab3 = new QLabel(tr("Characteristic blending distance from L.E."));
-            pLab3->setPalette(m_Palette);
-            pLab3->setAlignment(Qt::AlignRight);
-
-            QLabel *pLab4 = new QLabel(tr("% chord"));
-            pLab4->setPalette(m_Palette);
+            QLabel *plab3 = new QLabel(tr("Characteristic blending distance from L.E."));
+            QLabel *plab4 = new QLabel(tr("% chord"));
 
             m_pfeBlend = new FloatEdit;
 
-            pParamsLayout->addWidget(pLabr,              1,1);
-            pParamsLayout->addWidget(m_pfeDisplayRadius, 1,2);
-            pParamsLayout->addWidget(pLabChord,          1,3);
-            pParamsLayout->addWidget(pLab1,              2,1);
-            pParamsLayout->addWidget(m_pfeLEfactor,      2,2);
-            pParamsLayout->addWidget(pLab2,              2,3);
-            pParamsLayout->addWidget(pLab3,              3,1);
-            pParamsLayout->addWidget(m_pfeBlend,         3,2);
-            pParamsLayout->addWidget(pLab4,              3,3);
+            pParamsLayout->addWidget(plabr,              1, 1, Qt::AlignRight);
+            pParamsLayout->addWidget(m_pfeDisplayRadius, 1, 2);
+            pParamsLayout->addWidget(plabChord,          1, 3);
+            pParamsLayout->addWidget(plab1,              2, 1, Qt::AlignRight);
+            pParamsLayout->addWidget(m_pfeLEfactor,      2, 2);
+            pParamsLayout->addWidget(plab2,              2, 3);
+            pParamsLayout->addWidget(plab3,              3, 1, Qt::AlignRight);
+            pParamsLayout->addWidget(m_pfeBlend,         3, 2);
+            pParamsLayout->addWidget(plab4,              3, 3);
         }
         m_pOverlayFrame->setLayout(pParamsLayout);
     }
