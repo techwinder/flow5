@@ -20,12 +20,12 @@
 #endif
 
 #if defined ACCELERATE_NEW_LAPACK
-    #include <Accelerate/Accelerate.h>
-    #define lapack_int int
+#include <Accelerate/Accelerate.h>
+#define lapack_int int
 #elif defined INTEL_MKL
-    #include <mkl.h>
+#include <mkl.h>
 #elif defined OPENBLAS
-    #include <openblas/cblas.h>
+#include <openblas/cblas.h>
 #endif
 
 
@@ -43,48 +43,10 @@ int main()
 
     std::cout << std::endl << std::endl;
 
-    printf("Plane with NURBS fuselage - build and calculation\n\n");
+    printf("Plane with STL fuselage - build and calculation\n\n");
 
     // Configure LAPACK
     std::string strange;
-
-    #ifdef OPENBLAS
-
-    strange.clear();
-    switch(openblas_get_parallel())
-    {
-        //        https://github.com/OpenMathLib/OpenBLAS/wiki/Faq/a15b786986841d2e4e4e84e3f2ecff9c3b263b32
-        //openblas_get_parallel() will return 0 for a single-threaded library, 1 if multithreading without OpenMP, 2 if built with USE_OPENMP=1
-        case 0:  strange = "OpenBlas: single-threaded library";     break;
-        case 1:  strange = "OpenBlas: multi-threading without OMP"; break;
-        case 2:  strange = "OpenBlas: built with USE_OPENMP=1";     break;
-        default: strange = "openblas_get_parallel() return error";
-    }
-    std::cout << strange << std::endl << std::endl;
-
-    #elif defined INTEL_MKL
-
-    strange.clear();
-    int nt = mkl_get_max_threads();
-
-    mkl_set_dynamic(0);
-
-    if (1 == mkl_get_dynamic())
-    {
-        strange += "MKL dynamic threading is enabled\n";
-        strange += std::format("Intel MKL may use less than {:d} threads for a large problem", nt);
-    }
-    else
-    {
-        strange += "MKL dynamic threading is disabled\n";
-        strange += std::format("Intel MKL should use {:d} threads for a large problem", nt);
-    }
-
-    std::cout << strange << std::endl << std::endl;
-
-    #endif
-
-
 
     // Start by creating the foils needed to build the wings
     // flow5 objects, i.e. foils, planes, boats and their polar and opp children
@@ -155,7 +117,7 @@ int main()
         // Start with the fuselage
         // Import it from a file
         std::cout << "    Importing the fuselage" << std::endl;
-        std::string fusefilepath = "/home/techwinder/flow5/studies/VSP imports/pw5_fuse.stl";
+        std::string fusefilepath = "/path/to/fuse.stl";
         std::string logmsg;
         FuseStl *pFuseStl = io::importFuseFromMesh(fusefilepath, io::STL, 1.0, logmsg); // file contains data in m
         std::cout << logmsg << std::endl;
@@ -167,10 +129,7 @@ int main()
         }
         else
         {
-            pFuseStl->setName("PW-5 STL fuse");
-            pFuseStl->setDescription("PW-5 Smyk World-class glider.\n"
-            "Author: Marek Cel\n"
-            "https://airshow.openvsp.org/vsp/C1S5HvELccHjhxiiV8Ra");
+            pFuseStl->setName("STL imported fuse");
 
             // add the fuselage to the plane
             pPlaneXfl->addFuse(pFuseStl);
