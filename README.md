@@ -10,7 +10,7 @@ It is version 7 of the legacy project xflr5.
 - ~~Remove the dependency of flow5-lib on Qt6-core~~
 - ~~Add plane imports from STL or OBJ meshes to the API~~
 - ~~Add fuselage imports from STL or OBJ meshes to the API~~
-- Add fuselage imports from STEP files to the API
+- ~~Add fuselage imports from STEP files to the API~~
 - Either complete or remove currently inoperative features, e.g. plane optimization, advanced editors
 - Continue to clean the code and to improve the API 
 - Clean the documentation
@@ -30,3 +30,4 @@ The intent is to stabilize both the source code and the API by the end of 2026. 
 - PlaneRun3: Import of an stl-type plane from a mesh file, configuration of the trailing edge and calculation of a type 1 polar.
 - PlaneRun4: Import of a plane and a polar from xml files, construction of a conforming mesh, and calculation of a type 1 polar.
 - PlaneRun5: Import of an STL-type fuselage into an xfl-type plane.
+- PlaneRun6: Import of a fuselage from a STEP file into an xfl-type plane.
