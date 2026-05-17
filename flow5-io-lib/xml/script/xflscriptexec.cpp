@@ -35,7 +35,7 @@
 #include <QThreadPool>
 
 
-#include "xflscriptexec.h"
+#include <api/xflscriptexec.h>
 
 
 #include <api/analysisrange.h>
@@ -60,7 +60,6 @@
 #include <api/planexfl.h>
 #include <api/polar.h>
 #include <api/sailobjects.h>
-#include <api/serialization.h>
 #include <api/utils-io.h>
 #include <api/xfoiltask.h>
 #include <api/xmlboatreader.h>
@@ -69,10 +68,8 @@
 #include <api/xmlplanereader.h>
 #include <api/xmlpolarreader.h>
 
-#include <core/xflcore.h>
-#include <globals/mainframe.h>
 #include <api/polarnamemaker.h>
-#include <modules/xobjects.h>
+
 
 
 QThread::Priority XflScriptExec::s_ThreadPriority = QThread::NormalPriority;
@@ -334,7 +331,7 @@ bool XflScriptExec::loadFoilPolarFiles()
             std::vector<Foil*>foilList;
             std::vector<Polar*> polarList;
 
-            serial::readPolarFile(plrFile, foilList, polarList);
+            io::readPolarFile(plrFile, foilList, polarList);
 
             for(uint ifoil=0;ifoil<foilList.size(); ifoil++)
             {
@@ -394,10 +391,10 @@ bool XflScriptExec::loadXFoilPolarFiles()
 
         XFoilFile.setFileName(XFoilPolarList.at(ifo));
 
-        Polar *pPolar = Objects3d::importXFoilPolar(XFoilFile, logmsg);
+        Polar *pPolar = io::importXFoilPolar(XFoilFile, logmsg);
         if(pPolar)
         {
-            pPolar->setLineWidth(Curve::defaultLineWidth());
+            pPolar->setLineWidth(2);
             QString foilname = QString::fromStdString(pPolar->foilName());
             Foil *pFoil = Objects2d::foil(foilname.toStdString());
             if(!pFoil)
@@ -481,8 +478,8 @@ bool XflScriptExec::makeFoils()
             Foil *pFoil = new Foil();
             if(foil::readFoilFile(datPathName.toStdString(), pFoil, iLineError))
             {
-                pFoil->setLineWidth(Curve::defaultLineWidth());
-                pFoil->setLineColor(xfl::randomfl5Color());
+                pFoil->setLineWidth(2);
+                pFoil->setLineColor(xfl::Orchid);
                 if(m_pScriptReader->m_bRepanelFoils)
                 {
                     rePanelFoil(pFoil);

@@ -41,7 +41,7 @@
 #include <api/units.h>
 
 #include <core/displayoptions.h>
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/xflcore.h>
 #include <interfaces/graphs/controls/graphoptions.h>

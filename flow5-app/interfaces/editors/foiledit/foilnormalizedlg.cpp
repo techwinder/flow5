@@ -23,6 +23,8 @@
 *****************************************************************************/
 
 
+#define _MATH_DEFINES_DEFINED
+
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>

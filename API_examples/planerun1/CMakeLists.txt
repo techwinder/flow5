@@ -6,7 +6,7 @@ project(PlaneRun1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-unset(USING_INTEL_MKL CACHE)
+
 option(USING_INTEL_MKL "Activate if flow5 has been built with Intel MKL" OFF)
 option(FLOW5_IO  "Activate to link to flow5-io.\nRequired for data serialization and use of xml files" ON)
 

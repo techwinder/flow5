@@ -22,6 +22,9 @@
 
 *****************************************************************************/
 
+
+#define _MATH_DEFINES_DEFINED
+
 #include <QApplication>
 #include <QVBoxLayout>
 #include <QKeyEvent>
@@ -40,7 +43,6 @@
 #include <api/objects2d_globals.h>
 #include <api/objects_global.h>
 #include <api/polar.h>
-#include <api/serialization.h>
 #include <api/flow5-io.h>
 #include <api/utils-io.h>
 
@@ -257,7 +259,7 @@ void FoilPlrListDlg::onImportSelectedFiles()
 
             std::vector<Foil*> foillist;
             std::vector<Polar*> polarlist;
-            serial::readPolarFile(file, foillist, polarlist);
+            io::readPolarFile(file, foillist, polarlist);
             file.close();
 
             m_ppto->onAppendQText(QString::asprintf("   file contains %d foil(s) and %d polar(s)", int(foillist.size()), int(polarlist.size()))+EOLch);
@@ -328,7 +330,7 @@ void FoilPlrListDlg::onScanDirectory()
         {
             m_ppto->onAppendQText("Reading file " + filename + EOLch);
 
-            serial::readPolarFile(plrfile, foils, polars);
+            io::readPolarFile(plrfile, foils, polars);
             plrfile.close();
 
             for(uint j=0; j<foils.size(); j++)

@@ -23,10 +23,9 @@
 *****************************************************************************/
 
 
-
 #include <format>
 
-
+#include <TopoDS_Wire.hxx>
 #include <BRepBuilderAPI_Sewing.hxx>
 #include <BRepOffsetAPI_ThruSections.hxx>
 #include <StdFail_NotDone.hxx>

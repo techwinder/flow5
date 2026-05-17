@@ -1372,6 +1372,7 @@ void gmesh::meshFuseShellsThinSurfaces(Fuse *pFuse, const std::vector<WingXfl> &
     FuseXfl const*pFuseXfl = dynamic_cast<FuseXfl const*>(pFuse);
     if(pFuseXfl) pShells = &pFuseXfl->rightSideShells();
     else         pShells = &pFuse->shells();
+
     std::vector<std::string> brepstr;
     occ::shapesToBreps(*pShells, brepstr);
     gmesh::BRepstoGmsh(brepstr);

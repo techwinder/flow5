@@ -66,7 +66,7 @@ class GMesherWt : public QFrame
         void clearWings() {m_Wings.clear();}
 
         QSize sizeHint() const override {return QSize(300,150);}
-        QSize minimumSizeHint() const override {return QSize(100,50);}
+//        QSize minimumSizeHint() const override {return QSize(100,50);}
 
         static void loadSettings(QSettings &settings);
         static void saveSettings(QSettings &settings);

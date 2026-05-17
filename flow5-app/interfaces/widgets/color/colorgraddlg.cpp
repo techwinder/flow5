@@ -22,6 +22,10 @@
 
 *****************************************************************************/
 
+
+#define _MATH_DEFINES_DEFINED
+
+
 #include <QPushButton>
 #include <QColorDialog>
 #include <QPainter>

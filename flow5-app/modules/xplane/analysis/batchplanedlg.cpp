@@ -38,7 +38,6 @@
 
 
 #include <api/fl5core.h>
-#include <core/flow5events.h>
 #include <api/llttask.h>
 #include <api/objects3d.h>
 #include <api/panelanalysis.h>
@@ -47,17 +46,18 @@
 #include <api/planetask.h>
 #include <api/planexfl.h>
 #include <api/task3d.h>
+#include <api/units.h>
+#include <api/xflexecutor.h>
 
 #include <core/displayoptions.h>
+#include <core/flow5events.h>
 #include <core/fontstruct.h>
-#include <api/units.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/analysisrangetable.h>
 #include <interfaces/controls/t8rangetable.h>
 #include <interfaces/editors/analysis3ddef/t1234578polardlg.h>
 #include <interfaces/editors/analysis3ddef/t6polardlg.h>
-#include <interfaces/script/xflexecutor.h>
 #include <interfaces/widgets/customdlg/newnamedlg.h>
 #include <interfaces/widgets/customwts/actionitemmodel.h>
 #include <interfaces/widgets/customwts/cptableview.h>

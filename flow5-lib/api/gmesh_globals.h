@@ -96,7 +96,7 @@ namespace gmesh
     //_________________ imported from GMesher ___________
 
     void setGmshParams(double emin, double emax, int iCurvature, gmesh::enumGmshAlgo algorithm);
-    void setAlgorithm(enumGmshAlgo algorithm);
+    FL5LIB_EXPORT void setAlgorithm(enumGmshAlgo algorithm);
 
     void meshFuseShellsThinSurfaces( Fuse *pFuse, std::vector<WingXfl> const &wings);
     void meshFuseShellsThickSurfaces(Fuse *pFuse, std::vector<WingXfl> const &wings);

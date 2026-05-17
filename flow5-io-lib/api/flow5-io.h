@@ -24,19 +24,28 @@
 
 #pragma once
 
-#include <QString>
-#include <QTextStream>
-#include <QDataStream>
+#include <vector>
+
+class QString;
+class QTextStream;
+class QDataStream;
+class QFile;
+
+#include <TopoDS_Shape.hxx>
+#include <TopoDS_ListOfShape.hxx>
 
 #include <flow5-io-lib_global.h>
 #include <fl5color.h>
 #include <utils.h>
 
+class Boat;
 class Foil;
+class FuseOcc;
 class FuseStl;
 class PlanePolar;
 class PlaneSTL;
 class PlaneXfl;
+class Polar;
 class TriMesh;
 class Triangle3d;
 class Vector3d;
@@ -56,16 +65,18 @@ namespace io
 
     FL5IOLIB_EXPORT PlaneSTL* importPlaneFromMesh(std::string const&FilePath, enumMeshFileType type, double FileUnitsToMeter, std::string &logmsg);
     FL5IOLIB_EXPORT FuseStl* importFuseFromMesh(std::string const&FilePath, enumMeshFileType type, double FileUnitsToMeter, std::string &logmsg);
-
+    FL5IOLIB_EXPORT FuseOcc* importFuseFromSTEP(std::string const&FilePath, std::string &logmsg);
 
     FL5IOLIB_EXPORT bool exportMeshToSTLFile(const QString &filename, TriMesh const &trimesh, double mtounit);
     FL5IOLIB_EXPORT int exportTriangulationToSTL(const QString &pathname, double scalefactor, std::vector<Triangle3d> const &triangle);
 
     FL5IOLIB_EXPORT int exportTriMeshToSTL(QString const &pathname, double scalefactor, TriMesh const &trimesh);
 
-    FL5IOLIB_EXPORT bool importVSPWing(QString const &filename, QVector<WingXfl *> &winglist, QString &logmsg);
+    FL5IOLIB_EXPORT bool importVSPWing(QString const &filename, std::vector<WingXfl *> &winglist, QString &logmsg);
     FL5IOLIB_EXPORT bool readVSPFoilFile(QString const &FoilFileName, Foil *pFoil);
     FL5IOLIB_EXPORT void readVSPSection(QTextStream &stream, QString &wingname, int &index, WingSection &ws);
+
+    FL5IOLIB_EXPORT bool readPolarFile(QFile &plrFile, std::vector<Foil *> &foilList, std::vector<Polar *> &polarList);
 
     FL5IOLIB_EXPORT bool exportAllStlMesh(QString const &pathname);
 
@@ -79,4 +90,12 @@ namespace io
 
     FL5IOLIB_EXPORT PlaneXfl*  importPlaneFromXML(const std::string &xmlfilepath, std::string &logmsg);
     FL5IOLIB_EXPORT PlanePolar* importAnalysisFromXML(std::string const &xmlfilepath, std::string &logmsg);
+
+    FL5IOLIB_EXPORT bool saveBoatAsProject(Boat *pBoat, QString const &pathname);
+
+    FL5IOLIB_EXPORT Polar *importXFoilPolar(QFile &txtFile, QString &logmsg);
+
+    FL5IOLIB_EXPORT void exportSTEP(QString const & filename, TopoDS_ListOfShape const &m_ShapesToExport, int index, QString &logmsg);
+    FL5IOLIB_EXPORT void exportBRep(QString const & filename, TopoDS_ListOfShape const &m_ShapesToExport, QString &logmsg);
+
 }

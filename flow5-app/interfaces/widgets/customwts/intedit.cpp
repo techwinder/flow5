@@ -45,8 +45,6 @@ void IntEdit::initialize(int value)
     m_Value = value;
     m_pIV = new QIntValidator(this);
     setValidator(m_pIV);
-    setAlignment(Qt::AlignRight);
-    setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum));
 }
 
 

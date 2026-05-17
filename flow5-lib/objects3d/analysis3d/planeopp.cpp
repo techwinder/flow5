@@ -1101,7 +1101,7 @@ void PlaneOpp::exportMainDataToString(Plane const*pPlane, std::string &poppdata,
         sstr << std::format("{:17g}", SD.Cnr);   sstr << sep;
         sstr << EOLstr + EOLstr;
 
-        for(uint i=0; i<SD.ControlNames.size(); i++)
+        for(unsigned int i=0; i<SD.ControlNames.size(); i++)
         {
             sstr << "  " + std::string(SD.ControlNames.at(i)) + EOLstr;
 

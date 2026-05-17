@@ -105,7 +105,7 @@ int main()
 }
 */
 
-    std::string STLFilePath = "/path/to/mesh.stl";
+    std::string STLFilePath = "/home/techwinder/flow5/studies/STL/plane_mesh.stl";
 //    std::string OBJFilePath = "/path/to/file.obj";
     std::string logmsg;
 
@@ -183,7 +183,7 @@ int main()
     std::cout << "Defining the polar" << std::endl;
     PlanePolar *pPlPolar = new PlanePolar;
     {
-        pPlPolar->setTheStyle({true, Line::SOLID, 2, {131,29,251}, Line::NOSYMBOL});
+        pPlPolar->setTheStyle({true, Line::SOLID, 2, {131,29,251}, Line::BIGCIRCLE});
 
         // attach the polar to the plane
         pPlPolar->setPlaneName(pPlane->name());

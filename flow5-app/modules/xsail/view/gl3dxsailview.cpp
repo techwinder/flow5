@@ -57,7 +57,7 @@
 #include <api/flow5-io.h>
 
 #include <core/displayoptions.h>
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/trace.h>
 #include <core/xflcore.h>

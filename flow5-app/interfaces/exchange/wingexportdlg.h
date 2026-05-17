@@ -44,12 +44,11 @@ class WingExportDlg : public CADExportDlg
         void setupLayout();
         void hideEvent(QHideEvent*pEvent) override;
 
-        void exportShapes() override;
-
         void readParams();
 
     private slots:
         void onExportType();
+        void onExport() override;
 
     private:
         QRadioButton *m_prbFacets, *m_prbNURBS, *m_prbSwept;

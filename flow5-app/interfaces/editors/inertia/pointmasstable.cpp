@@ -35,7 +35,7 @@
 #include <api/part.h>
 #include <api/units.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <interfaces/widgets/customwts/xfldelegate.h>
 

@@ -26,8 +26,8 @@
 
 #include <QTextStream>
 
-#include <interfaces/script/xflexecutor.h>
-#include <interfaces/script/xflscriptreader.h>
+#include <api/xflexecutor.h>
+#include <api/xflscriptreader.h>
 
 class MainFrame;
 class PlaneXfl;
@@ -46,7 +46,7 @@ class XflScriptExec : public XflExecutor
 //    Q_OBJECT
 
     public:
-        XflScriptExec();
+        FL5IOLIB_EXPORT XflScriptExec();
         ~XflScriptExec();
 
         bool makeExportDirectories();
@@ -61,7 +61,7 @@ class XflScriptExec : public XflExecutor
         bool preLoadProject();
 
 
-        QString projectFilePathName() const;
+        FL5IOLIB_EXPORT QString projectFilePathName() const;
         QString const &outputDirPath()               const {return m_OutputPath;}
         QString const &foilPolarTextOutputDirPath()  const {return m_FoilPolarsTextPath;}
         QString const &foilPolarBinOutputDirPath()   const {return m_FoilPolarsBinPath;}
@@ -80,7 +80,7 @@ class XflScriptExec : public XflExecutor
 
 
     public slots:
-        bool runScript(const QString &scriptpath);
+        FL5IOLIB_EXPORT bool runScript(const QString &scriptpath);
 
     private:
         void clearArrays() override;

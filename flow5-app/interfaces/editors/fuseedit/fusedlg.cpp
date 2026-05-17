@@ -359,7 +359,7 @@ void FuseDlg::onExportFuseToCADFile()
     m_pFuse->makeFuseGeometry();
 
     CADExportDlg dlg(this);
-    dlg.init(m_pFuse->shapes(), QString::fromStdString(m_pFuse->name()));
+    dlg.init(m_pFuse->shells(), QString::fromStdString(m_pFuse->name()));
     dlg.exec();
 }
 

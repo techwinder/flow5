@@ -50,9 +50,6 @@ void FloatEdit::initialize(float value, int decimals)
     m_Notation = QDoubleValidator::StandardNotation;
     setRange(-1.e10, 1.e10);
     m_Digits = decimals;
-
-    setAlignment(Qt::AlignRight);
-    setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum));
 }
 
 

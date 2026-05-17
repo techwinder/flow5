@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow5>
+<xflplane version="1.0">
+    <!--For convenience, all field names are case-insensitive, as an exception to the standard xml specification-->
+    <!--Where applicable, default values will be used for all undefined fields-->
+    <Units>
+        <length_unit_to_meter>1</length_unit_to_meter>
+        <area_unit_to_m2>1</area_unit_to_m2>
+        <mass_unit_to_kg>1</mass_unit_to_kg>
+        <speed_unit_to_ms>0.514444</speed_unit_to_ms>
+        <inertia_unit_to_kgm2>1</inertia_unit_to_kgm2>
+    </Units>
+    <Plane>
+        <Name>Plane from xml</Name>
+        <The_Style>
+            <!--Available style options are: SOLID, DASH, DOT, DASHDOT, DASHDOTDOT, NOLINE-->
+            <Stipple>SOLID</Stipple>
+            <!--Available symbol options are NOSYMBOL, LITTLECIRCLE, LITTLECIRCLEFILLED, BIGCIRCLE, BIGCIRCLEFILLED, LITTLESQUARE, LITTLESQUAREFILLED, BIGSQUARE, BIGSQUAREFILLED, TRIANGLE, TRIANGLEFILLED, LITTLECROSS, BIGCROSS-->
+            <PointStyle>NOSYMBOL</PointStyle>
+            <Width>2</Width>
+            <Color>
+                <red>30</red>
+                <green>144</green>
+                <blue>255</blue>
+                <alpha>255</alpha>
+            </Color>
+        </The_Style>
+        <Inertia>
+            <Point_Mass>
+                <Tag>Nose lead</Tag>
+                <Mass>  0.250</Mass>
+                <coordinates>          0,           0,       -0.03</coordinates>
+            </Point_Mass>
+            <Point_Mass>
+                <Tag>Battery</Tag>
+                <Mass>  0.150</Mass>
+                <coordinates>       0.15,           0,           0</coordinates>
+            </Point_Mass>
+            <Point_Mass>
+                <Tag>Two servos</Tag>
+                <Mass>  0.080</Mass>
+                <coordinates>       0.25,           0,           0</coordinates>
+            </Point_Mass>
+        </Inertia>
+        <body>
+            <Name>xfl_fuse_1</Name>
+            <Color>
+                <red>179</red>
+                <green>183</green>
+                <blue>203</blue>
+                <alpha>255</alpha>
+            </Color>
+            <Position>          0,           0,           0</Position>
+            <Type>NURBS</Type>
+            <x_panels>19</x_panels>
+            <hoop_panels>7</hoop_panels>
+            <Inertia>
+                <Volume_Mass>  0.500</Volume_Mass>
+            </Inertia>
+            <NURBS>
+                <u_degree>3</u_degree>
+                <v_degree>3</v_degree>
+                <uAxis>0</uAxis>
+                <vAxis>2</vAxis>
+                <uEdgeWeight>1</uEdgeWeight>
+                <vEdgeWeight>1</vEdgeWeight>
+                <Bunch_amplitude>0</Bunch_amplitude>
+                <Bunch_distribution>0.5</Bunch_distribution>
+                <frame>
+                    <Angle>0</Angle>
+                    <x_panels>1</x_panels>
+                    <Position>          0,           0,           0</Position>
+                    <point>          0,           0,     -0.0585</point>
+                    <point>          0,           0,     -0.0585</point>
+                    <point>          0,           0,     -0.0585</point>
+                    <point>          0,           0,     -0.0585</point>
+                    <point>          0,           0,     -0.0585</point>
+                </frame>
+                <frame>
+                    <Angle>0</Angle>
+                    <x_panels>1</x_panels>
+                    <Position>      0.031,           0,           0</Position>
+                    <point>      0.031,           0,    0.017162</point>
+                    <point>      0.031,       0.029,    0.013762</point>
+                    <point>      0.031,       0.034,    -0.06103</point>
+                    <point>      0.031,       0.029,    -0.10183</point>
+                    <point>      0.031,           0,    -0.10523</point>
+                </frame>
+                <frame>
+                    <Angle>0</Angle>
+                    <x_panels>1</x_panels>
+                    <Position>      0.355,           0,           0</Position>
+                    <point>      0.355,           0,     0.12005</point>
+                    <point>      0.355,      0.0728,     0.13026</point>
+                    <point>      0.355,      0.0962,    -0.00234</point>
+                    <point>      0.355,      0.0884,    -0.14514</point>
+                    <point>      0.355,           0,    -0.15874</point>
+                </frame>
+                <frame>
+                    <Angle>0</Angle>
+                    <x_panels>1</x_panels>
+                    <Position>      0.605,           0,           0</Position>
+                    <point>      0.605,           0,      0.0783</point>
+                    <point>      0.605,      0.0312,      0.0579</point>
+                    <point>      0.605,      0.0468,     -0.0032</point>
+                    <point>      0.605,      0.0312,     -0.0644</point>
+                    <point>      0.605,           0,     -0.0848</point>
+                </frame>
+                <frame>
+                    <Angle>0</Angle>
+                    <x_panels>1</x_panels>
+                    <Position>      0.839,           0,           0</Position>
+                    <point>      0.839,           0,     0.05348</point>
+                    <point>      0.839,     0.02386,    0.063298</point>
+                    <point>      0.839,     0.03367,    0.012383</point>
+                    <point>      0.839,     0.01703,     -0.0163</point>
+                    <point>      0.839,           0,  -0.0083597</point>
+                </frame>
+                <frame>
+                    <Angle>0</Angle>
+                    <x_panels>1</x_panels>
+                    <Position>      1.592,           0,           0</Position>
+                    <point>      1.592,           0,       0.065</point>
+                    <point>      1.592,       0.026,       0.063</point>
+                    <point>      1.592,       0.031,       0.018</point>
+                    <point>      1.592,       0.026,      -0.016</point>
+                    <point>      1.592,           0,      -0.018</point>
+                </frame>
+                <frame>
+                    <Angle>0</Angle>
+                    <x_panels>1</x_panels>
+                    <Position>      1.638,           0,           0</Position>
+                    <point>      1.638,           0,       0.035</point>
+                    <point>      1.638,           0,       0.029</point>
+                    <point>      1.638,           0,       0.024</point>
+                    <point>      1.638,           0,        0.02</point>
+                    <point>      1.638,           0,       0.015</point>
+                </frame>
+            </NURBS>
+        </body>
+        <wing>
+            <Name>Main wing</Name>
+            <!--Available options are MAINWING, SECONDWING, ELEVATOR, FIN, OTHERWING-->
+            <Type>MAINWING</Type>
+            <Color>
+                <red>180</red>
+                <green>169</green>
+                <blue>130</blue>
+                <alpha>255</alpha>
+            </Color>
+            <Description></Description>
+            <Position>       0.45,           0,           0</Position>
+            <!--The field Tip_strips specifies the number of horizontal panel strips at the tips.-->
+            <Tip_Strips>1</Tip_Strips>
+            <Rx_angle>  0.000</Rx_angle>
+            <Ry_angle>  0.000</Ry_angle>
+            <symmetric>true</symmetric>
+            <Two_Sided>true</Two_Sided>
+            <Inertia>
+                <Mass>    1.30000</Mass>
+                <CoG>0.14087, -7.7384e-17, 0.009477</CoG>
+                <CoG_Ixx>    0.59346</CoG_Ixx>
+                <CoG_Iyy>  0.0049335</CoG_Iyy>
+                <CoG_Izz>    0.59835</CoG_Izz>
+                <CoG_Ixz>-0.00011723</CoG_Ixz>
+                <Point_Mass>
+                    <Tag>Right flap servo</Tag>
+                    <Mass>  0.050</Mass>
+                    <coordinates>       0.12,        0.25,           0</coordinates>
+                </Point_Mass>
+                <Point_Mass>
+                    <Tag>Left flap servo</Tag>
+                    <Mass>  0.050</Mass>
+                    <coordinates>       0.12,       -0.25,           0</coordinates>
+                </Point_Mass>
+                <Point_Mass>
+                    <Tag>Right aileron servo</Tag>
+                    <Mass>  0.050</Mass>
+                    <coordinates>       0.13,        0.85,           0</coordinates>
+                </Point_Mass>
+                <Point_Mass>
+                    <Tag>Left aileron servo</Tag>
+                    <Mass>  0.050</Mass>
+                    <coordinates>       0.13,       -0.85,           0</coordinates>
+                </Point_Mass>
+            </Inertia>
+            <Sections>
+                <Section>
+                    <y_position>  0.000</y_position>
+                    <Chord>  0.300</Chord>
+                    <xOffset>  0.000</xOffset>
+                    <Dihedral>  0.000</Dihedral>
+                    <Twist>  0.000</Twist>
+                    <x_number_of_panels>11</x_number_of_panels>
+                    <x_panel_distribution>TANH</x_panel_distribution>
+                    <y_number_of_panels>11</y_number_of_panels>
+                    <y_panel_distribution>UNIFORM</y_panel_distribution>
+                    <Left_Side_FoilName>NACA 2413</Left_Side_FoilName>
+                    <Right_Side_FoilName>NACA 2413</Right_Side_FoilName>
+                </Section>
+                <Section>
+                    <y_position>  0.750</y_position>
+                    <Chord>  0.250</Chord>
+                    <xOffset>  0.035</xOffset>
+                    <Dihedral>  1.500</Dihedral>
+                    <Twist> -1.000</Twist>
+                    <x_number_of_panels>11</x_number_of_panels>
+                    <x_panel_distribution>TANH</x_panel_distribution>
+                    <y_number_of_panels>11</y_number_of_panels>
+                    <y_panel_distribution>UNIFORM</y_panel_distribution>
+                    <Left_Side_FoilName>NACA 2413</Left_Side_FoilName>
+                    <Right_Side_FoilName>NACA 2413</Right_Side_FoilName>
+                </Section>
+                <Section>
+                    <y_position>  1.400</y_position>
+                    <Chord>  0.130</Chord>
+                    <xOffset>  0.130</xOffset>
+                    <Dihedral>  5.500</Dihedral>
+                    <Twist> -2.000</Twist>
+                    <x_number_of_panels>11</x_number_of_panels>
+                    <x_panel_distribution>TANH</x_panel_distribution>
+                    <y_number_of_panels>1</y_number_of_panels>
+                    <y_panel_distribution>INV_EXP</y_panel_distribution>
+                    <Left_Side_FoilName>NACA 2413</Left_Side_FoilName>
+                    <Right_Side_FoilName>NACA 2413</Right_Side_FoilName>
+                </Section>
+                <Section>
+                    <y_position>  1.400</y_position>
+                    <Chord>  0.130</Chord>
+                    <xOffset>  0.130</xOffset>
+                    <Dihedral>  5.500</Dihedral>
+                    <Twist> -2.000</Twist>
+                    <x_number_of_panels>11</x_number_of_panels>
+                    <x_panel_distribution>TANH</x_panel_distribution>
+                    <y_number_of_panels>5</y_number_of_panels>
+                    <y_panel_distribution>INV_EXP</y_panel_distribution>
+                    <Left_Side_FoilName>NACA 2413</Left_Side_FoilName>
+                    <Right_Side_FoilName>NACA 2413</Right_Side_FoilName>
+                </Section>
+                <Section>
+                    <y_position>  1.500</y_position>
+                    <Chord>  0.085</Chord>
+                    <xOffset>  0.160</xOffset>
+                    <Dihedral>  7.500</Dihedral>
+                    <Twist> -3.500</Twist>
+                    <x_number_of_panels>11</x_number_of_panels>
+                    <x_panel_distribution>COSINE</x_panel_distribution>
+                    <y_number_of_panels>11</y_number_of_panels>
+                    <y_panel_distribution>UNIFORM</y_panel_distribution>
+                    <Left_Side_FoilName>NACA 2413</Left_Side_FoilName>
+                    <Right_Side_FoilName>NACA 2413</Right_Side_FoilName>
+                </Section>
+            </Sections>
+        </wing>
+        <wing>
+            <Name>Elevator</Name>
+            <!--Available options are MAINWING, SECONDWING, ELEVATOR, FIN, OTHERWING-->
+            <Type>ELEVATOR</Type>
+            <Color>
+                <red>203</red>
+                <green>188</green>
+                <blue>176</blue>
+                <alpha>255</alpha>
+            </Color>
+            <Description></Description>
+            <Position>       1.35,           0,        0.35</Position>
+            <!--The field Tip_strips specifies the number of horizontal panel strips at the tips.-->
+            <Tip_Strips>1</Tip_Strips>
+            <Rx_angle>  0.000</Rx_angle>
+            <Ry_angle> -2.000</Ry_angle>
+            <symmetric>true</symmetric>
+            <Two_Sided>true</Two_Sided>
+            <Inertia>
+                <Mass>    0.09000</Mass>
+                <CoG>0.087643, -1.7152e-17, 0.0030606</CoG>
+                <CoG_Ixx>  0.0024312</CoG_Ixx>
+                <CoG_Iyy> 0.00012522</CoG_Iyy>
+                <CoG_Izz>  0.0025561</CoG_Izz>
+                <CoG_Ixz>-4.3675e-06</CoG_Ixz>
+            </Inertia>
+            <Sections>
+                <Section>
+                    <y_position>  0.000</y_position>
+                    <Chord>  0.190</Chord>
+                    <xOffset>  0.000</xOffset>
+                    <Dihedral>  0.000</Dihedral>
+                    <Twist>  0.000</Twist>
+                    <x_number_of_panels>5</x_number_of_panels>
+                    <x_panel_distribution>TANH</x_panel_distribution>
+                    <y_number_of_panels>5</y_number_of_panels>
+                    <y_panel_distribution>TANH</y_panel_distribution>
+                    <Left_Side_FoilName>NACA 0009</Left_Side_FoilName>
+                    <Right_Side_FoilName>NACA 0009</Right_Side_FoilName>
+                </Section>
+                <Section>
+                    <y_position>  0.330</y_position>
+                    <Chord>  0.110</Chord>
+                    <xOffset>  0.053</xOffset>
+                    <Dihedral>  0.000</Dihedral>
+                    <Twist>  0.000</Twist>
+                    <x_number_of_panels>5</x_number_of_panels>
+                    <x_panel_distribution>COSINE</x_panel_distribution>
+                    <y_number_of_panels>0</y_number_of_panels>
+                    <y_panel_distribution>COSINE</y_panel_distribution>
+                    <Left_Side_FoilName>NACA 0009</Left_Side_FoilName>
+                    <Right_Side_FoilName>NACA 0009</Right_Side_FoilName>
+                </Section>
+            </Sections>
+        </wing>
+        <wing>
+            <Name>Fin</Name>
+            <!--Available options are MAINWING, SECONDWING, ELEVATOR, FIN, OTHERWING-->
+            <Type>FIN</Type>
+            <Color>
+                <red>152</red>
+                <green>162</green>
+                <blue>140</blue>
+                <alpha>255</alpha>
+            </Color>
+            <Description></Description>
+            <Position>       1.35,           0,       0.045</Position>
+            <!--The field Tip_strips specifies the number of horizontal panel strips at the tips.-->
+            <Tip_Strips>1</Tip_Strips>
+            <Rx_angle>-90.000</Rx_angle>
+            <Ry_angle>  0.000</Ry_angle>
+            <symmetric>true</symmetric>
+            <Two_Sided>false</Two_Sided>
+            <Inertia>
+                <Mass>    0.05000</Mass>
+                <CoG>0.099169, 4.9195e-10, 0.11162</CoG>
+                <CoG_Ixx> 0.00029449</CoG_Ixx>
+                <CoG_Iyy> 0.00039106</CoG_Iyy>
+                <CoG_Izz> 9.6568e-05</CoG_Izz>
+                <CoG_Ixz>-7.2403e-06</CoG_Ixz>
+            </Inertia>
+            <Sections>
+                <Section>
+                    <y_position>  0.000</y_position>
+                    <Chord>  0.230</Chord>
+                    <xOffset>  0.000</xOffset>
+                    <Dihedral>  0.000</Dihedral>
+                    <Twist>  0.000</Twist>
+                    <x_number_of_panels>5</x_number_of_panels>
+                    <x_panel_distribution>TANH</x_panel_distribution>
+                    <y_number_of_panels>5</y_number_of_panels>
+                    <y_panel_distribution>TANH</y_panel_distribution>
+                    <Left_Side_FoilName>NACA 0009</Left_Side_FoilName>
+                    <Right_Side_FoilName>NACA 0009</Right_Side_FoilName>
+                </Section>
+                <Section>
+                    <y_position>  0.280</y_position>
+                    <Chord>  0.120</Chord>
+                    <xOffset>  0.053</xOffset>
+                    <Dihedral>  0.000</Dihedral>
+                    <Twist>  0.000</Twist>
+                    <x_number_of_panels>5</x_number_of_panels>
+                    <x_panel_distribution>COSINE</x_panel_distribution>
+                    <y_number_of_panels>0</y_number_of_panels>
+                    <y_panel_distribution>COSINE</y_panel_distribution>
+                    <Left_Side_FoilName>NACA 0009</Left_Side_FoilName>
+                    <Right_Side_FoilName>NACA 0009</Right_Side_FoilName>
+                </Section>
+            </Sections>
+        </wing>
+    </Plane>
+</xflplane>

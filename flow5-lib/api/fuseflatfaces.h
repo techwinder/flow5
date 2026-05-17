@@ -43,7 +43,7 @@ class FL5LIB_EXPORT FuseFlatFaces : public FuseXfl
         Fuse* clone() const override {return new FuseFlatFaces(*this);}
 
         int quadCount() const override;
-        int makeShape(std::string &log) override;
+        int makeShell(std::string &log) override;
         int makeSurfaceTriangulation(int axialres, int hoopres) override;
 
 };

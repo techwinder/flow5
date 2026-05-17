@@ -37,7 +37,7 @@
 #include "planestldlg.h"
 
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>

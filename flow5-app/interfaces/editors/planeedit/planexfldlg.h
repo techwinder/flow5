@@ -85,9 +85,6 @@ class PlaneXflDlg : public PlaneDlg
         void makeActions();
         void connectSignals();
 
-        void cutFuseShapes(Fuse *pFuse, const Vector3d &fusepos, TopoDS_ListOfShape &tools);
-        void cutFuseXflRightShapes(Fuse *pFuse, Vector3d const &fusepos, TopoDS_ListOfShape &tools);
-
         void editWing(WingXfl *pWing, bool bAdvanced=false);
         void editFuse(int iFuse, bool bAdvanced=false);
         void readParams();
@@ -121,14 +118,11 @@ class PlaneXflDlg : public PlaneDlg
 
         bool endPanelMods();
 
-        bool makeFragments();
-
         QVector<WingXfl> thinWingList() const;
 
     protected slots:
         void onButton(QAbstractButton *pButton) override;
         void onClearOutput();
-        void onCutFuse();
         void onPartDataChanged();
         void onDuplicatePart();
         void onEditPart();

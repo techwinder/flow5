@@ -135,16 +135,19 @@ class FL5LIB_EXPORT PlaneXfl : public Plane
         void setFusePos(int idx, Vector3d const &pos){m_Fuse[idx]->setPosition(pos);}
 
         Vector3d const &wingPosition(int iWing) const{return m_Wing.at(iWing)->position();}
+        Vector3d const &wingPosition(WingXfl const *pWing) {return pWing->position();}
         void setWingPosition(int iWing, Vector3d const &LE) {m_Wing[iWing]->setPosition(LE);}
+        void setWingPosition(WingXfl *pWing, Vector3d const &LE)  {pWing->setPosition(LE);}
 
-        Vector3d wingPosition(WingXfl const *pWing);
-        void setWingPosition(WingXfl *pWing, Vector3d const &LE);
-
-        double rxAngle(int iWing) const {return m_Wing[iWing]->rx();}
+        double rxAngle(int iWing) const {return m_Wing.at(iWing)->rx();}
+        double rxAngle(WingXfl const *pWing) const {return pWing->rx();}
         void setRxAngle(int iWing, double rx) {m_Wing[iWing]->setRx(rx);}
+        void setRxAngle(WingXfl *pWing, double rx) {pWing->setRx(rx);}
 
-        double ryAngle(int iWing) const {return m_Wing[iWing]->ry();}
+        double ryAngle(int iWing) const {return m_Wing.at(iWing)->ry();}
+        double ryAngle(WingXfl const*pWing) const {return pWing->ry();}
         void setRyAngle(int iWing, double ry) {m_Wing[iWing]->setRy(ry);}
+        void setRyAngle(WingXfl *pWing, double ry) {pWing->setRy(ry);}
 
 
         void clearWings();

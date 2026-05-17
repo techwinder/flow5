@@ -24,13 +24,18 @@
 
 #pragma once
 
-#include <QTextStream>
-#include <QStringList>
+//#include <QTextStream>
+//#include <QStringList>
 #include <QString>
+
+class QTextStream;
+class QDataStream;
+
 
 #include <flow5-io-lib_global.h>
 #include <fl5color.h>
 #include <units.h>
+
 
 namespace io
 {
@@ -39,59 +44,23 @@ namespace io
 
     FL5IOLIB_EXPORT int readValues(QString const &theline, double &x, double &y, double &z);
     FL5IOLIB_EXPORT bool readAVLString(QTextStream &in, int &Line, QString &strong);
-
-    FL5IOLIB_EXPORT  fl5Color readQColor(QDataStream &ar);
-    FL5IOLIB_EXPORT  void readString(QDataStream &ar, std::string &strong);
-    FL5IOLIB_EXPORT  void readFloat(QDataStream &inStream, float &f);
-    FL5IOLIB_EXPORT  void writeFloat(QDataStream &outStream, float f);
-
-    FL5IOLIB_EXPORT  void writeString(QDataStream &ar, QString const &strong);
-    FL5IOLIB_EXPORT  void writeString(QDataStream &ar, std::string const &strong);
-
-    FL5IOLIB_EXPORT  void readColor(QDataStream &ar, int &r, int &g, int &b);
-    FL5IOLIB_EXPORT  void writeColor(QDataStream &ar, int r, int g, int b);
-
-    FL5IOLIB_EXPORT  void readColor(QDataStream &ar, int &r, int &g, int &b, int &a);
-    FL5IOLIB_EXPORT  void writeColor(QDataStream &ar, int r, int g, int b, int a);
 }
 
-namespace Units
+
+// Private methods, not intended to be exposed in the API
+namespace io
 {
-    // convenience conversion to QString
-    inline QString lengthUnitQLabel(int idx=-1)    {return QString::fromStdString(Units::lengthUnitLabel(idx));}
-    inline QString speedUnitQLabel(int idx=-1)     {return QString::fromStdString(Units::speedUnitLabel(idx));}
-    inline QString massUnitQLabel(int idx=-1)      {return QString::fromStdString(Units::massUnitLabel(idx));}
-    inline QString areaUnitQLabel(int idx=-1)      {return QString::fromStdString(Units::areaUnitLabel(idx));}
-    inline QString forceUnitQLabel(int idx=-1)     {return QString::fromStdString(Units::forceUnitLabel(idx));}
-    inline QString momentUnitQLabel(int idx=-1)    {return QString::fromStdString(Units::momentUnitLabel(idx));}
-    inline QString pressureUnitQLabel(int idx=-1)  {return QString::fromStdString(Units::pressureUnitLabel(idx));}
-    inline QString inertiaUnitQLabel(int idx=-1)   {return QString::fromStdString(Units::inertiaUnitLabel(idx));}
+    fl5Color readQColor(QDataStream &ar);
+    void readString(QDataStream &ar, std::string &strong);
+    void readFloat(QDataStream &inStream, float &f);
+    void writeFloat(QDataStream &outStream, float f);
 
-    inline QString densityUnitQLabel()    {return QString::fromStdString(Units::densityUnitLabel());}
-    inline QString viscosityUnitQLabel()  {return QString::fromStdString(Units::viscosityUnitLabel());}
+    void writeString(QDataStream &ar, QString const &strong);
+    void writeString(QDataStream &ar, std::string const &strong);
 
+    void readColor(QDataStream &ar, int &r, int &g, int &b);
+    void writeColor(QDataStream &ar, int r, int g, int b);
+
+    void readColor(QDataStream &ar, int &r, int &g, int &b, int &a);
+    void writeColor(QDataStream &ar, int r, int g, int b, int a);
 }
-
-
-
-#define PIch         QString(QChar(0x03C0))
-#define ALPHAch      QString(QChar(0x03B1))
-#define BETAch       QString(QChar(0x03B2))
-#define GAMMAch      QString(QChar(0x03B3))
-#define DELTAch      QString(QChar(0x03B4))
-#define DELTACAPch   QString(QChar(0x0394)) // Capital
-#define ZETAch       QString(QChar(0x03B6))
-#define LAMBDAch     QString(QChar(0x03BB))
-#define NUch         QString(QChar(0x03BD))
-#define PHIch        QString(QChar(0x03C6))
-#define RHOch        QString(QChar(0x03C1))
-#define SIGMAch      QString(QChar(0x03C3))
-#define THETAch      QString(QChar(0x03B8))
-#define XIch         QString(QChar(0x03BE))
-#define TAUch        QString(QChar(0x03C4))
-#define DEGch        QString(QChar(0x00B0))
-#define INFch        QString(QChar(0x221e))
-#define TIMESch      QString(QChar(0x00d7))
-#define SQUAREch     QString(QChar(0x00b2))
-#define EOLch        QString("\n")
-

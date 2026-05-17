@@ -23,6 +23,8 @@
 *****************************************************************************/
 
 
+#define _MATH_DEFINES_DEFINED
+
 #include <QtConcurrent/QtConcurrent>
 #include <QVector3D>
 #include <QQuaternion>

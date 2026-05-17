@@ -859,7 +859,7 @@ bool PlaneTask::T6Loop()
 /*                if(ivw==nWakeIter-1)
                 {
                     for(int ip=0; ip<m_pPA->nPanels(); ip++)
-                        qDebug(" %17g   %17g", m_pPA->m_Sigma.at(ip), m_pPA->m_uRHS.at(ip));
+                        qDebug(" {:17g}   {:17g}", m_pPA->m_Sigma.at(ip), m_pPA->m_uRHS.at(ip));
                 }*/
 
                 if(m_pPlPolar->isQuadMethod())
@@ -919,9 +919,9 @@ bool PlaneTask::T6Loop()
                     std::string strerr;
                     if(updateVirtualTwist(QInfStab, error, strerr))
                     {
-                        str = std::format("         iter={:3d}   error=%9.5f", inl+1, error);
+                        str = std::format("         iter={:3d}   error={:9.5f}", inl+1, error);
                         str += DEGstr + "   ";
-                        str += std::format(" CL=%9.5f", CL);
+                        str += std::format(" CL={:9.5f}", CL);
                         traceStdLog(str + strange);
                     }
                     else
@@ -983,7 +983,7 @@ bool PlaneTask::T6Loop()
             }
 
             if(m_pPlPolar->bVortonWake())
-                traceStdLog(std::format("      VPW iteration {:3d}/{:3d}      CL=%9.5f\n", ivw+1, nWakeIter, CL));
+                traceStdLog(std::format("      VPW iteration {:3d}/{:3d}      CL={:9.5f}\n", ivw+1, nWakeIter, CL));
 
             if(isCancelled()) return true;
         } // end VPW loop
@@ -1969,7 +1969,7 @@ bool PlaneTask::T7Loop()
     {
         if(isCancelled()) return true;
         //no zero moment alpha
-        str = std::format("      Unsuccessful attempt to trim the model for control position = %.2f - skipping.\n\n\n", m_Ctrl);
+        str = std::format("      Unsuccessful attempt to trim the model for control position = {:.2f} - skipping.\n\n\n", m_Ctrl);
         traceStdLog(str);
         m_bError = true;
     }
@@ -1984,7 +1984,7 @@ bool PlaneTask::T7Loop()
 
         if (isCancelled()) return true;
 
-        str = "      Calculating Plane for "+ALPHAstr + std::format("=%.2f", AlphaEq) + DEGstr + EOLstr;
+        str = "      Calculating Plane for "+ALPHAstr + std::format("={:.2f}", AlphaEq) + DEGstr + EOLstr;
         traceStdLog(str);
         PlaneOpp *pPOpp = computePlane(m_Ctrl, AlphaEq, m_Beta, m_Phi, u0, mass, CoG, false);
         if(!pPOpp)
@@ -2828,7 +2828,7 @@ bool PlaneTask::computeSurfaceDragOTF(Surface const &surf, int iStartStation, do
             std::string strong = "                     ";
             strong +=  std::format("span pos. {:9.3f} ", spandist.m_StripPos.at(iStation)*Units::mtoUnit());
             strong += Units::lengthUnitLabel();
-            strong += std::format(", Cl=%9.5f, Re=%7.0f", spandist.m_Cl.at(iStation), spandist.m_Re.at(iStation));
+            strong += std::format(", Cl={:9.5f}, Re={:7.0f}", spandist.m_Cl.at(iStation), spandist.m_Re.at(iStation));
 
             logg += strong + EOLstr;
             bCv = false;
@@ -2935,7 +2935,7 @@ bool PlaneTask::computeViscousDragOTF(WingXfl *pWing, double alpha, double beta,
 /*            std::string strong = "                  ";
             strong +=  std::format("span pos. {:9.3f} ", sd.m_StripPos.at(k)*Units::mtoUnit());
             strong += Units::lengthUnitLabel();
-            strong += std::format(", Cl=%9.5f, Re=%7.0f", sd.m_Cl.at(k), sd.m_Re.at(k));
+            strong += std::format(", Cl={:9.5f}, Re={:7.0f}", sd.m_Cl.at(k), sd.m_Re.at(k));
 
             logg += strong + EOLstr;*/
             bCv = false;
@@ -3053,7 +3053,7 @@ void PlaneTask::makeVortonRow(int qrhs)
         iv++;
     }
 
-//for(int i=0; i<vortonrow.size(); i++)    qDebug("%17g", vortonrow.at(i).circulation());
+//for(int i=0; i<vortonrow.size(); i++)    qDebug("{:17g}", vortonrow.at(i).circulation());
 //qDebug(" ");
 
     newvortons.insert(newvortons.begin(), vortonrow);

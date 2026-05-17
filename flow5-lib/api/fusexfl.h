@@ -102,17 +102,16 @@ class FL5LIB_EXPORT FuseXfl : public Fuse
 
         void getProperties(std::string &props, const std::string &prefix, bool bFull=false) override;
 
-        void duplicateFuse(const Fuse &aFuse) override;
+        void duplicate(const Fuse &aFuse) override;
         void duplicateFuseXfl(const FuseXfl &aFuseXfl);
 
         virtual void makeDefaultFuse();
         void makeDefaultHull();
-        virtual int makeShape(std::string &log);
+        virtual int makeShell(std::string &log);
         void makeBodySplineShape(std::string &logmsg);
         void makeBodySplineShape_old(std::string &logmsg);
-        void makeBodyFlatPanelShape_with2Triangles(std::string &logmsg);
-        void makeBodyFlatPanelShape_withSpline(std::string &tracelog);
-
+        void makeBodyFlatPanelShell_with2Triangles(std::string &logmsg);
+        void makeBodyFlatPanelShell_withSpline(std::string &tracelog);
 
         int makeDefaultTriMesh(std::string &logmsg, const std::string &prefix) override;
 

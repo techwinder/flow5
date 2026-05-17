@@ -16,7 +16,7 @@
 
 int main()
 {
-    printf("XFoil batch run\n");
+    std::cout << ("XFoil batch run") << std::endl << std::endl;
 
     std::string nacaname = "theNaca2410";
     std::cout << "Making foil " << nacaname << std::endl;
@@ -28,7 +28,7 @@ int main()
         if(pFoil2410) delete pFoil2410;
         return 0;
     }
-    pFoil2410->setName("NACA 2410");
+    pFoil2410->setName(nacaname);
     pFoil2410->setLineColor({255,127,31});
     pFoil2410->setLineWidth(2);
 

@@ -400,7 +400,7 @@ void Triangle3d::splitIn3Triangles(Vector3d const &ptinside, std::vector<Triangl
 
 double Triangle3d::minEdgeLength() const
 {
-    double l=1.e10;
+    double l=LARGEVALUE;
     for (int ie=0; ie<3; ie++)
     {
         l = std::min(l, edge(ie).length());

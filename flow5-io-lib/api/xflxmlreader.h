@@ -27,7 +27,6 @@
 #include <QXmlStreamReader>
 #include <QFile>
 
-#include <flow5-io-lib_global.h>
 
 class PlaneXfl;
 class PointMass;
@@ -41,7 +40,7 @@ struct fl5Color;
 struct ExtraDrag;
 struct LineStyle;
 
-class FL5IOLIB_EXPORT XflXmlReader : public QXmlStreamReader
+class XflXmlReader : public QXmlStreamReader
 {
     public:
         XflXmlReader(QFile &file);

@@ -40,7 +40,7 @@
 #include <api/units.h>
 #include <api/xflmesh.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <interfaces/mesh/afmesher.h>
 #include <interfaces/mesh/meshevent.h>
@@ -371,7 +371,7 @@ void MesherWt::initWt(TopoDS_ListOfShape const &shells, double maxedgelength, bo
 
     QString strange, strong;
     int iShell=0;
-    double Xmin(1e10), Ymin(1e10), Zmin(1e10), Xmax(-1e10), Ymax(-1e10), Zmax(-1e10);
+    double Xmin(LARGEVALUE), Ymin(LARGEVALUE), Zmin(LARGEVALUE), Xmax(-LARGEVALUE), Ymax(-LARGEVALUE), Zmax(-LARGEVALUE);
 
     for(TopTools_ListIteratorOfListOfShape iterator(shells); iterator.More(); iterator.Next())
     {

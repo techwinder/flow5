@@ -27,7 +27,7 @@
 
 #include <api/units.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <interfaces/mesh/occtessctrlswt.h>
 #include <interfaces/widgets/customwts/floatedit.h>

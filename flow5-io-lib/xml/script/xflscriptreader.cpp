@@ -27,6 +27,8 @@
 #include <QDir>
 #include <QTime>
 
+#include <TopoDS_Shape.hxx>
+
 #include "xflscriptreader.h"
 
 #include <api/objects_global.h>
@@ -34,9 +36,6 @@
 #include <api/vorton.h>
 #include <api/xml_globals.h>
 #include <api/flow5-io.h>
-
-#include <core/xflcore.h>
-#include <modules/xobjects.h>
 
 
 XflScriptReader::XflScriptReader() : QXmlStreamReader()

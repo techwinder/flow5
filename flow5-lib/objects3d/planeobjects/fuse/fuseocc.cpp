@@ -54,6 +54,14 @@ FuseOcc::FuseOcc() : Fuse()
 }
 
 
+void FuseOcc::duplicate(const Fuse &fuse)
+{
+    Fuse::duplicate(fuse);
+    FuseOcc const&fuseOcc = dynamic_cast<const FuseOcc&>(fuse);
+    m_Shape = fuseOcc.shapes();
+}
+
+
 void FuseOcc::getProperties(std::string &properties, std::string const &prefx, bool bFull)
 {
     Fuse::getProperties(properties, prefx);
@@ -61,11 +69,11 @@ void FuseOcc::getProperties(std::string &properties, std::string const &prefx, b
     if(bFull)
     {
         std::string strange;
-        strange = std::format("Fuse is made of {:d} shapes\n", int(m_Shape.Size()));
+        strange = std::format("Fuse is made of {:d} shells\n", int(m_Shell.Size()));
         properties += "\n"+prefx+strange;
 
         std::string occstr;
-        for(TopTools_ListIteratorOfListOfShape shapeit(m_Shape); shapeit.More(); shapeit.Next())
+        for(TopTools_ListIteratorOfListOfShape shapeit(m_Shell); shapeit.More(); shapeit.Next())
         {
             occ::listShapeContent(shapeit.Value(), occstr, prefx);
             properties += prefx+occstr;
@@ -77,7 +85,6 @@ void FuseOcc::getProperties(std::string &properties, std::string const &prefx, b
 void FuseOcc::scale(double XFactor, double , double )
 {
     Fuse::scale(XFactor, XFactor, XFactor);
-    occ::scaleShapes(m_Shape, XFactor);
     occ::scaleShapes(m_Shell, XFactor);
 
 }
@@ -86,7 +93,6 @@ void FuseOcc::scale(double XFactor, double , double )
 void FuseOcc::translate(const Vector3d &T)
 {
     Fuse::translate(T);
-    occ::translateShapes(m_Shape, T);
     occ::translateShapes(m_Shell, T);
     translateTriPanels(T);
 }
@@ -95,8 +101,7 @@ void FuseOcc::translate(const Vector3d &T)
 void FuseOcc::rotate(const Vector3d &origin, const Vector3d &axis, double theta)
 {
     Fuse::rotate(origin, axis, theta);
-    occ::rotateShapes(m_Shape, origin, axis, theta);
-    makeShellsFromShapes();
+    occ::rotateShapes(m_Shell, origin, axis, theta);
     makeFuseGeometry();
 
     m_TriMesh.rotatePanels(origin, axis, theta);
@@ -107,7 +112,7 @@ void FuseOcc::reverseFuse()
 {
     TopoDS_ListIteratorOfListOfShape iterator;
 //    m_Shape.Clear();
-    for (iterator.Initialize(m_Shape); iterator.More(); iterator.Next())
+    for (iterator.Initialize(m_Shell); iterator.More(); iterator.Next())
     {
         iterator.Value().Reverse();
     }
@@ -120,7 +125,7 @@ void FuseOcc::makeEdges(std::vector<Segment3d>&lines)
     lines.clear();
     TopoDS_ListIteratorOfListOfShape iterator;
     int nShapes = 0;
-    for (iterator.Initialize(m_Shape); iterator.More(); iterator.Next())
+    for (iterator.Initialize(m_Shell); iterator.More(); iterator.Next())
     {
         TopExp_Explorer shapeExplorer;
         int nEdges = 0;
@@ -203,5 +208,20 @@ void FuseOcc::computeSurfaceProperties(std::string &logmsg, const std::string &p
     logmsg += prefix + strong;
 }
 
+
+void FuseOcc::extractShellsFromShapes()
+{
+    m_Shell.Clear();
+
+    for(TopTools_ListIteratorOfListOfShape shapeit(m_Shape); shapeit.More(); shapeit.Next())
+    {
+        TopExp_Explorer shapeExplorer;
+        for (shapeExplorer.Init(shapeit.Value(),TopAbs_SHELL); shapeExplorer.More(); shapeExplorer.Next())
+        {
+            TopoDS_Shell aShell = TopoDS::Shell(shapeExplorer.Current());
+            m_Shell.Append(aShell);
+        }
+    }
+}
 
 

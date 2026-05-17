@@ -24,8 +24,6 @@
 
 #define _MATH_DEFINES_DEFINED
 
-#include <thread>
-#include <format>
 
 #include <QApplication>
 #include <QScreen>
@@ -58,9 +56,8 @@
 
 
 #include <core/displayoptions.h>
-#include <utils-io.h>
-
 #include <core/saveoptions.h>
+#include <core/trace.h>
 #include <core/xflcore.h>
 #include <globals/aboutf5.h>
 #include <globals/creditsdlg.h>
@@ -69,33 +66,18 @@
 #include <interfaces/controls/poppctrls/flowctrls.h>
 #include <interfaces/controls/poppctrls/opp3dscalesctrls.h>
 #include <interfaces/controls/poppctrls/streamlinesctrls.h>
-#include <interfaces/controls/splinectrl/splinectrl.h>
 #include <interfaces/controls/w3dprefs.h>
-#include <interfaces/editors/analysis2ddef/foilpolardlg.h>
-#include <interfaces/editors/analysis3ddef/t1234578polardlg.h>
-#include <interfaces/editors/analysis3ddef/t6polardlg.h>
 #include <interfaces/editors/boatedit/saildlg.h>
-#include <interfaces/editors/editplrdlg.h>
-#include <interfaces/editors/foiledit/foil1splinedlg.h>
-#include <interfaces/editors/foiledit/foil2splinedlg.h>
-#include <interfaces/editors/foiledit/foilcamberdlg.h>
 #include <interfaces/editors/foiledit/foildlg.h>
-#include <interfaces/editors/fuseedit/bodytransdlg.h>
 #include <interfaces/editors/fuseedit/fusemesherdlg.h>
-#include <interfaces/editors/fuseedit/fuseoccdlg.h>
-#include <interfaces/editors/fuseedit/fusestldlg.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.h>
 #include <interfaces/editors/planeedit/planexfldlg.h>
 #include <interfaces/editors/wingedit/wingdlg.h>
 #include <interfaces/graphs/containers/fastgraphwt.h>
-#include <interfaces/graphs/containers/graphwt.h>
-#include <interfaces/graphs/containers/legendwt.h>
 #include <interfaces/graphs/controls/graphdlg.h>
 #include <interfaces/graphs/controls/graphoptions.h>
 #include <interfaces/graphs/controls/graphtilectrls.h>
 #include <interfaces/graphs/globals/graphsvgwriter.h>
-#include <interfaces/graphs/graph/curve.h>
-#include <interfaces/mesh/afmesher.h>
 #include <interfaces/mesh/gmesherwt.h>
 #include <interfaces/mesh/mesherwt.h>
 #include <interfaces/opengl/globals/opengldlg.h>
@@ -118,29 +100,18 @@
 #include <interfaces/opengl/testgl/gl3dsurface.h>
 #include <interfaces/opengl/testgl/gl3dtestpoints.h>
 #include <interfaces/opengl/testgl/gl3dtexture.h>
-#include <interfaces/script/xflscriptexec.h>
-#include <interfaces/script/xflscriptreader.h>
 #include <interfaces/view2d/foilsvgwriter.h>
-#include <interfaces/widgets/color/colorgraddlg.h>
-#include <interfaces/widgets/customdlg/logmessagedlg.h>
 #include <interfaces/widgets/customdlg/logmessagedlg.h>
 #include <interfaces/widgets/customdlg/objectpropsdlg.h>
 #include <interfaces/widgets/customdlg/renamedlg.h>
 #include <interfaces/widgets/customdlg/selectiondlg.h>
 #include <interfaces/widgets/customdlg/separatorsdlg.h>
-#include <interfaces/widgets/customwts/cptableview.h>
 #include <interfaces/widgets/customwts/logwt.h>
-#include <interfaces/widgets/customwts/plaintextoutput.h>
-#include <interfaces/widgets/customwts/popup.h>
-#include <interfaces/widgets/line/lineaction.h>
-#include <interfaces/widgets/line/linemenu.h>
 #include <interfaces/widgets/line/linepicker.h>
-#include <interfaces/widgets/mvc/expandabletreeview.h>
-#include <interfaces/widgets/mvc/objecttreedelegate.h>
 #include <interfaces/widgets/view/section2doptions.h>
 #include <modules/xdirect/controls/analysis2dctrls.h>
-#include <modules/xdirect/controls/foiltable.h>
 #include <modules/xdirect/controls/foilexplorer.h>
+#include <modules/xdirect/controls/foiltable.h>
 #include <modules/xdirect/controls/oppointctrls.h>
 #include <modules/xdirect/graphs/blgraphctrls.h>
 #include <modules/xdirect/graphs/xdirectlegendwt.h>
@@ -193,45 +164,19 @@
 #include <test/tests/threadtestdlg.h>
 #include <test/tests/vortontestdlg.h>
 
-#include <api.h>
 #include <api/boat.h>
-#include <api/boatopp.h>
 #include <api/boatpolar.h>
 #include <api/fileio.h>
 #include <api/fl5core.h>
-#include <api/foil.h>
-#include <api/fusenurbs.h>
-#include <api/fusestl.h>
-#include <api/geom_global.h>
+#include <api/flow5-io.h>
 #include <api/gmesh_globals.h>
 #include <api/objects2d.h>
 #include <api/objects2d_globals.h>
 #include <api/objects3d.h>
-#include <api/objects_global.h>
-#include <api/oppoint.h>
-#include <api/panelanalysis.h>
-#include <api/panel3.h>
-#include <api/panel4.h>
-#include <api/planeopp.h>
 #include <api/planepolar.h>
-#include <api/planepolarnamemaker.h>
-#include <api/planestl.h>
-#include <api/planetask.h>
 #include <api/planexfl.h>
-#include <api/polar.h>
-#include <api/polarnamemaker.h>
-#include <api/quad3d.h>
-#include <api/sail.h>
 #include <api/sailobjects.h>
-#include <api/sailwing.h>
-#include <api/serialization.h>
-#include <api/splinefoil.h>
-#include <api/testpanels.h>
-#include <core/trace.h>
-#include <api/units.h>
-#include <api/flow5-io.h>
-#include <api/wingxfl.h>
-#include <api/xfoiltask.h>
+#include <api/xflscriptexec.h>
 
 
 xfl::enumApp MainFrame::s_iApp=xfl::NOAPP;
@@ -1628,7 +1573,7 @@ void MainFrame::onLoadPlrFile()
 
             std::vector<Foil*> foilList;
             std::vector<Polar*> polarList;
-            serial::readPolarFile(plrFile, foilList, polarList);
+            io::readPolarFile(plrFile, foilList, polarList);
             plrFile.close();
 
             for(uint i=0; i<foilList.size(); i++)
@@ -2621,82 +2566,12 @@ void MainFrame::onSaveBoatAsProject()
         onShowLogWindow(true);
         return;
     }
-
-    QDataStream ar(&fp);
-    FileIO saver;
-
-    saver.serializeProjectMetaDataFl5(ar, true);
-
-    std::vector<Foil*> FoilList;
-    for(int is=0; is<pBoat->nSails(); is++)
-    {
-        SailWing const *pWS = dynamic_cast<SailWing const*>(pBoat->sailAt(is));
-        if(pWS)
-        {
-            for(int is=0; is<pWS->sectionCount(); is++)
-            {
-                WingSailSection const &ws = pWS->sectionAt(is);
-                Foil *pFoil = Objects2d::foil(ws.foilName());
-                if(pFoil)
-                {
-                    if(std::find(FoilList.begin(), FoilList.end(), pFoil)==FoilList.end())
-                        FoilList.push_back(pFoil);
-                }
-            }
-        }
-    }
-
-    saver.storeFoilsFl5(FoilList, ar, true);
-
-    ar << 0; //planes
-    ar << 0; //wpolars
-    ar << 0; //wpolars external
-    ar << 0; //popps
-
-    ar << 500001;
-    // save the Boats...
-    ar << 1;
-    serial::serializeBoatFl5(pBoat, ar, true);
-
-    // save the BtPolars
-    int polarcount = 0;
-    for(int i=0; i<SailObjects::nBtPolars(); i++)
-    {
-        if(SailObjects::btPolar(i)->boatName()==pBoat->name()) polarcount++;
-    }
-    ar << polarcount;
-    for (int i=0; i<polarcount;i++)
-    {
-        BoatPolar *pBtPolar = SailObjects::btPolar(i);
-        if(pBtPolar->boatName()==pBoat->name()) serial::serializeBoatPolarFl5v750(pBtPolar, ar, true);
-    }
-
-    // not forgetting their BtOpps
-    int btoppcount = 0;
-    for(int i=0; i<SailObjects::nBtOpps(); i++)
-    {
-        if(SailObjects::btOpp(i)->boatName()==pBoat->name()) btoppcount++;
-    }
-    ar << btoppcount;
-    for (int i=0; i<btoppcount; i++)
-    {
-        BoatOpp *pBOpp = SailObjects::btOpp(i);
-        if(pBOpp->boatName()==pBoat->name()) serial::serializeBoatOppFl5(pBOpp, ar, true);
-    }
-
-    // dynamic space allocation for the future storage of more data, without need to change the format
-    int nIntSpares=0;
-    ar << nIntSpares;
-    int n=0;
-    for (int i=0; i<nIntSpares; i++) ar << n;
-    int nDbleSpares=0;
-    double dble=0.0;
-    ar << nDbleSpares;
-    for (int i=0; i<nDbleSpares; i++) ar << dble;
-
-    displayMessage(pathname + " has been saved successfully\n\n", false);
-
     fp.close();
+
+    if(io::saveBoatAsProject(pBoat, pathname))
+        displayMessage(pathname + " has been saved successfully\n\n", false);
+    else
+        displayMessage("Error exporting the boat to :" + pathname + "_n\n", true, true);
 }
 
 
@@ -3598,12 +3473,12 @@ void MainFrame::onPreferences()
 
     m_pXPlane->resetPrefs();
     m_pXPlane->updateUnits();
-    m_pXPlane->m_pgl3dXPlaneView->setBackground();
+    m_pXPlane->m_pgl3dXPlaneView->resetBackground();
 
 
     m_pXSail->resetPrefs();
     m_pXSail->updateUnits();    
-    m_pXSail->m_pgl3dXSailView->setBackground();
+    m_pXSail->m_pgl3dXSailView->resetBackground();
 
     QPalette palette;
     palette.setColor(QPalette::WindowText, DisplayOptions::textColor());

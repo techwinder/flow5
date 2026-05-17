@@ -87,7 +87,7 @@ class gl3dTexture : public gl3dTestGLView
 
         QImage *m_pImg;
 
-        QOpenGLTexture *m_pglTexture = nullptr;
+        QOpenGLTexture *m_pglTexture2d = nullptr;
         QOpenGLBuffer m_vboTexSphere;
 
         bool m_bResetTexture;

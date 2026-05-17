@@ -46,7 +46,7 @@
 #include <api/quad3d.h>
 #include <api/units.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <interfaces/editors/fuseedit/xflfuseedit/fuseframewt.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fuselinewt.h>
@@ -1161,7 +1161,7 @@ void FuseXflDefDlg::setPicture()
     int iActiveFrameIndex = m_pFuseXfl->activeFrameIndex();
 
     Fuse const *pTmpBodyXfl = m_UndoStack.at(m_StackPos);
-    m_pFuseXfl->duplicateFuse(*pTmpBodyXfl);
+    m_pFuseXfl->duplicate(*pTmpBodyXfl);
     fillFrameDataTable();
     fillPointDataTable();
 

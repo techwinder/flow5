@@ -29,4 +29,4 @@ The intent is to stabilize both the source code and the API by the end of 2026. 
 - PlaneRun2: Construction of an xfl-type plane with a NURBS type fuselage, construction of a conforming mesh, and calculation of a type 2 polar.
 - PlaneRun3: Import of an stl-type plane from a mesh file, configuration of the trailing edge and calculation of a type 1 polar.
 - PlaneRun4: Import of a plane and a polar from xml files, construction of a conforming mesh, and calculation of a type 1 polar.
-- PlaneRun5: Import of an STL-type fuselage in an xfl-type plane
+- PlaneRun5: Import of an STL-type fuselage into an xfl-type plane.

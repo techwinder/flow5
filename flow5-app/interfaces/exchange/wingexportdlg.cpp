@@ -27,11 +27,8 @@
 
 
 #include <QVBoxLayout>
-
-
-#include <BRepBuilderAPI_Transform.hxx>
-//#include <StdFail_NotDone.hxx>
-#include <Standard_NoSuchObject.hxx>
+#include <QFileInfo>
+#include <QFileDialog>
 
 
 #include "wingexportdlg.h"
@@ -39,9 +36,10 @@
 #include <api/units.h>
 #include <api/wingxfl.h>
 #include <api/occ_globals.h>
+#include <api/flow5-io.h>
 
-#include <utils-io.h>
-
+#include <core/xflcore.h>
+#include <core/saveoptions.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
@@ -231,7 +229,7 @@ void WingExportDlg::readParams()
 }
 
 
-void WingExportDlg::exportShapes()
+void WingExportDlg::onExport()
 {
     std::string logmsg;
     TopoDS_Shape wingshape;
@@ -263,18 +261,8 @@ void WingExportDlg::exportShapes()
     if(!wingshape.IsNull())
         m_ShapesToExport.Append(wingshape);
 
-    
+    exportShapes();
 
-
-    if(m_ShapesToExport.IsEmpty())
-    {
-        updateOutput("Nothing to export.\n");
-        return;
-    }
-
-    if     (m_prbBRep->isChecked()) exportBRep();
-    else if(m_prbSTEP->isChecked()) exportSTEP();
 }
-
 
 

@@ -67,7 +67,7 @@
 #include <api/xmlfusereader.h>
 #include <api/xmlsailreader.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/saveoptions.h>
 #include <core/stlreaderdlg.h>
@@ -722,7 +722,8 @@ void BoatDlg::onImportHullCAD()
 
     pNewHullOcc->setName(fi.baseName().toStdString());
 
-    bool bImport = occ::importCADShapes(filename.toStdString(), pNewHullOcc->shapes(), dimension, strlog);
+    TopoDS_ListOfShape shapes;
+    bool bImport = occ::importCADShapes(filename.toStdString(), shapes, dimension, strlog);
     m_ppto->onAppendQText(QString::fromStdString(strlog)+"\n");
 
     if(!bImport)
@@ -731,7 +732,8 @@ void BoatDlg::onImportHullCAD()
         return;
     }
 
-    pNewHullOcc->makeShellsFromShapes();
+    pNewHullOcc->setShapes(shapes);
+    pNewHullOcc->extractShellsFromShapes();
 
     logmsg.clear();
     m_ppto->appendPlainText("Making shell triangulation\n");
@@ -922,7 +924,7 @@ void BoatDlg::editHull(int iFuse)
 
         if(glbDlg.exec() != QDialog::Accepted)
         {
-            pFuse->duplicateFuse(*pMemBody);
+            pFuse->duplicate(*pMemBody);
             delete pMemBody;
             return;
         }
@@ -937,7 +939,7 @@ void BoatDlg::editHull(int iFuse)
         obDlg.initDialog(pOccBody);
         if(obDlg.exec() != QDialog::Accepted)
         {
-            pOccBody->duplicateFuse(memBody);
+            pOccBody->duplicate(memBody);
             return;
         }
     }
@@ -950,7 +952,7 @@ void BoatDlg::editHull(int iFuse)
         sbDlg.initDialog(pStlFuse);
         if(sbDlg.exec() != QDialog::Accepted)
         {
-            pStlFuse->duplicateFuse(memFuseStl);
+            pStlFuse->duplicate(memFuseStl);
             return;
         }
     }

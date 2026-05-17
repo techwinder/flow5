@@ -57,7 +57,7 @@
 #include <api/wingxfl.h>
 
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/xflcore.h>
 #include <api/gmesh_globals.h>

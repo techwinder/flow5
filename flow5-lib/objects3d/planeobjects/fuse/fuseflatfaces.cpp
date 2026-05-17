@@ -369,15 +369,14 @@ int FuseFlatFaces::quadCount() const
 }
 
 
-int FuseFlatFaces::makeShape(std::string &log)
+int FuseFlatFaces::makeShell(std::string &log)
 {
-    m_Shape.Clear();
     m_Shell.Clear();
     m_RightSideShell.Clear();
 //    makeBodyFlatPanelShape_with2Triangles(log);
-    makeBodyFlatPanelShape_withSpline(log);
+    makeBodyFlatPanelShell_withSpline(log);
 //    makeBodySplineShape_old(log);
-    return m_Shape.Extent();
+    return m_Shell.Extent();
 }
 
 

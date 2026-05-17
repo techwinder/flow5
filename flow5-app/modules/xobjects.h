@@ -57,9 +57,6 @@ namespace Objects3d
     extern MainFrame *g_pMainFrame;
     inline void setMainFrame(MainFrame *pMainFrame) {g_pMainFrame=pMainFrame;} // to position popup windows
 
-    Polar *importXFoilPolar(QFile & txtFile, QString &logmsg);
-
-
     Plane * setModifiedPlane(Plane *pModPlane);
     PlanePolar* insertNewPolar(PlanePolar *pNewWPolar, Plane const*pCurPlane);
     void renamePlPolar(PlanePolar *pWPolar, Plane const *pPlane);

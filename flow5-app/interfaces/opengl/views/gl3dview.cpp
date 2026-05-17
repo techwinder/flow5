@@ -24,6 +24,9 @@
 
 
 
+#define _MATH_DEFINES_DEFINED
+
+
 #include <QApplication>
 #include <QStandardPaths>
 #include <QOpenGLFramebufferObject>
@@ -46,7 +49,7 @@
 #include <api/xml_globals.h>
 
 #include <core/displayoptions.h>
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/saveoptions.h>
 #include <core/trace.h>
@@ -2744,13 +2747,8 @@ void gl3dView::paintBackImage()
     glEnable(GL_POLYGON_OFFSET_FILL);
     glPolygonOffset(DEPTHFACTOR, DEPTHUNITS);
 
+
     QMatrix4x4 vmMat;   // identity matrix
-/*    vmMat.scale(m_ImageScaleX, m_ImageScaleY, 1.0f);
-    if(m_bScaleImageWithView)
-    {
-        vmMat.scale(m_glScalef, m_glScalef, m_glScalef);
-        vmMat.translate(m_glViewportTrans.xf(), -m_glViewportTrans.yf(), 0.0f);
-    }*/
     QMatrix4x4 pvmMat = m_matProj * vmMat;
 
     int const stride = 8; // 3 coordinates, 3 normal components, 2 texture coordinates

@@ -32,6 +32,7 @@
 #include <TopTools_ListIteratorOfListOfShape.hxx>
 #include <TopoDS.hxx>
 #include <TopoDS_Edge.hxx>
+#include <TopoDS_Face.hxx>
 
 #define _MATH_DEFINES_DEFINED
 

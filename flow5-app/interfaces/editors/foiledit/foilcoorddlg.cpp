@@ -31,14 +31,14 @@
 #include <QKeyEvent>
 
 #include "foilcoorddlg.h"
-#include <interfaces/editors/foiledit/foilwt.h>
-#include <interfaces/widgets/customwts/cptableview.h>
-#include <interfaces/widgets/customwts/actionitemmodel.h>
-#include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <core/xflcore.h>
+#include <interfaces/editors/foiledit/foilwt.h>
+#include <interfaces/widgets/customwts/actionitemmodel.h>
+#include <interfaces/widgets/customwts/cptableview.h>
+#include <interfaces/widgets/customwts/plaintextoutput.h>
 
-#include <utils-io.h>
 #include <api/foil.h>
+#include <api/utils-io.h>
 
 QByteArray FoilCoordDlg::s_HSplitterSizes;
 

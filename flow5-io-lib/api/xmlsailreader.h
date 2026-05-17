@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <flow5-io-lib_global.h>
 #include <xmlxsailreader.h>
 
 

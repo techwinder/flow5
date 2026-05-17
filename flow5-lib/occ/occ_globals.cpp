@@ -28,6 +28,7 @@
 #include <iostream>
 #include <filesystem>
 
+
 #include <BRepAdaptor_Curve.hxx>
 #include <BRepAdaptor_Surface.hxx>
 #include <BRepBndLib.hxx>
@@ -41,6 +42,7 @@
 #include <BRepBuilderAPI_Sewing.hxx>
 #include <BRepBuilderAPI_Transform.hxx>
 #include <BRepCheck_Analyzer.hxx>
+#include <BRepCheck_ListOfStatus.hxx>
 #include <BRepGProp.hxx>
 #include <BRepMesh_IncrementalMesh.hxx>
 #include <BRepOffsetAPI_ThruSections.hxx>
@@ -62,14 +64,22 @@
 #include <Poly_Triangulation.hxx>
 #include <STEPControl_Reader.hxx>
 #include <ShapeAnalysis_FreeBounds.hxx>
+#include <ShapeFix_Shape.hxx>
+#include <ShapeFix_Wireframe.hxx>
 #include <StdFail_NotDone.hxx>
 #include <StepBasic_LengthMeasureWithUnit.hxx>
 #include <StepData_StepModel.hxx>
+#include <TColStd_Array1OfInteger.hxx>
+#include <TColStd_Array1OfReal.hxx>
+#include <TColStd_SequenceOfAsciiString.hxx>
+#include <TColgp_Array1OfPnt.hxx>
+#include <TColgp_Array2OfPnt.hxx>
 #include <TCollection_AsciiString.hxx>
 #include <TopExp_Explorer.hxx>
 #include <TopoDS.hxx>
 #include <TopoDS_Builder.hxx>
 #include <TopoDS_FrozenShape.hxx>
+#include <TopoDS_ListIteratorOfListOfShape.hxx>
 #include <TopoDS_UnCompatibleShapes.hxx>
 #include <TopoDS_Wire.hxx>
 #include <gp_Ax2.hxx>
@@ -77,21 +87,16 @@
 #include <gp_Lin.hxx>
 #include <gp_Trsf.hxx>
 
-#include <TColgp_Array1OfPnt.hxx>
-#include <TColgp_Array2OfPnt.hxx>
-#include <TColStd_Array1OfReal.hxx>
-#include <TColStd_Array1OfInteger.hxx>
-#include <BRepCheck_ListOfStatus.hxx>
-#include <TColStd_SequenceOfAsciiString.hxx>
-
-#include <occ_globals.h>
+#include <bspline3d.h>
 #include <constants.h>
-#include <wingxfl.h>
 #include <fuse.h>
-#include <occmeshparams.h>
+#include <fuseocc.h>
 #include <geom_global.h>
 #include <nurbssurface.h>
-#include <bspline3d.h>
+#include <occ_globals.h>
+#include <occmeshparams.h>
+#include <units.h>
+#include <wingxfl.h>
 
 std::string occ::shapeType(TopoDS_Shape const &aShape)
 {
@@ -137,7 +142,38 @@ std::string occ::shapeOrientation(const TopoDS_Shape &aShape)
 }
 
 
-int occ::listSubShapes(TopoDS_Shape const &aShape, TopAbs_ShapeEnum SubShapeType, std::vector<std::string> &strList, std::string prefx)
+int occ::shellCount(TopoDS_ListOfShape const &listofshapes, std::string &logmsg)
+{
+    int nshells = 0;
+    TopoDS_ListIteratorOfListOfShape iterator;
+    for (iterator.Initialize(listofshapes); iterator.More(); iterator.Next())
+    {
+        TopExp_Explorer ShellExplorer;
+        for(ShellExplorer.Init(iterator.Value(), TopAbs_SHELL); ShellExplorer.More(); ShellExplorer.Next())
+        {
+            nshells++;
+        }
+
+        logmsg += std::format("List of shapes contains {:d} shells\n", nshells);
+    }
+    return nshells;
+}
+
+
+void occ::listAllShapes(TopoDS_ListOfShape &listofshapes, std::string &logmsg, std::string prefix)
+{
+    // output the result
+    TopoDS_ListIteratorOfListOfShape iterator;
+    for (iterator.Initialize(listofshapes); iterator.More(); iterator.Next())
+    {
+        std::string strange;
+        listShapeProperties(iterator.Value(), strange, prefix);
+        logmsg += strange;
+    }
+}
+
+
+int occ::listSubShapes(TopoDS_Shape const &aShape, TopAbs_ShapeEnum const &SubShapeType, std::vector<std::string> &strList, std::string prefx)
 {
     std::string prefix = prefx;
     std::string strange;
@@ -245,6 +281,28 @@ void occ::listShapeContent(TopoDS_Shape const &shape, std::string &logmsg, std::
 
     logmsg = logg;
 }
+
+
+void occ::listShapeProperties(TopoDS_Shape const &shape, std::string &props, std::string prefix)
+{
+    std::string logmsg, strange;
+    std::string properties;
+    occ::listShapeContent(shape, properties, prefix);
+
+    props = properties;
+
+    double Xmin(LARGEVALUE), Ymin(LARGEVALUE), Zmin(LARGEVALUE), Xmax(-LARGEVALUE), Ymax(-LARGEVALUE), Zmax(-LARGEVALUE);
+    occ::shapeBoundingBox(shape, Xmin, Ymin, Zmin, Xmax, Ymax, Zmax);
+    logmsg = prefix + "Bounding box:\n";
+    strange = std::format("   X=[{:9g}, {:9g}] ", Xmin*Units::mtoUnit(), Xmax *Units::mtoUnit());
+    logmsg += prefix + strange + Units::lengthUnitLabel() +"\n";
+    strange = std::format("   Y=[{:9g}, {:9g}] ", Ymin*Units::mtoUnit(), Ymax *Units::mtoUnit());
+    logmsg += prefix + strange + Units::lengthUnitLabel() +"\n";
+    strange = std::format("   Z=[{:9g}, {:9g}] ", Zmin*Units::mtoUnit(), Zmax *Units::mtoUnit());
+    logmsg += prefix + strange + Units::lengthUnitLabel() +"\n";
+    props += logmsg +"\n";
+}
+
 
 
 void occ::checkShape(TopoDS_Shape const &shape, std::string & logmsg, std::string const & prefix)
@@ -980,72 +1038,6 @@ void occ::stitchFaces(double stitchprecision, TopoDS_Shape &theshape, TopoDS_She
                   "                          Increase the sewing precision\n"
                   "                          Recommendation: 0.1 mm\n";
     }
-}
-
-
-bool occ::makeFuseSolid(Fuse *pFuse, TopoDS_Solid &solidshape, std::string &logmsg)
-{
-    pFuse->makeShellsFromShapes();
-    logmsg += "Processing fuse "+pFuse->name()+"\n";
-    try
-    {
-        //make the solid
-        BRepBuilderAPI_Sewing stitcher(1.e-4);
-        for(TopTools_ListIteratorOfListOfShape shellIt(pFuse->shells()); shellIt.More(); shellIt.Next())
-        {
-            TopoDS_Shell shell = TopoDS::Shell(shellIt.Value());
-            TopExp_Explorer shapeExplorer;
-            for (shapeExplorer.Init(shell, TopAbs_FACE); shapeExplorer.More(); shapeExplorer.Next())
-            {
-                TopoDS_Shape aSub = shapeExplorer.Current();
-                stitcher.Add(aSub);
-            }
-        }
-        // stitch
-        stitcher.Perform();
-        logmsg += std::format("   Nb of free edges={:d}\n",       stitcher.NbFreeEdges());
-        logmsg += std::format("   Nb of contiguous edges={:d}\n", stitcher.NbContigousEdges());
-
-
-//    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
-//    After a successful sewing operation all faces have a coherent orientation.
-
-        TopoDS_Shape sewedshape = stitcher.SewedShape();
-        if(sewedshape.IsNull())
-        {
-            logmsg += "   Fuse stitched shape is NULL\n";
-            return false;
-        }
-
-        TopoDS_Shell FuseShellShape = TopoDS::Shell(sewedshape);
-        //make the solid
-        if(!FuseShellShape.IsNull())
-        {
-            BRepBuilderAPI_MakeSolid solidMaker(FuseShellShape);
-            if(!solidMaker.IsDone())
-            {
-                logmsg += "   Solid not made... \n";
-                solidshape.Nullify();
-                return false;
-            }
-            solidshape = TopoDS::Solid(solidMaker.Shape());
-
-            logmsg += "   Fuse stitching result is " +shapeType(solidshape) + "\n";
-            std::string strange;
-            occ::listShapeContent(solidshape, strange, "   ");
-            logmsg += strange;
-            occ::checkShape(solidshape, logmsg, "   ");
-        }
-    }
-    catch(Standard_TypeMismatch const &)
-    {
-        logmsg += "     Fuse::makeFuseSolid: Type mismatch error\n";
-    }
-    catch(...)
-    {
-        logmsg += "     Fuse::makeFuseSolid: Unknown error\n";
-    }
-    return true;
 }
 
 
@@ -3767,6 +3759,196 @@ bool occ::shapesToBreps(TopoDS_ListOfShape const &shapes, std::vector<std::strin
 
     return true;
 }
+
+
+void occ::stitchShapes(TopoDS_ListOfShape &shapes, float precision, std::string &logmsg)
+{
+    BRepBuilderAPI_Sewing stitcher(precision);
+    TopoDS_ListIteratorOfListOfShape iterator;
+    for (iterator.Initialize(shapes); iterator.More(); iterator.Next())
+    {
+        stitcher.Add(iterator.Value());
+    }
+    stitcher.Perform();
+
+    logmsg += "Stiching FACE(s):\n";
+    logmsg += std::format("   Nb of free edges={:d}\n",       stitcher.NbFreeEdges());
+    logmsg += std::format("   Nb of contiguous edges={:d}\n", stitcher.NbContigousEdges());
+
+    /*    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
+    After a successful sewing operation all faces have a coherent orientation.*/
+    TopoDS_Shape stitchedshape;
+
+    try
+    {
+        TopoDS_Shape sewedshape = stitcher.SewedShape();
+        if(sewedshape.IsNull()) return;
+        shapes.Clear();
+
+        TopExp_Explorer shapeExplorer;
+        for (shapeExplorer.Init(sewedshape, TopAbs_SHELL); shapeExplorer.More(); shapeExplorer.Next())
+        {
+            TopoDS_Shell ShellShape = TopoDS::Shell(shapeExplorer.Current());
+            //            TopoDS_Shell WingShellShape = TopoDS::Shell(sewedshape);
+            //make the solid
+            if(!ShellShape.IsNull())
+            {
+                BRepBuilderAPI_MakeSolid solidMaker(ShellShape);
+                if(!solidMaker.IsDone())
+                {
+                    logmsg += "   Solid not made... \n";
+                    stitchedshape.Nullify();
+                    return;
+                }
+                stitchedshape = solidMaker.Shape();
+
+                logmsg += "   Stitching result is " + occ::shapeType(stitchedshape) + "\n";
+
+                BRepCheck_Analyzer ShapeAnalyzer(stitchedshape);
+                if(ShapeAnalyzer.IsValid()) logmsg += "   Shape topology is VALID \n\n";
+                else                        logmsg += "   Shape topology is NOT VALID \n\n";
+            }
+
+            shapes.Append(stitchedshape);
+        }
+    }
+    catch(Standard_TypeMismatch &)
+    {
+        logmsg += "     Type mismatch error\n";
+    }
+}
+
+
+void occ::reverseShape(const TopoDS_Shape &shape, TopoDS_Shape &result)
+{
+    result = shape;
+    result.Reverse();
+}
+
+
+void occ::shapeFixSmallEdges(TopoDS_Shape const &shape, TopoDS_Shape &result,
+                             float precision, float mintol, float maxtol)
+{
+    Handle(ShapeFix_Wireframe) SFWF = new ShapeFix_Wireframe;
+
+    SFWF->SetPrecision(   precision);
+    SFWF->SetMinTolerance(mintol);
+    SFWF->SetMaxTolerance(maxtol);
+    SFWF->ModeDropSmallEdges() = Standard_True;
+
+    SFWF->Load(shape);
+    SFWF->FixSmallEdges();
+    result = SFWF->Shape();
+}
+
+
+void occ::shapeFixGaps(TopoDS_Shape const &shape, TopoDS_Shape &result,
+                      float precision, float mintol, float maxtol)
+{
+    Handle(ShapeFix_Wireframe) SFWF = new ShapeFix_Wireframe;
+
+    SFWF->SetPrecision(   precision);
+    SFWF->SetMinTolerance(mintol);
+    SFWF->SetMaxTolerance(maxtol);
+
+    SFWF->Load(shape);
+    SFWF->FixWireGaps();
+    result = SFWF->Shape();
+}
+
+
+void occ::shapeFixAll(TopoDS_Shape const &shape, TopoDS_Shape &result,
+                      float precision, float mintol, float maxtol)
+{
+    std::string strange;
+
+    TopoDS_ListOfShape fixedshapes;
+
+    Handle(ShapeFix_Shape) sfs = new ShapeFix_Shape;
+
+    sfs->Init(shape);
+    sfs->SetPrecision(precision);
+    sfs->SetMinTolerance(mintol);
+    sfs->SetMaxTolerance(maxtol);
+    sfs->Perform();
+    result = sfs->Shape();
+}
+
+
+void occ::fuseStitchFaces(FuseOcc *pFuseOcc, float precision, std::string &logmsg)
+{
+    occ::stitchShapes(pFuseOcc->shapes(), precision, logmsg);
+}
+
+
+void occ::fuseReverseShapes(FuseOcc *pFuseOcc, std::string &logmsg)
+{
+    TopoDS_ListIteratorOfListOfShape iterator;
+    for (iterator.Initialize(pFuseOcc->shapes()); iterator.More(); iterator.Next())
+    {
+        iterator.Value().Reverse();
+    }
+    (void)logmsg;
+}
+
+
+void occ::fuseFixSmallEdges(FuseOcc *pFuseOcc, float precision, float mintol, float maxtol, std::string &logmsg)
+{
+    TopoDS_ListOfShape fixedshapes;
+    TopoDS_ListIteratorOfListOfShape iterator;
+    for (iterator.Initialize(pFuseOcc->shapes()); iterator.More(); iterator.Next())
+    {
+        TopoDS_Shape result;
+        occ::shapeFixSmallEdges(iterator.Value(), result, precision, mintol, maxtol);
+        fixedshapes.Append(result);
+    }
+
+    pFuseOcc->setShells(fixedshapes);
+    logmsg += "Finished fixing small edges if any\n";
+}
+
+
+void occ::fuseFixGaps(FuseOcc *pFuseOcc, float precision, float mintol, float maxtol, std::string &logmsg)
+{
+    TopoDS_ListOfShape fixedshapes;
+    TopoDS_ListIteratorOfListOfShape iterator;
+    for (iterator.Initialize(pFuseOcc->shapes()); iterator.More(); iterator.Next())
+    {
+        TopoDS_Shape result;
+        occ::shapeFixGaps(iterator.Value(), result, precision, mintol, maxtol);
+        fixedshapes.Append(result);
+    }
+
+    pFuseOcc->setShells(fixedshapes);
+    logmsg += "Finished fixing gaps if any\n";
+}
+
+
+void occ::fuseFixAll(FuseOcc *pFuseOcc, float precision, float mintol, float maxtol, std::string &logmsg)
+{
+    std::string strange;
+
+    TopoDS_ListOfShape fixedshapes;
+
+    TopoDS_ListIteratorOfListOfShape iterator;
+    int ishape=0;
+    for (iterator.Initialize(pFuseOcc->shapes()); iterator.More(); iterator.Next())
+    {
+        TopoDS_Shape aResult;
+        occ::shapeFixAll(iterator.Value(), aResult, precision, mintol, maxtol);
+        strange = std::format("Fixed shape {:d}\n", ishape);
+        logmsg += strange;
+
+        fixedshapes.Append(aResult);
+
+        ishape++;
+    }
+
+    pFuseOcc->setShells(fixedshapes);
+    logmsg += "Finished fixing all\n";
+}
+
+
 
 
 

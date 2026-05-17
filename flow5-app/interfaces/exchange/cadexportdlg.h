@@ -47,8 +47,8 @@ class CADExportDlg : public QDialog
 
     public:
         CADExportDlg(QWidget*pParent);
-        void init(TopoDS_Shape const & shape, QString partname);
-        void init(TopoDS_ListOfShape const & listofshape, QString partname);
+        void init(TopoDS_Shape const & shape, QString const &partname);
+        void init(TopoDS_ListOfShape const & listofshape, QString const &partname);
 
         void showEvent(QShowEvent *pEvent) override;
         void hideEvent(QHideEvent *pEvent) override;
@@ -59,18 +59,15 @@ class CADExportDlg : public QDialog
         static void saveSettings(QSettings &settings);
 
     protected:
-        void exportBRep();
-        void exportSTEP();
-
         void updateStdOutput(std::string const &strong);
         void updateOutput(QString const &strong);
 
         void makeCommonWts();
         void setupLayout();
-        virtual void exportShapes();
+        void exportShapes();
 
     protected slots:
-        void onExport();
+        virtual void onExport();
         void onFormat();
         void onButton(QAbstractButton *pButton);
 

@@ -46,7 +46,7 @@
 #include <api/pointmass.h>
 #include <api/units.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/saveoptions.h>
 #include <core/xflcore.h>

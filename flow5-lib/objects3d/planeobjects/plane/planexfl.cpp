@@ -242,10 +242,10 @@ void PlaneXfl::duplicate(Plane const*pPlane)
     m_Wing.resize(pPlaneXfl->nWings());
     for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
     {
+        m_Wing[iw] = new WingXfl(*pPlaneXfl->wingAt(iw));
         m_Wing[iw]->setUniqueIndex();
         m_Wing[iw]->duplicate(pPlaneXfl->m_Wing.at(iw));
     }
-//    m_Wing.detach();
 
     clearFuses();
 
@@ -1945,23 +1945,4 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstr)
 }
 
 
-Vector3d PlaneXfl::wingPosition(WingXfl const *pWing)
-{
-    for(unsigned int iw=0; iw<m_Wing.size(); iw++)
-    {
-        if(m_Wing.at(iw) == pWing)
-            return m_Wing.at(iw)->position();
-    }
-    return Vector3d();
-}
-
-
-void PlaneXfl::setWingPosition(WingXfl *pWing, Vector3d const &LE)
-{
-    for(unsigned int iw=0; iw<m_Wing.size(); iw++)
-    {
-        if(m_Wing.at(iw) == pWing)
-            m_Wing[iw]->setPosition(LE);
-    }
-}
 

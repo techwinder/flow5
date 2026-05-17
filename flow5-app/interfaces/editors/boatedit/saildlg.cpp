@@ -56,7 +56,7 @@
 #include <api/units.h>
 #include <api/xmlsailwriter.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/saveoptions.h>
 #include <core/xflcore.h>

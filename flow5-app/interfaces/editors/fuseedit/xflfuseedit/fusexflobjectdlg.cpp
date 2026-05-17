@@ -42,7 +42,7 @@
 #include <api/xmlfusewriter.h>
 
 #include <core/enums_core.h>
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/saveoptions.h>
 #include <interfaces/editors/editobjectdelegate.h>

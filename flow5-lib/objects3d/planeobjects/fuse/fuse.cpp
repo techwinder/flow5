@@ -89,7 +89,6 @@ Fuse::Fuse(const Fuse &aFuse)
 
     m_Triangulation = aFuse.m_Triangulation;
 
-    m_Shape = aFuse.m_Shape;
     m_Shell = aFuse.m_Shell;
 
     m_TriMesh     = aFuse.m_TriMesh;
@@ -99,7 +98,7 @@ Fuse::Fuse(const Fuse &aFuse)
 }
 
 
-void Fuse::duplicateFuse(Fuse const &aFuse)
+void Fuse::duplicate(Fuse const &aFuse)
 {
     duplicatePart(aFuse);
     m_bLocked = false;
@@ -112,7 +111,6 @@ void Fuse::duplicateFuse(Fuse const &aFuse)
 
     m_Triangulation = aFuse.m_Triangulation;
 
-    m_Shape = aFuse.m_Shape;
     m_Shell = aFuse.m_Shell;
 
     m_TriMesh     = aFuse.m_TriMesh;
@@ -120,22 +118,6 @@ void Fuse::duplicateFuse(Fuse const &aFuse)
     m_MaxElementSize = aFuse.m_MaxElementSize;
     m_OccTessParams = aFuse.m_OccTessParams;
 }
-
-
-void Fuse::makeShellsFromShapes()
-{
-    m_Shell.Clear();
-    for(TopTools_ListIteratorOfListOfShape shapeit(m_Shape); shapeit.More(); shapeit.Next())
-    {
-        TopExp_Explorer shapeExplorer;
-        for (shapeExplorer.Init(shapeit.Value(),TopAbs_SHELL); shapeExplorer.More(); shapeExplorer.Next())
-        {
-            TopoDS_Shell aShell = TopoDS::Shell(shapeExplorer.Current());
-            m_Shell.Append(aShell);
-        }
-    }
-}
-
 
 /**
  * Makes a default triangular mesh.
@@ -161,7 +143,7 @@ void Fuse::computeWettedArea()
 
     TopoDS_ListIteratorOfListOfShape iterator;
     int nShapes = 0;
-    for (iterator.Initialize(m_Shape); iterator.More(); iterator.Next())
+    for (iterator.Initialize(m_Shell); iterator.More(); iterator.Next())
     {
         int nShells = 0;
         TopExp_Explorer shapeExplorer;
@@ -423,7 +405,7 @@ void Fuse::computeStructuralInertia(Vector3d const &PartPosition)
 
     TopoDS_ListIteratorOfListOfShape iterator;
     int nShapes = 0;
-    for (iterator.Initialize(m_Shape); iterator.More(); iterator.Next())
+    for (iterator.Initialize(m_Shell); iterator.More(); iterator.Next())
     {
         int nShells = 0;
         TopExp_Explorer shapeExplorer;
@@ -546,21 +528,20 @@ bool Fuse::intersectFuse(Vector3d const &A, Vector3d const &B, Vector3d &I) cons
 
 bool Fuse::intersectFuse(Vector3d const &A, Vector3d const &B, Vector3d &I, bool bRightSide) const
 {
-    int nShapes = m_Shape.Extent();
-    std::vector<bool> bIntersect(nShapes, false);
-    std::vector<Vector3d> ISh(nShapes);
+    int nShells = m_Shell.Extent();
+    std::vector<bool> bIntersect(nShells, false);
+    std::vector<Vector3d> ISh(nShells);
 
     int iShape = 0;
-    for(TopTools_ListIteratorOfListOfShape shapeit(m_Shape); shapeit.More(); shapeit.Next())
+    for(TopTools_ListIteratorOfListOfShape shapeit(m_Shell); shapeit.More(); shapeit.Next())
     {
         bIntersect[iShape] = occ::intersectShape(shapeit.Value(), {A,B}, ISh[iShape], bRightSide);
         iShape++;
     }
 
-
     bool bResult = false;
     double dmax = LARGEVALUE;
-    for(int i=0; i<nShapes; i++)
+    for(int i=0; i<nShells; i++)
     {
         if(bIntersect[i])
         {
@@ -615,25 +596,6 @@ void Fuse::listShells()
     }
 }
 
-
-void Fuse::listShapes()
-{
-    std::string strange;
-    int ishell=0;
-    for(TopTools_ListIteratorOfListOfShape iterator(shapes()); iterator.More(); iterator.Next())
-    {
-        strange = std::format("Shell {:d} ", ishell);
-        if     (iterator.Value().Orientation()==TopAbs_FORWARD)  strange += "is FORWARD";
-        else if(iterator.Value().Orientation()==TopAbs_REVERSED) strange += "is REVERSED";
-        std::cout << std::format("{:s}", strange.c_str()) << std::endl;
-
-        std::string str;
-        occ::listShapeContent(iterator.Value(), str, "   ");
-        std::cout << std::format("{:s}", str.c_str()) << std::endl;
-
-        ishell++;
-    }
-}
 
 
 

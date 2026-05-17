@@ -118,21 +118,6 @@ struct LineStyle
 
     std::string m_Tag="";
 
-/*
-    Qt::PenStyle getStipple()
-    {
-         switch(m_Stipple)
-         {
-             default:
-             case Line::SOLID:      return Qt::SolidLine;
-             case Line::DASH:       return Qt::DashLine;
-             case Line::DOT:        return Qt::DotLine;
-             case Line::DASHDOT:    return Qt::DashDotLine;
-             case Line::DASHDOTDOT: return Qt::DashDotDotLine;
-             case Line::NOLINE:     return Qt::NoPen;
-         }
-    }*/
-
     static Line::enumLineStipple convertLineStyle(int iStipple)
     {
         switch (iStipple)

@@ -512,7 +512,7 @@ void gl3dTexture::cartesianToSpherical(Vector3d const &pos, float &theta, float 
 
 gl3dTexture::~gl3dTexture()
 {
-    if(m_pglTexture) delete m_pglTexture;
+    if(m_pglTexture2d) delete m_pglTexture2d;
     if(m_pImg) delete m_pImg;
 }
 
@@ -781,8 +781,8 @@ void gl3dTexture::glMake3dObjects()
 {
     if(m_bResetTexture)
     {
-        if(m_pglTexture) delete m_pglTexture;
-        m_pglTexture = new QOpenGLTexture(*m_pImg);
+        if(m_pglTexture2d) delete m_pglTexture2d;
+        m_pglTexture2d = new QOpenGLTexture(*m_pImg);
         m_bResetTexture = false;
     }
 }
@@ -827,11 +827,11 @@ void gl3dTexture::glRenderView()
             m_shadSurf.setAttributeBuffer(m_locSurf.m_attrNormal, GL_FLOAT, 3*sizeof(GLfloat), 3, stride*sizeof(GLfloat));
             m_shadSurf.setAttributeBuffer(m_locSurf.m_attrUV,     GL_FLOAT, 6*sizeof(GLfloat), 2, stride*sizeof(GLfloat));
 
-            m_pglTexture->bind();
+            m_pglTexture2d->bind();
             {
                 glDrawArrays(GL_TRIANGLES, 0, nTriangles*3);
             }
-            m_pglTexture->release();
+            m_pglTexture2d->release();
         }
         m_vboTexSphere.release();
         glDisable(GL_POLYGON_OFFSET_FILL);

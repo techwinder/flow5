@@ -34,7 +34,7 @@
 #include <api/surface.h>
 #include <api/units.h>
 #include <api/wingxfl.h>
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/xflcore.h>
 

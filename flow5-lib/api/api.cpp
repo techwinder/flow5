@@ -93,11 +93,6 @@ void plane::meshFuse(PlaneXfl *pPlaneXfl, std::vector<int>selectedWings, bool bT
 
     gmesh::setGmshParams(pFuse->gmshMinSize(), pFuse->gmshMaxSize(), pFuse->gmshNCurvature(), algorithm);
 
-/*    gmsh::option::setNumber("Mesh.MeshSizeMin", pFuse->gmshMinSize());
-    gmsh::option::setNumber("Mesh.MeshSizeMax", pFuse->gmshMaxSize());
-    gmsh::option::setNumber("Mesh.MeshSizeFromCurvature", pFuse->gmshNCurvature());
-    gmsh::option::setNumber("Mesh.Algorithm", iAlgorithm);*/
-
     std::vector<WingXfl> winglist;
 
     for(unsigned int iw=0; iw<selectedWings.size(); iw++)
@@ -161,8 +156,10 @@ void plane::meshFuse(PlaneXfl *pPlaneXfl, std::vector<int>selectedWings, bool bT
     strange = std::format("Gmsh count: {:.0f} triangles and {:.0f} nodes\n", nT3d, nNodes);
     log += prefix + strange;
 
-    bool m_bMakeXZSymmetric = true;
-    if(m_bMakeXZSymmetric)
+    // In the case of an xfl-type fuse, the shells cover only one side,
+    // This is to ensure that we build a symmetric mesh and obtain symmetrical calculation results
+    bool bMakeXZSymmetric = pFuse->isXflType();
+    if(bMakeXZSymmetric)
     {
         int nt = int(triangles.size());
         strange = std::format("Right side triangle count = {:d}\n", nt);

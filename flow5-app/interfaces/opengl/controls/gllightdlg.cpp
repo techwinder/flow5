@@ -32,7 +32,7 @@
 
 #include "gllightdlg.h"
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <interfaces/opengl/views/gl3dview.h>
 #include <interfaces/widgets/customwts/floatedit.h>

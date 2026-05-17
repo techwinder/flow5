@@ -37,7 +37,7 @@
 #include <api/planeopp.h>
 #include <api/units.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/displayoptions.h>
 #include <globals/mainframe.h>

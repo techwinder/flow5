@@ -100,7 +100,6 @@
 #include <api/oppoint.h>
 #include <api/oppoint.h>
 #include <api/polar.h>
-#include <api/serialization.h>
 #include <api/utils-io.h>
 #include <api/xfoiltask.h>
 #include <api/xmlpolarreader.h>
@@ -2147,7 +2146,7 @@ void XDirect::onImportXFoilPolars()
     {
         logmsg.clear();
         QFile XFile(pathNames.at(iFile));
-        pPolar = Objects3d::importXFoilPolar(XFile, logmsg);
+        pPolar = io::importXFoilPolar(XFile, logmsg);
         if(!pPolar)
         {
             s_pMainFrame->onShowLogWindow(true);

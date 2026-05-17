@@ -36,8 +36,8 @@
 
 #include "streamlinesctrls.h"
 
-#include <utils-io.h>
 
+#include <core/xflcore.h>
 #include <globals/mainframe.h>
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/widgets/customwts/exponentialslider.h>
@@ -48,10 +48,10 @@
 #include <modules/xplane/glview/gl3dxplaneview.h>
 #include <modules/xsail/view/gl3dxsailview.h>
 
-#include <api/units.h>
+
 
 StreamLineCtrls::eStreamStart StreamLineCtrls::s_pos = StreamLineCtrls::TRAILINGEDGE;
-int StreamLineCtrls::s_NX = 50;
+int    StreamLineCtrls::s_NX = 50;
 double StreamLineCtrls::s_L0 = 0.01;
 double StreamLineCtrls::s_XFactor = 1.05;
 double StreamLineCtrls::s_XOffset = 0.0;

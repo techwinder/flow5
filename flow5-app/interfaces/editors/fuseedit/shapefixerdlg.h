@@ -50,7 +50,7 @@ class ShapeFixerDlg : public QDialog
         void showEvent(QShowEvent *pEvent) override;
         void hideEvent(QHideEvent *pEvent) override;
 
-        TopoDS_ListOfShape const &shapes() const {return m_shapes;}
+        TopoDS_ListOfShape const &shapes() const {return m_Shapes;}
 
         static void loadSettings(QSettings &settings);
         static void saveSettings(QSettings &settings);
@@ -59,7 +59,6 @@ class ShapeFixerDlg : public QDialog
         void setupLayout();
         void connectSignals();
         void outputMessage(QString const &msg);
-        void listShapeProperties(QString &props, TopoDS_Shape const &shape, QString prefix);
 
 
     private slots:
@@ -75,7 +74,7 @@ class ShapeFixerDlg : public QDialog
         void onFixAll();
 
     private:
-        TopoDS_ListOfShape m_shapes;
+        TopoDS_ListOfShape m_Shapes;
 
         QDialogButtonBox *m_pButtonBox;
 

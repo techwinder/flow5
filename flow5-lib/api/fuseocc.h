@@ -37,6 +37,8 @@ class FL5LIB_EXPORT FuseOcc : public Fuse
     public:
         FuseOcc();
 
+        void duplicate(const Fuse &fuse) override;
+
         void computeSurfaceProperties(std::string &logmsg, const std::string &prefix) override;
 
         int nPanel4() const override {return 0;}
@@ -65,6 +67,23 @@ class FL5LIB_EXPORT FuseOcc : public Fuse
 
         void makeEdges(std::vector<Segment3d> &lines);
 
+        void setShapes(const TopoDS_ListOfShape & shapes) {m_Shape=shapes;}
+        TopoDS_ListOfShape &shapes() {return m_Shape;}
+        TopoDS_ListOfShape const &shapes() const {return m_Shape;}
+
+        void appendShape(TopoDS_Shape const &shape) {m_Shape.Append(shape);}
+        int shapeCount() const {return m_Shape.Extent();}
+        int nShapes() const {return m_Shape.Extent();}
+        void clearShapes() {m_Shape.Clear();}
+
+
+        void extractShellsFromShapes();
+
+    private:
+        // The list of RAW shapes imported from STL;
+        // NOT serialized;
+        // only used during session to construct the shells
+        TopoDS_ListOfShape m_Shape;
 
 };
 

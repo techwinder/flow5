@@ -196,7 +196,7 @@ void Triangulation::rotate(Vector3d const &Origin, Vector3d const&axis, double t
 
 bool Triangulation::intersect(Vector3d const &A, Vector3d const &B, Vector3d &Inear, Vector3d &N) const
 {
-    double dmax = +1.e10;
+    double dmax = LARGEVALUE;
     bool bIntersect = false;
     Vector3d I;
     Vector3d U = (B-A).normalized();

@@ -28,6 +28,7 @@
 #include <QFile>
 
 #include <api/xflxmlreader.h>
+#include <flow5-io-lib_global.h>
 
 
 class Polar;

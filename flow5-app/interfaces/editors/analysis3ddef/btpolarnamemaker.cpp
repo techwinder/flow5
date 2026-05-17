@@ -31,7 +31,7 @@
 #include <api/sail.h>
 #include <api/units.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 
 bool BtPolarNameMaker::s_bMethod=true;

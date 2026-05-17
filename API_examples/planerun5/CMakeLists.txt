@@ -6,7 +6,6 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-unset(USING_INTEL_MKL CACHE)
 option(USING_INTEL_MKL "Activate if flow5 has been built with Intel MKL" OFF)
 option(FLOW5_IO  "Activate to link to flow5-io.\nRequired for data serialization and use of xml files" ON)
 
@@ -73,7 +72,7 @@ endif(FLOW5_IO)
 
 
 if(WIN32)
-    target_link_libraries(PlaneRun5 XFoil1 flow5-io-lib)
+    target_link_libraries(PlaneRun5 XFoil1)
     target_link_libraries(PlaneRun5 gmsh.dll.lib) # the file name is gmsh.dll.lib
     if(USING_INTEL_MKL)
         target_link_libraries(PlaneRun5 mkl_rt)         # Intel® oneAPI Math Kernel Library Single Dynamic Library (SDL)
@@ -89,7 +88,7 @@ elseif (LINUX)
         target_link_libraries(PlaneRun5 mkl_core mkl_intel_lp64 mkl_gnu_thread)
         target_compile_definitions(PlaneRun5 PUBLIC INTEL_MKL)
     else()
-            # Fedora libs in /usr/lib64:
+        # Fedora libs in /usr/lib64:
         #   openblas:  single-threaded library
         #   openblaso: built with USE_OPENMP=1
         #   openblasp: multi-threading without OMP

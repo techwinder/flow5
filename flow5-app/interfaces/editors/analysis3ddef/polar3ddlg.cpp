@@ -38,7 +38,7 @@
 #include <api/planepolarnamemaker.h>
 #include <api/units.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <interfaces/editors/analysis3ddef/extradragwt.h>
 #include <interfaces/editors/analysis3ddef/wpolarautonamedlg.h>

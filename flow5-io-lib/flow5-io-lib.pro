@@ -78,8 +78,14 @@ win32-msvc {
     LIBS += -LD:\bin\OCCT-7_9_2\build\win64\vc14\lib
     LIBS += -LD:\bin\OCCT-7_9_2\build\win64\vc14\bin
 
-#-----XFoil-----
 
+#--------------------- GMSH ------------------------
+    INCLUDEPATH += D:\bin\gmsh-4.14.1-Windows64-sdk/include/
+    LIBS += -L"D:\bin\gmsh-4.14.1-Windows64-sdk/lib"
+    LIBS += -lgmsh.dll  # the file name is gmsh.dll.lib
+
+
+#-----XFoil-----
     LIBS += -L../XFoil-lib -lXFoil1
 
 }
@@ -157,5 +163,7 @@ LIBS += \
     -lTKTopAlgo \
     -lTKXSBase \
     -lTKernel \
+
+
 
 

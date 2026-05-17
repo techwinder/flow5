@@ -55,6 +55,7 @@
 
 
 #include <api/fl5core.h>
+#include <api/xflscriptexec.h>
 
 #include <core/displayoptions.h>
 #include <core/saveoptions.h>
@@ -63,7 +64,6 @@
 #include <core/xflcore.h>
 #include <globals/mainframe.h>
 #include <interfaces/opengl/views/gl3dview.h>
-#include <interfaces/script/xflscriptexec.h>
 #include <interfaces/widgets/customdlg/objectpropsdlg.h>
 #include <interfaces/widgets/customwts/popup.h>
 #include <options/prefsdlg.h>

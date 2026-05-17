@@ -53,7 +53,7 @@ class FL5LIB_EXPORT FuseSections : public FuseXfl
         void scaleFrame(double YFactor, double ZFactor, int FrameID=0) override;
         void translateFrame(Vector3d T, int FrameID) override;
         void translate(Vector3d const &T) override;
-        void duplicateFuse(const Fuse &aFuse) override;
+        void duplicate(const Fuse &aFuse) override;
         void insertPoint(int iPt) override;
         void insertPoint(const Vector3d &Real) override;
         void removeSideLine(int SideLine) override;

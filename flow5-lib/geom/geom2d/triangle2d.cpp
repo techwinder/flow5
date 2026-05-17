@@ -409,7 +409,7 @@ bool Triangle2d::isSkinny() const
 
 double Triangle2d::qualityFactor(double &r, double &shortestEdge) const
 {
-    shortestEdge = 1.e100;
+    shortestEdge = LARGEVALUE;
     double a = m_Edge[0].length();
     double b = m_Edge[1].length();
     double c = m_Edge[2].length();
@@ -645,7 +645,7 @@ void Triangle2d::splitAtCoG(std::vector<Triangle2d> &splittriangles) const
 
 double Triangle2d::minEdgeLength() const
 {
-    double l=1.e10;
+    double l=LARGEVALUE;
     for (int ie=0; ie<3; ie++)
     {
         l = std::min(l, edge(ie).length());

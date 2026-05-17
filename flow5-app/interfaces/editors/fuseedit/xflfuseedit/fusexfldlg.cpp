@@ -459,7 +459,7 @@ void FuseXflDlg::takePicture()
     // append a copy of the current object
 
     Fuse* pFuseXfl = m_pFuseXfl->clone();
-    pFuseXfl->duplicateFuse(*m_pFuseXfl);
+    pFuseXfl->duplicate(*m_pFuseXfl);
     m_UndoStack.append(pFuseXfl);
 
     // the new current position is the top of the stack
@@ -605,7 +605,7 @@ void FuseXflDlg::onResetFuse()
 
     m_bChanged = true;
 
-    m_pFuseXfl->makeShellsFromShapes();
+//    m_pFuseXfl->extractShellsFromShapes();
 
     m_pFuseXfl->makeFuseGeometry();
 
@@ -637,8 +637,7 @@ void FuseXflDlg::updateFuseXfl()
 
     m_pFuseXfl->makeDefaultTriMesh(strong, "   ");
     m_pFuseXfl->makeSurfaceTriangulation(W3dPrefs::bodyAxialRes(), W3dPrefs::bodyHoopRes());
-    m_pFuseXfl->makeShape(strong);
-    m_pFuseXfl->makeShellsFromShapes();
+    m_pFuseXfl->makeShell(strong);
 }
 
 

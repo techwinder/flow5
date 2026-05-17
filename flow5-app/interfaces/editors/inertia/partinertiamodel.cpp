@@ -30,7 +30,7 @@
 
 #include "partinertiamodel.h"
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 
 

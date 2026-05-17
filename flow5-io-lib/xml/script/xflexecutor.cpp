@@ -33,10 +33,8 @@
 #include <QFileInfo>
 #include <QDir>
 
-#include <core/xflcore.h>
-#include <interfaces/script/xflexecutor.h>
+#include <api/xflexecutor.h>
 
-#include <core/flow5events.h>
 #include <api/llttask.h>
 #include <api/objects3d.h>
 #include <api/planeopp.h>

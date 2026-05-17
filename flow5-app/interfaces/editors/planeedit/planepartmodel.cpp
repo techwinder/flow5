@@ -38,7 +38,7 @@
 #include <api/flow5-io.h>
 #include <api/xml_globals.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/xflcore.h>
 #include <modules/xobjects.h>

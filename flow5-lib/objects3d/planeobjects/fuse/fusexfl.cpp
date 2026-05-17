@@ -247,7 +247,7 @@ FuseXfl::FuseXfl(FuseXfl const &aFuseXfl) : Fuse(aFuseXfl)
 }
 
 
-void FuseXfl::duplicateFuse(const Fuse &aFuse)
+void FuseXfl::duplicate(const Fuse &aFuse)
 {
     FuseXfl const&xflfuse = dynamic_cast<const FuseXfl&>(aFuse);
     duplicateFuseXfl(xflfuse);
@@ -259,7 +259,7 @@ void FuseXfl::duplicateFuse(const Fuse &aFuse)
  */
 void FuseXfl::duplicateFuseXfl(const FuseXfl &aFuseXfl)
 {
-    Fuse::duplicateFuse(aFuseXfl);
+    Fuse::duplicate(aFuseXfl);
 
     //copy the splined surface data
     m_nxNurbsPanels = aFuseXfl.m_nxNurbsPanels;
@@ -294,22 +294,20 @@ void FuseXfl::makeFuseGeometry()
     makeBodyFaces();
 
     std::string logmsg;
-    makeShape(logmsg);
-    makeShellsFromShapes();
+    makeShell(logmsg);
 
     computeSurfaceProperties(logmsg, "");
 }
 
 
-int FuseXfl::makeShape(std::string &log)
+int FuseXfl::makeShell(std::string &log)
 {
-    m_Shape.Clear();
     m_Shell.Clear();
     m_RightSideShell.Clear();
 
     makeBodySplineShape(log);
 
-    return m_Shape.Extent();
+    return m_Shell.Extent();
 }
 
 
@@ -966,7 +964,6 @@ void FuseXfl::translate(const Vector3d &T)
     }
 
     makeBodyFaces();
-    occ::translateShapes(m_Shape, T);
     occ::translateShapes(m_Shell, T);
     occ::translateShapes(m_RightSideShell, T);
     translateTriPanels(T.x, T.y, T.z);
@@ -1366,7 +1363,7 @@ void FuseXfl::makeBodySplineShape(std::string &logmsg)
         if(RightBodyShell.IsNull()) return;
 
         m_RightSideShell.Append(RightBodyShell);
-        m_Shape.Append(RightBodyShell);
+        m_Shell.Append(RightBodyShell);
 
         BRepBuilderAPI_MakeShell LeftShellMaker(HLeftSurface);
 
@@ -1379,7 +1376,7 @@ void FuseXfl::makeBodySplineShape(std::string &logmsg)
         if(LeftBodyShell.IsNull()) return;
 
 //        LeftBodyShell.Reverse();
-        m_Shape.Append(LeftBodyShell);
+        m_Shell.Append(LeftBodyShell);
         strong = "   The left NURBS has type "+ occ::shapeType(LeftBodyShell) + "\n";
         logmsg += strong;
         strong = "   The right NURBS has type "+ occ::shapeType(RightBodyShell) + "\n";
@@ -1506,7 +1503,7 @@ void FuseXfl::makeBodySplineShape_old(std::string &logmsg)
         if(RightBodyShell.IsNull()) return;
 
         m_RightSideShell.Append(RightBodyShell);
-        m_Shape.Append(RightBodyShell);
+        m_Shell.Append(RightBodyShell);
 
         BRepBuilderAPI_MakeShell LeftShellMaker(HLeftSurface);
 
@@ -1519,7 +1516,7 @@ void FuseXfl::makeBodySplineShape_old(std::string &logmsg)
         if(LeftBodyShell.IsNull()) return;
 
 //        m_LeftSideShell.Append(LeftBodyShell);
-        m_Shape.Append(LeftBodyShell);
+        m_Shell.Append(LeftBodyShell);
         strong = "   The left NURBS has type "+ occ::shapeType(LeftBodyShell) + "\n";
         logmsg += strong;
         strong = "   The right NURBS has type "+ occ::shapeType(RightBodyShell) + "\n";
@@ -1538,7 +1535,7 @@ void FuseXfl::makeBodySplineShape_old(std::string &logmsg)
 }
 
 
-void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &logmsg)
+void FuseXfl::makeBodyFlatPanelShell_with2Triangles(std::string &logmsg)
 {
     Vector3d P1, P2, P3;
     TopTools_ListOfShape RightFaceList;
@@ -1599,7 +1596,7 @@ void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &logmsg)
             if(sewedShape.ShapeType()==TopAbs_SHELL)
             {
                 RightBodyShell= TopoDS::Shell(stitcher.SewedShape()); // is a TopoDS_SHELL
-                m_Shape.Append(RightBodyShell);
+                m_Shell.Append(RightBodyShell);
             }
             else
             {
@@ -1617,7 +1614,7 @@ void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &logmsg)
         tracelog+= strong;
     }
 
-    // make the symmetric shell
+    // make the symmetric shellm_Shape
     if(RightBodyShell.IsNull()) return;
 
     RightBodyShell.Reverse();
@@ -1633,13 +1630,13 @@ void FuseXfl::makeBodyFlatPanelShape_with2Triangles(std::string &logmsg)
     TopoDS_Shell LeftBodyShell = TopoDS::Shell(ShapeCopier.Shape());
 
     LeftBodyShell = TopoDS::Shell(trfSym.Shape());
-    m_Shape.Append(LeftBodyShell);
+    m_Shell.Append(LeftBodyShell);
 
     logmsg = tracelog;
 }
 
 
-void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &logmsg)
+void FuseXfl::makeBodyFlatPanelShell_withSpline(std::string &logmsg)
 {
     Vector3d P1, P2, P3, P4;
     std::vector<Vector3d> Pt;
@@ -1761,7 +1758,7 @@ void FuseXfl::makeBodyFlatPanelShape_withSpline(std::string &logmsg)
                 if(sewedShape.ShapeType()==TopAbs_SHELL)
                 {
                     SideShell[iSide] = TopoDS::Shell(stitcher.SewedShape()); // is a TopoDS_SHELL
-                    m_Shape.Append(SideShell[iSide]);
+                    m_Shell.Append(SideShell[iSide]);
                     if(iSide==0)
                         m_RightSideShell.Append(SideShell[iSide]);
                 }

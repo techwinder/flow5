@@ -36,7 +36,7 @@
 #include <api/units.h>
 #include <api/flow5-io.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/xflcore.h>
 

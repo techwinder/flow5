@@ -444,116 +444,6 @@ bool serial::serializeFrameXfl(Frame *pFrame, QDataStream &ar, bool bIsStoring)
 }
 
 
-bool serial::readPolarFile(QFile &plrFile, std::vector<Foil*> &foilList, std::vector<Polar*> &polarList)
-{
-    Foil* pFoil(nullptr);
-    Polar *pPolar(nullptr);
-    Polar *pOldPolar(nullptr);
-    int n(0);
-
-    QDataStream ar(&plrFile);
-    ar.setVersion(QDataStream::Qt_4_5);
-    ar.setByteOrder(QDataStream::LittleEndian);
-
-    ar >> n;
-
-    if(n<100000)
-    {
-        // deprecated format
-        return false;
-    }
-    else if (n >=100000 && n<200000)
-    {
-        //new format XFLR5 v1.99+
-        //first read all available foils
-        ar>>n;
-        for (int i=0;i<n; i++)
-        {
-            pFoil = new Foil();
-            if (!serializeFoil(pFoil, ar))
-            {
-                delete pFoil;
-                return false;
-            }
-            foilList.push_back(pFoil);
-        }
-
-        //next read all available polars
-
-        ar>>n;
-        for (int i=0; i<n; i++)
-        {
-            pPolar = new Polar();
-
-            if (!serializePolarv6(pPolar, ar, false))
-            {
-                delete pPolar;
-                return false;
-            }
-            for (uint l=0; l<polarList.size(); l++)
-            {
-                pOldPolar = polarList.at(l);
-                if (pOldPolar->foilName()  == pPolar->foilName() &&
-                    pOldPolar->name() == pPolar->name())
-                {
-                    //just overwrite...
-                    polarList.erase(polarList.begin()+l);
-                    delete pOldPolar;
-                    //... and continue to add
-                }
-            }
-            polarList.push_back(pPolar);
-        }
-    }
-    else if (n >=500000 && n<600000)
-    {
-        // v7 format
-        // number of foils to read
-        ar>>n;
-        for (int i=0;i<n; i++)
-        {
-            pFoil = new Foil();
-            if (!serial::serializeFoilFl5(pFoil, ar, false))
-            {
-                delete pFoil;
-                return false;
-            }
-            foilList.push_back(pFoil);
-        }
-
-        //next read all available polars
-
-        ar>>n;
-        for (int i=0;i<n; i++)
-        {
-            pPolar = new Polar();
-
-            if (!serial::serializePolarFl5(pPolar, ar, false))
-            {
-                delete pPolar;
-                return false;
-            }
-
-            for (uint l=0; l<polarList.size(); l++)
-            {
-                pOldPolar = polarList.at(l);
-
-                if (pOldPolar->foilName()  == pPolar->foilName() &&
-                    pOldPolar->name() == pPolar->name())
-                {
-                    //just overwrite...
-                    polarList.erase(polarList.begin()+l);
-                    delete pOldPolar;
-                    //... and continue to add
-                }
-            }
-            polarList.push_back(pPolar);
-        }
-    }
-    return true;
-}
-
-
 bool serial::serializePolarv6(Polar *pPolar, QDataStream &ar, bool bIsStoring)
 {
     int n(0), l(0), k(0);
@@ -4575,6 +4465,7 @@ bool serial::serializeFuseFl5(Fuse*pFuse, QDataStream &ar, bool bIsStoring)
     // 500001: new fl5 format;
     // 500003; added max element size in beta 12
     int ArchiveFormat = 500003;
+
     if(bIsStoring)
     {
         ar << ArchiveFormat;
@@ -4711,27 +4602,28 @@ bool serial::serializeFuseStlFl5(FuseStl*pFuse, QDataStream &ar, bool bIsStoring
 }
 
 
-bool serial::serializeFuseOccFl5(FuseOcc*pFuse, QDataStream &ar, bool bIsStoring)
+bool serial::serializeFuseOccFl5(FuseOcc*pFuseOcc, QDataStream &ar, bool bIsStoring)
 {
-    serial::serializeFuseFl5(pFuse, ar, bIsStoring);
+    serial::serializeFuseFl5(pFuseOcc, ar, bIsStoring);
 
     int nIntSpares=0;
     int nDbleSpares=0;
     int n=0;
     double dble=0;
 
-    //500001 : new fl5 format;
-
+    // 500001: new fl5 format;
+//    // 500002: serializing shells instead of shapes
     int ArchiveFormat = 500001;
+
     if(bIsStoring)
     {
         ar << ArchiveFormat;
 
-        ar<<pFuse->nShapes();
+        // v7.57: serializing shells instead of shapes
+        ar<<pFuseOcc->nShells();
 
-        /** @todo use global occ::shapeToBrep */
         std::stringstream sstream;
-        for(TopTools_ListIteratorOfListOfShape shapeit(pFuse->shapes()); shapeit.More(); shapeit.Next())
+        for(TopTools_ListIteratorOfListOfShape shapeit(pFuseOcc->shells()); shapeit.More(); shapeit.Next())
         {
             sstream.str(std::string()); // clear the stream
             BRepTools::Write(shapeit.Value(), sstream); // stream the brep to the stringstream
@@ -4754,11 +4646,13 @@ bool serial::serializeFuseOccFl5(FuseOcc*pFuse, QDataStream &ar, bool bIsStoring
     else
     {
         ar >> ArchiveFormat;
-        if(ArchiveFormat!=500001) return false;
+        if((ArchiveFormat<=500000) || (ArchiveFormat>500100)) return false; // failsafe
 
-        pFuse->clearShapes();
+//        pFuse->clearShapes();
+        // v7.57: serializing shells instead of shapes
         int nShapes;
         ar >> nShapes;
+        TopoDS_ListOfShape shapes;
         for(int iShape=0; iShape<nShapes; iShape++)
         {
             QString brepstr;
@@ -4776,7 +4670,7 @@ bool serial::serializeFuseOccFl5(FuseOcc*pFuse, QDataStream &ar, bool bIsStoring
                     //                    qDebug()<<"Error serializing CAD fuse " + m_Name;
                     return false;
                 }
-                pFuse->appendShape(shape);
+                shapes.Append(shape);
             }
             catch(...)
             {
@@ -4791,8 +4685,11 @@ bool serial::serializeFuseOccFl5(FuseOcc*pFuse, QDataStream &ar, bool bIsStoring
         ar >> nDbleSpares;
         for (int i=0; i<nDbleSpares; i++) ar >> dble;
 
-        pFuse->makeShellsFromShapes();
-        pFuse->makeFuseGeometry();
+        // v7.57: updating legacy models
+        pFuseOcc->setShapes(shapes);
+        pFuseOcc->extractShellsFromShapes();
+
+        pFuseOcc->makeFuseGeometry();
     }
     return true;
 }
@@ -4800,9 +4697,9 @@ bool serial::serializeFuseOccFl5(FuseOcc*pFuse, QDataStream &ar, bool bIsStoring
 
 bool serial::serializeFuseXFLXfl(FuseXfl *pFuse, QDataStream &ar, bool bIsStoring, int format)
 {
-    int i=0,k=0,n=0,p=0;
+    int i(0),k(0),n(0),p(0);
 
-    double dble=0,m=0,px=0,py=0,pz=0;
+    double dble(0),m(0),px(0),py(0),pz(0);
     QString str;
 
     if(bIsStoring)

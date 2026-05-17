@@ -63,7 +63,7 @@
 
 
 #include <core/displayoptions.h>
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
@@ -2221,7 +2221,7 @@ void XSail::onEditHull()
 
         if(glbDlg.exec() != QDialog::Accepted)
         {
-            pXflFuse->duplicateFuse(*pMemBody);
+            pXflFuse->duplicate(*pMemBody);
             delete pMemBody;
             return;
         }
@@ -2235,7 +2235,7 @@ void XSail::onEditHull()
         obDlg.initDialog(pOccFuse);
         if(obDlg.exec() != QDialog::Accepted)
         {
-            pOccFuse->duplicateFuse(memBody);
+            pOccFuse->duplicate(memBody);
             return;
         }
     }
@@ -2248,7 +2248,7 @@ void XSail::onEditHull()
         sbDlg.initDialog(pStlFuse);
         if(sbDlg.exec() != QDialog::Accepted)
         {
-            pStlFuse->duplicateFuse(memFuseStl);
+            pStlFuse->duplicate(memFuseStl);
             return;
         }
     }

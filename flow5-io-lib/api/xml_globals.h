@@ -26,7 +26,7 @@
 
 #pragma once
 
-#include <QString>
+class QString;
 
 
 #include <flow5-io-lib_global.h>

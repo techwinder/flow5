@@ -28,6 +28,9 @@
 #include <RWStl.hxx>
 #include <gp_Trsf.hxx>
 #include <Bnd_Box.hxx>
+#include <BRepTools.hxx>
+#include <STEPControl_Writer.hxx>
+#include <BRepBuilderAPI_Transform.hxx>
 
 #include <QDataStream>
 #include <QDir>
@@ -41,7 +44,9 @@
 #include <fileio.h>
 #include <flow5-io.h>
 #include <foil.h>
+#include <fuseocc.h>
 #include <fusestl.h>
+#include <gmesh_globals.h>
 #include <objects2d.h>
 #include <objects3d.h>
 #include <occ_globals.h>
@@ -51,6 +56,7 @@
 #include <planestl.h>
 #include <planexfl.h>
 #include <sailobjects.h>
+#include <sailwing.h>
 #include <serialization.h>
 #include <triangle3d.h>
 #include <trimesh.h>
@@ -180,6 +186,53 @@ PlaneSTL *io::importPlaneFromMesh(std::string const&FilePath, enumMeshFileType t
     logmsg += std::format("                     topright= {:11g} {:11g} {:11g} ", topright.x, topright.y, topright.z) + Units::lengthUnitLabel() + EOLstr;
 
     return pPlaneSTL;
+}
+
+
+FuseOcc* io::importFuseFromSTEP(std::string const&FilePath, std::string &logmsg)
+{
+    if(!std::filesystem::exists(FilePath))
+    {
+        logmsg += "File " + FilePath + " does not exist\n";
+        return nullptr;
+    }
+
+    std::string str;
+    FuseOcc *pFuseOcc = new FuseOcc;
+    pFuseOcc->setName(FilePath);
+    double refdimension(0); // some kind of reference dimension extracted from the STEP file
+    TopoDS_ListOfShape shapes;
+    bool bImport = occ::importCADShapes(FilePath, shapes, refdimension, str);
+
+    logmsg += str+"\n";
+
+    if(!bImport)
+    {
+        delete pFuseOcc;
+        logmsg += "Error importing CAD file:"+FilePath+ EOLstr;
+        return nullptr;
+    }
+
+    pFuseOcc->setShapes(shapes);
+
+    // Test whether the imported Shapes contain shells ready to mesh
+    logmsg += "Extracting shells from imported shapes\n";
+    pFuseOcc->extractShellsFromShapes();
+
+    if(pFuseOcc->shellCount()==0)
+    {
+        logmsg += "Warning: Imported LIST_OF_SHAPES does not contain any SHELL.\n"
+                  "         Use shape healing methods to build one.\n";
+    }
+    else
+    {
+        logmsg += "---Making shell triangulation-----\n";
+        gmesh::makeFuseTriangulation(pFuseOcc, logmsg, "   ");
+
+        pFuseOcc->computeSurfaceProperties(str, "   ");
+    }
+
+    return pFuseOcc;
 }
 
 
@@ -396,7 +449,7 @@ int io::exportTriangulationToSTL(QString const &pathname, double scalefactor, st
 }
 
 
-bool io::importVSPWing(QString const &filename, QVector<WingXfl*> &winglist, QString &logmsg)
+bool io::importVSPWing(QString const &filename, std::vector<WingXfl*> &winglist, QString &logmsg)
 {
     QFileInfo fi(filename);
 
@@ -702,12 +755,12 @@ bool io::exportAllWPolars(QString const &pathname, bool bCSV)
                     out.setDevice(&XFile);
                     std::string props;
 
-                    QString lenlab, arealab, masslab, speedlab;
+/*                    QString lenlab, arealab, masslab, speedlab;
                     lenlab = Units::lengthUnitQLabel();
                     arealab = Units::areaUnitQLabel();
                     masslab = Units::massUnitQLabel();
                     speedlab = Units::speedUnitQLabel();
-
+*/
                     pWPolar->getProperties(props, pPlane);
                     out << QString::fromStdString(props);
 
@@ -1059,5 +1112,526 @@ PlanePolar* io::importAnalysisFromXML(std::string const &xmlfilepath, std::strin
 
     xmlFile.close();
     return pWPolar;
+}
+
+
+bool io::readPolarFile(QFile &plrFile, std::vector<Foil*> &foilList, std::vector<Polar*> &polarList)
+{
+    Foil* pFoil(nullptr);
+    Polar *pPolar(nullptr);
+    Polar *pOldPolar(nullptr);
+    int n(0);
+
+    QDataStream ar(&plrFile);
+    ar.setVersion(QDataStream::Qt_4_5);
+    ar.setByteOrder(QDataStream::LittleEndian);
+
+    ar >> n;
+
+    if(n<100000)
+    {
+        // deprecated format
+        return false;
+    }
+    else if (n >=100000 && n<200000)
+    {
+        //new format XFLR5 v1.99+
+        //first read all available foils
+        ar>>n;
+        for (int i=0;i<n; i++)
+        {
+            pFoil = new Foil();
+            if (!serial::serializeFoil(pFoil, ar))
+            {
+                delete pFoil;
+                return false;
+            }
+            foilList.push_back(pFoil);
+        }
+
+        //next read all available polars
+
+        ar>>n;
+        for (int i=0; i<n; i++)
+        {
+            pPolar = new Polar();
+
+            if (!serial::serializePolarv6(pPolar, ar, false))
+            {
+                delete pPolar;
+                return false;
+            }
+            for (uint l=0; l<polarList.size(); l++)
+            {
+                pOldPolar = polarList.at(l);
+                if (pOldPolar->foilName()  == pPolar->foilName() &&
+                    pOldPolar->name() == pPolar->name())
+                {
+                    //just overwrite...
+                    polarList.erase(polarList.begin()+l);
+                    delete pOldPolar;
+                    //... and continue to add
+                }
+            }
+            polarList.push_back(pPolar);
+        }
+    }
+    else if (n >=500000 && n<600000)
+    {
+        // v7 format
+        // number of foils to read
+        ar>>n;
+        for (int i=0;i<n; i++)
+        {
+            pFoil = new Foil();
+            if (!serial::serializeFoilFl5(pFoil, ar, false))
+            {
+                delete pFoil;
+                return false;
+            }
+            foilList.push_back(pFoil);
+        }
+
+        //next read all available polars
+
+        ar>>n;
+        for (int i=0;i<n; i++)
+        {
+            pPolar = new Polar();
+
+            if (!serial::serializePolarFl5(pPolar, ar, false))
+            {
+                delete pPolar;
+                return false;
+            }
+
+            for (uint l=0; l<polarList.size(); l++)
+            {
+                pOldPolar = polarList.at(l);
+
+                if (pOldPolar->foilName()  == pPolar->foilName() &&
+                    pOldPolar->name() == pPolar->name())
+                {
+                    //just overwrite...
+                    polarList.erase(polarList.begin()+l);
+                    delete pOldPolar;
+                    //... and continue to add
+                }
+            }
+            polarList.push_back(pPolar);
+        }
+    }
+    return true;
+}
+
+
+bool io::saveBoatAsProject(Boat *pBoat, QString const &pathname)
+{
+    QString strong;
+
+    QFile fp(pathname);
+
+    if (!fp.open(QIODevice::WriteOnly))
+    {
+        return false;
+    }
+
+    QDataStream ar(&fp);
+    FileIO saver;
+
+    saver.serializeProjectMetaDataFl5(ar, true);
+
+    std::vector<Foil*> FoilList;
+    for(int is=0; is<pBoat->nSails(); is++)
+    {
+        SailWing const *pWS = dynamic_cast<SailWing const*>(pBoat->sailAt(is));
+        if(pWS)
+        {
+            for(int is=0; is<pWS->sectionCount(); is++)
+            {
+                WingSailSection const &ws = pWS->sectionAt(is);
+                Foil *pFoil = Objects2d::foil(ws.foilName());
+                if(pFoil)
+                {
+                    if(std::find(FoilList.begin(), FoilList.end(), pFoil)==FoilList.end())
+                        FoilList.push_back(pFoil);
+                }
+            }
+        }
+    }
+
+    saver.storeFoilsFl5(FoilList, ar, true);
+
+    ar << 0; //planes
+    ar << 0; //wpolars
+    ar << 0; //wpolars external
+    ar << 0; //popps
+
+    ar << 500001;
+    // save the Boats...
+    ar << 1;
+    serial::serializeBoatFl5(pBoat, ar, true);
+
+    // save the BtPolars
+    int polarcount = 0;
+    for(int i=0; i<SailObjects::nBtPolars(); i++)
+    {
+        if(SailObjects::btPolar(i)->boatName()==pBoat->name()) polarcount++;
+    }
+    ar << polarcount;
+    for (int i=0; i<polarcount;i++)
+    {
+        BoatPolar *pBtPolar = SailObjects::btPolar(i);
+        if(pBtPolar->boatName()==pBoat->name()) serial::serializeBoatPolarFl5v750(pBtPolar, ar, true);
+    }
+
+    // not forgetting their BtOpps
+    int btoppcount = 0;
+    for(int i=0; i<SailObjects::nBtOpps(); i++)
+    {
+        if(SailObjects::btOpp(i)->boatName()==pBoat->name()) btoppcount++;
+    }
+    ar << btoppcount;
+    for (int i=0; i<btoppcount; i++)
+    {
+        BoatOpp *pBOpp = SailObjects::btOpp(i);
+        if(pBOpp->boatName()==pBoat->name()) serial::serializeBoatOppFl5(pBOpp, ar, true);
+    }
+
+    // dynamic space allocation for the future storage of more data, without need to change the format
+    int nIntSpares=0;
+    ar << nIntSpares;
+    int n=0;
+    for (int i=0; i<nIntSpares; i++) ar << n;
+    int nDbleSpares=0;
+    double dble=0.0;
+    ar << nDbleSpares;
+    for (int i=0; i<nDbleSpares; i++) ar << dble;
+
+    fp.close();
+    return true;
+}
+
+
+
+Polar *io::importXFoilPolar(QFile &txtFile, QString &logmsg)
+{
+    double Re(0), alpha(0), CL(0), CD(0), CDp(0), CM(0), Xt(0), Xb(0),Cpmn(0), HMom(0);
+    QString FoilName;
+    QString strong, strange, str;
+    bool bRead = false;
+
+    if (!txtFile.open(QIODevice::ReadOnly))
+    {
+        strange = "Could not open the file "+txtFile.fileName();
+        logmsg += strange;
+        return nullptr;
+    }
+    Polar *pPolar = new Polar;
+
+    QTextStream in(&txtFile);
+    int Line = 0;
+    bool bOK=false, bOK2=false;
+
+    io::readAVLString(in, Line, strong);    // XFoil or XFLR5 version
+    io::readAVLString(in, Line, strong);    // Foil Name
+
+    FoilName = strong.right(strong.length()-22).trimmed();
+//    FoilName = FoilName.trimmed();
+
+    pPolar->setFoilName(FoilName.toStdString());
+
+    io::readAVLString(in, Line, strong);// analysis type
+
+    int retype = strong.mid(0,2).toInt(&bOK);
+    if(bOK) pPolar->setReType(retype);
+    int matype = strong.mid(2,2).toInt(&bOK2);
+    if(bOK) pPolar->setMaType(matype);
+
+    if(!bOK || !bOK2)
+    {
+        str = QString::asprintf("Error reading line %d: Unrecognized Mach and Reynolds type.\nThe polar(s) will not be stored.",Line);
+        delete pPolar;
+        logmsg += str+"\n";
+
+        return nullptr;
+    }
+    if     (pPolar->ReType() ==1 && pPolar->MaType() ==1) pPolar->setType(xfl::T1POLAR);
+    else if(pPolar->ReType() ==2 && pPolar->MaType() ==2) pPolar->setType(xfl::T2POLAR);
+    else if(pPolar->ReType() ==3 && pPolar->MaType() ==1) pPolar->setType(xfl::T3POLAR);
+    else                                                  pPolar->setType(xfl::T1POLAR);
+
+    bRead = io::readAVLString(in, Line, strong);
+    if(!bRead || strong.length() < 34)
+    {
+        str = QString::asprintf("Error reading line %d. The polar(s) will not be stored.",Line);
+        delete pPolar;
+
+        logmsg += str+"\n";
+        return nullptr;
+    }
+
+    double xtr = strong.mid(9,6).toDouble(&bOK);
+    if(bOK) pPolar->setXTripBot(xtr);
+    if(!bOK)
+    {
+        str = QString::asprintf("Error reading Bottom Transition value at line %d. The polar(s) will not be stored.",Line);
+        delete pPolar;
+        logmsg += str+"\n";
+        return nullptr;
+    }
+
+    xtr = strong.mid(28,6).toDouble(&bOK);
+    if(bOK) pPolar->setXTripTop(xtr);
+
+    if(!bOK)
+    {
+        str = QString::asprintf("Error reading Top Transition value at line %d. The polar(s) will not be stored.",Line);
+        delete pPolar;
+
+        logmsg += str+"\n";
+        return nullptr;
+    }
+
+    // Mach     Re     NCrit
+    bRead = io::readAVLString(in, Line, strong);// blank line
+    if(!bRead || strong.length() < 50)
+    {
+        str = QString::asprintf("Error reading line %d. The polar(s) will not be stored.",Line);
+        delete pPolar;
+        logmsg += str+"\n";
+        return nullptr;
+    }
+
+    double Ma = strong.mid(8,6).toDouble(&bOK);
+    if(!bOK)
+    {
+        str = QString::asprintf("Error reading Mach Number at line %d. The polar(s) will not be stored.",Line);
+        delete pPolar;
+        logmsg += str+"\n";
+        return nullptr;
+    }
+    else
+        pPolar->setMach(Ma);
+
+    Re = strong.mid(24,10).toDouble(&bOK);
+    if(!bOK)
+    {
+        str = QString::asprintf("Error reading Reynolds Number at line %d. The polar(s) will not be stored.",Line);
+        delete pPolar;
+        logmsg += str+"\n";
+        return nullptr;
+    }
+    Re *=1000000.0;
+    pPolar->setReynolds(Re);
+
+    double ncrit = strong.mid(52,8).toDouble(&bOK);
+    if(bOK) pPolar->setNCrit(ncrit);
+    if(!bOK)
+    {
+        str = QString::asprintf("Error reading NCrit at line %d. The polar(s) will not be stored.",Line);
+        delete pPolar;
+        logmsg += str+"\n";
+        return nullptr;
+    }
+
+    io::readAVLString(in, Line, strong);// column titles
+    bRead = io::readAVLString(in, Line, strong);// underscores
+
+
+    while(bRead && !in.atEnd())
+    {
+        bRead = io::readAVLString(in, Line, strong);// polar data
+        if(strong.length())
+        {
+            if(strong.length())
+            {
+                //                textline = strong.toLatin1();
+                //                text = textline.constData();
+                //                res = sscanf(text, "%lf%lf%lf%lf%lf%lf%lf%lf%lf", &alpha, &CL, &CD, &CDp, &CM, &Xt, &Xb, &Cpmn, &HMom);
+
+                //Do this the Qt way
+                QStringList values;
+#if QT_VERSION >= 0x050F00
+                values = strong.split(" ", Qt::SkipEmptyParts);
+#else
+                values = strong.split(" ", QString::SkipEmptyParts);
+#endif
+
+                if(values.length()>=7)
+                {
+                    alpha  = values.at(0).toDouble();
+                    CL     = values.at(1).toDouble();
+                    CD     = values.at(2).toDouble();
+                    CDp    = values.at(3).toDouble();
+                    CM     = values.at(4).toDouble();
+                    Xt     = values.at(5).toDouble();
+                    Xb     = values.at(6).toDouble();
+
+                    if(values.length() >= 9)
+                    {
+                        Cpmn    = values.at(7).toDouble();
+                        HMom    = values.at(8).toDouble();
+                        pPolar->addPoint(alpha, CD, CDp, CL, CM, Cpmn, HMom, Re, 0, 0, Xt, Xb, 0, 0, 0, 0);
+                    }
+                    else
+                    {
+                        pPolar->addPoint(alpha, CD, CDp, CL, CM, 0.0, 0.0,Re,0.0,0.0, Xt, Xb, 0, 0, 0, 0);
+
+                    }
+                }
+            }
+        }
+    }
+    txtFile.close();
+
+    Re = pPolar->Reynolds()/1000000.0;
+    QString name = QString("T%1_Re%2_M%3")
+            .arg(pPolar->type()+1)
+            .arg(Re,0,'f',2)
+            .arg(pPolar->Mach(),0,'f',2);
+    str = QString("_N%1").arg(pPolar->NCrit(),0,'f',1);
+    name += str;
+    pPolar->setName(name.toStdString());
+
+
+    return pPolar;
+}
+
+
+void io::exportSTEP(QString const & filename, TopoDS_ListOfShape const &m_ShapesToExport, int index, QString &logmsg)
+{
+    // inform OCC that internal units are meters
+    STEPControl_Writer aWriter;
+
+    STEPControl_StepModelType aValue = STEPControl_AsIs;
+
+    // set the units after the writer is created
+//qDebug("%s",UnitsAPI::CurrentUnit("LENGTH"));
+//UnitsAPI::SetCurrentUnit("LENGTH","meter");
+//qDebug()<<UnitsAPI::CurrentUnit("LENGTH");
+//Interface_Static::SetCVal("write.step.unit", "M");
+//qDebug() << Interface_Static::SetIVal("write.step.unit", 0);
+//qDebug()    <<"exportSTEP"<<Interface_Static::CVal("write.step.unit")<<Interface_Static::IVal("write.step.unit")<<Interface_Static::RVal("write.step.unit");
+
+    switch(index)
+    {
+        case 0:
+            aValue = STEPControl_AsIs;
+            break;
+        case 1:
+            aValue = STEPControl_ManifoldSolidBrep;
+            break;
+        case 2:
+            aValue = STEPControl_BrepWithVoids;
+            break;
+        case 3:
+            aValue = STEPControl_FacetedBrep;
+            break;
+        case 4:
+            aValue = STEPControl_FacetedBrepAndBrepWithVoids;
+            break;
+        case 5:
+            aValue = STEPControl_ShellBasedSurfaceModel;
+            break;
+        case 6:
+            aValue = STEPControl_GeometricCurveSet;
+            break;
+        case 7:
+            aValue = STEPControl_Hybrid;
+            break;
+        default:
+            aValue = STEPControl_AsIs;
+            break;
+    }
+
+    std::stringstream buffer;
+    std::streambuf *originalBuffer = std::cout.rdbuf(buffer.rdbuf());
+
+    //    aWriter.Transfer(solid, STEPControl_AsIs);
+    //    aWriter.Write("cylinder.step");
+
+    int nShapes=0;
+    TopoDS_ListIteratorOfListOfShape iterator;
+    TopoDS_Shape exportshape;
+    for (iterator.Initialize(m_ShapesToExport); iterator.More(); iterator.Next())
+    {
+
+        //OCC assumes internal dimensions are mm, so scale by a factor 1000 before exporting
+        gp_Trsf Scale;
+        Scale.SetScale(gp_Pnt(0.0,0.0,0.0), 1000.0);
+        try {
+            BRepBuilderAPI_Transform thescaler(Scale);
+            thescaler.Perform(iterator.Value(), Standard_True);
+            exportshape = thescaler.Shape();
+
+        }  catch (StdFail_NotDone &) {
+            logmsg +="Error scaling the model: StdFail_NotDone\n";
+             return;
+        }  catch (Standard_NoSuchObject &) {
+            logmsg +="Error scaling the model: Standard_NoSuchObject\n";
+            return;
+        }  catch (...) {
+            logmsg +="Error scaling the model: Something unexpected happened....\n";
+            return;
+        }
+        if(exportshape.IsNull())
+        {
+            logmsg +="exportshape is null - cannot export.";
+            return;
+        }
+
+
+        switch(aWriter.Transfer(exportshape, aValue))
+        {
+            case IFSelect_RetVoid:
+                logmsg +="Normal execution - created nothing or no data to process\n";
+                return;
+            case IFSelect_RetError:
+                logmsg +="Error in command or input data, no execution\n";
+                return;
+            case IFSelect_RetFail:
+                logmsg +="Execution was run and has failed\n";
+                return;
+            case IFSelect_RetStop:
+                logmsg +="End or stop (such as Raise)\n";
+                return;
+            default:
+                break;
+        }
+        nShapes++;
+    }
+
+
+    aWriter.Write(filename.toStdString().c_str());
+
+    QString strong;
+    // buffer.str() contains now the output from STEPControl
+    std::cout.rdbuf(originalBuffer);
+    strong = QString::fromStdString(buffer.str()) + "\n";
+
+    logmsg +=strong;
+
+    strong = QString::asprintf("Exported %d shape(s) to file %s", nShapes, filename.toStdString().c_str());
+    logmsg +=strong;
+}
+
+
+void io::exportBRep(QString const & filename, const TopoDS_ListOfShape &m_ShapesToExport, QString &logmsg)
+{
+    std::ofstream brepfile;
+    brepfile.open(filename.toStdString());
+    if(brepfile.is_open())
+    {
+        TopoDS_ListIteratorOfListOfShape iterator;
+        for (iterator.Initialize(m_ShapesToExport); iterator.More(); iterator.Next())
+        {
+            BRepTools::Write(iterator.Value(), brepfile);
+        }
+        brepfile.close();
+    }
+    QString strong;
+    logmsg = QString::asprintf("Exported shape(s) to file %s", filename.toStdString().c_str());
+
 }
 

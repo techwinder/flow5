@@ -22,6 +22,7 @@
 
 *****************************************************************************/
 
+#define _MATH_DEFINES_DEFINED
 
 #include <QFileDialog>
 #include <QPushButton>
@@ -33,7 +34,7 @@
 #include "stlreaderdlg.h"
 
 #include <core/flow5events.h>
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/saveoptions.h>
 #include <core/xflcore.h>

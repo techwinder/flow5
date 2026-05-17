@@ -58,7 +58,7 @@ class FL5LIB_EXPORT Fuse : public Part
         void computeViscousForces(const PlanePolar *pWPolar, double Alpha, double QInf, Vector3d &Force, Vector3d &Moment) const;
 
         virtual Fuse* clone() const = 0;
-        virtual void duplicateFuse(const Fuse &aFuse);
+        virtual void duplicate(const Fuse &aFuse);
 
         virtual void makeFuseGeometry();
         virtual bool intersectFuse(const Vector3d &A, const Vector3d &B, Vector3d &I) const;
@@ -81,19 +81,12 @@ class FL5LIB_EXPORT Fuse : public Part
         Fuse::enumType fuseType() const {return m_FuseType;}
         void setFuseType(Fuse::enumType type){m_FuseType=type;}
 
-        TopoDS_ListOfShape &shapes() {return m_Shape;}
-        TopoDS_ListOfShape const &shapes() const {return m_Shape;}
         TopoDS_ListOfShape &shells() {return m_Shell;}
         TopoDS_ListOfShape const &shells() const {return m_Shell;}
 
-        // Methods related to the Uncut shape
-        void appendShape(TopoDS_Shape const &shape) {m_Shape.Append(shape);}
-        int shapeCount() const {return m_Shape.Extent();}
-        int nShapes() const {return m_Shape.Extent();}
-        void clearShapes() {m_Shape.Clear();}
 
         //	Methods related to the cut shells
-        void makeShellsFromShapes();
+        void setShells(const TopoDS_ListOfShape & shells) {m_Shell=shells;}
         void clearShells() {m_Shell.Clear();}
         int shellCount() const {return m_Shell.Extent();}
         int nShells() const {return m_Shell.Extent();}
@@ -133,13 +126,11 @@ class FL5LIB_EXPORT Fuse : public Part
         static std::string bodyPanelType(Fuse::enumType panelType);
 
         void listShells();
-        void listShapes();
 
     protected:
 
         Fuse::enumType m_FuseType; /** @todo useless now that each fuse is defined in its own subclass - remove */
 
-        TopoDS_ListOfShape m_Shape;  /** The list of shapes of which this body is made: solids, shells, etc. */
         TopoDS_ListOfShape m_Shell;  /** The list of shells AFTER the cut operation. Used for display and mesh generation.*/
 
 

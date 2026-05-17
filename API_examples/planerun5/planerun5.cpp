@@ -30,12 +30,12 @@
 
 
 /* This example shows how to
- * - import a plane and a polar from xml files
- * - build a fuselage conforming mesh
- * - run a calculation */
+ * - import a fuselage from an STL type file into an xfl-type plane
+ *
+ * Copy the stl subdirectory into the build folder before running
+ */
 int main()
 {
-
     #ifdef WIN32
     // enable UTF8 characters
     SetConsoleOutputCP(65001);
@@ -99,7 +99,8 @@ int main()
     PlaneXfl* pPlaneXfl = new PlaneXfl;
     {
         //Set the plane's name now to ensure the plane is inserted in alphabetical order
-        pPlaneXfl->setName("The fused plane!");
+        pPlaneXfl->setName("Plane with STL type fuselage");
+        pPlaneXfl->setDescription("xfl-type plane with fuselage imported from an STL file.");
 
         // We insert the plane = store the pointer
         // This ensures that the heap memory will not be lost and will be released properly
@@ -117,7 +118,7 @@ int main()
         // Start with the fuselage
         // Import it from a file
         std::cout << "    Importing the fuselage" << std::endl;
-        std::string fusefilepath = "/path/to/fuse.stl";
+        std::string fusefilepath = "stl/pw5_fuse.stl";
         std::string logmsg;
         FuseStl *pFuseStl = io::importFuseFromMesh(fusefilepath, io::STL, 1.0, logmsg); // file contains data in m
         std::cout << logmsg << std::endl;
@@ -130,6 +131,9 @@ int main()
         else
         {
             pFuseStl->setName("STL imported fuse");
+            pFuseStl->setDescription("PW-5 Smyk World-class glider.\n"
+                                     "Author: Marek Cel\n"
+                                     "https://airshow.openvsp.org/vsp/C1S5HvELccHjhxiiV8Ra");
 
             // add the fuselage to the plane
             pPlaneXfl->addFuse(pFuseStl);
@@ -138,11 +142,10 @@ int main()
             pFuseStl->scale(0.3, 0.3, 0.3);
 
             //position the fuse
-            // make sure that is does not touch or intersect the wings
+            // make sure that it does not touch or intersect the wings
             pPlaneXfl->setFusePos(0, {-0.05, 0.0, 0.0});
             // equivalent to
             //  pFuse->setPosition({-0.450, 0.0, 0.0}); // deprecated
-
 
 
             // The default fuse is a bit too long

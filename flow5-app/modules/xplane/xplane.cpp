@@ -5768,7 +5768,7 @@ void XPlane::onExportFuseToCAD()
 
     CADExportDlg dlg(s_pMainFrame);
     pFuse->makeFuseGeometry();
-    dlg.init(pFuse->shapes(), QString::fromStdString(pFuse->name()));
+    dlg.init(pFuse->shells(), QString::fromStdString(pFuse->name()));
     dlg.exec();
 }
 

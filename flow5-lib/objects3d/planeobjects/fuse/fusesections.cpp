@@ -239,12 +239,12 @@ void FuseSections::translate(Vector3d const &T)
 }
 
 
-void FuseSections::duplicateFuse(const Fuse &aFuse)
+void FuseSections::duplicate(const Fuse &aFuse)
 {
     FuseSections const&fusepts = dynamic_cast<const FuseSections&>(aFuse);
 
     m_Section = fusepts.m_Section;
-    FuseXfl::duplicateFuse(aFuse);
+    FuseXfl::duplicate(aFuse);
 }
 
 

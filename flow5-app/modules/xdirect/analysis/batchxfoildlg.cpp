@@ -22,7 +22,9 @@
 
 *****************************************************************************/
 
-#include <iostream>
+
+#define _MATH_DEFINES_DEFINED
+
 
 #include <QGroupBox>
 #include <QHBoxLayout>

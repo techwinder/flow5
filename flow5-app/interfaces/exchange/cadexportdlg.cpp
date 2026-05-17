@@ -36,18 +36,12 @@
 
 
 #include <BRepBuilderAPI_Transform.hxx>
-#include <BRepTools.hxx>
-#include <Interface_Static.hxx>
-#include <STEPControl_Writer.hxx>
-#include <Standard_NoSuchObject.hxx>
-#include <StdFail_NotDone.hxx>
-#include <TopoDS_Shape.hxx>
-#include <UnitsAPI.hxx>
 
 #include "cadexportdlg.h"
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <core/saveoptions.h>
 
+#include <api/flow5-io.h>
 
 int CADExportDlg::s_ExportIndex=0;
 QByteArray CADExportDlg::s_Geometry;
@@ -61,7 +55,7 @@ CADExportDlg::CADExportDlg(QWidget*pParent) : QDialog(pParent)
 }
 
 
-void CADExportDlg::init(TopoDS_ListOfShape const & listofshape, QString partname)
+void CADExportDlg::init(TopoDS_ListOfShape const & listofshape, const QString &partname)
 {
     setupLayout();
 
@@ -82,7 +76,7 @@ void CADExportDlg::init(TopoDS_ListOfShape const & listofshape, QString partname
 }
 
 
-void CADExportDlg::init(const TopoDS_Shape &shape, QString partname)
+void CADExportDlg::init(const TopoDS_Shape &shape, const QString &partname)
 {
     setupLayout();
 
@@ -226,180 +220,52 @@ void CADExportDlg::exportShapes()
         return;
     }
 
-    //    QString unit = m_pExportUnit->currentText();
-    // Tell OCC that all dimensions are in meters
+//    QString unit = m_pExportUnit->currentText();
+//    Tell OCC that all dimensions are in meters
 //    UnitsAPI::SetLocalSystem(UnitsAPI_SI);
 
-    if     (m_prbBRep->isChecked()) exportBRep();
-    else if(m_prbSTEP->isChecked()) exportSTEP();
-}
-
-
-void CADExportDlg::exportSTEP()
-{
-    QString filter = "STEP Files (*.step)";
-    QString filename = SaveOptions::CADDirName()+QDir::separator()+m_PartName+".step";
-    filename = QFileDialog::getSaveFileName(this, "Export STEP file",filename,filter);
-    if(!filename.length())
+    QString logmsg;
+    if     (m_prbBRep->isChecked())
     {
-        return;
-    }
-    QFileInfo fi(filename);
-    if(fi.suffix().isNull())
-    {
-        filename +=".step";
-        fi.setFile(filename);
-    }
-
-    // inform OCC that internal units are meters
-    STEPControl_Writer aWriter;
-
-    STEPControl_StepModelType aValue = STEPControl_AsIs;
-
-    QModelIndex index = m_plwListFormat->currentIndex();
-
-    // set the units after the writer is created
-//qDebug("%s",UnitsAPI::CurrentUnit("LENGTH"));
-//UnitsAPI::SetCurrentUnit("LENGTH","meter");
-//qDebug()<<UnitsAPI::CurrentUnit("LENGTH");
-//Interface_Static::SetCVal("write.step.unit", "M");
-//qDebug() << Interface_Static::SetIVal("write.step.unit", 0);
-//qDebug()    <<"exportSTEP"<<Interface_Static::CVal("write.step.unit")<<Interface_Static::IVal("write.step.unit")<<Interface_Static::RVal("write.step.unit");
-
-    switch(index.row())
-    {
-        case 0:
-            aValue = STEPControl_AsIs;
-            break;
-        case 1:
-            aValue = STEPControl_ManifoldSolidBrep;
-            break;
-        case 2:
-            aValue = STEPControl_BrepWithVoids;
-            break;
-        case 3:
-            aValue = STEPControl_FacetedBrep;
-            break;
-        case 4:
-            aValue = STEPControl_FacetedBrepAndBrepWithVoids;
-            break;
-        case 5:
-            aValue = STEPControl_ShellBasedSurfaceModel;
-            break;
-        case 6:
-            aValue = STEPControl_GeometricCurveSet;
-            break;
-        case 7:
-            aValue = STEPControl_Hybrid;
-            break;
-        default:
-            aValue = STEPControl_AsIs;
-            break;
-    }
-
-    std::stringstream buffer;
-    std::streambuf *originalBuffer = std::cout.rdbuf(buffer.rdbuf());
-
-    //    aWriter.Transfer(solid, STEPControl_AsIs);
-    //    aWriter.Write("cylinder.step");
-
-    int nShapes=0;
-    TopoDS_ListIteratorOfListOfShape iterator;
-    TopoDS_Shape exportshape;
-    for (iterator.Initialize(m_ShapesToExport); iterator.More(); iterator.Next())
-    {
-
-        //OCC assumes internal dimensions are mm, so scale by a factor 1000 before exporting
-        gp_Trsf Scale;
-        Scale.SetScale(gp_Pnt(0.0,0.0,0.0), 1000.0);
-        try {
-            BRepBuilderAPI_Transform thescaler(Scale);
-            thescaler.Perform(iterator.Value(), Standard_True);
-            exportshape = thescaler.Shape();
-
-        }  catch (StdFail_NotDone &) {
-            updateOutput("Error scaling the model: StdFail_NotDone\n");
-             return;
-        }  catch (Standard_NoSuchObject &) {
-            updateOutput("Error scaling the model: Standard_NoSuchObject\n");
-            return;
-        }  catch (...) {
-            updateOutput("Error scaling the model: Something unexpected happened....\n");
+        QString filter = "BRep Files (*.brep)";
+        QString filename = SaveOptions::CADDirName()+QDir::separator()+m_PartName+".brep";
+        filename = QFileDialog::getSaveFileName(this, "Export BRep file",filename,filter);
+        if(!filename.length())
+        {
             return;
         }
-        if(exportshape.IsNull())
+        QFileInfo fi(filename);
+        if(fi.suffix().isNull())
         {
-            updateOutput("exportshape is null - cannot export.");
+            filename +=".brep";
+            fi.setFile(filename);
+        }
+
+        io::exportBRep(filename, m_ShapesToExport, logmsg);
+        updateOutput(logmsg);
+    }
+    else if(m_prbSTEP->isChecked())
+    {
+        QString filter = "STEP Files (*.step)";
+        QString filename = SaveOptions::CADDirName()+QDir::separator()+m_PartName+".step";
+        filename = QFileDialog::getSaveFileName(this, "Export STEP file",filename,filter);
+        if(!filename.length())
+        {
             return;
         }
-
-
-        switch(aWriter.Transfer(exportshape, aValue))
+        QFileInfo fi(filename);
+        if(fi.suffix().isNull())
         {
-            case IFSelect_RetVoid:
-                updateOutput("Normal execution - created nothing or no data to process\n");
-                return;
-            case IFSelect_RetError:
-                updateOutput("Error in command or input data, no execution\n");
-                return;
-            case IFSelect_RetFail:
-                updateOutput("Execution was run and has failed\n");
-                return;
-            case IFSelect_RetStop:
-                updateOutput("End or stop (such as Raise)\n");
-                return;
-            default:
-                break;
+            filename +=".step";
+            fi.setFile(filename);
         }
-        nShapes++;
+
+        QModelIndex index = m_plwListFormat->currentIndex();
+        io::exportSTEP(filename, m_ShapesToExport, index.row(), logmsg);
+        updateOutput(logmsg);
     }
-
-
-    aWriter.Write(filename.toStdString().c_str());
-
-    QString strong;
-    // buffer.str() contains now the output from STEPControl
-    std::cout.rdbuf(originalBuffer);
-    strong = QString::fromStdString(buffer.str()) + "\n";
-
-    updateOutput(strong);
-
-    strong = QString::asprintf("Exported %d shape(s) to file %s", nShapes, fi.fileName().toStdString().c_str());
-    updateOutput(strong);
 }
 
-
-void CADExportDlg::exportBRep()
-{
-    QString filter = "BRep Files (*.brep)";
-    QString filename = SaveOptions::CADDirName()+QDir::separator()+m_PartName+".brep";
-    filename = QFileDialog::getSaveFileName(this, "Export BRep file",filename,filter);
-    if(!filename.length())
-    {
-        return;
-    }
-    QFileInfo fi(filename);
-    if(fi.suffix().isNull())
-    {
-        filename +=".brep";
-        fi.setFile(filename);
-    }
-
-    std::ofstream brepfile;
-    brepfile.open(filename.toStdString());
-    if(brepfile.is_open())
-    {
-        TopoDS_ListIteratorOfListOfShape iterator;
-        for (iterator.Initialize(m_ShapesToExport); iterator.More(); iterator.Next())
-        {
-            BRepTools::Write(iterator.Value(), brepfile);
-        }
-        brepfile.close();
-    }
-    QString strong;
-    strong = QString::asprintf("Exported shape(s) to file %s", fi.fileName().toStdString().c_str());
-    updateOutput(strong);
-}
 
 void CADExportDlg::updateStdOutput(std::string const &strong)
 {

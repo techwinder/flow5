@@ -1086,7 +1086,7 @@ void PlanePolar::getProperties(std::string &props, Plane const *pPlane) const
 
     if(isFixedSpeedPolar())
     {
-        strong  = "V" + INFstr + " =" + std::format(" %.2g", velocity()*speedunit);
+        strong  = "V" + INFstr + " =" + std::format(" {:.2g}", velocity()*speedunit);
         PolarProps += strong + speedlab+ EOLstr;
     }
     else if(isFixedaoaPolar())
@@ -1217,8 +1217,8 @@ void PlanePolar::getProperties(std::string &props, Plane const *pPlane) const
         {
             PolarProps += "Viscous drag: XFoil on the fly\n";
             PolarProps += std::format("   NCrit  = {:g}\n", m_NCrit);
-            PolarProps += std::format("   XTrTop = {:g}%% chord\n", m_XTrTop*100.0);
-            PolarProps += std::format("   XTrBot = {:g}%% chord\n", m_XTrBot*100.0);
+            PolarProps += std::format("   XTrTop = {:g}% chord\n", m_XTrTop*100.0);
+            PolarProps += std::format("   XTrBot = {:g}% chord\n", m_XTrBot*100.0);
             if(m_bTransAtHinge)
                 PolarProps += "   Forcing transitions at hinge position\n";
         }

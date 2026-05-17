@@ -32,7 +32,6 @@
 #include <vector>
 
 
-
 #define ALPHAstr      std::string("\u03B1")
 #define BETAstr       std::string("\u03B2")
 #define GAMMAstr      std::string("\u03B3")

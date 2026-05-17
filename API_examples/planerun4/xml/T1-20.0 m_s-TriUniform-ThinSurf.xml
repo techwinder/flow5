@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow5>
+<xflPlanePolar version="1.0">
+    <!--For convenience, all field names are case-insensitive, as an exception to the standard xml specification-->
+    <!--Where applicable, default values will be used for all undefined fields-->
+    <Units>
+        <length_unit_to_meter>1</length_unit_to_meter>
+        <area_unit_to_m2>1</area_unit_to_m2>
+        <mass_unit_to_kg>1</mass_unit_to_kg>
+        <speed_unit_to_ms>1</speed_unit_to_ms>
+        <inertia_unit_to_kgm2>1</inertia_unit_to_kgm2>
+    </Units>
+    <Polar>
+        <Polar_Name>T1-20.0 m/s-TriUniform-ThinSurf</Polar_Name>
+        <!--For scripts and batch analyses: if the plane's name is left blank, the analysis will be associated to all available planes-->
+        <Plane_Name>no fuse plane flapped</Plane_Name>
+        <The_Style>
+            <!--Available style options are: SOLID, DASH, DOT, DASHDOT, DASHDOTDOT, NOLINE-->
+            <Stipple>SOLID</Stipple>
+            <!--Available symbol options are NOSYMBOL, LITTLECIRCLE, LITTLECIRCLEFILLED, BIGCIRCLE, BIGCIRCLEFILLED, LITTLESQUARE, LITTLESQUAREFILLED, BIGSQUARE, BIGSQUAREFILLED, TRIANGLE, TRIANGLE_INV, TRIANGLEFILLED, TRIANGLEFILLED_INV, LITTLECROSS, BIGCROSS-->
+            <PointStyle>NOSYMBOL</PointStyle>
+            <Width>2</Width>
+            <Color>
+                <red>103</red>
+                <green>158</green>
+                <blue>180</blue>
+                <alpha>255</alpha>
+            </Color>
+        </The_Style>
+        <!--Available analysis types are: FIXEDSPEEDPOLAR, FIXEDLIFTPOLAR, GLIDEPOLAR, CONTROLPOLAR, STABILITYPOLAR, T8POLAR-->
+        <Type>FIXEDSPEEDPOLAR</Type>
+        <!--Available methods are: LLT, VLM1, VLM2, QUADS, TRIUNIFORM, TRILINEAR-->
+        <Method>TRIUNIFORM</Method>
+        <Include_Fuse_Moments>false</Include_Fuse_Moments>
+        <Thin_Surfaces>true</Thin_Surfaces>
+        <Ground_Effect>false</Ground_Effect>
+        <Ground_Height>0</Ground_Height>
+        <Wake>
+            <!--Set the following field to true for a conventional flat panel wake, and to false for a vorton wake. The default is true. All lengths are in reference chord units.-->
+            <FlatPanelWake>true</FlatPanelWake>
+            <!--These parameters define the wake panels;
+                NX is the number of panels in one column,
+                ProgressionFactor is the geometric progression factor between rows n+1 and n
+                LengthFactor is the total wake length in M.A.C. units-->
+            <!--Recommended values: NX=5, ProgressionFactor=1.1, LengthFactor=30-->
+            <NX>5</NX>
+            <ProgressionFactor>  1.100</ProgressionFactor>
+            <LengthFactor> 30.000</LengthFactor>
+        </Wake>
+        <Reference_Dimensions>
+            <!--Available options are PLANFORM, PROJECTED, CUSTOM-->
+            <Reference_Dimensions>PROJECTED</Reference_Dimensions>
+            <!--The following fields are required only if dimensions are set to CUSTOM-->
+            <Reference_Area>    0.73475</Reference_Area>
+            <Reference_Span_Length>    2.99897</Reference_Span_Length>
+            <Reference_Chord_Length>    0.24912</Reference_Chord_Length>
+            <Include_Other_Wing_Area>false</Include_Other_Wing_Area>
+        </Reference_Dimensions>
+        <Flaps>
+            <main_wing_flap_1>-5</main_wing_flap_1>
+            <main_wing_flap_2>5</main_wing_flap_2>
+            <Elevator_flap_1>3</Elevator_flap_1>
+            <Elevator_flap_2>3</Elevator_flap_2>
+            <Fin_flap_1>0</Fin_flap_1>
+        </Flaps>
+        <Fluid>
+            <Viscosity>    1.5e-05</Viscosity>
+            <Density>      1.225</Density>
+        </Fluid>
+        <Viscous_Analysis>
+            <Is_Viscous_Analysis>true</Is_Viscous_Analysis>
+            <!--Set the field From_CL to true if the viscous properties are interpolated using the local lift coefficient, i.e. the xflr5 method; and to false if they are interpolated from the local apparent angle, e.g. the case of control polars and the viscous loop.-->
+            <From_CL>false</From_CL>
+        </Viscous_Analysis>
+        <Fuselage_Drag>
+            <Friction_Drag>false</Friction_Drag>
+            <!--Set the field Friction_drag_method  to either KARMAN-SCHOENHERR or PRANDTL-SCHLICHTING-->
+            <Friction_Drag_Method>Karman-Schoenherr</Friction_Drag_Method>
+        </Fuselage_Drag>
+        <Use_plane_inertia>true</Use_plane_inertia>
+        <!--The inertia fields are used only if Use_plane_inertia is set to false-->
+        <Inertia>
+            <Mass>    1.43000</Mass>
+            <CoG>0.11918, 9.2327e-12, 0.023041</CoG>
+            <CoG_Ixx>     0.3548</CoG_Ixx>
+            <CoG_Iyy>    0.24991</CoG_Iyy>
+            <CoG_Izz>    0.59278</CoG_Izz>
+            <CoG_Ixz>   0.023906</CoG_Ixz>
+        </Inertia>
+        <Fixed_Velocity>   20.00000</Fixed_Velocity>
+    </Polar>
+</xflPlanePolar>

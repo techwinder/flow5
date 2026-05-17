@@ -40,7 +40,10 @@
 /* This example shows how to
  * - import a plane and a polar from xml files
  * - build a fuselage conforming mesh
- * - run a calculation */
+ * - run a calculation
+ *
+ * Copy the xml subdirectory into the build folder before running
+ */
 int main()
 {
     #ifdef WIN32
@@ -50,7 +53,7 @@ int main()
 
     std::cout << std::endl << std::endl;
 
-    printf("flow5 plane run\n");
+    std::cout << "flow5 plane run"  << std::endl;
 
     // Configure LAPACK
     std::string strange;
@@ -109,7 +112,7 @@ int main()
      *    if(!io::loadProject(loadfilepath, logload))
      *    {
      *        std::cerr << logload << std::endl;
-}*/
+    }*/
 
     // make the foils
     std::cout << "Making the NACA foils" << std::endl;
@@ -167,14 +170,9 @@ int main()
         // Store the pointer.
         Objects3d::insertPlane(pPlaneXfl);
 
-        // Assemble the plane and build the triangular mesh
-        bool bThickSurfaces = false;
-        bool bIgnoreFusePanels = false; // unused in the present case
-        bool bMakeTriMesh = true;
-        pPlaneXfl->makePlane(bThickSurfaces, bIgnoreFusePanels, bMakeTriMesh);
-
 
         // Assemble the plane and build the triangular mesh for a thin surface calculation
+        bool bThickSurfaces = false;
         std::cout << "    Building the parts and their meshes" <<std::endl;
         {
             // Build the plane and the individual part meshes
@@ -267,14 +265,13 @@ int main()
         // Results are automatically stored in the polar and
         // in the planeOpp array, so no action needed
 
-
         // print the results
-        printf("Created %d plane operating points\n\n", int(pPlaneTask->planeOppList().size()));
+        std::cout << std::format("Created %d plane operating points", int(pPlaneTask->planeOppList().size())) << std::endl << std::endl;
 
         std::string separator = ", ";
         std::string exportstr = pPlPolar->exportToString(separator);
         std::cout<<exportstr.c_str()<<std::endl;
-        printf("\n");
+        std::cout << std::endl;
 
         // clean up
         delete pPlaneTask;
@@ -301,8 +298,6 @@ int main()
 
     // Must call! will delete the planes, foils and children objects
     // Memory leak otherwise
-    // In the present case it is possible to delete all objects manually since they
-    // have all been created in this main() function and are all accounted for.
     globals::deleteObjects();
 
     std::cout << "done" << std::endl;

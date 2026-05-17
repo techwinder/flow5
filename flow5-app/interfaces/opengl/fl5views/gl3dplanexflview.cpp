@@ -128,7 +128,7 @@ void gl3dPlaneXflView::glMake3dObjects()
                 std::string strange;
                 TopoDS_ListOfShape theEdges;
                 TopoDS_ListIteratorOfListOfShape iterator;
-                for (iterator.Initialize(pFuse->shapes()); iterator.More(); iterator.Next())
+                for (iterator.Initialize(pFuse->shells()); iterator.More(); iterator.Next())
                 {
                    occ::findEdges(iterator.Value(), theEdges, strange);
                 }

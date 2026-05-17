@@ -28,23 +28,20 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
-#include <QDebug>
 
 #include <BRepBuilderAPI_MakeSolid.hxx>
 #include <BRepBuilderAPI_Sewing.hxx>
 #include <BRepCheck_Analyzer.hxx>
-#include <ShapeFix_Shape.hxx>
-#include <ShapeFix_Wireframe.hxx>
 #include <TopoDS.hxx>
 #include <TopExp_Explorer.hxx>
-
+#include <ShapeFix_Wireframe.hxx>
 
 #include "shapefixerdlg.h"
 #include <api/fuse.h>
 #include <api/occ_globals.h>
 #include <api/units.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
@@ -71,9 +68,7 @@ void ShapeFixerDlg::setupLayout()
         QLabel *plabPrec   = new QLabel(tr("Precision"));
         QLabel *plabMinTol = new QLabel(tr("Min. tolerance"));
         QLabel *plabMaxTol = new QLabel(tr("Max. tolerance"));
-        plabPrec->setAlignment(::Qt::AlignRight |Qt::AlignVCenter);
-        plabMinTol->setAlignment(::Qt::AlignRight |Qt::AlignVCenter);
-        plabMaxTol->setAlignment(::Qt::AlignRight |Qt::AlignVCenter);
+
         m_pfePrecision = new FloatEdit;
         QString tip("OCC: the basic precision");
         m_pfePrecision->setToolTip(tip);
@@ -84,39 +79,38 @@ void ShapeFixerDlg::setupLayout()
         m_pfeMinTolerance->setToolTip(tip);
         m_pfeMaxTolerance = new FloatEdit;
         tip = "<p>OCC: The maximum allowed tolerance. All problems will be detected for cases when a dimension of "
-        "invalidity is larger than the basic precision or a tolerance of sub-shape on that problem is detected.<br>"
-        "The maximum tolerance value limits the increasing tolerance for fixing a problem such as fix of not "
-        "connected and self-intersected wires. If a value larger than the maximum allowed tolerance is necessary "
-        "for correcting a detected problem the problem can not be fixed. The maximal tolerance is not taking into "
-        "account during computation of tolerance of edges in ShapeFix_SameParameter() method and "
-        "ShapeFix_Edge::FixVertexTolerance() method.</p>";
+              "invalidity is larger than the basic precision or a tolerance of sub-shape on that problem is detected.<br>"
+              "The maximum tolerance value limits the increasing tolerance for fixing a problem such as fix of not "
+              "connected and self-intersected wires. If a value larger than the maximum allowed tolerance is necessary "
+              "for correcting a detected problem the problem can not be fixed. The maximal tolerance is not taking into "
+              "account during computation of tolerance of edges in ShapeFix_SameParameter() method and "
+              "ShapeFix_Edge::FixVertexTolerance() method.</p>";
         m_pfeMaxTolerance->setToolTip(tip);
 
-        QLabel *pLabLen0 = new QLabel(Units::lengthUnitQLabel());
-        QLabel *pLabLen1 = new QLabel(Units::lengthUnitQLabel());
-        QLabel *pLabLen2 = new QLabel(Units::lengthUnitQLabel());
-        pLabLen0->setAlignment(::Qt::AlignLeft|Qt::AlignVCenter);
-        pLabLen1->setAlignment(::Qt::AlignLeft|Qt::AlignVCenter);
-        pLabLen2->setAlignment(::Qt::AlignLeft|Qt::AlignVCenter);
+        QLabel *plabLen0 = new QLabel(Units::lengthUnitQLabel());
+        QLabel *plabLen1 = new QLabel(Units::lengthUnitQLabel());
+        QLabel *plabLen2 = new QLabel(Units::lengthUnitQLabel());
 
-        pFixerLayout->addWidget(plabPrec,            1,1);
+
+        pFixerLayout->addWidget(plabPrec,            1,1, Qt::AlignRight);
         pFixerLayout->addWidget(m_pfePrecision,      1,2);
-        pFixerLayout->addWidget(pLabLen0,            1,3);
-        pFixerLayout->addWidget(plabMinTol,          2,1);
+        pFixerLayout->addWidget(plabLen0,            1,3);
+        pFixerLayout->addWidget(plabMinTol,          2,1, Qt::AlignRight);
         pFixerLayout->addWidget(m_pfeMinTolerance,   2,2);
-        pFixerLayout->addWidget(pLabLen1,            2,3);
-        pFixerLayout->addWidget(plabMaxTol,          3,1);
+        pFixerLayout->addWidget(plabLen1,            2,3);
+        pFixerLayout->addWidget(plabMaxTol,          3,1, Qt::AlignRight);
         pFixerLayout->addWidget(m_pfeMaxTolerance,   3,2);
-        pFixerLayout->addWidget(pLabLen2,            3,3);
+        pFixerLayout->addWidget(plabLen2,            3,3);
     }
+
     QGridLayout *pActionLayout = new QGridLayout;
     {
-        m_ppbListShapes = new QPushButton(tr("List shapes"));
-        m_ppbStitch = new QPushButton(tr("Stitch shapes"));
+        m_ppbListShapes    = new QPushButton(tr("List shapes"));
+        m_ppbStitch        = new QPushButton(tr("Stitch shapes"));
         m_ppbReverseShapes = new QPushButton(tr("Reverse shapes"));
-        m_ppbSmallEdges = new QPushButton(tr("Remove small edges"));
-        m_ppbFixGaps = new QPushButton(tr("Fix gaps"));
-        m_ppbFixAll = new QPushButton(tr("Fix everything"));
+        m_ppbSmallEdges    = new QPushButton(tr("Remove small edges"));
+        m_ppbFixGaps       = new QPushButton(tr("Fix gaps"));
+        m_ppbFixAll        = new QPushButton(tr("Fix everything"));
         pActionLayout->addWidget(m_ppbStitch);
         pActionLayout->addWidget(m_ppbReverseShapes);
         pActionLayout->addWidget(m_ppbSmallEdges);
@@ -229,76 +223,22 @@ void ShapeFixerDlg::initDialog(const TopoDS_ListOfShape &shapes)
     m_pfeMinTolerance->setValue(s_MinTolerance*Units::mtoUnit());
     m_pfeMaxTolerance->setValue(s_MaxTolerance*Units::mtoUnit());
 
-    m_shapes = shapes;
+    m_Shapes = shapes;
     onListShapes();
 }
 
 
 void ShapeFixerDlg::onStitchShapes()
 {
-    QString strange;
-
     s_Precision = m_pfePrecision->value()/Units::mtoUnit();
 
-    BRepBuilderAPI_Sewing stitcher(s_Precision);
-    TopoDS_ListIteratorOfListOfShape iterator;
-    for (iterator.Initialize(m_shapes); iterator.More(); iterator.Next())
-    {
-        stitcher.Add(iterator.Value());
-    }
+    std::string logmsg;
+    occ::stitchShapes(m_Shapes, s_Precision, logmsg);
+    outputMessage(QString::fromStdString(logmsg));
 
-    stitcher.Perform();
-
-    QString logmsg;
-    logmsg += tr("Performing FACE stitching:\n");
-    logmsg += tr("   Nb of free edges=%1\n").arg(stitcher.NbFreeEdges());
-    logmsg += QString("   Nb of contiguous edges=%1\n").arg(stitcher.NbContigousEdges());
-
-/*    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
-    After a successful sewing operation all faces have a coherent orientation.*/
-    TopoDS_Shape stitchedshape;
-
-    try
-    {
-        TopoDS_Shape sewedshape = stitcher.SewedShape();
-        if(sewedshape.IsNull()) return;
-        m_shapes.Clear();
-
-        TopExp_Explorer shapeExplorer;
-        for (shapeExplorer.Init(sewedshape, TopAbs_SHELL); shapeExplorer.More(); shapeExplorer.Next())
-        {
-            TopoDS_Shell ShellShape = TopoDS::Shell(shapeExplorer.Current());
-//            TopoDS_Shell WingShellShape = TopoDS::Shell(sewedshape);
-            //make the solid
-            if(!ShellShape.IsNull())
-            {
-                BRepBuilderAPI_MakeSolid solidMaker(ShellShape);
-                if(!solidMaker.IsDone())
-                {
-                    logmsg += "   Solid not made... \n";
-                    stitchedshape.Nullify();
-                    return;
-                }
-                stitchedshape = solidMaker.Shape();
-
-                logmsg += "   Stitching result is " + QString::fromStdString(occ::shapeType(stitchedshape)) + "\n";
-
-                BRepCheck_Analyzer ShapeAnalyzer(stitchedshape);
-                if(ShapeAnalyzer.IsValid()) logmsg += "   Shape topology is VALID \n\n";
-                else                        logmsg += "   Shape topology is NOT VALID \n\n";
-            }
-
-            m_shapes.Append(stitchedshape);
-        }
-    }
-    catch(Standard_TypeMismatch &)
-    {
-        logmsg += "     Type mismatch error\n";
-    }
-
-    listShapeProperties(strange, stitchedshape, "   "),
-    logmsg += strange;
-    outputMessage(logmsg);
+    logmsg.clear();
+    occ::listAllShapes(m_Shapes, logmsg);
+    outputMessage(QString::fromStdString(logmsg));
 }
 
 
@@ -306,39 +246,19 @@ void ShapeFixerDlg::onListShapes()
 {
     TopoDS_ListIteratorOfListOfShape iterator;
     int ishape=0;
-    QString strange, logmsg, prefix="      ";
-    strange = tr("Fuselage is made of %1 shape(s):").arg(m_shapes.Extent());
+    QString strange;
+    std::string    logmsg, prefix="      ";
+    strange = QString::asprintf("Fuselage is made of %d shape(s):", m_Shapes.Extent());
     outputMessage(strange+"\n");
-    for (iterator.Initialize(m_shapes); iterator.More(); iterator.Next())
+    for (iterator.Initialize(m_Shapes); iterator.More(); iterator.Next())
     {
-        strange = tr("   Shape %1\n").arg(ishape);
+        strange = QString::asprintf("   Shape %d\n", ishape);
         outputMessage(strange);
-        listShapeProperties(logmsg, iterator.Value(), prefix);
-        outputMessage(logmsg);
+        occ::listShapeProperties(iterator.Value(), logmsg, prefix);
+        outputMessage(QString::fromStdString(logmsg));
         ishape++;
     }
     outputMessage("\n");
-}
-
-
-void ShapeFixerDlg::listShapeProperties(QString &props, TopoDS_Shape const &shape, QString prefix)
-{
-    QString logmsg, strange;
-    std::string properties;
-    occ::listShapeContent(shape, properties, prefix.toStdString());
-
-    props = QString::fromStdString(properties);
-
-    double Xmin(1e10), Ymin(1e10), Zmin(1e10), Xmax(-1e10), Ymax(-1e10), Zmax(-1e10);
-    occ::shapeBoundingBox(shape, Xmin, Ymin, Zmin, Xmax, Ymax, Zmax);
-    logmsg = prefix + "Bounding box:\n";
-    strange = QString::asprintf("   X=[%9g, %9g] ", Xmin*Units::mtoUnit(), Xmax *Units::mtoUnit());
-    logmsg += prefix + strange + Units::lengthUnitQLabel() +"\n";
-    strange = QString::asprintf("   Y=[%9g, %9g] ", Ymin*Units::mtoUnit(), Ymax *Units::mtoUnit());
-    logmsg += prefix + strange + Units::lengthUnitQLabel() +"\n";
-    strange = QString::asprintf("   Z=[%9g, %9g] ", Zmin*Units::mtoUnit(), Zmax *Units::mtoUnit());
-    logmsg += prefix + strange + Units::lengthUnitQLabel() +"\n";
-    props += logmsg +"\n";
 }
 
 
@@ -347,11 +267,11 @@ void ShapeFixerDlg::onReverseShapes()
     QString strange, logmsg;
     TopoDS_ListIteratorOfListOfShape iterator;
     int ishape=0;
-    for (iterator.Initialize(m_shapes); iterator.More(); iterator.Next())
+    for (iterator.Initialize(m_Shapes); iterator.More(); iterator.Next())
     {
         iterator.Value().Reverse();
-        if     (iterator.Value().Orientation()==TopAbs_FORWARD)  strange = tr("   After: sub-shape %1 has FORWARD  orientation").arg(ishape);
-        else if(iterator.Value().Orientation()==TopAbs_REVERSED) strange = tr("   After: sub-shape %1 has REVERSED orientation").arg(ishape);
+        if     (iterator.Value().Orientation()==TopAbs_FORWARD)  strange = QString::asprintf("   After: sub-shape %d has FORWARD  orientation", ishape);
+        else if(iterator.Value().Orientation()==TopAbs_REVERSED) strange = QString::asprintf("   After: sub-shape %d has REVERSED orientation", ishape);
 
         logmsg += strange +"\n";
         ishape++;
@@ -363,22 +283,16 @@ void ShapeFixerDlg::onReverseShapes()
 void ShapeFixerDlg::onSmallEdges()
 {
     TopoDS_ListOfShape fixedshapes;
-    Handle(ShapeFix_Wireframe) SFWF = new ShapeFix_Wireframe;
-    SFWF->SetPrecision(s_Precision);
-    SFWF->SetMinTolerance(s_MinTolerance);
-    SFWF->SetMaxTolerance(s_MaxTolerance);
-    SFWF->ModeDropSmallEdges() = Standard_True;
-
     TopoDS_ListIteratorOfListOfShape iterator;
-    for (iterator.Initialize(m_shapes); iterator.More(); iterator.Next())
+    for (iterator.Initialize(m_Shapes); iterator.More(); iterator.Next())
     {
-        SFWF->Load(iterator.Value());
-        SFWF->FixSmallEdges();
-        fixedshapes.Append(SFWF->Shape());
+        TopoDS_Shape result;
+        occ::shapeFixSmallEdges(iterator.Value(), result, s_Precision, s_MinTolerance, s_MaxTolerance);
+        fixedshapes.Append(result);
     }
 
-    m_shapes = fixedshapes;
-    outputMessage(tr("Finished fixing small edges if any:\n"));
+    m_Shapes = fixedshapes;
+    outputMessage("Finished fixing small edges if any\n");
     onListShapes();
 }
 
@@ -386,53 +300,44 @@ void ShapeFixerDlg::onSmallEdges()
 void ShapeFixerDlg::onFixGaps()
 {
     TopoDS_ListOfShape fixedshapes;
-    Handle(ShapeFix_Wireframe) SFWF = new ShapeFix_Wireframe;
-    SFWF->SetPrecision(s_Precision);
-    SFWF->SetMinTolerance(s_MinTolerance);
-    SFWF->SetMaxTolerance(s_MaxTolerance);
-
     TopoDS_ListIteratorOfListOfShape iterator;
-    for (iterator.Initialize(m_shapes); iterator.More(); iterator.Next())
+    for (iterator.Initialize(m_Shapes); iterator.More(); iterator.Next())
     {
-        SFWF->Load(iterator.Value());
-        SFWF->FixWireGaps();
-        fixedshapes.Append(SFWF->Shape());
+        TopoDS_Shape result;
+        occ::shapeFixGaps(iterator.Value(), result, s_Precision, s_MinTolerance, s_MaxTolerance);
+        fixedshapes.Append(result);
     }
-//    SFWF->DropSmallEdgesMode() = Standard_True;
-      m_shapes = fixedshapes;
-      outputMessage(tr("Finished fixing gaps if any:\n"));
-      onListShapes();
+
+    m_Shapes = fixedshapes;
+    outputMessage("Finished fixing gaps if any:\n");
+    onListShapes();
 }
 
 
 void ShapeFixerDlg::onFixAll()
 {
-    QString strange, logmsg, prefix="   ";
+    QString strange;
+    std::string    logmsg, prefix="   ";
 
     TopoDS_ListOfShape fixedshapes;
 
-    Handle(ShapeFix_Shape) sfs = new ShapeFix_Shape;
     TopoDS_ListIteratorOfListOfShape iterator;
     int ishape=0;
-    for (iterator.Initialize(m_shapes); iterator.More(); iterator.Next())
+    for (iterator.Initialize(m_Shapes); iterator.More(); iterator.Next())
     {
-        sfs->Init (iterator.Value());
-        sfs->SetPrecision (  s_Precision);
-        sfs->SetMinTolerance(s_MinTolerance);
-        sfs->SetMaxTolerance(s_MaxTolerance);
-        sfs->Perform();
-        TopoDS_Shape aResult = sfs->Shape();
-        strange = tr("Fixed shape %1\n").arg(ishape);
+        TopoDS_Shape aResult;
+        occ::shapeFixAll(iterator.Value(), aResult, s_Precision, s_MinTolerance, s_MaxTolerance);
+        strange = QString::asprintf("Fixed shape %d\n", ishape);
         outputMessage(strange);
-        listShapeProperties(logmsg, aResult, prefix);
+        occ::listShapeProperties(aResult, logmsg, prefix);
+        outputMessage(QString::fromStdString(logmsg));
 
         fixedshapes.Append(aResult);
 
-        outputMessage(logmsg);
         ishape++;
     }
 
-    m_shapes = fixedshapes;
+    m_Shapes = fixedshapes;
 }
 
 

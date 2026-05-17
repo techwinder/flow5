@@ -25,15 +25,15 @@
 #pragma once
 
 #include <QObject>
-#include <QVector>
-#include <QFile>
 #include <QTextStream>
+#include <QFile>
 
 
 #include <api/analysisrange.h>
 #include <api/t8opp.h>
 #include <api/utils.h>
-#include <api/fl5lib_global.h>
+#include <flow5-io-lib_global.h>
+
 
 class Plane;
 class PlanePolar;
@@ -41,7 +41,7 @@ class LLTTask;
 class PlaneTask;
 class Task3d;
 
-class XflExecutor : public QObject
+class FL5IOLIB_EXPORT XflExecutor : public QObject
 {
     Q_OBJECT
 

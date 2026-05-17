@@ -75,7 +75,7 @@
 #include <api/xmlwingreader.h>
 
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/saveoptions.h>
 #include <core/stlreaderdlg.h>
@@ -1121,17 +1121,15 @@ void PlaneXflDlg::onInsertFuseOcc()
     if(!filename.length()) return;
     QFileInfo fi(filename);
 
-    FuseOcc *pFuseOcc = new FuseOcc;
-    pFuseOcc->setName(fi.baseName().toStdString());
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    bool bImport = occ::importCADShapes(filename.toStdString(), pFuseOcc->shapes(), dimension, str);
+    TopoDS_ListOfShape shapes;
+    bool bImport = occ::importCADShapes(filename.toStdString(), shapes, dimension, str);
 
     updateStdOutput(str+"\n");
 
     if(!bImport)
     {
-        delete pFuseOcc;
 
         m_ppto->appendHtmlText("<font color=red>Error importing CAD file:</font> <br>"+QString::fromStdString(str)+"<br>");
 
@@ -1139,11 +1137,14 @@ void PlaneXflDlg::onInsertFuseOcc()
         return;
     }
 
+    FuseOcc *pFuseOcc = new FuseOcc;
+    pFuseOcc->setName(fi.baseName().toStdString());
     m_pPlaneXfl->addFuse(pFuseOcc);
 
     m_ppto->appendPlainText("---Making shells from shapes-----\n\n");
 
-    pFuseOcc->makeShellsFromShapes();
+    pFuseOcc->setShapes(shapes);
+    pFuseOcc->extractShellsFromShapes();
 
     if(pFuseOcc->shellCount()==0)
     {
@@ -1483,7 +1484,7 @@ void PlaneXflDlg::onInsertWingFromVSP()
         return;
     }
 
-    QVector<WingXfl*> winglist;
+    std::vector<WingXfl*> winglist;
     QString log;
     io::importVSPWing(pathname, winglist, log);
 }
@@ -1658,7 +1659,7 @@ void PlaneXflDlg::editFuse(int iFuse, bool bAdvanced)
         pXflFuseDlg->hideSaveAsNew();
         if(pXflFuseDlg->exec() != QDialog::Accepted)
         {
-            pFuse->duplicateFuse(*pMemBody);
+            pFuse->duplicate(*pMemBody);
             delete pMemBody;
             delete pXflFuseDlg;
             return;
@@ -1671,7 +1672,7 @@ void PlaneXflDlg::editFuse(int iFuse, bool bAdvanced)
     else if(pFuse->isSectionType())
     {
         FuseSections memBody;
-        memBody.duplicateFuse(*pFuse);
+        memBody.duplicate(*pFuse);
         FuseSections* pFuseSections = dynamic_cast<FuseSections*>(pFuse);
 
         FuseXflDlg *pXflFuseDlg = nullptr;
@@ -1682,7 +1683,7 @@ void PlaneXflDlg::editFuse(int iFuse, bool bAdvanced)
         pXflFuseDlg->hideSaveAsNew();
         if(pXflFuseDlg->exec() != QDialog::Accepted)
         {
-            pFuseSections->duplicateFuse(memBody);
+            pFuseSections->duplicate(memBody);
             delete pXflFuseDlg;
             return;
         }
@@ -1699,7 +1700,7 @@ void PlaneXflDlg::editFuse(int iFuse, bool bAdvanced)
         obDlg.initDialog(pOccBody);
         if(obDlg.exec() != QDialog::Accepted)
         {
-            pOccBody->duplicateFuse(memBody);
+            pOccBody->duplicate(memBody);
             return;
         }
         m_bChanged |= obDlg.bChanged();
@@ -1715,7 +1716,7 @@ void PlaneXflDlg::editFuse(int iFuse, bool bAdvanced)
         sbDlg.initDialog(pStlFuse);
         if(sbDlg.exec() != QDialog::Accepted)
         {
-            pStlFuse->duplicateFuse(memFuseStl);
+            pStlFuse->duplicate(memFuseStl);
             return;
         }
         m_bChanged |= sbDlg.bChanged();
@@ -1986,505 +1987,6 @@ void PlaneXflDlg::onThinListClick()
 }
 
 
-/**
- * Unused in v7.54 - replaced by calls to gmsh API
- */
-void PlaneXflDlg::onCutFuse()
-{
-
-    readParams();
-
-    // reset the shells
-    Fuse *pFuse = nullptr;
-    Vector3d fusepos;
-
-    if(!pFuse)
-    {
-        pFuse = m_pPlaneXfl->fuse(0);
-        if(!pFuse)
-        {
-            updateOutput("No fuse selected.\n\n");
-            return;
-        }
-    }
-
-    TopTools_ListOfShape WingShapeList;
-    WingShapeList.Clear();
-
-    TopoDS_Shape WingShape;
-    for(int iw=0; iw<m_plwWings->count(); iw++)
-    {
-        QListWidgetItem *pItem = m_plwWings->item(iw);
-        if(pItem && pItem->isSelected())
-        {
-            std::string logmsg;
-            WingXfl const *pWing = m_pPlaneXfl->wingAt(iw);
-
-            // check foils
-            std::vector<std::string> foilist;
-            for(int is=0; is<pWing->nSections(); is++)
-            {
-                foilist.push_back(pWing->section(is).leftFoilName());
-                foilist.push_back(pWing->section(is).rightFoilName());
-            }
-//            foilist.removeDuplicates();
-
-            bool bOpen = false;
-            for(uint ifoil=0; ifoil<foilist.size(); ifoil++)
-            {
-                Foil const *pFoil = Objects2d::foil(foilist.at(ifoil));
-                if(!pFoil)
-                {
-                    logmsg += "   Missing foil" +foilist.at(ifoil)+" in wing " + pWing->name() + "\n";
-                    logmsg += "   ... Aborting operation\n";
-                    updateStdOutput(logmsg);
-                    return;
-                }
-
-                if(fabs(pFoil->TEGap())>1.e-6)
-                {
-                    logmsg += "   The foil " + foilist.at(ifoil) + " has an open trailing edge\n";
-                    bOpen = true;
-                    break;
-                }
-            }
-            if(bOpen)
-            {
-                logmsg += "   Cannot make a solid of wing " + pWing->name() + " due to its open trailing edge\n";
-//                iWing++;
-                updateStdOutput(logmsg);
-                return;
-            }
-
-            occ::makeWingShape(pWing, s_StitchPrecision, WingShape, logmsg);
-            updateStdOutput(logmsg);
-
-            if(!pWing->isTwoSided() && pWing->isClosedInnerSide())
-            {
-                logmsg  = "   WARNING: " + pWing->name() + " is one-sided and has a closed right tip\n";
-                logmsg += "            the resulting mesh may be self intersecting.\n\n";
-                updateStdOutput(logmsg);
-            }
-
-            if(!WingShape.IsNull())
-            {
-                WingShapeList.Append(WingShape);
-            }
-
-//            iWing++;
-        }
-    }
-
-    if(WingShapeList.Size()<1)
-    {
-        updateOutput("   No wing selected, no cut to perform\n");
-        return;
-    }
-
-    //restore the shells before attempting to cut
-    if(pFuse->isXflType())
-    {
-        std::string str;
-        FuseXfl *pFuseXfl = dynamic_cast<FuseXfl*>(pFuse);
-        pFuseXfl->makeShape(str); // will build both the shapes and the shells
-    }
-    else
-        pFuse->makeShellsFromShapes();
-
-    if(pFuse->isXflType())
-    {
-        cutFuseXflRightShapes(pFuse, fusepos, WingShapeList); //saves 1/2 the cutting time
-    }
-    else
-    {
-        cutFuseShapes(pFuse, fusepos, WingShapeList);
-    }
-
-    if(pFuse->shells().Extent())
-    {
-    }
-    else
-    {
-        updateOutput("Restoring the uncut shells\n");
-        pFuse->makeShellsFromShapes();
-    }
-
-    std::string str;
-    pFuse->makeDefaultTriMesh(str, ""); // just for xfl and stl
-
-    m_pPlaneXfl->makeTriMesh(m_pPlaneXfl->isThickBuild());
-
-    gl3dPlaneXflView*pglPlaneXflView = dynamic_cast<gl3dPlaneXflView*>(m_pglPlaneView);
-    pglPlaneXflView->resetgl3dFuse();
-    m_pglPlaneView->update();
-    m_bChanged = true;
-}
-
-
-bool PlaneXflDlg::makeFragments()
-{
-    if(!m_pPlaneXfl->hasMainWing()) return false;
-    if(!m_pPlaneXfl->hasFuse()) return false;
-
-    // build thin surface on wing mid-line
-    WingXfl const &wing = *m_pPlaneXfl->mainWing();
-
-    //Make the tools
-    std::string logmsg;
-
-    TopoDS_Shape SweptShape;
-    if(!occ::makeWingSweepMidSection(&wing, SweptShape, logmsg))
-        return false;
-
-    TopTools_ListOfShape tools;
-    tools.Append(SweptShape);
-
-
-    // Time to fragment
-    QString strong, strange;
-    Fuse *pFuse = m_pPlaneXfl->fuse(0);
-
-    if(pFuse->shapeCount()<=0)
-    {
-        updateOutput("   Fuse has no topology shapes to cut.\n");
-        return false;
-    }
-    pFuse->makeShellsFromShapes();  /** @todo no need? */
-    strange.clear();
-    int iShell = 0;
-    for(TopTools_ListIteratorOfListOfShape shellit(pFuse->shells()); shellit.More(); shellit.Next())
-    {
-        strange += QString::asprintf("   Shell %d:\n", iShell);
-        std::string str;
-        occ::listShapeContent(shellit.Value(), str, "      ");
-        strange += QString::fromStdString(str);
-        iShell++;
-    }
-//    updateOutput(strange+"\n");
-
-    updateOutput("Fragmenting body shape with selected wings...\n");
-
-    // translate the wings by -fusepos
-    if(fabs(pFuse->position().x)>LENGTHPRECISION || fabs(pFuse->position().y)>LENGTHPRECISION || fabs(pFuse->position().z)>LENGTHPRECISION)
-    {
-        gp_Trsf Translation;
-        Translation.SetTranslation(gp_Vec(-pFuse->position().x, -pFuse->position().y, -pFuse->position().z));
-        BRepBuilderAPI_Transform thetranslator(Translation);
-
-        for(TopTools_ListIteratorOfListOfShape shapeit(tools); shapeit.More(); shapeit.Next())
-        {
-            thetranslator.Perform(shapeit.Value(), Standard_True);
-            shapeit.Value() = thetranslator.Shape();
-        }
-    }
-
-//    pFuse->clearShells();
-
-    TopoDS_ListOfShape newShapes;
-    for(TopTools_ListIteratorOfListOfShape shellit(pFuse->shapes()); shellit.More(); shellit.Next())
-    {
-        TopoDS_ListOfShape faces;
-        TopExp_Explorer shellexplorer;
-        for (shellexplorer.Init(shellit.Value(), TopAbs_SHELL); shellexplorer.More(); shellexplorer.Next())
-        {
-            faces.Append(shellexplorer.Current());
-        }
-
-
-        BRepAlgoAPI_Splitter aSplitter;
-        aSplitter.SetArguments(faces);
-        aSplitter.SetTools(tools); // or the shells maybe?
-        aSplitter.SetRunParallel(true);
-        aSplitter.Build();
-
-        if (!aSplitter.IsDone())
-        {
-            return false;
-        }
-
-        TopoDS_Shape compound = aSplitter.Shape();
-
-        newShapes.Append(compound);
-
-/*std::string str;
-occ::listShapeContent(compound, str, "", true);
-qDebug("%s", str.c_str());*/
-
-        TopExp_Explorer compexplorer;
-        int iShell=0;
-
-        for (compexplorer.Init(compound, TopAbs_SHELL); compexplorer.More(); compexplorer.Next())
-        {
-            strange = QString::asprintf("   Cutting shell %d\n", iShell+1);
-            updateOutput(strange);
-
-            if(compexplorer.Current().Orientation()==TopAbs_REVERSED)
-                pFuse->appendShell(compexplorer.Current().Reversed());
-            else
-                pFuse->appendShell(compexplorer.Current());
-
-            iShell++;
-        }
-    }
-
-    // save the fragmented shapes
-    pFuse->clearShapes();
-    for(TopTools_ListIteratorOfListOfShape shapeit(newShapes); shapeit.More(); shapeit.Next())
-    {
-        pFuse->appendShape(shapeit.Value());
-    }
-
-
-    pFuse->clearTriangles();
-    pFuse->clearTriangleNodes();
-
-
-    std::string logg;
-    gmesh::makeFuseTriangulation(pFuse, logg, "   ");
-    updateStdOutput(logg);
-
-    strong = QString::asprintf("   New triangulation has %d elements\n", pFuse->nTriangles());
-    updateOutput(strong+"\n\n");
-
-    return true;
-}
-
-
-void PlaneXflDlg::cutFuseShapes(Fuse *pFuse, Vector3d const &fusepos, TopoDS_ListOfShape &tools)
-{
-    QString strong, strange;
-    if(pFuse->shapeCount()<=0)
-    {
-        updateOutput("   Fuse has no topology shapes to cut.\n");
-        return;
-    }
-    pFuse->makeShellsFromShapes();  /** @todo no need? */
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    updateOutput("Cutting body shape with selected wings...\n");
-
-    // make cutting list
-
-    // translate the wings by -fusepos
-    if(fabs(fusepos.x)>LENGTHPRECISION || fabs(fusepos.y)>LENGTHPRECISION || fabs(fusepos.z)>LENGTHPRECISION)
-    {
-        gp_Trsf Translation;
-        Translation.SetTranslation(gp_Vec(-fusepos.x, -fusepos.y, -fusepos.z));
-        BRepBuilderAPI_Transform thetranslator(Translation);
-
-        for(TopTools_ListIteratorOfListOfShape shapeit(tools); shapeit.More(); shapeit.Next())
-        {
-            thetranslator.Perform(shapeit.Value(), Standard_True);
-            shapeit.Value() = thetranslator.Shape();
-        }
-    }
-
-    pFuse->clearShells();
-
-    QElapsedTimer t; t.start();
-    // BRepAlgoAPI_Cut sometimes fails when there is more than one shape in the arguments
-    for(TopTools_ListIteratorOfListOfShape shellit(pFuse->shapes()); shellit.More(); shellit.Next())
-    {
-//        TopoDS_ListOfShape singleshell;
-//        singleshell.Append(shellit.Value());
-
-        TopoDS_ListOfShape faces;
-        TopExp_Explorer shellexplorer;
-        for (shellexplorer.Init(shellit.Value(), TopAbs_SHELL); shellexplorer.More(); shellexplorer.Next())
-        {
-            faces.Append(shellexplorer.Current());
-        }
-
-        BRepAlgoAPI_Cut theKnife;
-        theKnife.SetArguments(faces);
-        theKnife.SetTools(tools);
-        theKnife.SetRunParallel(true);
-//        theKnife.SetFuzzyValue(1.0e-4);
-        strange = QString::asprintf("   Using fuzzy value %g ", theKnife.FuzzyValue()*Units::mtoUnit());
-        strange += Units::lengthUnitQLabel() + "\n";
-        updateOutput(strange);
-
-        // run the algorithm
-        theKnife.Build();
-
-        if (theKnife.HasErrors() || !theKnife.IsDone())
-        {
-            updateOutput("Error cutting shape with wings\n");
-            QApplication::restoreOverrideCursor();
-            return;
-        }
-
-        TopoDS_Shape compound = theKnife.Shape();
-
-        TopExp_Explorer compexplorer;
-        int iShell=0;
-
-        for (compexplorer.Init(compound, TopAbs_SHELL); compexplorer.More(); compexplorer.Next())
-        {
-            strange = QString::asprintf("   Cutting shell %d\n", iShell+1);
-            updateOutput(strange);
-
-            if(compexplorer.Current().Orientation()==TopAbs_REVERSED)
-                pFuse->appendShell(compexplorer.Current().Reversed());
-            else
-                pFuse->appendShell(compexplorer.Current());
-
-            iShell++;
-        }
-    }
-
-    strange = QString::asprintf("   Time to cut the fuse: %.3f s\n\n", double(t.elapsed())/1000.0);
-    updateOutput(strange);
-
-    strong = QString::asprintf("   Cut operation has produced %d shell(s)\n\n",pFuse->shells().Extent());
-    updateOutput(strong);
-    int iShell=0;
-
-    strange.clear();
-    for(TopTools_ListIteratorOfListOfShape shellit(pFuse->shells()); shellit.More(); shellit.Next())
-    {
-        strange += QString::asprintf("   Shell %d:\n", iShell);
-        std::string str;
-        occ::listShapeContent(shellit.Value(), str, "      ");
-        strange += QString::fromStdString(str);
-        iShell++;
-    }
-    updateOutput(strange+"\n");
-
-
-    pFuse->clearTriangles();
-    pFuse->clearTriangleNodes();
-
-    std::string logmsg;
-
-    gmesh::makeFuseTriangulation(pFuse, logmsg, "   ");
-    updateStdOutput(logmsg);
-
-    strong = QString::asprintf("   New triangulation has %d elements\n", pFuse->nTriangles());
-    updateOutput(strong+"\n\n");
-
-    QApplication::restoreOverrideCursor();
-}
-
-
-/**
- * In the case of an xfl type fuse, only cut the right shells and duplicate.
- * Saves significant cutting time.
- */
-void PlaneXflDlg::cutFuseXflRightShapes(Fuse *pFuse, Vector3d const &fusepos, TopoDS_ListOfShape &tools)
-{
-    QString strong, strange;
-    FuseXfl *pFuseXfl = dynamic_cast<FuseXfl*>(pFuse);
-
-    std::string logmsg;
-    // remake the shells which may have been modified by a previous cut
-//    logmsg = "Making fuse shape\n";
-//    pFuseXfl->makeShape(logmsg);
-//    updateStdOutput(logmsg+"\n");
-//    logmsg .clear();
-
-    int nshells = pFuseXfl->m_RightSideShell.Size();
-    if(nshells<0)
-    {
-        updateOutput("   Fuse has no TopoDS_Shell to cut.\n");
-        return;
-    }
-
-/*    strange = QString::asprintf("   Fuse half-side is made of %d shells\n", nshells);
-    updateAssyOutput(strange);
-
-    int ishell=0;
-    for(TopTools_ListIteratorOfListOfShape shapeit(pFuseXfl->rightSideShells()); shapeit.More(); shapeit.Next())
-    {
-        strange = QString::asprintf("   Sub-shell %d:\n", ishell);
-        listShapeContent(shapeit.Value(), strange, "      ");
-        updateAssyOutput(strange);
-        ishell++;
-    }
-    updateAssyOutput("\n");*/
-
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    updateOutput("Cutting fuse shape with selected wings...");
-
-    // make cutting list
-    TopTools_ListOfShape toollist;
-    TopTools_ListIteratorOfListOfShape itwing;
-
-    // translate the wings by -fusepos
-    if(fabs(fusepos.x)>LENGTHPRECISION || fabs(fusepos.y)>LENGTHPRECISION || fabs(fusepos.z)>LENGTHPRECISION)
-    {
-        gp_Trsf Translation;
-        Translation.SetTranslation(gp_Vec(-fusepos.x, -fusepos.y, -fusepos.z));
-        BRepBuilderAPI_Transform thetranslator(Translation);
-
-        for(TopTools_ListIteratorOfListOfShape shapeit(tools); shapeit.More(); shapeit.Next())
-        {
-            thetranslator.Perform(shapeit.Value(), Standard_True);
-            shapeit.Value() = thetranslator.Shape();
-        }
-    }
-
-
-    BRepAlgoAPI_Cut theKnife;
-    theKnife.SetRunParallel(true);
-
-//    double fuzz = theKnife.FuzzyValue();
-//    theKnife.SetFuzzyValue(1.e-4);
-    theKnife.SetArguments(pFuseXfl->rightSideShells());
-    theKnife.SetTools(tools);
-
-    QElapsedTimer t; t.start();
-
-    // run the algorithm
-    theKnife.Build();
-
-    if (theKnife.HasErrors() || !theKnife.IsDone())
-    {
-        updateOutput("Error cutting shape with wings\n");
-        QApplication::restoreOverrideCursor();
-        return;
-    }
-
-    updateOutput("   DONE\n");
-    strange = QString::asprintf("   Time to cut the fuse: %.3f s\n\n", double(t.elapsed())/1000.0);
-    updateOutput(strange);
-
-    TopoDS_Shape compound = theKnife.Shape();
-    TopExp_Explorer compexplorer;
-    int iShell=0;
-    pFuseXfl->clearShells();
-    pFuseXfl->clearRightShells();
-
-    for (compexplorer.Init(compound, TopAbs_SHELL); compexplorer.More(); compexplorer.Next())
-    {
-        strange = QString::asprintf("   shell %d content:\n", iShell+1);
-        updateOutput(strange);
-
-        TopoDS_Shell rightsideshell = TopoDS::Shell(compexplorer.Current());
-        pFuseXfl->appendRightSideShell(rightsideshell);
-        std::string str;
-        occ::listShapeContent(compexplorer.Current(), str, "      ");
-        updateStdOutput(str);
-        iShell++;
-    }
-
-    strong = QString::asprintf("   Cut operation has produced %d shell(s)\n\n",iShell);
-    updateOutput(strong);
-
-//    pFuseXfl->makeShellTriangulation(logmsg, "   ");
-
-    gmesh::makeFuseTriangulation(pFuse, logmsg, "   ");
-
-    updateStdOutput(logmsg);
-
-    strong = QString::asprintf("   The new fuse tessellation has %d elements\n", pFuseXfl->nTriangles());
-    strong += "\n______\n\n";
-    updateOutput(strong);
-
-    QApplication::restoreOverrideCursor();
-}
-
-
 void PlaneXflDlg::loadSettings(QSettings &settings)
 {
     settings.beginGroup("PlaneXflDlg");
@@ -2657,10 +2159,12 @@ void PlaneXflDlg::onResetFuse()
     if(pFuse->isXflType())
     {
         FuseXfl *pFuseXfl = dynamic_cast<FuseXfl*>(pFuse);
-        pFuseXfl->makeShape(strange); // will build both the shapes and the shells
+        pFuseXfl->makeShell(strange); // will build both the shapes and the shells
     }
     else
-        pFuse->makeShellsFromShapes();
+    {
+//        pFuse->extractShellsFromShapes(); /
+    }
 
     pFuse->makeFuseGeometry();
 
@@ -3161,9 +2665,14 @@ void PlaneXflDlg::onInsertCADShape()
     QAction *pSenderAction = qobject_cast<QAction *>(sender());
     if (!pSenderAction) return;
 
-    Fuse *pFuseOcc = m_pPlaneXfl->makeNewFuse(Fuse::Occ);
+    Fuse *pFuse = m_pPlaneXfl->makeNewFuse(Fuse::Occ);
+    FuseOcc *pFuseOcc = dynamic_cast<FuseOcc*>(pFuse);
+    if(!pFuseOcc) return;
+
     QString strong = QString::asprintf("CAD_shape_%d", m_pPlaneXfl->stlFuseCount());
     pFuseOcc->setName(strong.toStdString());
+
+    TopoDS_ListOfShape shapes;
 
     if(pSenderAction==m_pInsertCADCylinder)
     {
@@ -3182,7 +2691,7 @@ void PlaneXflDlg::onInsertCADShape()
             m_ppto->appendHtmlText("<font color=red>Error making cylinder</font><br><br>");
             return;
         }
-        pFuseOcc->appendShape(maker.Shape());
+        shapes.Append(maker.Shape());
     }
     else if(pSenderAction==m_pInsertCADSphere)
     {
@@ -3199,7 +2708,7 @@ void PlaneXflDlg::onInsertCADShape()
             m_ppto->appendHtmlText("<font color=red>Error making sphere</font><br><br>");
             return;
         }
-        pFuseOcc->appendShape(maker.Shape());
+        shapes.Append(maker.Shape());
     }
     else if(pSenderAction==m_pInsertCADBox)
     {
@@ -3219,11 +2728,12 @@ void PlaneXflDlg::onInsertCADShape()
             m_ppto->appendHtmlText("<font color=red>Error making box</font><br><br>");
             return;
         }
-        pFuseOcc->appendShape(maker.Shape());
+        shapes.Append(maker.Shape());
     }
     m_ppto->appendPlainText("---Making shells from shapes-----\n");
 
-    pFuseOcc->makeShellsFromShapes();
+    pFuseOcc->setShapes(shapes);
+    pFuseOcc->extractShellsFromShapes();
 
     if(pFuseOcc->shellCount()==0)
     {

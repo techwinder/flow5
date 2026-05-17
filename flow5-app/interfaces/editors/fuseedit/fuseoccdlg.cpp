@@ -37,7 +37,7 @@
 
 #include "fuseoccdlg.h"
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <interfaces/editors/fuseedit/shapefixerdlg.h>
 #include <interfaces/exchange/cadexportdlg.h>
@@ -92,6 +92,10 @@ void FuseOccDlg::initDialog(Fuse*pFuse)
     FuseOcc *pFuseOcc = dynamic_cast<FuseOcc*>(pFuse);
 
     m_pFuseOcc = pFuseOcc;
+
+    std::string logmsg;
+    occ::listAllShapes(m_pFuseOcc->shapes(), logmsg);
+    updateStdOutput(logmsg+"\n");
 
     m_pMesherWt->initWt(m_pFuseOcc->shells(), m_pFuseOcc->maxElementSize(), false, false);
     m_pGMesherWt->initWt(m_pFuseOcc, false, false);
@@ -392,7 +396,7 @@ void FuseOccDlg::onFlipTessNormals()
 
 void FuseOccDlg::onExportBodyToCADFile()
 {
-    if(!m_pFuseOcc)return ;// is there anything to export?
+    if(!m_pFuseOcc) return;// is there anything to export?
     CADExportDlg dlg(this);
 
     dlg.init(m_pFuseOcc->shells(), QString::fromStdString(m_pFuseOcc->name()));
@@ -427,10 +431,10 @@ void FuseOccDlg::showEvent(QShowEvent *pEvent)
 
 void FuseOccDlg::hideEvent(QHideEvent *pEvent)
 {
-     s_Geometry = saveGeometry();
-     s_HSplitterSizes  = m_pHSplitter->saveState();
+    s_Geometry = saveGeometry();
+    s_HSplitterSizes  = m_pHSplitter->saveState();
 
-     FuseDlg::hideEvent(pEvent);
+    FuseDlg::hideEvent(pEvent);
 }
 
 
@@ -461,7 +465,7 @@ void FuseOccDlg::saveSettings(QSettings &settings)
 void FuseOccDlg::onShapeFix()
 {
     ShapeFixerDlg dlg(this);
-    dlg.initDialog(m_pFuse->shapes());
+    dlg.initDialog(m_pFuseOcc->shapes());
     if(dlg.exec()!=QDialog::Accepted) return;
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -470,12 +474,12 @@ void FuseOccDlg::onShapeFix()
     std::string prefix("   ");
     updateOutput("Updating fuselage with fixed shapes:\n");
 
-    m_pFuse->clearShapes();
+    TopoDS_ListOfShape shapes;
     TopoDS_ListIteratorOfListOfShape iterator;
     int ishape(0);
     for (iterator.Initialize(dlg.shapes()); iterator.More(); iterator.Next())
     {
-        m_pFuse->appendShape(iterator.Value());
+        shapes.Append(iterator.Value());
 
         std::string str;
         occ::listShapeContent(iterator.Value(), str, prefix);
@@ -484,8 +488,11 @@ void FuseOccDlg::onShapeFix()
         ishape++;
     }
 
+    Q_ASSERT(m_pFuse==m_pFuseOcc);
+
     updateOutput("Making shells from shapes\n");
-    m_pFuse->makeShellsFromShapes();
+    m_pFuseOcc->setShapes(shapes);
+    m_pFuseOcc->extractShellsFromShapes();
 
     updateOutput("Making shell triangulation\n");
     std::string str;

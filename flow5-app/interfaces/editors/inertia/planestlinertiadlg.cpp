@@ -35,7 +35,7 @@
 #include <api/planestl.h>
 #include <api/units.h>
 
-#include <utils-io.h>
+#include <core/xflcore.h>
 
 #include <core/saveoptions.h>
 #include <interfaces/editors/inertia/partinertiamodel.h>
