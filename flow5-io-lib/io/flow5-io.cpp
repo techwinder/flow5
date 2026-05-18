@@ -576,7 +576,7 @@ bool io::importVSPWings(QString const &filename, std::vector<WingXfl*> &winglist
     stream.seek(0);
     QStringList airfoilfilenames;
     std::string foilname;
-    int nx(1), ny(5);
+    int nx(7), ny(1);
 
     do
     {

@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 option(USING_INTEL_MKL "Activate if flow5 has been built with Intel MKL" OFF)
-option(FLOW5_IO  "Activate to link to flow5-io.\nRequired for data serialization and use of xml files" ON)
+option(USING_FLOW5_IO  "Activate to link to flow5-io.\nRequired for data serialization and use of xml files\nRequires linking to Qt6Core" ON)
 
 
 if (WIN32)
@@ -44,16 +44,29 @@ if (WIN32)
     set(USING_INTEL_MKL true CACHE BOOL "Activate if flow5 has been built with Intel MKL")
 
 elseif (LINUX)
-    include_directories(/usr/local/include/XFoil/)
-    include_directories(/usr/local/include/flow5/)
-    include_directories(/usr/include/)                     # gmsh install location in fedora
-    include_directories(/usr/include/opencascade/)         # default distro location
-    #include_directories(/usr/local/include/opencascade/)  # make install location if built from source
+    set(XFOIL_INCLUDE_DIR "/usr/local/include/XFoil"  CACHE PATH "The path to the XFoil include files")
+    set(FLOW5_INCLUDE_DIR /usr/local/include/flow5    CACHE PATH "The path to the flow5 include files")
+    set(GMSH_INCLUDE_DIR  "/usr/include"              CACHE PATH "The path to the gmsh.h include file")
+    set(OCCT_INCLUDE_DIR  "/usr/include/opencascade"  CACHE PATH "The path to the OpenCascade include files")
+
+    include_directories(${XFOIL_INCLUDE_DIR})
+    include_directories(${FLOW5_INCLUDE_DIR})
+    include_directories(${GMSH_INCLUDE_DIR})
+    include_directories(${OCCT_INCLUDE_DIR})
     include_directories(/usr/include/qt6/)        #required by flow5-io
     include_directories(/usr/include/qt6/QtCore/) #required by flow5-io
 
-    link_directories(/usr/local/lib/)
-    link_directories(/usr/lib64/)
+
+    set(FLOW5_LIB_DIR "/usr/local/lib/" CACHE PATH "The path to the flow5-lib and flow5-io-lib libraries")
+    link_directories(${FLOW5_LIB_DIR})
+
+    # /usr/lib64 is set by derfault in the environment's library paths
+#    set(OCCT_LIB_DIR "/usr/lib64/" CACHE PATH "The path to the OCCT TKxxx libraries")
+#    link_directories(OCCT_LIB_DIR)
+
+#    set(GMSH_LIB_DIR "/usr/lib64/" CACHE PATH "The path to the gmsh library")
+#    link_directories(GMSH_LIB_DIR)
+
     if(USING_INTEL_MKL)
         link_directories(/opt/intel/oneapi/mkl/latest/lib/)
     endif (USING_INTEL_MKL)
@@ -68,9 +81,9 @@ add_executable(PlaneRun6 planerun6.cpp)
 
 target_link_libraries(PlaneRun6 flow5-lib)
 
-if(FLOW5_IO)
+if(USING_FLOW5_IO)
     target_link_libraries(PlaneRun6 flow5-io-lib Qt6Core)
-endif(FLOW5_IO)
+endif(USING_FLOW5_IO)
 
 
 if(WIN32)

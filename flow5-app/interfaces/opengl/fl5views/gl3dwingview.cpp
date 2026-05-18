@@ -165,6 +165,7 @@ void gl3dWingView::glMake3dObjects()
 {
     if(!m_pWing) return;
     WingXfl *pWingXfl = dynamic_cast<WingXfl*>(m_pWing);
+//    auto t0 = std::chrono::high_resolution_clock::now();
 
     if(m_bResetglSectionHighlight || m_bResetglWing)
     {
@@ -182,13 +183,16 @@ void gl3dWingView::glMake3dObjects()
         if(pWingXfl)
         {
             pWingXfl->makeTriangulation(nullptr, W3dPrefs::s_iChordwiseRes);
+/*            auto t1 = std::chrono::high_resolution_clock::now();
+            int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+            qDebug("gl3dWingView::glMake3dObjects t1: %g ms ", double(duration)/1000.0); */
+
             gl::makeTriangles3Vtx(m_pWing->triangulation().triangles(), false, m_vboSurface);
             gl::makeTrianglesOutline(m_pWing->triangulation().triangles(), Vector3d(), m_vboTessellation);
             gl::makeSegments(pWingXfl->outline(), Vector3d(), m_vboOutline);
         }
 
         gl::makeTriangleNodeNormals(m_pWing->triangulation().triangles(), 0.05f, m_vboTessNormals);
-//        m_pglStdBuffers->glMakeTriangleNormals(triangles, 0.1f, m_vboTessNormals);
 
         // wing triangular panels are not stored in the wing object, need to rebuild them on the fly
         // and store them in this class to pick them
@@ -202,6 +206,7 @@ void gl3dWingView::glMake3dObjects()
         }
 
         m_pWing->makeTriPanels(0, 0, true);
+
         gl::makeTriPanels(pWingXfl->panels(), Vector3d(), m_vboTriMesh);
         gl::makeTriEdges(pWingXfl->panels(), Vector3d(), m_vboTriEdges);
         gl::makePanelNormals(pWingXfl->panels(), 0.1f, m_vboNormals);

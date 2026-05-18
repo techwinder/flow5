@@ -460,6 +460,7 @@ void WingDefDlg::onCellChanged()
     }
 
     computeGeometry();
+
     setWingProps();
 
     m_pglWingView->setReferenceLength(m_pWing->planformSpan());

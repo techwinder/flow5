@@ -454,7 +454,7 @@ void Surface::getSidePoints_1(xfl::enumSurfacePosition pos,
     tmp_pFoilA = foilA();
     tmp_pFoilB = foilB();
 
-    bool bMultithread = true;
+    bool bMultithread = false;  // multithreading slows task down 10x
 
 //    int nThreads=std::thread::hardware_concurrency();
 
@@ -846,7 +846,7 @@ void Surface::makeSideNodes(Fuse const*pTranslatedFuse, bool bDebug)
     m_SideB_Top.resize(m_NXPanels+1);
 
     auto t0 = std::chrono::high_resolution_clock::now();
-    bool bMultihread = true;
+    bool bMultihread = false;  // multithreading slows task down 5x
 
     if(bMultihread)
     {
