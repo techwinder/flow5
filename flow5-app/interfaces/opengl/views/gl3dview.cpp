@@ -1275,6 +1275,7 @@ void gl3dView::glSetupLight()
 
 void gl3dView::paintGL()
 {
+//    auto t0 = std::chrono::high_resolution_clock::now();
     glMake3dObjects();
 
     //    QOpenGLPaintDevice device(size() * devicePixelRatio()); //"The context is captured upon construction."
@@ -1302,6 +1303,10 @@ void gl3dView::paintGL()
 //    painter.endNativePainting();
 
     paintOverlay();
+/*
+auto t1 = std::chrono::high_resolution_clock::now();
+int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+qDebug("gl3dView::paintGL: %g ms ", double(duration)/1000.0);*/
 }
 
 

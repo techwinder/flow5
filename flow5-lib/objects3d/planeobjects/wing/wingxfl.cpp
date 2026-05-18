@@ -2657,14 +2657,8 @@ void WingXfl::makeTriangulation(Fuse const *pFuse, int CHORDPANELS)
     }
 
     std::vector<Triangle3d> &triangles = m_Triangulation.triangles();
+
     int CHORDPOINTS = CHORDPANELS;
-
-    Vector3d N;
-
-    std::vector<Node> PtBotLeft(CHORDPOINTS);
-    std::vector<Node> PtBotRight(CHORDPOINTS);
-    std::vector<Node> PtTopLeft(CHORDPOINTS);
-    std::vector<Node> PtTopRight(CHORDPOINTS);
 
     //     top and bottom surfaces:
     //        NSurfaces
@@ -2744,28 +2738,44 @@ void WingXfl::makeTriangulation(Fuse const *pFuse, int CHORDPANELS)
 
     m_Outline.resize(nOutlineSegments);
 
-    N.set(0.0, 0.0, 0.0);
     int it3 = 0; //index of triangles
     int ivo = 0; //index of outline segments
 
-    //SURFACE
+    Vector3d N;
+
+    std::vector<Node> PtBotLeft(CHORDPOINTS);
+    std::vector<Node> PtBotRight(CHORDPOINTS);
+    std::vector<Node> PtTopLeft(CHORDPOINTS);
+    std::vector<Node> PtTopRight(CHORDPOINTS);
+    std::vector<Vector3d> NA(CHORDPOINTS), NB(CHORDPOINTS);
+    std::vector<double> xdistrib;
+    xfl::getPointDistribution(xdistrib, CHORDPOINTS-1, xfl::COSINE); // ensures good resolution at LE and TE
+
     for (int jsurf=0; jsurf<nSurf; jsurf++)
     {
         Surface const &surf = surfaceAt(jsurf);
 
-        surf.getSidePoints_1(xfl::TOPSURFACE, pFuse, PtTopLeft, PtTopRight, CHORDPOINTS, xfl::COSINE);
-        surf.getSidePoints_1(xfl::BOTSURFACE, pFuse, PtBotLeft, PtBotRight, CHORDPOINTS, xfl::COSINE);
-
         //top surface
+        surf.getSidePoints(xfl::TOPSURFACE, pFuse, PtTopLeft, PtTopRight, NA, NB, xdistrib, xdistrib);
         for (int l=0; l<CHORDPOINTS-1; l++)
         {
+            PtTopLeft[ l  ].setNormal(NA.at(l));
+            PtTopLeft[ l+1].setNormal(NA.at(l+1));
+            PtTopRight[l  ].setNormal(NB.at(l));
+            PtTopRight[l+1].setNormal(NB.at(l+1));
+
             triangles[it3++].setTriangle(PtTopLeft[l], PtTopLeft[l+1],  PtTopRight[l+1]);
             triangles[it3++].setTriangle(PtTopLeft[l], PtTopRight[l+1], PtTopRight[l]);
         }
 
         //bottom surface
+        surf.getSidePoints(xfl::BOTSURFACE, pFuse, PtBotLeft, PtBotRight, NA, NB, xdistrib, xdistrib);
         for (int l=0; l<CHORDPOINTS-1; l++)
         {
+            PtBotLeft[ l  ].setNormal(NA.at(l));
+            PtBotLeft[ l+1].setNormal(NA.at(l+1));
+            PtBotRight[l  ].setNormal(NB.at(l));
+            PtBotRight[l+1].setNormal(NB.at(l+1));
             triangles[it3++].setTriangle(PtBotLeft[l], PtBotRight[l+1], PtBotLeft[l+1]);
             triangles[it3++].setTriangle(PtBotLeft[l], PtBotRight[l],   PtBotRight[l+1]);
         }

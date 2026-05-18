@@ -1260,11 +1260,11 @@ bool occ::makeFoilWires(Surface const &aSurf,
                         std::string &logmsg)
 {
     int nPoints = int(aSurf.xDistribA().size());
-    std::vector<Vector3d> PtA_T(nPoints),  PtA_B(nPoints), PtB_T(nPoints), PtB_B(nPoints);
+    std::vector<Node> PtA_T(nPoints),  PtA_B(nPoints), PtB_T(nPoints), PtB_B(nPoints);
     std::vector<Vector3d> NA(nPoints), NB(nPoints);
 
-    aSurf.getSidePoints_2(xfl::TOPSURFACE, nullptr, PtA_T, PtB_T, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
-    aSurf.getSidePoints_2(xfl::BOTSURFACE, nullptr, PtA_B, PtB_B, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
+    aSurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtA_T, PtB_T, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
+    aSurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtA_B, PtB_B, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
 
     // LEFT FOIL
     //TOP Wire
@@ -1331,10 +1331,10 @@ bool occ::makeFoilWires(Surface const &aSurf,
 bool occ::makeFoilMidWires(Surface const &aSurf,TopoDS_Wire & LeftWire, TopoDS_Wire &RightWire, std::string &logmsg)
 {
     int nPoints = int(aSurf.xDistribA().size());
-    std::vector<Vector3d>  PtA(nPoints), PtB(nPoints);
+    std::vector<Node> PtA(nPoints), PtB(nPoints);
     std::vector<Vector3d> NA(nPoints), NB(nPoints);
 
-    aSurf.getSidePoints_2(xfl::MIDSURFACE, nullptr, PtA, PtB, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
+    aSurf.getSidePoints(xfl::MIDSURFACE, nullptr, PtA, PtB, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
 
     // LEFT FOIL
     if(!makePolyLineWire(PtA, LeftWire, logmsg))
@@ -1449,7 +1449,7 @@ bool occ::makeSplineWire(BSpline3d const &spline, TopoDS_Wire &wire, std::string
 void occ::makeSurfaceWires(WingXfl const *pWing, double scalefactor, TopoDS_ListOfShape &wires, std::string &logmsg)
 {
     TopoDS_Wire TLWire, BLWire;
-    std::vector<Vector3d> PtA_T, PtA_B, PtB_T, PtB_B;
+    std::vector<Node> PtA_T, PtA_B, PtB_T, PtB_B;
     std::vector<Vector3d> NA, NB;
 
     // make leading and trailing edges
@@ -1499,8 +1499,8 @@ void occ::makeSurfaceWires(WingXfl const *pWing, double scalefactor, TopoDS_List
         NA.resize(nPoints);
         NB.resize(nPoints);
 
-        aSurf.getSidePoints_2(xfl::TOPSURFACE, nullptr, PtA_T, PtB_T, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
-        aSurf.getSidePoints_2(xfl::BOTSURFACE, nullptr, PtA_B, PtB_B, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
+        aSurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtA_T, PtB_T, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
+        aSurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtA_B, PtB_B, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
 
         // LEFT FOIL
         //TOP Wire

@@ -85,9 +85,8 @@ Surface::Surface()
     m_FirstStripPanelIndex = m_LastStripPanelIndex = -1;
 
 
-    tmp_alpha_dA = tmp_alpha_dB = tmp_delta=0;
+    tmp_alpha_dA = tmp_alpha_dB = 0;
     tmp_pos=xfl::NOSURFACE;
-    tmp_pFoilA = tmp_pFoilB=nullptr;
     tmp_pFuse=nullptr;
 }
 
@@ -418,153 +417,10 @@ void Surface::getSideNode(double xRel, bool bRight, xfl::enumSurfacePosition pos
 }
 
 
-
-void Surface::getSidePoints_1(xfl::enumSurfacePosition pos,
-                              Fuse const *pFuse,
-                              std::vector<Node> &PtA, std::vector<Node> &PtB,
-                              int nPoints, xfl::enumDistribution ) const
-{
-    PtA.resize(nPoints);
-    PtB.resize(nPoints);
-
-
-    Vector3d V = m_Normal * m_NormalA;
-    Vector3d U = (m_TA - m_LA).normalized();
-    //    double sindA = -V.dot(Vector3d(1.0,0.0,0.0));
-    double sindA = -V.dot(U);
-    if(sindA> 1.0) sindA = 1.0;
-    if(sindA<-1.0) sindA = -1.0;
-    tmp_alpha_dA = asin(sindA);
-
-    V = m_Normal * m_NormalB;
-    U = (m_TB-m_LB).normalized();
-    //    double sindB = -V.dot(Vector3d(1.0,0.0,0.0));
-    double sindB = -V.dot(U);
-    if(sindB> 1.0) sindB = 1.0;
-    if(sindB<-1.0) sindB = -1.0;
-    tmp_alpha_dB = asin(sindB);
-
-
-    tmp_delta = -atan(m_Normal.y / m_Normal.z);
-    //    double delta = -atan2(Normal.y, Normal.z)*180.0/PI;
-
-    tmp_pos = pos;
-    tmp_pFuse = pFuse;
-
-    tmp_pFoilA = foilA();
-    tmp_pFoilB = foilB();
-
-    bool bMultithread = false;  // multithreading slows task down 10x
-
-//    int nThreads=std::thread::hardware_concurrency();
-
-    if(bMultithread)
-    {
-        std::vector<std::thread> threads;
-
-        for(int i=0; i<nPoints; i++)
-        {
-            threads.push_back(std::thread(&Surface::getSidePoints1_task, this, i, nPoints, &PtA[i], &PtB[i]));
-        }
-
-        for(int i=0; i<nPoints; i++)
-        {
-            threads[i].join();
-        }
-//        std::cout << "getSidePoints_1 joined all " << m_NXPanels << " threads" <<std::endl;
-    }
-    else
-    {
-        for(int i=0; i<nPoints; i++)
-        {
-            getSidePoints1_task(i, nPoints, &PtA[i], &PtB[i]);
-        }
-    }
-}
-
-
-//Note: passing references to nodeA and nodeB is not compatible with multithreading
-void Surface::getSidePoints1_task(int i, int tmp_nPoints, Node *nodeA, Node *nodeB) const
-{
-    double cosdA = cos(tmp_alpha_dA);
-    double cosdB = cos(tmp_alpha_dB);
-
-    Vector3d I;
-    double xRelA=0, xRelB=0;
-    if(tmp_pFoilA && tmp_pFoilB && tmp_pFoilA->hasTEFlap() && tmp_pFoilB->hasTEFlap())
-    {
-        int nPtsLe = tmp_nPoints*3/4;
-        int nPtsTr = tmp_nPoints-nPtsLe;
-
-        if(i<nPtsLe)
-        {
-            xRelA  = 1.0/2.0*(1.0-cos(PI * double(i)/double(nPtsLe-1)))* (tmp_pFoilA->TEXHinge());
-            xRelB  = 1.0/2.0*(1.0-cos(PI * double(i)/double(nPtsLe-1)))* (tmp_pFoilB->TEXHinge());
-        }
-        else
-        {
-            int j = i-nPtsLe;
-            xRelA  = tmp_pFoilA->TEXHinge() + 1.0/2.0*(1.0-cos(PI* double(j)/double(nPtsTr-1))) * (1.-tmp_pFoilA->TEXHinge());
-            xRelB  = tmp_pFoilB->TEXHinge() + 1.0/2.0*(1.0-cos(PI* double(j)/double(nPtsTr-1))) * (1.-tmp_pFoilB->TEXHinge());
-        }
-    }
-    else
-    {
-        xRelA  = 1.0/2.0*(1.0-cos(PI * double(i)/double(tmp_nPoints-1)));
-        xRelB  = xRelA;
-    }
-
-    nodeA->reset();
-    getSideNode(xRelA, false, tmp_pos, *nodeA);
-    //scale the thickness
-    double Ox = xRelA;
-    double Oy = m_LA.y * (1.0-Ox) +  m_TA.y * Ox;
-    double Oz = m_LA.z * (1.0-Ox) +  m_TA.z * Ox;
-    nodeA->y   = Oy +(nodeA->y - Oy)/cosdA;
-    nodeA->z   = Oz +(nodeA->z - Oz)/cosdA;
-    nodeA->rotate(m_LA, (m_LA-m_TA).normalized(), +tmp_alpha_dA*180.0/PI);
-    nodeA->normal().rotate(Vector3d(1.0,0.0,0.0), tmp_delta*180.0/PI);
-
-
-    nodeB->reset();
-    getSideNode(xRelB, true,  tmp_pos, *nodeB);
-    Ox = xRelB;
-    Oy = m_LB.y * (1.0-Ox) +  m_TB.y * Ox;
-    Oz = m_LB.z * (1.0-Ox) +  m_TB.z * Ox;
-    nodeB->y   = Oy +(nodeB->y - Oy)/cosdB;
-    nodeB->z   = Oz +(nodeB->z - Oz)/cosdB;
-    nodeB->rotate(m_LB, (m_LB-m_TB).normalized(), +tmp_alpha_dB*180.0/PI);
-    nodeB->normal().rotate(Vector3d(1.0,0.0,0.0), tmp_delta*180.0/PI);
-
-    if(tmp_pFuse && m_bIsCenterSurf && m_bIsLeftSurf)
-    {
-        if(tmp_pFuse->intersectFuse(*nodeA, *nodeB, I, false))
-        {
-            if(I.distanceTo(*nodeA) < nodeB->distanceTo(*nodeA))
-                nodeB->setPosition(I);
-        }
-    }
-    else if(tmp_pFuse && m_bIsCenterSurf && m_bIsRightSurf)
-    {
-        if(tmp_pFuse->intersectFuse(*nodeB, *nodeA, I, true))
-        {
-            if(I.distanceTo(*nodeB) < nodeA->distanceTo(*nodeB))
-            {
-                nodeA->setPosition(I);
-            }
-        }
-    }
-/*    qDebug("AB  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}",
-           nodeA->normal().x, nodeA->normal().y, nodeA->normal().z,
-           nodeB->normal().x, nodeB->normal().y, nodeB->normal().z);*/
-//    qDebug("normals  {:13g}  {:13g}", nodeA->normal().norm(), nodeB->normal().norm());
-}
-
-
 /** Intersects exactly the TOPO_DS_SHELL so that wing and fuse and wing meshes connect */
-void Surface::getSidePoints_2(xfl::enumSurfacePosition pos,
+void Surface::getSidePoints(xfl::enumSurfacePosition pos,
                               const Fuse *pFuse,
-                              std::vector<Vector3d> &PtA, std::vector<Vector3d> &PtB, std::vector<Vector3d> &NA, std::vector<Vector3d> &NB,
+                              std::vector<Node> &PtA, std::vector<Node> &PtB, std::vector<Vector3d> &NA, std::vector<Vector3d> &NB,
                               std::vector<double> const &xPointsA, std::vector<double> const &xPointsB) const
 {
     assert(xPointsA.size()==xPointsB.size());
@@ -587,7 +443,7 @@ void Surface::getSidePoints_2(xfl::enumSurfacePosition pos,
     if(sindB<-1.0) sindB = -1.0;
     tmp_alpha_dB = asin(sindB);
 
-    tmp_delta = -atan(m_Normal.y / m_Normal.z)*180.0/PI;
+    //    tmp_delta = -atan(m_Normal.y / m_Normal.z)*180.0/PI;
     //    double delta = -atan2(Normal.y, Normal.z)*180.0/PI;
 
     tmp_pFuse = pFuse;
@@ -600,7 +456,48 @@ void Surface::getSidePoints_2(xfl::enumSurfacePosition pos,
     {
         double xRelA = xPointsA.at(i);
         double xRelB = xPointsB.at(i);
-        getSidePoints2_task(xRelA, xRelB, nodeA[i], nodeB[i]);
+//        getSidePoints_task(xRelA, xRelB, nodeA[i], nodeB[i]);
+
+        Node &ndA = nodeA[i];
+        Node &ndB = nodeB[i];
+
+        double cosdA = cos(tmp_alpha_dA);
+        double cosdB = cos(tmp_alpha_dB);
+
+        Vector3d I;
+
+        getSideNode(xRelA, false, tmp_pos, ndA);
+
+        //scale the thickness
+        double Ox = xRelA;
+        double Oy = m_LA.y * (1.0-Ox) +  m_TA.y * Ox;
+        double Oz = m_LA.z * (1.0-Ox) +  m_TA.z * Ox;
+        ndA.y   = Oy +(ndA.y - Oy)/cosdA;
+        ndA.z   = Oz +(ndA.z - Oz)/cosdA;
+        ndA.rotate(m_LA, (m_LA-m_TA).normalized(), +tmp_alpha_dA*180.0/PI);
+        //    NA[i].rotate(Vector3d(1.0,0.0,0.0), delta);
+
+
+        getSideNode(xRelB, true, tmp_pos, ndB);
+        Ox = xRelB;
+        Oy = m_LB.y * (1.0-Ox) +  m_TB.y * Ox;
+        Oz = m_LB.z * (1.0-Ox) +  m_TB.z * Ox;
+        ndB.y   = Oy +(ndB.y - Oy)/cosdB;
+        ndB.z   = Oz +(ndB.z - Oz)/cosdB;
+        ndB.rotate(m_LB, (m_LB-m_TB).normalized(), +tmp_alpha_dB*180.0/PI);
+        //    NB[i].rotate(Vector3d(1.0,0.0,0.0), delta);
+
+        if(tmp_pFuse && m_bIsCenterSurf && m_bIsLeftSurf)
+        {
+            if(tmp_pFuse->intersectFuse(ndA, ndB, I, false))
+                ndB.set(I);
+        }
+        else if(tmp_pFuse && m_bIsCenterSurf && m_bIsRightSurf)
+        {
+            if(tmp_pFuse->intersectFuse(ndB, ndA, I, true))
+                ndA.set(I);
+        }
+
     }
 
 /*    auto t1 = std::chrono::high_resolution_clock::now();
@@ -617,53 +514,12 @@ void Surface::getSidePoints_2(xfl::enumSurfacePosition pos,
 }
 
 
-void Surface::getSidePoints2_task(double xRelA, double xRelB, Node &nodeA, Node &nodeB) const
-{
-    double cosdA = cos(tmp_alpha_dA);
-    double cosdB = cos(tmp_alpha_dB);
-
-    Vector3d I;
-
-    getSideNode(xRelA, false, tmp_pos, nodeA);
-
-    //scale the thickness
-    double Ox = xRelA;
-    double Oy = m_LA.y * (1.0-Ox) +  m_TA.y * Ox;
-    double Oz = m_LA.z * (1.0-Ox) +  m_TA.z * Ox;
-    nodeA.y   = Oy +(nodeA.y - Oy)/cosdA;
-    nodeA.z   = Oz +(nodeA.z - Oz)/cosdA;
-    nodeA.rotate(m_LA, (m_LA-m_TA).normalized(), +tmp_alpha_dA*180.0/PI);
-//    NA[i].rotate(Vector3d(1.0,0.0,0.0), delta);
-
-
-    getSideNode(xRelB, true, tmp_pos, nodeB);
-    Ox = xRelB;
-    Oy = m_LB.y * (1.0-Ox) +  m_TB.y * Ox;
-    Oz = m_LB.z * (1.0-Ox) +  m_TB.z * Ox;
-    nodeB.y   = Oy +(nodeB.y - Oy)/cosdB;
-    nodeB.z   = Oz +(nodeB.z - Oz)/cosdB;
-    nodeB.rotate(m_LB, (m_LB-m_TB).normalized(), +tmp_alpha_dB*180.0/PI);
-//    NB[i].rotate(Vector3d(1.0,0.0,0.0), delta);
-
-    if(tmp_pFuse && m_bIsCenterSurf && m_bIsLeftSurf)
-    {
-        if(tmp_pFuse->intersectFuse(nodeA, nodeB, I, false))
-            nodeB.set(I);
-    }
-    else if(tmp_pFuse && m_bIsCenterSurf && m_bIsRightSurf)
-    {
-        if(tmp_pFuse->intersectFuse(nodeB, nodeA, I, true))
-            nodeA.set(I);
-    }
-}
-
-
 /**
  * Returns the position of a surface point at the position specified by the input parameters.
  * @param xArel the relative position at the left Foil
  * @param xBrel the relative position at the right Foil
  * @param yrel the relative span position
- * @param Point a reference of the requested point's position
+ * @param Point a reference to the requested point's position
  * @param pos defines on which surface (Xfl::BOTSURFACE, Xfl::TOPSURFACE, Xfl::MIDSURFACE) the point is calculated
  */
 void Surface::getSurfacePoint(double xArel, double xBrel, double yrel, xfl::enumSurfacePosition pos, Vector3d &Point, Vector3d &PtNormal) const
@@ -2074,34 +1930,6 @@ Foil *Surface::foilB()
 }
 
 
-//UNUSED
-bool Surface::makeSectionSplines(BSpline3d &leftspline, BSpline3d &rightspline) const
-{
-    int nCtrlPoints = 11;
-    int nPoints = 2*nCtrlPoints; // minimum to get a good approximation
-    std::vector<Vector3d> PtA_T(nPoints),  PtA_B(nPoints), PtB_T(nPoints), PtB_B(nPoints);
-    std::vector<Vector3d> NA(nPoints), NB(nPoints);
-    std::vector<double> xdistrib;
-    xfl::getPointDistribution(xdistrib, nPoints-1, xfl::COSINE);
-
-    getSidePoints_2(xfl::TOPSURFACE, nullptr, PtA_T, PtB_T, NA, NB, xdistrib, xdistrib);
-    getSidePoints_2(xfl::BOTSURFACE, nullptr, PtA_B, PtB_B, NA, NB, xdistrib, xdistrib);
-    //Left Spline
-    std::vector<Vector3d> points;
-    for(int i=int(PtA_B.size()-1); i>=0; i--) points.push_back(PtA_B.at(i));
-    for(int i=0; i<int(PtA_T.size()); i++) points.push_back(PtA_T.at(i));
-    if(!leftspline.approximate(3, nCtrlPoints, points)) return false;
-
-    //Right spline
-    points.clear();
-    for(int i=int(PtB_B.size()-1); i>=0; i--) points.push_back(PtB_B.at(i));
-    for(int i=1; i<int(PtB_T.size()); i++) points.push_back(PtB_T.at(i));
-    if(!rightspline.approximate(3, nCtrlPoints, points)) return false;
-
-    return true;
-}
-
-
 bool Surface::makeSectionHalfSpline(xfl::enumSurfacePosition pos, bool bLeft, int degree, int nCtrlPoints, int nOutPoints, BSpline3d &spline) const
 {
     if(pos!=xfl::TOPSURFACE && pos!=xfl::BOTSURFACE && pos!=xfl::MIDSURFACE)
@@ -2110,12 +1938,12 @@ bool Surface::makeSectionHalfSpline(xfl::enumSurfacePosition pos, bool bLeft, in
 //    int degree = 3;
 //    int nCtrlPoints = 11;
 //    int nPoints = 2*nCtrlPoints; // minimum to get a good approximation
-    std::vector<Vector3d> PtA(nOutPoints), PtB(nOutPoints);
+    std::vector<Node> PtA(nOutPoints), PtB(nOutPoints);
     std::vector<Vector3d> NA(nOutPoints), NB(nOutPoints);
     std::vector<double> xdistrib;
     xfl::getPointDistribution(xdistrib, nOutPoints-1, xfl::COSINE); // ensures good resolution at LE and TE
 
-    getSidePoints_2(pos, nullptr, PtA, PtB, NA, NB, xdistrib, xdistrib);
+    getSidePoints(pos, nullptr, PtA, PtB, NA, NB, xdistrib, xdistrib);
 
     if(bLeft)
     {

@@ -26,8 +26,9 @@
 
 #include <vector>
 
-#include <vector3d.h>
+#include <node.h>
 #include <linestyle.h>
+
 
 class FL5LIB_EXPORT BSpline3d
 {
@@ -76,7 +77,7 @@ class FL5LIB_EXPORT BSpline3d
         void splineDerivative(BSpline3d &der) const;
         void makeCurve();
 
-        bool approximate(int degree, int nPts, std::vector<Vector3d> const& pts);
+        bool approximate(int degree, int nPts, const std::vector<Node> &pts);
 
         int outputSize() const {return int(m_Output.size());}
         void setOutputSize(int n) {m_Output.resize(n);}

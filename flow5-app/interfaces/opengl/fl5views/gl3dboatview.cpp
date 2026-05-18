@@ -531,7 +531,7 @@ void gl3dBoatView::mouseMoveEvent(QMouseEvent *pEvent)
     if(m_PickedPanelIndex<0 || m_PickedPanelIndex>=m_pBoat->refTriMesh().nPanels())
     {
         m_PickedNodeIndex = -1;
-        clearTopRightOutput();
+//        clearTopRightOutput();
         update();
         return;
     }

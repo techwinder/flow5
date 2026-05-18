@@ -363,7 +363,7 @@ void BSpline3d::setUniformWeights()
  *   1. The curve contains the first and last data points
  *   2. The curve approximates the data polygon in the sense of least square.
 */
-bool BSpline3d::approximate(int degree, int nPts, const std::vector<Vector3d> &pts)
+bool BSpline3d::approximate(int degree, int nPts, const std::vector<Node> &pts)
 {
     // p=degree
     // h=number of control points to build

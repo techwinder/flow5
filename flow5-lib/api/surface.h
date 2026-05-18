@@ -125,12 +125,7 @@ class FL5LIB_EXPORT Surface
         void getSection(double const &tau, double &Chord, double &Area, Vector3d &PtC4) const;
         inline void getYDist(int k, double &y1, double &y2) const;
 
-        void getSidePoints_1(xfl::enumSurfacePosition pos, const Fuse *pFuse, std::vector<Node> &PtA, std::vector<Node> &PtB, int nPoints, xfl::enumDistribution disttype) const;
-        void getSidePoints1_task(int nPoints, int tmp_nPoints, Node *nodeA, Node *nodeB) const;
-
-        void getSidePoints_2(xfl::enumSurfacePosition pos, const Fuse *pFuse, std::vector<Vector3d> &PtA, std::vector<Vector3d> &PtB, std::vector<Vector3d> &NA, std::vector<Vector3d> &NB, const std::vector<double> &xPointsA, const std::vector<double> &xPointsB) const;
-        void getSidePoints2_task(double xRelA, double xRelB, Node &nodeA, Node &nodeB) const;
-
+        void getSidePoints(xfl::enumSurfacePosition pos, const Fuse *pFuse, std::vector<Node> &PtA, std::vector<Node> &PtB, std::vector<Vector3d> &NA, std::vector<Vector3d> &NB, const std::vector<double> &xPointsA, const std::vector<double> &xPointsB) const;
 
         void init();
         void clearQuadFlapMesh(){m_FlapNode4.clear();  m_FlapPanel4.clear();}
@@ -267,7 +262,6 @@ class FL5LIB_EXPORT Surface
         int nPanel3() const {return int(m_Panel3List.size());}
         int nPanel4() const {return int(m_Panel4List.size());}
 
-        bool makeSectionSplines(BSpline3d & leftspline, BSpline3d &rightspline) const;
         bool makeSectionHalfSpline(xfl::enumSurfacePosition pos, bool bLeft, int degree, int nCtrlPoints, int nOutPoints, BSpline3d &spline) const;
 
         void setNormals(Vector3d const& NA, Vector3d const &NB) {m_NormalA=NA; m_NormalB=NB;}
@@ -354,9 +348,8 @@ class FL5LIB_EXPORT Surface
         Vector3d m_TA;              /**< the Surface's trailing left point */
         Vector3d m_TB;              /**< the Surface's trailing right point */
 
-        mutable double tmp_alpha_dA, tmp_alpha_dB, tmp_delta;
+        mutable double tmp_alpha_dA, tmp_alpha_dB;
         mutable xfl::enumSurfacePosition tmp_pos;
-        mutable Foil const *tmp_pFoilA, *tmp_pFoilB;
         mutable Fuse const*tmp_pFuse;
 
 

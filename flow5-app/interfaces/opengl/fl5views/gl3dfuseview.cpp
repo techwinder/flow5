@@ -398,7 +398,6 @@ void gl3dFuseView::mouseMoveEvent(QMouseEvent *pEvent)
     if(!isPicking() || !m_bMeshPanels)
     {
         m_PickedPanelIndex = m_PickedNodeIndex = -1;
-        update();
         return;
     }
 
