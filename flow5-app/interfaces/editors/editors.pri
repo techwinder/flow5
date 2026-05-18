@@ -57,7 +57,6 @@ HEADERS += \
     $$PWD/foiledit/interpolatefoilsdlg.h \
     $$PWD/fuseedit/bodyscaledlg.h \
     $$PWD/fuseedit/bodytransdlg.h \
-    $$PWD/fuseedit/flatfaceconverterdlg.h \
     $$PWD/fuseedit/fusedlg.h \
     $$PWD/fuseedit/fusemesherdlg.h \
     $$PWD/fuseedit/fuseoccdlg.h \
@@ -144,7 +143,6 @@ SOURCES += \
     $$PWD/foiledit/interpolatefoilsdlg.cpp \
     $$PWD/fuseedit/bodyscaledlg.cpp \
     $$PWD/fuseedit/bodytransdlg.cpp \
-    $$PWD/fuseedit/flatfaceconverterdlg.cpp \
     $$PWD/fuseedit/fusedlg.cpp \
     $$PWD/fuseedit/fusemesherdlg.cpp \
     $$PWD/fuseedit/fuseoccdlg.cpp \

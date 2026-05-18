@@ -23,9 +23,10 @@
 *****************************************************************************/
 
 
-
+#include <iostream>
 #include <format>
-
+#include <thread>
+#include <chrono>
 
 #include <wingxfl.h>
 
@@ -66,13 +67,13 @@ WingXfl::WingXfl(xfl::enumType type) : Part()
 
     m_nFlaps =  0;
 
-    switch (m_WingType)
+/*    switch (m_WingType)
     {
         default:
         case xfl::Main:     makeDefaultWing();  break;
         case xfl::Elevator: makeDefaultStab();  break;
         case xfl::Fin:      makeDefaultFin();   break;
-    }
+    }*/
 }
 
 
@@ -89,8 +90,8 @@ void WingXfl::makeDefaultWing()
 {
     m_WingType = xfl::Main;
     m_Section.clear();
-    appendWingSection(.300, 0.0, 0.0, 0.0, 0.000, 13, 19, xfl::TANH, xfl::INV_EXP, "", "");
-    appendWingSection(.190, 0.0, 1.5, 0.0, 0.085, 13, 19, xfl::TANH, xfl::INV_EXP, "", "");
+    appendSection(.300, 0.0, 0.0, 0.0, 0.000, 13, 19, xfl::TANH, xfl::INV_EXP, "", "");
+    appendSection(.190, 0.0, 1.5, 0.0, 0.085, 13, 19, xfl::TANH, xfl::INV_EXP, "", "");
     m_nTipStrips = 1;
 }
 
@@ -100,8 +101,8 @@ void WingXfl::makeDefaultStab()
     //make default wing
     m_WingType = xfl::Elevator;
     m_Section.clear();
-    appendWingSection(0.200, 0.0, 0.00, 0.0, 0.00, 5, 5, xfl::TANH, xfl::INV_EXP, "", "");
-    appendWingSection(0.110, 0.0, 0.32, 0.0, 0.05, 5, 5, xfl::TANH, xfl::INV_EXP, "", "");
+    appendSection(0.200, 0.0, 0.00, 0.0, 0.00, 5, 5, xfl::TANH, xfl::INV_EXP, "", "");
+    appendSection(0.110, 0.0, 0.32, 0.0, 0.05, 5, 5, xfl::TANH, xfl::INV_EXP, "", "");
     m_nTipStrips = 1;
 }
 
@@ -112,8 +113,8 @@ void WingXfl::makeDefaultFin()
     m_bTwoSided = false;
     m_bCloseInnerSide = true;
     m_Section.clear();
-    appendWingSection(0.200, 0.0, 0.00, 0.0, 0.00, 5, 5, xfl::TANH, xfl::TANH, "", "");
-    appendWingSection(0.120, 0.0, 0.29, 0.0, 0.08, 5, 5, xfl::TANH, xfl::TANH, "", "");
+    appendSection(0.200, 0.0, 0.00, 0.0, 0.00, 5, 5, xfl::TANH, xfl::TANH, "", "");
+    appendSection(0.120, 0.0, 0.29, 0.0, 0.08, 5, 5, xfl::TANH, xfl::TANH, "", "");
     m_nTipStrips = 1;
 }
 
@@ -221,9 +222,68 @@ int WingXfl::makeTriPanels(int ip3start, int indStart, bool bThickSurfaces)
     return nWingPanels;
 }
 
-
 #define NXSTATIONS 20
 #define NYSTATIONS 40
+
+
+void WingXfl::computeSurfaceInertia(int jsurf, SurfaceInertia *SurfInertia) const
+{
+    Vector3d Pt, Pt1, PtC4, ATop, ABot, CTop, CBot, N;
+    Vector3d Diag1, Diag2, PointNormal;
+    double tau(0), tau1(0), xrel(0), xrel1(0), yrel(0);
+    double LocalChord(0), LocalArea(0);
+    double LocalChord1(0), LocalArea1(0);
+    double ElemArea(0);
+    SurfInertia->SurfVolume = 0.0;
+
+    int p = 0;
+    Surface const &surf = m_Surface.at(jsurf);
+    double LocalSpan = surf.m_Length/double(NYSTATIONS);
+    for (int k=0; k<NYSTATIONS; k++)
+    {
+        tau  = double(k)   / double(NYSTATIONS);
+        tau1 = double(k+1) / double(NYSTATIONS);
+        yrel = (tau+tau1)/2.0;
+
+        surf.getSection(tau,  LocalChord,  LocalArea,  Pt);
+        surf.getSection(tau1, LocalChord1, LocalArea1, Pt1);
+        //            LocalVolume = (LocalArea+LocalArea1)/2.0 * LocalSpan;
+        PtC4.x = (Pt.x + Pt1.x)/2.0;
+        PtC4.y = (Pt.y + Pt1.y)/2.0;
+        PtC4.z = (Pt.z + Pt1.z)/2.0;
+
+        //            CoGCheck += LocalVolume * PtC4;
+        for(int l=0; l<NXSTATIONS; l++)
+        {
+            //browse mid-section
+            xrel  = 1.0 - 1.0/2.0 * (1.0-cos(double(l)  *PI /double(NXSTATIONS)));
+            xrel1 = 1.0 - 1.0/2.0 * (1.0-cos(double(l+1)*PI /double(NXSTATIONS)));
+
+            surf.getSurfacePoint(xrel,  xrel, yrel,  xfl::TOPSURFACE, ATop, N);
+            surf.getSurfacePoint(xrel,  xrel, yrel,  xfl::BOTSURFACE, ABot, N);
+            surf.getSurfacePoint(xrel1, xrel1, yrel, xfl::TOPSURFACE, CTop, N);
+            surf.getSurfacePoint(xrel1, xrel1, yrel, xfl::BOTSURFACE, CBot, N);
+            SurfInertia->PtVolume[p] = (ATop+ABot+CTop+CBot)/4.0;
+            Diag1 = ATop - CBot;
+            Diag2 = ABot - CTop;
+            PointNormal = Diag1 * Diag2;
+
+            ElemArea = PointNormal.norm()/2.0;
+            if(ElemArea>0.0) SurfInertia->ElemVolume[p] = ElemArea * LocalSpan;
+            else
+            {
+                //no area, means that the foils have not yet been defined for this surface
+                // so just count a unit volume, temporary
+                SurfInertia->ElemVolume[p] = 1.0;
+            }
+            SurfInertia->SurfVolume += SurfInertia->ElemVolume[p];
+            SurfInertia->SurfCoG.x += SurfInertia->ElemVolume[p] * SurfInertia->PtVolume[p].x;
+            SurfInertia->SurfCoG.y += SurfInertia->ElemVolume[p] * SurfInertia->PtVolume[p].y;
+            SurfInertia->SurfCoG.z += SurfInertia->ElemVolume[p] * SurfInertia->PtVolume[p].z;
+            p++;
+        }
+    }
+}
 
 /**
  * Calculates and returns the inertia properties of the structure based on the object's mass
@@ -232,6 +292,133 @@ int WingXfl::makeTriPanels(int ip3start, int indStart, bool bThickSurfaces)
  */
 void WingXfl::computeStructuralInertia(const Vector3d &PartPosition)
 {
+//    auto t0 = std::chrono::high_resolution_clock::now();
+//    std::cout <<"Wing::computeStructuralInertia() "  << m_Name << " " << std::endl;
+
+    if(!m_bAutoInertia) return;
+
+    std::vector<SurfaceInertia> SurfInertia(nSurfaces());
+
+    for(int jsurf=0; jsurf<nSurfaces(); jsurf++) SurfInertia[jsurf].resize(NXSTATIONS*NYSTATIONS);
+
+    double rho{0}, LocalSpan{0};
+    double LocalVolume{0};
+    double LocalChord{0},  LocalArea{0},  tau{0};
+    double LocalChord1{0}, LocalArea1{0}, tau1{0};
+
+    Vector3d PtC4, Pt, Pt1, N;
+    Vector3d StructCoG;
+    double CoGIxx_vol(0.0), CoGIyy_vol(0.0), CoGIzz_vol(0.0), CoGIxz_vol(0.0);
+
+    //sanity check
+    double CoGIxxCheck(0), CoGIyyCheck(0), CoGIzzCheck(0), CoGIxzCheck(0);
+    double recalcMass(0.0);
+    double recalcVolume(0.0);
+    double checkVolume(0.0);
+
+
+    //the mass density is assumed to be homogeneous
+    //the local mass is proportional to the chord x foil area
+    //the foil's area is interpolated
+    //we consider the whole wing, i.e. all left and right surfaces
+    //note : in AVL documentation, each side is considered separately
+    //first get the CoG - necessary for future application of Huygens/Steiner theorem
+    int p = 0;
+
+//    for (int jsurf=0; jsurf<nSurfaces(); jsurf++)     computeSurfaceInertia(jsurf, &SurfInertia[jsurf]);
+
+    std::vector<std::thread> threads;
+    for (int jsurf=0; jsurf<nSurfaces(); jsurf++)
+    {
+        threads.push_back(std::thread(&WingXfl::computeSurfaceInertia, this, jsurf, &SurfInertia[jsurf]));
+    }
+    for(int isurf=0; isurf<nSurfaces(); isurf++) threads[isurf].join();
+
+
+    for (int jSurf=0; jSurf<nSurfaces(); jSurf++)
+    {
+        StructCoG += SurfInertia[jSurf].SurfCoG;
+        checkVolume += SurfInertia[jSurf].SurfVolume;
+    }
+
+    if(checkVolume>0.0)  rho = m_Inertia.structuralMass()/checkVolume;
+    else                 rho = 0.0;
+
+    if(checkVolume>0.0)  StructCoG *= 1.0/ checkVolume;
+    else                 StructCoG.set(0.0, 0.0, 0.0);
+
+
+    // CoG is the new origin for inertia calculation
+    p=0;
+    for (int jSurf=0; jSurf<nSurfaces(); jSurf++)
+    {
+        Surface const &surf = m_Surface.at(jSurf);
+        std::vector<double> const & EV = SurfInertia[jSurf].ElemVolume;
+        std::vector<Vector3d> const& PtV = SurfInertia[jSurf].PtVolume;
+
+        p=0;
+
+        LocalSpan = surf.m_Length/double(NYSTATIONS);
+        for (int k=0; k<NYSTATIONS; k++)
+        {
+            tau  = double(k)   / double(NYSTATIONS);
+            tau1 = double(k+1) / double(NYSTATIONS);
+            surf.getSection(tau,  LocalChord,  LocalArea,  Pt);
+            surf.getSection(tau1, LocalChord1, LocalArea1, Pt1);
+
+            LocalVolume = (LocalArea+LocalArea1)/2.0 * LocalSpan;
+
+            PtC4.x = (Pt.x + Pt1.x)/2.0;
+            PtC4.y = (Pt.y + Pt1.y)/2.0;
+            PtC4.z = (Pt.z + Pt1.z)/2.0;
+
+            CoGIxxCheck += LocalVolume*rho * ( (PtC4.y-StructCoG.y)*(PtC4.y-StructCoG.y) + (PtC4.z-StructCoG.z)*(PtC4.z-StructCoG.z) );
+            CoGIyyCheck += LocalVolume*rho * ( (PtC4.x-StructCoG.x)*(PtC4.x-StructCoG.x) + (PtC4.z-StructCoG.z)*(PtC4.z-StructCoG.z) );
+            CoGIzzCheck += LocalVolume*rho * ( (PtC4.x-StructCoG.x)*(PtC4.x-StructCoG.x) + (PtC4.y-StructCoG.y)*(PtC4.y-StructCoG.y) );
+            CoGIxzCheck += LocalVolume*rho * ( (PtC4.x-StructCoG.x)*(PtC4.z-StructCoG.z) );
+
+            recalcMass   += LocalVolume*rho;
+            recalcVolume += LocalVolume;
+
+
+            for(int l=0; l<NXSTATIONS; l++)
+            {
+                //browse mid-section
+                CoGIxx_vol += EV[p]*rho * ( (PtV[p].y-StructCoG.y)*(PtV[p].y-StructCoG.y) + (PtV[p].z-StructCoG.z)*(PtV[p].z-StructCoG.z));
+                CoGIyy_vol += EV[p]*rho * ( (PtV[p].x-StructCoG.x)*(PtV[p].x-StructCoG.x) + (PtV[p].z-StructCoG.z)*(PtV[p].z-StructCoG.z));
+                CoGIzz_vol += EV[p]*rho * ( (PtV[p].x-StructCoG.x)*(PtV[p].x-StructCoG.x) + (PtV[p].y-StructCoG.y)*(PtV[p].y-StructCoG.y));
+                CoGIxz_vol += EV[p]*rho * ( (PtV[p].x-StructCoG.x)*(PtV[p].z-StructCoG.z) );
+                p++;
+            }
+        }
+    }
+
+    m_Inertia.setCoG_s(StructCoG-PartPosition);
+    m_Inertia.setIxx_s(CoGIxx_vol);
+    m_Inertia.setIyy_s(CoGIyy_vol);
+    m_Inertia.setIzz_s(CoGIzz_vol);
+    m_Inertia.setIxz_s(CoGIxz_vol);
+    (void)recalcMass;
+    (void)CoGIxxCheck;
+    (void)CoGIyyCheck;
+    (void)CoGIzzCheck;
+    (void)CoGIxzCheck;
+    (void)recalcMass;
+    (void)recalcVolume;
+
+/*    auto t2 = std::chrono::high_resolution_clock::now();
+    int duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t0).count();
+    std::cout << std::format("... done in {:g} ms", double(duration)/1000.0) <<std::endl;*/
+
+}
+
+
+
+void WingXfl::computeStructuralInertia_sequential(const Vector3d &PartPosition)
+{
+    auto t0 = std::chrono::high_resolution_clock::now();
+    std::cout <<"Wing::computeStructuralInertia() "  << m_Name << " " << std::endl;
+
     if(!m_bAutoInertia) return;
 
     std::vector<double> ElemVolume(NXSTATIONS*NYSTATIONS*nSurfaces());
@@ -276,12 +463,12 @@ void WingXfl::computeStructuralInertia(const Vector3d &PartPosition)
 
             surf.getSection(tau,  LocalChord,  LocalArea,  Pt);
             surf.getSection(tau1, LocalChord1, LocalArea1, Pt1);
-//            LocalVolume = (LocalArea+LocalArea1)/2.0 * LocalSpan;
+            //            LocalVolume = (LocalArea+LocalArea1)/2.0 * LocalSpan;
             PtC4.x = (Pt.x + Pt1.x)/2.0;
             PtC4.y = (Pt.y + Pt1.y)/2.0;
             PtC4.z = (Pt.z + Pt1.z)/2.0;
 
-//            CoGCheck += LocalVolume * PtC4;
+            //            CoGCheck += LocalVolume * PtC4;
             for(int l=0; l<NXSTATIONS; l++)
             {
                 //browse mid-section
@@ -314,6 +501,10 @@ void WingXfl::computeStructuralInertia(const Vector3d &PartPosition)
             }
         }
     }
+
+    auto t1 = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+    std::cout << std::format("... done in {:g} ms", double(duration)/1000.0) <<std::endl;
 
     if(checkVolume>0.0)  rho = m_Inertia.structuralMass()/checkVolume;
     else                 rho = 0.0;
@@ -373,6 +564,11 @@ void WingXfl::computeStructuralInertia(const Vector3d &PartPosition)
     (void)CoGIxzCheck;
     (void)recalcMass;
     (void)recalcVolume;
+
+    auto t2 = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t0).count();
+    std::cout << std::format("... done in {:g} ms", double(duration)/1000.0) <<std::endl;
+
 }
 
 
@@ -1913,7 +2109,7 @@ bool WingXfl::isWingPanel4(int nPanel) const
  * Removes the section identified by its index
  * @param iSection the index of the section
  */
-void WingXfl::removeWingSection(int const iSection)
+void WingXfl::removeSection(int const iSection)
 {
     if(iSection<0 || iSection>=nSections()) return;
     m_Section.erase(m_Section.begin()+iSection);
@@ -1938,14 +2134,14 @@ void WingXfl::insertSection(int iSection)
 /**
  * Appends a new section at the tip of the wing, with default values
  */
-bool WingXfl::appendWingSection()
+bool WingXfl::appendSection()
 {
     m_Section.push_back(WingSection());
     return true;
 }
 
 
-bool WingXfl::appendWingSection(WingSection const &ws)
+bool WingXfl::appendSection(WingSection const &ws)
 {
     m_Section.push_back(ws);
     return true;
@@ -1955,7 +2151,7 @@ bool WingXfl::appendWingSection(WingSection const &ws)
 /**
  * Appends a new section at the tip of the wing, with values specified as input parameters
  */
-bool WingXfl::appendWingSection(double Chord, double Twist, double Pos, double Dihedral, double Offset,
+bool WingXfl::appendSection(double Chord, double Twist, double Pos, double Dihedral, double Offset,
                              int NXPanels, int NYPanels, xfl::enumDistribution XPanelDist, xfl::enumDistribution YPanelDist,
                              std::string const &RightFoilName, std::string const &LeftFoilName)
 {

@@ -93,10 +93,15 @@ void XPlaneActions::makeActions()
     m_pResetScale = new QAction(tr("Reset view\tR"), this);
     connect(m_pResetScale, SIGNAL(triggered()), m_pXPlane->m_pgl3dXPlaneView, SLOT(on3dReset()));
 
-    m_pDefinePlaneAct = new QAction(tr("Define a new plane"), m_pXPlane);
-    m_pDefinePlaneAct->setStatusTip(tr("Shows a dialogbox to create a new plane definition"));
-    m_pDefinePlaneAct->setShortcut(Qt::Key_F3);
-    connect(m_pDefinePlaneAct, SIGNAL(triggered()), m_pXPlane, SLOT(onNewPlane()));
+    m_pDefineDefaultPlaneAct = new QAction(tr("Define a new default plane"), m_pXPlane);
+    m_pDefineDefaultPlaneAct->setData(0);
+    m_pDefineDefaultPlaneAct->setShortcut(Qt::Key_F3);
+    connect(m_pDefineDefaultPlaneAct, SIGNAL(triggered()), m_pXPlane, SLOT(onNewPlane()));
+
+    m_pDefineEmptyPlaneAct = new QAction(tr("Define a new empty plane"), m_pXPlane);
+    m_pDefineEmptyPlaneAct->setData(1);
+    m_pDefineEmptyPlaneAct->setShortcut(QKeySequence(Qt::ALT | Qt::Key_F3));
+    connect(m_pDefineEmptyPlaneAct, SIGNAL(triggered()), m_pXPlane, SLOT(onNewPlane()));
 
     m_pSTLPlaneAct = new QAction(tr("From an STL file"), m_pXPlane);
     m_pSTLPlaneAct->setStatusTip(tr("Import a complete plane geometry from an STL file"));

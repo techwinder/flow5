@@ -48,6 +48,7 @@
 #include <fusestl.h>
 #include <gmesh_globals.h>
 #include <objects2d.h>
+#include <objects2d_globals.h>
 #include <objects3d.h>
 #include <occ_globals.h>
 #include <planeopp.h>
@@ -382,7 +383,7 @@ bool io::exportMeshToSTLFile(const QString &filename, TriMesh const &trimesh, do
 }
 
 
-int io::exportTriangulationToSTL(QString const &pathname, double scalefactor, std::vector<Triangle3d> const &triangle)
+int io::exportTriangulationToSTLBinary(QString const &pathname, double scalefactor, std::vector<Triangle3d> const &triangle)
 {
     QFile XFile(pathname);
 
@@ -449,7 +450,64 @@ int io::exportTriangulationToSTL(QString const &pathname, double scalefactor, st
 }
 
 
-bool io::importVSPWing(QString const &filename, std::vector<WingXfl*> &winglist, QString &logmsg)
+int io::exportTriangulationToSTLText(QString const &pathname, double scalefactor, std::vector<Triangle3d> const &triangles)
+{
+    QFile XFile(pathname);
+
+    if (!XFile.open(QIODevice::WriteOnly))
+    {
+        return -1;
+    }
+
+    QTextStream outStream(&XFile);
+
+    /***
+        facet normal ni nj nk
+            outer loop
+                vertex v1x v1y v1z
+                vertex v2x v2y v2z
+                vertex v3x v3y v3z
+            endloop
+        endfacet
+    */
+
+
+    QString strong =     "solid flow5 model\n";
+    outStream << strong;
+
+    short zero = 0;
+    char buffer[12];
+    memcpy(buffer, &zero, sizeof(short));
+
+
+    for (unsigned int it=0; it<triangles.size(); it++)
+    {
+        Triangle3d const & t3 = triangles.at(it);
+
+        QString facet = QString::asprintf("facet   %13g   %13g   %13g\n", t3.normal().xf(), t3.normal().yf(), t3.normal().zf());
+        outStream << facet;
+        outStream << "    outer loop\n";
+
+        outStream << QString::asprintf("        vertex %13g %13g %13g\n",
+                                        float(t3.vertexAt(0).x*scalefactor), float(t3.vertexAt(0).y*scalefactor), float(t3.vertexAt(0).z*scalefactor));
+
+        outStream << QString::asprintf("        vertex %13g %13g %13g\n",
+                                        float(t3.vertexAt(1).x*scalefactor), float(t3.vertexAt(1).y*scalefactor), float(t3.vertexAt(1).z*scalefactor));
+
+        outStream << QString::asprintf("        vertex %13g %13g %13g\n",
+                                        float(t3.vertexAt(2).x*scalefactor), float(t3.vertexAt(2).y*scalefactor), float(t3.vertexAt(2).z*scalefactor));
+
+        outStream << "    endloop\n";
+        outStream << "endfacet\n";
+
+    }
+
+    XFile.close();
+    return int(triangles.size());
+}
+
+
+bool io::importVSPWings(QString const &filename, std::vector<WingXfl*> &winglist, QString &logmsg)
 {
     QFileInfo fi(filename);
 
@@ -477,8 +535,9 @@ bool io::importVSPWing(QString const &filename, std::vector<WingXfl*> &winglist,
             QStringList fields = strange.split(",");
             if(fields.count()>=2)
             {
-                if(!wingnames.contains(fields.at(1)))
-                    wingnames.append(fields.at(1));
+                QString name = fields.at(1).trimmed();
+                if(!wingnames.contains(name))
+                    wingnames.append(name);
             }
         }
 
@@ -490,165 +549,196 @@ bool io::importVSPWing(QString const &filename, std::vector<WingXfl*> &winglist,
     {
         logmsg += QString("   ")+wingnames.at(i)+"\n";
     }
-    /*    QVector<Wing*> wings;
-    for(int i=0; i<wingnames.size(); i++)
-    {
-        wings.append(new WingXfl(xfl::OtherWing));
-        wings.back()->setName(wingnames.at(i));
-    }
-*/
 
-    //read all the foil names
+    winglist.clear();
+    for(unsigned int i=0; i<wingnames.size(); i++)
+    {
+        WingXfl*pWing = new WingXfl;
+        pWing->setName(wingnames.at(i).toStdString());
+        switch (i)
+        {
+            case 0:  pWing->setWingType(xfl::Main);      break;
+            case 1:  pWing->setWingType(xfl::Elevator);  break;
+            case 2:  pWing->setWingType(xfl::Fin);       break;
+            default: pWing->setWingType(xfl::OtherWing); break;
+        }
+
+        winglist.push_back(pWing);
+    }
+
+
+    // read the section data
+    // format assumptions:
+    //    sections written for right half wing i.e. y>0
+    //    sections are read in order from root to tip
+    //    LE.y==TE.y at each station
+
     stream.seek(0);
     QStringList airfoilfilenames;
+    std::string foilname;
+    int nx(1), ny(5);
+
     do
     {
         strange = stream.readLine();
         if(strange.isNull()) break;
         if(strange.contains("Airfoil File Name", Qt::CaseSensitive))
         {
+            // Airfoil File Name is used as start marker for the section
             QStringList fields = strange.split(",");
             if(fields.count()>=2)
             {
-                if(!airfoilfilenames.contains(fields.at(1)))
-                    airfoilfilenames.append(fields.at(1));
+                QString FoilName = fields.at(1).trimmed();
+                int pos = FoilName.lastIndexOf(".dat");
+                FoilName.truncate(pos);
+                foilname = FoilName.toStdString();
+                if(!airfoilfilenames.contains(FoilName))  airfoilfilenames.append(FoilName);
+            }
+
+            // Continue reading the section data
+            // section is considered valid if the following fields have been read:
+            //     wingname
+            //     LE and TE
+            //     airfoil file name
+            WingXfl *pWingXfl(nullptr);
+            std::string wingname;
+
+            Vector3d LE, TE;
+            double chord(0);
+            bool bLE(false), bTE(false);
+            do
+            {
+                strange = stream.readLine();
+                if (strange.contains("Geom Name"))
+                {
+                    fields = strange.split(",");
+                    wingname = fields.at(1).trimmed().toStdString();
+                    pWingXfl = nullptr;
+                    for(unsigned int j=0; j<winglist.size(); j++)
+                    {
+                        if(winglist.at(j)->name().compare(wingname)==0)
+                        {
+                            pWingXfl = winglist.at(j);
+                        }
+                    }
+                }
+                else if (strange.contains("Leading Edge Point"))
+                {
+                    fields = strange.split(",");
+                    if(fields.length()==4)
+                    {
+                        LE.x = fields.at(1).toDouble();
+                        LE.y = fields.at(2).toDouble();
+                        LE.z = fields.at(3).toDouble();
+                        bLE = true;
+                    }
+                }
+                else if (strange.contains("Trailing Edge Point"))
+                {
+                    fields = strange.split(",");
+                    if(fields.length()==4)
+                    {
+                        TE.x = fields.at(1).toDouble();
+                        TE.y = fields.at(2).toDouble();
+                        TE.z = fields.at(3).toDouble();
+                        bTE = true;
+                    }
+                }
+                else if (strange.contains("Chord"))
+                {
+                    fields = strange.split(",");
+                    if(fields.length()==2)
+                    {
+                        chord = fields.at(1).toDouble();
+                    }
+                }
+            }
+            while(!strange.contains("########")); // assuming this closes the section
+
+            if(bLE && bTE && pWingXfl)
+            {
+//                double length = LE.distanceTo(TE); // same as chord?
+
+                double twist = atan2(TE.z-LE.z, TE.x-LE.x) * 180.0 / PI;
+                WingSection sec;// = WingSection(chord, twist, yPos, dihedral, xOffset, nx, ny, xfl::TANH, xfl::UNIFORM, foilname, foilname);
+                sec.setChord(chord);
+                sec.setTwist(twist);
+                sec.setYPosition(LE.y); // recalculated at the next step
+                sec.setzPos(LE.z); // temporary
+                sec.setDihedral(0.0);   // recalculated at the next step
+                sec.setXOffset(LE.x);   // recalculated at the next step
+                sec.setNX(nx);
+                sec.setNY(ny);
+                sec.setXDistType(xfl::TANH);
+                sec.setYDistType(xfl::UNIFORM);
+                sec.setRightFoilName(foilname);
+                sec.setLeftFoilName(foilname);
+
+                pWingXfl->appendSection(sec);
+
             }
         }
 
     }while (!strange.isNull());
 
-    logmsg += QString::asprintf("Found %d airfoil files to load:\n", int(airfoilfilenames.size()));
-    for(int i=0; i<airfoilfilenames.size(); i++)
+    // recalculate dihedrals and y positions
+    for(WingXfl *pWing : winglist)
     {
-        logmsg += QString("   ")+airfoilfilenames.at(i)+"\n";
+        // the wing's position is defined by its first section
+/*        WingSection const & root = pWing->rootSection();
+        Vector3d WingPosition = Vector3d(root.offset(), root.yPosition(), root.zPos());
+
+        for(int iws=0; iws<pWing->nSections(); iws++)
+        {
+            pWing->
+        }*/
+
+        for(int iws=0; iws<pWing->nSections()-1; iws++)
+        {
+            WingSection       &seci  = pWing->section(iws);
+            WingSection const &seci1 = pWing->section(iws+1);
+            double dihedral = atan2(seci1.zPos()-seci.zPos(), seci1.yPosition()-seci.yPosition()) * 180.0/PI;
+            seci.setDihedral(dihedral);
+            seci.setYPosition(seci.yPosition()/cos(dihedral*PI/180.0)); // confirm to planform
+        }
+
+
     }
+    // translate the wing
+
+
+
+    logmsg += QString::asprintf("Found %d airfoils to load from file:\n", int(airfoilfilenames.size()));
+//    for(int i=0; i<airfoilfilenames.size(); i++) logmsg += QString("   ")+airfoilfilenames.at(i)+"\n";
 
 
     QStringList filter = {"*.dat"};
     QStringList files = io::findFiles(fi.absolutePath(), filter, false);
-    for(int i=0; i<files.size(); i++)
+    fl5Color clr = xfl::Orchid;
+    int iError(0);
+    for(QString file : files)
     {
+
         Foil *pFoil = new Foil;
-        if(io::readVSPFoilFile(files.at(i), pFoil))
+        if(foil::readFoilFile(file.toStdString(), pFoil, iError))
+        {
+            QString FoilName = QString::fromStdString(pFoil->name());
+
+            int pos = FoilName.length()-FoilName.lastIndexOf("/");
+            FoilName = FoilName.right(pos-1);
+            pos = FoilName.lastIndexOf(".dat");
+            FoilName.truncate(pos);
+            pFoil->setName(FoilName.toStdString());
+
+            pFoil->setLineColor(clr);
+            clr = clr.darker(105);
             Objects2d::insertThisFoil(pFoil);
+        }
         else
             delete  pFoil;
     }
 
-    /*    do
-    {
-        strange = stream.readLine();
-        if(strange.isNull()) break;
-        if(strange.contains("########################################", Qt::CaseSensitive))
-        {
-            QString wingname;
-            int index(0);
-            WingSection *ws = new WingSection;
-            readVSPSection(stream, wingname, index, ws);
-        }
-
-    }while (!strange.isNull());*/
     return true;
-}
-
-
-bool io::readVSPFoilFile(QString const &FoilFileName, Foil *pFoil)
-{
-    QString strong;
-    QString FoilName;
-
-    int pos(0);
-    double x(0), y(0);
-    double xp(0), yp(0);
-    bool bRead=false;
-
-    QFileInfo fi(FoilFileName);
-    if(!fi.exists()) return false;
-
-    QFile xFoilFile(FoilFileName);
-    if(!xFoilFile.open(QIODevice::ReadOnly)) return false;
-
-    QTextStream inStream(&xFoilFile);
-
-    QFileInfo fileInfo(xFoilFile);
-
-    QString fileName = fileInfo.fileName();
-    int suffixLength = fileInfo.suffix().length()+1;
-    fileName = fileName.left(fileName.size()-suffixLength);
-
-    FoilName = inStream.readLine();
-    pos = FoilName.length()-FoilName.lastIndexOf("/");
-    FoilName = FoilName.right(pos-1);
-    pos = FoilName.lastIndexOf(".dat");
-    FoilName.truncate(pos);
-    pFoil->setName(FoilName.toStdString());
-
-    std::vector<Node2d> basenodes;
-
-    bRead = true;
-    xp=-9999.0;
-    yp=-9999.0;
-    do
-    {
-        strong = inStream.readLine().trimmed();
-        QStringList fields = strong.split(",");
-        if(fields.size()==2)
-        {
-            x = fields.at(0).trimmed().toDouble();
-            y = fields.at(1).trimmed().toDouble();
-            //add values only if the point is not coincident with the previous one
-            double dist = sqrt((x-xp)*(x-xp) + (y-yp)*(y-yp));
-            if(dist>0.000001)
-            {
-                basenodes.push_back({x,y});
-
-                xp = x;
-                yp = y;
-            }
-        }
-        else bRead = false;
-
-    }while (bRead && !strong.isNull());
-
-    xFoilFile.close();
-
-    /*    pFoil->m_Node.resize(pFoil->nBaseNodes());
-    for(int i=0; i<pFoil->nBaseNodes(); i++)
-    {
-        pFoil->m_Node[i].x = pFoil->xb(i);
-        pFoil->m_Node[i].y = pFoil->yb(i);
-    }*/
-
-    pFoil->setBaseNodes(basenodes);
-
-    pFoil->initGeometry();
-    return true;
-}
-
-
-void io::readVSPSection(QTextStream &stream, QString &wingname, int &index, WingSection &ws)
-{
-    QString strange;
-    do
-    {
-        strange = stream.readLine();
-        QStringList fields = strange.split(",");
-        if(fields.count()>2)
-        {
-            if     (fields.front().contains("Geom Name"))          wingname = fields.at(1);
-            else if(fields.front().contains("Airfoil Index"))      index = fields.at(1).toInt();
-            else if(fields.front().contains("Leading Edge Point") && fields.size()==4)
-            {
-                //                ws.setOffset(fields.at(1).toDouble(), fields.at(1).toDouble(), fields.at(3).toDouble());
-            }
-            else if(fields.front().contains("Airfoil File Name"))
-            {
-                ws.setLeftFoilName(fields.at(1).toStdString());
-                ws.setRightFoilName(fields.at(1).toStdString());
-            }
-        }
-    }
-    while(!strange.contains("#######"));
 }
 
 
@@ -1634,4 +1724,7 @@ void io::exportBRep(QString const & filename, const TopoDS_ListOfShape &m_Shapes
     logmsg = QString::asprintf("Exported shape(s) to file %s", filename.toStdString().c_str());
 
 }
+
+
+
 

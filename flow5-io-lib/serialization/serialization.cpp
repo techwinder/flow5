@@ -5003,7 +5003,7 @@ bool serial::serializeWingXflXfl(WingXfl *pWing, QDataStream &ar, bool bIsStorin
 
         ar >> boolean; pWing->setSymmetric(boolean);
 
-        pWing->clearWingSections();
+        pWing->clearSections();
         ar >> n;
         for (int i=0; i<n; i++)
         {
@@ -5029,7 +5029,7 @@ bool serial::serializeWingXflXfl(WingXfl *pWing, QDataStream &ar, bool bIsStorin
             else if(k==-2) yDist = xfl::INV_SINE;
             else           yDist = xfl::UNIFORM;
 
-            pWing->appendWingSection(cord, tw, pos, dih, off, nx, ny, xDist, yDist, rightfoil.toStdString(), leftfoil.toStdString());
+            pWing->appendSection(cord, tw, pos, dih, off, nx, ny, xDist, yDist, rightfoil.toStdString(), leftfoil.toStdString());
         }
 
         // improve uniformity of nx panel numbers
@@ -5166,7 +5166,7 @@ bool serial::serializeWingXflFl5(WingXfl*pWing, QDataStream &ar, bool bIsStoring
 
         ar >> boolean; pWing->setSymmetric(boolean);
 
-        pWing->clearWingSections();
+        pWing->clearSections();
         ar >> n;
         for (i=0; i<n; i++)
         {

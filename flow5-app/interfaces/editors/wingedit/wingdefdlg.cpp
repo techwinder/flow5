@@ -438,7 +438,7 @@ void WingDefDlg::onRowChanged(const QModelIndex &currentindex, const QModelIndex
     {
         //the user has filled a cell in the last line
         //so add an item before reading
-        m_pWing->appendWingSection();
+        m_pWing->appendSection();
     }
     m_iSection = currentindex.row();
     if(!m_pWing->isTwoSided()) m_bRightSide = false;

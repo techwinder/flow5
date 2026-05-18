@@ -43,7 +43,6 @@
 #include <interfaces/controls/w3dprefs.h>
 #include <interfaces/editors/fuseedit/bodyscaledlg.h>
 #include <interfaces/editors/fuseedit/bodytransdlg.h>
-#include <interfaces/editors/fuseedit/flatfaceconverterdlg.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fuseframewt.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fuselinewt.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
@@ -81,7 +80,6 @@ void FuseXflDlg::createActions()
     m_pScaleBody     = new QAction(tr("Scale"), this);
     m_pExportBodyXML = new QAction(tr("Export body geometry to an XML file"), this);
     m_pTranslateBody = new QAction(tr("Translate"), this);
-    m_pToFlatFace    = new QAction(tr("to flat face type"), this);
 
     QMenu *pBodyMenu = new QMenu(tr("Actions..."), this);
     {
@@ -99,8 +97,6 @@ void FuseXflDlg::createActions()
         pBodyMenu->addAction(m_pScaleBody);
         pBodyMenu->addSeparator();
         pBodyMenu->addAction(m_pTessSettings);
-        pBodyMenu->addSeparator();
-        pBodyMenu->addAction(m_pToFlatFace);
     }
     m_ppbMenuButton->setMenu(pBodyMenu);
 }
@@ -115,7 +111,6 @@ void FuseXflDlg::connectFuseXflSignals()
     connect(m_pScaleBody,      SIGNAL(triggered()),         SLOT(onScaleFuse()));
     connect(m_pExportBodyXML,  SIGNAL(triggered()),         SLOT(onExportFuseToXML()));
     connect(m_pTranslateBody,  SIGNAL(triggered()),         SLOT(onTranslateFuse()));
-    connect(m_pToFlatFace,     SIGNAL(triggered()),         SLOT(onConvertToFlatFace()));
 
     // view signals
     connect(m_pFuseLineView, SIGNAL(scaleFuse(bool)),       SLOT(onScaleFuse(bool)));
@@ -196,8 +191,6 @@ void FuseXflDlg::initDialog(Fuse *pFuse)
     FuseXfl const*pFuseXfl = dynamic_cast<FuseXfl*>(pFuse);
     if(!pFuseXfl) return;
 
-    m_pToFlatFace->setEnabled(pFuseXfl->isSplineType());
-
     m_pFuseLineView->setUnitFactor(Units::mtoUnit());
     m_pFrameView->setUnitFactor(Units::mtoUnit());
 
@@ -257,8 +250,6 @@ void FuseXflDlg::contextMenuEvent(QContextMenuEvent *pEvent)
         pBodyMenu->addSeparator();
         pBodyMenu->addAction(m_pTranslateBody);
         pBodyMenu->addAction(m_pScaleBody);
-        pBodyMenu->addSeparator();
-        pBodyMenu->addAction(m_pToFlatFace);
     }
 
     pBodyMenu->exec(pEvent->globalPos());
@@ -582,20 +573,6 @@ void FuseXflDlg::onExportFuseToXML()
     fusewriter.writeXMLBody(*m_pFuseXfl);
 
     XFile.close();
-}
-
-
-void FuseXflDlg::onConvertToFlatFace()
-{
-    if(!m_pFuse || !m_pFuse->isSplineType()) return;
-
-    FlatFaceConverterDlg dlg(this);
-    dlg.initDialog(m_pFuseXfl);
-    if(dlg.exec()!=QDialog::Accepted) return;
-
-    m_pFuseXfl->duplicateFuseXfl(*dlg.flatFaceFuse());
-
-    m_pToFlatFace->setEnabled(false);
 }
 
 

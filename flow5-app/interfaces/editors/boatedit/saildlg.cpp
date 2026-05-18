@@ -1372,7 +1372,7 @@ void SailDlg::onExportTrianglesToStl()
     bool bBinary = true;
     if(bBinary)
     {
-        io::exportTriangulationToSTL(FileName, 1.0, m_pSail->triangles());
+        io::exportTriangulationToSTLBinary(FileName, 1.0, m_pSail->triangles());
     }
     else
     {

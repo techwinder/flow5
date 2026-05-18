@@ -80,7 +80,6 @@
 #include <core/saveoptions.h>
 #include <core/stlreaderdlg.h>
 #include <core/xflcore.h>
-#include <interfaces/editors/fuseedit/flatfaceconverterdlg.h>
 #include <interfaces/editors/fuseedit/fusemesherdlg.h>
 #include <interfaces/editors/fuseedit/fuseoccdlg.h>
 #include <interfaces/editors/fuseedit/fusestldlg.h>
@@ -639,17 +638,16 @@ void PlaneXflDlg::setControls()
 
 void PlaneXflDlg::makeActions()
 {
-    m_pEditPartDef           = new QAction(tr("Edit"),                       this);
-//    m_pEditPartObject        = new QAction(tr("Edit (advanced)"),            this);
-    m_pInsertWing            = new QAction(tr("new"),                        this);
-    m_pInsertWingOther       = new QAction(tr("from other plane"),           this);
-    m_pInsertWingXml         = new QAction(tr("from XML file"),              this);
-    m_pInsertWingVSP         = new QAction(tr("from VSP export"),            this);
-    m_pInsertElev            = new QAction(tr("Elevator"),                   this);
-    m_pInsertFin             = new QAction(tr("Fin"),                        this);
-    m_pInsertFuseXflSpline   = new QAction(tr("NURBS type"),                 this);
-    m_pInsertFuseXflFlat     = new QAction(tr("Quad faces"),                 this);
-    m_pInsertFuseXflSections = new QAction(tr("Interpolated (in progress)"), this);
+    m_pEditPartDef           = new QAction(tr("Edit"),                            this);
+    m_pInsertWing            = new QAction(tr("new"),                             this);
+    m_pInsertWingOther       = new QAction(tr("from other plane"),                this);
+    m_pInsertWingXml         = new QAction(tr("from XML file"),                   this);
+    m_pInsertWingVSP         = new QAction(tr("from VSP export"),                 this);
+    m_pInsertElev            = new QAction(tr("Elevator"),                        this);
+    m_pInsertFin             = new QAction(tr("Fin"),                             this);
+    m_pInsertFuseXflSpline   = new QAction(tr("NURBS type"),                      this);
+    m_pInsertFuseXflFlat     = new QAction(tr("Quad faces"),                      this);
+    m_pInsertFuseXflSections = new QAction(tr("Interpolated (in progress)"),      this);
 
     m_pInsertFuseXml         = new QAction(tr("from XML file"),                   this);
     m_pInsertFuseOther       = new QAction(tr("from other plane"),                this);
@@ -664,13 +662,13 @@ void PlaneXflDlg::makeActions()
     m_pRemovePart            = new QAction(tr("Remove"),                          this);
     m_pDuplicatePart         = new QAction(tr("Duplicate"),                       this);
 
-    m_pResetFuse             = new QAction(tr("Restore geometry and mesh"),  this);
-    m_pTessellation          = new QAction(tr("Fuse tessellation"),          this);
+    m_pResetFuse             = new QAction(tr("Restore geometry and mesh"),       this);
+    m_pTessellation          = new QAction(tr("Fuse tessellation"),               this);
 
     m_pPartInertia   = new QAction(tr("Inertia"), this);
     m_pPartScale     = new QAction(tr("Scale"), this);
-    m_pMoveUp        = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowUp),  tr("Move Up"), this);
-    m_pMoveDown      = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowDown),  tr("Move Down"), this);
+    m_pMoveUp        = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowUp),   tr("Move Up"), this);
+    m_pMoveDown      = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowDown), tr("Move Down"), this);
 
     m_pExportMeshSTL = new QAction(tr("Export mesh to STL"), this);
 
@@ -1366,7 +1364,7 @@ void PlaneXflDlg::onInsertEllipticWing()
     nsecs = std::max(2, nsecs);    //at least two sections
 
     WingXfl *pWing = new WingXfl;
-    pWing->clearWingSections();
+    pWing->clearSections();
     std::vector<double> frac;
     xfl::getPointDistribution(frac, nsecs, xfl::INV_EXP);
     for(uint i=0; i<frac.size(); i++)
@@ -1375,7 +1373,7 @@ void PlaneXflDlg::onInsertEllipticWing()
         double bs = b *r;
         double as = a* sqrt(1.0-bs*bs/b/b);
         as = std::max(as, a/20);
-        pWing->appendWingSection(as, 0.0, bs, 0, (a-as)/2.0, 5, 1, xfl::COSINE, xfl::UNIFORM, std::string(), std::string());
+        pWing->appendSection(as, 0.0, bs, 0, (a-as)/2.0, 5, 1, xfl::COSINE, xfl::UNIFORM, std::string(), std::string());
     }
 
     if(!m_pPlaneXfl->hasMainWing()) pWing->setWingType(xfl::Main);
@@ -1486,7 +1484,12 @@ void PlaneXflDlg::onInsertWingFromVSP()
 
     std::vector<WingXfl*> winglist;
     QString log;
-    io::importVSPWing(pathname, winglist, log);
+    io::importVSPWings(pathname, winglist, log);
+    for(WingXfl *pWing : winglist)
+        m_pPlaneXfl->addWing(pWing);
+
+    updateData();
+    onUpdatePlane();
 }
 
 

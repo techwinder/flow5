@@ -451,7 +451,7 @@ void WingDlg::onDeleteSection()
     }
     int ny = m_pWing->nYPanels(m_iSection-1) + m_pWing->nYPanels(m_iSection);
 
-    m_pWing->removeWingSection(m_iSection);
+    m_pWing->removeSection(m_iSection);
     m_pWing->setNYPanels(m_iSection-1, ny);
 
     updateData();
@@ -539,7 +539,7 @@ void WingDlg::onInsertNAfter()
     if(m_iSection==m_pWing->nSections()-1)
     {
         WingSection sec = m_pWing->section(m_iSection);
-        m_pWing->appendWingSection();
+        m_pWing->appendSection();
         m_pWing->m_Section.back() = sec;
         m_pWing->m_Section.back().setYPosition(1.5*sec.yPosition());
         m_pWing->m_Section.back().setNY(sec.nYPanels()/2);

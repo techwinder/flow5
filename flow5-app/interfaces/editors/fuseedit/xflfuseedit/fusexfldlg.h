@@ -70,7 +70,6 @@ class FuseXflDlg : public FuseDlg
         virtual void onScaleFuse(bool bFrameOnly);
         virtual void onTranslateFuse();
 
-        virtual void onConvertToFlatFace();
 
         void onRemoveFrame(int iFrame);
         void onInsertFrame(Vector3d const &pos);
@@ -116,7 +115,6 @@ class FuseXflDlg : public FuseDlg
         QAction *m_pResetFuse;
         QAction *m_pExportBodyXML;
         QAction *m_pScaleBody, *m_pTranslateBody;
-        QAction *m_pToFlatFace;
 
         QPushButton *m_ppblRedraw, *m_ppbMenuButton;
 

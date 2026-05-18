@@ -1124,18 +1124,6 @@ void FuseXflDefDlg::onResizeTables()
 }
 
 
-void FuseXflDefDlg::onConvertToFlatFace()
-{
-    FuseXflDlg::onConvertToFlatFace();
-
-    if(m_pFuseXfl->isFlatFaceType())
-    {
-        if(m_ptwDefinition->count()>1) m_ptwDefinition->removeTab(0);
-        updateFuseDlg();
-    }
-}
-
-
 void FuseXflDefDlg::onUpdateFuseDlg()
 {
     takePicture();

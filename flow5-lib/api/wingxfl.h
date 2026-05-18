@@ -48,6 +48,21 @@ class PointMass;
 class Triangle3d;
 class Segment3d;
 
+
+struct SurfaceInertia
+{
+    void resize(int nSurf)
+    {
+        ElemVolume.resize(nSurf, 0.0);
+        PtVolume.resize(nSurf);
+    }
+    std::vector<double> ElemVolume;
+    std::vector<Vector3d> PtVolume;
+    Vector3d SurfCoG;
+    double  SurfVolume =  0.0;
+};
+
+
 class FL5LIB_EXPORT WingXfl : public Part
 {
 
@@ -129,7 +144,10 @@ class FL5LIB_EXPORT WingXfl : public Part
 
         void computeStations();
         void computeGeometry();
+        void computeStructuralInertia_sequential(Vector3d const &PartPosition);
         void computeStructuralInertia(Vector3d const &PartPosition) override;
+        void computeSurfaceInertia(int jsurf, SurfaceInertia *SurfInertia) const;
+
         bool intersectWing(const Vector3d &O, const Vector3d &U, Vector3d &I, int &idxSurf, double &dist, bool bDirOnly) const;
 
         int makeTriPanels(int ip3start, int indStart, bool bThickSurfaces);
@@ -154,13 +172,13 @@ class FL5LIB_EXPORT WingXfl : public Part
         int nSections() const {return int(m_Section.size());}
         std::vector<WingSection> &sections() {return m_Section;}
         std::vector<WingSection> const &sections() const {return m_Section;}
-        void clearWingSections() {m_Section.clear();}
+        void clearSections() {m_Section.clear();}
         void insertSection(int iSection);
-        bool appendWingSection();
-        bool appendWingSection(WingSection const &ws);
-        bool appendWingSection(double Chord, double Twist, double Pos, double Dihedral, double Offset, int nXPanels, int nYPanels,
+        bool appendSection();
+        bool appendSection(WingSection const &ws);
+        bool appendSection(double Chord, double Twist, double Pos, double Dihedral, double Offset, int nXPanels, int nYPanels,
                                xfl::enumDistribution XPanelDist, xfl::enumDistribution YPanelDist, const std::string &RightFoilName, const std::string &LeftFoilName);
-        void removeWingSection(int const iSection);
+        void removeSection(int const iSection);
         WingSection const &section(int iSec) const {return m_Section.at(iSec);}
         WingSection &section(int iSec) {return m_Section[iSec];}
         WingSection &rootSection() {return m_Section.front();}

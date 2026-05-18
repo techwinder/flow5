@@ -127,7 +127,7 @@ bool XmlPlaneReader::readPlane(PlaneXfl *pPlane, double lengthUnit, double massU
             m_pPlane->addWing();
             newWing.clearPointMasses();
             newWing.clearSurfaces();
-            newWing.clearWingSections();
+            newWing.clearSections();
             Vector3d wingLE;
             double Rx(0), Ry(0);
 

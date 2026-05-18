@@ -342,7 +342,7 @@ void SaveOptionsWt::setupLayout()
 
     m_pGroupBox.push_back(new QGroupBox(tr("SVG foil export")));
     {
-        QVBoxLayout *pExportLayout = new QVBoxLayout;
+        QVBoxLayout *pSVGExportLayout = new QVBoxLayout;
         {
             m_pchSVGCloseTE = new QCheckBox(tr("Close foil TE"));
             m_pchSVGFillFoil = new QCheckBox(tr("Fill foil"));
@@ -350,9 +350,9 @@ void SaveOptionsWt::setupLayout()
             m_pfeSVGScaleFactor->setToolTip(tr("<p>Recommendation: Scale factor>=10000 for a smooth foil shape</p>"));
             m_pchSVGExportStyle = new QCheckBox(tr("Export style"));
             m_pfeSVGMargin = new FloatEdit;
-            pExportLayout->addWidget(m_pchSVGCloseTE);
-            pExportLayout->addWidget(m_pchSVGFillFoil);
-            pExportLayout->addWidget(m_pchSVGExportStyle);
+            pSVGExportLayout->addWidget(m_pchSVGCloseTE);
+            pSVGExportLayout->addWidget(m_pchSVGFillFoil);
+            pSVGExportLayout->addWidget(m_pchSVGExportStyle);
             QGridLayout *pScaleLayout = new QGridLayout;
             {
                 pScaleLayout->addWidget(new QLabel(tr("Margin")),       1,1);
@@ -362,10 +362,9 @@ void SaveOptionsWt::setupLayout()
                 pScaleLayout->addWidget(m_pfeSVGScaleFactor,            2,2);
                 pScaleLayout->setColumnStretch(4,1);
             }
-            pExportLayout->addLayout(pScaleLayout);
-            pExportLayout->addStretch();
+            pSVGExportLayout->addLayout(pScaleLayout);
         }
-        m_pGroupBox.back()->setLayout(pExportLayout);
+        m_pGroupBox.back()->setLayout(pSVGExportLayout);
     }
 
     m_pGroupBox.push_back(new QGroupBox(tr("Operating points")));
@@ -374,8 +373,8 @@ void SaveOptionsWt::setupLayout()
         {
             QLabel *plabSave = new QLabel(tr("Save operating points for:"));
             plabSave->setAlignment(Qt::AlignRight);
-            m_pchOpps  = new QCheckBox(tr("Foils"));
-            m_pchPOpps = new QCheckBox(tr("Planes"));
+            m_pchOpps   = new QCheckBox(tr("Foils"));
+            m_pchPOpps  = new QCheckBox(tr("Planes"));
             m_pchBtOpps = new QCheckBox(tr("Boats"));
             pSaveOppLayout->addWidget(plabSave);
             pSaveOppLayout->addStretch();

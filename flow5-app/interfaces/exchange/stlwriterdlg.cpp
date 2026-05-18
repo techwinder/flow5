@@ -71,8 +71,8 @@ STLWriterDlg::STLWriterDlg(QWidget *pParent) : QDialog(pParent)
     setupLayout();
 
     m_UnitFactor=1.0;
-    m_prbBinary->setEnabled(false);
-    m_prbASCII->setEnabled(false);
+/*    m_prbBinary->setEnabled(false);
+    m_prbASCII->setEnabled(false);*/
 }
 
 
@@ -80,56 +80,44 @@ void STLWriterDlg::setupLayout()
 {
     QVBoxLayout *pMainLayout = new QVBoxLayout;
     {
-        QGroupBox *pExportFormat = new QGroupBox("File format");
+        QGroupBox *pgbExportFormat = new QGroupBox(tr("File format"));
         {
             QHBoxLayout *pFormatLayout = new QHBoxLayout;
             {
-                m_prbBinary = new QRadioButton("Binary");
+                m_prbBinary = new QRadioButton(tr("Binary"));
                 m_prbASCII  = new QRadioButton("ASCII");
                 pFormatLayout->addWidget(m_prbBinary);
                 pFormatLayout->addWidget(m_prbASCII);
             }
-            pExportFormat->setLayout(pFormatLayout);
+            pgbExportFormat->setLayout(pFormatLayout);
         }
 
         m_plwNameList = new QListWidget;
         m_plwNameList->setSelectionMode(QAbstractItemView::MultiSelection);
         connect(m_plwNameList, SIGNAL(currentRowChanged(int)), this, SLOT(onSetLabels()));
 
-        QGroupBox *pResolutionBox = new QGroupBox("Output Resolution");
+        QGroupBox *pResolutionBox = new QGroupBox(tr("Output resolution"));
         {
-            QVBoxLayout *pResolutionLayout = new QVBoxLayout;
+            QGridLayout *pResolutionLayout = new QGridLayout;
             {
-                QHBoxLayout *pChordLayout = new QHBoxLayout;
-                {
-                    m_plabChord = new QLabel("Chordwise panels");
-                    m_plabChord->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                    m_pieChordPanels = new IntEdit(17);
-                    m_pieChordPanels->setAlignment(Qt::AlignRight);
-                    pChordLayout->addStretch();
-                    pChordLayout->addWidget(m_plabChord);
-                    pChordLayout->addWidget(m_pieChordPanels);
-                }
+                m_plabChord = new QLabel("---");
+                m_pieChordPanels = new IntEdit(17);
 
-                QHBoxLayout *pSpanLayout = new QHBoxLayout;
-                {
-                    m_plabSpan = new QLabel("Spanwise panels");
-                    m_plabSpan->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                    m_pieSpanPanels = new IntEdit(17);
-                    m_pieSpanPanels->setAlignment(Qt::AlignRight);
-                    pSpanLayout->addStretch();
-                    pSpanLayout->addWidget(m_plabSpan);
-                    pSpanLayout->addWidget(m_pieSpanPanels);
-                }
-                pResolutionLayout->addLayout(pChordLayout);
-                pResolutionLayout->addLayout(pSpanLayout);
+                m_plabSpan = new QLabel("---");
+                m_pieSpanPanels = new IntEdit(17);
+
+                pResolutionLayout->addWidget(m_plabChord,      1, 1);
+                pResolutionLayout->addWidget(m_pieChordPanels, 1, 2);
+                pResolutionLayout->addWidget(m_plabSpan,       2, 1);
+                pResolutionLayout->addWidget(m_pieSpanPanels,  2, 2);
+                pResolutionLayout->setColumnStretch(3,1);
             }
             pResolutionBox->setLayout(pResolutionLayout);
         }
 
         QHBoxLayout *pUnitLayout = new QHBoxLayout;
         {
-            QLabel *pLabUnit = new QLabel("Unit to write the file:");
+            QLabel *pLabUnit = new QLabel(tr("Unit to write the file:"));
             pLabUnit->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
             m_pcbLengthUnitSel = new QComboBox;
             QStringList list;
@@ -144,20 +132,21 @@ void STLWriterDlg::setupLayout()
         }
 
         QDialogButtonBox *pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
-        connect(pButtonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+        {
+            QPushButton *pExportButton  = new QPushButton(tr("Export part"));
+            pButtonBox->addButton(pExportButton, QDialogButtonBox::ActionRole);
+            connect(pExportButton, SIGNAL(clicked(bool)), this, SLOT(onExporttoSTL()));
+            connect(pButtonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+        }
 
-        QPushButton *pExportButton  = new QPushButton("Export Part");
-        connect(pExportButton, SIGNAL(clicked(bool)), this, SLOT(onExporttoSTL()));
-        pExportButton->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-        m_pptoOutputLog = new PlainTextOutput;
+        m_ppto = new PlainTextOutput;
 
-        pMainLayout->addWidget(pExportFormat);
+        pMainLayout->addWidget(pgbExportFormat);
         pMainLayout->addWidget(m_plwNameList);
         pMainLayout->addWidget(pResolutionBox);
         pMainLayout->addLayout(pUnitLayout);
-        pMainLayout->addWidget(pExportButton);
-        pMainLayout->addWidget(m_pptoOutputLog);
+        pMainLayout->addWidget(m_ppto);
 
         pMainLayout->addWidget(pButtonBox);
     }
@@ -265,18 +254,18 @@ void STLWriterDlg::onSetLabels()
     readParams();
     if(m_pFuse)
     {
-        m_plabChord->setText("Number of x-panels");
-        m_plabSpan->setText("Number of hoop panels");
+        m_plabChord->setText(tr("Number of x-panels"));
+        m_plabSpan->setText(tr("Number of hoop panels"));
     }
     else if(m_pWing)
     {
-        m_plabChord->setText("Number of chordwise panels");
-        m_plabSpan->setText("Number of span panels per surface");
+        m_plabChord->setText(tr("Number of chordwise panels"));
+        m_plabSpan->setText(tr("Number of span panels per surface"));
     }
     else if(m_pSail)
     {
-        m_plabChord->setText("Number of chordwise panels");
-        m_plabSpan->setText("Number of z-panels");
+        m_plabChord->setText(tr("Number of chordwise panels"));
+        m_plabSpan->setText(tr("Number of z-panels"));
     }
 }
 
@@ -317,47 +306,47 @@ void STLWriterDlg::onExporttoSTL()
     int nTriangles = 0;
     if(m_pPlane)
     {
+        std::vector<Triangle3d> triangles;
+        for(int i=0; i<m_SelectedList.size(); i++)
+        {
+            WingXfl const *pWing = m_pPlane->wingFromName(m_SelectedList.at(i).toStdString());
+            Fuse const *pFuse = m_pPlane->fuseFromName(m_SelectedList.at(i).toStdString());
+            if(pWing)
+            {
+                makeSTLTriangulation(pWing, triangles, s_iChordPanels, s_iSpanPanels, 1.0);
+            }
+            else if(pFuse)
+            {
+                triangles.insert(triangles.end(), pFuse->triangles().begin(), pFuse->triangles().end());
+            }
+        }
         if(bBinary)
         {
-            std::vector<Triangle3d> triangles;
-            for(int i=0; i<m_SelectedList.size(); i++)
-            {
-                WingXfl const *pWing = m_pPlane->wingFromName(m_SelectedList.at(i).toStdString());
-                Fuse const *pFuse = m_pPlane->fuseFromName(m_SelectedList.at(i).toStdString());
-                if(pWing)
-                {
-                    makeSTLTriangulation(pWing, triangles, s_iChordPanels, s_iSpanPanels, 1.0);
-                }
-                else if(pFuse)
-                {
-                    triangles.insert(triangles.end(), pFuse->triangles().begin(), pFuse->triangles().end());
-                }
-            }
-            nTriangles = io::exportTriangulationToSTL(FileName, 1.0, triangles);
+            nTriangles = io::exportTriangulationToSTLBinary(FileName, 1.0, triangles);
         }
         else
         {
-            nTriangles = exportWingToSTLText(m_pWing, FileName, STLWriterDlg::s_iChordPanels, STLWriterDlg::s_iSpanPanels, 1.0);
+            nTriangles = io::exportTriangulationToSTLText(FileName, 1.0, triangles);
         }
     }
     else if(m_pWing)
     {
-        if(bBinary)
-        {
             std::vector<Triangle3d> triangles;
             makeSTLTriangulation(m_pWing, triangles, s_iChordPanels, s_iSpanPanels, 1.0);
-            nTriangles = io::exportTriangulationToSTL(FileName, 1.0, triangles);
+        if(bBinary)
+        {
+            nTriangles = io::exportTriangulationToSTLBinary(FileName, 1.0, triangles);
         }
         else
         {
-            nTriangles = exportWingToSTLText(m_pWing, FileName, STLWriterDlg::s_iChordPanels, STLWriterDlg::s_iSpanPanels, 1.0);
+            nTriangles = io::exportTriangulationToSTLText(FileName, 1.0, triangles);
         }
     }
     else if(m_pFuse)
     {
         if(bBinary)
         {
-            nTriangles = io::exportTriangulationToSTL(FileName, m_UnitFactor, m_pFuse->triangles());
+            nTriangles = io::exportTriangulationToSTLBinary(FileName, m_UnitFactor, m_pFuse->triangles());
         }
         else
         {
@@ -366,272 +355,25 @@ void STLWriterDlg::onExporttoSTL()
     }
     else if(m_pSail)
     {
+        Objects3d::makeSailTriangulation(m_pSail, s_iChordPanels, s_iSpanPanels);
         if(bBinary)
         {
-            nTriangles = exportSailToSTLBinary(m_pSail, FileName, STLWriterDlg::s_iChordPanels, STLWriterDlg::s_iSpanPanels, m_UnitFactor);
+            nTriangles = io::exportTriangulationToSTLBinary(FileName, m_UnitFactor, m_pSail->triangles());
+        }
+        else
+        {
+            nTriangles = io::exportTriangulationToSTLText(FileName, m_UnitFactor, m_pSail->triangles());
+
         }
     }
 
-    m_pptoOutputLog->insertPlainText("The part has been successfully exported to the STL file");
-    m_pptoOutputLog->insertPlainText("\n");
+    m_ppto->insertPlainText("The part has been successfully exported to the STL file\n");
     QString strong;
-    strong = QString::asprintf("Total triangles: %d", nTriangles);
-    m_pptoOutputLog->insertPlainText(strong);
+    strong = QString::asprintf("Total triangles: %d\n\n", nTriangles);
+    m_ppto->insertPlainText(strong);
 
 }
 
-
-
-int STLWriterDlg::exportWingToSTLText(WingXfl const *pWing, QString const &pathname, int CHORDPANELS, int SPANPANELS, double scalefactor) const
-{
-    Q_UNUSED(scalefactor)
-
-    QFile XFile(pathname);
-    QDataStream outstream(&XFile);
-    // stl format uses Little-Endian byte order
-    outstream.setByteOrder(QDataStream::LittleEndian);
-
-    /***
-     * solid name
-     *
-     *       facet normal ni nj nk
-     *         outer loop
-     *           vertex v1x v1y v1z
-     *           vertex v2x v2y v2z
-     *           vertex v3x v3y v3z
-     *      endloop
-     *   endfacet
-     *
-     * endsolid name
-    */
-    QString name = QString::fromStdString(pWing->name());
-    name.replace(" ","");
-    QString strong = "solid " + name + "\n";
-    outstream << strong;
-
-    Vector3d N, Pt;
-
-    std::vector<Node> PtLeft(CHORDPANELS+1);
-    std::vector<Node> PtRight(CHORDPANELS+1);
-    std::vector<Node> PtBotLeft(CHORDPANELS+1);
-    std::vector<Node> PtBotRight(CHORDPANELS+1);
-
-    //Number of triangles
-    // nSurfaces
-    //   *CHORDPANELS*SPANPANELS   quads
-    //   *2                        2 triangles/quad
-    //   *2                        top and bottom surfaces
-    // 2 Tip patches
-    //   1 LE triangle
-    //   1 TE triangle
-    //   CHORDPANELS-1  quads
-    //   *2 triangles/quad
-
-    int nTriangles = pWing->nSurfaces() * CHORDPANELS * SPANPANELS * 2 *2
-            + 2* ((CHORDPANELS-2) * 2 + 2);
-    N.set(0.0, 0.0, 0.0);
-    int iTriangles = 0;
-
-    for (int j=0; j<pWing->nSurfaces(); j++)
-    {
-        //top surface
-        for(int is=0; is<SPANPANELS; is++)
-        {
-            pWing->surfaceAt(j).getSidePoints_1(xfl::TOPSURFACE, nullptr,
-                                                PtLeft, PtRight, CHORDPANELS+1, xfl::COSINE);
-
-            double tauA = double(is)  /double(SPANPANELS);
-            double tauB = double(is+1)/double(SPANPANELS);
-            double tau = (tauA+tauB)/2.0;
-            for(int ic=0; ic<CHORDPANELS; ic++)
-            {
-                N = (PtLeft[ic].normal()+PtLeft[ic+1].normal()) * (1.0-tau) + (PtRight[ic].normal()+PtRight[ic+1].normal()) * tau;
-                N.normalize();
-
-                //1st triangle
-                outstream << QString::asprintf("  facet normal %13.7f  %13.7f  %13.7f\n",  N.x, N.y, N.z);
-                outstream << "    outer loop\n";
-                Pt = PtLeft[ic]   * (1.0-tauA) + PtRight[ic]   * tauA;
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  Pt.x, Pt.y, Pt.z);
-                Pt = PtLeft[ic+1] * (1.0-tauA) + PtRight[ic+1] * tauA;
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  Pt.x, Pt.y, Pt.z);
-                Pt = PtLeft[ic]   * (1.0-tauB) + PtRight[ic]   * tauB;
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  Pt.x, Pt.y, Pt.z);
-                outstream << "    endloop\n  endfacet\n";
-
-                //2nd triangle
-                outstream << QString::asprintf("  facet normal %13.7f  %13.7f  %13.7f\n",  N.x, N.y, N.z);
-                outstream << "    outer loop\n";
-                Pt = PtLeft[ic]   * (1.0-tauB) + PtRight[ic]   * tauB;
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  Pt.x, Pt.y, Pt.z);
-                Pt = PtLeft[ic+1] * (1.0-tauA) + PtRight[ic+1] * tauA;
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  Pt.x, Pt.y, Pt.z);
-                Pt = PtLeft[ic+1] * (1.0-tauB) + PtRight[ic+1] * tauB;
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  Pt.x, Pt.y, Pt.z);
-                outstream << "    endloop\n  endfacet\n";
-                iTriangles +=2;
-            }
-        }
-
-        //bottom surface
-        for(int is=0; is<SPANPANELS; is++)
-        {
-            pWing->surfaceAt(j).getSidePoints_1(xfl::BOTSURFACE, nullptr, PtLeft, PtRight, CHORDPANELS+1, xfl::COSINE);
-
-            double tauA = double(is)   / double(SPANPANELS);
-            double tauB = double(is+1) / double(SPANPANELS);
-            double tau = (tauA+tauB)/2.0;
-            for(int ic=0; ic<CHORDPANELS; ic++)
-            {
-                //left side vertices
-                N = (PtLeft[ic].normal()+PtLeft[ic+1].normal()) * (1.0-tau) + (PtRight[ic].normal()+PtRight[ic+1].normal()) * tau;
-                N.normalize();
-
-                //1st triangle
-                outstream << QString::asprintf("facet normal %13.7f  %13.7f  %13.7f\n",  N.x, N.y, N.z);
-                outstream << "    outer loop\n";
-                Pt = PtLeft[ic]   * (1.0-tauA) + PtRight[ic]   * tauA;
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  Pt.x, Pt.y, Pt.z);
-                Pt = PtLeft[ic+1] * (1.0-tauA) + PtRight[ic+1] * tauA;
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  Pt.x, Pt.y, Pt.z);
-                Pt = PtLeft[ic]   * (1.0-tauB) + PtRight[ic]   * tauB;
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  Pt.x, Pt.y, Pt.z);
-                outstream << "    endloop\n  endfacet\n";
-
-                //2nd triangle
-                outstream << QString::asprintf("facet normal %13.7f  %13.7f  %13.7f\n",  N.x, N.y, N.z);
-                outstream << "    outer loop\n";
-                Pt = PtLeft[ic+1] * (1.0-tauA) + PtRight[ic+1] * tauA;
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  Pt.x, Pt.y, Pt.z);
-                Pt = PtLeft[ic+1] * (1.0-tauB) + PtRight[ic+1] * tauB;
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  Pt.x, Pt.y, Pt.z);
-                Pt = PtLeft[ic]   * (1.0-tauB) + PtRight[ic]   * tauB;
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  Pt.x, Pt.y, Pt.z);
-                outstream << "    endloop\n  endfacet\n";
-                iTriangles +=2;
-            }
-        }
-    }
-
-    Q_ASSERT(iTriangles==pWing->nSurfaces() * CHORDPANELS * SPANPANELS * 2 *2);
-
-    //TIP PATCHES
-
-    for(int j=0; j<pWing->nSurfaces(); j++)
-    {
-        Surface const &surf = pWing->surfaceAt(j);
-
-        if(surf.isTipLeft())
-        {
-            surf.getSidePoints_1(xfl::TOPSURFACE, nullptr, PtLeft,    PtRight, CHORDPANELS+1, xfl::COSINE);
-            surf.getSidePoints_1(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, CHORDPANELS+1, xfl::COSINE);
-
-            N = surf.normal();
-            N.rotateX(90.0);
-
-            //L.E. triangle
-            outstream << QString::asprintf("  facet normal %13.7f  %13.7f  %13.7f\n",  N.x, N.y, N.z);
-            outstream << "    outer loop\n";
-            outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotLeft[0].x, PtBotLeft[0].y, PtBotLeft[0].z);
-            outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtLeft[1].x, PtLeft[1].y, PtLeft[1].z);
-            outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotLeft[1].x, PtBotLeft[1].y, PtBotLeft[1].z);
-            outstream << "    endloop\n  endfacet\n";
-            iTriangles +=1;
-
-            for(int ic=1; ic<CHORDPANELS-1; ic++)
-            {
-                //1st triangle
-                outstream << QString::asprintf("  facet normal %13.7f  %13.7f  %13.7f\n",  N.x, N.y, N.z);
-                outstream << "    outer loop\n";
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotLeft[ic].x, PtBotLeft[ic].y, PtBotLeft[ic].z);
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtLeft[ic].x, PtLeft[ic].y, PtLeft[ic].z);
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotLeft[ic+1].x, PtBotLeft[ic+1].y, PtBotLeft[ic+1].z);
-                outstream << "    endloop\n  endfacet\n";
-                //2nd triangle
-                outstream << QString::asprintf("  facet normal %13.7f  %13.7f  %13.7f\n",  N.x, N.y, N.z);
-                outstream << "    outer loop\n";
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotLeft[ic+1].x, PtBotLeft[ic+1].y, PtBotLeft[ic+1].z);
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtLeft[ic].x, PtLeft[ic].y, PtLeft[ic].z);
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtLeft[ic+1].x, PtLeft[ic+1].y, PtLeft[ic+1].z);
-                outstream << "    endloop\n  endfacet\n";
-                iTriangles +=2;
-            }
-            //T.E. triangle
-            int ic = CHORDPANELS-1;
-            outstream << QString::asprintf("  facet normal %13.7f  %13.7f  %13.7f\n",  N.x, N.y, N.z);
-            outstream << "    outer loop\n";
-            outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotLeft[ic].x, PtBotLeft[ic].y, PtBotLeft[ic].z);
-            outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtLeft[ic].x, PtLeft[ic].y, PtLeft[ic].z);
-            outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotLeft[ic+1].x, PtBotLeft[ic+1].y, PtBotLeft[ic+1].z);
-            outstream << "    endloop\n  endfacet\n";
-            iTriangles +=1;
-        }
-
-        if(surf.isTipRight())
-        {
-            surf.getSidePoints_1(xfl::TOPSURFACE, nullptr, PtLeft,    PtRight,    CHORDPANELS+1, xfl::COSINE);
-            surf.getSidePoints_1(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, CHORDPANELS+1, xfl::COSINE);
-
-            N = surf.normal();
-            N.rotateX(-90.0);
-
-            //L.E. triangle
-            outstream << QString::asprintf("  facet normal %13.7f  %13.7f  %13.7f\n",  N.x, N.y, N.z);
-            outstream << "    outer loop\n";
-            outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotRight[0].x, PtBotRight[0].y, PtBotRight[0].z);
-            outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtRight[1].x, PtRight[1].y, PtRight[1].z);
-            outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotRight[1].x, PtBotRight[1].y, PtBotRight[1].z);
-            outstream << "    endloop\n  endfacet\n";
-            iTriangles +=1;
-
-            for(int ic=1; ic<CHORDPANELS-1; ic++)
-            {
-                //1st triangle
-                outstream << QString::asprintf("  facet normal %13.7f  %13.7f  %13.7f\n",  N.x, N.y, N.z);
-                outstream << "    outer loop\n";
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotRight[ic].x, PtBotRight[ic].y, PtBotRight[ic].z);
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtRight[ic].x, PtRight[ic].y, PtRight[ic].z);
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotRight[ic+1].x, PtBotRight[ic+1].y, PtBotRight[ic+1].z);
-                outstream << "    endloop\n  endfacet\n";
-                //2nd triangle
-                outstream << QString::asprintf("  facet normal %13.7f  %13.7f  %13.7f\n",  N.x, N.y, N.z);
-                outstream << "    outer loop\n";
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotRight[ic+1].x, PtBotRight[ic+1].y, PtBotRight[ic+1].z);
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtRight[ic].x, PtRight[ic].y, PtRight[ic].z);
-                outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtRight[ic+1].x, PtRight[ic+1].y, PtRight[ic+1].z);
-                outstream << "    endloop\n  endfacet\n";
-                iTriangles +=2;
-            }
-            //T.E. triangle
-            int ic = CHORDPANELS-1;
-            outstream << QString::asprintf("  facet normal %13.7f  %13.7f  %13.7f\n",  N.x, N.y, N.z);
-            outstream << "    outer loop\n";
-            outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotRight[ic].x, PtBotRight[ic].y, PtBotRight[ic].z);
-            outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtRight[ic].x, PtRight[ic].y, PtRight[ic].z);
-            outstream << QString::asprintf("      vertex %13.7f  %13.7f  %13.7f\n",  PtBotRight[ic+1].x, PtBotRight[ic+1].y, PtBotRight[ic+1].z);
-            outstream << "    endloop\n  endfacet\n";
-            iTriangles +=1;
-        }
-    }
-
-    Q_ASSERT(iTriangles==nTriangles);
-
-    strong = "endsolid " + name + "\n";
-    outstream << strong;
-
-
-    return nTriangles;
-}
-
-
-int STLWriterDlg::exportSailToSTLBinary(Sail *pSail, QString const &pathname, int CHORDPANELS, int SPANPANELS, double scalefactor) const
-{
-    // make a triangulation for export
-//    pSail->makeTriangulation(CHORDPANELS, SPANPANELS);
-    Objects3d::makeSailTriangulation(pSail, CHORDPANELS, SPANPANELS);
-
-    return io::exportTriangulationToSTL(pathname, scalefactor, pSail->triangles());
-}
 
 
 void STLWriterDlg::loadSettings(QSettings &settings)

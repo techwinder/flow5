@@ -54,7 +54,7 @@ class XPlaneActions : public QObject
 
         QAction *m_pWPolarAct, *m_pWOppAct, *m_pW3dAct, *m_pCpViewAct, *m_pStabTimeAct, *m_pRootLocusAct;
         QAction *m_p3dLightAct, *m_pResetScale;
-        QAction *m_pDefinePlaneAct, *m_pSTLPlaneAct;
+        QAction *m_pDefineDefaultPlaneAct, *m_pDefineEmptyPlaneAct, *m_pSTLPlaneAct;
         QAction *m_pSavePlaneAsProjectAct, *m_pRenameCurPlaneAct, *m_pDeleteCurPlane, *m_pDuplicateCurPlane;
         QAction *m_pEditWPolarPts, *m_pExportCurWPolar, *m_pCopyCurWPolarData, *m_pResetCurWPolar;
         QAction *m_pShowOnlyCurPolar;

@@ -703,7 +703,6 @@ void P4Analysis::getVelocityVector(Vector3d const &C,
 
         for(int iBlock=0; iBlock<m_nBlocks; iBlock++)
         {
-//            futureSync.addFuture(QtConcurrent::run(&P4Analysis::velocityVectorBlock, this, iBlock, C, &VBlock[iBlock]));
             threads.push_back(std::thread(&P4Analysis::velocityVectorBlock, this, iBlock, C, &VBlock[iBlock], data));
         }
 

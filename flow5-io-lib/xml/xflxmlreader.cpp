@@ -513,7 +513,7 @@ bool XflXmlReader::readFuseXfl(FuseXfl *pFuseXfl, double lengthUnit, double mass
 bool XflXmlReader::readWing(WingXfl *pWing, Vector3d &WingLE, double &Rx, double &Ry, double lengthUnit, double massUnit, double inertiaUnit)
 {
     pWing->setWingType(xfl::OtherWing);
-    pWing->clearWingSections();
+    pWing->clearSections();
 
     while(!atEnd() && !hasError() && readNextStartElement() )
     {
@@ -587,7 +587,7 @@ bool XflXmlReader::readWing(WingXfl *pWing, Vector3d &WingLE, double &Rx, double
             {
                 if (name().compare(QString("Section"), Qt::CaseInsensitive)==0)
                 {
-                    pWing->appendWingSection({});
+                    pWing->appendSection({});
                     WingSection*pWingSec = &pWing->tipSection();
                     while(!atEnd() && !hasError() && readNextStartElement() )
                     {

@@ -61,7 +61,6 @@
 #include <interfaces/editors/analysis3ddef/wpolarautonamedlg.h>
 #include <interfaces/editors/analysisseldlg.h>
 #include <interfaces/editors/editplrdlg.h>
-#include <interfaces/editors/fuseedit/flatfaceconverterdlg.h>
 #include <interfaces/editors/fuseedit/fusemesherdlg.h>
 #include <interfaces/editors/fuseedit/fuseoccdlg.h>
 #include <interfaces/editors/fuseedit/fusestldlg.h>
@@ -1566,7 +1565,6 @@ bool XPlane::loadSettings(QSettings &settings)
     BatchXmlDlg::loadSettings(settings);
     CADExportDlg::loadSettings(settings);
     ExtraDragDlg::loadSettings(settings);
-    FlatFaceConverterDlg::loadSettings(settings);
     FuseOccDlg::loadSettings(settings);
     FuseStlDlg::loadSettings(settings);
     FuseXflDefDlg::loadSettings(settings);
@@ -1736,7 +1734,6 @@ bool XPlane::saveSettings(QSettings &settings)
     CADExportDlg::saveSettings(settings);
     T6PolarDlg::saveSettings(settings);
     ExtraDragDlg::saveSettings(settings);
-    FlatFaceConverterDlg::saveSettings(settings);
     FuseOccDlg::saveSettings(settings);
     FuseStlDlg::saveSettings(settings);
     FuseXflDefDlg::saveSettings(settings);
@@ -3690,7 +3687,11 @@ void XPlane::onHidePlaneWPolars()
 
 void XPlane::onNewPlane()
 {
-    PlaneXfl* pPlane = new PlaneXfl(true);
+    QAction *pSenderAction = qobject_cast<QAction *>(sender());
+    if (!pSenderAction) return;
+
+    PlaneXfl *pPlane = new PlaneXfl(pSenderAction->data().toInt()==0);
+
     pPlane->setLineWidth(Curve::defaultLineWidth());
 
     pPlane->makePlane(true, false, true);
@@ -5750,7 +5751,7 @@ void XPlane::onExportFuseToSTL()
 
     if(bBinary)
     {
-        io::exportTriangulationToSTL(FileName,1.0, pFuse->triangles());
+        io::exportTriangulationToSTLBinary(FileName,1.0, pFuse->triangles());
     }
     else
     {

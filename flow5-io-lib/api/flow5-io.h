@@ -68,13 +68,12 @@ namespace io
     FL5IOLIB_EXPORT FuseOcc* importFuseFromSTEP(std::string const&FilePath, std::string &logmsg);
 
     FL5IOLIB_EXPORT bool exportMeshToSTLFile(const QString &filename, TriMesh const &trimesh, double mtounit);
-    FL5IOLIB_EXPORT int exportTriangulationToSTL(const QString &pathname, double scalefactor, std::vector<Triangle3d> const &triangle);
+    FL5IOLIB_EXPORT int exportTriangulationToSTLBinary(const QString &pathname, double scalefactor, std::vector<Triangle3d> const &triangle);
+    FL5IOLIB_EXPORT int exportTriangulationToSTLText(const QString &pathname, double scalefactor, std::vector<Triangle3d> const &triangles);
 
     FL5IOLIB_EXPORT int exportTriMeshToSTL(QString const &pathname, double scalefactor, TriMesh const &trimesh);
 
-    FL5IOLIB_EXPORT bool importVSPWing(QString const &filename, std::vector<WingXfl *> &winglist, QString &logmsg);
-    FL5IOLIB_EXPORT bool readVSPFoilFile(QString const &FoilFileName, Foil *pFoil);
-    FL5IOLIB_EXPORT void readVSPSection(QTextStream &stream, QString &wingname, int &index, WingSection &ws);
+    FL5IOLIB_EXPORT bool importVSPWings(QString const &filename, std::vector<WingXfl *> &winglist, QString &logmsg);
 
     FL5IOLIB_EXPORT bool readPolarFile(QFile &plrFile, std::vector<Foil *> &foilList, std::vector<Polar *> &polarList);
 

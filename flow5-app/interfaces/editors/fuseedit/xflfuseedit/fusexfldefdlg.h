@@ -86,7 +86,6 @@ class FuseXflDefDlg : public FuseXflDlg
 
     private slots:       
         void onControlPoints();
-        void onConvertToFlatFace() override;
         void onEdgeWeight();
         void onFitPrecision();
         void onFrameCellChanged();

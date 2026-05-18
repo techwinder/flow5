@@ -257,7 +257,7 @@ void ObjectTreeView::readWingSectionTree(WingXfl *pWing, QModelIndex indexLevel)
         indexLevel = indexLevel.sibling(indexLevel.row()+1,0);
     } while(indexLevel.isValid());
 
-    pWing->appendWingSection(pWS);
+    pWing->appendSection(pWS);
 }
 
 

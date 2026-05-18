@@ -193,7 +193,7 @@ void WingObjectDlg::updateData()
 
 void WingObjectDlg::onEndEdit()
 {
-    m_pWing->clearWingSections();
+    m_pWing->clearSections();
     m_pWing->clearPointMasses();
     m_pTreeView->readWingTree(m_pWing);
     m_bChanged = true;

@@ -94,7 +94,6 @@ class FuseXflObjectDlg : public FuseXflDlg
         void onFrameClickedIn2dView() override;
         void onPointClickedIn2dView() override;
         void onUpdateFuseDlg();
-        void onConvertToFlatFace() override;
 
         void onRefillBodyTree();
         void onItemClicked(const QModelIndex &index);

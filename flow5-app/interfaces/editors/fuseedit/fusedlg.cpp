@@ -435,7 +435,7 @@ void FuseDlg::onExportTrianglesToSTLFile()
     bool bBinary = true;
     if(bBinary)
     {
-        io::exportTriangulationToSTL(FileName, 1.0, m_pFuse->triangles());
+        io::exportTriangulationToSTLBinary(FileName, 1.0, m_pFuse->triangles());
     }
     else
     {

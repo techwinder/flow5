@@ -24,9 +24,6 @@
 
 
 
-#include <format>
-
-
 #include <wingsection.h>
 
 

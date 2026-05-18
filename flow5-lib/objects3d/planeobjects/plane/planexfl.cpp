@@ -23,7 +23,7 @@
 *****************************************************************************/
 
 #include <format>
-
+#include <chrono>
 
 #include <planexfl.h>
 #include <fusenurbs.h>
@@ -340,7 +340,8 @@ void PlaneXfl::createSurfaces()
         double ry = pWing->ry();
         pWing->createSurfaces(LE, rx, ry);
         pWing->computeGeometry();
-        if(pWing->bAutoInertia()) pWing->computeStructuralInertia(pWing->position());
+        if(pWing->bAutoInertia())
+            pWing->computeStructuralInertia(pWing->position());
     }
 
     createWingSideNodes();
@@ -1782,8 +1783,6 @@ void PlaneXfl::setRangePositions3(PlanePolar const *pWPolar, double t, std::stri
 void PlaneXfl::rotateWingNodes(std::vector<Panel3> const &panel3, std::vector<Node> &node, WingXfl const *pWing,
                                 Vector3d const &hingePoint, Vector3d const & hingeVector, double alpha) const
 {
-//    auto t0 = std::chrono::high_resolution_clock::now();
-
     bool bFound=false;
 
     for(unsigned int iNode=0; iNode<node.size(); iNode++)
@@ -1799,11 +1798,6 @@ void PlaneXfl::rotateWingNodes(std::vector<Panel3> const &panel3, std::vector<No
         }
         if(bFound) node[iNode].rotate(hingePoint, hingeVector, alpha);
     }
-
-/*
-    auto t1 = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    qDebug("PlaneTask::rotateWingNodes: {:g}ms", double(duration)/1000.0);*/
 }
 
 

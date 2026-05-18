@@ -462,7 +462,8 @@ void XPlaneMenus::createMainBarMenus()
 
     m_pPlaneMenu = m_pMainFrame->menuBar()->addMenu(tr("&Plane"));
     {
-        m_pPlaneMenu->addAction(pActions->m_pDefinePlaneAct);
+        m_pPlaneMenu->addAction(pActions->m_pDefineDefaultPlaneAct);
+        m_pPlaneMenu->addAction(pActions->m_pDefineEmptyPlaneAct);
         m_pCurrentPlaneMenu = m_pPlaneMenu->addMenu(tr("Active plane"));
         {
             m_pCurrentPlaneMenu->addAction(pActions->m_pEditPlaneAct);

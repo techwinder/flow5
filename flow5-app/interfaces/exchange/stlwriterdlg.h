@@ -26,11 +26,9 @@
 #pragma once
 
 #include <QDialog>
-#include <QCheckBox>
 #include <QRadioButton>
 #include <QLabel>
 #include <QListWidget>
-#include <QPlainTextEdit>
 #include <QComboBox>
 #include <QSettings>
 
@@ -44,7 +42,6 @@ class Sail;
 class IntEdit;
 class PlainTextOutput;
 class Triangle3d;
-class TriMesh;
 
 class STLWriterDlg : public QDialog
 {
@@ -54,9 +51,13 @@ class STLWriterDlg : public QDialog
         STLWriterDlg(QWidget *pParent);
         void initDialog(PlaneXfl *pPlane, WingXfl *pWing, Fuse *pFuse, Sail *pSail);
 
-        int exportWingToSTLText(const WingXfl *pWing, const QString &pathname, int CHORDPANELS, int SPANPANELS, double scalefactor) const;
+        static void loadSettings(QSettings &settings);
+        static void saveSettings(QSettings &settings);
 
-        int exportSailToSTLBinary(Sail *pSail, const QString &pathname, int CHORDPANELS, int SPANPANELS, double scalefactor) const;
+
+    private:
+        void setupLayout();
+        void readParams();
 
         void makeSTLTriangulation(WingXfl const *pWingXfl, std::vector<Triangle3d> &triangles, int CHORDPANELS, int SPANPANELS, double scalefactor=1.0) const;
 
@@ -66,17 +67,6 @@ class STLWriterDlg : public QDialog
         void accept() override;
         void showEvent(QShowEvent *pEvent) override;
         void hideEvent(QHideEvent *pEvent) override;
-
-        static void loadSettings(QSettings &settings);
-        static void saveSettings(QSettings &settings);
-
-        static bool s_bBinary;
-        static int s_iChordPanels;
-        static int s_iSpanPanels;
-
-    private:
-        void setupLayout();
-        void readParams();
 
     private slots:
         void onSetLabels();
@@ -94,7 +84,7 @@ class STLWriterDlg : public QDialog
         QRadioButton *m_prbBinary, *m_prbASCII;
         QListWidget *m_plwNameList;
         QLabel *m_plabChord, *m_plabSpan;
-        PlainTextOutput *m_pptoOutputLog;
+        PlainTextOutput *m_ppto;
         QComboBox *m_pcbLengthUnitSel;
         QStringList m_SelectedList;
 
@@ -102,6 +92,9 @@ class STLWriterDlg : public QDialog
         static int s_LengthUnitIndex;
         static QByteArray s_Geometry;
 
+        static bool s_bBinary;
+        static int s_iChordPanels;
+        static int s_iSpanPanels;
 };
 
 

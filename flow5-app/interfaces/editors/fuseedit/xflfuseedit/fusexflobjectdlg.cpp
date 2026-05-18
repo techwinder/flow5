@@ -1078,9 +1078,4 @@ void FuseXflObjectDlg::removeSelectedPoint()
 }
 
 
-void FuseXflObjectDlg::onConvertToFlatFace()
-{
-    FuseXflDlg::onConvertToFlatFace();
-    updateFuseDlg();
-}
 
