@@ -91,7 +91,6 @@
 #include <interfaces/editors/planeedit/planepartdelegate.h>
 #include <interfaces/editors/planeedit/planepartmodel.h>
 #include <interfaces/editors/wingedit/wingdefdlg.h>
-#include <interfaces/editors/wingedit/wingobjectdlg.h>
 #include <interfaces/editors/wingedit/wingscaledlg.h>
 #include <interfaces/exchange/stlwriterdlg.h>
 #include <interfaces/mesh/afmesher.h>
@@ -1618,15 +1617,14 @@ void PlaneXflDlg::onUpdateHighlightedPanels()
 }
 
 
-void PlaneXflDlg::editWing(WingXfl *pWing, bool bAdvanced)
+void PlaneXflDlg::editWing(WingXfl *pWing)
 {
     if(!pWing) return;
     WingXfl modWing;
     modWing.duplicate(pWing);
 
-    WingDlg *pWingDlg = nullptr;
-    if(!bAdvanced) pWingDlg = new WingDefDlg(this);
-    else           pWingDlg = new WingObjectDlg(this);
+    WingDefDlg *pWingDlg = new WingDefDlg(this);
+
     pWingDlg->hideSaveAsNew();
 
     pWingDlg->initDialog(&modWing);
@@ -2115,20 +2113,17 @@ void PlaneXflDlg::onEditPart()
     QAction *pSenderAction = qobject_cast<QAction *>(sender());
     if (!pSenderAction) return;
 
-    bool bAdvanced = false;
-//    if     (pSenderAction == m_pEditPartDef)    bAdvanced = false;
-//    else if(pSenderAction == m_pEditPartObject) bAdvanced = true;
-
     int row = selectedPart();
 
     if(row<m_pPlaneXfl->nWings())
     {
         WingXfl *pWing = m_pPlaneXfl->wing(row);
-        editWing(pWing, bAdvanced);
+        editWing(pWing);
     }
     else if(row>=m_pPlaneXfl->nWings())
     {
         int iFuse = row-m_pPlaneXfl->nWings();
+        bool bAdvanced = false;
         editFuse(iFuse, bAdvanced);
     }
 }
@@ -2190,6 +2185,7 @@ void PlaneXflDlg::onResetFuse()
 void PlaneXflDlg::onRemovePart()
 {
     int row = selectedPart();
+
     if (row<0 || row>=m_pPlaneXfl->nParts()) return;
 
     int iFuse = row-m_pPlaneXfl->nWings();
@@ -2334,6 +2330,7 @@ void PlaneXflDlg::onPartItemClicked(QModelIndex index)
             m_pResetFuse->setEnabled(index.row()>=m_pPlaneXfl->nWings());
             m_pFlipNormals->setEnabled(index.row()>=m_pPlaneXfl->nWings());
             m_pTessellation->setEnabled(index.row()>=m_pPlaneXfl->nWings());
+
             m_pPartMenu->exec(menupos, m_pEditPartDef);
         }
     }

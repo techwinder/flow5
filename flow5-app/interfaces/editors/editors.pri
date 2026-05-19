@@ -87,8 +87,6 @@ HEADERS += \
     $$PWD/shapedlg.h \
     $$PWD/translatedlg.h \
     $$PWD/wingedit/wingdefdlg.h \
-    $$PWD/wingedit/wingdlg.h \
-    $$PWD/wingedit/wingobjectdlg.h \
     $$PWD/wingedit/wingscaledlg.h \
     $$PWD/wingedit/wingsectiondelegate.h \
     $$PWD/wingedit/wingsectionmodel.h \
@@ -173,8 +171,6 @@ SOURCES += \
     $$PWD/shapedlg.cpp \
     $$PWD/translatedlg.cpp \
     $$PWD/wingedit/wingdefdlg.cpp \
-    $$PWD/wingedit/wingdlg.cpp \
-    $$PWD/wingedit/wingobjectdlg.cpp \
     $$PWD/wingedit/wingscaledlg.cpp \
     $$PWD/wingedit/wingsectiondelegate.cpp \
     $$PWD/wingedit/wingsectionmodel.cpp \

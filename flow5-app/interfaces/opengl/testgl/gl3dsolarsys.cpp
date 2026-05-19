@@ -320,12 +320,12 @@ void gl3dSolarSys::glRenderView()
 
     float radius = float(1.3927e9/SCALEFACTOR);
 
-    m_shadPoint.bind();
+    m_shadPoint2.bind();
     {
-        m_shadPoint.setUniformValue(m_locPoint.m_vmMatrix, vmMat);
-        m_shadPoint.setUniformValue(m_locPoint.m_pvmMatrix, pvmMat);
+        m_shadPoint2.setUniformValue(m_locPoint.m_vmMatrix, vmMat);
+        m_shadPoint2.setUniformValue(m_locPoint.m_pvmMatrix, pvmMat);
     }
-    m_shadPoint.release();
+    m_shadPoint2.release();
     paintPoints2(m_vboLightSource, radius*m_glScalef*500.0, false, Qt::black, 4);
 
 

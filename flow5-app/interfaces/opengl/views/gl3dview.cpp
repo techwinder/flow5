@@ -322,7 +322,7 @@ void gl3dView::initializeGL()
     m_shadSurf.release();
 
     //--------- setup the shader to paint stippled large points -----------
-
+#ifndef MAC_OS
     vsrc = ":/shaders/point/point_VS.glsl";
     m_shadPoint.addShaderFromSourceFile(QOpenGLShader::Vertex, vsrc);
     if(m_shadPoint.log().length())
@@ -366,7 +366,7 @@ void gl3dView::initializeGL()
         m_locPoint.m_TwoSided    = m_shadPoint.uniformLocation("TwoSided");
     }
     m_shadPoint.release();
-
+#endif
 
     // setup the flat point shader
     vsrc = ":/shaders/point2/point2_VS.glsl";

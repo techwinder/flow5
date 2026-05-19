@@ -85,7 +85,7 @@ class PlaneXflDlg : public PlaneDlg
         void makeActions();
         void connectSignals();
 
-        void editWing(WingXfl *pWing, bool bAdvanced=false);
+        void editWing(WingXfl *pWing);
         void editFuse(int iFuse, bool bAdvanced=false);
         void readParams();
 
@@ -208,8 +208,6 @@ class PlaneXflDlg : public PlaneDlg
         QList<TriMesh> m_UndoStack;      /**< the stack of incremental modifications to the SplineFoil;
                                               we can't use the QStack though, because we need to access
                                               any point in the case of multiple undo operations */
-
-        QComboBox *m_pcbStepFormat;
 
         QMenu *m_pPartMenu;
         QAction *m_pScalePlane;

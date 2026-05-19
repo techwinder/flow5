@@ -72,7 +72,6 @@
 #include <interfaces/editors/fuseedit/fusemesherdlg.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.h>
 #include <interfaces/editors/planeedit/planexfldlg.h>
-#include <interfaces/editors/wingedit/wingdlg.h>
 #include <interfaces/graphs/containers/fastgraphwt.h>
 #include <interfaces/graphs/controls/graphdlg.h>
 #include <interfaces/graphs/controls/graphoptions.h>

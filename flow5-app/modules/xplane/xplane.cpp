@@ -74,7 +74,6 @@
 #include <interfaces/editors/planeedit/planexfldlg.h>
 #include <interfaces/editors/translatedlg.h>
 #include <interfaces/editors/wingedit/wingdefdlg.h>
-#include <interfaces/editors/wingedit/wingobjectdlg.h>
 #include <interfaces/editors/wingedit/wingscaledlg.h>
 #include <interfaces/exchange/cadexportdlg.h>
 #include <interfaces/exchange/stlwriterdlg.h>
@@ -1585,7 +1584,6 @@ bool XPlane::loadSettings(QSettings &settings)
     StlReaderDlg::loadSettings(settings);
     WPolarAutoNameDlg::loadSettings(settings);
     WingDefDlg::loadSettings(settings);
-    WingObjectDlg::loadSettings(settings);
     WingSelDlg::loadSettings(settings);
     WingExportDlg::loadSettings(settings);
     XPlaneWt::loadSettings(settings);
@@ -1754,7 +1752,6 @@ bool XPlane::saveSettings(QSettings &settings)
     StlReaderDlg::saveSettings(settings);
     WPolarAutoNameDlg::saveSettings(settings);
     WingDefDlg::saveSettings(settings);
-    WingObjectDlg::saveSettings(settings);
     WingSelDlg::saveSettings(settings);
     WingExportDlg::saveSettings(settings);
     XPlaneWt::saveSettings(settings);
@@ -3072,12 +3069,7 @@ void XPlane::onEditCurWing()
         return;
     }
 
-    WingDlg *pWngDlg = nullptr;
-/*    if (pSenderAction==m_pActions->m_pEditWingObject || pSenderAction==m_pActions->m_pEditStabObject || pSenderAction==m_pActions->m_pEditFinObject)
-    {
-        pWngDlg = new WingObjectDlg(s_pMainFrame);
-    }
-    else*/
+    WingDefDlg *pWngDlg = nullptr;
     if(pSenderAction==m_pActions->m_pEditWingDef || pSenderAction==m_pActions->m_pEditStabDef || pSenderAction==m_pActions->m_pEditFinDef)
     {
         pWngDlg = new WingDefDlg(s_pMainFrame);

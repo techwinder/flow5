@@ -71,6 +71,7 @@ class FL5LIB_EXPORT WingXfl : public Part
     friend class  PlaneXflDlg;
     friend struct SpanDistribs;
     friend class  Surface;
+    friend class  WingDefDlg;
     friend class  WingDlg;
     friend class  XMLPlaneReader;
 

@@ -111,6 +111,9 @@ void gl3dTestPoints::glRenderView()
 
     if(m_iRenderer==0)
     {
+
+#if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
+#else
         m_shadPoint.bind();
         {
             m_shadPoint.setUniformValue(m_locPoint.m_vmMatrix,  vmMat);
@@ -124,6 +127,7 @@ void gl3dTestPoints::glRenderView()
 
         glDisable(GL_CULL_FACE);
         paintPoints(m_vboPoints, float(PointSize)/1.0f, m_iShape, true, Qt::black, 8);
+#endif
     }
     else if(m_iRenderer==1)
     {

@@ -184,7 +184,7 @@ void QuadMesh::checkPanels(std::string &logmsg, bool bMinAngle, bool bMinArea, b
             {
                 warplist.push_back(i4);
                 count++;
-                strong = std::format("   Panel {:4d} has warp = %7.2g", i4, warp);
+                strong = std::format("   Panel {:4d} has warp ={:7.2g}", i4, warp);
                 log += strong + DEGstr +"\n";
             }
     //                else m_PanelHightlight.insert(i4, false);

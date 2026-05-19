@@ -1296,16 +1296,16 @@ void PlanePolar::getProperties(std::string &props, Plane const *pPlane) const
 
     if(isStabilityPolar())
     {
-        strong  = frontspacer + "Ixx = "+std::format("%7.4g ",  Ixx()*lenunit*lenunit*massunit);
+        strong  = frontspacer + "Ixx = "+std::format("{:7.4g} ",  Ixx()*lenunit*lenunit*massunit);
         PolarProps += strong + inertiaunit + EOLstr;
 
-        strong  = frontspacer + "Iyy = "+std::format("%7.4g ", Iyy()*lenunit*lenunit*massunit);
+        strong  = frontspacer + "Iyy = "+std::format("{:7.4g} ", Iyy()*lenunit*lenunit*massunit);
         PolarProps += strong + inertiaunit + EOLstr;
 
-        strong  = frontspacer + "Izz = "+std::format("%7.4g ", Izz()*lenunit*lenunit*massunit);
+        strong  = frontspacer + "Izz = "+std::format("{:7.4g} ", Izz()*lenunit*lenunit*massunit);
         PolarProps += strong + inertiaunit + EOLstr;
 
-        strong  = frontspacer + "Ixz = "+std::format("%7.4g ", Ixz()*lenunit*lenunit*massunit);
+        strong  = frontspacer + "Ixz = "+std::format("{:7.4g} ", Ixz()*lenunit*lenunit*massunit);
         PolarProps += strong + inertiaunit + EOLstr;
     }
 
@@ -1326,7 +1326,7 @@ void PlanePolar::getProperties(std::string &props, Plane const *pPlane) const
                 {
                     strange = "      " +  pPlaneXfl->controlSurfaceName(ig) + ":";
                     strange.resize(30, ' ');
-                    strange += std::format(" %7.2g", avlc.value(ig)) + DEGstr+ EOLstr;
+                    strange += std::format(" {:7.2g}", avlc.value(ig)) + DEGstr+ EOLstr;
 
                     PolarProps += strange;
                 }
