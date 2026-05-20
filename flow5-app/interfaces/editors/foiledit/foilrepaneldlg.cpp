@@ -30,15 +30,16 @@
 
 #include "foilrepaneldlg.h"
 
-#include <core/displayoptions.h>
-#include <interfaces/editors/foiledit/foilwt.h>
 #include <api/cubicspline.h>
 #include <api/foil.h>
-#include <xfoil_params.h>
+
+#include <core/displayoptions.h>
+#include <interfaces/editors/foiledit/foilwt.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/line/linebtn.h>
 #include <interfaces/widgets/line/linemenu.h>
+#include <xfoil_params.h>
 
 
 FoilRepanelDlg::FoilRepanelDlg(QWidget *pParent) : FoilDlg(pParent)

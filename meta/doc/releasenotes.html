@@ -34,11 +34,12 @@
                         <ul>
                             <li>fixed the import of wings exported from OpenVSP, with however precision loss due to incompatible data structures</li>
                             <li>added the import of meshes from OBJ files in addition to STL</li>
+                            <li>added XFoil's PANE method as an alternative to re-panel airfoils</li>
                         </ul>
                     </li>
                     <li>Analysis
                         <ul>
-                            <li></li>
+                            <li>fixed the incorrect calculation of control derivatives on MacOS</li>
                         </ul>
                     </li>
                     <li>Source code and API
@@ -58,12 +59,12 @@
                     </li>
                     <li>UI
                         <ul>
-                            <li>optimized performance of the wing editor</li>
+                            <li>improved the performance of the wing editor</li>
                         </ul>
                     </li>
                     <li>Other
                         <ul>
-                            <li>packaged the windows binaries with Intel's MKL TBB threading library instead of the OpenMP library
+                            <li>packaged the Windows binaries with Intel's MKL TBB threading library instead of the OpenMP library
                             to possibly avoid threading conflicts with Gmsh</li>
                         </ul>
                     </li>

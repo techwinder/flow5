@@ -257,6 +257,7 @@ void FoilTable::contextMenuEvent(QContextMenuEvent *pEvent)
 //            pModifyMenu->addAction(s_pXDirect->m_pActions->m_pNormalizeFoil);
             pModifyMenu->addAction(s_pXDirect->m_pActions->m_pDerotateFoil);
             pModifyMenu->addAction(s_pXDirect->m_pActions->m_pRefineGlobalFoil);
+            pModifyMenu->addAction(s_pXDirect->m_pActions->m_pRefineXFoil);
             pModifyMenu->addAction(s_pXDirect->m_pActions->m_pEditCoordsFoil);
             pModifyMenu->addAction(s_pXDirect->m_pActions->m_pScaleFoil);
             pModifyMenu->addAction(s_pXDirect->m_pActions->m_pSetTEGap);

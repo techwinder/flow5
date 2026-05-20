@@ -738,7 +738,7 @@ void WingDefDlg::contextMenuEvent(QContextMenuEvent *pEvent)
     QPoint pt = pEvent->pos();
     if(r.contains(pt))
     {
-        QMenu *pContextMenu = new QMenu(tr("GraphMenu"));
+        QMenu *pContextMenu = new QMenu("GraphMenu");
         QMenu *pSectionMenu = pContextMenu->addMenu(tr("Selected section"));
         {
             pSectionMenu->addAction(m_pInsertBefore);

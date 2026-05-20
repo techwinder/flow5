@@ -897,7 +897,7 @@ m_pSail->makeTriPanels(Vector3d());*/
 
 void SailDlg::contextMenuEvent(QContextMenuEvent *pEvent)
 {
-    QMenu *pContextMenu = new QMenu(tr("GraphMenu"));
+    QMenu *pContextMenu = new QMenu("GraphMenu");
     {
         pContextMenu->addAction(m_pTranslate);
         pContextMenu->addAction(m_pScaleShape);

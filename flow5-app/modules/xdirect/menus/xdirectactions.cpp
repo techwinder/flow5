@@ -238,6 +238,10 @@ void XDirectActions::makeActions()
     m_pRefineGlobalFoil->setShortcut(Qt::Key_F9);
     connect(m_pRefineGlobalFoil, SIGNAL(triggered()), m_pXDirect, SLOT(onRefineGlobally()));
 
+    m_pRefineXFoil = new QAction(tr("Refine using XFoil"), this);
+    m_pRefineXFoil->setShortcut(QKeySequence(Qt::ALT | Qt::Key_F9));
+    connect(m_pRefineXFoil, SIGNAL(triggered()), m_pXDirect, SLOT(onRefineXFoil()));
+
     m_pEditCoordsFoil = new QAction(tr("Coordinates"), this);
     connect(m_pEditCoordsFoil, SIGNAL(triggered()), m_pXDirect, SLOT(onFoilCoordinates()));
 

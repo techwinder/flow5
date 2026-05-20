@@ -54,6 +54,7 @@
 #include <interfaces/editors/foiledit/foilscaledlg.h>
 #include <interfaces/editors/foiledit/foiltegapdlg.h>
 #include <interfaces/editors/foiledit/interpolatefoilsdlg.h>
+#include <interfaces/editors/foiledit/xfoilpaneldlg.h>
 #include <interfaces/graphs/containers/graphwt.h>
 #include <interfaces/graphs/controls/graphdlg.h>
 #include <interfaces/graphs/controls/graphoptions.h>
@@ -406,6 +407,7 @@ void XDirect::setControls()
     m_pActions->m_pDerotateFoil->setEnabled(s_pCurFoil);
 //    m_pActions->m_pNormalizeFoil->setEnabled(s_pCurFoil);
     m_pActions->m_pRefineGlobalFoil->setEnabled(s_pCurFoil);
+    m_pActions->m_pRefineXFoil->setEnabled(s_pCurFoil);
     m_pActions->m_pEditCoordsFoil->setEnabled(s_pCurFoil);
     m_pActions->m_pScaleFoil->setEnabled(s_pCurFoil);
     m_pActions->m_pSetLERadius->setEnabled(s_pCurFoil);
@@ -1036,6 +1038,7 @@ void XDirect::loadSettings(QSettings &settings)
     BatchXFoilDlg::loadSettings(settings);
     XFoilAnalysisDlg::loadSettings(settings);
     FoilDlg::loadSettings(settings);
+    XFoilPanelDlg::loadSettings(settings);
 
     m_pDFoilWt->loadSettings(settings);
 
@@ -1112,7 +1115,6 @@ void XDirect::saveSettings(QSettings &settings)
     }
     settings.endGroup();
 
-
     OpPointWt::saveSettings(settings);
     EditPlrDlg::saveSettings(settings);
     FoilPolarDlg::saveSettings(settings);
@@ -1121,6 +1123,7 @@ void XDirect::saveSettings(QSettings &settings)
     BatchAltDlg::saveSettings(settings);
     BatchXFoilDlg::saveSettings(settings);
     XFoilAnalysisDlg::saveSettings(settings);
+    XFoilPanelDlg::saveSettings(settings);
 
     FoilDlg::saveSettings(settings);
 
@@ -2708,6 +2711,42 @@ void XDirect::onRefineGlobally()
     {
         Foil *pNewFoil = new Foil;
         pNewFoil->copy(tdpDlg.bufferFoil());
+        pNewFoil->setName(s_pCurFoil->name());
+        pNewFoil->setTheStyle(s_pCurFoil->theStyle());
+        pNewFoil->show();
+        if(addNewFoil(pNewFoil))
+        {
+            setFoil(pNewFoil);
+            m_pFoilExplorer->insertFoil(pNewFoil);
+            m_pFoilExplorer->selectFoil(pNewFoil);
+            m_pFoilTable->updateTable();
+            m_pFoilTable->selectFoil(pNewFoil);
+            m_pDFoilWt->resetLegend();
+
+            emit projectModified();
+            m_bResetCurves = true;
+            updateView();
+        }
+        else delete pNewFoil;
+    }
+
+    updateView();
+}
+
+
+void XDirect::onRefineXFoil()
+{
+    if(!s_pCurFoil) return;
+    stopAnimate();
+
+    XFoilPanelDlg XFDlg(s_pMainFrame);
+
+    XFDlg.initDialog(s_pCurFoil);
+
+    if(QDialog::Accepted == XFDlg.exec())
+    {
+        Foil *pNewFoil = new Foil;
+        pNewFoil->copy(XFDlg.bufferFoil());
         pNewFoil->setName(s_pCurFoil->name());
         pNewFoil->setTheStyle(s_pCurFoil->theStyle());
         pNewFoil->show();

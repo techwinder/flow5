@@ -67,13 +67,13 @@ WingXfl::WingXfl(xfl::enumType type) : Part()
 
     m_nFlaps =  0;
 
-/*    switch (m_WingType)
+    switch (m_WingType)
     {
         default:
         case xfl::Main:     makeDefaultWing();  break;
         case xfl::Elevator: makeDefaultStab();  break;
         case xfl::Fin:      makeDefaultFin();   break;
-    }*/
+    }
 }
 
 
@@ -1666,8 +1666,9 @@ void WingXfl::scaleArea(double newArea)
  */
 int WingXfl::quadTotal(bool bThinSurface) const
 {
-    double MinPanelSize;
+    if(m_Section.size()==0) return 0;
 
+    double MinPanelSize(0);
     if(s_MinSurfaceLength>0.0) MinPanelSize = s_MinSurfaceLength;
     else                       MinPanelSize = m_PlanformSpan/1000.0;
     int total = 0;

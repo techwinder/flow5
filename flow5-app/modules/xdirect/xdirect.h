@@ -238,6 +238,7 @@ class XDirect : public QObject
         void onPolarProps();
         void onPolarView();
         void onRefineGlobally();
+        void onRefineXFoil();
         void onRenameCurFoil();
         void onRenameCurPolar();
         void onResetAllPolarGraphsScales();

@@ -71,6 +71,7 @@ void XDirectMenus::createFoilMenus()
 //            m_pActiveFoilMenu->addAction(pActions->m_pNormalizeFoil);
             m_pActiveFoilMenu->addAction(pActions->m_pDerotateFoil);
             m_pActiveFoilMenu->addAction(pActions->m_pRefineGlobalFoil);
+            m_pActiveFoilMenu->addAction(pActions->m_pRefineXFoil);
             m_pActiveFoilMenu->addAction(pActions->m_pEditCoordsFoil);
             m_pActiveFoilMenu->addAction(pActions->m_pScaleFoil);
             m_pActiveFoilMenu->addAction(pActions->m_pSetTEGap);

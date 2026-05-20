@@ -24,13 +24,13 @@
 
 #include <filesystem>
 
+#include <BRepBuilderAPI_Transform.hxx>
+#include <BRepTools.hxx>
+#include <Bnd_Box.hxx>
 #include <RWObj.hxx>
 #include <RWStl.hxx>
-#include <gp_Trsf.hxx>
-#include <Bnd_Box.hxx>
-#include <BRepTools.hxx>
 #include <STEPControl_Writer.hxx>
-#include <BRepBuilderAPI_Transform.hxx>
+#include <gp_Trsf.hxx>
 
 #include <QDataStream>
 #include <QDir>
@@ -139,7 +139,7 @@ bool io::readOBJFile(std::string const&FilePath, double FileUnitsToMeter,
 {
     Standard_CString ObjFile = FilePath.c_str();
 
-    Handle(Poly_Triangulation) polyTriangulation = RWObj::ReadFile(ObjFile); // not sure how to set the merge angle
+    Handle(Poly_Triangulation) polyTriangulation = RWObj::ReadFile(ObjFile);
 
     occ::polyTriangulationToTriangles(polyTriangulation, FileUnitsToMeter, triangles, botleft, topright);
 

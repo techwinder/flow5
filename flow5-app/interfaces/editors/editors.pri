@@ -55,6 +55,7 @@ HEADERS += \
     $$PWD/foiledit/foiltegapdlg.h \
     $$PWD/foiledit/foilwt.h \
     $$PWD/foiledit/interpolatefoilsdlg.h \
+    $$PWD/foiledit/xfoilpaneldlg.h \
     $$PWD/fuseedit/bodyscaledlg.h \
     $$PWD/fuseedit/bodytransdlg.h \
     $$PWD/fuseedit/fusedlg.h \
@@ -139,6 +140,7 @@ SOURCES += \
     $$PWD/foiledit/foiltegapdlg.cpp \
     $$PWD/foiledit/foilwt.cpp \
     $$PWD/foiledit/interpolatefoilsdlg.cpp \
+    $$PWD/foiledit/xfoilpaneldlg.cpp \
     $$PWD/fuseedit/bodyscaledlg.cpp \
     $$PWD/fuseedit/bodytransdlg.cpp \
     $$PWD/fuseedit/fusedlg.cpp \
