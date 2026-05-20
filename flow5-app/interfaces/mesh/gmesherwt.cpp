@@ -30,7 +30,7 @@
 #include <QMessageBox>
 #include <QLabel>
 
-#include <TopTools_ListIteratorOfListOfShape.hxx>
+
 #include <TopExp_Explorer.hxx>
 #include <BRepTools.hxx>
 

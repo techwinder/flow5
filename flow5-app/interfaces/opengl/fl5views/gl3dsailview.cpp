@@ -647,7 +647,7 @@ void gl3dSailView::mouseMoveEvent(QMouseEvent *pEvent)
 
             Handle(Geom_TrimmedCurve) ln = GC_MakeSegment(gp_Pnt(AA.x, AA.y, AA.z) , gp_Pnt(BB.x, BB.y, BB.z));
 //            Handle(Geom_Line) ln = new Geom_Line(gp_Pnt(AA.x, AA.y, AA.z), gp_Dir(U.x, U.y, U.z));
-            Standard_Real First=0, Last=0;
+            double First=0, Last=0;
             TopExp_Explorer FaceExplorer;
             TopExp_Explorer EdgeExplorer;
             int iFace=0, iEdge = 0;

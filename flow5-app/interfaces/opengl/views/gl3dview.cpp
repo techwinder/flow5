@@ -322,7 +322,7 @@ void gl3dView::initializeGL()
     m_shadSurf.release();
 
     //--------- setup the shader to paint stippled large points -----------
-#ifndef MAC_OS
+#ifndef Q_OS_MAC
     vsrc = ":/shaders/point/point_VS.glsl";
     m_shadPoint.addShaderFromSourceFile(QOpenGLShader::Vertex, vsrc);
     if(m_shadPoint.log().length())
@@ -339,7 +339,7 @@ void gl3dView::initializeGL()
         xfl::trace(strange);
     }
 
-    fsrc = ":/shaders/surface/surface_FS.glsl";
+    fsrc = ":/shaders/point/point_FS.glsl";
     m_shadPoint.addShaderFromSourceFile(QOpenGLShader::Fragment, fsrc);
     if(m_shadPoint.log().length())
     {
@@ -347,25 +347,27 @@ void gl3dView::initializeGL()
         xfl::trace(strange);
     }
 
-    m_shadPoint.link();
-    m_shadPoint.bind();
+    if(m_shadPoint.link())
     {
-        m_locPoint.m_attrVertex  = m_shadPoint.attributeLocation("vertexPosition_modelSpace");
-        m_locPoint.m_attrColor   = m_shadPoint.attributeLocation("vertexColor");
-        m_locPoint.m_State       = m_shadPoint.attributeLocation("PointState");
+        m_shadPoint.bind();
+        {
+            m_locPoint.m_attrVertex  = m_shadPoint.attributeLocation("vertexPosition_modelSpace");
+            m_locPoint.m_attrColor   = m_shadPoint.attributeLocation("vertexColor");
+            m_locPoint.m_State       = m_shadPoint.attributeLocation("PointState");
 
-        m_locPoint.m_vmMatrix    = m_shadPoint.uniformLocation("vmMatrix");
-        m_locPoint.m_pvmMatrix   = m_shadPoint.uniformLocation("pvmMatrix");
-        m_locPoint.m_ClipPlane   = m_shadPoint.uniformLocation("clipPlane0");
-        m_locPoint.m_HasUniColor = m_shadPoint.uniformLocation("HasUniColor");
-        m_locPoint.m_UniColor    = m_shadPoint.uniformLocation("UniformColor");
-        m_locPoint.m_Thickness   = m_shadPoint.uniformLocation("Thickness");
-        m_locPoint.m_Shape       = m_shadPoint.uniformLocation("Shape");
-        m_locPoint.m_Viewport    = m_shadPoint.uniformLocation("Viewport");
-        m_locPoint.m_Light       = m_shadPoint.uniformLocation("LightOn");
-        m_locPoint.m_TwoSided    = m_shadPoint.uniformLocation("TwoSided");
+            m_locPoint.m_vmMatrix    = m_shadPoint.uniformLocation("vmMatrix");
+            m_locPoint.m_pvmMatrix   = m_shadPoint.uniformLocation("pvmMatrix");
+            m_locPoint.m_ClipPlane   = m_shadPoint.uniformLocation("clipPlane0");
+            m_locPoint.m_HasUniColor = m_shadPoint.uniformLocation("HasUniColor");
+            m_locPoint.m_UniColor    = m_shadPoint.uniformLocation("UniformColor");
+            m_locPoint.m_Thickness   = m_shadPoint.uniformLocation("Thickness");
+            m_locPoint.m_Shape       = m_shadPoint.uniformLocation("Shape");
+            m_locPoint.m_Viewport    = m_shadPoint.uniformLocation("Viewport");
+            m_locPoint.m_Light       = m_shadPoint.uniformLocation("LightOn");
+            m_locPoint.m_TwoSided    = m_shadPoint.uniformLocation("TwoSided");
+        }
+        m_shadPoint.release();
     }
-    m_shadPoint.release();
 #endif
 
     // setup the flat point shader
@@ -1240,7 +1242,7 @@ void gl3dView::glSetupLight()
         m_shadSurf.setUniformValue(m_shadSurf.uniformLocation("Kq"),                       s_Light.m_Attenuation.m_Quadratic);
     }
     m_shadSurf.release();
-
+#ifndef Q_OS_MAC
     m_shadPoint.bind();
     {
         if(isLightOn()) m_shadPoint.setUniformValue(m_locPoint.m_Light, 1);
@@ -1270,6 +1272,7 @@ void gl3dView::glSetupLight()
         m_shadPoint.setUniformValue(iKq,             s_Light.m_Attenuation.m_Quadratic);
     }
     m_shadPoint.release();
+#endif
 }
 
 

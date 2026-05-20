@@ -28,10 +28,8 @@
 #include <Geom_BSplineSurface.hxx>
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Shell.hxx>
-#include <TColgp_Array2OfPnt.hxx>
-#include <TColStd_Array1OfReal.hxx>
-#include <TColStd_Array1OfInteger.hxx>
 #include <BRepBuilderAPI_MakeShell.hxx>
+#include <Standard_Version.hxx>
 
 
 
@@ -410,8 +408,8 @@ bool SailNurbs::makeOccShell(TopoDS_Shape &sailshape, std::string &tracelog) con
 
     if(frameCount()<=0) return false;
 
-    TColgp_Array2OfPnt RightPoles(0, frameCount()-1, 0, sideLineCount()-1);
-    TColgp_Array2OfPnt LeftPoles( 0, frameCount()-1, 0, sideLineCount()-1);
+    NCollection_Array2<gp_Pnt> RightPoles(0, frameCount()-1, 0, sideLineCount()-1);
+    NCollection_Array2<gp_Pnt> LeftPoles( 0, frameCount()-1, 0, sideLineCount()-1);
 
     //------Store the control point in OCC format-----
     for(int iFrame=0; iFrame<frameCount(); iFrame++)
@@ -431,8 +429,8 @@ bool SailNurbs::makeOccShell(TopoDS_Shape &sailshape, std::string &tracelog) con
     //------Make the knots-----
     int p = nurbs().uDegree();
     int uSize = nurbs().uKnotCount()-2*p+2;
-    TColStd_Array1OfReal    uKnots(0, uSize-1);
-    TColStd_Array1OfInteger uMults(0, uSize-1);
+    NCollection_Array1<double>    uKnots(0, uSize-1);
+    NCollection_Array1<int> uMults(0, uSize-1);
     uKnots.SetValue(0, 0.0);
     uMults.SetValue(0, p);
     uKnots.SetValue(uSize-1, 1.0);
@@ -449,8 +447,8 @@ bool SailNurbs::makeOccShell(TopoDS_Shape &sailshape, std::string &tracelog) con
 
     p = nurbs().vDegree();
     int vSize = nurbs().vKnotCount()-2*p+2;
-    TColStd_Array1OfReal    vKnots(0, vSize-1);
-    TColStd_Array1OfInteger vMults(0, vSize-1);
+    NCollection_Array1<double>    vKnots(0, vSize-1);
+    NCollection_Array1<int> vMults(0, vSize-1);
     vKnots.SetValue(0, 0.0);
     vMults.SetValue(0, p);
     vKnots.SetValue(vSize-1, 1.0);
@@ -473,13 +471,21 @@ bool SailNurbs::makeOccShell(TopoDS_Shape &sailshape, std::string &tracelog) con
     }
     catch (Standard_ConstructionError &e)
     {
+#if OCC_VERSION_MAJOR<8
         strong = "   Spline construction error... "+std::string(e.GetMessageString()) + "\n";
+#else
+        strong = "   Spline construction error... "+std::string(e.what()) + "\n";
+#endif
         tracelog += strong;
         return false;
     }
     catch(Standard_Failure &s)
     {
+#if OCC_VERSION_MAJOR<8
         strong = "   Standard failure... "+ std::string(s.GetMessageString())+"\n";
+#else
+        strong = "   Standard failure... "+ std::string(s.what())+"\n";
+#endif
         tracelog += strong;
         return false;
     }

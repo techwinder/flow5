@@ -30,6 +30,7 @@
 #include <BRepOffsetAPI_ThruSections.hxx>
 #include <StdFail_NotDone.hxx>
 #include <BRepBuilderAPI_MakePolygon.hxx>
+#include <Standard_Version.hxx>
 
 
 #include <units.h>
@@ -719,11 +720,19 @@ bool SailSpline::makeOccShell(TopoDS_Shape &sailshape, std::string &logmsg) cons
         }
         catch(Standard_DomainError &e)
         {
+#if OCC_VERSION_MAJOR<8
             logg += "     Standard_DomainError sweeping wires\n" + std::string(e.GetMessageString()) + "\n";
+#else
+            logg += "     Standard_DomainError sweeping wires\n" + std::string(e.what()) + "\n";
+#endif
         }
         catch (StdFail_NotDone &e)
         {
+#if OCC_VERSION_MAJOR<8
             logg += "   StdFail_NotDone sweeping wires" + std::string(e.GetMessageString()) + "\n";
+#else
+            logg += "   StdFail_NotDone sweeping wires" + std::string(e.what()) + "\n";
+#endif
             return false;
         }
         catch (...)

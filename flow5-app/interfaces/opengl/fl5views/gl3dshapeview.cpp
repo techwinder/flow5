@@ -29,7 +29,6 @@
 #include <TopoDS.hxx>
 #include <TopExp_Explorer.hxx>
 #include <TopoDS_Vertex.hxx>
-#include <TopTools_ListIteratorOfListOfShape.hxx>
 #include <BRepAdaptor_Curve.hxx>
 #include <BRepMesh_IncrementalMesh.hxx>
 #include <GCPnts_UniformAbscissa.hxx>
@@ -216,7 +215,8 @@ void gl3dShapeView::setFuse(Fuse *pFuse)
 
     m_bResetglShape = true;
     std::string strange;
-    occ::listShapeContent(*m_pShape, strange);
+    if(m_pShape)
+        occ::listShapeContent(*m_pShape, strange);
 
     setBotLeftOutput(strange);
     reset3dScale();
@@ -333,7 +333,7 @@ void gl3dShapeView::mouseMoveEvent(QMouseEvent *pEvent)
         }
         m_vboWires.clear();
 
-        for(TopTools_ListIteratorOfListOfShape ShapeIt(theInnerWires); ShapeIt.More(); ShapeIt.Next())
+        for(NCollection_List<TopoDS_Shape>::Iterator ShapeIt(theInnerWires); ShapeIt.More(); ShapeIt.Next())
         {
             m_vboWires.append(QOpenGLBuffer());
             TopoDS_Wire const &aWire = TopoDS::Wire(ShapeIt.Value());
@@ -341,7 +341,7 @@ void gl3dShapeView::mouseMoveEvent(QMouseEvent *pEvent)
             gl::glMakeWire(aWire, m_vboWires.back());
 
             TopExp_Explorer WireExplorer;
-            Standard_Real First(0),Last(0);
+            double First(0),Last(0);
             gp_Pnt pt0, pt1;
             int nEdge = 0;
             for (WireExplorer.Init(aWire, TopAbs_EDGE); WireExplorer.More(); WireExplorer.Next())

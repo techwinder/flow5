@@ -198,7 +198,7 @@ bool gl3dShapesView::intersectTheObject(Vector3d const &A, Vector3d const&B, Vec
 
             if(!hTriangulation.IsNull())
             {
-//                const TColgp_Array1OfPnt& nodes = hTriangulation->Nodes();
+//                const NCollection_Array1<gp_Pnt>& nodes = hTriangulation->Nodes();
 //                const Poly_Array1OfTriangle& triangles = hTriangulation->Triangles();
 
                 for (int i=1; i<=hTriangulation->NbTriangles(); i++)
@@ -427,7 +427,7 @@ void gl3dShapesView::mouseMoveEvent(QMouseEvent *pEvent)
 
             Handle(Geom_TrimmedCurve) ln = GC_MakeSegment(gp_Pnt(AA.x, AA.y, AA.z) , gp_Pnt(BB.x, BB.y, BB.z));
 //            Handle(Geom_Line) ln = new Geom_Line(gp_Pnt(AA.x, AA.y, AA.z), gp_Dir(U.x, U.y, U.z));
-            Standard_Real First=0, Last=0;
+            double First=0, Last=0;
             TopExp_Explorer FaceExplorer;
             TopExp_Explorer EdgeExplorer;
             int iFace=0, iEdge = 0;

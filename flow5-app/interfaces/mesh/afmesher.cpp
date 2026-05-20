@@ -59,10 +59,10 @@
 #include <Geom2d_Curve.hxx>
 #include <GeomLProp_SLProps.hxx>
 #include <TopExp_Explorer.hxx>
-#include <TopTools_ListIteratorOfListOfShape.hxx>
 #include <TopoDS.hxx>
 #include <TopoDS_Face.hxx>
 #include <TopoDS_Wire.hxx>
+#include <Standard_Version.hxx>
 
 
 
@@ -121,7 +121,7 @@ void AFMesher::triangulateShells()
     int iShell=0;
     m_Triangles.clear();
 
-    for(TopTools_ListIteratorOfListOfShape ShellIt(m_Shapes); ShellIt.More(); ShellIt.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator ShellIt(m_Shapes); ShellIt.More(); ShellIt.Next())
     {
         std::vector<Triangle3d> shelltriangles;
         QString logmsg;
@@ -337,7 +337,11 @@ void AFMesher::makeFaceSLG3dFrom2d(TopoDS_Face const &aFace, PSLG2d const &pslg2
     }
     catch (Standard_Failure &failure)
     {
+#if OCC_VERSION_MAJOR<8
         logmsg += "   SLG3dFrom2d:: standard exception" + QString(failure.GetMessageString());
+#else
+        logmsg += "   SLG3dFrom2d:: standard exception" + QString(failure.what());
+#endif
     }
     catch(...)
     {
@@ -417,15 +421,14 @@ void AFMesher::makeFaceSLG3d(const TopoDS_Face &aFace,
     }
 
     // build the PSLG in the parametric space from the edges of the wires
-    gp_Pnt2d p2d, p1;
     gp_Pnt P0, P1;
 
     gp_Dir Dir;
     Node nd0, nd1;
-    Standard_Real First=0, Last=0;
+    double First=0, Last=0;
     double c=0;
 
-    for(TopTools_ListIteratorOfListOfShape WireIt(theinnerwires); WireIt.More(); WireIt.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator WireIt(theinnerwires); WireIt.More(); WireIt.Next())
     {
         if(WireIt.Value()!=theouterwire) innerslg.push_back({});
 
@@ -897,7 +900,7 @@ void AFMesher::makeFacePSLG2d(const TopoDS_Face &aFace,
     std::vector<double> uval;
     gp_Pnt2d P0,P1;
     int nWire = 0;
-    for(TopTools_ListIteratorOfListOfShape WireIt(allwires); WireIt.More(); WireIt.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator WireIt(allwires); WireIt.More(); WireIt.Next())
     {
         if(WireIt.Value()!=theouterwire)
             innerpslgUV.push_back({});

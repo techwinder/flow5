@@ -40,7 +40,7 @@
 #include <TopExp_Explorer.hxx>
 #include <BRepAdaptor_Surface.hxx>
 #include <BRepBuilderAPI_MakeShell.hxx>
-#include <TopTools_ListIteratorOfListOfShape.hxx>
+#include <Standard_Version.hxx>
 
 
 
@@ -1058,7 +1058,7 @@ void BoatDlg::onImportSailFromCAD()
     {
         //each imported SHELL is a sail
         int ishape=0;
-        for(TopTools_ListIteratorOfListOfShape faceit(dlg.shapes()); faceit.More(); faceit.Next())
+        for(NCollection_List<TopoDS_Shape>::Iterator faceit(dlg.shapes()); faceit.More(); faceit.Next())
         {
             TopExp_Explorer shellexplorer;
             for (shellexplorer.Init(faceit.Value(), TopAbs_SHELL); shellexplorer.More(); shellexplorer.Next())
@@ -1087,8 +1087,11 @@ void BoatDlg::onImportSailFromCAD()
                 }
                 catch(Standard_TypeMismatch &ex)
                 {
+#if OCC_VERSION_MAJOR<8
                     m_ppto->onAppendQText("   Shells not made: "+QString(ex.GetMessageString())+"\n");
-                    
+#else
+                    m_ppto->onAppendQText("   Shells not made: "+QString(ex.what())+"\n");
+#endif
                 }
                 catch(...)
                 {
@@ -1102,7 +1105,7 @@ void BoatDlg::onImportSailFromCAD()
     {
         //each imported FACE is a sail
         int ishape=0;
-        for(TopTools_ListIteratorOfListOfShape faceit(dlg.shapes()); faceit.More(); faceit.Next())
+        for(NCollection_List<TopoDS_Shape>::Iterator faceit(dlg.shapes()); faceit.More(); faceit.Next())
         {
             TopExp_Explorer faceexplorer;
             for (faceexplorer.Init(faceit.Value(), TopAbs_FACE); faceexplorer.More(); faceexplorer.Next())
@@ -1111,7 +1114,11 @@ void BoatDlg::onImportSailFromCAD()
                 {
                     TopoDS_Face face = TopoDS::Face(faceexplorer.Current());
                     BRepAdaptor_Surface surfaceadaptor(face);
+#if OCC_VERSION_MAJOR<8
                     GeomAdaptor_Surface aGAS = surfaceadaptor.Surface();
+#else
+                    GeomAdaptor_Surface aGAS = surfaceadaptor.AdaptorSurfaceOriginal();
+#endif
 
                     Handle(Geom_Surface) hSurf = aGAS.Surface();
                     if(hSurf.IsNull())
@@ -1174,8 +1181,11 @@ void BoatDlg::onImportSailFromCAD()
                 }
                 catch(Standard_TypeMismatch &ex)
                 {
+#if OCC_VERSION_MAJOR<8
                     m_ppto->onAppendQText("Shells not made: "+QString(ex.GetMessageString())+"\n");
-                    
+#else
+                    m_ppto->onAppendQText("Shells not made: "+QString(ex.what())+"\n");
+#endif
                 }
                 catch(...)
                 {

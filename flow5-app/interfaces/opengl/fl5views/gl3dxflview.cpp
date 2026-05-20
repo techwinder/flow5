@@ -34,7 +34,6 @@
 
 #include <BRep_Tool.hxx>
 #include <TopExp_Explorer.hxx>
-#include <TopTools_ListIteratorOfListOfShape.hxx>
 #include <TopoDS.hxx>
 #include <TopoDS_Vertex.hxx>
 
@@ -796,7 +795,7 @@ bool gl3dXflView::pickShapeVertex(QPoint const &point, TopoDS_ListOfShape const&
 
     TopoDS_ListIteratorOfListOfShape iterator;
 
-    gp_Pnt pt0, pt1;
+//    gp_Pnt pt0, pt1;
 
 
     for (iterator.Initialize(shapes); iterator.More(); iterator.Next()) // for each of the fuse (cut) shells
@@ -1078,7 +1077,7 @@ int gl3dXflView::pickFace(const QPoint &point, TopoDS_Shape const &shape, TopoDS
         }
         else
         {
-//            const TColgp_Array1OfPnt& nodes = hTriangulation->Nodes();
+//            const NCollection_Array1<gp_Pnt>& nodes = hTriangulation->Nodes();
 //            const Poly_Array1OfTriangle& triangles = hTriangulation->Triangles();
 
             for (int i3=1; i3<=hTriangulation->NbTriangles(); i3++)
@@ -1135,7 +1134,7 @@ QPair<int, int> gl3dXflView::pickFace(const QPoint &point, TopoDS_ListOfShape co
     int nShell = 0;
     int iFace(-1);
     int nFace = 0;
-    for(TopTools_ListIteratorOfListOfShape shapeit(shapes); shapeit.More(); shapeit.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shapeit(shapes); shapeit.More(); shapeit.Next())
     {
         for (shapeExplorer.Init(shapeit.Value(), TopAbs_FACE); shapeExplorer.More(); shapeExplorer.Next())
         {
@@ -1148,7 +1147,7 @@ QPair<int, int> gl3dXflView::pickFace(const QPoint &point, TopoDS_ListOfShape co
             }
             else
             {
-//                const TColgp_Array1OfPnt& nodes = hTriangulation->Nodes();
+//                const NCollection_Array1<gp_Pnt>& nodes = hTriangulation->Nodes();
 //                const Poly_Array1OfTriangle& triangles = hTriangulation->Triangles();
 
                 for (int i3=1; i3<=hTriangulation->NbTriangles(); i3++)

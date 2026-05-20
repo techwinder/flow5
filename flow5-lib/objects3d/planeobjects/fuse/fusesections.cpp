@@ -26,8 +26,7 @@
 #include <format>
 
 
-
-#include <TColgp_Array2OfPnt.hxx>
+#include <Standard_Version.hxx>
 #include <Geom_BSplineSurface.hxx>
 #include <GeomAPI_PointsToBSplineSurface.hxx>
 
@@ -53,7 +52,7 @@ void FuseSections::makeNURBS()
     if(nSections()<=1) return;
     if(m_Section.front().size()<=1) return;
 
-    TColgp_Array2OfPnt array(1, nSections(), 1, int(m_Section.front().size()));
+    NCollection_Array2<gp_Pnt> array(1, nSections(), 1, int(m_Section.front().size()));
 
     for(int i=0; i<nSections(); i++)
     {
@@ -72,15 +71,27 @@ void FuseSections::makeNURBS()
     }
     catch (Standard_OutOfRange const &ex)
     {
+#if OCC_VERSION_MAJOR<8
         std::cerr << std::format("error making poles {:s} \n", ex.GetMessageString()) << std::endl;
+#else
+        std::cerr << std::format("error making poles {:s} \n", ex.what()) << std::endl;
+#endif
     }
     catch (Standard_ConstructionError const &ex)
     {
+#if OCC_VERSION_MAJOR<8
         std::cerr << std::format("error making poles {:s} \n", ex.GetMessageString()) << std::endl;
+#else
+        std::cerr << std::format("error making poles {:s} \n", ex.what()) << std::endl;
+#endif
     }
     catch (Standard_NoSuchObject const &ex)
     {
+#if OCC_VERSION_MAJOR<8
         std::cerr << std::format("error making poles {:s} \n", ex.GetMessageString()) << std::endl;
+#else
+        std::cerr << std::format("error making poles {:s} \n", ex.what()) << std::endl;
+#endif
     }
     catch(...)
     {

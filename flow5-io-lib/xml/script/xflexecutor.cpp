@@ -24,6 +24,8 @@
 
 #define _MATH_DEFINES_DEFINED
 
+#include <thread>
+
 // Visual studio bug override
 //https://developercommunity.visualstudio.com/t/Visual-Studio-17100-Update-leads-to-Pr/10669759?sort=newest
 //#define _DISABLE_CONSTEXPR_MUTEX_CONSTRUCTOR

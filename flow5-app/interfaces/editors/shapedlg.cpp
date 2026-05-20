@@ -28,8 +28,6 @@
 #include <TopoDS.hxx>
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Shell.hxx>
-#include <TopTools_ListIteratorOfListOfShape.hxx>
-
 
 
 
@@ -186,7 +184,7 @@ void ShapeDlg::fillShapes(TopoDS_ListOfShape const &shapes)
 {
     m_plwShapes->clear();
     int iShell=0;
-    for(TopTools_ListIteratorOfListOfShape shapeit(shapes); shapeit.More(); shapeit.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shapeit(shapes); shapeit.More(); shapeit.Next())
     {
         TopExp_Explorer shapeExplorer;
         for (shapeExplorer.Init(shapeit.Value(),TopAbs_SHELL); shapeExplorer.More(); shapeExplorer.Next())

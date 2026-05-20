@@ -32,7 +32,6 @@
 #include <TopoDS_Face.hxx>
 #include <TopExp_Explorer.hxx>
 #include <TopoDS.hxx>
-#include <TopTools_ListIteratorOfListOfShape.hxx>
 
 
 
@@ -1281,7 +1280,7 @@ int gmesh::makeFuseTriangulation(Fuse *pFuse, std::string &logmsg, const std::st
     else         pShells = &pFuse->shells();
 
 
-    for(TopTools_ListIteratorOfListOfShape shellitt(*pShells); shellitt.More(); shellitt.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shellitt(*pShells); shellitt.More(); shellitt.Next())
     {
 /*        if(s_bOccTessellator)
         {

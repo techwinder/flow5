@@ -174,6 +174,7 @@ macx {
     # If defined, the value of this variable is used as a path to be prepended to
     # the built shared library's SONAME identifier.
     # The SONAME is the identifier that the dynamic linker will later use to reference the library.
+    # Needed to bundle flow5
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
 
 
@@ -209,8 +210,7 @@ macx {
 
     #-------------vecLib -----------------
     DEFINES += ACCELERATE_NEW_LAPACK
-    LIBS += -llapack -lcblas   #todo cblas may not be necessary
-
+    LIBS += -llapack -lcblas
 }
 
 

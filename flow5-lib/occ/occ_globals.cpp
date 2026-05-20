@@ -42,7 +42,6 @@
 #include <BRepBuilderAPI_Sewing.hxx>
 #include <BRepBuilderAPI_Transform.hxx>
 #include <BRepCheck_Analyzer.hxx>
-#include <BRepCheck_ListOfStatus.hxx>
 #include <BRepGProp.hxx>
 #include <BRepMesh_IncrementalMesh.hxx>
 #include <BRepOffsetAPI_ThruSections.hxx>
@@ -66,14 +65,10 @@
 #include <ShapeAnalysis_FreeBounds.hxx>
 #include <ShapeFix_Shape.hxx>
 #include <ShapeFix_Wireframe.hxx>
+#include <Standard_Version.hxx>
 #include <StdFail_NotDone.hxx>
 #include <StepBasic_LengthMeasureWithUnit.hxx>
 #include <StepData_StepModel.hxx>
-#include <TColStd_Array1OfInteger.hxx>
-#include <TColStd_Array1OfReal.hxx>
-#include <TColStd_SequenceOfAsciiString.hxx>
-#include <TColgp_Array1OfPnt.hxx>
-#include <TColgp_Array2OfPnt.hxx>
 #include <TCollection_AsciiString.hxx>
 #include <TopExp_Explorer.hxx>
 #include <TopoDS.hxx>
@@ -323,9 +318,9 @@ void occ::checkShape(TopoDS_Shape const &shape, std::string & logmsg, std::strin
         logmsg += prefix + "   BRepCheck_Analyzer status:\n";
 
         const Handle(BRepCheck_Result)& result = ShapeAnalyzer.Result(shape);
-        const BRepCheck_ListOfStatus& status = result->StatusOnShape(shape);
+        const NCollection_List<BRepCheck_Status>& status = result->StatusOnShape(shape);
 
-        BRepCheck_ListIteratorOfListOfStatus it(status);
+        NCollection_List<BRepCheck_Status>::Iterator it(status);
         while (it.More())
         {
             logmsg += prefix+"      ";
@@ -514,7 +509,11 @@ void occ::makeFaceFromTriangle(Vector3d const &P1, Vector3d const &P2, Vector3d 
     }
     catch(StdFail_NotDone const &ex)
     {
+#if OCC_VERSION_MAJOR<8
         std::string strong =  "   Error making body face\n" + std::string(ex.GetMessageString()) +"\n";
+#else
+        std::string strong =  "   Error making body face\n" + std::string(ex.what()) +"\n";
+#endif
         log += strong;
         return;
     }
@@ -1100,11 +1099,19 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
                 }
                 catch(TopoDS_UnCompatibleShapes const &ex)
                 {
+#if OCC_VERSION_MAJOR<8
                     logmsg += "   incompatible shapes" + std::string(ex.GetMessageString());
+#else
+                    logmsg += "   incompatible shapes" + std::string(ex.what());
+#endif
                 }
                 catch(TopoDS_FrozenShape const &ex)
                 {
+#if OCC_VERSION_MAJOR<8
                     logmsg += "   frozen shapes" + std::string(ex.GetMessageString());
+#else
+                    logmsg += "   frozen shapes" + std::string(ex.what());
+#endif
                 }
                 catch(...)
                 {
@@ -1165,7 +1172,11 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
         }
         catch(Standard_DomainError const &ex)
         {
+#if OCC_VERSION_MAJOR<8
             logmsg += "     catching "+ std::string(ex.GetMessageString())+"\n";
+#else
+            logmsg += "     catching "+ std::string(ex.what())+"\n";
+#endif
         }
 
         if(!TopSweeper.IsDone())
@@ -1194,7 +1205,11 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
         }
         catch(Standard_DomainError const &ex)
         {
+#if OCC_VERSION_MAJOR<8
             logmsg += "     catching "+ std::string(ex.GetMessageString())+"\n";
+#else
+            logmsg += "     catching "+ std::string(ex.what())+"\n";
+#endif
         }
 
         if(!BotSweeper.IsDone())
@@ -1434,7 +1449,11 @@ bool occ::makeSplineWire(BSpline3d const &spline, TopoDS_Wire &wire, std::string
     }
     catch(StdFail_NotDone const &e)
     {
+#if OCC_VERSION_MAJOR<8
         logmsg += "BRepBuilderAPI_MakeEdge::StdFail_NotDone - "+std::string(e.GetMessageString());
+#else
+        logmsg += "BRepBuilderAPI_MakeEdge::StdFail_NotDone - "+std::string(e.what());
+#endif
         return false;
     }
     catch(...)
@@ -1581,7 +1600,13 @@ void occ::makeFaceRuledTriangulation(TopoDS_Face const &face, std::vector<Vector
 
     // make a Quad3d from the TopoDS_Face
     BRepAdaptor_Surface surfaceadaptor(face);
+
+#if OCC_VERSION_MAJOR<8
     GeomAdaptor_Surface aGAS = surfaceadaptor.Surface(); /** @todo no need */
+#else
+    GeomAdaptor_Surface aGAS = surfaceadaptor.AdaptorSurfaceOriginal(); /** @todo no need */
+#endif
+
 
     double umin = aGAS.FirstUParameter();
     double umax = aGAS.LastUParameter();
@@ -1826,7 +1851,7 @@ bool occ::importBRep(std::string const &filename, TopoDS_ListOfShape &shapes, do
     dimension = 1.0;
     BRep_Builder aBuilder;
     TopoDS_Shape brep;
-    Standard_Boolean aResult = BRepTools::Read(brep, filename.c_str(), aBuilder);
+    bool aResult = BRepTools::Read(brep, filename.c_str(), aBuilder);
     std::string msg;
     if (aResult)
     {
@@ -1855,9 +1880,9 @@ bool occ::importSTEP(const std::string &filename, TopoDS_ListOfShape &shapes, do
 //qDebug()    <<"importSTEP xstep.cascade.unit"<<Interface_Static::IVal("xstep.cascade.unit");
 
     IFSelect_ReturnStatus status = aReader.ReadFile(aFilePath.ToCString());
-    TColStd_SequenceOfAsciiString theUnitLengthNames;
-    TColStd_SequenceOfAsciiString theUnitAngleNames;
-    TColStd_SequenceOfAsciiString theUnitSolidAngleNames;
+    NCollection_Sequence<TCollection_AsciiString> theUnitLengthNames;
+    NCollection_Sequence<TCollection_AsciiString> theUnitAngleNames;
+    NCollection_Sequence<TCollection_AsciiString> theUnitSolidAngleNames;
 
     if (status == IFSelect_RetDone)
     {
@@ -1897,7 +1922,7 @@ bool occ::importSTEP(const std::string &filename, TopoDS_ListOfShape &shapes, do
         int nbr = aReader.NbRootsForTransfer();
         std::string strong;
 
-        for (Standard_Integer n=1; n<=nbr; n++)
+        for (int n=1; n<=nbr; n++)
         {
             try
             {
@@ -1962,8 +1987,11 @@ bool occ::importSTEP(const std::string &filename, TopoDS_ListOfShape &shapes, do
                 }
                 catch(Geom_UndefinedValue const &ex)
                 {
-
+#if OCC_VERSION_MAJOR<8
                     strange  = "Exception raised when calculating object length: " + std::string(ex.GetMessageString());
+#else
+                    strange  = "Exception raised when calculating object length: " + std::string(ex.what());
+#endif
                     strange += "\n";
                     strange += "Aborting\n";
                     logg += strange;
@@ -2340,7 +2368,11 @@ void occ::makeFaceFromNodeStrip(std::vector<Node> const &pts, TopoDS_Face &face,
     }
     catch(StdFail_NotDone const &ex)
     {
+#if OCC_VERSION_MAJOR<8
         std::string strong =  "   Error making body face\n" + std::string(ex.GetMessageString()) +"\n";
+#else
+        std::string strong =  "   Error making body face\n" + std::string(ex.what()) +"\n";
+#endif
         log+= strong;
         return;
     }
@@ -2382,7 +2414,7 @@ bool occ::makeXflNurbsfromOccNurbs(Handle(Geom_BSplineSurface) occnurbs, NURBSSu
 
 bool occ::makeOCCSplineFromPoints(std::vector<Vector3d> const &pointlist, Handle(Geom_BSplineCurve)& theSpline, std::string &logmsg)
 {
-    TColgp_Array1OfPnt pts(0, int(pointlist.size())-1);
+    NCollection_Array1<gp_Pnt> pts(0, int(pointlist.size())-1);
     for(unsigned int i=0; i<pointlist.size(); i++)
     {
         pts.SetValue(i, gp_Pnt(pointlist.at(i).x, pointlist.at(i).y, pointlist.at(i).z));
@@ -2409,8 +2441,8 @@ bool occ::makeOCCSplineFromPoints(std::vector<Vector3d> const &pointlist, Handle
 
 bool occ::makeOCCSplineFromBSpline3d_0(BSpline3d const &b3d, Handle(Geom_BSplineCurve)& hspline, std::string &logmsg)
 {
-    TColgp_Array1OfPnt poles(0, b3d.nCtrlPoints()-1);
-    TColStd_Array1OfReal weights(0, b3d.nCtrlPoints()-1);
+    NCollection_Array1<gp_Pnt> poles(0, b3d.nCtrlPoints()-1);
+    NCollection_Array1<double> weights(0, b3d.nCtrlPoints()-1);
     for(int i=0; i< b3d.nCtrlPoints(); i++)
     {
         Vector3d  const &pt = b3d.controlPoint(i);
@@ -2424,8 +2456,8 @@ bool occ::makeOCCSplineFromBSpline3d_0(BSpline3d const &b3d, Handle(Geom_BSpline
 
     int p = b3d.degree();
     int uSize = int(b3d.knots().size())-2*p+2;
-    TColStd_Array1OfReal    knots(0, uSize-1);
-    TColStd_Array1OfInteger mults(0, uSize-1);
+    NCollection_Array1<double>    knots(0, uSize-1);
+    NCollection_Array1<int> mults(0, uSize-1);
     knots.SetValue(0, 0.0);
     mults.SetValue(0, p);
     knots.SetValue(uSize-1, 1.0);
@@ -2450,12 +2482,20 @@ bool occ::makeOCCSplineFromBSpline3d_0(BSpline3d const &b3d, Handle(Geom_BSpline
     }
     catch (Standard_ConstructionError const &e)
     {
+#if OCC_VERSION_MAJOR<8
         logmsg += "   Spline construction error... " + std::string(e.GetMessageString()) + "\n";
+#else
+        logmsg += "   Spline construction error... " + std::string(e.what()) + "\n";
+#endif
         return false;
     }
     catch(Standard_Failure const &s)
     {
+#if OCC_VERSION_MAJOR<8
         logmsg += "   Standard failure... " + std::string(s.GetMessageString())+"\n";
+#else
+        logmsg += "   Standard failure... " + std::string(s.what())+"\n";
+#endif
         return false;
     }
     catch (...)
@@ -2469,8 +2509,8 @@ bool occ::makeOCCSplineFromBSpline3d_0(BSpline3d const &b3d, Handle(Geom_BSpline
 
 bool occ::makeOCCSplineFromBSpline3d(BSpline3d const &b3d, Handle(Geom_BSplineCurve)& hspline, std::string &logmsg)
 {
-    TColgp_Array1OfPnt poles(0, b3d.nCtrlPoints()-1);
-    TColStd_Array1OfReal    weights(0, b3d.nCtrlPoints()-1);
+    NCollection_Array1<gp_Pnt> poles(0, b3d.nCtrlPoints()-1);
+    NCollection_Array1<double>    weights(0, b3d.nCtrlPoints()-1);
     for(int i=0; i<b3d.nCtrlPoints(); i++)
     {
         Vector3d  const &pt = b3d.controlPoint(i);
@@ -2481,8 +2521,8 @@ bool occ::makeOCCSplineFromBSpline3d(BSpline3d const &b3d, Handle(Geom_BSplineCu
     //------Make the knots-----
     int p = b3d.degree()+1;
     int uSize = int(b3d.knots().size())-2*p+1;
-    TColStd_Array1OfReal    knots(0, uSize);
-    TColStd_Array1OfInteger mults(0, uSize);
+    NCollection_Array1<double>    knots(0, uSize);
+    NCollection_Array1<int> mults(0, uSize);
     knots.SetValue(0, 0.0);
     mults.SetValue(0, p);
     knots.SetValue(uSize, 1.0);
@@ -2505,12 +2545,20 @@ bool occ::makeOCCSplineFromBSpline3d(BSpline3d const &b3d, Handle(Geom_BSplineCu
     }
     catch (Standard_ConstructionError const &e)
     {
+#if OCC_VERSION_MAJOR<8
         logmsg += "   Spline construction error... " + std::string(e.GetMessageString()) + "\n";
+#else
+        logmsg += "   Spline construction error... " + std::string(e.what()) + "\n";
+#endif
         return false;
     }
     catch(Standard_Failure const &s)
     {
+#if OCC_VERSION_MAJOR<8
         logmsg += "   Standard failure... " + std::string(s.GetMessageString())+"\n";
+#else
+        logmsg += "   Standard failure... " + std::string(s.what())+"\n";
+#endif
         return false;
     }
     catch (...)
@@ -2531,8 +2579,8 @@ void occ::makeOCCNURBSFromNurbs(NURBSSurface const &nurbs, bool bXZSymmetric, Ha
     int nv = nurbs.framePointCount();
     if(nu<=0) return;
 
-    TColgp_Array2OfPnt Poles(0, nu-1, 0, nv-1);
-    TColgp_Array2OfPnt LeftPoles( 0, nu-1, 0, nv-1);
+    NCollection_Array2<gp_Pnt> Poles(0, nu-1, 0, nv-1);
+    NCollection_Array2<gp_Pnt> LeftPoles( 0, nu-1, 0, nv-1);
 
     //------Store the control points in OCC format-----
     for(int iFrame=0; iFrame<nu; iFrame++)
@@ -2560,8 +2608,8 @@ void occ::makeOCCNURBSFromNurbs(NURBSSurface const &nurbs, bool bXZSymmetric, Ha
     //------Make the knots-----
     int p = nurbs.uDegree();
     int uSize = int(nurbs.uKnot().size())-2*p+2;
-    TColStd_Array1OfReal    uKnots(0, uSize-1);
-    TColStd_Array1OfInteger uMults(0, uSize-1);
+    NCollection_Array1<double>    uKnots(0, uSize-1);
+    NCollection_Array1<int> uMults(0, uSize-1);
     uKnots.SetValue(0, 0.0);
     uMults.SetValue(0, p);
     uKnots.SetValue(uSize-1, 1.0);
@@ -2578,8 +2626,8 @@ void occ::makeOCCNURBSFromNurbs(NURBSSurface const &nurbs, bool bXZSymmetric, Ha
 
     p = nurbs.vDegree();
     int vSize = int(nurbs.vKnot().size())-2*p+2;
-    TColStd_Array1OfReal    vKnots(0, vSize-1);
-    TColStd_Array1OfInteger vMults(0, vSize-1);
+    NCollection_Array1<double>    vKnots(0, vSize-1);
+    NCollection_Array1<int> vMults(0, vSize-1);
     vKnots.SetValue(0, 0.0);
     vMults.SetValue(0, p);
     vKnots.SetValue(vSize-1, 1.0);
@@ -2602,13 +2650,21 @@ void occ::makeOCCNURBSFromNurbs(NURBSSurface const &nurbs, bool bXZSymmetric, Ha
     }
     catch (Standard_ConstructionError const &e)
     {
+#if OCC_VERSION_MAJOR<8
         strong = "   Spline construction error... "+std::string(e.GetMessageString()) + "\n";
+#else
+        strong = "   Spline construction error... "+std::string(e.what()) + "\n";
+#endif
         logmsg += strong;
         return;
     }
     catch(Standard_Failure const &s)
     {
+#if OCC_VERSION_MAJOR<8
         strong = "   Standard failure... "+std::string(s.GetMessageString())+"\n";
+#else
+        strong = "   Standard failure... "+std::string(s.what())+"\n";
+#endif
         logmsg += strong;
         return;
     }
@@ -2625,9 +2681,9 @@ void occ::flipShapesXZ(TopoDS_ListOfShape &shapes)
     gp_Trsf mirror;
     mirror.SetMirror(gp_Ax2(gp_Pnt(0,0,0), gp_Dir(0,1,0)));
     BRepBuilderAPI_Transform themirror(mirror);
-    for(TopTools_ListIteratorOfListOfShape shapeit(shapes); shapeit.More(); shapeit.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shapeit(shapes); shapeit.More(); shapeit.Next())
     {
-        themirror.Perform(shapeit.Value(), Standard_True);
+        themirror.Perform(shapeit.Value(), true);
         shapeit.Value() = themirror.Shape();
     }
 }
@@ -2642,9 +2698,9 @@ void occ::scaleShapes(TopoDS_ListOfShape &shapes, double scalefactor)
     Scale.SetScale(gp_Pnt(0.0,0.0,0.0), scalefactor);
     BRepBuilderAPI_Transform thescaler(Scale);
 
-    for(TopTools_ListIteratorOfListOfShape shapeit(shapes); shapeit.More(); shapeit.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shapeit(shapes); shapeit.More(); shapeit.Next())
     {
-        thescaler.Perform(shapeit.Value(), Standard_True);
+        thescaler.Perform(shapeit.Value(), true);
         shapeit.Value() = thescaler.Shape();
     }
 }
@@ -2655,10 +2711,10 @@ void occ::scaleShapes(TopoDS_ListOfShape &shapes, double xfactor, double yfactor
     gp_GTrsf aTrsf;
     gp_Mat rot(xfactor, 0, 0, 0, yfactor, 0, 0, 0, zfactor);
     aTrsf.SetVectorialPart(rot);
-    for(TopTools_ListIteratorOfListOfShape shapeit(shapes); shapeit.More(); shapeit.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shapeit(shapes); shapeit.More(); shapeit.Next())
     {
         BRepBuilderAPI_GTransform thescaler(shapeit.Value(), aTrsf);
-        thescaler.Perform(shapeit.Value(), Standard_True);
+        thescaler.Perform(shapeit.Value(), true);
         shapeit.Value() = thescaler.Shape();
     }
 }
@@ -2672,9 +2728,9 @@ void occ::translateShapes(TopoDS_ListOfShape &shapes, Vector3d const &T)
     Translation.SetTranslation(gp_Vec(T.x, T.y, T.z));
     BRepBuilderAPI_Transform thetranslator(Translation);
 
-    for(TopTools_ListIteratorOfListOfShape shapeit(shapes); shapeit.More(); shapeit.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shapeit(shapes); shapeit.More(); shapeit.Next())
     {
-        thetranslator.Perform(shapeit.Value(), Standard_True);
+        thetranslator.Perform(shapeit.Value(), true);
         shapeit.Value() = thetranslator.Shape();
     }
 }
@@ -2688,9 +2744,9 @@ void occ::rotateShapes(TopoDS_ListOfShape &shapes, Vector3d const &O, Vector3d c
     Rot.SetRotation(gp_Ax1(gp_Pnt(O.x, O.y, O.z), gp_Vec(axis.x, axis.y, axis.z)), theta*PI/180.0);
     BRepBuilderAPI_Transform theRotation(Rot);
 
-    for(TopTools_ListIteratorOfListOfShape shapeit(shapes); shapeit.More(); shapeit.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shapeit(shapes); shapeit.More(); shapeit.Next())
     {
-        theRotation.Perform(shapeit.Value(), Standard_True);
+        theRotation.Perform(shapeit.Value(), true);
         shapeit.Value() = theRotation.Shape();
     }
 }
@@ -2702,7 +2758,7 @@ void occ::flipShapeXZ(TopoDS_Shape &shape)
     mirror.SetMirror(gp_Ax2(gp_Pnt(0,0,0), gp_Dir(0,1,0)));
     BRepBuilderAPI_Transform themirror(mirror);
 
-    themirror.Perform(shape, Standard_True);
+    themirror.Perform(shape, true);
     shape = themirror.Shape();
 }
 
@@ -2716,7 +2772,7 @@ void occ::scaleShape(TopoDS_Shape &shape, double scalefactor)
     Scale.SetScale(gp_Pnt(0.0,0.0,0.0), scalefactor);
     BRepBuilderAPI_Transform thescaler(Scale);
 
-    thescaler.Perform(shape, Standard_True);
+    thescaler.Perform(shape, true);
 //    shape = thescaler.Shape();
 }
 
@@ -2729,7 +2785,7 @@ void occ::translateShape(TopoDS_Shape &shape, Vector3d const &T)
     Translation.SetTranslation(gp_Vec(T.x, T.y, T.z));
     BRepBuilderAPI_Transform thetranslator(Translation);
 
-    thetranslator.Perform(shape, Standard_True);
+    thetranslator.Perform(shape, true);
     shape = thetranslator.Shape();
 }
 
@@ -2742,7 +2798,7 @@ void occ::rotateShape(TopoDS_Shape &shape, Vector3d const &O, Vector3d const &ax
     Rot.SetRotation(gp_Ax1(gp_Pnt(O.x, O.y, O.z), gp_Vec(axis.x, axis.y, axis.z)), theta*PI/180.0);
     BRepBuilderAPI_Transform theRotation(Rot);
 
-    theRotation.Perform(shape, Standard_True);
+    theRotation.Perform(shape, true);
 //    shape = theRotation.Shape();
 }
 
@@ -2911,7 +2967,11 @@ qDebug()<<"occspliness"<<HBotCurve->Degree()<<HBotCurve->NbPoles()<<HTopCurve->D
             }
             catch (StdFail_NotDone const &ex)
             {
+#if OCC_VERSION_MAJOR<8
                 logg += "   BRepBuilderAPI_MakeShell::StdFail_NotDone" + std::string(ex.GetMessageString()) +"\n";
+#else
+                logg += "   BRepBuilderAPI_MakeShell::StdFail_NotDone" + std::string(ex.what()) +"\n";
+#endif
                 return false;
             }
             catch (...)
@@ -2988,7 +3048,11 @@ for(int iu=1; iu<3; iu++)
     }
     catch(Standard_TypeMismatch const &ex)
     {
+#if OCC_VERSION_MAJOR<8
         logg += "     BRepBuilderAPI_MakeSolid::Standard_TypeMismatch " + std::string(ex.GetMessageString()) +"\n";
+#else
+        logg += "     BRepBuilderAPI_MakeSolid::Standard_TypeMismatch " + std::string(ex.what()) +"\n";
+#endif
     }
 
     logg += "\n";
@@ -3594,7 +3658,7 @@ void occ::makeShapeEdges(TopoDS_Shape const &shape, std::vector<std::vector<Segm
     for(unsigned int i=0; i<edges.size(); i++)
         edges[i].resize(EDGERES);
 
-    Standard_Real First=0, Last=0;
+    double First=0, Last=0;
     gp_Pnt pt0, pt1;
     double df0=0, df1=0, u0=0, u1=0;
     int iEdge=0;
@@ -3751,7 +3815,7 @@ bool occ::shapesToBreps(TopoDS_ListOfShape const &shapes, std::vector<std::strin
 {
     std::string brepstr;
     breps.clear();
-    for(TopTools_ListIteratorOfListOfShape shapeit(shapes); shapeit.More(); shapeit.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shapeit(shapes); shapeit.More(); shapeit.Next())
     {
         if(!occ::shapeToBrep(shapeit.Value(), brepstr)) return false;
         breps.push_back(brepstr);
@@ -3834,7 +3898,7 @@ void occ::shapeFixSmallEdges(TopoDS_Shape const &shape, TopoDS_Shape &result,
     SFWF->SetPrecision(   precision);
     SFWF->SetMinTolerance(mintol);
     SFWF->SetMaxTolerance(maxtol);
-    SFWF->ModeDropSmallEdges() = Standard_True;
+    SFWF->ModeDropSmallEdges() = true;
 
     SFWF->Load(shape);
     SFWF->FixSmallEdges();

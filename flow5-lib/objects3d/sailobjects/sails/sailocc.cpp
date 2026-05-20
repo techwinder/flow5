@@ -27,7 +27,6 @@
 
 #include <BRep_Builder.hxx>
 #include <BRepTools.hxx>
-#include <TopTools_ListIteratorOfListOfShape.hxx>
 #include <TopExp_Explorer.hxx>
 #include <TopoDS.hxx>
 
@@ -123,7 +122,7 @@ void SailOcc::properties(std::string &properties, const std::string &prefx, bool
     {
         props +="\n";
         std::string str;
-        for(TopTools_ListIteratorOfListOfShape shapeit(m_Shape); shapeit.More(); shapeit.Next())
+        for(NCollection_List<TopoDS_Shape>::Iterator shapeit(m_Shape); shapeit.More(); shapeit.Next())
         {
             occ::listShapeContent(shapeit.Value(), str, prefx);
             props += frontspacer+str;

@@ -35,7 +35,7 @@
 #include <TopoDS.hxx>
 #include <TopoDS_Shell.hxx>
 #include <gp_Ax1.hxx>
-
+#include <Standard_Version.hxx>
 
 
 
@@ -189,7 +189,7 @@ double Fuse::formFactor() const
 
 void Fuse::clearOccTriangulation()
 {
-    for(TopTools_ListIteratorOfListOfShape ShapeIt(m_Shell); ShapeIt.More(); ShapeIt.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator ShapeIt(m_Shell); ShapeIt.More(); ShapeIt.Next())
     {
         BRepTools::Clean(ShapeIt.Value());
     }
@@ -211,7 +211,7 @@ bool Fuse::stitchShells(TopoDS_Shell &fusedshell, std::string &msg, std::string 
     BRepBuilderAPI_Sewing stitcher(0.001);
     int nFaces=0;
 
-    for(TopTools_ListIteratorOfListOfShape FaceIt(m_Shell); FaceIt.More(); FaceIt.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator FaceIt(m_Shell); FaceIt.More(); FaceIt.Next())
     {
         stitcher.Add(FaceIt.Value());
         nFaces++;
@@ -250,7 +250,12 @@ bool Fuse::stitchShells(TopoDS_Shell &fusedshell, std::string &msg, std::string 
     catch(Standard_TypeMismatch &ex)
     {
         std::string strong;
+#if OCC_VERSION_MAJOR<8
         strong = prefix + "Fused shells not made: " + ex.GetMessageString()+"\n";
+#else
+        strong = prefix + "Fused shells not made: " + ex.what()+"\n";
+#endif
+
         logmsg += strong;
         msg = logmsg;
         return false;
@@ -533,7 +538,7 @@ bool Fuse::intersectFuse(Vector3d const &A, Vector3d const &B, Vector3d &I, bool
     std::vector<Vector3d> ISh(nShells);
 
     int iShape = 0;
-    for(TopTools_ListIteratorOfListOfShape shapeit(m_Shell); shapeit.More(); shapeit.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shapeit(m_Shell); shapeit.More(); shapeit.Next())
     {
         bIntersect[iShape] = occ::intersectShape(shapeit.Value(), {A,B}, ISh[iShape], bRightSide);
         iShape++;
@@ -581,7 +586,7 @@ void Fuse::listShells()
 {
     std::string strange;
     int ishell=0;
-    for(TopTools_ListIteratorOfListOfShape iterator(shells()); iterator.More(); iterator.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator iterator(shells()); iterator.More(); iterator.Next())
     {
         strange = std::format("Shell {:d} ", ishell);
         if     (iterator.Value().Orientation()==TopAbs_FORWARD)  strange += "is FORWARD";

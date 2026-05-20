@@ -70,7 +70,7 @@ void CADExportDlg::init(TopoDS_ListOfShape const & listofshape, const QString &p
     TopoDS_ListIteratorOfListOfShape iterator;
     for (iterator.Initialize(listofshape); iterator.More(); iterator.Next())
     {
-        thescaler.Perform(iterator.Value(), Standard_True);
+        thescaler.Perform(iterator.Value(), true);
         m_ShapesToExport.Append(thescaler.Shape());
     }
 }
@@ -96,7 +96,7 @@ void CADExportDlg::init(const TopoDS_Shape &shape, const QString &partname)
     Scale.SetScale(gp_Pnt(0.0,0.0,0.0), 1000.0);
     try {
         BRepBuilderAPI_Transform thescaler(Scale);
-        thescaler.Perform(shape, Standard_True);
+        thescaler.Perform(shape, true);
         m_ShapesToExport.Append(thescaler.Shape());
 
     }  catch (StdFail_NotDone &) {

@@ -9,7 +9,7 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 TEMPLATE = app
 TARGET = flow5
 
-VERSION = 7.70
+VERSION = 7.57
 
 QT += opengl widgets xml
 
@@ -251,7 +251,7 @@ macx {
     #-------------vecLib -----------------
     DEFINES += ACCELERATE_NEW_LAPACK
     #    QMAKE_LFLAGS += -framework Accelerate
-    LIBS += -llapack -lcblas   #todo cblas may not be necessary
+    LIBS += -llapack -lcblas
 
 }
 

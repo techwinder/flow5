@@ -31,7 +31,7 @@
 #include <QDebug>
 #include <QtCore>
 
-#include <TopTools_ListIteratorOfListOfShape.hxx>
+
 #include <TopoDS_Shape.hxx>
 #include <BRep_Builder.hxx>
 #include <BRepTools.hxx>
@@ -4008,7 +4008,7 @@ bool serial::serializeSailOCCFl5(SailOcc *pSail, QDataStream &ar, bool bIsStorin
         ar << int(pSail->shapes().Size());
 
         std::string brepstr;
-        for(TopTools_ListIteratorOfListOfShape shapeit(pSail->shapes()); shapeit.More(); shapeit.Next())
+        for(NCollection_List<TopoDS_Shape>::Iterator shapeit(pSail->shapes()); shapeit.More(); shapeit.Next())
         {
             occ::shapeToBrep(shapeit.Value(), brepstr);
             ar << QString::fromStdString(brepstr);
@@ -4623,7 +4623,7 @@ bool serial::serializeFuseOccFl5(FuseOcc*pFuseOcc, QDataStream &ar, bool bIsStor
         ar<<pFuseOcc->nShells();
 
         std::stringstream sstream;
-        for(TopTools_ListIteratorOfListOfShape shapeit(pFuseOcc->shells()); shapeit.More(); shapeit.Next())
+        for(NCollection_List<TopoDS_Shape>::Iterator shapeit(pFuseOcc->shells()); shapeit.More(); shapeit.Next())
         {
             sstream.str(std::string()); // clear the stream
             BRepTools::Write(shapeit.Value(), sstream); // stream the brep to the stringstream

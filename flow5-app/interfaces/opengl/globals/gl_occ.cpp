@@ -29,7 +29,6 @@
 #include <Geom_Curve.hxx>
 #include <Poly.hxx>
 #include <TopExp_Explorer.hxx>
-#include <TopTools_ListIteratorOfListOfShape.hxx>
 #include <TopoDS.hxx>
 #include <TopoDS_Edge.hxx>
 #include <TopoDS_Face.hxx>
@@ -48,7 +47,7 @@ void gl::glMakeWire(TopoDS_Wire const &wire, QOpenGLBuffer &vbo)
         return;
     }
 
-    Standard_Real First=0,Last=0;
+    double First=0,Last=0;
     gp_Pnt pt0, pt1;
     int nEdge=0;
 
@@ -117,7 +116,7 @@ void gl::glMakeShapeTriangles(TopoDS_Shape const &shape, OccMeshParams const& pa
         {
             Poly::ComputeNormals(hTriangulation);
 
-//            const TColgp_Array1OfPnt& nodes = hTriangulation->Nodes();
+//            const NCollection_Array1<gp_Pnt>& nodes = hTriangulation->Nodes();
 //            const Poly_Array1OfTriangle& triangles = hTriangulation->Triangles();
 
             for (int i=1; i<=hTriangulation->NbTriangles();  i++)
@@ -193,12 +192,12 @@ void gl::glMakeEdges(TopoDS_ListOfShape const &theEdges, Vector3d const &T, QOpe
 {
     if(vboEdges.isCreated()) vboEdges.destroy();
 
-    Standard_Real First=0,Last=0;
+    double First=0,Last=0;
     gp_Pnt pt0, pt1;
 
     QVector<float> OutlineVertexArray;
     int nEdge=0;
-    for(TopTools_ListIteratorOfListOfShape EdgeIt(theEdges); EdgeIt.More(); EdgeIt.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator EdgeIt(theEdges); EdgeIt.More(); EdgeIt.Next())
     {
         TopoDS_Edge const &anEdge = TopoDS::Edge(EdgeIt.Value());
 
@@ -247,7 +246,7 @@ void gl::glMakeEdge(const TopoDS_Edge &Edge, QOpenGLBuffer &vboEdge)
 
     //could also use BRep_Tool::PolygonOnSurface
 
-    Standard_Real First=0, Last=0;
+    double First=0, Last=0;
     gp_Pnt pt0, pt1;
 
     QVector<float> OutlineVertexArray;
@@ -293,7 +292,7 @@ void gl::glMakeShellOutline(const TopoDS_ListOfShape &shapes, const Vector3d &po
     QVector<float> OutlineVertexArray;
 
     TopoDS_ListIteratorOfListOfShape iterator;
-    Standard_Real First,Last;
+    double First,Last;
     gp_Pnt pt0, pt1;
 
     int iShape=0;
@@ -313,7 +312,7 @@ void gl::glMakeShellOutline(const TopoDS_ListOfShape &shapes, const Vector3d &po
 
             int iWire=0;
             // for each of the face's wire
-            for(TopTools_ListIteratorOfListOfShape WireIt(theInnerWires); WireIt.More(); WireIt.Next())
+            for(NCollection_List<TopoDS_Shape>::Iterator WireIt(theInnerWires); WireIt.More(); WireIt.Next())
             {
                 TopExp_Explorer WireExplorer;
 

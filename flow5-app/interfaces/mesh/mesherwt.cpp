@@ -29,7 +29,6 @@
 #include <QVBoxLayout>
 
 #include <TopExp_Explorer.hxx>
-#include <TopTools_ListIteratorOfListOfShape.hxx>
 #include <TopoDS.hxx>
 
 #include "mesherwt.h"
@@ -373,7 +372,7 @@ void MesherWt::initWt(TopoDS_ListOfShape const &shells, double maxedgelength, bo
     int iShell=0;
     double Xmin(LARGEVALUE), Ymin(LARGEVALUE), Zmin(LARGEVALUE), Xmax(-LARGEVALUE), Ymax(-LARGEVALUE), Zmax(-LARGEVALUE);
 
-    for(TopTools_ListIteratorOfListOfShape iterator(shells); iterator.More(); iterator.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator iterator(shells); iterator.More(); iterator.Next())
     {
         m_Shapes.Append(iterator.Value());
         strange = QString::asprintf("Shell %d ", iShell);
@@ -500,7 +499,7 @@ void MesherWt::onMakeMesh()
     m_pMesher->setSplittableInnerPSLG(m_bSplittableInnerPSLG);
     m_pMesher->setEdgeSplit(m_EdgeSplit);
 
-    for(TopTools_ListIteratorOfListOfShape ShellIt(m_Shapes); ShellIt.More(); ShellIt.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator ShellIt(m_Shapes); ShellIt.More(); ShellIt.Next())
         m_pMesher->appendShape(ShellIt.Value());
 
 

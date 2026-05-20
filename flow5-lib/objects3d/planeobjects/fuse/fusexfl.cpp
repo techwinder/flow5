@@ -47,9 +47,6 @@
 #include <Standard_Version.hxx>
 #include <StdFail_NotDone.hxx>
 #include <TopExp_Explorer.hxx>
-#include <TColgp_Array2OfPnt.hxx>
-#include <TColStd_Array1OfReal.hxx>
-#include <TColStd_Array1OfInteger.hxx>
 #include <TopoDS.hxx>
 #include <TopoDS_Shell.hxx>
 #include <TopoDS_Wire.hxx>
@@ -380,7 +377,7 @@ void FuseXfl::computeSurfaceProperties(std::string &msg, const std::string &pref
         }
         catch(StdFail_NotDone &)
         {
-//            qDebug()<<"FuseXfl::computeSurfaceProperties"<<e.GetMessageString();
+//            qDebug()<<"FuseXfl::computeSurfaceProperties"<<e.what();
         }
         catch(...)
         {
@@ -1384,7 +1381,11 @@ void FuseXfl::makeBodySplineShape(std::string &logmsg)
     }
     catch (StdFail_NotDone &e)
     {
+#if OCC_VERSION_MAJOR<8
         logmsg += std::string("   StdFail_NotDone: ") + e.GetMessageString() + EOLstr;
+#else
+        logmsg += std::string("   StdFail_NotDone: ") + e.what() + EOLstr;
+#endif
         return;
     }
     catch (...)
@@ -1401,8 +1402,8 @@ void FuseXfl::makeBodySplineShape_old(std::string &logmsg)
 
     if(frameCount()<=0) return;
 
-    TColgp_Array2OfPnt RightPoles(0, frameCount()-1, 0, sideLineCount()-1);
-    TColgp_Array2OfPnt LeftPoles( 0, frameCount()-1, 0, sideLineCount()-1);
+    NCollection_Array2<gp_Pnt> RightPoles(0, frameCount()-1, 0, sideLineCount()-1);
+    NCollection_Array2<gp_Pnt> LeftPoles( 0, frameCount()-1, 0, sideLineCount()-1);
 
     //------Store the control points in OCC format-----
     for(int iFrame=0; iFrame<frameCount(); iFrame++)
@@ -1425,8 +1426,8 @@ void FuseXfl::makeBodySplineShape_old(std::string &logmsg)
     //------Make the knots-----
     int p = nurbs().uDegree();
     int uSize = int(nurbs().uKnot().size())-2*p+2;
-    TColStd_Array1OfReal    uKnots(0, uSize-1);
-    TColStd_Array1OfInteger uMults(0, uSize-1);
+    NCollection_Array1<double>    uKnots(0, uSize-1);
+    NCollection_Array1<int> uMults(0, uSize-1);
     uKnots.SetValue(0, 0.0);
     uMults.SetValue(0, p);
     uKnots.SetValue(uSize-1, 1.0);
@@ -1443,8 +1444,8 @@ void FuseXfl::makeBodySplineShape_old(std::string &logmsg)
 
     p = nurbs().vDegree();
     int vSize = int(nurbs().vKnot().size())-2*p+2;
-    TColStd_Array1OfReal    vKnots(0, vSize-1);
-    TColStd_Array1OfInteger vMults(0, vSize-1);
+    NCollection_Array1<double>    vKnots(0, vSize-1);
+    NCollection_Array1<int> vMults(0, vSize-1);
     vKnots.SetValue(0, 0.0);
     vMults.SetValue(0, p);
     vKnots.SetValue(vSize-1, 1.0);
@@ -1473,13 +1474,21 @@ void FuseXfl::makeBodySplineShape_old(std::string &logmsg)
      }
     catch (Standard_ConstructionError &e)
     {
-        strong = "   Spline construction error... "+std::string(e.GetMessageString()) + "\n";
+#if OCC_VERSION_MAJOR<8
+         strong = "   Spline construction error... "+std::string(e.GetMessageString()) + "\n";
+#else
+         strong = "   Spline construction error... "+std::string(e.what()) + "\n";
+#endif
         logmsg += strong;
         return;
     }
     catch(Standard_Failure &s)
     {
+#if OCC_VERSION_MAJOR<8
         strong = "   Standard failure... "+std::string(s.GetMessageString())+"\n";
+#else
+        strong = "   Standard failure... "+std::string(s.what())+"\n";
+#endif
         logmsg += strong;
         return;
     }
@@ -1524,7 +1533,11 @@ void FuseXfl::makeBodySplineShape_old(std::string &logmsg)
     }
     catch (StdFail_NotDone &e)
     {
+#if OCC_VERSION_MAJOR<8
         logmsg += std::string("   StdFail_NotDone: ") + e.GetMessageString() + EOLstr;
+#else
+        logmsg += std::string("   StdFail_NotDone: ") + e.what() + EOLstr;
+#endif
         return;
     }
     catch (...)
@@ -1538,7 +1551,7 @@ void FuseXfl::makeBodySplineShape_old(std::string &logmsg)
 void FuseXfl::makeBodyFlatPanelShell_with2Triangles(std::string &logmsg)
 {
     Vector3d P1, P2, P3;
-    TopTools_ListOfShape RightFaceList;
+    NCollection_List<TopoDS_Shape> RightFaceList;
     std::string tracelog;
 
     std::string occstr;
@@ -1575,7 +1588,7 @@ void FuseXfl::makeBodyFlatPanelShell_with2Triangles(std::string &logmsg)
     // sew the Panels together
     BRepBuilderAPI_Sewing stitcher(0.001);
     int nFaces=0;
-    for(TopTools_ListIteratorOfListOfShape FaceIt(RightFaceList); FaceIt.More(); FaceIt.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator FaceIt(RightFaceList); FaceIt.More(); FaceIt.Next())
     {
         stitcher.Add(FaceIt.Value());
         nFaces++;
@@ -1610,7 +1623,11 @@ void FuseXfl::makeBodyFlatPanelShell_with2Triangles(std::string &logmsg)
     catch(Standard_TypeMismatch const &ex)
     {
         std::string strong;
+#if OCC_VERSION_MAJOR<8
         strong = "   Left body shells not made: " + std::string(ex.GetMessageString())+"\n";
+#else
+        strong = "   Left body shells not made: " + std::string(ex.what())+"\n";
+#endif
         tracelog+= strong;
     }
 
@@ -1643,10 +1660,10 @@ void FuseXfl::makeBodyFlatPanelShell_withSpline(std::string &logmsg)
     std::string strong, tracelog;
 
     // define parameters
-    Standard_Real Tol = 0.00001;
-    Standard_Real dummy = 0.;
-    Standard_Integer MaxDeg = 3;
-    Standard_Integer MaxSeg = 8;
+    double Tol = 0.00001;
+    double dummy = 0.;
+    int MaxDeg = 3;
+    int MaxSeg = 8;
     Handle(Geom_TrimmedCurve) TC[5];
     Handle(GeomAdaptor_Curve) adapCurve[5];
     Handle(GeomFill_SimpleBound) bnd[5];
@@ -1657,7 +1674,7 @@ void FuseXfl::makeBodyFlatPanelShell_withSpline(std::string &logmsg)
     // side 0 is right, side 1 is left
     for(int iSide=0; iSide<2; iSide++)
     {
-        TopTools_ListOfShape FaceList;
+        NCollection_List<TopoDS_Shape> FaceList;
         for (int k=0; k<sideLineCount()-1; k++)
         {
             for (int j=0; j<frameCount()-1; j++)
@@ -1738,7 +1755,7 @@ void FuseXfl::makeBodyFlatPanelShell_withSpline(std::string &logmsg)
         //sew the Panels together
         BRepBuilderAPI_Sewing stitcher(0.003);
         int nFaces=0;
-        for(TopTools_ListIteratorOfListOfShape FaceIt(FaceList); FaceIt.More(); FaceIt.Next())
+        for(NCollection_List<TopoDS_Shape>::Iterator FaceIt(FaceList); FaceIt.More(); FaceIt.Next())
         {
             stitcher.Add(FaceIt.Value());
             nFaces++;
@@ -1773,7 +1790,11 @@ void FuseXfl::makeBodyFlatPanelShell_withSpline(std::string &logmsg)
         }
         catch(Standard_TypeMismatch const &ex)
         {
+#if OCC_VERSION_MAJOR<8
             std::string strong = "   Right side body shells not made: " + std::string(ex.GetMessageString())+"\n";
+#else
+            std::string strong = "   Right side body shells not made: " + std::string(ex.what())+"\n";
+#endif
             tracelog += strong;
         }
     }

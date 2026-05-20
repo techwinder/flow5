@@ -113,11 +113,18 @@ macx {
     # The SONAME is the identifier that the dynamic linker will later use to reference the library.
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
 
+    #-----XFoil-----
+    LIBS += -L../XFoil-lib -lXFoil
+
 
     #-------------OPENCASCADE -----------------
     INCLUDEPATH += /usr/local/include/opencascade
     LIBS += -L/usr/local/lib
 
+
+    #_____________GMSH__________________
+    INCLUDEPATH += /usr/local/include
+    LIBS += -lgmsh
 
     #-------Lib install ----------------
     isEmpty(PREFIX){

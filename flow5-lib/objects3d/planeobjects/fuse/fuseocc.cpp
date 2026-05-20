@@ -34,7 +34,6 @@
 #include <BRep_Builder.hxx>
 #include <GProp_GProps.hxx>
 #include <TopExp_Explorer.hxx>
-#include <TopTools_ListIteratorOfListOfShape.hxx>
 #include <TopoDS.hxx>
 
 #include <fuseocc.h>
@@ -72,7 +71,7 @@ void FuseOcc::getProperties(std::string &properties, std::string const &prefx, b
         properties += "\n"+prefx+strange;
 
         std::string occstr;
-        for(TopTools_ListIteratorOfListOfShape shapeit(m_Shell); shapeit.More(); shapeit.Next())
+        for(NCollection_List<TopoDS_Shape>::Iterator shapeit(m_Shell); shapeit.More(); shapeit.Next())
         {
             occ::listShapeContent(shapeit.Value(), occstr, prefx);
             properties += prefx+occstr;
@@ -212,7 +211,7 @@ void FuseOcc::extractShellsFromShapes()
 {
     m_Shell.Clear();
 
-    for(TopTools_ListIteratorOfListOfShape shapeit(m_Shape); shapeit.More(); shapeit.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shapeit(m_Shape); shapeit.More(); shapeit.Next())
     {
         TopExp_Explorer shapeExplorer;
         for (shapeExplorer.Init(shapeit.Value(),TopAbs_SHELL); shapeExplorer.More(); shapeExplorer.Next())

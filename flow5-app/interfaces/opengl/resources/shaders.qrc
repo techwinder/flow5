@@ -20,5 +20,6 @@
         <file>shaders/shaders2d/quat_FS.glsl</file>
         <file>shaders/shaders2d/complex_FS.glsl</file>
         <file>shaders/flow/flowVtx_CS.glsl</file>
+        <file>shaders/point/point_FS.glsl</file>
     </qresource>
 </RCC>

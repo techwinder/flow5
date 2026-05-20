@@ -53,15 +53,15 @@ class XFoilPanelDlg : public FoilDlg
         static void saveSettings(QSettings &settings);
 
     private slots:
-        void onApply();
-        void onReset();
+        void onApply() override;
+        void onReset() override;
 
     private:
         void showEvent(QShowEvent *pEvent) override;
         void resizeEvent(QResizeEvent *) override;
 
         void setupLayout();
-        void readParams();
+        void readParams() override;
 
     private:
         QFrame *m_pfrXFoilPanel;

@@ -28,7 +28,7 @@
 
 #include <TopoDS_Wire.hxx>
 #include <TopoDS_Edge.hxx>
-
+#include <TopoDS_ListOfShape.hxx>
 #include <api/vector3d.h>
 #include <api/occmeshparams.h>
 

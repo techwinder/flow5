@@ -37,7 +37,7 @@
 #include <QTableView>
 #include <QTextEdit>
 
-#include <TopTools_ListOfShape.hxx>
+
 #include <TopoDS_Wire.hxx>
 
 #include <interfaces/editors/planeedit/planedlg.h>

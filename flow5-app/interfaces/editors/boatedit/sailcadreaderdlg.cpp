@@ -31,8 +31,6 @@
 #include <QFileDialog>
 #include <QGroupBox>
 
-#include <TopTools_ListIteratorOfListOfShape.hxx>
-
 #include "sailcadreaderdlg.h"
 #include <core/saveoptions.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
@@ -118,7 +116,7 @@ void SailCadReaderDlg::onImportFile()
 
     std::string log;
     int ishape=0;
-    for(TopTools_ListIteratorOfListOfShape shellit(m_ListOfShape); shellit.More(); shellit.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shellit(m_ListOfShape); shellit.More(); shellit.Next())
     {
         m_ppto->onAppendQText(QString::asprintf("Shape %d:\n", ishape));
         occ::listShapeContent(shellit.Value(), log, "   ");

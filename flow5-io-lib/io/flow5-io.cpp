@@ -124,7 +124,7 @@ bool io::loadProject(std::string const& stdPathName, std::string &logmsg)
 bool io::readSTLFile(std::string const&FilePath, double FileUnitsToMeter, double theMergeAngle,
                      std::vector<Triangle3d> &triangles, Vector3d &botleft, Vector3d &topright)
 {
-    Standard_CString STLFile = FilePath.c_str();
+    const char* STLFile = FilePath.c_str();
 
     Handle(Poly_Triangulation) polyTriangulation = RWStl::ReadFile(STLFile, theMergeAngle); // not sure how to set the merge angle
 
@@ -137,7 +137,7 @@ bool io::readSTLFile(std::string const&FilePath, double FileUnitsToMeter, double
 bool io::readOBJFile(std::string const&FilePath, double FileUnitsToMeter,
                      std::vector<Triangle3d> &triangles, Vector3d &botleft, Vector3d &topright)
 {
-    Standard_CString ObjFile = FilePath.c_str();
+    const char* ObjFile = FilePath.c_str();
 
     Handle(Poly_Triangulation) polyTriangulation = RWObj::ReadFile(ObjFile);
 
@@ -1652,7 +1652,7 @@ void io::exportSTEP(QString const & filename, TopoDS_ListOfShape const &m_Shapes
         Scale.SetScale(gp_Pnt(0.0,0.0,0.0), 1000.0);
         try {
             BRepBuilderAPI_Transform thescaler(Scale);
-            thescaler.Perform(iterator.Value(), Standard_True);
+            thescaler.Perform(iterator.Value(), true);
             exportshape = thescaler.Shape();
 
         }  catch (StdFail_NotDone &) {

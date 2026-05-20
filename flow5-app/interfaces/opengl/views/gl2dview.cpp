@@ -523,6 +523,14 @@ QPoint gl2dView::worldToScreen(float xf, float yf) const
 void gl2dView::paintPoints(QOpenGLBuffer &vbo, float width, int iShape, bool bLight, QColor const &clr, int stride)
 {
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
+#if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
+    (void)vbo;
+    (void)width;
+    (void)iShape;
+    (void)bLight;
+    (void)clr;
+    (void)stride;
+#else
     m_shadPoint.bind();
     {
         // iShape 0: Pentagon, 1: Icosahedron, 2: Cube
@@ -546,6 +554,7 @@ void gl2dView::paintPoints(QOpenGLBuffer &vbo, float width, int iShape, bool bLi
         vbo.release();
     }
     m_shadPoint.release();
+#endif
 }
 
 
@@ -982,25 +991,28 @@ void gl2dView::initializeGL()
         xfl::trace(strange);
     }
 
-    m_shadLine.link();
-    m_shadLine.bind();
+    if(m_shadLine.link())
     {
-        m_locLine.m_attrVertex    = m_shadLine.attributeLocation("vertexPosition_modelSpace");
-        m_locLine.m_attrColor = m_shadLine.attributeLocation("vertexColor");
-        m_locLine.m_vmMatrix     = m_shadLine.uniformLocation("vmMatrix");
-        m_locLine.m_pvmMatrix    = m_shadLine.uniformLocation("pvmMatrix");
-        m_locLine.m_HasUniColor  = m_shadLine.uniformLocation("HasUniColor");
-        m_locLine.m_UniColor     = m_shadLine.uniformLocation("UniformColor");
-        m_locLine.m_ClipPlane    = m_shadLine.uniformLocation("clipPlane0");
-        m_locLine.m_Thickness    = m_shadLine.uniformLocation("Thickness");
-        m_locLine.m_Viewport     = m_shadLine.uniformLocation("Viewport");
-        m_locLine.m_Pattern      = m_shadLine.uniformLocation("pattern");
-        m_locLine.m_nPatterns    = m_shadLine.uniformLocation("nPatterns");
-        GLint nPatterns = 300; // number of patterns per unit projected length (viewport half width = 1)
-        m_shadLine.setUniformValue(m_locLine.m_nPatterns, nPatterns);
+        m_shadLine.bind();
+        {
+            m_locLine.m_attrVertex    = m_shadLine.attributeLocation("vertexPosition_modelSpace");
+            m_locLine.m_attrColor = m_shadLine.attributeLocation("vertexColor");
+            m_locLine.m_vmMatrix     = m_shadLine.uniformLocation("vmMatrix");
+            m_locLine.m_pvmMatrix    = m_shadLine.uniformLocation("pvmMatrix");
+            m_locLine.m_HasUniColor  = m_shadLine.uniformLocation("HasUniColor");
+            m_locLine.m_UniColor     = m_shadLine.uniformLocation("UniformColor");
+            m_locLine.m_ClipPlane    = m_shadLine.uniformLocation("clipPlane0");
+            m_locLine.m_Thickness    = m_shadLine.uniformLocation("Thickness");
+            m_locLine.m_Viewport     = m_shadLine.uniformLocation("Viewport");
+            m_locLine.m_Pattern      = m_shadLine.uniformLocation("pattern");
+            m_locLine.m_nPatterns    = m_shadLine.uniformLocation("nPatterns");
+            GLint nPatterns = 300; // number of patterns per unit projected length (viewport half width = 1)
+            m_shadLine.setUniformValue(m_locLine.m_nPatterns, nPatterns);
+        }
+        m_shadLine.release();
     }
-    m_shadLine.release();
 
+#ifndef Q_OS_MAC
     vsrc = ":/shaders/point/point_VS.glsl";
     m_shadPoint.addShaderFromSourceFile(QOpenGLShader::Vertex, vsrc);
     if(m_shadPoint.log().length())
@@ -1025,24 +1037,25 @@ void gl2dView::initializeGL()
         xfl::trace(strange);
     }
 
-    m_shadPoint.link();
-    m_shadPoint.bind();
+    if(m_shadPoint.link())
     {
-        m_locPoint.m_attrVertex = m_shadPoint.attributeLocation("vertexPosition_modelSpace");
-        m_locPoint.m_State      = m_shadPoint.attributeLocation("PointState");
-        m_locPoint.m_vmMatrix   = m_shadPoint.uniformLocation("vmMatrix");
-        m_locPoint.m_pvmMatrix  = m_shadPoint.uniformLocation("pvmMatrix");
-        m_locPoint.m_ClipPlane  = m_shadPoint.uniformLocation("clipPlane0");
-        m_locPoint.m_UniColor   = m_shadPoint.uniformLocation("Color");
-        m_locPoint.m_Thickness  = m_shadPoint.uniformLocation("Thickness");
-        m_locPoint.m_Shape      = m_shadPoint.uniformLocation("Shape");
-        m_locPoint.m_Viewport   = m_shadPoint.uniformLocation("Viewport");
-        m_locPoint.m_Light      = m_shadPoint.uniformLocation("LightOn");
-        m_locPoint.m_TwoSided   = m_shadPoint.uniformLocation("TwoSided");
+        m_shadPoint.bind();
+        {
+            m_locPoint.m_attrVertex = m_shadPoint.attributeLocation("vertexPosition_modelSpace");
+            m_locPoint.m_State      = m_shadPoint.attributeLocation("PointState");
+            m_locPoint.m_vmMatrix   = m_shadPoint.uniformLocation("vmMatrix");
+            m_locPoint.m_pvmMatrix  = m_shadPoint.uniformLocation("pvmMatrix");
+            m_locPoint.m_ClipPlane  = m_shadPoint.uniformLocation("clipPlane0");
+            m_locPoint.m_UniColor   = m_shadPoint.uniformLocation("Color");
+            m_locPoint.m_Thickness  = m_shadPoint.uniformLocation("Thickness");
+            m_locPoint.m_Shape      = m_shadPoint.uniformLocation("Shape");
+            m_locPoint.m_Viewport   = m_shadPoint.uniformLocation("Viewport");
+            m_locPoint.m_Light      = m_shadPoint.uniformLocation("LightOn");
+            m_locPoint.m_TwoSided   = m_shadPoint.uniformLocation("TwoSided");
+        }
+        m_shadPoint.release();
     }
-    m_shadPoint.release();
-
-
+#endif
     // setup the flat point shader
     vsrc =  ":/shaders/point2/point2_VS.glsl";
     fsrc =  ":/shaders/point2/point2_FS.glsl";

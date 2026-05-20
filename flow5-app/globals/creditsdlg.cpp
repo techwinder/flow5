@@ -72,7 +72,6 @@ void CreditsDlg::setupLayout()
     {
         QVBoxLayout *pOccLayout = new QVBoxLayout;
         {
-
             QLabel *plabVersion = new QLabel(tr("<p><b>Version:</b> ") + QString(OCC_VERSION_COMPLETE));
             QLabel *plabDescription = new QLabel(tr("<p>Open Cascade Technology (OCCT) is an open-source software "
                                                  "development platform for 3D CAD, CAM, CAE, etc. that is developed "

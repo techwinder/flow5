@@ -31,7 +31,6 @@
 
 #include <TopoDS.hxx>
 #include <TopExp_Explorer.hxx>
-#include <TopTools_ListIteratorOfListOfShape.hxx>
 
 #include "sailoccdlg.h"
 
@@ -371,7 +370,7 @@ void SailOccDlg::initMesher()
 
     int iShell = 0;
     TopoDS_ListOfShape shells;
-    for(TopTools_ListIteratorOfListOfShape shellitt(pOccSail->shapes()); shellitt.More(); shellitt.Next())
+    for(NCollection_List<TopoDS_Shape>::Iterator shellitt(pOccSail->shapes()); shellitt.More(); shellitt.Next())
     {
         TopExp_Explorer shapeExplorer;
         for (shapeExplorer.Init(shellitt.Value(), TopAbs_SHELL); shapeExplorer.More(); shapeExplorer.Next())
