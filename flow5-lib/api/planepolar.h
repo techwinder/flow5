@@ -96,7 +96,7 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
         virtual void removeAt(int index);
         void removeAoA(double alphaT4);
 
-        void setPlane(Plane const *pPlane) {m_pPlane = pPlane;}
+//        void setPlane(Plane const *pPlane) {m_pPlane = pPlane;}
 
         std::string const &planeName()  const {return m_PlaneName;}      /**< returns the name of the polar's parent object as a string object. */
         void setPlaneName(std::string const &planename) {m_PlaneName = planename;}
@@ -240,7 +240,7 @@ class FL5LIB_EXPORT PlanePolar : public Polar3d
 
     protected:
 
-        Plane const *m_pPlane;
+//        Plane const *m_pPlane;          // very bad idea to store a pointer; removed in v7.57 due to issues with fuse drag
         std::string m_PlaneName;          /**< the name of the parent wing or plane */
 
         double m_RefArea;          /**< The reference area for the calculation of aero coefficients */

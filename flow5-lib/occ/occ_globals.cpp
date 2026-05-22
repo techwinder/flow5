@@ -286,14 +286,15 @@ void occ::listShapeProperties(TopoDS_Shape const &shape, std::string &props, std
 
     props = properties;
 
-    double Xmin(LARGEVALUE), Ymin(LARGEVALUE), Zmin(LARGEVALUE), Xmax(-LARGEVALUE), Ymax(-LARGEVALUE), Zmax(-LARGEVALUE);
-    occ::shapeBoundingBox(shape, Xmin, Ymin, Zmin, Xmax, Ymax, Zmax);
+//    double Xmin(LARGEVALUE), Ymin(LARGEVALUE), Zmin(LARGEVALUE), Xmax(-LARGEVALUE), Ymax(-LARGEVALUE), Zmax(-LARGEVALUE);
+    Vector3d BRL, TFR;
+    occ::shapeBoundingBox(shape, BRL, TFR, false);
     logmsg = prefix + "Bounding box:\n";
-    strange = std::format("   X=[{:9g}, {:9g}] ", Xmin*Units::mtoUnit(), Xmax *Units::mtoUnit());
+    strange = std::format("   X=[{:9g}, {:9g}] ", BRL.x*Units::mtoUnit(), TFR.x *Units::mtoUnit());
     logmsg += prefix + strange + Units::lengthUnitLabel() +"\n";
-    strange = std::format("   Y=[{:9g}, {:9g}] ", Ymin*Units::mtoUnit(), Ymax *Units::mtoUnit());
+    strange = std::format("   Y=[{:9g}, {:9g}] ", BRL.y*Units::mtoUnit(), TFR.y *Units::mtoUnit());
     logmsg += prefix + strange + Units::lengthUnitLabel() +"\n";
-    strange = std::format("   Z=[{:9g}, {:9g}] ", Zmin*Units::mtoUnit(), Zmax *Units::mtoUnit());
+    strange = std::format("   Z=[{:9g}, {:9g}] ", BRL.z*Units::mtoUnit(), TFR.z *Units::mtoUnit());
     logmsg += prefix + strange + Units::lengthUnitLabel() +"\n";
     props += logmsg +"\n";
 }
@@ -646,24 +647,31 @@ void occ::findEdges(TopoDS_Shape const &theshape, TopoDS_ListOfShape &edges, std
 }
 
 
-/** returns the edge lengths of the box which bounds the shape */
-void occ::shapeBoundingBox(TopoDS_Shape const &shape, double &Xmin, double &Ymin, double &Zmin, double &Xmax, double &Ymax, double &Zmax)
+void occ::shapeBoundingBox(TopoDS_Shape const &shape, Vector3d &BotRearLeft, Vector3d &TopFrontRight, bool bCumulative)
 {
     TopExp_Explorer shapeExplorer;
     double xmin=0, ymin=0, zmin=0;
     double xmax=0, ymax=0, zmax=0;
+
+    if(!bCumulative)
+    {
+        //reset
+        BotRearLeft.set(LARGEVALUE, LARGEVALUE, LARGEVALUE);
+        TopFrontRight.set(-LARGEVALUE, -LARGEVALUE, -LARGEVALUE);
+    }
+
     for (shapeExplorer.Init(shape, TopAbs_FACE); shapeExplorer.More(); shapeExplorer.Next())
     {
         TopoDS_Shape aSub = shapeExplorer.Current();
         Bnd_Box box;
         BRepBndLib::Add(aSub, box); // Use triangulation in this case.
         box.Get(xmin, ymin, zmin, xmax, ymax, zmax);
-        Xmin = std::min(xmin, Xmin);
-        Ymin = std::min(ymin, Ymin);
-        Zmin = std::min(zmin, Zmin);
-        Xmax = std::max(xmax, Xmax);
-        Ymax = std::max(ymax, Ymax);
-        Zmax = std::max(zmax, Zmax);
+        BotRearLeft.x = std::min(xmin, BotRearLeft.x);
+        BotRearLeft.y = std::min(ymin, BotRearLeft.y);
+        BotRearLeft.z = std::min(zmin, BotRearLeft.z);
+        TopFrontRight.x = std::max(xmax, TopFrontRight.x);
+        TopFrontRight.y = std::max(ymax, TopFrontRight.y);
+        TopFrontRight.z = std::max(zmax, TopFrontRight.z);
     }
 }
 

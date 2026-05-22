@@ -237,8 +237,8 @@ void Objects3d::insertPlaneOpp(PlaneOpp *pPOpp)
 void Objects3d::addPlPolar(PlanePolar *pWPolar)
 {
     if(!pWPolar) return;
-    Plane const *pPlane = planeAt(pWPolar->planeName());
-    pWPolar->setPlane(pPlane);
+//    Plane const *pPlane = planeAt(pWPolar->planeName());
+//    pWPolar->setPlane(pPlane);
 
     for (int ip=0; ip<nPolars(); ip++)
     {
@@ -280,8 +280,8 @@ void Objects3d::addPlPolar(PlanePolar *pWPolar)
 void Objects3d::appendPlPolar(PlanePolar *pWPolar)
 {
     if(!pWPolar) return;
-    Plane const *pPlane = planeAt(pWPolar->planeName());
-    pWPolar->setPlane(pPlane);
+//    Plane const *pPlane = planeAt(pWPolar->planeName());
+//    pWPolar->setPlane(pPlane);
 
     s_oaPlanePolar.push_back(pWPolar);
 }

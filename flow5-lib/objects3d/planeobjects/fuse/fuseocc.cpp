@@ -154,7 +154,15 @@ void FuseOcc::computeSurfaceProperties(std::string &logmsg, const std::string &p
 {
     computeWettedArea();
 
-    double xmax=0.0, xmin=0.0;
+    Vector3d BRL, TFR;
+    TopoDS_ListIteratorOfListOfShape iterator;
+    for (iterator.Initialize(m_Shell); iterator.More(); iterator.Next())
+    {
+        occ::shapeBoundingBox(iterator.Value(), BRL, TFR, true);
+    }
+    m_Length = TFR.x-BRL.x;
+
+/*    double xmax=0.0, xmin=0.0;
     double ymax=0.0, ymin=0.0;
     double zmax=0.0, zmin=0.0;
     m_Length = 0.0;
@@ -186,10 +194,10 @@ void FuseOcc::computeSurfaceProperties(std::string &logmsg, const std::string &p
     }
     m_Length = fabs(xmin-xmax);
     m_MaxWidth = fabs(ymax-ymin);
-    m_MaxHeight = fabs(zmax-zmin);
+    m_MaxHeight = fabs(zmax-zmin);*/
 
     std::string strong;
-    strong = std::format("Length          = {:9.5g} ", length()*Units::mtoUnit());
+    strong = std::format("Length          = {:9.5g} ", m_Length*Units::mtoUnit());
     strong += Units::lengthUnitLabel() + "\n";
     logmsg += prefix + strong;
 

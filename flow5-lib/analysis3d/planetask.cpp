@@ -1460,16 +1460,16 @@ PlaneOpp* PlaneTask::computePlane(double ctrl, double alpha, double beta, double
 
             if(m_pPlPolar->hasFuseDrag())
             {
-                Vector3d Force, Moment;
-                pFuse->computeViscousForces(m_pPlPolar, alpha, QInf, Force, Moment);
-                m_AF.addFuseDrag(Force.dot(windD));
-                m_PartAF[ipart].setFuseDrag(Force.dot(windD));
+                Vector3d ForceFuse, Moment;
+                pFuse->computeViscousForces(m_pPlPolar, alpha, QInf, ForceFuse, Moment);
+                m_AF.addFuseDrag(ForceFuse.dot(windD));
+                m_PartAF[ipart].setFuseDrag(ForceFuse.dot(windD));
 
 //                Vector3d drag(windD*pFuse->AF().viscousDrag());
 
                 Vector3d leverarm = (pPlaneXfl->fusePos(0)+pFuse->inertia().CoG_t())-CoG;
-                m_AF.addMv(leverarm * Force);
-                m_PartAF[ipart].setMv(leverarm * Force);
+                m_AF.addMv(leverarm * ForceFuse);
+                m_PartAF[ipart].setMv(leverarm * ForceFuse);
             }
         }
     }

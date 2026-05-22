@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(PlaneRun6 LANGUAGES CXX)
+SET(API_EXAMPLE "PlaneRun6")
+project(${API_EXAMPLE} LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,7 +10,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(USING_INTEL_MKL "Activate if flow5 has been built with Intel MKL" OFF)
 option(USING_FLOW5_IO  "Activate to link to flow5-io.\nRequired for data serialization and use of xml files\nRequires linking to Qt6Core" ON)
 
-SET(API_EXAMPLE "PlaneRun6")
 
 if (WIN32)
 

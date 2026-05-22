@@ -258,10 +258,11 @@ void PlaneExplorer::updatePlane(const Plane *pPlane)
             ObjectTreeItem *pItem = m_pModel->itemFromIndex(planeindex);
             if(!pItem) continue;
             m_pModel->blockSignals(true);
-            m_pModel->removeRows(0, pItem->rowCount(), planeindex);
+            {
+                m_pModel->removeRows(0, pItem->rowCount(), planeindex);
+                fillWPolars(pPlaneItem, pPlane);
+            }
             m_pModel->blockSignals(false);
-
-            fillWPolars(pPlaneItem, pPlane);
             break;
         }
     }
@@ -565,8 +566,6 @@ void PlaneExplorer::selectPlaneOpp(PlaneOpp *pPOpp)
             //find the WPolar item
             for(int jr=0; jr<pPlaneItem->rowCount(); jr++)
             {
-                //				const QModelIndex &oldWPolarChild = pPlaneItem->index().child(jr, 0);
-                //				PlaneTreeItem *pPolarItem = m_pModel->itemFromIndex(oldWPolarChild);
                 ObjectTreeItem *pPolarItem = pPlaneItem->child(jr);
 
                 if(pPolarItem->name().compare(QString::fromStdString(pPOpp->polarName()), Qt::CaseInsensitive)==0)
@@ -574,8 +573,6 @@ void PlaneExplorer::selectPlaneOpp(PlaneOpp *pPOpp)
                     //find the POpp item
                     for(int jr=0; jr<pPolarItem->rowCount(); jr++)
                     {
-                        //						const QModelIndex &poppChild = pPolarItem->index().child(jr, 0);
-                        //						PlaneTreeItem *poppItem = m_pModel->itemFromIndex(poppChild);
                         ObjectTreeItem *pPOppItem = pPolarItem->child(jr);
                         QModelIndex poppChild = m_pModel->index(jr,0, pPolarItem);
                         QString strange = QString::fromStdString(pPOpp->name());
@@ -588,44 +585,6 @@ void PlaneExplorer::selectPlaneOpp(PlaneOpp *pPOpp)
                             m_pTreeView->scrollTo(poppChild);
                             break;
                         }
-/*                        bool bOK=false;
-                        QString strange = pPOppItem->name().trimmed();
-                        double val = locale().toDouble(strange, &bOK);
-
-                        if(bOK)
-                        {
-                            switch(pPOpp->polarType())
-                            {
-                            case xfl::T1POLAR:
-                            case xfl::T2POLAR:
-                            case xfl::T3POLAR:
-                            {
-                                bSelected = fabs(val-pPOpp->alpha())<0.0005;
-                                break;
-                            }
-                            case xfl::T5POLAR:
-                            {
-                                bSelected = fabs(val-pPOpp->beta())<0.0005;
-                                break;
-                            }
-                            case xfl::T7POLAR:
-                            case xfl::T6POLAR:
-                            {
-                                bSelected = fabs(val-pPOpp->ctrl())<0.0005;
-                                break;
-                            }
-                            default:
-                                bSelected = false; //never reached
-                                break;
-                            }
-                            if(bSelected)
-                            {
-                                m_Selection = xfl::PLANEOPP;
-                                m_pTreeView->setCurrentIndex(poppChild);
-                                m_pTreeView->scrollTo(poppChild);
-                                break;
-                            }
-                        }*/
                     }
                 }
                 if(bSelected) break;
@@ -961,9 +920,9 @@ void PlaneExplorer::selectCurrentObject()
 
 void PlaneExplorer::selectObjects()
 {
-    if     (s_pXPlane->curPOpp())   selectPlaneOpp();
+    if     (s_pXPlane->curPOpp())    selectPlaneOpp();
     else if(s_pXPlane->curPlPolar()) selectPlPolar(s_pXPlane->curPlPolar(), false);
-    else                            selectPlane(s_pXPlane->curPlane());
+    else                             selectPlane(s_pXPlane->curPlane());
 }
 
 

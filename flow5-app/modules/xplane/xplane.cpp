@@ -2841,7 +2841,7 @@ Plane* XPlane::setModPlane(Plane *pModPlane, bool bUsed, bool bAsNew)
     setPolar(m_pCurPlPolar);
 
     m_pPlaneExplorer->updatePlane(m_pCurPlane);
-    m_pPlaneExplorer->selectObjects();
+//    m_pPlaneExplorer->selectObjects(); // redundant
     setControls();
 
     m_bResetCurves = true;
@@ -4636,6 +4636,12 @@ Plane *XPlane::setPlane(Plane* pPlane)
 
     m_pgl3dXPlaneView->onCancelThreads();
 
+/*    if(m_pCurPlane && m_pCurPlane->hasFuse())
+    {
+        Fuse const *pFuse = m_pCurPlane->fuseAt(0);
+        std::cout <<m_pCurPlane->name() << "  Fuse length = "<<pFuse->length() << std::endl;
+    }*/
+
     if(m_pCurPlane)
     {
         if(!m_pCurPlane->isInitialized())
@@ -4676,6 +4682,7 @@ Plane *XPlane::setPlane(Plane* pPlane)
         }
     }
 
+
     m_pgl3dXPlaneView->s_bResetglGeom = true;
     m_pgl3dXPlaneView->resetglMesh();
     m_pgl3dXPlaneView->s_bResetglWake = true;
@@ -4691,6 +4698,12 @@ Plane *XPlane::setPlane(Plane* pPlane)
     else
         m_pCurPlane = pPlane;
 
+
+/*    if(m_pCurPlane && m_pCurPlane->hasFuse())
+    {
+        Fuse const *pFuse = m_pCurPlane->fuseAt(0);
+        std::cout <<m_pCurPlane->name() << "  Fuse length = "<<pFuse->length() << std::endl;
+    }*/
 
     m_pgl3dXPlaneView->setVisiblePanels(std::vector<Panel3>());
     m_pgl3dXPlaneView->setVisiblePanels(std::vector<Panel4>());

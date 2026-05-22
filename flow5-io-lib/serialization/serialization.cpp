@@ -3218,12 +3218,13 @@ bool serial::serializePartFl5(Part *pPart, QDataStream &ar, bool bIsStoring)
     double dble(0), d0(0), d1(0);
     QString strange;
 
-    //500001: new fl5 format;
-    //500002: added m_bReversed
-    //500754: added GmshParams;
-    //500755: modified GmshParams to avoid excessively small tessellation elements;
+    // 500001: new fl5 format;
+    // 500002: added m_bReversed
+    // 500754: added GmshParams;
+    // 500755: modified GmshParams to avoid excessively small tessellation elements;
+    // 500757: add Length serialization to fix issue #55
 
-    int ArchiveFormat = 500755;
+    int ArchiveFormat = 500757;
     if(bIsStoring)
     {
         ar << ArchiveFormat;
@@ -3252,9 +3253,11 @@ bool serial::serializePartFl5(Part *pPart, QDataStream &ar, bool bIsStoring)
         ar << nIntSpares;
         n=0;
         for (int i=0; i<nIntSpares; i++) ar << n;
-        nDbleSpares=0;
+
+
+        nDbleSpares=1;
         ar << nDbleSpares;
-        for (int i=0; i<nDbleSpares; i++) ar << dble;
+        ar << pPart->length();// Format 500757: fix for issue #55
     }
     else
     {
@@ -3305,7 +3308,12 @@ bool serial::serializePartFl5(Part *pPart, QDataStream &ar, bool bIsStoring)
         for (int i=0; i<nIntSpares; i++) ar >> n;
         ar >> nDbleSpares;
         if(nDbleSpares<0 || nDbleSpares>100) return false;
-        for (int i=0; i<nDbleSpares; i++) ar >> dble;
+        if(nDbleSpares>=1)
+        {
+            ar >> dble;
+            pPart->setLength(dble); // Format 500757: fix for issue #55
+        }
+        for (int i=1; i<nDbleSpares; i++) ar >> dble;
     }
     return true;
 }
@@ -4612,7 +4620,7 @@ bool serial::serializeFuseOccFl5(FuseOcc*pFuseOcc, QDataStream &ar, bool bIsStor
     double dble=0;
 
     // 500001: new fl5 format;
-//    // 500002: serializing shells instead of shapes
+//    500002: serializing shells instead of shapes
     int ArchiveFormat = 500001;
 
     if(bIsStoring)
@@ -4690,6 +4698,19 @@ bool serial::serializeFuseOccFl5(FuseOcc*pFuseOcc, QDataStream &ar, bool bIsStor
         pFuseOcc->extractShellsFromShapes();
 
         pFuseOcc->makeFuseGeometry();
+
+/*        // fix for issue #55
+        if(ArchiveFormat<500002)
+        {
+            Vector3d BRL, TFR;
+            TopoDS_ListIteratorOfListOfShape iterator;
+            for (iterator.Initialize(shapes); iterator.More(); iterator.Next())
+            {
+                occ::shapeBoundingBox(iterator.Value(), BRL, TFR, true);
+            }
+            pFuseOcc->setLength(TFR.x-BRL.x);
+        }*/
+
     }
     return true;
 }

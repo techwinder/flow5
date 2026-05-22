@@ -1307,7 +1307,7 @@ int gmesh::makeFuseTriangulation(Fuse *pFuse, std::string &logmsg, const std::st
     if(pFuseXfl) pFuseXfl->triangulation().makeXZsymmetric();
 
     strong = std::format("Made {:d} triangles\n", pFuse->nTriangles());
-    logmsg +=prefix + strong;
+    logmsg += prefix + strong;
     int nnodes = pFuse->makeTriangleNodes();
 
     strong = std::format("Made {:d} nodes\n", nnodes);

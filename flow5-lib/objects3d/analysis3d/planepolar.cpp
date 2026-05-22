@@ -41,15 +41,15 @@
 #include <units.h>
 #include <utils.h>
 #include <wingopp.h>
+#include <objects3d.h>
 
 std::vector<std::string> PlanePolar::s_VariableNames;
 
 
 PlanePolar::PlanePolar() : Polar3d()
 {
-      m_pPlane = nullptr;
-
-      setDefaultSpec(m_pPlane);
+      Plane *pPlane = nullptr;
+      setDefaultSpec(pPlane);
 }
 
 
@@ -57,7 +57,6 @@ void PlanePolar::setDefaults()
 {
     Polar3d::setDefaults();
 
-    m_pPlane = nullptr;
     m_PlaneName = std::string("");
 
     m_bAVLDrag          = false;
@@ -139,8 +138,6 @@ void PlanePolar::setDefaultSpec(Plane const*pPlane)
 {
     setDefaults();
 
-    m_pPlane = pPlane;
-
     m_ExtraDrag.clear();
 
     m_OperatingRange.resize(4);  //Vel, alpha, beta, phi
@@ -153,8 +150,8 @@ void PlanePolar::setDefaultSpec(Plane const*pPlane)
     clearAngleRangeList();
     if(pPlane)
     {
-        setReferenceArea(m_pPlane->planformArea(m_bOtherWingsArea));
-        setReferenceSpanLength(m_pPlane->planformSpan());
+        setReferenceArea(pPlane->planformArea(m_bOtherWingsArea));
+        setReferenceSpanLength(pPlane->planformSpan());
         retrieveInertia(pPlane);
         resetAngleRanges(pPlane);
     }
@@ -583,9 +580,10 @@ double PlanePolar::getVariable(int iVar, int index) const
         case 27: return extraDragForce(index) * Units::NtoUnit();
         case 28:
         {
-            if(!m_pPlane || !m_bFuseDrag || !m_pPlane->isXflType())
+            Plane const*pPlane = Objects3d::planeAt(m_PlaneName);
+            if(!pPlane || !m_bFuseDrag || !pPlane->isXflType())
                 return 0.0;
-            PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pPlane);
+            PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
 
             double fd = 0.0;
             for(int ifuse=0; ifuse<pPlaneXfl->nFuse(); ifuse++)
@@ -598,9 +596,10 @@ double PlanePolar::getVariable(int iVar, int index) const
         }
         case 29:
         {
+            Plane const *pPlane = Objects3d::planeAt(m_PlaneName);
             // Cf_Fuse
-            if(!m_pPlane || !m_bFuseDrag || !m_pPlane->isXflType() || !m_pPlane->hasFuse()) return 0.0;
-            PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pPlane);
+            if(!pPlane || !m_bFuseDrag || !pPlane->isXflType() || !pPlane->hasFuse()) return 0.0;
+            PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
             Fuse const*pFuse = pPlaneXfl->fuseAt(0);
             double Re = pFuse->length() *  m_QInfinite.at(index) / m_Viscosity;
             return fuseDragCoef(Re);

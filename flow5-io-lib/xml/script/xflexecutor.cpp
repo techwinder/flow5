@@ -373,7 +373,7 @@ void XflExecutor::makeWPolars(QMap<QString, bool> const&Analyses, QString const 
                 Plane const*pPlane = Objects3d::planeAt(pWPolar->planeName());
                 if(pPlane)
                 {
-                    pWPolar->setPlane(pPlane);
+//                    pWPolar->setPlane(pPlane);
                     if(pWPolar->bProjectedDim())
                     {
                         pWPolar->setReferenceChordLength(pPlane->mac());
@@ -408,7 +408,6 @@ void XflExecutor::makeWPolars(QMap<QString, bool> const&Analyses, QString const 
                     Plane const *pPlane = m_oaPlane.at(ip);
                     PlanePolar *pNewWPolar = new PlanePolar;
                     pNewWPolar->duplicateSpec(pWPolar);
-//                    pNewWPolar->setTheStyle(pPlane->theStyle());
                     pNewWPolar->setVisible(true);
                     pNewWPolar->setName(pWPolar->name());
                     pNewWPolar->setPlaneName(pPlane->name());

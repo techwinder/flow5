@@ -370,7 +370,8 @@ void MesherWt::initWt(TopoDS_ListOfShape const &shells, double maxedgelength, bo
 
     QString strange, strong;
     int iShell=0;
-    double Xmin(LARGEVALUE), Ymin(LARGEVALUE), Zmin(LARGEVALUE), Xmax(-LARGEVALUE), Ymax(-LARGEVALUE), Zmax(-LARGEVALUE);
+//    double Xmin(LARGEVALUE), Ymin(LARGEVALUE), Zmin(LARGEVALUE), Xmax(-LARGEVALUE), Ymax(-LARGEVALUE), Zmax(-LARGEVALUE);
+    Vector3d BRL, TFR;
 
     for(NCollection_List<TopoDS_Shape>::Iterator iterator(shells); iterator.More(); iterator.Next())
     {
@@ -380,18 +381,19 @@ void MesherWt::initWt(TopoDS_ListOfShape const &shells, double maxedgelength, bo
         else if(iterator.Value().Orientation()==TopAbs_REVERSED) strange += " is REVERSED\n\n";
         emit outputMsg(strange);
 
-        occ::shapeBoundingBox(iterator.Value(), Xmin, Ymin, Zmin, Xmax, Ymax, Zmax);
+        occ::shapeBoundingBox(iterator.Value(), BRL, TFR, true);
+//        occ::shapeBoundingBox(iterator.Value(), Xmin, Ymin, Zmin, Xmax, Ymax, Zmax);
         std::string str;
         occ::listShapeContent(iterator.Value(), str);
         emit outputMsg(QString::fromStdString(str)+"\n");
         iShell++;
     }
     strange = "Bounding box:\n";
-    strong = QString::asprintf("   X=[%9g, %9g] ", Xmin*Units::mtoUnit(), Xmax *Units::mtoUnit());
+    strong = QString::asprintf("   X=[%9g, %9g] ", BRL.x*Units::mtoUnit(), TFR.x *Units::mtoUnit());
     strange += strong + Units::lengthUnitQLabel() +"\n";
-    strong = QString::asprintf("   Y=[%9g, %9g] ", Ymin*Units::mtoUnit(), Ymax *Units::mtoUnit());
+    strong = QString::asprintf("   Y=[%9g, %9g] ", BRL.y*Units::mtoUnit(), TFR.y *Units::mtoUnit());
     strange += strong + Units::lengthUnitQLabel() +"\n";
-    strong = QString::asprintf("   Z=[%9g, %9g] ", Zmin*Units::mtoUnit(), Zmax *Units::mtoUnit());
+    strong = QString::asprintf("   Z=[%9g, %9g] ", BRL.z*Units::mtoUnit(), TFR.z *Units::mtoUnit());
     strange += strong + Units::lengthUnitQLabel() +"\n\n";
     emit outputMsg(strange);
     setControls();
