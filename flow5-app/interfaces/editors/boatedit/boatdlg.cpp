@@ -722,7 +722,7 @@ void BoatDlg::onImportHullCAD()
 
     pNewHullOcc->setName(fi.baseName().toStdString());
 
-    TopoDS_ListOfShape shapes;
+    NCollection_List<TopoDS_Shape> shapes;
     bool bImport = occ::importCADShapes(filename.toStdString(), shapes, dimension, strlog);
     m_ppto->onAppendQText(QString::fromStdString(strlog)+"\n");
 

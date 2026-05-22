@@ -29,7 +29,7 @@
 
 
 #include <TopoDS_Shape.hxx>
-#include <TopoDS_ListOfShape.hxx>
+
 
 
 #include <QDialog>
@@ -50,7 +50,7 @@ class ShapeDlg : public QDialog
     public:
         ShapeDlg(QWidget *pParent);
 
-        void initDialog(const TopoDS_ListOfShape &shapes);
+        void initDialog(const NCollection_List<TopoDS_Shape> &shapes);
 
         void showEvent(QShowEvent *pEvent) override;
         void hideEvent(QHideEvent *) override;
@@ -69,7 +69,7 @@ class ShapeDlg : public QDialog
     private:
         void setupLayout();
         void connectSignals();
-        void fillShapes(const TopoDS_ListOfShape &shapes);
+        void fillShapes(const NCollection_List<TopoDS_Shape> &shapes);
 
     private:
 

@@ -776,7 +776,7 @@ void gl3dXflView::pickNode(QPoint const &point, QVector<Node> const &nodes, xfl:
 }
 
 
-bool gl3dXflView::pickShapeVertex(QPoint const &point, TopoDS_ListOfShape const&shapes, Vector3d &I)
+bool gl3dXflView::pickShapeVertex(QPoint const &point, NCollection_List<TopoDS_Shape> const&shapes, Vector3d &I)
 {
     Vector3d AA, BB;
 
@@ -793,7 +793,7 @@ bool gl3dXflView::pickShapeVertex(QPoint const &point, TopoDS_ListOfShape const&
     m_bPickedVertex = false;
     m_PickedNodeIndex = -1;
 
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
 
 //    gp_Pnt pt0, pt1;
 
@@ -1112,7 +1112,7 @@ int gl3dXflView::pickFace(const QPoint &point, TopoDS_Shape const &shape, TopoDS
 }
 
 
-QPair<int, int> gl3dXflView::pickFace(const QPoint &point, TopoDS_ListOfShape const &shapes)
+QPair<int, int> gl3dXflView::pickFace(const QPoint &point, NCollection_List<TopoDS_Shape> const &shapes)
 {
     if(shapes.Extent()==0)
     {

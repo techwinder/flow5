@@ -35,7 +35,7 @@
 #include <TopAbs_ShapeEnum.hxx>
 #include <TopoDS_Edge.hxx>
 #include <TopoDS_Face.hxx>
-#include <TopoDS_ListOfShape.hxx>
+
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Shell.hxx>
 #include <TopoDS_Solid.hxx>
@@ -59,7 +59,7 @@ class WingXfl;
 /** @todo not all methods need to be exposed */
 namespace occ
 {
-    FL5LIB_EXPORT void listAllShapes(TopoDS_ListOfShape &listofshapes, std::string &logmsg, std::string prefix="    ");
+    FL5LIB_EXPORT void listAllShapes(NCollection_List<TopoDS_Shape> &listofshapes, std::string &logmsg, std::string prefix="    ");
     FL5LIB_EXPORT int listSubShapes(TopoDS_Shape const &aShape, TopAbs_ShapeEnum const &SubShapeType, std::vector<std::string> &strList, std::string prefx="");
     FL5LIB_EXPORT void listAllSubShapes(TopoDS_Shape const &aShape, std::vector<std::string> &strlist);
     FL5LIB_EXPORT void listShapeContent(TopoDS_Shape const &shape, std::string &logmsg, const std::string &prefx="", bool bFull=false);
@@ -79,9 +79,9 @@ namespace occ
     FL5LIB_EXPORT void makeFaceTriMesh(TopoDS_Face const &face, std::vector<Triangle3d> &trianglelist, double maxelementsize);
 
 
-    FL5LIB_EXPORT int shellCount(TopoDS_ListOfShape const &listofshapes, std::string &logmsg);
-    FL5LIB_EXPORT void findEdges(TopoDS_Shape const &shape, TopoDS_ListOfShape &edges, std::string &logmsg);
-    FL5LIB_EXPORT void findWires(const TopoDS_Shape &theshape, TopoDS_Wire &theOuterWire, TopoDS_ListOfShape &wires, std::string &logmsg, std::string prefix="");
+    FL5LIB_EXPORT int shellCount(NCollection_List<TopoDS_Shape> const &listofshapes, std::string &logmsg);
+    FL5LIB_EXPORT void findEdges(TopoDS_Shape const &shape, NCollection_List<TopoDS_Shape> &edges, std::string &logmsg);
+    FL5LIB_EXPORT void findWires(const TopoDS_Shape &theshape, TopoDS_Wire &theOuterWire, NCollection_List<TopoDS_Shape> &wires, std::string &logmsg, std::string prefix="");
 
     FL5LIB_EXPORT void shapeBoundingBox(const TopoDS_Shape &shape, Vector3d &BotRearLeft, Vector3d &TopFrontRight, bool bCumulative=true);
 
@@ -109,7 +109,7 @@ namespace occ
 
     FL5LIB_EXPORT bool makeSplineWire(const BSpline3d &spline, TopoDS_Wire &wire, std::string &logmsg);
 
-    FL5LIB_EXPORT void makeSurfaceWires(WingXfl const *pWing, double scalefactor, TopoDS_ListOfShape &wires, std::string &logmsg);
+    FL5LIB_EXPORT void makeSurfaceWires(WingXfl const *pWing, double scalefactor, NCollection_List<TopoDS_Shape> &wires, std::string &logmsg);
 
     FL5LIB_EXPORT void makeFaceRuledTriangulation(TopoDS_Face const &face, std::vector<Vector3d> &pointlist, std::vector<Triangle3d> &trianglelist);
 
@@ -117,9 +117,9 @@ namespace occ
     FL5LIB_EXPORT int shapeTriangulationWithOcc(TopoDS_Shape const &shape, OccMeshParams const &params, std::vector<Triangle3d> &triangles);
     FL5LIB_EXPORT int polyTriangulationToTriangles(opencascade::handle<Poly_Triangulation> hTri, double scalefactor, std::vector<Triangle3d> &triangles, Vector3d &botleft, Vector3d &topright);
 
-    FL5LIB_EXPORT bool importCADShapes(const std::string &filename, TopoDS_ListOfShape &shapes, double &dimension, std::string &logmsg);
-    FL5LIB_EXPORT bool importBRep(std::string const &filename, TopoDS_ListOfShape &shapes, double &dimension, std::string &logmsg);
-    FL5LIB_EXPORT bool importSTEP(std::string const &filename, TopoDS_ListOfShape &shapes, double &dimension, std::string &logmsg);
+    FL5LIB_EXPORT bool importCADShapes(const std::string &filename, NCollection_List<TopoDS_Shape> &shapes, double &dimension, std::string &logmsg);
+    FL5LIB_EXPORT bool importBRep(std::string const &filename, NCollection_List<TopoDS_Shape> &shapes, double &dimension, std::string &logmsg);
+    FL5LIB_EXPORT bool importSTEP(std::string const &filename, NCollection_List<TopoDS_Shape> &shapes, double &dimension, std::string &logmsg);
 
     FL5LIB_EXPORT bool intersectFace(TopoDS_Face const &aFace, Segment3d const &seg, Vector3d &I);
     FL5LIB_EXPORT bool intersectShape(TopoDS_Shape const &aShape, Segment3d const &seg, Vector3d &I, bool bRightSide);
@@ -134,11 +134,11 @@ namespace occ
     FL5LIB_EXPORT void scaleShape(TopoDS_Shape &shape, double scalefactor);
     FL5LIB_EXPORT void rotateShape(TopoDS_Shape &shape, Vector3d const &O, Vector3d const &axis, double theta);
 
-    FL5LIB_EXPORT void flipShapesXZ(TopoDS_ListOfShape &shapes);
-    FL5LIB_EXPORT void translateShapes(TopoDS_ListOfShape &shapes, Vector3d const &T);
-    FL5LIB_EXPORT void scaleShapes(TopoDS_ListOfShape &shapes, double scalefactor);
-    FL5LIB_EXPORT void scaleShapes(TopoDS_ListOfShape &shapes, double xfactor, double yfactor, double zfactor);
-    FL5LIB_EXPORT void rotateShapes(TopoDS_ListOfShape &shapes, Vector3d const &O, Vector3d const &axis, double theta);
+    FL5LIB_EXPORT void flipShapesXZ(NCollection_List<TopoDS_Shape> &shapes);
+    FL5LIB_EXPORT void translateShapes(NCollection_List<TopoDS_Shape> &shapes, Vector3d const &T);
+    FL5LIB_EXPORT void scaleShapes(NCollection_List<TopoDS_Shape> &shapes, double scalefactor);
+    FL5LIB_EXPORT void scaleShapes(NCollection_List<TopoDS_Shape> &shapes, double xfactor, double yfactor, double zfactor);
+    FL5LIB_EXPORT void rotateShapes(NCollection_List<TopoDS_Shape> &shapes, Vector3d const &O, Vector3d const &axis, double theta);
 
     FL5LIB_EXPORT bool makeWing2NurbsShape(WingXfl const *pWing, double stitchprecision, int degree, int nCtrlPoints, int nOutPoints, TopoDS_Shape &wingshape, std::string &logmsg);
     FL5LIB_EXPORT bool makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int degree, int nCtrlPoints, int nOutPoints, TopoDS_Shape &wingshape, std::string &logmsg);
@@ -160,10 +160,10 @@ namespace occ
     FL5LIB_EXPORT void removeFace(const TopoDS_Face &face, TopoDS_Shape &shape);
 
     FL5LIB_EXPORT bool shapeToBrep(const TopoDS_Shape &shape, std::string &brep);
-    FL5LIB_EXPORT bool shapesToBreps(const TopoDS_ListOfShape &shapes, std::vector<std::string> &breps);
+    FL5LIB_EXPORT bool shapesToBreps(const NCollection_List<TopoDS_Shape> &shapes, std::vector<std::string> &breps);
 
 
-    FL5LIB_EXPORT void stitchShapes(TopoDS_ListOfShape &m_shapes, float precision, std::string &logmsg);
+    FL5LIB_EXPORT void stitchShapes(NCollection_List<TopoDS_Shape> &m_shapes, float precision, std::string &logmsg);
 
     FL5LIB_EXPORT void reverseShape(const TopoDS_Shape &shape, TopoDS_Shape &result);
     FL5LIB_EXPORT void shapeFixSmallEdges(const TopoDS_Shape &shape, TopoDS_Shape &result, float precision, float mintol, float maxtol);

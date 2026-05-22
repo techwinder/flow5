@@ -217,7 +217,7 @@ void ShapeFixerDlg::onReadParams()
 }
 
 
-void ShapeFixerDlg::initDialog(const TopoDS_ListOfShape &shapes)
+void ShapeFixerDlg::initDialog(const NCollection_List<TopoDS_Shape> &shapes)
 {
     m_pfePrecision->setValue(s_Precision*Units::mtoUnit());
     m_pfeMinTolerance->setValue(s_MinTolerance*Units::mtoUnit());
@@ -244,7 +244,7 @@ void ShapeFixerDlg::onStitchShapes()
 
 void ShapeFixerDlg::onListShapes()
 {
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     int ishape=0;
     QString strange;
     std::string    logmsg, prefix="      ";
@@ -265,7 +265,7 @@ void ShapeFixerDlg::onListShapes()
 void ShapeFixerDlg::onReverseShapes()
 {
     QString strange, logmsg;
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     int ishape=0;
     for (iterator.Initialize(m_Shapes); iterator.More(); iterator.Next())
     {
@@ -282,8 +282,8 @@ void ShapeFixerDlg::onReverseShapes()
 
 void ShapeFixerDlg::onSmallEdges()
 {
-    TopoDS_ListOfShape fixedshapes;
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape> fixedshapes;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     for (iterator.Initialize(m_Shapes); iterator.More(); iterator.Next())
     {
         TopoDS_Shape result;
@@ -299,8 +299,8 @@ void ShapeFixerDlg::onSmallEdges()
 
 void ShapeFixerDlg::onFixGaps()
 {
-    TopoDS_ListOfShape fixedshapes;
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape> fixedshapes;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     for (iterator.Initialize(m_Shapes); iterator.More(); iterator.Next())
     {
         TopoDS_Shape result;
@@ -319,9 +319,9 @@ void ShapeFixerDlg::onFixAll()
     QString strange;
     std::string    logmsg, prefix="   ";
 
-    TopoDS_ListOfShape fixedshapes;
+    NCollection_List<TopoDS_Shape> fixedshapes;
 
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     int ishape=0;
     for (iterator.Initialize(m_Shapes); iterator.More(); iterator.Next())
     {

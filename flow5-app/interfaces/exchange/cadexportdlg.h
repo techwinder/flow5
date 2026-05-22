@@ -36,7 +36,7 @@
 #include <QSplitter>
 #include <QDialogButtonBox>
 
-#include <TopoDS_ListOfShape.hxx>
+
 #include <TopoDS_Shape.hxx>
 
 class PlainTextOutput;
@@ -48,7 +48,7 @@ class CADExportDlg : public QDialog
     public:
         CADExportDlg(QWidget*pParent);
         void init(TopoDS_Shape const & shape, QString const &partname);
-        void init(TopoDS_ListOfShape const & listofshape, QString const &partname);
+        void init(NCollection_List<TopoDS_Shape> const & listofshape, QString const &partname);
 
         void showEvent(QShowEvent *pEvent) override;
         void hideEvent(QHideEvent *pEvent) override;
@@ -81,7 +81,7 @@ class CADExportDlg : public QDialog
 
         QFrame *m_pfrControls;
 
-        TopoDS_ListOfShape m_ShapesToExport;
+        NCollection_List<TopoDS_Shape> m_ShapesToExport;
 
         QString m_PartName;
 

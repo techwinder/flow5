@@ -74,7 +74,6 @@
 #include <TopoDS.hxx>
 #include <TopoDS_Builder.hxx>
 #include <TopoDS_FrozenShape.hxx>
-#include <TopoDS_ListIteratorOfListOfShape.hxx>
 #include <TopoDS_UnCompatibleShapes.hxx>
 #include <TopoDS_Wire.hxx>
 #include <gp_Ax2.hxx>
@@ -137,10 +136,10 @@ std::string occ::shapeOrientation(const TopoDS_Shape &aShape)
 }
 
 
-int occ::shellCount(TopoDS_ListOfShape const &listofshapes, std::string &logmsg)
+int occ::shellCount(NCollection_List<TopoDS_Shape> const &listofshapes, std::string &logmsg)
 {
     int nshells = 0;
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     for (iterator.Initialize(listofshapes); iterator.More(); iterator.Next())
     {
         TopExp_Explorer ShellExplorer;
@@ -155,10 +154,10 @@ int occ::shellCount(TopoDS_ListOfShape const &listofshapes, std::string &logmsg)
 }
 
 
-void occ::listAllShapes(TopoDS_ListOfShape &listofshapes, std::string &logmsg, std::string prefix)
+void occ::listAllShapes(NCollection_List<TopoDS_Shape> &listofshapes, std::string &logmsg, std::string prefix)
 {
     // output the result
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     for (iterator.Initialize(listofshapes); iterator.More(); iterator.Next())
     {
         std::string strange;
@@ -577,7 +576,7 @@ void occ::makeFaceTriMesh(TopoDS_Face const &face, std::vector<Triangle3d> &tria
 }
 
 
-void occ::findWires(const TopoDS_Shape &theshape, TopoDS_Wire &theOuterWire, TopoDS_ListOfShape &wires,
+void occ::findWires(const TopoDS_Shape &theshape, TopoDS_Wire &theOuterWire, NCollection_List<TopoDS_Shape> &wires,
                     std::string &, std::string )
 {
     if(theshape.IsNull()) return;
@@ -616,7 +615,7 @@ void occ::findWires(const TopoDS_Shape &theshape, TopoDS_Wire &theOuterWire, Top
 }
 
 
-void occ::findEdges(TopoDS_Shape const &theshape, TopoDS_ListOfShape &edges, std::string &logmsg)
+void occ::findEdges(TopoDS_Shape const &theshape, NCollection_List<TopoDS_Shape> &edges, std::string &logmsg)
 {
     std::string strange;
 
@@ -893,7 +892,7 @@ double occ::facePerimeter(TopoDS_Face const &face)
 {
     std::string strange;
 
-    TopoDS_ListOfShape innerwires;
+    NCollection_List<TopoDS_Shape> innerwires;
     TopoDS_Wire theouterwire;
     // may have free edges, so need to find the outer wire
     occ::findWires(face, theouterwire, innerwires, strange);
@@ -924,7 +923,7 @@ void occ::faceAverageSize(TopoDS_Face const &face,
 {
     int NMEASURES = 5;
 
-    TopoDS_ListOfShape thewires;
+    NCollection_List<TopoDS_Shape> thewires;
     TopoDS_Wire theouterwire;
 
     //Find the Face's average length in u and v directions
@@ -1473,7 +1472,7 @@ bool occ::makeSplineWire(BSpline3d const &spline, TopoDS_Wire &wire, std::string
 }
 
 
-void occ::makeSurfaceWires(WingXfl const *pWing, double scalefactor, TopoDS_ListOfShape &wires, std::string &logmsg)
+void occ::makeSurfaceWires(WingXfl const *pWing, double scalefactor, NCollection_List<TopoDS_Shape> &wires, std::string &logmsg)
 {
     TopoDS_Wire TLWire, BLWire;
     std::vector<Node> PtA_T, PtA_B, PtB_T, PtB_B;
@@ -1833,7 +1832,7 @@ int occ::polyTriangulationToTriangles(Handle(Poly_Triangulation) hTri, double sc
 }
 
 
-bool occ::importCADShapes(std::string const &filename, TopoDS_ListOfShape &shapes,
+bool occ::importCADShapes(std::string const &filename, NCollection_List<TopoDS_Shape> &shapes,
                           double &dimension, std::string &logmsg)
 {
     if(!filename.length()) return false;
@@ -1854,7 +1853,7 @@ bool occ::importCADShapes(std::string const &filename, TopoDS_ListOfShape &shape
 }
 
 
-bool occ::importBRep(std::string const &filename, TopoDS_ListOfShape &shapes, double &dimension, std::string &logmsg)
+bool occ::importBRep(std::string const &filename, NCollection_List<TopoDS_Shape> &shapes, double &dimension, std::string &logmsg)
 {
     dimension = 1.0;
     BRep_Builder aBuilder;
@@ -1872,7 +1871,7 @@ bool occ::importBRep(std::string const &filename, TopoDS_ListOfShape &shapes, do
 }
 
 
-bool occ::importSTEP(const std::string &filename, TopoDS_ListOfShape &shapes, double &dimension, std::string &logmsg)
+bool occ::importSTEP(const std::string &filename, NCollection_List<TopoDS_Shape> &shapes, double &dimension, std::string &logmsg)
 {
     std::string msg;
     std::string logg;
@@ -1972,7 +1971,7 @@ bool occ::importSTEP(const std::string &filename, TopoDS_ListOfShape &shapes, do
         // get some kind of reference dimension
         dimension=0.0;
         BRepAdaptor_Surface adaptor;
-        for(TopoDS_ListIteratorOfListOfShape bodyIt(shapes); bodyIt.More(); bodyIt.Next())
+        for(NCollection_List<TopoDS_Shape>::Iterator bodyIt(shapes); bodyIt.More(); bodyIt.Next())
         {
             TopExp_Explorer shapeExplorer;
             int iFace=0;
@@ -2023,7 +2022,7 @@ bool occ::importSTEP(const std::string &filename, TopoDS_ListOfShape &shapes, do
         strong = std::format("   Reference length to display the model= {:7.2f} meters\n\n", dimension);
         logg += strong;
 /*        Handle(ShapeFix_Shell) SFS = new ShapeFix_Shell();
-        for(TopoDS_ListIteratorOfListOfShape bodyIt(occbody.m_Shell); bodyIt.More(); bodyIt.Next())
+        for(NCollection_List<TopoDS_Shape>::Iterator bodyIt(occbody.m_Shell); bodyIt.More(); bodyIt.Next())
         {
             TopoDS_Shell aShell = TopoDS::Shell(bodyIt.Value());
             SFS->FixFaceOrientation(aShell);
@@ -2684,7 +2683,7 @@ void occ::makeOCCNURBSFromNurbs(NURBSSurface const &nurbs, bool bXZSymmetric, Ha
 }
 
 
-void occ::flipShapesXZ(TopoDS_ListOfShape &shapes)
+void occ::flipShapesXZ(NCollection_List<TopoDS_Shape> &shapes)
 {
     gp_Trsf mirror;
     mirror.SetMirror(gp_Ax2(gp_Pnt(0,0,0), gp_Dir(0,1,0)));
@@ -2697,7 +2696,7 @@ void occ::flipShapesXZ(TopoDS_ListOfShape &shapes)
 }
 
 
-void occ::scaleShapes(TopoDS_ListOfShape &shapes, double scalefactor)
+void occ::scaleShapes(NCollection_List<TopoDS_Shape> &shapes, double scalefactor)
 {
     if(fabs(scalefactor)<PRECISION) return;
     if(fabs(scalefactor-1.0)<PRECISION) return;
@@ -2714,7 +2713,7 @@ void occ::scaleShapes(TopoDS_ListOfShape &shapes, double scalefactor)
 }
 
 
-void occ::scaleShapes(TopoDS_ListOfShape &shapes, double xfactor, double yfactor, double zfactor)
+void occ::scaleShapes(NCollection_List<TopoDS_Shape> &shapes, double xfactor, double yfactor, double zfactor)
 {
     gp_GTrsf aTrsf;
     gp_Mat rot(xfactor, 0, 0, 0, yfactor, 0, 0, 0, zfactor);
@@ -2728,7 +2727,7 @@ void occ::scaleShapes(TopoDS_ListOfShape &shapes, double xfactor, double yfactor
 }
 
 
-void occ::translateShapes(TopoDS_ListOfShape &shapes, Vector3d const &T)
+void occ::translateShapes(NCollection_List<TopoDS_Shape> &shapes, Vector3d const &T)
 {
     if(T.norm()<LENGTHPRECISION) return;
 
@@ -2744,7 +2743,7 @@ void occ::translateShapes(TopoDS_ListOfShape &shapes, Vector3d const &T)
 }
 
 
-void occ::rotateShapes(TopoDS_ListOfShape &shapes, Vector3d const &O, Vector3d const &axis, double theta)
+void occ::rotateShapes(NCollection_List<TopoDS_Shape> &shapes, Vector3d const &O, Vector3d const &axis, double theta)
 {
     if(fabs(theta)<ANGLEPRECISION) return;
 
@@ -3819,7 +3818,7 @@ bool occ::shapeToBrep(const TopoDS_Shape &shape, std::string &brep)
 }
 
 
-bool occ::shapesToBreps(TopoDS_ListOfShape const &shapes, std::vector<std::string> &breps)
+bool occ::shapesToBreps(NCollection_List<TopoDS_Shape> const &shapes, std::vector<std::string> &breps)
 {
     std::string brepstr;
     breps.clear();
@@ -3833,10 +3832,10 @@ bool occ::shapesToBreps(TopoDS_ListOfShape const &shapes, std::vector<std::strin
 }
 
 
-void occ::stitchShapes(TopoDS_ListOfShape &shapes, float precision, std::string &logmsg)
+void occ::stitchShapes(NCollection_List<TopoDS_Shape> &shapes, float precision, std::string &logmsg)
 {
     BRepBuilderAPI_Sewing stitcher(precision);
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     for (iterator.Initialize(shapes); iterator.More(); iterator.Next())
     {
         stitcher.Add(iterator.Value());
@@ -3934,7 +3933,7 @@ void occ::shapeFixAll(TopoDS_Shape const &shape, TopoDS_Shape &result,
 {
     std::string strange;
 
-    TopoDS_ListOfShape fixedshapes;
+    NCollection_List<TopoDS_Shape> fixedshapes;
 
     Handle(ShapeFix_Shape) sfs = new ShapeFix_Shape;
 
@@ -3955,7 +3954,7 @@ void occ::fuseStitchFaces(FuseOcc *pFuseOcc, float precision, std::string &logms
 
 void occ::fuseReverseShapes(FuseOcc *pFuseOcc, std::string &logmsg)
 {
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     for (iterator.Initialize(pFuseOcc->shapes()); iterator.More(); iterator.Next())
     {
         iterator.Value().Reverse();
@@ -3966,8 +3965,8 @@ void occ::fuseReverseShapes(FuseOcc *pFuseOcc, std::string &logmsg)
 
 void occ::fuseFixSmallEdges(FuseOcc *pFuseOcc, float precision, float mintol, float maxtol, std::string &logmsg)
 {
-    TopoDS_ListOfShape fixedshapes;
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape> fixedshapes;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     for (iterator.Initialize(pFuseOcc->shapes()); iterator.More(); iterator.Next())
     {
         TopoDS_Shape result;
@@ -3982,8 +3981,8 @@ void occ::fuseFixSmallEdges(FuseOcc *pFuseOcc, float precision, float mintol, fl
 
 void occ::fuseFixGaps(FuseOcc *pFuseOcc, float precision, float mintol, float maxtol, std::string &logmsg)
 {
-    TopoDS_ListOfShape fixedshapes;
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape> fixedshapes;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     for (iterator.Initialize(pFuseOcc->shapes()); iterator.More(); iterator.Next())
     {
         TopoDS_Shape result;
@@ -4000,9 +3999,9 @@ void occ::fuseFixAll(FuseOcc *pFuseOcc, float precision, float mintol, float max
 {
     std::string strange;
 
-    TopoDS_ListOfShape fixedshapes;
+    NCollection_List<TopoDS_Shape> fixedshapes;
 
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     int ishape=0;
     for (iterator.Initialize(pFuseOcc->shapes()); iterator.More(); iterator.Next())
     {

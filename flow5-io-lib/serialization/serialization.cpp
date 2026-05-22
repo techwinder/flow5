@@ -4660,7 +4660,7 @@ bool serial::serializeFuseOccFl5(FuseOcc*pFuseOcc, QDataStream &ar, bool bIsStor
         // v7.57: serializing shells instead of shapes
         int nShapes;
         ar >> nShapes;
-        TopoDS_ListOfShape shapes;
+        NCollection_List<TopoDS_Shape> shapes;
         for(int iShape=0; iShape<nShapes; iShape++)
         {
             QString brepstr;
@@ -4703,7 +4703,7 @@ bool serial::serializeFuseOccFl5(FuseOcc*pFuseOcc, QDataStream &ar, bool bIsStor
         if(ArchiveFormat<500002)
         {
             Vector3d BRL, TFR;
-            TopoDS_ListIteratorOfListOfShape iterator;
+            NCollection_List<TopoDS_Shape>::Iterator iterator;
             for (iterator.Initialize(shapes); iterator.More(); iterator.Next())
             {
                 occ::shapeBoundingBox(iterator.Value(), BRL, TFR, true);

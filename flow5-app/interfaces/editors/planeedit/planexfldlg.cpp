@@ -1120,7 +1120,7 @@ void PlaneXflDlg::onInsertFuseOcc()
 
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    TopoDS_ListOfShape shapes;
+    NCollection_List<TopoDS_Shape> shapes;
     bool bImport = occ::importCADShapes(filename.toStdString(), shapes, dimension, str);
 
     updateStdOutput(str+"\n");
@@ -2672,7 +2672,7 @@ void PlaneXflDlg::onInsertCADShape()
     QString strong = QString::asprintf("CAD_shape_%d", m_pPlaneXfl->stlFuseCount());
     pFuseOcc->setName(strong.toStdString());
 
-    TopoDS_ListOfShape shapes;
+    NCollection_List<TopoDS_Shape> shapes;
 
     if(pSenderAction==m_pInsertCADCylinder)
     {

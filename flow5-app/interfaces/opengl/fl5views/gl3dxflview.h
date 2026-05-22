@@ -28,7 +28,7 @@
 
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Face.hxx>
-#include <TopoDS_ListOfShape.hxx>
+
 
 #include <QTimer>
 #include <QOpenGLWidget>
@@ -223,13 +223,13 @@ class gl3dXflView : public gl3dView
         void pickPanelNode(const Panel3 &p3, const Vector3d &I, xfl::enumSurfacePosition pos);
         void pickNode(QPoint const &point, QVector<Node> const &nodes, xfl::enumSurfacePosition pos);
         int pickFace(const QPoint &point, TopoDS_Shape const &shape, TopoDS_Face &pickedface);
-        QPair<int, int> pickFace(const QPoint &point, TopoDS_ListOfShape const &shapes);
+        QPair<int, int> pickFace(const QPoint &point, NCollection_List<TopoDS_Shape> const &shapes);
 
         virtual void highlightPickedPanel3(const Panel3 &p3);
         virtual bool pickPanel3(QPoint const &point, const std::vector<Panel3> &panels, Vector3d &I);
         bool pickTriangle3d(QPoint const &point, const std::vector<Triangle3d> &panels, Vector3d &I);
 
-        bool pickShapeVertex(QPoint const &point, TopoDS_ListOfShape const&shapes, Vector3d &I);
+        bool pickShapeVertex(QPoint const &point, NCollection_List<TopoDS_Shape> const&shapes, Vector3d &I);
 
         void paintMeasure();
 

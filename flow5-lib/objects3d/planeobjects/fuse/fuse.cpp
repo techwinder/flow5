@@ -141,7 +141,7 @@ void Fuse::computeWettedArea()
     GProp_GProps aProps; // Global properties object
     // initializing Global properties object with surface properties of aShell
 
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     int nShapes = 0;
     for (iterator.Initialize(m_Shell); iterator.More(); iterator.Next())
     {
@@ -408,7 +408,7 @@ void Fuse::computeStructuralInertia(Vector3d const &PartPosition)
     GProp_GProps aProps; // Global properties object
     // initializing Global properties object with surface properties of aShell
 
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     int nShapes = 0;
     for (iterator.Initialize(m_Shell); iterator.More(); iterator.Next())
     {

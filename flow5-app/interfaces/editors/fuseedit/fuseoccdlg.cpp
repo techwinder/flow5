@@ -474,8 +474,8 @@ void FuseOccDlg::onShapeFix()
     std::string prefix("   ");
     updateOutput("Updating fuselage with fixed shapes:\n");
 
-    TopoDS_ListOfShape shapes;
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape> shapes;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     int ishape(0);
     for (iterator.Initialize(dlg.shapes()); iterator.More(); iterator.Next())
     {

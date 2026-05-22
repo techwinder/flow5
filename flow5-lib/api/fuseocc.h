@@ -27,7 +27,7 @@
 
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Shell.hxx>
-#include <TopoDS_ListOfShape.hxx>
+
 
 #include <fuse.h>
 
@@ -67,9 +67,9 @@ class FL5LIB_EXPORT FuseOcc : public Fuse
 
         void makeEdges(std::vector<Segment3d> &lines);
 
-        void setShapes(const TopoDS_ListOfShape & shapes) {m_Shape=shapes;}
-        TopoDS_ListOfShape &shapes() {return m_Shape;}
-        TopoDS_ListOfShape const &shapes() const {return m_Shape;}
+        void setShapes(const NCollection_List<TopoDS_Shape> & shapes) {m_Shape=shapes;}
+        NCollection_List<TopoDS_Shape> &shapes() {return m_Shape;}
+        NCollection_List<TopoDS_Shape> const &shapes() const {return m_Shape;}
 
         void appendShape(TopoDS_Shape const &shape) {m_Shape.Append(shape);}
         int shapeCount() const {return m_Shape.Extent();}
@@ -83,7 +83,7 @@ class FL5LIB_EXPORT FuseOcc : public Fuse
         // The list of RAW shapes imported from STL;
         // NOT serialized;
         // only used during session to construct the shells
-        TopoDS_ListOfShape m_Shape;
+        NCollection_List<TopoDS_Shape> m_Shape;
 
 };
 

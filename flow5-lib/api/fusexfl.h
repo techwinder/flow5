@@ -176,8 +176,8 @@ class FL5LIB_EXPORT FuseXfl : public Fuse
         int highlightedFrame() const {return m_iHighlightFrame;}
 
         void toFlatType(const std::vector<double> &fracpos, int nh);
-        TopoDS_ListOfShape const& rightSideShells() const {return m_RightSideShell;}
-        TopoDS_ListOfShape &rightSideShells() {return m_RightSideShell;}
+        NCollection_List<TopoDS_Shape> const& rightSideShells() const {return m_RightSideShell;}
+        NCollection_List<TopoDS_Shape> &rightSideShells() {return m_RightSideShell;}
 
         // for NURBS type fuses
         int nxNurbsPanels() const {return m_nxNurbsPanels;}
@@ -208,7 +208,7 @@ class FL5LIB_EXPORT FuseXfl : public Fuse
 
     protected:
 
-        TopoDS_ListOfShape m_RightSideShell;  /**< Only the right side shells. Used to reduce meshing times, by making left side triangles by symmetry */
+        NCollection_List<TopoDS_Shape> m_RightSideShell;  /**< Only the right side shells. Used to reduce meshing times, by making left side triangles by symmetry */
         std::vector<Quad3d> m_LeftFace, m_RightFace;  /**< the body's flat faces if of the flat face type */
 
         std::vector<Panel4> m_Panel4;

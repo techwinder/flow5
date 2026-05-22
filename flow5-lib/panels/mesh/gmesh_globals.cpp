@@ -1273,7 +1273,7 @@ int gmesh::makeFuseTriangulation(Fuse *pFuse, std::string &logmsg, const std::st
 
     int iShell = 0;
 
-    TopoDS_ListOfShape *pShells(nullptr);
+    NCollection_List<TopoDS_Shape> *pShells(nullptr);
 
     FuseXfl *pFuseXfl = dynamic_cast<FuseXfl*>(pFuse);
     if(pFuseXfl) pShells = &pFuseXfl->rightSideShells();
@@ -1367,7 +1367,7 @@ void gmesh::meshFuseShellsThinSurfaces(Fuse *pFuse, const std::vector<WingXfl> &
 
 
     // converting to BREP and export+import
-    TopoDS_ListOfShape const *pShells(nullptr);
+    NCollection_List<TopoDS_Shape> const *pShells(nullptr);
     FuseXfl const*pFuseXfl = dynamic_cast<FuseXfl const*>(pFuse);
     if(pFuseXfl) pShells = &pFuseXfl->rightSideShells();
     else         pShells = &pFuse->shells();
@@ -1478,7 +1478,7 @@ void gmesh::meshFuseShellsThickSurfaces(Fuse *pFuse, const std::vector<WingXfl> 
 
 
     // converting to BREP and export+import
-    TopoDS_ListOfShape const *pShells(nullptr);
+    NCollection_List<TopoDS_Shape> const *pShells(nullptr);
     FuseXfl const*pFuseXfl = dynamic_cast<FuseXfl const*>(pFuse);
     if(pFuseXfl) pShells = &pFuseXfl->rightSideShells();
     else         pShells = &pFuse->shells();

@@ -34,7 +34,7 @@
 #include <interfaces/mesh/slg3d.h>
 
 #include <TopoDS_Face.hxx>
-#include <TopoDS_ListOfShape.hxx>
+
 #include <TopoDS_Shell.hxx>
 #include <TopoDS_Edge.hxx>
 
@@ -128,7 +128,7 @@ class AFMesher : public QObject
 
         std::vector<Triangle3d> m_Triangles;
 
-        TopoDS_ListOfShape m_Shapes;
+        NCollection_List<TopoDS_Shape> m_Shapes;
 
         void setSail(Sail*pSail) {m_pSail=pSail;}
         Sail *m_pSail;

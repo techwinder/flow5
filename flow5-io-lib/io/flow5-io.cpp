@@ -202,7 +202,7 @@ FuseOcc* io::importFuseFromSTEP(std::string const&FilePath, std::string &logmsg)
     FuseOcc *pFuseOcc = new FuseOcc;
     pFuseOcc->setName(FilePath);
     double refdimension(0); // some kind of reference dimension extracted from the STEP file
-    TopoDS_ListOfShape shapes;
+    NCollection_List<TopoDS_Shape> shapes;
     bool bImport = occ::importCADShapes(FilePath, shapes, refdimension, str);
 
     logmsg += str+"\n";
@@ -1589,7 +1589,7 @@ Polar *io::importXFoilPolar(QFile &txtFile, QString &logmsg)
 }
 
 
-void io::exportSTEP(QString const & filename, TopoDS_ListOfShape const &m_ShapesToExport, int index, QString &logmsg)
+void io::exportSTEP(QString const & filename, NCollection_List<TopoDS_Shape> const &m_ShapesToExport, int index, QString &logmsg)
 {
     // inform OCC that internal units are meters
     STEPControl_Writer aWriter;
@@ -1642,7 +1642,7 @@ void io::exportSTEP(QString const & filename, TopoDS_ListOfShape const &m_Shapes
     //    aWriter.Write("cylinder.step");
 
     int nShapes=0;
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     TopoDS_Shape exportshape;
     for (iterator.Initialize(m_ShapesToExport); iterator.More(); iterator.Next())
     {
@@ -1707,13 +1707,13 @@ void io::exportSTEP(QString const & filename, TopoDS_ListOfShape const &m_Shapes
 }
 
 
-void io::exportBRep(QString const & filename, const TopoDS_ListOfShape &m_ShapesToExport, QString &logmsg)
+void io::exportBRep(QString const & filename, const NCollection_List<TopoDS_Shape> &m_ShapesToExport, QString &logmsg)
 {
     std::ofstream brepfile;
     brepfile.open(filename.toStdString());
     if(brepfile.is_open())
     {
-        TopoDS_ListIteratorOfListOfShape iterator;
+        NCollection_List<TopoDS_Shape>::Iterator iterator;
         for (iterator.Initialize(m_ShapesToExport); iterator.More(); iterator.Next())
         {
             BRepTools::Write(iterator.Value(), brepfile);

@@ -55,7 +55,7 @@ CADExportDlg::CADExportDlg(QWidget*pParent) : QDialog(pParent)
 }
 
 
-void CADExportDlg::init(TopoDS_ListOfShape const & listofshape, const QString &partname)
+void CADExportDlg::init(NCollection_List<TopoDS_Shape> const & listofshape, const QString &partname)
 {
     setupLayout();
 
@@ -67,7 +67,7 @@ void CADExportDlg::init(TopoDS_ListOfShape const & listofshape, const QString &p
     gp_Trsf Scale;
     Scale.SetScale(gp_Pnt(0.0,0.0,0.0), 1000.0);
     BRepBuilderAPI_Transform thescaler(Scale);
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     for (iterator.Initialize(listofshape); iterator.More(); iterator.Next())
     {
         thescaler.Perform(iterator.Value(), true);

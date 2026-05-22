@@ -178,7 +178,7 @@ void gl::glMakeEdges(TopoDS_Shape const &Shape, QOpenGLBuffer &vboEdges, QVector
 {
     //could also use BRep_Tool::PolygonOnSurface
     std::string strange;
-    TopoDS_ListOfShape theEdges;
+    NCollection_List<TopoDS_Shape> theEdges;
 
     occ::findEdges(Shape, theEdges, strange);
 
@@ -188,7 +188,7 @@ void gl::glMakeEdges(TopoDS_Shape const &Shape, QOpenGLBuffer &vboEdges, QVector
 
 #define EDGERES 37
 
-void gl::glMakeEdges(TopoDS_ListOfShape const &theEdges, Vector3d const &T, QOpenGLBuffer &vboEdges, QVector<Vector3d> &labelpoints)
+void gl::glMakeEdges(NCollection_List<TopoDS_Shape> const &theEdges, Vector3d const &T, QOpenGLBuffer &vboEdges, QVector<Vector3d> &labelpoints)
 {
     if(vboEdges.isCreated()) vboEdges.destroy();
 
@@ -278,7 +278,7 @@ void gl::glMakeEdge(const TopoDS_Edge &Edge, QOpenGLBuffer &vboEdge)
 }
 
 
-void gl::glMakeShellOutline(const TopoDS_ListOfShape &shapes, const Vector3d &position, QOpenGLBuffer &vbo, int nWireRes)
+void gl::glMakeShellOutline(const NCollection_List<TopoDS_Shape> &shapes, const Vector3d &position, QOpenGLBuffer &vbo, int nWireRes)
 {
     if(shapes.Extent()<=0)
     {
@@ -291,7 +291,7 @@ void gl::glMakeShellOutline(const TopoDS_ListOfShape &shapes, const Vector3d &po
     //OUTLINE
     QVector<float> OutlineVertexArray;
 
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     double First,Last;
     gp_Pnt pt0, pt1;
 
@@ -306,7 +306,7 @@ void gl::glMakeShellOutline(const TopoDS_ListOfShape &shapes, const Vector3d &po
             TopoDS_Face face = TopoDS::Face(shapeExplorer.Current());
 
             TopoDS_Wire theOuterWire;
-            TopoDS_ListOfShape theInnerWires;
+            NCollection_List<TopoDS_Shape> theInnerWires;
             occ::findWires(face, theOuterWire, theInnerWires, strange);
             theInnerWires.Append(theOuterWire);
 

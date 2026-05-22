@@ -397,7 +397,7 @@ void AFMesher::makeFaceSLG3d(const TopoDS_Face &aFace,
                              QString &logmsg) const
 {
     std::string strange;
-    TopoDS_ListOfShape theinnerwires;
+    NCollection_List<TopoDS_Shape> theinnerwires;
     TopoDS_Wire theouterwire;
     double curvemin=0, curvemax=0;
 
@@ -880,7 +880,7 @@ void AFMesher::makeFacePSLG2d(const TopoDS_Face &aFace,
                               QString &logmsg) const
 {
     std::string strange;
-    TopoDS_ListOfShape allwires;
+    NCollection_List<TopoDS_Shape> allwires;
     TopoDS_Wire theouterwire;
     double curvemin(0), curvemax(0);
 

@@ -29,7 +29,7 @@
 #include <QDialogButtonBox>
 #include <QSettings>
 
-#include <TopoDS_ListOfShape.hxx>
+
 
 #include <TopoDS_Shape.hxx>
 
@@ -44,13 +44,13 @@ class ShapeFixerDlg : public QDialog
     public:
         ShapeFixerDlg(QWidget *pParent=nullptr);
 
-        void initDialog(TopoDS_ListOfShape const &shapes);
+        void initDialog(NCollection_List<TopoDS_Shape> const &shapes);
 
         QSize sizeHint() const override {return QSize(1100, 900);}
         void showEvent(QShowEvent *pEvent) override;
         void hideEvent(QHideEvent *pEvent) override;
 
-        TopoDS_ListOfShape const &shapes() const {return m_Shapes;}
+        NCollection_List<TopoDS_Shape> const &shapes() const {return m_Shapes;}
 
         static void loadSettings(QSettings &settings);
         static void saveSettings(QSettings &settings);
@@ -74,7 +74,7 @@ class ShapeFixerDlg : public QDialog
         void onFixAll();
 
     private:
-        TopoDS_ListOfShape m_Shapes;
+        NCollection_List<TopoDS_Shape> m_Shapes;
 
         QDialogButtonBox *m_pButtonBox;
 

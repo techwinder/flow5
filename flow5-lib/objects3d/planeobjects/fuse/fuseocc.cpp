@@ -108,7 +108,7 @@ void FuseOcc::rotate(const Vector3d &origin, const Vector3d &axis, double theta)
 
 void FuseOcc::reverseFuse()
 {
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
 //    m_Shape.Clear();
     for (iterator.Initialize(m_Shell); iterator.More(); iterator.Next())
     {
@@ -121,7 +121,7 @@ void FuseOcc::reverseFuse()
 void FuseOcc::makeEdges(std::vector<Segment3d>&lines)
 {
     lines.clear();
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     int nShapes = 0;
     for (iterator.Initialize(m_Shell); iterator.More(); iterator.Next())
     {
@@ -155,7 +155,7 @@ void FuseOcc::computeSurfaceProperties(std::string &logmsg, const std::string &p
     computeWettedArea();
 
     Vector3d BRL, TFR;
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     for (iterator.Initialize(m_Shell); iterator.More(); iterator.Next())
     {
         occ::shapeBoundingBox(iterator.Value(), BRL, TFR, true);

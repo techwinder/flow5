@@ -26,7 +26,7 @@
 #pragma once
 
 #include <TopoDS_Shape.hxx>
-#include <TopoDS_ListOfShape.hxx>
+
 
 
 #include <externalsail.h>
@@ -60,8 +60,8 @@ class FL5LIB_EXPORT SailOcc : public ExternalSail
         void translate(Vector3d const &T) override;
         void shapesToBreps();
 
-        TopoDS_ListOfShape &shapes() {return m_Shape;}
-        TopoDS_ListOfShape const &shapes() const {return m_Shape;}
+        NCollection_List<TopoDS_Shape> &shapes() {return m_Shape;}
+        NCollection_List<TopoDS_Shape> const &shapes() const {return m_Shape;}
         void clearShapes() {m_Shape.Clear();}
         void appendShape(TopoDS_Shape const &shape) {m_Shape.Append(shape);}
 
@@ -77,7 +77,7 @@ class FL5LIB_EXPORT SailOcc : public ExternalSail
         void clearLogMsg() {m_LogMsg.clear();}
 
     private:
-        TopoDS_ListOfShape m_Shape;  /** The list of shapes of which this sail is made. */
+        NCollection_List<TopoDS_Shape> m_Shape;  /** The list of shapes of which this sail is made. */
 
         std::vector<std::string> m_BRep;
 

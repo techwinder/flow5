@@ -27,7 +27,7 @@
 
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Shell.hxx>
-#include <TopoDS_ListOfShape.hxx>
+
 
 
 #include <enums_objects.h>
@@ -81,12 +81,12 @@ class FL5LIB_EXPORT Fuse : public Part
         Fuse::enumType fuseType() const {return m_FuseType;}
         void setFuseType(Fuse::enumType type){m_FuseType=type;}
 
-        TopoDS_ListOfShape &shells() {return m_Shell;}
-        TopoDS_ListOfShape const &shells() const {return m_Shell;}
+        NCollection_List<TopoDS_Shape> &shells() {return m_Shell;}
+        NCollection_List<TopoDS_Shape> const &shells() const {return m_Shell;}
 
 
         //	Methods related to the cut shells
-        void setShells(const TopoDS_ListOfShape & shells) {m_Shell=shells;}
+        void setShells(const NCollection_List<TopoDS_Shape> & shells) {m_Shell=shells;}
         void clearShells() {m_Shell.Clear();}
         int shellCount() const {return m_Shell.Extent();}
         int nShells() const {return m_Shell.Extent();}
@@ -131,7 +131,7 @@ class FL5LIB_EXPORT Fuse : public Part
 
         Fuse::enumType m_FuseType; /** @todo useless now that each fuse is defined in its own subclass - remove */
 
-        TopoDS_ListOfShape m_Shell;  /** The list of shells AFTER the cut operation. Used for display and mesh generation.*/
+        NCollection_List<TopoDS_Shape> m_Shell;  /** The list of shells AFTER the cut operation. Used for display and mesh generation.*/
 
 
         double m_WettedArea;

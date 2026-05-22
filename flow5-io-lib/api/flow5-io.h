@@ -32,7 +32,7 @@ class QDataStream;
 class QFile;
 
 #include <TopoDS_Shape.hxx>
-#include <TopoDS_ListOfShape.hxx>
+
 
 #include <flow5-io-lib_global.h>
 #include <fl5color.h>
@@ -94,7 +94,7 @@ namespace io
 
     FL5IOLIB_EXPORT Polar *importXFoilPolar(QFile &txtFile, QString &logmsg);
 
-    FL5IOLIB_EXPORT void exportSTEP(QString const & filename, TopoDS_ListOfShape const &m_ShapesToExport, int index, QString &logmsg);
-    FL5IOLIB_EXPORT void exportBRep(QString const & filename, TopoDS_ListOfShape const &m_ShapesToExport, QString &logmsg);
+    FL5IOLIB_EXPORT void exportSTEP(QString const & filename, NCollection_List<TopoDS_Shape> const &m_ShapesToExport, int index, QString &logmsg);
+    FL5IOLIB_EXPORT void exportBRep(QString const & filename, NCollection_List<TopoDS_Shape> const &m_ShapesToExport, QString &logmsg);
 
 }

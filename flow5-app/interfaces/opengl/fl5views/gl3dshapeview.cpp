@@ -325,7 +325,7 @@ void gl3dShapeView::mouseMoveEvent(QMouseEvent *pEvent)
 
         m_Segments.clear();
         TopoDS_Wire theOuterWire;
-        TopoDS_ListOfShape theInnerWires;
+        NCollection_List<TopoDS_Shape> theInnerWires;
         occ::findWires(pickedface, theOuterWire, theInnerWires, log);
         for(int i=0; i<m_vboWires.size(); i++)
         {

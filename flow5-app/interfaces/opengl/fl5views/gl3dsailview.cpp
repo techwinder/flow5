@@ -627,7 +627,7 @@ void gl3dSailView::mouseMoveEvent(QMouseEvent *pEvent)
         {
             SailOcc const *pOccSail = dynamic_cast<SailOcc const*>(m_pSail);
             if(!pOccSail) break;
-            TopoDS_ListOfShape const &shapes = pOccSail->shapes();
+            NCollection_List<TopoDS_Shape> const &shapes = pOccSail->shapes();
             if(!shapes.Extent()) break;
 
             int lastpickedface = m_HighFace;

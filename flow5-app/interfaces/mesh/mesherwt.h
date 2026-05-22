@@ -32,7 +32,7 @@
 #include <QGroupBox>
 
 #include <TopoDS_Shape.hxx>
-#include <TopoDS_ListOfShape.hxx>
+
 
 #include <api/triangle3d.h>
 #include <api/edgesplit.h>
@@ -61,7 +61,7 @@ class MesherWt : public QFrame
 
         void initWt(const TopoDS_Shape &shape, const std::vector<std::vector<EdgeSplit> > &edgesplits, bool bSplittableInnerPSLG);
         void initWt(const QVector<TopoDS_Shape> &shapes, bool bSplittableInnerPSLG);
-        void initWt(const TopoDS_ListOfShape &shells, double maxedgelength, bool bMakeXZSymmetric, bool bSplittableInnerPSLG);
+        void initWt(const NCollection_List<TopoDS_Shape> &shells, double maxedgelength, bool bMakeXZSymmetric, bool bSplittableInnerPSLG);
         void initWt(Sail *pSail);
 
         void setEdgeSplit(std::vector<std::vector<EdgeSplit>> &EdgeSplit) {m_EdgeSplit=EdgeSplit;}
@@ -100,7 +100,7 @@ class MesherWt : public QFrame
     private:
         QWidget *m_pParent;
 
-        TopoDS_ListOfShape m_Shapes;
+        NCollection_List<TopoDS_Shape> m_Shapes;
 
         AFMesher *m_pMesher; // build it on the heap so that it can be moved to a distinct thread?
         std::vector<std::vector<EdgeSplit>> m_EdgeSplit; // for each face<each edge>

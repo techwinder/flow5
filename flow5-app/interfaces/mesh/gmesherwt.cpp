@@ -773,7 +773,7 @@ void GMesherWt::meshFuseShellsThinSurfaces()
     onCheckLogger();
 
     // converting to BREP and export+import
-    TopoDS_ListOfShape const *pShells(nullptr);
+    NCollection_List<TopoDS_Shape> const *pShells(nullptr);
     FuseXfl const*pFuseXfl = dynamic_cast<FuseXfl const*>(m_pFuse);
     if(pFuseXfl) pShells = &pFuseXfl->rightSideShells();
     else         pShells = &m_pFuse->shells();
@@ -890,7 +890,7 @@ void GMesherWt::meshFuseShellsThickSurfaces()
     onCheckLogger();
 
     // converting to BREP and export+import
-    TopoDS_ListOfShape const *pShells(nullptr);
+    NCollection_List<TopoDS_Shape> const *pShells(nullptr);
     FuseXfl const*pFuseXfl = dynamic_cast<FuseXfl const*>(m_pFuse);
     if(pFuseXfl) pShells = &pFuseXfl->rightSideShells();
     else         pShells = &m_pFuse->shells();

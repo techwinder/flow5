@@ -24,7 +24,7 @@
 
 
 #include <TopExp_Explorer.hxx>
-#include <TopoDS_ListOfShape.hxx>
+
 #include <TopoDS.hxx>
 #include <TopoDS_Shape.hxx>
 #include <TopoDS_Shell.hxx>
@@ -121,7 +121,7 @@ void ShapeDlg::onButton(QAbstractButton *pButton)
 }
 
 
-void ShapeDlg::initDialog(TopoDS_ListOfShape const &shapes)
+void ShapeDlg::initDialog(NCollection_List<TopoDS_Shape> const &shapes)
 {
     fillShapes(shapes);
     m_pglShapesView->setShapes(m_Shapes);
@@ -180,7 +180,7 @@ void ShapeDlg::saveSettings(QSettings &settings)
 }
 
 
-void ShapeDlg::fillShapes(TopoDS_ListOfShape const &shapes)
+void ShapeDlg::fillShapes(NCollection_List<TopoDS_Shape> const &shapes)
 {
     m_plwShapes->clear();
     int iShell=0;

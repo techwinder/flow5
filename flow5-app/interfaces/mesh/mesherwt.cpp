@@ -361,7 +361,7 @@ void MesherWt::initWt(QVector<TopoDS_Shape> const &shapes, bool bSplittableInner
 }
 
 
-void MesherWt::initWt(TopoDS_ListOfShape const &shells, double maxedgelength, bool bMakeXZSymmetric, bool bSplittableInnerPSLG)
+void MesherWt::initWt(NCollection_List<TopoDS_Shape> const &shells, double maxedgelength, bool bMakeXZSymmetric, bool bSplittableInnerPSLG)
 {
     AFMesher::setMaxEdgeLength(maxedgelength);
     m_bMakexzSymmetric = bMakeXZSymmetric;

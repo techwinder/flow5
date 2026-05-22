@@ -26,7 +26,7 @@
 #pragma once
 
 #include <TopoDS_Shape.hxx>
-#include <TopoDS_ListOfShape.hxx>
+
 
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -46,7 +46,7 @@ class SailCadReaderDlg : public QDialog
         void customEvent(QEvent *pEvent) override;
         QSize sizeHint() const override {return QSize(900,750);}
 
-        TopoDS_ListOfShape const &shapes() const {return m_ListOfShape;}
+        NCollection_List<TopoDS_Shape> const &shapes() const {return m_ListOfShape;}
         bool bShells() const {return s_bShell;}
 
     private:
@@ -58,7 +58,7 @@ class SailCadReaderDlg : public QDialog
         void accept() override;
 
     private:
-        TopoDS_ListOfShape m_ListOfShape;
+        NCollection_List<TopoDS_Shape> m_ListOfShape;
 
         QRadioButton *m_prbFACE, *m_prbSHELL;
         PlainTextOutput *m_ppto;

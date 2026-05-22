@@ -369,7 +369,7 @@ void SailOccDlg::initMesher()
     SailOcc *pOccSail = dynamic_cast<SailOcc*>(m_pSail);
 
     int iShell = 0;
-    TopoDS_ListOfShape shells;
+    NCollection_List<TopoDS_Shape> shells;
     for(NCollection_List<TopoDS_Shape>::Iterator shellitt(pOccSail->shapes()); shellitt.More(); shellitt.Next())
     {
         TopExp_Explorer shapeExplorer;

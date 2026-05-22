@@ -270,7 +270,7 @@ void FuseXfl::duplicateFuseXfl(const FuseXfl &aFuseXfl)
     m_XPanelPos = aFuseXfl.m_XPanelPos;
 
 
-    TopoDS_ListIteratorOfListOfShape iterator;
+    NCollection_List<TopoDS_Shape>::Iterator iterator;
     m_RightSideShell.Clear();
     for (iterator.Initialize(aFuseXfl.m_RightSideShell); iterator.More(); iterator.Next())
     {
