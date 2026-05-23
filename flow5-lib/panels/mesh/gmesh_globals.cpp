@@ -1195,41 +1195,18 @@ void gmesh::tessellateShape(TopoDS_Shape const&Shape, GmshParams const &params, 
 }
 
 
-/** @todo unusable: importShapesNativePointer throws an unknown exception */
 void gmesh::tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log)
 {
     gmsh::clear();
     gmsh::model::add("Face");
 
     gmsh::vectorpair outDimTags;
-    const bool bHighestDimOnly = true;
 
-    try
-    {
-        gmsh::option::setNumber("Mesh.MeshSizeMin",           params.m_MinSize);
-        gmsh::option::setNumber("Mesh.MeshSizeMax",           params.m_MaxSize);
-        gmsh::option::setNumber("Mesh.MeshSizeFromCurvature", params.m_nCurvature);
+    std::string brep;
+    occ::shapeToBrep(Face, brep);
 
-        gmsh::model::occ::importShapesNativePointer(&Face, outDimTags, bHighestDimOnly);
+    gmesh::tessellateBRep(brep, params, triangles, log);
 
-        gmsh::model::mesh::generate(2);
-        gmesh::convertFromGmsh(triangles, log);
-    }
-    catch(std::runtime_error &e)
-    {
-        log += std::string(e.what()) + std::string(" while making triangulation... aborting\n\n");
-        return;
-    }
-    catch(std::exception &e)
-    {
-        log += std::string(e.what()) + std::string(" while making triangulation... aborting\n\n");
-        return;
-    }
-    catch(...)
-    {
-        log.append("Error making triangulation\n");
-        return;
-    }
 }
 
 

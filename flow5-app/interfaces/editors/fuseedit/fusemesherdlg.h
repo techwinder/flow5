@@ -46,7 +46,6 @@
 class gl3dGeomControls;
 
 class Fuse;
-class MesherWt;
 class GMesherWt;
 class gl3dFuseView;
 class gl3dShapeView;
@@ -91,7 +90,6 @@ class FuseMesherDlg : public QDialog
 
         void onNodeDistance();
 
-        void onSelMesher();
 
     private:
         void setupLayout();
@@ -100,8 +98,6 @@ class FuseMesherDlg : public QDialog
 
     private:
 
-        QRadioButton *m_prbfl5Mesher, *m_prbGMesher;
-        MesherWt *m_pMesherWt;
         GMesherWt *m_pGMesherWt;
 
         QSplitter *m_pHSplitter;
@@ -135,8 +131,6 @@ class FuseMesherDlg : public QDialog
 
         static Quaternion s_ab_quat_fuse;
         static Quaternion s_ab_quat_shape;
-
-        static bool s_bfl5Mesher;
 };
 
 

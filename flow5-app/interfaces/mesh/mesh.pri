@@ -10,11 +10,9 @@
 
 
 HEADERS += \
-    $$PWD/afmesher.h \
     $$PWD/gmesher.h \
     $$PWD/gmesherwt.h \
     $$PWD/gmshctrlswt.h \
-    $$PWD/mesherwt.h \
     $$PWD/meshevent.h \
     $$PWD/occtessctrlswt.h \
     $$PWD/panelcheckdlg.h \
@@ -24,11 +22,9 @@ HEADERS += \
 
 
 SOURCES += \
-    $$PWD/afmesher.cpp \
     $$PWD/gmesher.cpp \
     $$PWD/gmesherwt.cpp \
     $$PWD/gmshctrlswt.cpp \
-    $$PWD/mesherwt.cpp \
     $$PWD/occtessctrlswt.cpp \
     $$PWD/panelcheckdlg.cpp \
     $$PWD/slg3d.cpp \

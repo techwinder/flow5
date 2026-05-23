@@ -74,6 +74,7 @@ class FuseStlDlg : public FuseDlg
 
         FuseStl *m_pFuseStl;
 
+        static int s_nMaxPanels;
         static QByteArray s_Geometry;
 };
 

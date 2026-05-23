@@ -67,9 +67,7 @@
 #include <interfaces/editors/translatedlg.h>
 #include <interfaces/exchange/cadexportdlg.h>
 #include <interfaces/exchange/stlwriterdlg.h>
-#include <interfaces/mesh/afmesher.h>
 #include <interfaces/mesh/gmesherwt.h>
-#include <interfaces/mesh/mesherwt.h>
 #include <interfaces/mesh/meshevent.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <interfaces/opengl/fl5views/gl3dsailview.h>
@@ -650,8 +648,6 @@ void SailDlg::setSailData()
         case xfl::INV_EXP:       m_pcbZDistType->setCurrentIndex(6);  break;
     }
 
-    AFMesher::setMaxEdgeLength(m_pSail->maxElementSize()*Units::mtoUnit());
-
     m_iActiveSection = 0;
 }
 
@@ -855,7 +851,6 @@ void SailDlg::customEvent(QEvent *pEvent)
         m_ppto->onAppendQText(strange);
         m_pSail->setRefTriangles(pMeshEvent->triangles());
         m_pSail->makeTriPanels(Vector3d());
-        m_pSail->setMaxElementSize(AFMesher::maxEdgeLength());
 
         m_pglSailView->clearSegments();
 
@@ -869,17 +864,7 @@ void SailDlg::customEvent(QEvent *pEvent)
         m_pglSailView->update();
 
         m_pglSailView->clearDebugPoints();
-        if(AFMesher::s_DebugPts.size())
-        {
-            m_pglSailView->setDebugPoints(AFMesher::s_DebugPts);
-            m_pglSailView->appendDebugVec(AFMesher::s_DebugPts.back()-AFMesher::s_DebugPts.front());
-/*m_pSail->setRefTriangles(NURBSSurface::s_DbgTriangles);
-m_pSail->makeTriPanels(Vector3d());*/
-/*            Triangle3d const& t3d = NURBSSurface::s_DbgTriangles.at(5);
-            Vector3d I;
-            t3d.intersectSegmentInside(AFMesher::s_DebugPts.front(), AFMesher::s_DebugPts.back(), I, true);
-            m_pglSailView->appendDebugPoint(I);*/
-        }
+
         updateSailDataOutput();
 
         m_bChanged = true;

@@ -36,9 +36,7 @@
 
 #include <interfaces/editors/boatedit/edgesplitdlg.h>
 #include <interfaces/editors/shapedlg.h>
-#include <interfaces/mesh/afmesher.h>
 #include <interfaces/mesh/gmesherwt.h>
-#include <interfaces/mesh/mesherwt.h>
 #include <interfaces/mesh/meshevent.h>
 #include <interfaces/mesh/tesscontrolsdlg.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
@@ -78,9 +76,6 @@ void SailOccDlg::showEvent(QShowEvent *pEvent)
 void SailOccDlg::hideEvent(QHideEvent *pEvent)
 {
     ExternalSailDlg::hideEvent(pEvent);
-    SailOcc *pOccSail = dynamic_cast<SailOcc*>(m_pSail);
-    pOccSail->setMaxElementSize(AFMesher::maxEdgeLength());
-
     s_VSplitterSizes  = m_pLeftSplitter->saveState();
 }
 
@@ -218,9 +213,6 @@ void SailOccDlg::connectSignals()
     connect(m_pGMesherWt,       SIGNAL(updateFuseView()),     SLOT(onUpdateSailView()));
     connect(m_pGMesherWt,       SIGNAL(outputMsg(QString)), m_ppto, SLOT(onAppendQText(QString)));
 
-
-    connect(m_pglSailView, SIGNAL(pickedEdge(int,int)), SLOT(onPickedEdge(int,int)));
-
     connect(m_pFlipTessNormals, SIGNAL(triggered()),          SLOT(onFlipTessNormals()));
     connect(m_pTessSettings,    SIGNAL(triggered()),          SLOT(onTessellation()));
 
@@ -286,7 +278,6 @@ void SailOccDlg::customEvent(QEvent *pEvent)
         strange += "\n_______\n\n";
         m_ppto->onAppendQText(strange);
 
-        pOccSail->setMaxElementSize(AFMesher::maxEdgeLength());
         m_bChanged = true;
     }
     else
@@ -395,109 +386,6 @@ void SailOccDlg::initMesher()
     (void)iShell;
 
     m_pGMesherWt->initWt(pOccSail);
-}
-
-
-void SailOccDlg::onPickEdge(bool bPick)
-{
-    if(bPick)
-        m_pglSailView->setPicking(xfl::SEGMENT3D);
-    else
-        m_pglSailView->stopPicking();
-
-    m_pglSailView->showEdgeNodes(bPick);
-    m_pglSailView->update();
-}
-
-
-void SailOccDlg::onPickedEdge(int iFace, int iEdge)
-{
-    SailOcc *pOccSail = dynamic_cast<SailOcc*>(m_pSail);
-    if(!pOccSail) return;
-    if(!pOccSail->shapes().Extent()) return;
-
-    if(iFace<0 || iFace>=int(pOccSail->m_EdgeSplit.size()))
-    {
-        m_ppto->onAppendQText("Face selection error\n");
-        return;
-    }
-    if(iEdge<0 || iEdge>=int(pOccSail->m_EdgeSplit.at(iFace).size()))
-    {
-        m_ppto->onAppendQText("Edge selection error\n");
-        return;
-    }
-    EdgeSplitDlg dlg(this, pOccSail->m_EdgeSplit[iFace][iEdge]);
-    if(dlg.exec()!=QDialog::Accepted) return;
-    pOccSail->m_EdgeSplit[iFace][iEdge].setNSegs(dlg.nSegs());
-    pOccSail->m_EdgeSplit[iFace][iEdge].setDistrib(dlg.distrib());
-
-
-    // Since OCC duplicates edges for each face, need to update all identical edges
-    TopoDS_Edge refedge;
-    occ::getEdge(pOccSail->shapes().First(), iFace, iEdge, refedge);
-
-    TopExp_Explorer FaceExplorer;
-    TopExp_Explorer EdgeExplorer;
-
-    int iface=0, iedge=0;
-    for(FaceExplorer.Init(pOccSail->shapes().First(), TopAbs_FACE); FaceExplorer.More(); FaceExplorer.Next())
-    {
-        TopoDS_Face const &face = TopoDS::Face(FaceExplorer.Current());
-        if(iFace>=int(pOccSail->m_EdgeSplit.size())) break; //error somewhere, can't continue
-
-        iedge = 0;
-        for(EdgeExplorer.Init(face, TopAbs_EDGE); EdgeExplorer.More(); EdgeExplorer.Next())
-        {
-            if(iEdge>=int(pOccSail->m_EdgeSplit.at(iFace).size())) break; //error somewhere, can't continue
-
-            TopoDS_Edge const &edge = TopoDS::Edge(EdgeExplorer.Current());
-            if(occ::isSameEdge(edge, refedge))
-            {
-                pOccSail->m_EdgeSplit[iface][iedge] = pOccSail->m_EdgeSplit[iFace][iEdge];
-            }
-            iedge++;
-        }
-        iface++;
-    }
-
-    onMakeEdgeSplits();
-
-    m_bChanged = true;
-}
-
-
-void SailOccDlg::onMakeEdgeSplits()
-{
-    SailOcc *pOccSail = dynamic_cast<SailOcc*>(m_pSail);
-    TopExp_Explorer FaceExplorer;
-    TopExp_Explorer EdgeExplorer;
-    int iFace=0, iEdge=0;
-
-    for(FaceExplorer.Init(pOccSail->shapes().First(), TopAbs_FACE); FaceExplorer.More(); FaceExplorer.Next())
-    {
-        TopoDS_Face const &face = TopoDS::Face(FaceExplorer.Current());
-
-        if(iFace>=int(pOccSail->m_EdgeSplit.size()))
-            break; //error somewhere, can't continue
-        iEdge = 0;
-        for(EdgeExplorer.Init(face, TopAbs_EDGE); EdgeExplorer.More(); EdgeExplorer.Next())
-        {
-            if(iEdge>=int(pOccSail->m_EdgeSplit.at(iFace).size())) break; //error somewhere, can't continue
-
-            TopoDS_Edge const &edge = TopoDS::Edge(EdgeExplorer.Current());
-
-            EdgeSplit &es = pOccSail->m_EdgeSplit[iFace][iEdge];
-
-            if(es.nSegs()>0)
-                es.makeSplit(edge);
-            else
-                es.makeUniformSplit(edge, AFMesher::maxEdgeLength());
-            iEdge++;
-        }
-        iFace++;
-    }
-    updateEdgeNodes();
-
 }
 
 

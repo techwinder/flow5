@@ -52,7 +52,6 @@ class ColorBtn;
 class FloatEdit;
 class IntEdit;
 class LineBtn;
-class MesherWt;
 class GMesherWt;
 class PlainTextOutput;
 class Sail;

@@ -62,7 +62,6 @@ class Surface;
 class FloatEdit;
 class IntEdit;
 
-class MesherWt;
 class GMesherWt;
 class OccTessCtrlsWt;
 

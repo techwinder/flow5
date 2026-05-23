@@ -78,7 +78,7 @@
 #include <interfaces/graphs/controls/graphtilectrls.h>
 #include <interfaces/graphs/globals/graphsvgwriter.h>
 #include <interfaces/mesh/gmesherwt.h>
-#include <interfaces/mesh/mesherwt.h>
+
 #include <interfaces/opengl/globals/opengldlg.h>
 #include <interfaces/opengl/testgl/gl2dcomplex.h>
 #include <interfaces/opengl/testgl/gl2dfractal.h>
@@ -2680,7 +2680,6 @@ bool MainFrame::loadSettings()
     GraphOptions::loadSettings(settings);
     LogWt::loadSettings(settings);
     GMesherWt::loadSettings(settings);
-    MesherWt::loadSettings(settings);
     OneVortonTestDlg::loadSettings(settings);
     OpenGlDlg::loadSettings(settings);
     Opp3dScalesCtrls::loadSettings(settings);
@@ -2828,7 +2827,6 @@ void MainFrame::saveSettings()
     GraphOptions::saveSettings(settings);
     LogWt::saveSettings(settings);
     GMesherWt::saveSettings(settings);
-    MesherWt::saveSettings(settings);
     OneVortonTestDlg::saveSettings(settings);
     OpenGlDlg::saveSettings(settings);
     Opp3dScalesCtrls::saveSettings(settings);

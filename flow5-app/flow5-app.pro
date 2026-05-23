@@ -162,14 +162,14 @@ win32-msvc {
 
 
 #--------------------- GMSH ------------------------
-    INCLUDEPATH += D:\bin\gmsh-4.14.1-Windows64-sdk/include/
-    LIBS += -L"D:\bin\gmsh-4.14.1-Windows64-sdk/lib"
+    INCLUDEPATH += D:/bin/gmsh-4.14.1-Windows64-sdk/include/
+    LIBS += -L"D:/bin/gmsh-4.14.1-Windows64-sdk/lib"
     LIBS += -lgmsh.dll  # the file name is gmsh.dll.lib
 
 #------------ OPEN CASCADE --------------------------
-    INCLUDEPATH += D:\bin\OCCT-7_9_2\build\inc
-    LIBS += -LD:\bin\OCCT-7_9_2\build\win64\vc14\lib
-    LIBS += -LD:\bin\OCCT-7_9_2\build\win64\vc14\bin
+    INCLUDEPATH += D:/bin/OCCT-7_9_2/build/inc
+    LIBS += -LD:/bin/OCCT-7_9_2/build/win64/vc14/lib
+#    LIBS += -LD:/bin/OCCT-7_9_2/build/win64/vc14/bin
 
 #---------------- OTHER WIN LIBS -------------------
     DEFINES += _UNICODE WIN64 QT_DLL QT_WIDGETS_LIB

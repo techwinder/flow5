@@ -43,14 +43,13 @@
 
 #include <core/saveoptions.h>
 #include <interfaces/editors/inertia/partinertiadlg.h>
-#include <interfaces/mesh/afmesher.h>
-#include <interfaces/mesh/mesherwt.h>
+
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 
 QByteArray FuseStlDlg::s_Geometry;
-
+int FuseStlDlg::s_nMaxPanels = 1000;
 
 FuseStlDlg::FuseStlDlg(QWidget *pParent) : FuseDlg(pParent)
 {
@@ -73,7 +72,7 @@ void FuseStlDlg::initDialog(Fuse *pFuse)
     m_pglFuseView->setFuse(m_pFuseStl);
 
     m_pfeMaxEdgeLength->setValue(m_pFuseStl->maxElementSize()*Units::mtoUnit());
-    m_pieMaxPanelCount->setValue(AFMesher::maxPanelCount());
+    m_pieMaxPanelCount->setValue(s_nMaxPanels);
     updateProperties();
 }
 
@@ -88,7 +87,8 @@ void FuseStlDlg::showEvent(QShowEvent *pEvent)
 void FuseStlDlg::hideEvent(QHideEvent *pEvent)
 {
     FuseDlg::hideEvent(pEvent);
-     s_Geometry = saveGeometry();
+    s_nMaxPanels = m_pieMaxPanelCount->value();
+    s_Geometry = saveGeometry();
 }
 
 
@@ -131,7 +131,7 @@ void FuseStlDlg::setupLayout()
                                 QLabel *plabMaxPanelCount = new QLabel(tr("Max. panel count"));
                                 plabMaxPanelCount->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
                                 tip = tr("<p>The split operation will stop if the total number of panels exceeds this value</p>");
-                                m_pieMaxPanelCount = new IntEdit;
+                                m_pieMaxPanelCount = new IntEdit(s_nMaxPanels);
                                 m_pieMaxPanelCount->setToolTip(tip);
 
                                 pSplitLayout->addWidget(plabMaxEdgeLength,       1, 1);
@@ -240,7 +240,6 @@ void FuseStlDlg::onSplitMeshPanels()
     int maxpanels = m_pieMaxPanelCount->value();
     double maxsize = m_pfeMaxEdgeLength->value()/Units::mtoUnit();
 
-    AFMesher::setMaxPanelCount(maxpanels);
     m_pFuseStl->setMaxElementSize(maxsize);
 
     TriMesh &mesh = m_pFuseStl->triMesh();
@@ -328,6 +327,7 @@ void FuseStlDlg::loadSettings(QSettings &settings)
 {
     settings.beginGroup("StlFuseDlg");
     {
+        s_nMaxPanels = settings.value("NMaxPanels", s_nMaxPanels).toInt();
         s_Geometry = settings.value("WindowGeom", QByteArray()).toByteArray();
     }
     settings.endGroup();
@@ -338,6 +338,7 @@ void FuseStlDlg::saveSettings(QSettings &settings)
 {
     settings.beginGroup("StlFuseDlg");
     {
+        settings.setValue("NMaxPanels", s_nMaxPanels);
         settings.setValue("WindowGeom", s_Geometry);
     }
     settings.endGroup();

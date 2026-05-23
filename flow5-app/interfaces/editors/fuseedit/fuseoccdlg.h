@@ -37,7 +37,6 @@
 
 class FuseOcc;
 class PlainTextOutput;
-class MesherWt;
 class GMesherWt;
 
 class FuseOccDlg : public FuseDlg
@@ -80,13 +79,10 @@ class FuseOccDlg : public FuseDlg
         void onDoubleNodes();
         void onExportBodyToCADFile();
         void onFlipTessNormals();
-        void onSelMesher();
         void onShapeFix();
         void onUpdateFuseView();
 
         void onScale() override;
-        void onTranslate() override;
-        void onRotate() override;
 
 
 
@@ -101,8 +97,6 @@ class FuseOccDlg : public FuseDlg
 
         QPushButton *m_ppbCheckMenuBtn;
 
-        QRadioButton *m_prbfl5Mesher, *m_prbGMesher;
-
         QAction *m_pFlipTessNormals;
 
         /** @todo merge with fusexfl and maybe planexfl */
@@ -111,7 +105,6 @@ class FuseOccDlg : public FuseDlg
         QAction *m_pRestoreFuseMesh;
 
         GMesherWt *m_pGMesherWt;
-        MesherWt *m_pMesherWt;
 
         static bool s_bfl5Mesher;
 

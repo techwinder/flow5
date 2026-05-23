@@ -43,7 +43,6 @@ class MeshEvent : public QEvent
         MeshEvent(std::vector<Triangle3d> const & triangles): QEvent(MESH_UPDATE_EVENT)
         {
             m_Triangles = triangles;
-//            m_SLG = AFMesher::s_SLG;
             m_bFinal  = false;
         }
 

@@ -93,9 +93,7 @@
 #include <interfaces/editors/wingedit/wingdefdlg.h>
 #include <interfaces/editors/wingedit/wingscaledlg.h>
 #include <interfaces/exchange/stlwriterdlg.h>
-#include <interfaces/mesh/afmesher.h>
 #include <interfaces/mesh/gmesherwt.h>
-#include <interfaces/mesh/mesherwt.h>
 #include <interfaces/mesh/meshevent.h>
 #include <interfaces/mesh/tesscontrolsdlg.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
@@ -543,7 +541,6 @@ void PlaneXflDlg::customEvent(QEvent *pEvent)
         updateStdOutput(str);
 
         QString strange;
-        pFuse->setMaxElementSize(AFMesher::maxEdgeLength());
         strange  = QString::asprintf("\nTriangle count = %d\n", pFuse->nPanel3());
         strange += QString::asprintf("Node count     = %d\n", int(pFuse->nodes().size()));
         strange += "\n_______\n\n";
@@ -1301,16 +1298,11 @@ void PlaneXflDlg::onInsertSTLCylinderFuse()
         slg[i].setNodes(facepts.at(i), facepts.at((i+1)%nh));
     }
 
-    AFMesher mesher;
-    int maxpanelcount = 1000;
-    double maxedgelength = radius*2.0*PI/double(nh);
-    mesher.setMaxIterations(1000);
     std::vector<Triangle3d> facetrianglesleft, facetrianglesright;
-    QString log;
-    mesher.makeTriangles(face, slg, facetrianglesleft, maxedgelength, maxpanelcount, log);
 
-    int nFlips=0, nIter=0;
-    mesher.makeDelaunayFlips(facetrianglesleft, nFlips, nIter);
+    GmshParams params(radius/20.0, radius/2.0, 10);
+    std::string logmsg;
+    gmesh::tessellateFace(face, params, facetrianglesleft, logmsg);
 
     facetrianglesright = facetrianglesleft;
     Vector3d O, axis(0.0,1.0,0.0);
@@ -1335,7 +1327,6 @@ void PlaneXflDlg::onInsertSTLCylinderFuse()
     pFuse->makeTriangleNodes();
     pFuse->makeNodeNormals();
 
-    std::string logmsg;
     updateOutput("   Making mesh panels from stl triangles\n");
     pFuse->makeDefaultTriMesh(logmsg, "");
     updateStdOutput(logmsg);
@@ -1907,8 +1898,6 @@ void PlaneXflDlg::onTabChanged(int iNewTab)
             {
                 m_pGMesherWt->setEnabled(true);
                 m_pGMesherWt->initWt(pFuse, pFuse->isXflType(), m_pPlaneXfl->isThickBuild());
-
-                AFMesher::setTraceFaceIndex(-1);
             }
             break;
         }

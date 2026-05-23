@@ -28,7 +28,6 @@
 #include <interfaces/editors/boatedit/externalsaildlg.h>
 
 class GMesherWt;
-class MesherWt;
 
 class SailOccDlg: public ExternalSailDlg
 {
@@ -56,9 +55,6 @@ class SailOccDlg: public ExternalSailDlg
         void onShapes();
         void onTabChanged(int);
 
-        void onPickEdge(bool bPick) override;
-        void onPickedEdge(int iFace, int iEdge) override;
-        void onMakeEdgeSplits() override;
 
     private:
 
