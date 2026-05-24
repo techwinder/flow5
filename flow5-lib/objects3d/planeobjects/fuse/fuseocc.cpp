@@ -64,12 +64,12 @@ void FuseOcc::getProperties(std::string &properties, std::string const &prefx, b
 {
     Fuse::getProperties(properties, prefx);
 
+    std::string strange;
+    strange = std::format("Fuse is made of {:d} shell(s)\n", int(m_Shell.Size()));
+    properties += "\n"+prefx+strange;
+
     if(bFull)
     {
-        std::string strange;
-        strange = std::format("Fuse is made of {:d} shells\n", int(m_Shell.Size()));
-        properties += "\n"+prefx+strange;
-
         std::string occstr;
         for(NCollection_List<TopoDS_Shape>::Iterator shapeit(m_Shell); shapeit.More(); shapeit.Next())
         {
@@ -161,6 +161,8 @@ void FuseOcc::computeSurfaceProperties(std::string &logmsg, const std::string &p
         occ::shapeBoundingBox(iterator.Value(), BRL, TFR, true);
     }
     m_Length = TFR.x-BRL.x;
+    m_MaxWidth = TFR.y-BRL.y;
+    m_MaxHeight = TFR.z-BRL.z;
 
 /*    double xmax=0.0, xmin=0.0;
     double ymax=0.0, ymin=0.0;
@@ -215,7 +217,7 @@ void FuseOcc::computeSurfaceProperties(std::string &logmsg, const std::string &p
 }
 
 
-void FuseOcc::extractShellsFromShapes()
+int FuseOcc::extractShellsFromShapes()
 {
     m_Shell.Clear();
 
@@ -228,6 +230,7 @@ void FuseOcc::extractShellsFromShapes()
             m_Shell.Append(aShell);
         }
     }
+    return m_Shell.Extent();
 }
 
 

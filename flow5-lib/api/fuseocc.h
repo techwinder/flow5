@@ -77,7 +77,7 @@ class FL5LIB_EXPORT FuseOcc : public Fuse
         void clearShapes() {m_Shape.Clear();}
 
 
-        void extractShellsFromShapes();
+        int extractShellsFromShapes();
 
     private:
         // The list of RAW shapes imported from STL;

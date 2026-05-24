@@ -27,7 +27,7 @@
 
 #include <iostream>
 #include <filesystem>
-
+#include <cctype>
 
 #include <BRepAdaptor_Curve.hxx>
 #include <BRepAdaptor_Surface.hxx>
@@ -644,6 +644,17 @@ void occ::findEdges(TopoDS_Shape const &theshape, NCollection_List<TopoDS_Shape>
     strange = std::format("   Found {:d} valid EDGE\n   Found {:d} invalid EDGE\n", nValid, nInvalid);
     logmsg.append(strange);
 }
+
+
+
+void occ::shapesBoundingBox( NCollection_List<TopoDS_Shape>  const &shapes, Vector3d &BotRearLeft, Vector3d &TopFrontRight)
+{
+    for(NCollection_List<TopoDS_Shape>::Iterator shapeIt(shapes); shapeIt.More(); shapeIt.Next())
+    {
+        shapeBoundingBox(shapeIt.Value(), BotRearLeft, TopFrontRight, true);
+    }
+}
+
 
 
 void occ::shapeBoundingBox(TopoDS_Shape const &shape, Vector3d &BotRearLeft, Vector3d &TopFrontRight, bool bCumulative)
@@ -1840,11 +1851,16 @@ bool occ::importCADShapes(std::string const &filename, NCollection_List<TopoDS_S
     dimension = 1.0;
 
     std::filesystem::path filePath(filename);
-    if (filePath.extension() == ".brep") // Heed the dot.
+
+    std::string extension = filePath.extension();
+
+    for(auto& c : extension)   c = std::tolower(c);
+
+    if (extension == ".brep") // Heed the dot.
     {
         return occ::importBRep(filename, shapes, dimension, logmsg);
     }
-    else if (filePath.extension() == ".step" || filePath.extension() == ".stp")
+    else if (extension == ".step" || extension == ".stp")
     {
         return occ::importSTEP(filename, shapes, dimension, logmsg);
     }
@@ -1870,6 +1886,23 @@ bool occ::importBRep(std::string const &filename, NCollection_List<TopoDS_Shape>
     return false;
 }
 
+float getScaleFromUnitLabel(std::string unitLabel)
+{
+    std::transform(unitLabel.begin(), unitLabel.end(), unitLabel.begin(), [](unsigned char c) { return std::tolower(c); });
+
+    if (unitLabel == "m")        return 1.0f;
+    if (unitLabel == "mm")       return 0.001f;
+    if (unitLabel == "cm")       return 0.01f;
+    if (unitLabel == "um")       return 0.000001f;
+    if (unitLabel == "km")       return 1000.0f;
+    if (unitLabel == "inch" || unitLabel == "in")        return 0.0254f;
+    if (unitLabel == "mil")      return 0.0000254f;
+    if (unitLabel == "uin")      return 0.0000000254f;
+    if (unitLabel == "ft")       return 0.3048f;
+    if (unitLabel == "mi")       return 1609.344f;
+    return 0.001f;
+}
+
 
 bool occ::importSTEP(const std::string &filename, NCollection_List<TopoDS_Shape> &shapes, double &dimension, std::string &logmsg)
 {
@@ -1884,7 +1917,9 @@ bool occ::importSTEP(const std::string &filename, NCollection_List<TopoDS_Shape>
     TCollection_AsciiString  aFilePath = filename.c_str();
     STEPControl_Reader aReader;
     Interface_Static::SetCVal("xstep.cascade.unit", "M"); // because flow5 works in metres and OpenCascade in millimetres
-//qDebug()    <<"importSTEP xstep.cascade.unit"<<Interface_Static::IVal("xstep.cascade.unit");
+//    std::cout    <<"importSTEP xstep.cascade.unit IVAL "<<Interface_Static::IVal("xstep.cascade.unit") << std::endl;
+//    std::cout    <<"importSTEP xstep.cascade.unit CVAL "<<Interface_Static::CVal("xstep.cascade.unit") << std::endl;
+//    std::cout    <<"importSTEP xstep.cascade.unit RVAL "<<Interface_Static::RVal("xstep.cascade.unit") << std::endl;
 
     IFSelect_ReturnStatus status = aReader.ReadFile(aFilePath.ToCString());
     NCollection_Sequence<TCollection_AsciiString> theUnitLengthNames;
@@ -1895,11 +1930,12 @@ bool occ::importSTEP(const std::string &filename, NCollection_List<TopoDS_Shape>
     {
         aReader.FileUnits(theUnitLengthNames, theUnitAngleNames, theUnitSolidAngleNames);
 
-        NCollection_Sequence<TCollection_AsciiString>::Iterator iter(theUnitLengthNames);
-/*        for (; iter.More(); iter.Next())
-        {
-            qDebug() << "TheStepUnits: " << iter.Value().ToCString();
-        }*/
+        // Unit in which the file was written does not seem to matter: OCC converts the shapes to meters.
+//        NCollection_Sequence<TCollection_AsciiString>::Iterator iter(theUnitLengthNames);
+//        for (; iter.More(); iter.Next())
+//            std::cout << "TheStepUnits: " << iter.Value().ToCString() <<std::endl;
+//        std::cout << "Length unit factor from file = " << aReader.SystemLengthUnit() << std::endl;
+
 
         Handle(StepData_StepModel)  stepmodel = aReader.StepModel();
         if(stepmodel.IsNull())
@@ -1907,24 +1943,7 @@ bool occ::importSTEP(const std::string &filename, NCollection_List<TopoDS_Shape>
             logg += "   Unknown error importing STEP model\n";
             return false;
         }
-
-/*        Interface_EntityIterator entIt = stepmodel->Entities();
-        for ( ; entIt.More(); entIt.Next() )
-        {
-            const Handle(Standard_Transient)& ent     = entIt.Value();
-//            const Handle(Standard_Type)&      entType = ent->DynamicType();
-
-            if ( ent->IsKind( STANDARD_TYPE(StepBasic_LengthMeasureWithUnit) ) )
-            {
-                Handle(StepBasic_LengthMeasureWithUnit)  cpEnt = Handle(StepBasic_LengthMeasureWithUnit)::DownCast(ent);
-                double unit = cpEnt->ValueComponent();
-                strange = std::string::asprintf("   Length unit conversion factor to meter = {:f}\n", unit);
-                logmsg += strange;
-            }
-        }*/
-        //Interface_TraceFile::SetDefault();
-        //        bool failsonly = false;
-        //        aReader.PrintCheckLoad(failsonly, IFSelect_ItemsByEntity);
+//        std::cout << "STEP model unit" << stepmodel->LocalLengthUnit() << std::endl;
 
         int nbr = aReader.NbRootsForTransfer();
         std::string strong;
@@ -1968,58 +1987,25 @@ bool occ::importSTEP(const std::string &filename, NCollection_List<TopoDS_Shape>
         strange = std::format("   Imported {:d} shape(s)\n", shapes.Extent());
         logg += strange;
 
+
         // get some kind of reference dimension
-        dimension=0.0;
-        BRepAdaptor_Surface adaptor;
-        for(NCollection_List<TopoDS_Shape>::Iterator bodyIt(shapes); bodyIt.More(); bodyIt.Next())
-        {
-            TopExp_Explorer shapeExplorer;
-            int iFace=0;
-            for (shapeExplorer.Init(bodyIt.Value(), TopAbs_FACE); shapeExplorer.More(); shapeExplorer.Next())
-            {
-                double dx=0, dy=0, dz=0, d0=0, d1=0;
-                gp_Pnt P00,P01, P10, P11;
-                TopoDS_Face face = TopoDS::Face(shapeExplorer.Current());
-                adaptor.Initialize(face);
-                try
-                {
-                    double umin = adaptor.FirstUParameter();
-                    double umax = adaptor.LastUParameter();
-                    double vmin = adaptor.FirstVParameter();
-                    double vmax = adaptor.LastVParameter();
-                    adaptor.D0(umin, vmin, P00);
-                    adaptor.D0(umin, vmax, P01);
-                    adaptor.D0(umax, vmax, P11);
-                    adaptor.D0(umax, vmin, P10);
-                }
-                catch(Geom_UndefinedValue const &ex)
-                {
-#if OCC_VERSION_MAJOR<8
-                    strange  = "Exception raised when calculating object length: " + std::string(ex.GetMessageString());
-#else
-                    strange  = "Exception raised when calculating object length: " + std::string(ex.what());
-#endif
-                    strange += "\n";
-                    strange += "Aborting\n";
-                    logg += strange;
+        Vector3d BRL(LARGEVALUE, LARGEVALUE, LARGEVALUE);
+        Vector3d TFR(-LARGEVALUE, -LARGEVALUE, -LARGEVALUE);
+        occ::shapesBoundingBox(shapes, BRL, TFR);
 
-                    return false;
-                }
+        double unit = Units::mtoUnit();
+        strong  =             "Bounding box limits of imported SHAPEs:\n"
+              "                    x           y           z\n";
+        strong += std::format("   botleft = {:11g} {:11g} {:11g} ", BRL.x*unit, BRL.y*unit, BRL.z*unit) + Units::lengthUnitLabel() + EOLstr;
+        strong += std::format("   topright= {:11g} {:11g} {:11g} ", TFR.x*unit, TFR.y*unit, TFR.z*unit) + Units::lengthUnitLabel() + EOLstr;
 
-                dx = P00.X()-P11.X();   dy = P00.Y()-P11.Y();   dz = P00.Z()-P11.Z();
-                d0 = sqrt(dx*dx+dy*dy+dz*dz);
-                dimension = std::max(d0, dimension);
+        logmsg += strong;
 
-                dx = P01.X()-P10.X();   dy = P01.Y()-P10.Y();   dz = P01.Z()-P10.Z();
-                d1 = sqrt(dx*dx+dy*dy+dz*dz);
-                dimension = std::max(d1, dimension);
+        dimension = TFR.x-BRL.x;
+        dimension = std::max(dimension, TFR.y-BRL.y);
+        dimension = std::max(dimension, TFR.z-BRL.z);
 
-                iFace++;
-            }
-            (void)iFace;
-        }
-
-        strong = std::format("   Reference length to display the model= {:7.2f} meters\n\n", dimension);
+        strong = std::format("   Setting reference length for SHAPEs = {:7.2f} meters\n\n", dimension);
         logg += strong;
 /*        Handle(ShapeFix_Shell) SFS = new ShapeFix_Shell();
         for(NCollection_List<TopoDS_Shape>::Iterator bodyIt(occbody.m_Shell); bodyIt.More(); bodyIt.Next())

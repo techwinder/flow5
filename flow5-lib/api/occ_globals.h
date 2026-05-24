@@ -84,6 +84,7 @@ namespace occ
     FL5LIB_EXPORT void findWires(const TopoDS_Shape &theshape, TopoDS_Wire &theOuterWire, NCollection_List<TopoDS_Shape> &wires, std::string &logmsg, std::string prefix="");
 
     FL5LIB_EXPORT void shapeBoundingBox(const TopoDS_Shape &shape, Vector3d &BotRearLeft, Vector3d &TopFrontRight, bool bCumulative=true);
+    FL5LIB_EXPORT void shapesBoundingBox(const NCollection_List<TopoDS_Shape> &shapes, Vector3d &BotRearLeft, Vector3d &TopFrontRight);
 
     FL5LIB_EXPORT double edgeLength(TopoDS_Edge const &edge);
     FL5LIB_EXPORT double edgeLength(TopoDS_Edge const &edge, double u0, double u1);

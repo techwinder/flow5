@@ -97,9 +97,15 @@ class FL5LIB_EXPORT Fuse : public Part
         // Methods related to geometry
         double wettedArea() const {return m_WettedArea;}
         double formFactor() const;
+
         double maxWidth() const  {return m_MaxWidth;}
+        void setMaxWidth(double w) {m_MaxWidth=w;}
+
         double maxHeight() const {return m_MaxHeight;}
+        void setMaxHeight(double h) {m_MaxHeight=h;}
+
         double maxFrameArea() const {return m_MaxFrameArea;}
+
 
         void translateTriPanels(Vector3d const &T) {translateTriPanels(T.x, T.y, T.z);}
         void translateTriPanels(double tx, double ty, double tz);

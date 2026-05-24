@@ -193,7 +193,7 @@ void PlaneXflDlg::connectSignals()
     connect(m_pglPlaneView,           SIGNAL(pickedNodePair(QPair<int,int>)), SLOT(onPickedNodePair(QPair<int,int>)));
 
     connect(m_pGMesherWt,             SIGNAL(outputMsg(QString)), m_ppto, SLOT(onAppendQText(QString)));
-    connect(m_pGMesherWt,             SIGNAL(updateFuseView()),           SLOT(onUpdateMesh()));
+//    connect(m_pGMesherWt,             SIGNAL(updateFuseView()),           SLOT(onUpdateMesh())); // redundant with events
 
     connect(m_pRestoreFuseMesh,       SIGNAL(triggered()),    SLOT(onResetFuseMesh()));
     connect(m_pFuseMesher,            SIGNAL(triggered()),    SLOT(onFuseMeshDlg()));
@@ -1103,9 +1103,89 @@ void PlaneXflDlg::onImportOtherWing()
 }
 
 
-void PlaneXflDlg::onInsertFuseOcc()
+FuseOcc* PlaneXflDlg::insertFuseOcc(std::string filename)
 {
     double dimension(0);
+    std::string str;
+    NCollection_List<TopoDS_Shape> shapes;
+    bool bImport = occ::importCADShapes(filename, shapes, dimension, str);
+
+    updateStdOutput(str+"\n");
+
+    if(!bImport)
+    {
+
+        m_ppto->appendHtmlText("<font color=red>Error importing CAD file: </font> <br>"+QString::fromStdString(filename)+"<br>");
+
+        QApplication::restoreOverrideCursor();
+        return nullptr;
+    }
+
+    Vector3d BRL(LARGEVALUE, LARGEVALUE, LARGEVALUE);
+    Vector3d TFR(-LARGEVALUE, -LARGEVALUE, -LARGEVALUE);
+    occ::shapesBoundingBox(shapes, BRL, TFR);
+
+    double unit = Units::mtoUnit();
+
+    str  =             "Bounding box limits of imported SHAPEs:\n"
+          "                         x           y           z\n";
+    str += std::format("   Backbotleft  = {:11g} {:11g} {:11g} ", BRL.x*unit, BRL.y*unit, BRL.z*unit) + Units::lengthUnitLabel() + EOLstr;
+    str += std::format("   Fronttopright= {:11g} {:11g} {:11g} ", TFR.x*unit, TFR.y*unit, TFR.z*unit) + Units::lengthUnitLabel() + EOLstr;
+
+    updateStdOutput(str+EOLstr);
+
+    FuseOcc *pFuseOcc = new FuseOcc;
+
+    double length = TFR.x-BRL.x;
+    length = std::max(TFR.y-BRL.y, length);
+    length = std::max(TFR.z-BRL.z, length);
+
+    // Set temporary dimensions for user information.
+    // Overwritten in Fuse::computeSurfaceProperties();
+    pFuseOcc->setLength(TFR.x-BRL.x);
+    pFuseOcc->setMaxWidth(TFR.y-BRL.y);
+    pFuseOcc->setMaxHeight(TFR.z-BRL.z);
+
+    // adjust the mesh and tess parameters in case there is a unit issue
+    pFuseOcc->setGmshMinSize(length/20.0);
+    pFuseOcc->setGmshMaxSize(length/2.0);
+    pFuseOcc->setGmshNCurvature(20);
+
+    pFuseOcc->setGmshTessMinSize(length/100.0);
+    pFuseOcc->setGmshTessMaxSize(length/10.0);
+    pFuseOcc->setGmshTessNCurvature(20);
+
+    m_ppto->appendPlainText("---Making shells from shapes-----\n\n");
+    pFuseOcc->setShapes(shapes);
+    int nShells = pFuseOcc->extractShellsFromShapes();
+    if(nShells==0)
+    {
+        QString strange  = "<font color=red>Warning: </font>Imported SHAPE does not contain any SHELL: use the fuselage editor to fix the shapes.<br><br>";
+        m_ppto->appendHtmlText(strange);
+    }
+    else
+    {
+        str = std::format("   Extracted {:d} shells from the shapes\n\n", nShells);
+        updateStdOutput(str);
+
+        m_ppto->appendPlainText("---Making shell triangulation-----\n");
+        std::string str;
+        str.clear();
+        updateStdOutput("Making shell triangulation\n");
+        gmesh::makeFuseTriangulation(pFuseOcc, str, "   ");
+        updateStdOutput(str+"\n");
+
+        pFuseOcc->computeSurfaceProperties(str, "   ");
+        updateStdOutput(str+"\n");
+        m_ppto->appendPlainText("\n---updating plane-----\n\n");
+        onUpdatePlane();
+    }
+    return pFuseOcc;
+}
+
+
+void PlaneXflDlg::onInsertFuseOcc()
+{
     std::string logmsg;
     std::string str;
     updateOutput("Importing CAD file...\n");
@@ -1115,48 +1195,18 @@ void PlaneXflDlg::onInsertFuseOcc()
     if(!filename.length()) return;
     QFileInfo fi(filename);
 
+/*    std::future<FuseOcc*> ret = std::async(&PlaneXflDlg::insertFuseOcc, this, filename.toStdString());
+    FuseOcc *pFuseOcc = ret.get();*/
+/*    std::thread t(&PlaneXflDlg::insertFuseOcc, this, filename.toStdString());
+    t.join();*/
+
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
-    NCollection_List<TopoDS_Shape> shapes;
-    bool bImport = occ::importCADShapes(filename.toStdString(), shapes, dimension, str);
-
-    updateStdOutput(str+"\n");
-
-    if(!bImport)
+   FuseOcc *pFuseOcc = insertFuseOcc(filename.toStdString());
+    if(pFuseOcc)
     {
-
-        m_ppto->appendHtmlText("<font color=red>Error importing CAD file:</font> <br>"+QString::fromStdString(str)+"<br>");
-
-        QApplication::restoreOverrideCursor();
-        return;
-    }
-
-    FuseOcc *pFuseOcc = new FuseOcc;
-    pFuseOcc->setName(fi.baseName().toStdString());
-    m_pPlaneXfl->addFuse(pFuseOcc);
-
-    m_ppto->appendPlainText("---Making shells from shapes-----\n\n");
-
-    pFuseOcc->setShapes(shapes);
-    pFuseOcc->extractShellsFromShapes();
-
-    if(pFuseOcc->shellCount()==0)
-    {
-        QString strange  = "<font color=red>Warning: </font>Imported SHAPE does not contain any SHELL: use the fuselage editor to fix the shapes.<br><br>";
-        m_ppto->appendHtmlText(strange);
-    }
-    else
-    {
-        m_ppto->appendPlainText("---Making shell triangulation-----\n");
-        std::string str;
-        logmsg.clear();
-        updateOutput("Making shell triangulation\n");
-        gmesh::makeFuseTriangulation(pFuseOcc, logmsg, "   ");
-
-        pFuseOcc->computeSurfaceProperties(str, "   ");
-        updateStdOutput(logmsg + str+"\n");
-        m_ppto->appendPlainText("---updating plane-----\n");
-        onUpdatePlane();
+        pFuseOcc->setName(fi.baseName().toStdString());
+        m_pPlaneXfl->addFuse(pFuseOcc);
     }
 
     setControls();
@@ -2739,7 +2789,7 @@ void PlaneXflDlg::onInsertCADShape()
         std::string str;
         pFuseOcc->computeSurfaceProperties(str, "   ");
         updateStdOutput(str+"\n");
-        m_ppto->appendPlainText("---updating plane-----\n");
+        m_ppto->appendPlainText("\n---updating plane-----\n\n");
         onUpdatePlane();
     }
 

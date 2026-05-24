@@ -1597,10 +1597,11 @@ void io::exportSTEP(QString const & filename, NCollection_List<TopoDS_Shape> con
     STEPControl_StepModelType aValue = STEPControl_AsIs;
 
     // set the units after the writer is created
+    // File can be written in any unit
 //qDebug("%s",UnitsAPI::CurrentUnit("LENGTH"));
-//UnitsAPI::SetCurrentUnit("LENGTH","meter");
+    //UnitsAPI::SetCurrentUnit("LENGTH","meter");
+    //Interface_Static::SetCVal("write.step.unit", "M");
 //qDebug()<<UnitsAPI::CurrentUnit("LENGTH");
-//Interface_Static::SetCVal("write.step.unit", "M");
 //qDebug() << Interface_Static::SetIVal("write.step.unit", 0);
 //qDebug()    <<"exportSTEP"<<Interface_Static::CVal("write.step.unit")<<Interface_Static::IVal("write.step.unit")<<Interface_Static::RVal("write.step.unit");
 

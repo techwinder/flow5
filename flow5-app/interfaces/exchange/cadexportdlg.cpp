@@ -34,7 +34,7 @@
 #include <QVBoxLayout>
 #include <QSplitter>
 
-
+#include <UnitsAPI.hxx>
 #include <BRepBuilderAPI_Transform.hxx>
 
 #include "cadexportdlg.h"
@@ -65,7 +65,7 @@ void CADExportDlg::init(NCollection_List<TopoDS_Shape> const & listofshape, cons
     //OCC assumes internal dimensions are mm, so scale by a factor 1000 before exporting
     //better way would be to change default units in OCC modules
     gp_Trsf Scale;
-    Scale.SetScale(gp_Pnt(0.0,0.0,0.0), 1000.0);
+    Scale.SetScale(gp_Pnt(0.0,0.0,0.0), 1.0);
     BRepBuilderAPI_Transform thescaler(Scale);
     NCollection_List<TopoDS_Shape>::Iterator iterator;
     for (iterator.Initialize(listofshape); iterator.More(); iterator.Next())
@@ -220,9 +220,8 @@ void CADExportDlg::exportShapes()
         return;
     }
 
-//    QString unit = m_pExportUnit->currentText();
 //    Tell OCC that all dimensions are in meters
-//    UnitsAPI::SetLocalSystem(UnitsAPI_SI);
+    UnitsAPI::SetLocalSystem(UnitsAPI_SI);
 
     QString logmsg;
     if     (m_prbBRep->isChecked())

@@ -54,7 +54,7 @@ class PlanePartModel;
 
 class PlaneXfl;
 class Fuse;
-
+class FuseOcc;
 class WingXfl;
 class Part;
 class WingSection;
@@ -109,6 +109,7 @@ class PlaneXflDlg : public PlaneDlg
         int selectedPart();
         void makePartTable();
 
+        FuseOcc *insertFuseOcc(std::string filename);
 
         void takePicture();
         void setPicture();

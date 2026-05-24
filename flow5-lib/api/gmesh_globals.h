@@ -85,7 +85,7 @@ namespace gmesh
 
     void tessellateBRep(const std::string &BRep, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log);
     void tessellateShape(TopoDS_Shape const&Shape, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log);
-    void tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log);
+    FL5LIB_EXPORT void tessellateFace(TopoDS_Face const&Face, GmshParams const &params, std::vector<Triangle3d> &triangles, std::string &log);
 
     FL5LIB_EXPORT void makeSailOccTriangulation(SailOcc *pSailOcc);
     FL5LIB_EXPORT int makeFuseTriangulation(Fuse *pFuse, std::string &logmsg, const std::string &prefix="");
