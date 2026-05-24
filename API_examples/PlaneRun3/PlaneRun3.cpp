@@ -43,14 +43,14 @@
  * - run a calculation */
 int main()
 {
-    #ifdef WIN32
+#ifdef WIN32
     // enable UTF8 characters
     SetConsoleOutputCP(65001);
-    #endif
+#endif
 
     std::cout << std::endl << std::endl;
 
-    printf("Running a calcualtion on a plane imported from a mesh file\n\n");
+    printf("Running a calculation on a plane imported from a mesh file\n\n");
 
     // flow5 works internally in IS units
     // All inputs should be provided in the IS system, i.e. meters and kilograms
@@ -105,7 +105,8 @@ int main()
 }
 */
 
-    std::string STLFilePath = "/home/techwinder/flow5/studies/STL/plane_mesh.stl";
+    // either copy the STL sub-directory into the build folder, or update the path below
+    std::string STLFilePath = "STL/plane_mesh.stl";
 //    std::string OBJFilePath = "/path/to/file.obj";
     std::string logmsg;
 
@@ -247,8 +248,7 @@ int main()
         printf("Polar data:\n\n");
         std::string separator = ", ";
         std::string exportstr = pPlPolar->exportToString(separator);
-        std::cout<<exportstr.c_str()<<std::endl;
-        printf("\n");
+        std::cout << exportstr.c_str() << std::endl << std::endl;
 
         // clean up
         delete pPlaneTask;
@@ -263,9 +263,7 @@ int main()
         projectfilepath += std::filesystem::path::preferred_separator;
         projectfilepath += "PlaneRun3.fl5";
 
-        io::saveProject(projectfilepath, logmsg);
-
-        if(logmsg.size()>0)
+        if(!io::saveProject(projectfilepath, logmsg))
         {
             // error saving
             std::cerr << logmsg << std::endl << std::endl;
@@ -281,7 +279,6 @@ int main()
     // Memory leak otherwise
     std::cout << "Deleting objects"<<std::endl<<std::endl;
     globals::deleteObjects();
-
 
 
     std::cout << "_________done_____________" << std::endl  << std::endl ;

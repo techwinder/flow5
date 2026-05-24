@@ -344,7 +344,7 @@ bool FileIO::serializeProjectXfl(QDataStream &ar, bool bIsStoring, PlanePolar *p
         //Save unit data
         ar << Units::lengthUnitIndex();
         ar << Units::areaUnitIndex();
-        ar << Units::weightUnitIndex();
+        ar << Units::massUnitIndex();
         ar << Units::speedUnitIndex();
         ar << Units::forceUnitIndex();
         ar << Units::momentUnitIndex();

@@ -80,7 +80,7 @@ class FL5LIB_EXPORT PlaneSTL : public Plane
         bool hasMainWing() const override {return false;}
 //        bool hasWing2() const override {return false;}
         bool hasOtherWing() const override {return false;}
-        bool hasStab() const override {return false;}
+        bool hasElevator() const override {return false;}
         bool hasFin() const override {return false;}
         bool hasFuse() const override {return false;}
 

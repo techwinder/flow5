@@ -43,7 +43,20 @@
 #include <wingopp.h>
 #include <objects3d.h>
 
-std::vector<std::string> PlanePolar::s_VariableNames;
+std::vector<std::string> PlanePolar::s_VariableNames = {"Ctrl", ALPHAstr + " ("+DEGstr+")", BETAstr + " ("+DEGstr+")", PHIstr + " ("+DEGstr+")",
+                                            "CL", "CD", "CD_viscous", "CD_induced", "CY", "Cm", "Cm_viscous",
+                                            "Cm_pressure","Cl","Cn","Cn_viscous","Cn_pressure","CL/CD", "CL"+EXPstr+"(3/2)/CD", "1/sqrt(CL)",
+                                            "Lift (N)", "Drag (N)",
+                                            "Fx_FF (N)", "Fy_FF (N)", "Fz_FF (N)",
+                                            "Fx_sum (N)", "Fy_sum (N)", "Fz_sum (N)",
+                                            "Extra drag (N)", "Fuse drag (N)", "Cf_Fuse",
+                                            "Vx (m/s)","Vz (m/s)",
+                                            "V (m/s)", "Gamma", "L (N.m)", "M (N.m)",
+                                            "N (N.m)", "CPx (m)", "CPy (m)", "CPz (m)",
+                                            "BM (N.m)", "m.g.Vz (W)", "Drag x V (W)", "Efficiency", "XCp.Cl",
+                                            "XNP (m)", "Phugoid Freq. (Hz)", "Phugoid Damping", "Short Period Freq. (Hz)",
+                                            "Short Period Damping Ratio", "Dutch Roll Freq. (Hz)", "Dutch Roll Damping", "Roll Damping",
+                                            "Spiral Damping", "Mass (kg)","CoG_x (m)", "CoG_z (m)" };
 
 
 PlanePolar::PlanePolar() : Polar3d()
@@ -491,10 +504,8 @@ void PlanePolar::setVariableNames()
     std::string strMass   = Units::massUnitLabel();
     std::string strForce  = Units::forceUnitLabel();
     std::string strMoment = Units::momentUnitLabel();
-    s_VariableNames.clear();
 
-    s_VariableNames = std::vector<std::string>({
-                                                "Ctrl", ALPHAstr + " ("+DEGstr+")", BETAstr + " ("+DEGstr+")", PHIstr + " ("+DEGstr+")",
+    s_VariableNames = std::vector<std::string>({"Ctrl", ALPHAstr + " ("+DEGstr+")", BETAstr + " ("+DEGstr+")", PHIstr + " ("+DEGstr+")",
                                                 "CL", "CD", "CD_viscous", "CD_induced", "CY", "Cm", "Cm_viscous",
                                                 "Cm_pressure","Cl","Cn","Cn_viscous","Cn_pressure","CL/CD", "CL"+EXPstr+"(3/2)/CD", "1/sqrt(CL)",
                                                 "Lift ("+strForce+")", "Drag ("+strForce+")",
@@ -1428,7 +1439,6 @@ void PlanePolar::getProperties(std::string &props, Plane const *pPlane) const
 
 std::string PlanePolar::exportToString(const std::string &separator) const
 {
-    std::string polardata;
     std::string sep = separator;
     std::string strong, strange, str;
     std::stringstream out;

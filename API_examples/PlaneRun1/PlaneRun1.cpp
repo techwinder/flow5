@@ -17,6 +17,7 @@
 #include <planetask.h>
 #include <planexfl.h>
 #include <polar.h>
+#include <units.h>
 #include <xfoiltask.h>
 
 #ifdef WIN32
@@ -85,8 +86,13 @@ int main()
 
 #endif
 
-
-
+    // [Optional: set user units] Used when importing or exporting data
+    // Will be used here to the export polar in selected units
+    // Select the custom units
+    Units::setLengthUnit(Units::MM); // millimetre
+    Units::setMassUnit(Units::G); // gram
+    //  set conversion factors and update variable names
+    globals::updateUnits();
 
     // Preload some project file
     /*
@@ -119,6 +125,7 @@ int main()
         // this should not happen
         std::cerr << "Error making foil NACA 0009" << std::endl;
         delete pFoilN0009;
+        delete pFoilN2413;
         return 0;
     }
     pFoilN0009->setName("NACA 0009");
@@ -161,8 +168,9 @@ int main()
     {
         delete pFoilClarkY;
         std::cerr <<  "Error reading the file " << pathname << " at line " << iLineError << std::endl;
+        Objects2d::deleteObjects();
+        return 0;
     }*/
-
 
 
     // Create and define a new xfl-type plane
@@ -195,22 +203,11 @@ int main()
         pWing->setName("Fin");
         pWing->makeDefaultFin();
 
-        //position the mainwing
-        //flow5 works internally in IS units
-        pPlaneXfl->wing(0)->setPosition(0.400, 0.000, 0.000);
-
-        //position the elevator
-        pPlaneXfl->wing(1)->setPosition(1.350, 0.000, 0.025);
-        pPlaneXfl->wing(1)->setRy(-1.5);
-
-        //position the fin
-        pPlaneXfl->wing(2)->setPosition(1.350, 0.000, 0.050);
-        pPlaneXfl->wing(2)->setRx(-90.0);
-
 
         // Set the inertia properties
         // All units must be provided in I.S. standard, i.e. meters and kg
         Inertia &inertia = pPlaneXfl->inertia();
+        // not bothering with conversion factors, entering directly in IS unit i.e. kg
         inertia.appendPointMass(0.30, {-0.35,0,0},  "Nose lead");
         inertia.appendPointMass(0.20, {-0.25,0,0},  "Battery and receiver");
         inertia.appendPointMass(0.10, {-0.05,0,0},  "Two servos");
@@ -233,9 +230,10 @@ int main()
             inertia.appendPointMass({0.03, {0.13, -0.95, 0.08}, "Left aileron servo" });
 
 
-            // The wing's position in the plane's frame of reference is stored in the wing itself
-            // The field belongs in fact to the plane, so this may change in a future version
-            mainwing.setPosition(0,0,0);
+            // position the main wing
+            pPlaneXfl->setWingPosition(&mainwing, {0,0,0});
+            // or
+            // pPlaneXfl->setWingPosition(0, {0,0,0});  // mainwing was added first so index=0
 
             //insert a section between root and tip, i.e. between indexes 0 and 1
             mainwing.insertSection(1);
@@ -280,13 +278,13 @@ int main()
 
         // Define the elevator
         {
-            WingXfl *pElev = pPlaneXfl->stab(); // or pPlaneXfl->wing(1);
-            pElev->setColor({173, 111, 57});
+            WingXfl *pElev = pPlaneXfl->elevator(); // or pPlaneXfl->wing(1);
+            pElev->setColor({73, 111, 157});
 
             // position the elevator
-            pElev->setPosition(0.970, 0.0, 0.210);
-            // tilt the elevator down; this field belongs to the plane
-            pElev->setRy(-2.5); // degrees
+            // using the custom units i.e. mm with conversion factor
+            pPlaneXfl->setWingPosition(pElev, {870.0/Units::mtoUnit(), 0.000, 210.0/Units::mtoUnit()});
+            pPlaneXfl->setRyAngle(pElev, -2.5);
 
             // define the inertia
             Inertia &inertia = pElev->inertia();
@@ -313,13 +311,18 @@ int main()
         {
             // get a convenience reference or a pointer for ease of access
             WingXfl &fin = *pPlaneXfl->fin();
-            //    WingXfl *pFin = pPlaneXfl->fin(); // or pPlaneXfl->wing(2);
+            // or  WingXfl *pFin = pPlaneXfl->fin(); // or WingXfl *pFin = pPlaneXfl->wing(2);
 
+            fin.setColor({79, 79, 191});
             fin.inertia().setStructuralMass(0.035);
 
+            // position the fin
+            // using the custom units i.e. mm with conversion factor
+            pPlaneXfl->setWingPosition(&fin, {830.0/Units::mtoUnit(), 0.000, 10.0/Units::mtoUnit()});
+            pPlaneXfl->setRxAngle(&fin, -90.0);
 
-            fin.setPosition(0.930, 0.0, 0.010);
             // Make double sure that the fin is closed on its inner section
+            // since it is NOT connected to a fuselage
             fin.setClosedInnerSide(true);
 
             for(int isec=0; isec<fin.nSections(); isec++)
@@ -441,7 +444,7 @@ int main()
         std::vector<double> opplist;
         double oppmin = -5.0; // start at -5°
         double oppmax = 11.0; // +11°
-        double inc = 4.0; // (°)
+        double inc = 1.0; // (°)
         double opp = oppmin;
         int i=1;
         do
@@ -466,6 +469,7 @@ int main()
         printf("Created %d plane operating points\n\n", int(pPlaneTask->planeOppList().size()));
 
         std::string separator = ", ";
+        // The results are exported using the custom unit labels and conversion factors
         std::string exportstr = pPlPolar->exportToString(separator);
         std::cout<<exportstr.c_str()<<std::endl;
         printf("\n");
@@ -479,12 +483,9 @@ int main()
     std::string projectfilepath;
     projectfilepath  = std::filesystem::temp_directory_path().string();
     projectfilepath += std::filesystem::path::preferred_separator;
-    projectfilepath += "PlaneRun2.fl5";
+    projectfilepath += "PlaneRun1.fl5";
 
-
-    io::saveProject(projectfilepath, logmsg);
-
-    if(logmsg.size()>0)
+    if(!io::saveProject(projectfilepath, logmsg))
     {
         // error saving
         std::cerr << logmsg << std::endl << std::endl;
@@ -497,7 +498,6 @@ int main()
     // Must call! will delete the planes, foils and children objects
     // Memory leak otherwise
     globals::deleteObjects();
-
 
     std::cout << "done" << std::endl;
 

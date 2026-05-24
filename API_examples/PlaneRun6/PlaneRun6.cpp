@@ -289,7 +289,7 @@ int main()
             // These fields belong in fact to the plane, so this may change in a future version
             // Position the mainwing
             // flow5 works internally in IS units and expects all input in IS + degrees
-            pPlaneXfl->setWingPosition(pWing, {-0.05, 0.0, 0.0});
+            pPlaneXfl->setWingPosition(pWing, -0.05, 0.0, 0.0);
 
             // define the wing
             pWing->setColor({131, 177, 209});
@@ -347,10 +347,10 @@ int main()
             pElev->makeDefaultStab();
 
             //position the elevator
-            pPlaneXfl->setWingPosition(pElev, {1.03, 0.0, 0.260});
+            pPlaneXfl->setWingPosition(pElev, 1.03, 0.0, 0.260);
 
-            // tilt the elevator down; this field belongs to the plane
-            pPlaneXfl->setRyAngle(1, -2.5); // degrees
+            // tilt the elevator down
+            pPlaneXfl->setRyAngle(pElev, -2.5); // degrees
 
             // Define the elevator
             pElev->setColor({173, 111, 57});
@@ -382,7 +382,7 @@ int main()
             pFin->makeDefaultFin();
             //position the fin
 
-            pPlaneXfl->setWingPosition(pFin, {0.97, 0.0, 0.020});
+            pPlaneXfl->setWingPosition(pFin, 0.97, 0.0, 0.020);
             pPlaneXfl->setRxAngle(2, -90.0);
 
             // OPEN the fin at its inner section since it is connected to the fuselage

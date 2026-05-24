@@ -819,7 +819,7 @@ void PlaneXflDlg::keyPressEvent(QKeyEvent *pEvent)
         {
             if(bCtrl)
             {
-                WingXfl *pStab = m_pPlaneXfl->stab();
+                WingXfl *pStab = m_pPlaneXfl->elevator();
                 if(pStab)
                 {
                     editWing(pStab);

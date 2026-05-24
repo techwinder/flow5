@@ -61,12 +61,12 @@ elseif (LINUX)
     set(FLOW5_LIB_DIR "/usr/local/lib/" CACHE PATH "The path to the flow5-lib and flow5-io-lib libraries")
     link_directories(${FLOW5_LIB_DIR})
 
-    # /usr/lib64 is set by derfault in the environment's library paths
+    # /usr/lib64 is set by default in the environment's library paths
 #    set(OCCT_LIB_DIR "/usr/lib64/" CACHE PATH "The path to the OCCT TKxxx libraries")
-#    link_directories(OCCT_LIB_DIR)
+#    link_directories(${OCCT_LIB_DIR})
 
 #    set(GMSH_LIB_DIR "/usr/lib64/" CACHE PATH "The path to the gmsh library")
-#    link_directories(GMSH_LIB_DIR)
+#    link_directories({GMSH_LIB_DIR})
 
     if(USING_INTEL_MKL)
         link_directories(/opt/intel/oneapi/mkl/latest/lib/)

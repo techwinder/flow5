@@ -1,6 +1,6 @@
 
 #include <iostream>
-
+#include <filesystem>
 
 #include <api.h>
 #include <constants.h>
@@ -117,15 +117,13 @@ int main()
     printf(exportstr.c_str());
 
     // save the project; requires link to flow5-io-lib
-    logmsg.clear();
+    std::string logmsg;
     std::string projectfilepath;
     projectfilepath  = std::filesystem::temp_directory_path().string();
     projectfilepath += std::filesystem::path::preferred_separator;
     projectfilepath += "XFoilRun.fl5";
 
-    io::saveProject(projectfilepath, logmsg);
-
-    if(logmsg.size()>0)
+    if(!io::saveProject(projectfilepath, logmsg))
     {
         // error saving
         std::cerr << logmsg << std::endl << std::endl;

@@ -68,6 +68,11 @@ namespace globals
      */
     FL5LIB_EXPORT std::string poplog();
 
+    /**
+     * @brief updateUnits updates unit labels and conversion factors using loaded units;
+     * Updates the variable names
+     */
+    FL5LIB_EXPORT void updateUnits();
 }
 
 

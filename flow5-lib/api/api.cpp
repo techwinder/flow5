@@ -30,7 +30,9 @@
 
 #include "api.h"
 
+#include <boatpolar.h>
 #include <foil.h>
+#include <gmesh_globals.h>
 #include <gmesh_globals.h>
 #include <objects2d.h>
 #include <objects2d.h>
@@ -41,8 +43,8 @@
 #include <planexfl.h>
 #include <polar.h>
 #include <sailobjects.h>
+#include <units.h>
 #include <xfoiltask.h>
-#include <gmesh_globals.h>
 
 std::queue<std::string> globals::g_log;
 
@@ -190,7 +192,14 @@ void plane::meshFuse(PlaneXfl *pPlaneXfl, std::vector<int>selectedWings, bool bT
 }
 
 
+void globals::updateUnits()
+{
+    Units::setUnitConversionFactors();
 
+    PlanePolar::setVariableNames();
+    PlaneOpp::setVariableNames();
+    BoatPolar::setVariableNames();
+}
 
 
 

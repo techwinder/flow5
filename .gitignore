@@ -10,8 +10,14 @@ XFoil-lib/*.pro.user*
 XFoil-lib/.qtcreator/*
 flow5-lib/.qtcreator/*
 flow5-io-lib/.qtcreator/*
-API_examples/planerun/.qtcreator/*
-API_examples/planerun2/.qtcreator/*
+API_examples/XFoilRun/.qtcreator/*
+API_examples/XFoilBatchRun/.qtcreator/*
+API_examples/PlaneRun1/.qtcreator/*
+API_examples/PlaneRun2/.qtcreator/*
+API_examples/PlaneRun3/.qtcreator/*
+API_examples/PlaneRun4/.qtcreator/*
+API_examples/PlaneRun5/.qtcreator/*
+API_examples/PlaneRun6/.qtcreator/*
 *.autosave
 
 

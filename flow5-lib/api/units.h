@@ -35,14 +35,24 @@
 
 namespace Units
 {
-    extern FL5LIB_EXPORT int g_LengthUnitIndex;    /**< The index of the custom unit in the array of length units. @todo use an enumeration instead. */
-    extern FL5LIB_EXPORT int g_AreaUnitIndex;      /**< The index of the custom unit in the array of area units. */
-    extern FL5LIB_EXPORT int g_MassUnitIndex;    /**< The index of the custom unit in the array of mass units. */
-    extern FL5LIB_EXPORT int g_MomentUnitIndex;    /**< The index of the custom unit in the array of moment units. */
-    extern FL5LIB_EXPORT int g_SpeedUnitIndex;     /**< The index of the custom unit in the array of speed units. */
-    extern FL5LIB_EXPORT int g_ForceUnitIndex;     /**< The index of the custom unit in the array of force units. */
-    extern FL5LIB_EXPORT int g_PressureUnitIndex;  /**< The index of the custom unit in the array of pressure units. */
-    extern FL5LIB_EXPORT int g_InertiaUnitIndex;   /**< The index of the custom unit in the array of inertai units. */
+    typedef enum {MM, CM, DM, M, IN, FT}            enumLengthUnit;
+    typedef enum {MS, KMH, FTS, KT, MPH}            enumSpeedUnit;
+    typedef enum {MM2, CM2, DM2, M2, IN2, FT2}      enumAreaUnit;
+    typedef enum {G, KG, OZ, LB}                    enumMassUnit;
+    typedef enum {N, KN, TON, LBF}                  enumForceUnit;
+    typedef enum {NM, LBFIN, LBFFT}                 enumMomentUnit;
+    typedef enum {PA, HPA, KPA, MPA, BAR, PSI, KSI} enumPressureUnit;
+    typedef enum {KGM2, LBMFT2}                     enumInertiaUnit;
+    typedef enum {IS, IMPERIAL}                     enumFluidUnit;
+
+    extern FL5LIB_EXPORT enumLengthUnit   g_LengthUnit;
+    extern FL5LIB_EXPORT enumSpeedUnit    g_SpeedUnit;
+    extern FL5LIB_EXPORT enumAreaUnit     g_AreaUnit;
+    extern FL5LIB_EXPORT enumMassUnit     g_MassUnit;
+    extern FL5LIB_EXPORT enumForceUnit    g_ForceUnit;
+    extern FL5LIB_EXPORT enumMomentUnit   g_MomentUnit;
+    extern FL5LIB_EXPORT enumPressureUnit g_PressureUnit;
+    extern FL5LIB_EXPORT enumInertiaUnit  g_InertiaUnit;
 
     extern FL5LIB_EXPORT double g_mtoUnit;    /**< Conversion factor from meters to the custom length unit. */
     extern FL5LIB_EXPORT double g_mstoUnit;   /**< Conversion factor from m/s to the custom speed unit. */
@@ -66,7 +76,7 @@ namespace Units
     extern FL5LIB_EXPORT std::vector<std::string> g_PressureUnitLabels;
     extern FL5LIB_EXPORT std::vector<std::string> g_InertiaUnitLabels;
 
-    extern FL5LIB_EXPORT int g_FluidUnitType;//0= International, 1= Imperial
+    extern FL5LIB_EXPORT enumFluidUnit g_FluidUnitType;
     extern FL5LIB_EXPORT std::vector<std::string> g_DensityUnitLabels;
     extern FL5LIB_EXPORT std::vector<std::string> g_ViscosityUnitLabels;
 
@@ -86,14 +96,14 @@ namespace Units
     FL5LIB_EXPORT double toCustomUnit(int index);
 
 
-    FL5LIB_EXPORT inline void getLengthUnitLabel(  std::string &label) {label = g_LengthUnitLabels[g_LengthUnitIndex];}
-    FL5LIB_EXPORT inline void getSpeedUnitLabel(   std::string &label) {label = g_SpeedUnitLabels[g_SpeedUnitIndex];}
-    FL5LIB_EXPORT inline void getMassUnitLabel(    std::string &label) {label = g_MassUnitLabels[g_MassUnitIndex];}
-    FL5LIB_EXPORT inline void getAreaUnitLabel(    std::string &label) {label = g_AreaUnitLabels[g_AreaUnitIndex];}
-    FL5LIB_EXPORT inline void getForceUnitLabel(   std::string &label) {label = g_ForceUnitLabels.at(g_ForceUnitIndex);}
-    FL5LIB_EXPORT inline void getMomentUnitLabel(  std::string &label) {label = g_MomentUnitLabels[g_MomentUnitIndex];}
-    FL5LIB_EXPORT inline void getPressureUnitLabel(std::string &label) {label = g_PressureUnitLabels[g_PressureUnitIndex];}
-    FL5LIB_EXPORT inline void getInertiaUnitLabel( std::string &label) {label = g_PressureUnitLabels[g_PressureUnitIndex];}
+    FL5LIB_EXPORT inline void getLengthUnitLabel(  std::string &label) {label = g_LengthUnitLabels.at(g_LengthUnit);}
+    FL5LIB_EXPORT inline void getSpeedUnitLabel(   std::string &label) {label = g_SpeedUnitLabels.at(g_SpeedUnit);}
+    FL5LIB_EXPORT inline void getMassUnitLabel(    std::string &label) {label = g_MassUnitLabels.at(g_MassUnit);}
+    FL5LIB_EXPORT inline void getAreaUnitLabel(    std::string &label) {label = g_AreaUnitLabels.at(g_AreaUnit);}
+    FL5LIB_EXPORT inline void getForceUnitLabel(   std::string &label) {label = g_ForceUnitLabels.at(g_ForceUnit);}
+    FL5LIB_EXPORT inline void getMomentUnitLabel(  std::string &label) {label = g_MomentUnitLabels.at(g_MomentUnit);}
+    FL5LIB_EXPORT inline void getPressureUnitLabel(std::string &label) {label = g_PressureUnitLabels.at(g_PressureUnit);}
+    FL5LIB_EXPORT inline void getInertiaUnitLabel( std::string &label) {label = g_PressureUnitLabels.at(g_PressureUnit);}
 
 
     FL5LIB_EXPORT inline double mtoUnit()     {return g_mtoUnit;}
@@ -108,26 +118,26 @@ namespace Units
     FL5LIB_EXPORT inline double densitytoUnit()   {return g_kgm3toUnit;}
     FL5LIB_EXPORT inline double viscositytoUnit() {return g_m2stoUnit;}
 
-    FL5LIB_EXPORT inline int lengthUnitIndex()   {return g_LengthUnitIndex;}
-    FL5LIB_EXPORT inline int areaUnitIndex()     {return g_AreaUnitIndex;}
-    FL5LIB_EXPORT inline int weightUnitIndex()   {return g_MassUnitIndex;}
-    FL5LIB_EXPORT inline int speedUnitIndex()    {return g_SpeedUnitIndex;}
-    FL5LIB_EXPORT inline int forceUnitIndex()    {return g_ForceUnitIndex;}
-    FL5LIB_EXPORT inline int momentUnitIndex()   {return g_MomentUnitIndex;}
-    FL5LIB_EXPORT inline int pressureUnitIndex() {return g_PressureUnitIndex;}
-    FL5LIB_EXPORT inline int inertiaUnitIndex()  {return g_InertiaUnitIndex;}
+    FL5LIB_EXPORT inline enumLengthUnit   lengthUnitIndex()   {return g_LengthUnit;}
+    FL5LIB_EXPORT inline enumSpeedUnit    speedUnitIndex()    {return g_SpeedUnit;}
+    FL5LIB_EXPORT inline enumAreaUnit     areaUnitIndex()     {return g_AreaUnit;}
+    FL5LIB_EXPORT inline enumMassUnit     massUnitIndex()     {return g_MassUnit;}
+    FL5LIB_EXPORT inline enumForceUnit    forceUnitIndex()    {return g_ForceUnit;}
+    FL5LIB_EXPORT inline enumMomentUnit   momentUnitIndex()   {return g_MomentUnit;}
+    FL5LIB_EXPORT inline enumPressureUnit pressureUnitIndex() {return g_PressureUnit;}
+    FL5LIB_EXPORT inline enumInertiaUnit  inertiaUnitIndex()  {return g_InertiaUnit;}
 
-    FL5LIB_EXPORT inline void setLengthUnitIndex(int index)   {g_LengthUnitIndex    = index;}
-    FL5LIB_EXPORT inline void setAreaUnitIndex(int index)     {g_AreaUnitIndex      = index;}
-    FL5LIB_EXPORT inline void setWeightUnitIndex(int index)   {g_MassUnitIndex      = index;}
-    FL5LIB_EXPORT inline void setSpeedUnitIndex(int index)    {g_SpeedUnitIndex     = index;}
-    FL5LIB_EXPORT inline void setForceUnitIndex(int index)    {g_ForceUnitIndex     = index;}
-    FL5LIB_EXPORT inline void setMomentUnitIndex(int index)   {g_MomentUnitIndex    = index;}
-    FL5LIB_EXPORT inline void setPressureUnitIndex(int index) {g_PressureUnitIndex  = index;}
-    FL5LIB_EXPORT inline void setInertiaUnitIndex(int index)  {g_InertiaUnitIndex   = index;}
+    FL5LIB_EXPORT inline void setLengthUnit(  enumLengthUnit   index) {g_LengthUnit   = index;}
+    FL5LIB_EXPORT inline void setSpeedUnit(   enumSpeedUnit    index) {g_SpeedUnit    = index;}
+    FL5LIB_EXPORT inline void setAreaUnit(    enumAreaUnit     index) {g_AreaUnit     = index;}
+    FL5LIB_EXPORT inline void setMassUnit(    enumMassUnit     index) {g_MassUnit     = index;}
+    FL5LIB_EXPORT inline void setForceUnit(   enumForceUnit    index) {g_ForceUnit    = index;}
+    FL5LIB_EXPORT inline void setMomentUnit(  enumMomentUnit   index) {g_MomentUnit   = index;}
+    FL5LIB_EXPORT inline void setPressureUnit(enumPressureUnit index) {g_PressureUnit = index;}
+    FL5LIB_EXPORT inline void setInertiaUnit( enumInertiaUnit  index) {g_InertiaUnit  = index;}
 
-    FL5LIB_EXPORT inline int fluidUnitType() {return g_FluidUnitType;}
-    FL5LIB_EXPORT inline void setFluidUnitType(int type) {g_FluidUnitType=type;}
+    FL5LIB_EXPORT inline enumFluidUnit fluidUnitType() {return g_FluidUnitType;}
+    FL5LIB_EXPORT inline void setFluidUnitType(enumFluidUnit type) {g_FluidUnitType=type;}
 
 
 }

@@ -487,7 +487,7 @@ void XPlane::checkActions()
     m_pActions->checkActions();
 
     m_pMenus->m_pSubWingMenu->setEnabled( m_pCurPlane && m_pCurPlane->hasMainWing() && !m_pCurPlane->isLocked());
-    m_pMenus->m_pSubStabMenu->setEnabled( m_pCurPlane && m_pCurPlane->hasStab()     && !m_pCurPlane->isLocked());
+    m_pMenus->m_pSubStabMenu->setEnabled( m_pCurPlane && m_pCurPlane->hasElevator()     && !m_pCurPlane->isLocked());
     m_pMenus->m_pSubFinMenu->setEnabled(  m_pCurPlane && m_pCurPlane->hasFin()      && !m_pCurPlane->isLocked());
     m_pMenus->m_pSubFuseMenu->setEnabled( m_pCurPlane && m_pCurPlane->hasFuse()     && !m_pCurPlane->isLocked());
     m_pMenus->m_pCurrentPlaneMenu->setEnabled(m_pCurPlane && !m_pCurPlane->isLocked());
@@ -3051,8 +3051,8 @@ void XPlane::onEditCurWing()
             WingType = "MAINWING";
             break;
         case xfl::Elevator:
-            pWing = pPlaneXfl->stab();
-            pModWing = pModPlane->stab();
+            pWing = pPlaneXfl->elevator();
+            pModWing = pModPlane->elevator();
             WingType = "ELEVATOR";
             break;
         case xfl::Fin:
@@ -3128,7 +3128,7 @@ void XPlane::onWingProps()
             pWing = pPlaneXfl->mainWing();
             break;
         case xfl::Elevator:
-            pWing = pPlaneXfl->stab();
+            pWing = pPlaneXfl->elevator();
             break;
         case xfl::Fin:
             pWing = pPlaneXfl->fin();
@@ -3174,7 +3174,7 @@ void XPlane::onTranslateWing()
             pWing = pPlaneXfl->mainWing();
             break;
         case xfl::Elevator:
-            pWing = pPlaneXfl->stab();
+            pWing = pPlaneXfl->elevator();
             break;
         case xfl::Fin:
             pWing = pPlaneXfl->fin();
@@ -3244,7 +3244,7 @@ void XPlane::onScaleWing()
             WingType = "MAINWING";
             break;
         case xfl::Elevator:
-            pModWing = pModPlane->stab();
+            pModWing = pModPlane->elevator();
             WingType = "ELEVATOR";
             break;
         case xfl::Fin:
@@ -4290,7 +4290,7 @@ void XPlane::onWingInertia()
             iWing = pPlaneXfl->wingIndex(pPlaneXfl->mainWing());
             break;
         case xfl::Elevator:
-            iWing = pPlaneXfl->wingIndex(pPlaneXfl->stab());
+            iWing = pPlaneXfl->wingIndex(pPlaneXfl->elevator());
             break;
         case xfl::Fin:
             iWing = pPlaneXfl->wingIndex(pPlaneXfl->fin());
@@ -5536,7 +5536,7 @@ void XPlane::onExportWingToXML()
             WingType = "MAINWING";
             break;
         case xfl::Elevator:
-            pWing = pPlaneXfl->stab();
+            pWing = pPlaneXfl->elevator();
             WingType = "ELEVATOR";
             break;
         case xfl::Fin:
@@ -5590,7 +5590,7 @@ void XPlane::onExportWingMeshToSTL()
             pWing = pPlaneXfl->mainWing();
             break;
         case xfl::Elevator:
-            pWing = pPlaneXfl->stab();
+            pWing = pPlaneXfl->elevator();
             break;
         case xfl::Fin:
             pWing = pPlaneXfl->fin();
@@ -5635,7 +5635,7 @@ void XPlane::onExportWingToSTL()
             WingType = "MAINWING";
             break;
         case xfl::Elevator:
-            pWing = pPlaneXfl->stab();
+            pWing = pPlaneXfl->elevator();
             WingType = "ELEVATOR";
             break;
         case xfl::Fin:
@@ -5668,7 +5668,7 @@ void XPlane::onExportWingToCAD()
             WingType = "MAINWING";
             break;
         case xfl::Elevator:
-            pWing = pPlaneXfl->stab();
+            pWing = pPlaneXfl->elevator();
             WingType = "ELEVATOR";
             break;
         case xfl::Fin:

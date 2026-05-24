@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(PlaneRun1 LANGUAGES CXX)
+SET(API_EXAMPLE "PlaneRun1")
+
+project(${API_EXAMPLE} LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,7 +11,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(USING_INTEL_MKL "Activate if flow5 has been built with Intel MKL" OFF)
 option(USING_FLOW5_IO  "Activate to link to flow5-io.\nRequired for data serialization and use of xml files\nRequires linking to Qt6Core" ON)
 
-SET(API_EXAMPLE "PlaneRun1")
 
 if (WIN32)
 
@@ -47,8 +48,8 @@ if (WIN32)
 elseif (LINUX)
     set(XFOIL_INCLUDE_DIR "/usr/local/include/XFoil"  CACHE PATH "The path to the XFoil include files")
     set(FLOW5_INCLUDE_DIR /usr/local/include/flow5    CACHE PATH "The path to the flow5 include files")
-    set(GMSH_INCLUDE_DIR  "/usr/include"              CACHE PATH "The path to the gmsh.h include file")
-    set(OCCT_INCLUDE_DIR  "/usr/include/opencascade"  CACHE PATH "The path to the OpenCascade include files")
+    set(GMSH_INCLUDE_DIR  "/usr/local/include"              CACHE PATH "The path to the gmsh.h include file")
+    set(OCCT_INCLUDE_DIR  "/usr/local/include/opencascade"  CACHE PATH "The path to the OpenCascade include files")
 
     include_directories(${XFOIL_INCLUDE_DIR})
     include_directories(${FLOW5_INCLUDE_DIR})
@@ -61,12 +62,12 @@ elseif (LINUX)
     set(FLOW5_LIB_DIR "/usr/local/lib/" CACHE PATH "The path to the flow5-lib and flow5-io-lib libraries")
     link_directories(${FLOW5_LIB_DIR})
 
-    # /usr/lib64 is set by derfault in the environment's library paths
+    # /usr/lib64 is set by default in the environment's library paths
 #    set(OCCT_LIB_DIR "/usr/lib64/" CACHE PATH "The path to the OCCT TKxxx libraries")
-#    link_directories(OCCT_LIB_DIR)
+#    link_directories(${OCCT_LIB_DIR})
 
-#    set(GMSH_LIB_DIR "/usr/lib64/" CACHE PATH "The path to the gmsh library")
-#    link_directories(GMSH_LIB_DIR)
+    set(GMSH_LIB_DIR "/usr/local/lib64/" CACHE PATH "The path to the gmsh library")
+    link_directories(${GMSH_LIB_DIR})
 
     if(USING_INTEL_MKL)
         link_directories(/opt/intel/oneapi/mkl/latest/lib/)
@@ -93,7 +94,7 @@ if(WIN32)
     target_link_libraries(${API_EXAMPLE} TKernel)
     if(USING_INTEL_MKL)
         target_link_libraries(${API_EXAMPLE} mkl_rt)         # Intel® oneAPI Math Kernel Library Single Dynamic Library (SDL)
-#        target_link_libraries(${API_EXAMPLE} libiomp5md )    # uses the OpenMP threading technology
+#        target_link_libraries(${API_EXAMPLE} libiomp5md )   # uses the OpenMP threading technology
         target_link_libraries(${API_EXAMPLE} tbb12 )         # uses the Intel TBB threading technology
 
         target_compile_definitions(${API_EXAMPLE} PUBLIC INTEL_MKL)
@@ -118,10 +119,13 @@ elseif (APPLE)
 endif ()
 
 
+if(LINUX)
+    include(GNUInstallDirs)
+endif()
 
-
-include(GNUInstallDirs)
 install(TARGETS ${API_EXAMPLE}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+

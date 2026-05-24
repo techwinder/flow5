@@ -2603,15 +2603,100 @@ bool MainFrame::loadSettings()
 
         m_ImageDirName = settings.value("ImageDirName").toString();
 
-        Units::setLengthUnitIndex(  settings.value("LengthUnit").toInt());
-        Units::setAreaUnitIndex(    settings.value("AreaUnit").toInt());
-        Units::setWeightUnitIndex(  settings.value("WeightUnit").toInt());
-        Units::setSpeedUnitIndex(   settings.value("SpeedUnit").toInt());
-        Units::setForceUnitIndex(   settings.value("ForceUnit").toInt());
-        Units::setMomentUnitIndex(  settings.value("MomentUnit").toInt());
-        Units::setPressureUnitIndex(settings.value("PressureUnit").toInt());
-        Units::setInertiaUnitIndex( settings.value("InertiaUnit").toInt());
-        Units::setFluidUnitType(    settings.value("FluidUnits", Units::fluidUnitType()).toInt());
+        int lengthidx = settings.value("LengthUnit").toInt();
+        switch(lengthidx)
+        {
+            case 0: Units::setLengthUnit(Units::MM);     break;
+            case 1: Units::setLengthUnit(Units::CM);     break;
+            case 2: Units::setLengthUnit(Units::DM);     break;
+            default:
+            case 3: Units::setLengthUnit(Units::M);      break;
+            case 4: Units::setLengthUnit(Units::IN);     break;
+            case 5: Units::setLengthUnit(Units::FT);     break;
+        }
+
+        int speedidx = settings.value("SpeedUnit").toInt();
+        switch(speedidx)
+        {
+            default:
+            case 0: Units::setSpeedUnit(Units::MS);     break;
+            case 1: Units::setSpeedUnit(Units::KMH);    break;
+            case 2: Units::setSpeedUnit(Units::FTS);    break;
+            case 3: Units::setSpeedUnit(Units::KT);     break;
+            case 4: Units::setSpeedUnit(Units::MPH);    break;
+        }
+
+
+        int areaidx = settings.value("AreaUnit").toInt();
+        switch(areaidx)
+        {
+            case 0: Units::setAreaUnit(Units::MM2);  break;
+            case 1: Units::setAreaUnit(Units::CM2);  break;
+            case 2: Units::setAreaUnit(Units::DM2);  break;
+            default:
+            case 3: Units::setAreaUnit(Units::M2);   break;
+            case 4: Units::setAreaUnit(Units::IN2);  break;
+            case 5: Units::setAreaUnit(Units::FT2);  break;
+        }
+
+        int massidx = settings.value("WeightUnit").toInt();
+        switch(massidx)
+        {
+            case 0: Units::setMassUnit(Units::G);      break;
+            default:
+            case 1: Units::setMassUnit(Units::KG);     break;
+            case 2: Units::setMassUnit(Units::OZ);     break;
+            case 3: Units::setMassUnit(Units::LB);     break;
+        }
+
+        int forceidx = settings.value("ForceUnit").toInt();
+        switch(forceidx)
+        {
+            default:
+            case 0: Units::setForceUnit(Units::N);      break;
+            case 1: Units::setForceUnit(Units::KN);     break;
+            case 2: Units::setForceUnit(Units::TON);    break;
+            case 3: Units::setForceUnit(Units::LBF);    break;
+        }
+
+        int momentidx = settings.value("MomentUnit").toInt();
+        switch(momentidx)
+        {
+            default:
+            case 0: Units::setMomentUnit(Units::NM);        break;
+            case 1: Units::setMomentUnit(Units::LBFIN);   break;
+            case 2: Units::setMomentUnit(Units::LBFFT);   break;
+        }
+
+        int pressureidx = settings.value("PressureUnit").toInt();
+        switch(pressureidx)
+        {
+            default:
+            case 0: Units::setPressureUnit(Units::PA);      break;
+            case 1: Units::setPressureUnit(Units::HPA);     break;
+            case 2: Units::setPressureUnit(Units::KPA);     break;
+            case 3: Units::setPressureUnit(Units::MPA);     break;
+            case 4: Units::setPressureUnit(Units::BAR);     break;
+            case 5: Units::setPressureUnit(Units::PSI);     break;
+            case 6: Units::setPressureUnit(Units::KSI);     break;
+        }
+
+        int inertiaidx =  settings.value("InertiaUnit").toInt();
+        switch(inertiaidx)
+        {
+            default:
+            case 0: Units::setInertiaUnit(Units::KGM2);     break;
+            case 1: Units::setInertiaUnit(Units::LBMFT2);   break;
+        }
+
+        int fluididx = settings.value("FluidUnits", Units::fluidUnitType()).toInt();
+
+        switch(fluididx)
+        {
+            default:
+            case 0: Units::setFluidUnitType(Units::IS);       break;
+            case 1: Units::setFluidUnitType(Units::IMPERIAL); break;
+        }
 
         Units::setUnitConversionFactors();
 
@@ -2774,7 +2859,7 @@ void MainFrame::saveSettings()
 
         settings.setValue("LengthUnit",   Units::lengthUnitIndex());
         settings.setValue("AreaUnit",     Units::areaUnitIndex());
-        settings.setValue("WeightUnit",   Units::weightUnitIndex());
+        settings.setValue("WeightUnit",   Units::massUnitIndex());
         settings.setValue("SpeedUnit",    Units::speedUnitIndex());
         settings.setValue("ForceUnit",    Units::forceUnitIndex());
         settings.setValue("MomentUnit",   Units::momentUnitIndex());

@@ -101,16 +101,17 @@ class FL5LIB_EXPORT PlaneXfl : public Plane
 
         bool hasMainWing() const override;
         bool hasOtherWing() const override;
-//        bool hasWing2() const override;
-        bool hasStab() const override;
+        bool hasElevator() const override;
         bool hasFin() const override;
 
         WingXfl *mainWing();                 /** Returns a pointer to the plane's first found MAINWING, or NULL if none. */
         WingXfl const *mainWing() const;
 
-        WingXfl *stab();                     /** Returns a pointer to the plane's first found ELEVATOR, or NULL if none. */
-//        Wing* wing2();                    /** Returns a pointer to the plane's first found OTHERWING, or NULL if none. */
-        WingXfl* fin();                      /** Returns a pointer to the plane's first found FIN, or NULL if none. */
+        WingXfl *elevator();                 /** Returns a pointer to the plane's first found ELEVATOR, or NULL if none. */
+        WingXfl const *elevator() const;
+
+        WingXfl *fin();                      /** Returns a pointer to the plane's first found FIN, or NULL if none. */
+        WingXfl const *fin() const;
 
         WingXfl *addWing(xfl::enumType wingtype = xfl::Main);
         WingXfl *addWing(WingXfl *pNewWing);
@@ -133,22 +134,26 @@ class FL5LIB_EXPORT PlaneXfl : public Plane
 
         Vector3d const &fusePos(int idx) const { return m_Fuse.at(idx)->position(); }
         void setFusePos(int idx, Vector3d const &pos){m_Fuse[idx]->setPosition(pos);}
+        void setFusePos(int idx, double x, double y,double z){m_Fuse[idx]->setPosition({x,y,z});}
+        void setFusePos(Fuse *pFuse, Vector3d const &pos)        {if(pFuse) pFuse->setPosition(pos);}
+        void setFusePos(Fuse *pFuse, double x, double y,double z){if(pFuse) pFuse->setPosition({x,y,z});}
 
         Vector3d const &wingPosition(int iWing) const{return m_Wing.at(iWing)->position();}
         Vector3d const &wingPosition(WingXfl const *pWing) {return pWing->position();}
         void setWingPosition(int iWing, Vector3d const &LE) {m_Wing[iWing]->setPosition(LE);}
-        void setWingPosition(WingXfl *pWing, Vector3d const &LE)  {pWing->setPosition(LE);}
+        void setWingPosition(int iWing, double x, double y, double z) {m_Wing[iWing]->setPosition({x,y,z});}
+        void setWingPosition(WingXfl *pWing, Vector3d const &LE)  {if(pWing) pWing->setPosition(LE);}
+        void setWingPosition(WingXfl *pWing, double x, double y, double z)  {if(pWing) pWing->setPosition({x,y,z});}
 
         double rxAngle(int iWing) const {return m_Wing.at(iWing)->rx();}
-        double rxAngle(WingXfl const *pWing) const {return pWing->rx();}
+        double rxAngle(WingXfl const *pWing) const {if(pWing) return pWing->rx(); else return 0.0;}
         void setRxAngle(int iWing, double rx) {m_Wing[iWing]->setRx(rx);}
-        void setRxAngle(WingXfl *pWing, double rx) {pWing->setRx(rx);}
+        void setRxAngle(WingXfl *pWing, double rx) {if(pWing) pWing->setRx(rx);}
 
         double ryAngle(int iWing) const {return m_Wing.at(iWing)->ry();}
-        double ryAngle(WingXfl const*pWing) const {return pWing->ry();}
+        double ryAngle(WingXfl const*pWing) const {if(pWing) return pWing->ry(); else return 0.0;}
         void setRyAngle(int iWing, double ry) {m_Wing[iWing]->setRy(ry);}
-        void setRyAngle(WingXfl *pWing, double ry) {pWing->setRy(ry);}
-
+        void setRyAngle(WingXfl *pWing, double ry) {if(pWing) pWing->setRy(ry);}
 
         void clearWings();
         std::vector<WingXfl*> &wings() {return m_Wing;}

@@ -144,9 +144,6 @@ int main()
             //position the fuse
             // make sure that it does not touch or intersect the wings
             pPlaneXfl->setFusePos(0, {-0.05, 0.0, 0.0});
-            // equivalent to
-            //  pFuse->setPosition({-0.450, 0.0, 0.0}); // deprecated
-
 
             // The default fuse is a bit too long
             pFuseStl->scale(0.95, 1.0, 1.0);
@@ -166,8 +163,7 @@ int main()
             // These fields belong in fact to the plane, so this may change in a future version
             // Position the mainwing
             // flow5 works internally in IS units and expects all input in IS + degrees
-            pPlaneXfl->setWingPosition(0, {0.0, 0.0, 0.075});
-            // pWing->setPosition(0.0, 0.0, 0.075); // deprecated
+            pPlaneXfl->setWingPosition(0, 0.0, 0.0, 0.075);
 
             // define the wing
             pWing->setColor({131, 177, 209});
@@ -225,11 +221,10 @@ int main()
             pElev->makeDefaultStab();
 
             //position the elevator
-            pPlaneXfl->setWingPosition(1, {1.05, 0.0, 0.280});
-            // pElev->setPosition(1.05, 0.0, 0.280); // deprecated
+            pPlaneXfl->setWingPosition(pElev, 1.05, 0.0, 0.280);
 
-            // tilt the elevator down; this field belongs to the plane
-            pElev->setRy(-2.5); // degrees
+            // tilt the elevator down;
+            pPlaneXfl->setRyAngle(pElev, -2.5); // degrees
 
             // Define the elevator
             pElev->setColor({173, 111, 57});
@@ -259,10 +254,10 @@ int main()
         {
             pFin->setName("Fin");
             pFin->makeDefaultFin();
+
             //position the fin
-            pPlaneXfl->setWingPosition(2, {0.97, 0.0, 0.040});
-            //pFin->setPosition(0.97, 0.0, 0.040); // deprecated
-            pFin->setRx(-90.0);
+            pPlaneXfl->setWingPosition(2, 0.97, 0.0, 0.040);
+            pPlaneXfl->setRxAngle(pFin, -90.0);
 
             // CLOSE the fin at its inner section since it is NOT connected to the fuselage
             pFin->setClosedInnerSide(true);

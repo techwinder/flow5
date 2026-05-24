@@ -64,7 +64,7 @@ class FL5LIB_EXPORT Plane : public fl5Object
         virtual bool isWing() const {return false;}
         virtual bool hasMainWing() const = 0;
         virtual bool hasOtherWing() const = 0;
-        virtual bool hasStab() const = 0;
+        virtual bool hasElevator() const = 0;
         virtual bool hasFin() const = 0;
         virtual bool hasFuse() const = 0;
 

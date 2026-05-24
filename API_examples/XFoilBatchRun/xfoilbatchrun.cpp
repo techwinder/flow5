@@ -2,6 +2,7 @@
 #include <format>
 #include <iostream>
 #include <thread>
+#include <filesystem>
 
 #include <api.h>
 #include <constants.h>
@@ -80,9 +81,8 @@ int main()
     projectfilepath  = std::filesystem::temp_directory_path().string();
     projectfilepath += std::filesystem::path::preferred_separator;
     projectfilepath += "XFoilBatchRun.fl5";
-    io::saveProject(projectfilepath, logmsg);
 
-    if(logmsg.size()>0)
+    if(!io::saveProject(projectfilepath, logmsg))
     {
         // error saving
         std::cerr << logmsg << std::endl << std::endl;

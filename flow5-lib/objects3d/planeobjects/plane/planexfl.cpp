@@ -478,13 +478,13 @@ WingXfl const *PlaneXfl::mainWing() const
 {
     for(int iw=0; iw<nWings(); iw++)
     {
-        if(m_Wing.at(iw)->isMainWing())   return m_Wing[iw];
+        if(m_Wing.at(iw)->isMainWing())   return m_Wing.at(iw);
     }
     return nullptr;
 }
 
 
-WingXfl *PlaneXfl::stab()
+WingXfl *PlaneXfl::elevator()
 {
     for(int iw=0; iw<nWings(); iw++)
     {
@@ -493,22 +493,32 @@ WingXfl *PlaneXfl::stab()
     return nullptr;
 }
 
-/*
-Wing*PlaneXfl::wing2()
+
+WingXfl const *PlaneXfl::elevator() const
 {
     for(int iw=0; iw<nWings(); iw++)
     {
-        if(wing(iw) && wing(iw)->isSecondWing())   return wing(iw);
+        if(wingAt(iw) && wingAt(iw)->isElevator())   return wingAt(iw);
     }
     return nullptr;
-}*/
+}
 
 
 WingXfl*PlaneXfl::fin()
 {
     for(int iw=0; iw<nWings(); iw++)
     {
-        if(wing(iw) && wing(iw)->isFin())   return wing(iw);
+        if(wingAt(iw) && wingAt(iw)->isFin())   return wing(iw);
+    }
+    return nullptr;
+}
+
+
+WingXfl const*PlaneXfl::fin() const
+{
+    for(int iw=0; iw<nWings(); iw++)
+    {
+        if(wingAt(iw) && wingAt(iw)->isFin())   return wingAt(iw);
     }
     return nullptr;
 }
@@ -557,7 +567,7 @@ bool PlaneXfl::hasWing2() const
 
 
 
-bool PlaneXfl::hasStab() const
+bool PlaneXfl::hasElevator() const
 {
     for(int iw=0; iw<nWings(); iw++)
     {
@@ -1208,7 +1218,7 @@ std::string PlaneXfl::planeData(bool bOtherWings) const
         strange += Result +"\n";
     }
 
-    if(hasStab())
+    if(hasElevator())
     {
         str1 = std::format("Tail volume (H) = {:9.3f}", tailVolumeHorizontal());
         strange += str1 +"\n";

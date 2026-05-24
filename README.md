@@ -25,7 +25,7 @@ The intent is to stabilize both the source code and the API by the end of 2026. 
 ## Examples
 - XFoilRun: Construction of a NACA foil and calculation of a type 1 polar using XFoil.
 - XFoilBatchRun: Construction of a NACA foil and multi-threaded calculation of a 2d polar mesh.
-- PlaneRun1: Construction of an xfl-type plane with no fuselage and calculation of a type 2 polar with viscous drag evaluated on the fly.
+- PlaneRun1: Construction of an xfl-type plane with no fuselage and calculation of a type 2 polar with viscous drag evaluated on the fly. Shows how to use custom units.
 - PlaneRun2: Construction of an xfl-type plane with a NURBS type fuselage, construction of a conforming mesh, and calculation of a type 2 polar.
 - PlaneRun3: Import of an stl-type plane from a mesh file, configuration of the trailing edge and calculation of a type 1 polar.
 - PlaneRun4: Import of a plane and a polar from xml files, construction of a conforming mesh, and calculation of a type 1 polar.

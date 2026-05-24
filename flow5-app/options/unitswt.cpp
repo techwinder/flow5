@@ -60,14 +60,6 @@ void UnitsWt::setupLayout()
                 QLabel *plab6 = new QLabel(tr("Moment:"));
                 QLabel *plab7 = new QLabel(tr("Pressure:"));
                 QLabel *plab8 = new QLabel(tr("Inertia:"));
-                plab1->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                plab2->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                plab3->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                plab4->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                plab5->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                plab6->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                plab7->setAlignment(Qt::AlignRight | Qt::AlignCenter);
-                plab8->setAlignment(Qt::AlignRight | Qt::AlignCenter);
                 plab1->setFont(fixedfnt);
                 plab2->setFont(fixedfnt);
                 plab3->setFont(fixedfnt);
@@ -76,14 +68,14 @@ void UnitsWt::setupLayout()
                 plab6->setFont(fixedfnt);
                 plab7->setFont(fixedfnt);
                 plab8->setFont(fixedfnt);
-                pConversionLayout->addWidget(plab1, 1,1);
-                pConversionLayout->addWidget(plab2, 2,1);
-                pConversionLayout->addWidget(plab3, 3,1);
-                pConversionLayout->addWidget(plab4, 4,1);
-                pConversionLayout->addWidget(plab5, 5,1);
-                pConversionLayout->addWidget(plab6, 6,1);
-                pConversionLayout->addWidget(plab7, 7,1);
-                pConversionLayout->addWidget(plab8, 8,1);
+                pConversionLayout->addWidget(plab1, 1,1, Qt::AlignRight);
+                pConversionLayout->addWidget(plab2, 2,1, Qt::AlignRight);
+                pConversionLayout->addWidget(plab3, 3,1, Qt::AlignRight);
+                pConversionLayout->addWidget(plab4, 4,1, Qt::AlignRight);
+                pConversionLayout->addWidget(plab5, 5,1, Qt::AlignRight);
+                pConversionLayout->addWidget(plab6, 6,1, Qt::AlignRight);
+                pConversionLayout->addWidget(plab7, 7,1, Qt::AlignRight);
+                pConversionLayout->addWidget(plab8, 8,1, Qt::AlignRight);
 
 
                 m_plabLengthFactor   = new QLabel;
@@ -210,28 +202,28 @@ void UnitsWt::initWidget()
     QStringList list;
     list <<"mm" << "cm"<<"dm"<<"m"<<"in"<<"ft";
     m_pcbLength->clear();
-    m_pcbLength->addItems(list);        //5
+    m_pcbLength->addItems(list);
 
     m_pcbSurface->clear();
-    m_pcbSurface->addItem(QString::fromUtf8("mm²"));        //0
-    m_pcbSurface->addItem(QString::fromUtf8("cm²"));        //1
-    m_pcbSurface->addItem(QString::fromUtf8("dm²"));        //2
-    m_pcbSurface->addItem(QString::fromUtf8("m²"));        //3
-    m_pcbSurface->addItem(QString::fromUtf8("in²"));        //4
-    m_pcbSurface->addItem(QString::fromUtf8("ft²"));        //5
+    m_pcbSurface->addItem(QString::fromUtf8("mm²"));
+    m_pcbSurface->addItem(QString::fromUtf8("cm²"));
+    m_pcbSurface->addItem(QString::fromUtf8("dm²"));
+    m_pcbSurface->addItem(QString::fromUtf8("m²"));
+    m_pcbSurface->addItem(QString::fromUtf8("in²"));
+    m_pcbSurface->addItem(QString::fromUtf8("ft²"));
 
     m_pcbSpeed->clear();
-    m_pcbSpeed->addItem("m/s");       //0
-    m_pcbSpeed->addItem("km/h");      //1
-    m_pcbSpeed->addItem("ft/s");      //2
-    m_pcbSpeed->addItem("kt (int.)"); //3
-    m_pcbSpeed->addItem("mph");       //4
+    m_pcbSpeed->addItem("m/s");
+    m_pcbSpeed->addItem("km/h");
+    m_pcbSpeed->addItem("ft/s");
+    m_pcbSpeed->addItem("kt (int.)");
+    m_pcbSpeed->addItem("mph");
 
     m_pcbWeight->clear();
-    m_pcbWeight->addItem("g");        //0
-    m_pcbWeight->addItem("kg");       //1
-    m_pcbWeight->addItem("oz");       //2
-    m_pcbWeight->addItem("lb");       //3
+    m_pcbWeight->addItem("g");
+    m_pcbWeight->addItem("kg");
+    m_pcbWeight->addItem("oz");
+    m_pcbWeight->addItem("lb");
 
 
     m_pcbForce->clear();
@@ -242,25 +234,25 @@ void UnitsWt::initWidget()
     }
 
     m_pcbMoment->clear();
-    m_pcbMoment->addItem("N.m");        //0
-    m_pcbMoment->addItem("lbf.in");    //1
-    m_pcbMoment->addItem("lbf.ft");    //2
+    m_pcbMoment->addItem("N.m");
+    m_pcbMoment->addItem("lbf.in");
+    m_pcbMoment->addItem("lbf.ft");
 
     m_pcbPressure->clear();
-    m_pcbPressure->addItem("Pa");     //0
-    m_pcbPressure->addItem("hPa");    //1
-    m_pcbPressure->addItem("kPa");    //2
-    m_pcbPressure->addItem("MPa");    //3
-    m_pcbPressure->addItem("bar");    //4
-    m_pcbPressure->addItem("psi");    //5
+    m_pcbPressure->addItem("Pa");
+    m_pcbPressure->addItem("hPa");
+    m_pcbPressure->addItem("kPa");
+    m_pcbPressure->addItem("MPa");
+    m_pcbPressure->addItem("bar");
+    m_pcbPressure->addItem("psi");
     m_pcbPressure->addItem("ksi");    //6
 
     m_pcbInertia->clear();
-    m_pcbInertia->addItem(QString::fromUtf8("kg.m²"));    //0
-    m_pcbInertia->addItem(QString::fromUtf8("lbm.ft²"));    //1
+    m_pcbInertia->addItem(QString::fromUtf8("kg.m²"));
+    m_pcbInertia->addItem(QString::fromUtf8("lbm.ft²"));
 
     m_pcbLength->setCurrentIndex(  Units::lengthUnitIndex());
-    m_pcbWeight->setCurrentIndex(  Units::weightUnitIndex());
+    m_pcbWeight->setCurrentIndex(  Units::massUnitIndex());
     m_pcbSurface->setCurrentIndex( Units::areaUnitIndex());
     m_pcbSpeed->setCurrentIndex(   Units::speedUnitIndex());
     m_pcbForce->setCurrentIndex(   Units::forceUnitIndex());
@@ -268,8 +260,8 @@ void UnitsWt::initWidget()
     m_pcbPressure->setCurrentIndex(Units::pressureUnitIndex());
     m_pcbInertia->setCurrentIndex( Units::inertiaUnitIndex());
 
-    m_prbUnit1->setChecked(Units::fluidUnitType()==0);
-    m_prbUnit2->setChecked(Units::fluidUnitType()==1);
+    m_prbUnit1->setChecked(Units::fluidUnitType()==Units::IS);
+    m_prbUnit2->setChecked(Units::fluidUnitType()==Units::IMPERIAL);
 
     updateFluid();
 
@@ -280,14 +272,83 @@ void UnitsWt::initWidget()
 
 void UnitsWt::onSelChanged()
 {
-    Units::setLengthUnitIndex(    m_pcbLength->currentIndex());
-    Units::setAreaUnitIndex(      m_pcbSurface->currentIndex());
-    Units::setWeightUnitIndex(      m_pcbWeight->currentIndex());
-    Units::setSpeedUnitIndex(     m_pcbSpeed->currentIndex());
-    Units::setForceUnitIndex(     m_pcbForce->currentIndex());
-    Units::setMomentUnitIndex(    m_pcbMoment->currentIndex());
-    Units::setPressureUnitIndex(  m_pcbPressure->currentIndex());
-    Units::setInertiaUnitIndex(   m_pcbInertia->currentIndex());
+    switch(m_pcbLength->currentIndex())
+    {
+        case 0: Units::setLengthUnit(Units::MM);   break;
+        case 1: Units::setLengthUnit(Units::CM);   break;
+        case 2: Units::setLengthUnit(Units::DM);   break;
+        default:
+        case 3: Units::setLengthUnit(Units::M);    break;
+        case 4: Units::setLengthUnit(Units::IN);   break;
+        case 5: Units::setLengthUnit(Units::FT);   break;
+    }
+
+    switch( m_pcbSpeed->currentIndex())
+    {
+        default:
+        case 0: Units::setSpeedUnit(Units::MS);   break;
+        case 1: Units::setSpeedUnit(Units::KMH);  break;
+        case 2: Units::setSpeedUnit(Units::FTS);  break;
+        case 3: Units::setSpeedUnit(Units::KT);   break;
+        case 4: Units::setSpeedUnit(Units::MPH);  break;
+    }
+
+    switch(m_pcbSurface->currentIndex())
+    {
+        case 0: Units::setAreaUnit(Units::MM2);  break;
+        case 1: Units::setAreaUnit(Units::CM2);  break;
+        case 2: Units::setAreaUnit(Units::DM2);  break;
+        default:
+        case 3: Units::setAreaUnit(Units::M2);   break;
+        case 4: Units::setAreaUnit(Units::IN2);  break;
+        case 5: Units::setAreaUnit(Units::FT2);  break;
+    }
+
+    switch(m_pcbWeight->currentIndex())
+    {
+        case 0: Units::setMassUnit(Units::G);      break;
+        default:
+        case 1: Units::setMassUnit(Units::KG);     break;
+        case 2: Units::setMassUnit(Units::OZ);     break;
+        case 3: Units::setMassUnit(Units::LB);     break;
+    }
+
+    switch(m_pcbForce->currentIndex())
+    {
+        case 0: Units::setForceUnit(Units::N);     break;
+        default:
+        case 1: Units::setForceUnit(Units::KN);    break;
+        case 2: Units::setForceUnit(Units::TON);   break;
+        case 3: Units::setForceUnit(Units::LBF);   break;
+    }
+
+    switch(m_pcbMoment->currentIndex())
+    {
+        default:
+        case 0: Units::setMomentUnit(Units::NM);     break;
+        case 1: Units::setMomentUnit(Units::LBFIN);  break;
+        case 2: Units::setMomentUnit(Units::LBFFT);  break;
+    }
+
+    switch(m_pcbPressure->currentIndex())
+    {
+        default:
+        case 0: Units::setPressureUnit(Units::PA);      break;
+        case 1: Units::setPressureUnit(Units::HPA);     break;
+        case 2: Units::setPressureUnit(Units::KPA);     break;
+        case 3: Units::setPressureUnit(Units::MPA);     break;
+        case 4: Units::setPressureUnit(Units::BAR);     break;
+        case 5: Units::setPressureUnit(Units::PSI);     break;
+        case 6: Units::setPressureUnit(Units::KSI);     break;
+    }
+
+    switch(m_pcbInertia->currentIndex())
+    {
+        default:
+        case 0: Units::setInertiaUnit(Units::KGM2);   break;
+        case 1: Units::setInertiaUnit(Units::LBMFT2); break;
+    }
+
     Units::setUnitConversionFactors();
 
     setLabels();
@@ -305,8 +366,8 @@ void UnitsWt::onFluidUnit()
 
 void UnitsWt::updateFluid()
 {
-    if(m_prbUnit1->isChecked()) Units::setFluidUnitType(0);
-    else                        Units::setFluidUnitType(1);
+    if(m_prbUnit1->isChecked()) Units::setFluidUnitType(Units::IS);
+    else                        Units::setFluidUnitType(Units::IMPERIAL);
     Units::setUnitConversionFactors();
     m_plabFluidUnit->setText(tr("Density:             ") + Units::densityUnitQLabel()   +"\n" +
                              tr("Kinematic viscosity: ") + Units::viscosityUnitQLabel() +"\n");
