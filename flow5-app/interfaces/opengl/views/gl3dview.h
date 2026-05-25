@@ -110,7 +110,7 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
 
         void printFormat(QSurfaceFormat const & fmt, QString &log, QString prefix="   " );
 
-        void resetBackground() {m_bResetTexture=true;}
+        void resetBackground() {m_bResetBackground=true;}
         void setBackground();
 
         static void setXflSurfaceFormat(QSurfaceFormat const &fmt) {s_GlSurfaceFormat = fmt;}
@@ -407,7 +407,7 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
 
         GLLightDlg *m_pglLightDlg;
 
-        bool m_bResetTexture;
+        bool m_bResetBackground;
         QImage m_BackImage;
 
 

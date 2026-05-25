@@ -34,8 +34,8 @@
 
 namespace BL
 {
-    typedef enum {XFOIL, NOBLMETHOD} enumBLMethod;
-    typedef enum {TOP, BOTTOM, WAKE, NOSIDE} enumBLSide;
+    enum enumBLMethod {XFOIL, NOBLMETHOD};
+    enum enumBLSide {TOP, BOTTOM, WAKE, NOSIDE};
 }
 
 

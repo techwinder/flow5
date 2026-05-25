@@ -412,7 +412,6 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
 
         if(m_pPOpp3dControls->m_bMoments)
         {
-//           paintMoments();
             paintSegments(m_pglXPlaneBuffers->m_vboMoments, W3dPrefs::s_MomentStyle);
         }
     }
@@ -421,7 +420,6 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
     {
         if(m_PickedPanelIndex>=0)
         {
-
             if(pPlPolar && pPlPolar->isTriangleMethod())
             {
                 if(pPlPolar->isTriUniformMethod())
@@ -432,7 +430,6 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
                 {
                     if(pPOpp && (m_pPOpp3dControls->m_b3dCp || m_pPOpp3dControls->m_bGamma || m_pPOpp3dControls->m_bPanelForce))
                         paintSphere(m_PickedPoint, 0.0075/double(m_glScalef), Qt::red, true);
-    //                else paintTriangle(true, false, Qt::black);
                 }
             }
             else // if (pWPolar->isQuadMethod())
@@ -477,7 +474,8 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
                         int index = it.key();
                         if(index>=0 && index<pPlaneXfl->quadMesh().nPanels()) // failsafe
                         {
-                            strange = QString::asprintf("Q%d: %g", index, it.value());
+                            strange = QString::asprintf("Q%d", index);
+                            if(pPOpp) strange += QString::asprintf(": %g", it.value());
                             Panel4 const &p4 = pPlaneXfl->quadMesh().panelAt(index);
                             pt = p4.CoG();
                             glRenderText(pt.x+0.03/double(m_glScalef), pt.y+0.03/double(m_glScalef), pt.z+0.03/double(m_glScalef),
@@ -498,7 +496,9 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
 
                         if(index>=0 && index<pPlane->triMesh().nPanels()) // failsafe
                         {
-                            strange = QString::asprintf("T%d: %g", index, it.value());
+                            strange = QString::asprintf("T%d", index);
+                            if(pPOpp) strange += QString::asprintf(": %g", it.value());
+
                             Panel3 const &p3 = pPlane->triMesh().panelAt(index);
                             pt = p3.CoG();
                             glRenderText(pt.x+0.03/double(m_glScalef), pt.y+0.03/double(m_glScalef), pt.z+0.03/double(m_glScalef),
@@ -517,7 +517,8 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
                         {
                             Node const &nd = pPlane->triMesh().nodeAt(index);
                             paintSphere(nd, 0.0075/double(m_glScalef), Qt::red, true);
-                            strange = QString::asprintf("N%d: %g", index,  it.value());
+                            strange = QString::asprintf("N%d", index);
+                            if(pPOpp) strange += QString::asprintf(": %g", it.value());
                             glRenderText(nd.x+0.03/double(m_glScalef), nd.y+0.03/double(m_glScalef), nd.z+0.03/double(m_glScalef),
                                          strange, DisplayOptions::textColor(), true);
                         }

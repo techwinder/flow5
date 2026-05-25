@@ -67,12 +67,12 @@ void WingExportDlg::setupLayout()
        {
             QHBoxLayout *pExportTypeLayout = new QHBoxLayout;
             {
-                QLabel *pLabType = new QLabel("Wings surfaces as:");
-                m_prbFacets = new QRadioButton("Facets");
+                QLabel *plabType = new QLabel(tr("<b>Wing surfaces as:</b>"));
+                m_prbFacets = new QRadioButton(tr("Facets"));
                 m_prbNURBS  = new QRadioButton("NURBS");
-                m_prbNURBS->setToolTip("flow5 will create one NURBS for each top and bottom surface between two wing sections");
-                m_prbSwept  = new QRadioButton("Swept splines");
-                m_prbSwept->setToolTip("flow5 will first convert wing sections to splines,<br>then create a swept surface between the splines");
+                m_prbNURBS->setToolTip(tr("flow5 will create one NURBS for each top and bottom surface between two wing sections"));
+                m_prbSwept  = new QRadioButton(tr("Swept splines"));
+                m_prbSwept->setToolTip(tr("flow5 will first convert wing sections to splines,<br>then create a swept surface between the splines"));
 
                 m_prbFacets->setChecked(s_SurfaceType==0);
                 m_prbNURBS->setChecked(s_SurfaceType==1);
@@ -82,8 +82,7 @@ void WingExportDlg::setupLayout()
                 connect(m_prbNURBS,  SIGNAL(clicked(bool)), SLOT(onExportType()));
                 connect(m_prbSwept,  SIGNAL(clicked(bool)), SLOT(onExportType()));
 
-                pExportTypeLayout->addStretch();
-                pExportTypeLayout->addWidget(pLabType);
+                pExportTypeLayout->addWidget(plabType);
                 pExportTypeLayout->addWidget(m_prbFacets);
                 pExportTypeLayout->addWidget(m_prbNURBS);
                 pExportTypeLayout->addWidget(m_prbSwept);
@@ -92,37 +91,37 @@ void WingExportDlg::setupLayout()
 
             QGridLayout *pCommonLayout = new QGridLayout;
             {
-                QLabel *plabRes = new QLabel("Chordwise points");
+                QLabel *plabRes = new QLabel(tr("Chordwise points:"));
                 m_pieChordRes = new IntEdit(s_iChordRes);
                 m_pieChordRes->setToolTip("This parameter defines the discretization level of each wing section before it is used "
                                           "to build facets or as the base points on which the splines are built.<br>"
                                           "<b>flow5 default setting:</b> 30");
 
-                QLabel *plabStitch   = new QLabel("Stitch precision:");
-                m_pdeStitchPrecision = new FloatEdit(s_StitchPrecision*Units::mtoUnit());
-                m_pdeStitchPrecision->setToolTip("<b>OpenCascade documentation:</b><br>"
+                QLabel *plabStitch   = new QLabel(tr("Stitch precision:"));
+                m_pfeStitchPrecision = new FloatEdit(s_StitchPrecision*Units::mtoUnit());
+                m_pfeStitchPrecision->setToolTip("<b>OpenCascade documentation:</b><br>"
                                                  "The working tolerance defines the maximal distance between topological elements "
                                                  "which can be sewn. It is not ultimate that such elements will be actually sewn "
                                                  "as many other criteria are applied to make the final decision.<br>"
                                                  "<b>flow5 default setting:</b> &le; 0.1 mm");
                 QLabel *plabLen      = new QLabel(Units::lengthUnitQLabel());
 
-                QString tip("These parameters control the end splines on which the NURBS or swept surfaces are built.<br>"
+                QString tip(tr("These parameters control the end splines on which the NURBS or swept surfaces are built.<br>"
                             "The splines are constructed as approximations of the wing's chordwise points.<br>"
                             "<b>flow5 default settings:</b><br>"
                             "degree = 3<br>"
-                            "nbr. of ctrl points = 11");
-                QLabel *plabDegree   = new QLabel("Spline degree:");
+                            "nbr. of ctrl points = 11"));
+                QLabel *plabDegree   = new QLabel(tr("Spline degree:"));
                 m_pieSplineDegre     = new IntEdit(s_SplineDegree);
                 m_pieSplineDegre->setToolTip(tip);
-                QLabel *plabCtrl     = new QLabel("Nbr. of spline ctrl points:");
+                QLabel *plabCtrl     = new QLabel(tr("Nbr. of spline ctrl points:"));
                 m_pieSplineCtrlPts   = new IntEdit(s_nSplineCtrlPts);
                 m_pieSplineCtrlPts->setToolTip(tip);
 
                 pCommonLayout->addWidget(plabRes,               1, 1);
                 pCommonLayout->addWidget(m_pieChordRes,         1, 2);
                 pCommonLayout->addWidget(plabStitch,            2, 1);
-                pCommonLayout->addWidget(m_pdeStitchPrecision,  2, 2);
+                pCommonLayout->addWidget(m_pfeStitchPrecision,  2, 2);
                 pCommonLayout->addWidget(plabLen,               2, 3);
 
                 pCommonLayout->addWidget(plabDegree,            3, 1);
@@ -146,10 +145,9 @@ void WingExportDlg::setupLayout()
         pMainLayout->addWidget(m_pfrControls);
         pMainLayout->addWidget(m_ppto);
         pMainLayout->addWidget(m_pButtonBox);
-
-//        pMainLayout->setStretchFactor(pWingFrame,   1);
+;
         pMainLayout->setStretchFactor(m_pfrControls, 1);
-        pMainLayout->setStretchFactor(m_ppto,    1);
+        pMainLayout->setStretchFactor(m_ppto,  1);
     }
     setLayout(pMainLayout);
 }
@@ -225,7 +223,7 @@ void WingExportDlg::readParams()
 
     s_SplineDegree    = m_pieSplineDegre->value();
     s_nSplineCtrlPts  = m_pieSplineCtrlPts->value();
-    s_StitchPrecision = m_pdeStitchPrecision->value()/Units::mtoUnit();
+    s_StitchPrecision = m_pfeStitchPrecision->value()/Units::mtoUnit();
 }
 
 

@@ -251,14 +251,14 @@ void UnitsWt::initWidget()
     m_pcbInertia->addItem(QString::fromUtf8("kg.m²"));
     m_pcbInertia->addItem(QString::fromUtf8("lbm.ft²"));
 
-    m_pcbLength->setCurrentIndex(  Units::lengthUnitIndex());
-    m_pcbWeight->setCurrentIndex(  Units::massUnitIndex());
-    m_pcbSurface->setCurrentIndex( Units::areaUnitIndex());
-    m_pcbSpeed->setCurrentIndex(   Units::speedUnitIndex());
-    m_pcbForce->setCurrentIndex(   Units::forceUnitIndex());
-    m_pcbMoment->setCurrentIndex(  Units::momentUnitIndex());
-    m_pcbPressure->setCurrentIndex(Units::pressureUnitIndex());
-    m_pcbInertia->setCurrentIndex( Units::inertiaUnitIndex());
+    m_pcbLength->setCurrentIndex(  Units::lengthUnit());
+    m_pcbWeight->setCurrentIndex(  Units::massUnit());
+    m_pcbSurface->setCurrentIndex( Units::areaUnit());
+    m_pcbSpeed->setCurrentIndex(   Units::speedUnit());
+    m_pcbForce->setCurrentIndex(   Units::forceUnit());
+    m_pcbMoment->setCurrentIndex(  Units::momentUnit());
+    m_pcbPressure->setCurrentIndex(Units::pressureUnit());
+    m_pcbInertia->setCurrentIndex( Units::inertiaUnit());
 
     m_prbUnit1->setChecked(Units::fluidUnitType()==Units::IS);
     m_prbUnit2->setChecked(Units::fluidUnitType()==Units::IMPERIAL);

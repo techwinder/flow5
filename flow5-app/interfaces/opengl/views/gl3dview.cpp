@@ -130,6 +130,7 @@ void gl3dView::reset()
     m_bHasMouseMoved      = false;
     m_bTrans              = false;
     m_bDynTranslation = m_bDynRotation = m_bDynScaling = false;
+    m_bResetBackground    = true;
 
     m_glViewportTrans.reset();
 
@@ -1281,6 +1282,12 @@ void gl3dView::paintGL()
 //    auto t0 = std::chrono::high_resolution_clock::now();
     glMake3dObjects();
 
+    if(m_bResetBackground)
+    {
+        setBackground();
+        m_bResetBackground = false;
+    }
+
     //    QOpenGLPaintDevice device(size() * devicePixelRatio()); //"The context is captured upon construction."
     //    QPainter painter(&device);
     QPainter painter(this);
@@ -1289,7 +1296,6 @@ void gl3dView::paintGL()
     // clear the depth and color buffers before starting the rendering
     glClearDepthf(1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
 //    painter.beginNativePainting();
     if(m_pglTexture)

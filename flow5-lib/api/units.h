@@ -35,15 +35,15 @@
 
 namespace Units
 {
-    typedef enum {MM, CM, DM, M, IN, FT}            enumLengthUnit;
-    typedef enum {MS, KMH, FTS, KT, MPH}            enumSpeedUnit;
-    typedef enum {MM2, CM2, DM2, M2, IN2, FT2}      enumAreaUnit;
-    typedef enum {G, KG, OZ, LB}                    enumMassUnit;
-    typedef enum {N, KN, TON, LBF}                  enumForceUnit;
-    typedef enum {NM, LBFIN, LBFFT}                 enumMomentUnit;
-    typedef enum {PA, HPA, KPA, MPA, BAR, PSI, KSI} enumPressureUnit;
-    typedef enum {KGM2, LBMFT2}                     enumInertiaUnit;
-    typedef enum {IS, IMPERIAL}                     enumFluidUnit;
+    enum enumLengthUnit   {MM, CM, DM, M, IN, FT};
+    enum enumSpeedUnit    {MS, KMH, FTS, KT, MPH};
+    enum enumAreaUnit     {MM2, CM2, DM2, M2, IN2, FT2};
+    enum enumMassUnit     {G, KG, OZ, LB};
+    enum enumForceUnit    {N, KN, TON, LBF};
+    enum enumMomentUnit   {NM, LBFIN, LBFFT};
+    enum enumPressureUnit {PA, HPA, KPA, MPA, BAR, PSI, KSI};
+    enum enumInertiaUnit  {KGM2, LBMFT2};
+    enum enumFluidUnit    {IS, IMPERIAL};
 
     extern FL5LIB_EXPORT enumLengthUnit   g_LengthUnit;
     extern FL5LIB_EXPORT enumSpeedUnit    g_SpeedUnit;
@@ -118,14 +118,14 @@ namespace Units
     FL5LIB_EXPORT inline double densitytoUnit()   {return g_kgm3toUnit;}
     FL5LIB_EXPORT inline double viscositytoUnit() {return g_m2stoUnit;}
 
-    FL5LIB_EXPORT inline enumLengthUnit   lengthUnitIndex()   {return g_LengthUnit;}
-    FL5LIB_EXPORT inline enumSpeedUnit    speedUnitIndex()    {return g_SpeedUnit;}
-    FL5LIB_EXPORT inline enumAreaUnit     areaUnitIndex()     {return g_AreaUnit;}
-    FL5LIB_EXPORT inline enumMassUnit     massUnitIndex()     {return g_MassUnit;}
-    FL5LIB_EXPORT inline enumForceUnit    forceUnitIndex()    {return g_ForceUnit;}
-    FL5LIB_EXPORT inline enumMomentUnit   momentUnitIndex()   {return g_MomentUnit;}
-    FL5LIB_EXPORT inline enumPressureUnit pressureUnitIndex() {return g_PressureUnit;}
-    FL5LIB_EXPORT inline enumInertiaUnit  inertiaUnitIndex()  {return g_InertiaUnit;}
+    FL5LIB_EXPORT inline enumLengthUnit   lengthUnit()   {return g_LengthUnit;}
+    FL5LIB_EXPORT inline enumSpeedUnit    speedUnit()    {return g_SpeedUnit;}
+    FL5LIB_EXPORT inline enumAreaUnit     areaUnit()     {return g_AreaUnit;}
+    FL5LIB_EXPORT inline enumMassUnit     massUnit()     {return g_MassUnit;}
+    FL5LIB_EXPORT inline enumForceUnit    forceUnit()    {return g_ForceUnit;}
+    FL5LIB_EXPORT inline enumMomentUnit   momentUnit()   {return g_MomentUnit;}
+    FL5LIB_EXPORT inline enumPressureUnit pressureUnit() {return g_PressureUnit;}
+    FL5LIB_EXPORT inline enumInertiaUnit  inertiaUnit()  {return g_InertiaUnit;}
 
     FL5LIB_EXPORT inline void setLengthUnit(  enumLengthUnit   index) {g_LengthUnit   = index;}
     FL5LIB_EXPORT inline void setSpeedUnit(   enumSpeedUnit    index) {g_SpeedUnit    = index;}

@@ -58,7 +58,7 @@ class WingExportDlg : public CADExportDlg
 
         IntEdit *m_pieSplineDegre;
         IntEdit *m_pieSplineCtrlPts;
-        FloatEdit *m_pdeStitchPrecision;
+        FloatEdit *m_pfeStitchPrecision;
 
         WingXfl const* m_pWing;
 

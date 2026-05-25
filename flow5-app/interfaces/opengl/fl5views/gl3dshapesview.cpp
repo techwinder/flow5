@@ -185,8 +185,6 @@ bool gl3dShapesView::intersectTheObject(Vector3d const &A, Vector3d const&B, Vec
 
     Vector3d U =(B-A).normalized();
 
-    gp_Dir N1,N2,N3;
-
     for (int iShape=0; iShape<m_pShapes->size(); iShape++) // for each of the fuse (cut) shells
     {
         int nFace = 0;
@@ -198,9 +196,6 @@ bool gl3dShapesView::intersectTheObject(Vector3d const &A, Vector3d const&B, Vec
 
             if(!hTriangulation.IsNull())
             {
-//                const NCollection_Array1<gp_Pnt>& nodes = hTriangulation->Nodes();
-//                const Poly_Array1OfTriangle& triangles = hTriangulation->Triangles();
-
                 for (int i=1; i<=hTriangulation->NbTriangles(); i++)
                 {
                     const Poly_Triangle& tri = hTriangulation->Triangle(i);

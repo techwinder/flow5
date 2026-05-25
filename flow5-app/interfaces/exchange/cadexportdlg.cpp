@@ -134,7 +134,7 @@ void CADExportDlg::makeCommonWts()
                 connect(m_prbSTEP, SIGNAL(clicked(bool)), SLOT(onFormat()));
             }
 
-            QLabel *pLab = new QLabel("Select STEP Format:");
+            QLabel *plabFormat = new QLabel(tr("Select STEP Format:"));
             m_plwListFormat = new QListWidget;
             {
                 QString tip("<p>OpenCascade documentation:<br>"
@@ -155,14 +155,12 @@ void CADExportDlg::makeCommonWts()
                 m_plwListFormat->addItems(formats);
                 m_plwListFormat->setCurrentRow(0);
             }
-            m_ppbExport = new QPushButton("Export");
-            connect(m_ppbExport, SIGNAL(clicked(bool)), SLOT(onExport()));
+
 
             pControlsLayout->addLayout(pFormatSelLayout);
 
-            pControlsLayout->addWidget(pLab);
+            pControlsLayout->addWidget(plabFormat);
             pControlsLayout->addWidget(m_plwListFormat);
-            pControlsLayout->addWidget(m_ppbExport);
         }
         m_pfrControls->setLayout(pControlsLayout);
     }
@@ -170,10 +168,15 @@ void CADExportDlg::makeCommonWts()
 
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     {
+        m_ppbExport = new QPushButton(tr("Export"));
+        connect(m_ppbExport, SIGNAL(clicked(bool)), SLOT(onExport()));
+        m_pButtonBox->addButton(m_ppbExport, QDialogButtonBox::ActionRole);
+
         QPushButton *ppbClear = new QPushButton(tr("Clear output"));
         ppbClear->setToolTip(tr("<p>Clears the text output</p>"));
         connect(ppbClear, SIGNAL(clicked(bool)), m_ppto, SLOT(clear()));
         m_pButtonBox->addButton(ppbClear, QDialogButtonBox::ActionRole);
+
         connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onButton(QAbstractButton*)));
     }
 }

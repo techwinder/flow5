@@ -342,12 +342,12 @@ bool FileIO::serializeProjectXfl(QDataStream &ar, bool bIsStoring, PlanePolar *p
         // 200001 : First instance of new ".xfl" format
 
         //Save unit data
-        ar << Units::lengthUnitIndex();
-        ar << Units::areaUnitIndex();
-        ar << Units::massUnitIndex();
-        ar << Units::speedUnitIndex();
-        ar << Units::forceUnitIndex();
-        ar << Units::momentUnitIndex();
+        ar << Units::lengthUnit();
+        ar << Units::areaUnit();
+        ar << Units::massUnit();
+        ar << Units::speedUnit();
+        ar << Units::forceUnit();
+        ar << Units::momentUnit();
 
         // format 200002
         // saving WPolar full data including extra drag
@@ -385,8 +385,8 @@ bool FileIO::serializeProjectXfl(QDataStream &ar, bool bIsStoring, PlanePolar *p
         SplineFoil SF;
         serial::serializeSplineFoilXfl(&SF, ar, bIsStoring); //Foil2SplineDlg::s_SF.serializeXfl(ar, bIsStoring);
 
-        ar << Units::pressureUnitIndex();
-        ar << Units::inertiaUnitIndex();
+        ar << Units::pressureUnit();
+        ar << Units::inertiaUnit();
         //add provisions
         // space allocation for the future storage of more data, without need to change the format
         for (int i=2; i<20; i++) ar << 0;

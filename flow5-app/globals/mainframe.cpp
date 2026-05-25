@@ -2857,14 +2857,14 @@ void MainFrame::saveSettings()
 
         settings.setValue("ImageDirName", m_ImageDirName);
 
-        settings.setValue("LengthUnit",   Units::lengthUnitIndex());
-        settings.setValue("AreaUnit",     Units::areaUnitIndex());
-        settings.setValue("WeightUnit",   Units::massUnitIndex());
-        settings.setValue("SpeedUnit",    Units::speedUnitIndex());
-        settings.setValue("ForceUnit",    Units::forceUnitIndex());
-        settings.setValue("MomentUnit",   Units::momentUnitIndex());
-        settings.setValue("PressureUnit", Units::pressureUnitIndex());
-        settings.setValue("InertiaUnit",  Units::inertiaUnitIndex());
+        settings.setValue("LengthUnit",   Units::lengthUnit());
+        settings.setValue("AreaUnit",     Units::areaUnit());
+        settings.setValue("WeightUnit",   Units::massUnit());
+        settings.setValue("SpeedUnit",    Units::speedUnit());
+        settings.setValue("ForceUnit",    Units::forceUnit());
+        settings.setValue("MomentUnit",   Units::momentUnit());
+        settings.setValue("PressureUnit", Units::pressureUnit());
+        settings.setValue("InertiaUnit",  Units::inertiaUnit());
         settings.setValue("FluidUnits",   Units::fluidUnitType());
 
         settings.setValue("ImageFormat",    m_ImageFormat);
