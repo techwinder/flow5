@@ -124,6 +124,8 @@ class FoilExplorer : public QWidget
         void onSwitchAll(bool bChecked);
         void onSetFilter();
 
+        void onToggleSelectedItem();
+
     protected:
         static MainFrame *s_pMainFrame;
         static XDirect *s_pXDirect;

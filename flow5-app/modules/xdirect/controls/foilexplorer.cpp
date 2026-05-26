@@ -76,6 +76,7 @@ FoilExplorer::FoilExplorer(QWidget *pParent) : QWidget(pParent)
     m_pTreeView->setUniformRowHeights(true);
     m_pTreeView->setRootIsDecorated(true);
     connect(m_pTreeView, SIGNAL(switchAll(bool)), SLOT(onSwitchAll(bool)));
+    connect(m_pTreeView, SIGNAL(toggleItem(ObjectTreeItem*,QModelIndex)), SLOT(onToggleSelectedItem()));
 
     m_pModel = new ObjectTreeModel(this);
     m_pModel->setHeaderData(0, Qt::Horizontal, "Objects", Qt::DisplayRole);
@@ -411,6 +412,60 @@ void FoilExplorer::setObjectFromIndex(const QModelIndex &index)
 }
 
 
+void FoilExplorer::onToggleSelectedItem()
+{
+    Foil *pFoil   = s_pXDirect->curFoil();
+    Polar *pPolar = s_pXDirect->curPolar();
+    OpPoint *pOpp = s_pXDirect->curOpp();
+    if(pOpp)
+    {
+        pOpp->setVisible(!pOpp->isVisible());
+        updateVisibilityBoxes(); // to update polar and foil states
+    }
+    else if(pPolar)
+    {
+        if(s_pXDirect->isPolarView())
+        {
+            Objects2d::setPolarVisible(pPolar, !pPolar->isVisible());
+        }
+        else
+        {
+            Qt::CheckState state = polarState(pPolar);
+            if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
+                Objects2d::setPolarVisible(pPolar, true);
+            else if(state==Qt::Checked)
+                Objects2d::setPolarVisible(pPolar, false);
+        }
+
+        updateVisibilityBoxes();
+    }
+    else if(pFoil)
+    {
+        Qt::CheckState state = foilState(pFoil);
+        if(s_pXDirect->isDesignView())
+        {
+            if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
+                pFoil->setVisible(true);
+            else if(state==Qt::Checked)
+                pFoil->setVisible(false);
+        }
+        else
+        {
+            if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
+                Objects2d::setFoilVisible(pFoil, true, true);
+            else if(state==Qt::Checked)
+                Objects2d::setFoilVisible(pFoil, false, false);
+        }
+
+        updateVisibilityBoxes();
+    }
+    setOverallCheckStatus();
+    s_pXDirect->resetCurves();
+    s_pXDirect->m_pDFoilWt->resetLegend();
+    s_pXDirect->updateView();
+}
+
+
 void FoilExplorer::onCurrentRowChanged(QModelIndex currentIndex, QModelIndex)
 {
     setObjectFromIndex(currentIndex);
@@ -464,60 +519,17 @@ void FoilExplorer::onItemClicked(const QModelIndex &index)
             // update children items
             updateLineStyles();
         }
+        s_pXDirect->resetCurves();
+        s_pXDirect->m_pDFoilWt->resetLegend();
+        s_pXDirect->updateView();
     }
     else if (index.column()==2)
     {
-        if(pOpp)
-        {
-            pOpp->setVisible(!pOpp->isVisible());
-            updateVisibilityBoxes(); // to update polar and foil states
-        }
-        else if(pPolar)
-        {
-            if(s_pXDirect->isPolarView())
-            {
-                Objects2d::setPolarVisible(pPolar, !pPolar->isVisible());
-            }
-            else
-            {
-                Qt::CheckState state = polarState(pPolar);
-                if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
-                    Objects2d::setPolarVisible(pPolar, true);
-                else if(state==Qt::Checked)
-                    Objects2d::setPolarVisible(pPolar, false);
-            }
-
-            updateVisibilityBoxes();
-        }
-        else if(pFoil)
-        {
-            Qt::CheckState state = foilState(pFoil);
-            if(s_pXDirect->isDesignView())
-            {
-                if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
-                    pFoil->setVisible(true);
-                else if(state==Qt::Checked)
-                    pFoil->setVisible(false);
-            }
-            else
-            {
-                if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
-                    Objects2d::setFoilVisible(pFoil, true, true);
-                else if(state==Qt::Checked)
-                    Objects2d::setFoilVisible(pFoil, false, false);
-            }
-
-            updateVisibilityBoxes();
-        }
-        setOverallCheckStatus();
+        onToggleSelectedItem();
     }
-    s_pXDirect->resetCurves();
-    s_pXDirect->m_pDFoilWt->resetLegend();
-    s_pXDirect->updateView();
 
     m_pTreeView->update();
     emit(s_pXDirect->projectModified());
-//    m_pModel->updateDataFromRoot();
 }
 
 

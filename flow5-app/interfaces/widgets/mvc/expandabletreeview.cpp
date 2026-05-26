@@ -26,6 +26,7 @@
 #include <QToolButton>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <QKeyEvent>
 #include <QDebug>
 
 #include "expandabletreeview.h"
@@ -117,6 +118,24 @@ void ExpandableTreeView::initETV()
     connect(m_pLevelPlus,     SIGNAL(triggered(bool)), SLOT(onLevelPlus()));
 
     connect(m_pchHideShowAll, SIGNAL(clicked(bool)),   SLOT(onHideShowAll(bool)));
+}
+
+
+void ExpandableTreeView::keyPressEvent(QKeyEvent *pEvent)
+{
+    switch (pEvent->key())
+    {
+        case Qt::Key_Space:
+        {
+            QModelIndex currentIndex = this->currentIndex();
+            ObjectTreeModel *pModel = dynamic_cast<ObjectTreeModel*>(model());
+            ObjectTreeItem *pCurItem = pModel->itemFromIndex(currentIndex);
+            emit toggleItem(pCurItem, currentIndex);
+            break;
+        }
+        default:
+            QTreeView::keyPressEvent(pEvent);
+    }
 }
 
 

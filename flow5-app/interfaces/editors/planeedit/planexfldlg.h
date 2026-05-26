@@ -38,8 +38,6 @@
 #include <QTextEdit>
 
 
-#include <TopoDS_Wire.hxx>
-
 #include <interfaces/editors/planeedit/planedlg.h>
 #include <api/triangle3d.h>
 #include <api/linestyle.h>

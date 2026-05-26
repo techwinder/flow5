@@ -265,8 +265,8 @@ void BatchDlg::customEvent(QEvent * pEvent)
     else if(pEvent->type()==XFOIL_BATCH_END_EVENT)
     {
         std::string strong;
-        if(m_bCancel) strong = "\n_____Analysis cancelled_____\n";
-        else          strong = "\n_____Analysis completed_____\n";
+        if(m_bCancel) strong = "\n_____Analysis cancelled_____\n\n";
+        else          strong = "\n_____Analysis completed_____\n\n";
         m_ppto->onAppendStdText(strong);
 
         cleanUp();

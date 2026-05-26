@@ -120,6 +120,7 @@ class PlaneExplorer : public QWidget
         void onItemDoubleClicked(const QModelIndex &index);
         void onCurrentRowChanged(QModelIndex currentfilteredidx);
         void onSetFilter();
+        void onToggleSelectedItem(ObjectTreeItem *, QModelIndex index);
 
     public slots:
         void onSwitchAll(bool bChecked);

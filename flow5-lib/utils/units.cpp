@@ -155,7 +155,7 @@ void Units::setUnitConversionFactors()
         case DM:   g_mtoUnit  = 10.0;                  break;
         default:
         case M:    g_mtoUnit  = 1.0;                   break;
-        case IN:   g_mtoUnit  = 1000.0/25.4;           break;
+        case INCH: g_mtoUnit  = 1000.0/25.4;           break;
         case FT:   g_mtoUnit  = 1000.0/25.4/12.0;      break;
     }
 

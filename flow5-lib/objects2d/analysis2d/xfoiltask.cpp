@@ -202,7 +202,7 @@ bool XFoilTask::processCl(int k)
 
     if(m_XFoilInstance.lvconv)
     {
-//        str = std::format("   ...converged after {:3d} iterations / Cl=%5f  Cd=%5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
+//        str = std::format("   ...converged after {:3d} iterations / Cl={:5f}  Cd={:5f}\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
 //        traceStdLog(str);
         // repurposing control variable to contain convergence result
         m_pPolar->m_Control[k] = m_XFoilInstance.lvconv ? 1.0 : -1.0;
@@ -376,7 +376,7 @@ bool XFoilTask::processClList()
 
         if(m_XFoilInstance.lvconv)
         {
-            str = std::format("   ...converged after {:d} iterations / Cl=%5f  Cd=%5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
+            str = std::format("   ...converged after {:d} iterations / Cl={:5f}  Cd={:5f}\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
             traceStdLog(str);
             m_pPolar->m_Cd[icl]     = m_XFoilInstance.cd;
             m_pPolar->m_XTrTop[icl] = m_XFoilInstance.xoctr[1];
@@ -681,7 +681,7 @@ bool XFoilTask::thetaSequence()
 
             if(m_XFoilInstance.lvconv)
             {
-                str = std::format("   ...converged after {:3d} iterations / Cl=%9.5f  Cd=%9.5f\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
+                str = std::format("   ...converged after {:3d} iterations / Cl={:9.5f}  Cd={:9.5f}\n", iterations, m_XFoilInstance.cl, m_XFoilInstance.cd);
                 traceStdLog(str);
 
                 if(m_XFoilInstance.cd<s_CdError)
@@ -786,7 +786,7 @@ bool XFoilTask::ReSequence()
         double Re = SpMin;
         do
         {
-            strange =std::format("Re = %7.0f", Re);
+            strange =std::format("Re = {:7.0f}", Re);
             traceStdLog(strange);
             m_XFoilInstance.reinf1 = Re;
             m_XFoilInstance.lalfa = true;

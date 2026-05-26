@@ -26,8 +26,9 @@
 #pragma once
 
 
-#include <TopoDS_Shape.hxx>
-#include <TopoDS_Face.hxx>
+
+class TopoDS_Face;
+class TopoDS_Shape;
 
 #include <gmsh.h>
 

@@ -90,9 +90,10 @@ bool foil::readFoilFile(const std::string &filename, Foil *pFoil, int &iLineErro
         }
         else
         {
-            // non-empty but unreadable line, abort
+            // Non-empty but unreadable line, skip
+            // Drela's airfoil files end with a string comment
             iLineError = iLine;
-            return false;
+//            return false;
         }
     }
 

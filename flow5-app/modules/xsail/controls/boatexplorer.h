@@ -115,13 +115,14 @@ class BoatExplorer : public QWidget
         void onCurrentRowChanged(QModelIndex curidx, QModelIndex);
         void onSwitchAll(bool bChecked);
         void onSetFilter();
+        void onToggleSelectedItem(ObjectTreeItem *, QModelIndex index);
 
     private:
         void setupLayout();
         void setOverallCheckStatus();
 
     private:
-        ExpandableTreeView *m_pStruct;
+        ExpandableTreeView *m_pTreeView;
         ObjectTreeModel *m_pModel;
         ObjectTreeDelegate *m_pDelegate;
 

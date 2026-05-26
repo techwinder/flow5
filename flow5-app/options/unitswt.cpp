@@ -279,8 +279,8 @@ void UnitsWt::onSelChanged()
         case 2: Units::setLengthUnit(Units::DM);   break;
         default:
         case 3: Units::setLengthUnit(Units::M);    break;
-        case 4: Units::setLengthUnit(Units::IN);   break;
-        case 5: Units::setLengthUnit(Units::FT);   break;
+        case 4: Units::setLengthUnit(Units::INCH); break;
+        case 5: Units::setLengthUnit(Units::FT); break;
     }
 
     switch( m_pcbSpeed->currentIndex())

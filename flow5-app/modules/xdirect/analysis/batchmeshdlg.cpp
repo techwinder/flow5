@@ -35,7 +35,7 @@
 #include <QPushButton>
 #include <QtConcurrent/QtConcurrentRun>
 
-#include "batchxfoildlg.h"
+#include "batchmeshdlg.h"
 
 #include <api/fl5core.h>
 #include <api/analysisrange.h>
@@ -63,22 +63,22 @@
 
 
 
-xfl::enumPolarType BatchXFoilDlg::s_PolarType = xfl::T1POLAR;
+xfl::enumPolarType BatchMeshDlg::s_PolarType = xfl::T1POLAR;
 
-double BatchXFoilDlg::s_XTop   = 1.0;
-double BatchXFoilDlg::s_XBot   = 1.0;
+double BatchMeshDlg::s_XTop   = 1.0;
+double BatchMeshDlg::s_XBot   = 1.0;
 
-bool BatchXFoilDlg::s_bTransAtHinge = false;
+bool BatchMeshDlg::s_bTransAtHinge = false;
 
-QVector<bool> BatchXFoilDlg::s_ActiveList;
-QVector<double> BatchXFoilDlg::s_ReList;
-QVector<double> BatchXFoilDlg::s_MachList;
-QVector<double> BatchXFoilDlg::s_NCritList;
+QVector<bool> BatchMeshDlg::s_ActiveList;
+QVector<double> BatchMeshDlg::s_ReList;
+QVector<double> BatchMeshDlg::s_MachList;
+QVector<double> BatchMeshDlg::s_NCritList;
 
 
-BatchXFoilDlg::BatchXFoilDlg(QWidget *pParent) : BatchDlg(pParent)
+BatchMeshDlg::BatchMeshDlg(QWidget *pParent) : BatchDlg(pParent)
 {
-    setWindowTitle(tr("Multi-threaded batch analysis"));
+    setWindowTitle(tr("Polar mesh batch calculation"));
 
     setupLayout();
     connectBaseSignals();
@@ -86,14 +86,14 @@ BatchXFoilDlg::BatchXFoilDlg(QWidget *pParent) : BatchDlg(pParent)
 }
 
 
-BatchXFoilDlg::~BatchXFoilDlg()
+BatchMeshDlg::~BatchMeshDlg()
 {
     if(m_pXFile)  delete m_pXFile;
     m_pXFile = nullptr;
 }
 
 
-void BatchXFoilDlg::setupLayout()
+void BatchMeshDlg::setupLayout()
 {
     m_plwNameList = new QListWidget;
     m_plwNameList->setSelectionMode(QAbstractItemView::MultiSelection);
@@ -209,7 +209,7 @@ void BatchXFoilDlg::setupLayout()
 }
 
 
-void BatchXFoilDlg::connectSignals()
+void BatchMeshDlg::connectSignals()
 {
     connect(m_pLeftTabWt,         SIGNAL(currentChanged(int)),                  SLOT(onResizeColumns()));
     connect(m_pHSplitter,         SIGNAL(splitterMoved(int,int)),               SLOT(onResizeColumns()));
@@ -222,7 +222,7 @@ void BatchXFoilDlg::connectSignals()
 }
 
 
-void BatchXFoilDlg::initDialog()
+void BatchMeshDlg::initDialog()
 {
     BatchDlg::initDialog();
 
@@ -264,13 +264,13 @@ void BatchXFoilDlg::initDialog()
 
 
 
-void BatchXFoilDlg::onSpecChanged()
+void BatchMeshDlg::onSpecChanged()
 {
     readParams();
 }
 
 
-void BatchXFoilDlg::readParams()
+void BatchMeshDlg::readParams()
 {
     BatchDlg::readParams();
 
@@ -284,7 +284,7 @@ void BatchXFoilDlg::readParams()
 }
 
 
-void BatchXFoilDlg::outputReList()
+void BatchMeshDlg::outputReList()
 {
     m_ppto->appendPlainText("Reynolds numbers to analyze:\n");
 
@@ -301,7 +301,7 @@ void BatchXFoilDlg::outputReList()
 }
 
 
-void BatchXFoilDlg::onResizeColumns()
+void BatchMeshDlg::onResizeColumns()
 {
     double w = double(m_pcptReTable->width())*.93;
     int wCols  = int(w/10);
@@ -314,21 +314,21 @@ void BatchXFoilDlg::onResizeColumns()
 }
 
 
-void BatchXFoilDlg::resizeEvent(QResizeEvent*pEvent)
+void BatchMeshDlg::resizeEvent(QResizeEvent*pEvent)
 {
     BatchDlg::resizeEvent(pEvent);
     onResizeColumns();
 }
 
 
-void BatchXFoilDlg::showEvent(QShowEvent *pEvent)
+void BatchMeshDlg::showEvent(QShowEvent *pEvent)
 {
     BatchDlg::showEvent(pEvent);
     onResizeColumns();
 }
 
 
-void BatchXFoilDlg::initReList()
+void BatchMeshDlg::initReList()
 {
     s_ActiveList.resize(12);
     s_ReList.resize(12);
@@ -355,7 +355,7 @@ void BatchXFoilDlg::initReList()
 }
 
 
-void BatchXFoilDlg::loadSettings(QSettings &settings)
+void BatchMeshDlg::loadSettings(QSettings &settings)
 {
     settings.beginGroup("XFoilBatchDlg");
     {
@@ -396,7 +396,7 @@ void BatchXFoilDlg::loadSettings(QSettings &settings)
 }
 
 
-void BatchXFoilDlg::saveSettings(QSettings &settings)
+void BatchMeshDlg::saveSettings(QSettings &settings)
 {
     settings.beginGroup("XFoilBatchDlg");
     {
@@ -439,7 +439,7 @@ void BatchXFoilDlg::saveSettings(QSettings &settings)
 }
 
 
-void BatchXFoilDlg::fillReModel()
+void BatchMeshDlg::fillReModel()
 {
     m_pReModel->setRowCount(s_ReList.count());
     m_pReModel->blockSignals(true);
@@ -466,7 +466,7 @@ void BatchXFoilDlg::fillReModel()
 }
 
 
-void BatchXFoilDlg::setRowEnabled(int  row, bool bEnabled)
+void BatchMeshDlg::setRowEnabled(int  row, bool bEnabled)
 {
     for(int col=0; col<m_pReModel->columnCount(); col++)
     {
@@ -476,7 +476,7 @@ void BatchXFoilDlg::setRowEnabled(int  row, bool bEnabled)
 }
 
 
-void BatchXFoilDlg::onDelete()
+void BatchMeshDlg::onDelete()
 {
     if(m_pReModel->rowCount()<=1) return;
 
@@ -495,7 +495,7 @@ void BatchXFoilDlg::onDelete()
 }
 
 
-void BatchXFoilDlg::onInsertBefore()
+void BatchMeshDlg::onInsertBefore()
 {
     int sel = m_pcptReTable->currentIndex().row();
 
@@ -530,7 +530,7 @@ void BatchXFoilDlg::onInsertBefore()
 }
 
 
-void BatchXFoilDlg::onInsertAfter()
+void BatchMeshDlg::onInsertAfter()
 {
     int sel = m_pcptReTable->currentIndex().row()+1;
 
@@ -564,7 +564,7 @@ void BatchXFoilDlg::onInsertAfter()
 }
 
 
-void BatchXFoilDlg::onCellChanged(QModelIndex topLeft, QModelIndex )
+void BatchMeshDlg::onCellChanged(QModelIndex topLeft, QModelIndex )
 {
     s_ActiveList.clear();
     s_ReList.clear();
@@ -593,7 +593,7 @@ void BatchXFoilDlg::onCellChanged(QModelIndex topLeft, QModelIndex )
 * Bubble sort algorithm for the arrays of Reynolds, Mach and NCrit numbers.
 * The arrays are sorted by crescending Re numbers.
 */
-void BatchXFoilDlg::sortRe()
+void BatchMeshDlg::sortRe()
 {
     int indx(0), indx2(0);
     bool Chtemp(true), Chtemp2(true);
@@ -635,7 +635,7 @@ void BatchXFoilDlg::sortRe()
 }
 
 
-void BatchXFoilDlg::onReTableClicked(QModelIndex index)
+void BatchMeshDlg::onReTableClicked(QModelIndex index)
 {
     if(!index.isValid())  return;
 
@@ -675,10 +675,10 @@ void BatchXFoilDlg::onReTableClicked(QModelIndex index)
 }
 
 
-void BatchXFoilDlg::readFoils(QVector<Foil*> &foils)
+void BatchMeshDlg::readFoils(QVector<Foil*> &foils)
 {
     foils.clear();
-    for(int i=0; i<m_plwNameList->count();i++)
+    for(int i=0; i<m_plwNameList->count(); i++)
     {
         QListWidgetItem *pItem = m_plwNameList->item(i);
         if(pItem && pItem->isSelected())
@@ -691,7 +691,7 @@ void BatchXFoilDlg::readFoils(QVector<Foil*> &foils)
 }
 
 
-void BatchXFoilDlg::onCalculate()
+void BatchMeshDlg::onCalculate()
 {
     if(m_bIsRunning)
     {
@@ -723,7 +723,7 @@ void BatchXFoilDlg::onCalculate()
 
     if(foils.isEmpty())
     {
-        strong ="No foil defined for analysis\n\n";
+        strong ="No foil selected for calculation\n\n";
         m_ppto->onAppendQText(strong);
         cleanUp();
         return;
@@ -791,7 +791,7 @@ void BatchXFoilDlg::onCalculate()
     }
 
 
-    strong = QString::asprintf("\nFound %d foil/polar pairs to analyze\n", m_nAnalysis);
+    strong = QString::asprintf("\nFound %d foil/polar pairs to calculate\n", m_nAnalysis);
     m_ppto->onAppendQText(strong);
 
 
@@ -812,7 +812,7 @@ void BatchXFoilDlg::onCalculate()
     m_ppto->appendPlainText("\nStarted/Done/Total\n");
 
 #if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
-            QFuture<void> future = QtConcurrent::run(&BatchXFoilDlg::batchLaunch, this);
+            QFuture<void> future = QtConcurrent::run(&BatchMeshDlg::batchLaunch, this);
 #else
             QtConcurrent::run([this](){ this->batchLaunch(); });
 #endif

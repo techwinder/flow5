@@ -1852,7 +1852,7 @@ bool occ::importCADShapes(std::string const &filename, NCollection_List<TopoDS_S
 
     std::filesystem::path filePath(filename);
 
-    std::string extension = filePath.extension();
+    std::string extension = filePath.extension().string();
 
     for(auto& c : extension)   c = std::tolower(c);
 

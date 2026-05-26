@@ -28,7 +28,7 @@
 #include <QAction>
 #include <QLineEdit>
 
-
+class ObjectTreeItem;
 class CrossCheckBox;
 
 class ExpandableTreeView : public QTreeView
@@ -45,9 +45,6 @@ class ExpandableTreeView : public QTreeView
         void setOverallCheckedState(Qt::CheckState state);
         QWidget * cmdWidget() {return m_pfrControls;}
 
-        int sizeHintForColumn(int column) const override;
-        QSize sizeHint() const override;
-//        void resizeEvent(QResizeEvent *pEvent) override;
 
         void enableSelectBox(bool bEnable);
 
@@ -55,6 +52,10 @@ class ExpandableTreeView : public QTreeView
 
     private:
         void initETV();
+
+        void keyPressEvent(QKeyEvent *pEvent) override;
+        int sizeHintForColumn(int column) const override;
+        QSize sizeHint() const override;
 
     public slots:
         void onObjectLevel();
@@ -66,6 +67,7 @@ class ExpandableTreeView : public QTreeView
 
     signals:
         void switchAll(bool);
+        void toggleItem(ObjectTreeItem*,QModelIndex);
 
     private:
         QLineEdit *m_pleFilter;

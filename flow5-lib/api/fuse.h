@@ -90,7 +90,7 @@ class FL5LIB_EXPORT Fuse : public Part
         void clearShells() {m_Shell.Clear();}
         int shellCount() const {return m_Shell.Extent();}
         int nShells() const {return m_Shell.Extent();}
-        void appendShell(TopoDS_Shape const &shell) {m_Shell.Append(shell);}
+        void appendShell(TopoDS_Shell const &shell) {m_Shell.Append(shell);}
         bool stitchShells(TopoDS_Shell &fusedshell, std::string &logmsg, std::string prefx);
         void clearOccTriangulation();
 

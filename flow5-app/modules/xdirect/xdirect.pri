@@ -1,9 +1,9 @@
 
 HEADERS += \
     $$PWD/analysis/analysis2dsettings.h \
-    $$PWD/analysis/batchaltdlg.h \
+    $$PWD/analysis/batchcalcdlg.h \
     $$PWD/analysis/batchdlg.h \
-    $$PWD/analysis/batchxfoildlg.h \
+    $$PWD/analysis/batchmeshdlg.h \
     $$PWD/analysis/xfoilanalysisdlg.h \
     $$PWD/controls/analysis2dctrls.h \
     $$PWD/controls/foilexplorer.h \
@@ -25,9 +25,9 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/analysis/analysis2dsettings.cpp \
-    $$PWD/analysis/batchaltdlg.cpp \
+    $$PWD/analysis/batchcalcdlg.cpp \
     $$PWD/analysis/batchdlg.cpp \
-    $$PWD/analysis/batchxfoildlg.cpp \
+    $$PWD/analysis/batchmeshdlg.cpp \
     $$PWD/analysis/xfoilanalysisdlg.cpp \
     $$PWD/controls/analysis2dctrls.cpp \
     $$PWD/controls/foilexplorer.cpp \

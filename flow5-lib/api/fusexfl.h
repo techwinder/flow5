@@ -35,8 +35,6 @@
 #include <trimesh.h>
 #include <quad3d.h>
 
-#include <TopoDS_Face.hxx>
-
 #define NHOOPPOINTS 67  //used for display and to export the geometry
 #define NXPOINTS 97     //used for display and to export the geometry
 

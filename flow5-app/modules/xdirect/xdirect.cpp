@@ -72,8 +72,8 @@
 #include <interfaces/widgets/line/linemenu.h>
 #include <modules/xdirect/analysis/analysis2dsettings.h>
 #include <modules/xdirect/analysis/xfoilanalysisdlg.h>
-#include <modules/xdirect/analysis/batchaltdlg.h>
-#include <modules/xdirect/analysis/batchxfoildlg.h>
+#include <modules/xdirect/analysis/batchcalcdlg.h>
+#include <modules/xdirect/analysis/batchmeshdlg.h>
 #include <modules/xdirect/controls/analysis2dctrls.h>
 #include <modules/xdirect/controls/foiltable.h>
 #include <modules/xdirect/controls/foilexplorer.h>
@@ -1034,8 +1034,8 @@ void XDirect::loadSettings(QSettings &settings)
     FoilPolarDlg::loadSettings(settings);
     PolarAutoNameDlg::loadSettings(settings);
     BatchDlg::loadSettings(settings);
-    BatchAltDlg::loadSettings(settings);
-    BatchXFoilDlg::loadSettings(settings);
+    BatchCalcDlg::loadSettings(settings);
+    BatchMeshDlg::loadSettings(settings);
     XFoilAnalysisDlg::loadSettings(settings);
     FoilDlg::loadSettings(settings);
     XFoilPanelDlg::loadSettings(settings);
@@ -1120,8 +1120,8 @@ void XDirect::saveSettings(QSettings &settings)
     FoilPolarDlg::saveSettings(settings);
     PolarAutoNameDlg::saveSettings(settings);
     BatchDlg::saveSettings(settings);
-    BatchAltDlg::saveSettings(settings);
-    BatchXFoilDlg::saveSettings(settings);
+    BatchCalcDlg::saveSettings(settings);
+    BatchMeshDlg::saveSettings(settings);
     XFoilAnalysisDlg::saveSettings(settings);
     XFoilPanelDlg::saveSettings(settings);
 
@@ -1217,7 +1217,7 @@ void XDirect::onFinishAnalysis()
 
 void XDirect::onBatchAltAnalysis()
 {
-    BatchAltDlg *pBatchDlg = new BatchAltDlg(s_pMainFrame);
+    BatchCalcDlg *pBatchDlg = new BatchCalcDlg(s_pMainFrame);
     pBatchDlg->initDialog();
 
     pBatchDlg->exec();
@@ -1237,7 +1237,7 @@ void XDirect::onBatchAltAnalysis()
 
 void XDirect::onBatchAnalysis()
 {
-    BatchXFoilDlg *pBatchDlg = new BatchXFoilDlg(s_pMainFrame);
+    BatchMeshDlg *pBatchDlg = new BatchMeshDlg(s_pMainFrame);
     pBatchDlg->setFoil(XDirect::s_pCurFoil);
     pBatchDlg->initDialog();
 

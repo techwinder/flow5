@@ -33,7 +33,7 @@
 #include <QVBoxLayout>
 #include <QtConcurrent/QtConcurrentRun>
 
-#include "batchaltdlg.h"
+#include "batchcalcdlg.h"
 
 #include <api/fl5core.h>
 #include <api/analysisrange.h>
@@ -64,12 +64,12 @@
 #include <modules/xdirect/xdirect.h>
 
 
-QByteArray BatchAltDlg::s_VLeftSplitterSizes;
+QByteArray BatchCalcDlg::s_VLeftSplitterSizes;
 
 
-BatchAltDlg::BatchAltDlg(QWidget *pParent) : BatchDlg(pParent)
+BatchCalcDlg::BatchCalcDlg(QWidget *pParent) : BatchDlg(pParent)
 {
-    setWindowTitle(tr("Multi-threaded batch analysis"));
+    setWindowTitle(tr("Polar batch analysis"));
 
     setupLayout();
     connectBaseSignals();
@@ -77,14 +77,14 @@ BatchAltDlg::BatchAltDlg(QWidget *pParent) : BatchDlg(pParent)
 }
 
 
-BatchAltDlg::~BatchAltDlg()
+BatchCalcDlg::~BatchCalcDlg()
 {
     if(m_pXFile)  delete m_pXFile;
     m_pXFile = nullptr;
 }
 
 
-void BatchAltDlg::setupLayout()
+void BatchCalcDlg::setupLayout()
 {
     QFrame *pFrame = new QFrame;
     {
@@ -153,14 +153,14 @@ void BatchAltDlg::setupLayout()
 }
 
 
-void BatchAltDlg::connectSignals()
+void BatchCalcDlg::connectSignals()
 {
 
     connect(m_pStruct->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(onCurrentRowChanged(QModelIndex,QModelIndex)));
 }
 
 
-void BatchAltDlg::initDialog()
+void BatchCalcDlg::initDialog()
 {
     BatchDlg::initDialog();
 
@@ -196,7 +196,7 @@ void BatchAltDlg::initDialog()
 }
 
 
-void BatchAltDlg::showEvent(QShowEvent *pEvent)
+void BatchCalcDlg::showEvent(QShowEvent *pEvent)
 {
     BatchDlg::showEvent(pEvent);
 
@@ -204,14 +204,14 @@ void BatchAltDlg::showEvent(QShowEvent *pEvent)
 }
 
 
-void BatchAltDlg::hideEvent(QHideEvent *pEvent)
+void BatchCalcDlg::hideEvent(QHideEvent *pEvent)
 {
     BatchDlg::hideEvent(pEvent);
 
     s_VLeftSplitterSizes  = m_psplVLeft->saveState();
 }
 
-void BatchAltDlg::loadSettings(QSettings &settings)
+void BatchCalcDlg::loadSettings(QSettings &settings)
 {
     settings.beginGroup("XFoilBatchDlg");
     {
@@ -221,7 +221,7 @@ void BatchAltDlg::loadSettings(QSettings &settings)
 }
 
 
-void BatchAltDlg::saveSettings(QSettings &settings)
+void BatchCalcDlg::saveSettings(QSettings &settings)
 {
     settings.beginGroup("XFoilBatchDlg");
     {
@@ -231,13 +231,13 @@ void BatchAltDlg::saveSettings(QSettings &settings)
 }
 
 
-void BatchAltDlg::onCurrentRowChanged(QModelIndex currentidx, QModelIndex )
+void BatchCalcDlg::onCurrentRowChanged(QModelIndex currentidx, QModelIndex )
 {
     setObjectProperties(currentidx);
 }
 
 
-void BatchAltDlg::setObjectProperties(QModelIndex index)
+void BatchCalcDlg::setObjectProperties(QModelIndex index)
 {
     QString props;
     ObjectTreeItem *pSelectedItem = nullptr;
@@ -288,8 +288,7 @@ void BatchAltDlg::setObjectProperties(QModelIndex index)
 }
 
 
-
-void BatchAltDlg::onCalculate()
+void BatchCalcDlg::onCalculate()
 {
     if(m_bIsRunning)
     {
@@ -344,7 +343,7 @@ void BatchAltDlg::onCalculate()
 
     if(m_AnalysisPair.isEmpty())
     {
-        strong ="No foil defined for analysis\n\n";
+        strong ="No polar selected for calculation\n\n";
         m_ppto->insertPlainText(strong);
         cleanUp();
         return;
@@ -356,7 +355,7 @@ void BatchAltDlg::onCalculate()
     m_nTaskDone = 0;
     m_nTaskStarted = 0;
 
-    strong = QString::asprintf("Found %d foil/polar pairs to analyze\n", m_nAnalysis);
+    strong = QString::asprintf("Found %d foil/polar pairs to calculate\n", m_nAnalysis);
     m_ppto->insertPlainText(strong);
 
 
@@ -377,7 +376,7 @@ void BatchAltDlg::onCalculate()
     m_ppto->appendPlainText("\nStarted/Done/Total\n");
 
 #if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
-            QFuture<void> future = QtConcurrent::run(&BatchAltDlg::batchLaunch, this);
+            QFuture<void> future = QtConcurrent::run(&BatchCalcDlg::batchLaunch, this);
 #else
             QtConcurrent::run([this](){ this->batchLaunch(); });
 #endif

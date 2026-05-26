@@ -86,6 +86,7 @@ PlaneExplorer::PlaneExplorer(QWidget *pParent) : QWidget(pParent)
 //    connect(m_pTreeView, SIGNAL(activated(QModelIndex)),       SLOT(onCurrentRowChanged(QModelIndex)));
     connect(m_pTreeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(onCurrentRowChanged(QModelIndex)));
     connect(m_pTreeView->m_pleFilter, SIGNAL(returnPressed()), SLOT(onSetFilter()));
+    connect(m_pTreeView, SIGNAL(toggleItem(ObjectTreeItem*,QModelIndex)), SLOT(onToggleSelectedItem(ObjectTreeItem*,QModelIndex)));
 }
 
 
@@ -1426,7 +1427,7 @@ void PlaneExplorer::onItemClicked(const QModelIndex &index)
 {
     PlaneOpp   *pPOpp   = s_pXPlane->m_pCurPOpp;
     PlanePolar *pWPolar = s_pXPlane->m_pCurPlPolar;
-    Plane     *pPlane  = s_pXPlane->m_pCurPlane;
+    Plane      *pPlane  = s_pXPlane->m_pCurPlane;
 
     if(index.column()==1)
     {
@@ -1434,22 +1435,19 @@ void PlaneExplorer::onItemClicked(const QModelIndex &index)
 
         if(pPOpp)
         {
- //           if(s_pXPlane->isPOppView())
- //               emit s_pXPlane->projectModified();
-            {
-                LineStyle ls(pPOpp->theStyle());
-                LineMenu *pLineMenu = new LineMenu(nullptr);
-                pLineMenu->initMenu(ls);
-                pLineMenu->exec(QCursor::pos());
-                ls = pLineMenu->theStyle();
-                pPOpp->setLineStipple(ls.m_Stipple);
-                pPOpp->setLineWidth(ls.m_Width);
-                pPOpp->setLineColor(ls.m_Color);
-                pPOpp->setPointStyle(ls.m_Symbol);
-                pItem->setTheStyle(ls);
-                s_pXPlane->resetCurves();
-                emit s_pXPlane->projectModified();
-            }
+            LineStyle ls(pPOpp->theStyle());
+            LineMenu *pLineMenu = new LineMenu(nullptr);
+            pLineMenu->initMenu(ls);
+            pLineMenu->exec(QCursor::pos());
+            ls = pLineMenu->theStyle();
+            pPOpp->setLineStipple(ls.m_Stipple);
+            pPOpp->setLineWidth(ls.m_Width);
+            pPOpp->setLineColor(ls.m_Color);
+            pPOpp->setPointStyle(ls.m_Symbol);
+            pItem->setTheStyle(ls);
+            s_pXPlane->resetCurves();
+            emit s_pXPlane->projectModified();
+
         }
         else if(pWPolar)
         {
@@ -1468,78 +1466,84 @@ void PlaneExplorer::onItemClicked(const QModelIndex &index)
         }
         else if(pPlane)
         {
-//            if(!s_pXPlane->is3dView())
-            {
-                LineStyle ls(pPlane->theStyle());
-                LineMenu *pLineMenu = new LineMenu(nullptr);
-                pLineMenu->initMenu(ls);
-                pLineMenu->exec(QCursor::pos());
-                ls = pLineMenu->theStyle();
 
-                Objects3d::setPlaneStyle(pPlane, ls, pLineMenu->styleChanged(), pLineMenu->widthChanged(), pLineMenu->colorChanged(), pLineMenu->pointsChanged(), 100);
-                updateLineStyles();
-                emit s_pXPlane->projectModified();
+            LineStyle ls(pPlane->theStyle());
+            LineMenu *pLineMenu = new LineMenu(nullptr);
+            pLineMenu->initMenu(ls);
+            pLineMenu->exec(QCursor::pos());
+            ls = pLineMenu->theStyle();
 
-                if(pItem) pItem->setTheStyle(ls);
-                s_pXPlane->resetCurves();
-            }
+            Objects3d::setPlaneStyle(pPlane, ls, pLineMenu->styleChanged(), pLineMenu->widthChanged(), pLineMenu->colorChanged(), pLineMenu->pointsChanged(), 100);
+            updateLineStyles();
+            emit s_pXPlane->projectModified();
+
+            if(pItem) pItem->setTheStyle(ls);
+            s_pXPlane->resetCurves();
+
         }
+//        s_pXPlane->m_pAnalysisControls->setAnalysisRange();
+        s_pXPlane->updateView();
+
+        update();
     }
     else if (index.column()==2)
     {
-        if(pPOpp)
-        {
-//            if(s_pXPlane->isPOppView())
-            {
-                ObjectTreeItem *pItem = m_pModel->itemFromIndex(index);
-                if(pItem)
-                {
-                    pPOpp->setVisible(!pPOpp->isVisible());
-                    updateVisibilityBoxes();
-                    emit s_pXPlane->projectModified();
-                    s_pXPlane->resetCurves();
-                }
-            }
-        }
-        else if(pWPolar)
-        {
-            ObjectTreeItem *pItem = m_pModel->itemFromIndex(index);
-            if(pItem)
-            {
-                Qt::CheckState state = polarState(pWPolar);
-                if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
-                    Objects3d::setPlPolarVisible(pWPolar, true);
-                else
-                    Objects3d::setPlPolarVisible(pWPolar, false);
-
-                updateVisibilityBoxes();
-                emit s_pXPlane->projectModified();
-                s_pXPlane->resetCurves();
-            }
-        }
-        else if(pPlane)
-        {
-//            if(!s_pXPlane->is3dView())
-            {
-                ObjectTreeItem *pItem = m_pModel->itemFromIndex(index);
-                if(pItem)
-                {
-                    Qt::CheckState state = planeState(pPlane);
-                    if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
-                        Objects3d::setPlaneVisible(pPlane, true,  s_pXPlane->isStabPolarView());
-                    else if(state==Qt::Checked)
-                        Objects3d::setPlaneVisible(pPlane, false, s_pXPlane->isStabPolarView());
-
-                    updateVisibilityBoxes();
-                    emit s_pXPlane->projectModified();
-                    s_pXPlane->resetCurves();
-                }
-            }
-        }
-        setOverallCheckStatus();
+        onToggleSelectedItem(nullptr, index);
     }
+}
 
-    s_pXPlane->m_pAnalysisControls->setAnalysisRange();
+
+void PlaneExplorer::onToggleSelectedItem(ObjectTreeItem*, QModelIndex index)
+{
+    PlaneOpp   *pPOpp   = s_pXPlane->m_pCurPOpp;
+    PlanePolar *pWPolar = s_pXPlane->m_pCurPlPolar;
+    Plane      *pPlane  = s_pXPlane->m_pCurPlane;
+
+    if(pPOpp)
+    {
+        ObjectTreeItem *pItem = m_pModel->itemFromIndex(index);
+        if(pItem)
+        {
+            pPOpp->setVisible(!pPOpp->isVisible());
+            updateVisibilityBoxes();
+            emit s_pXPlane->projectModified();
+            s_pXPlane->resetCurves();
+        }
+
+    }
+    else if(pWPolar)
+    {
+        ObjectTreeItem *pItem = m_pModel->itemFromIndex(index);
+        if(pItem)
+        {
+            Qt::CheckState state = polarState(pWPolar);
+            if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
+                Objects3d::setPlPolarVisible(pWPolar, true);
+            else
+                Objects3d::setPlPolarVisible(pWPolar, false);
+
+            updateVisibilityBoxes();
+            emit s_pXPlane->projectModified();
+            s_pXPlane->resetCurves();
+        }
+    }
+    else if(pPlane)
+    {
+        ObjectTreeItem *pItem = m_pModel->itemFromIndex(index);
+        if(pItem)
+        {
+            Qt::CheckState state = planeState(pPlane);
+            if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
+                Objects3d::setPlaneVisible(pPlane, true,  s_pXPlane->isStabPolarView());
+            else if(state==Qt::Checked)
+                Objects3d::setPlaneVisible(pPlane, false, s_pXPlane->isStabPolarView());
+
+            updateVisibilityBoxes();
+            emit s_pXPlane->projectModified();
+            s_pXPlane->resetCurves();
+        }
+    }
+    setOverallCheckStatus();
     s_pXPlane->updateView();
 
     update();

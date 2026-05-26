@@ -25,12 +25,12 @@
 
 #pragma once
 
-#include <TopoDS_Shape.hxx>
 
 #include <sail.h>
 #include <nurbssurface.h>
 #include <triangle3d.h>
 
+class TopoDS_Shape;
 class Geom_BSplineSurface;
 
 class FL5LIB_EXPORT SailNurbs : public Sail

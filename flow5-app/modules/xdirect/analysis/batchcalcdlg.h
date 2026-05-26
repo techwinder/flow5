@@ -33,13 +33,13 @@ class ExpandableTreeView;
 class ObjectTreeDelegate;
 class ObjectTreeModel;
 
-class BatchAltDlg : public BatchDlg
+class BatchCalcDlg : public BatchDlg
 {
     Q_OBJECT
 
     public:
-        BatchAltDlg(QWidget *pParent=nullptr);
-        ~BatchAltDlg();
+        BatchCalcDlg(QWidget *pParent=nullptr);
+        ~BatchCalcDlg();
 
         void initDialog() override;
 

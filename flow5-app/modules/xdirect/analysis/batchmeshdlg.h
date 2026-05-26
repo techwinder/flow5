@@ -41,13 +41,13 @@ class XflDelegate;
 class XFoilTask;
 struct FoilAnalysis;
 
-class BatchXFoilDlg : public BatchDlg
+class BatchMeshDlg : public BatchDlg
 {
     Q_OBJECT
 
     public:
-        BatchXFoilDlg(QWidget *pParent=nullptr);
-        ~BatchXFoilDlg();
+        BatchMeshDlg(QWidget *pParent=nullptr);
+        ~BatchMeshDlg();
 
         void initDialog() override;
 

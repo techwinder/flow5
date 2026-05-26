@@ -37,8 +37,6 @@
 #include <QSettings>
 #include <QStack>
 
-#include <TopoDS_Face.hxx>
-
 
 #include <api/trimesh.h>
 
