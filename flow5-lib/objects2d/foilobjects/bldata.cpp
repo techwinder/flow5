@@ -22,7 +22,9 @@
 
 *****************************************************************************/
 
-
+#include <string>
+#include <format>
+#include <iostream>
 
 #include <bldata.h>
 
@@ -121,14 +123,14 @@ void BLData::resizeData(int N, bool bResultsOnly)
 
 void BLData::listBL() const
 {
-/*    std::string strange;
-    std::cout << "  nx  s  Qi   Qv   d*  theta  H  nTS  gamtr  Cf" <<std::endl;
+    std::string strange;
+    std::cout << "  nx   s   H   Qi   Qv   d*  theta  nTS  gamtr  Cf" <<std::endl;
     for(int in=0; in<nNodes(); in++)
     {
-        strange = std::format(" {:3d}  {:11g}  {:11g}  {:11g}  {:11g}  {:11g}  {:11g}  {:11g}  {:11g}  {:11g}  ",
-                        in, s[in], Qi[in], Qv[in], dstar[in], theta[in], H[in], nTS[in], gamtr[in], Cf[in]);
-        std::cout << std::format("{:s}", strange.toStdString().c_str()) << std::endl;
-    }*/
+        strange = std::format(" {:3d}  {:11g}  {:11g}  {:11g}  {:11g}  {:11g}  {:11g}  {:11g}  {:11g}  ",
+                        in, s[in], H[in], Qv[in], Cf[in], Cd[in], nTS[in], dstar[in], theta[in], gamtr[in]);
+        std::cout << std::format("{:s}", strange.c_str()) << std::endl;
+    }
 }
 
 

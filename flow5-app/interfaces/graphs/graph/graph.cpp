@@ -488,7 +488,10 @@ void Graph::setYMinGrid(int iy, bool state, bool bAuto, LineStyle const &ls, dou
 
 Curve* Graph::getClosestPoint(double x, double y, double &xSel, double &ySel, int &nSel)
 {
-    return m_pCurveModel->getClosestPoint(x,y,xSel, ySel, nSel);
+    if(m_pCurveModel)
+        return m_pCurveModel->getClosestPoint(x,y,xSel, ySel, nSel);
+
+    return nullptr;
 }
 
 
@@ -692,8 +695,6 @@ void Graph::drawCurve(int nIndex, QPainter &painter) const
             }
         }
     }
-
-//    if(s_bHighlightObject && m_pCurveModel->isCurveSelected(pCurve))
 
     if(s_bHighlightObject)
     {
@@ -1549,6 +1550,7 @@ void Graph::drawYLogMinGrid(int iy, QPainter &painter) const
 void Graph::drawLegend(QPainter &painter, QPointF const &Place) const
 {
     if(!m_bShowLegend) return;
+    if(!m_pCurveModel) return;
     painter.save();
 
     QString strong;
@@ -1621,8 +1623,10 @@ void Graph::drawLegend(QPainter &painter, QPointF const &Place) const
 
 
 
-void Graph::toFile(QFile &XFile, bool bCSV) const
+bool Graph::toFile(QFile &XFile, bool bCSV) const
 {
+    if(!m_pCurveModel) return false;
+
     int maxpoints=0;
     QString strong;
     QTextStream out(&XFile);
@@ -1663,6 +1667,8 @@ void Graph::toFile(QFile &XFile, bool bCSV) const
     }
     out<<"\n"; //end of file
     XFile.close();
+
+    return true;
 }
 
 

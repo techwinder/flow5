@@ -53,7 +53,8 @@ class XDirectActions : QObject
         QAction *m_pShowAllOpPoints, *m_pHideAllOpPoints, *m_pExportPolarOpps;
         QAction *m_pHideFoilOpps, *m_pShowFoilOpps, *m_pDeleteFoilOpps;
         QAction *m_pHidePolarOpps, *m_pShowPolarOpps, *m_pDeletePolarOpps;
-        QAction *m_pExportCurOpp, *m_pCopyCurOppData, *m_pDeleteCurOpp;
+        QAction *m_pExportCurOpp, *m_pCopyCurOppData, *m_pExportBLData;
+        QAction *m_pDeleteCurOpp;
         QAction *m_pGetFoilProps, *m_pGetPolarProps, *m_pGetOppProps;
         QAction *m_pResetFoilScale, *m_pShowInviscidCurve;
         QAction *m_pExportFoilCpGraphAct, *m_pExportToClipBoard;

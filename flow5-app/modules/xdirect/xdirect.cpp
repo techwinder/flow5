@@ -405,7 +405,6 @@ void XDirect::setControls()
     m_pActions->m_pDeletePolarOpps->setEnabled(s_pCurPolar);
 
     m_pActions->m_pDerotateFoil->setEnabled(s_pCurFoil);
-//    m_pActions->m_pNormalizeFoil->setEnabled(s_pCurFoil);
     m_pActions->m_pRefineGlobalFoil->setEnabled(s_pCurFoil);
     m_pActions->m_pRefineXFoil->setEnabled(s_pCurFoil);
     m_pActions->m_pEditCoordsFoil->setEnabled(s_pCurFoil);
@@ -417,6 +416,7 @@ void XDirect::setControls()
     m_pActions->m_pDeleteCurOpp->setEnabled(s_pCurOpp);
     m_pActions->m_pExportCurOpp->setEnabled(s_pCurOpp);
     m_pActions->m_pCopyCurOppData->setEnabled(s_pCurOpp);
+    m_pActions->m_pExportBLData->setEnabled(s_pCurOpp);
     m_pActions->m_pGetOppProps->setEnabled(s_pCurOpp);
 
     m_pOpPointControls->setControls();
@@ -436,6 +436,7 @@ void XDirect::connectSignals()
     connect(m_pOpPointWt,                   SIGNAL(curveDoubleClicked(Curve*)), SLOT(onCurveDoubleClicked(Curve*)));
     connect(m_pOpPointWt,                   SIGNAL(graphChanged(Graph*)),       SLOT(onOpPointGraphChanged()));
 
+    connect(s_pMainFrame->m_pBLTiles,       SIGNAL(graphChanged(int)),          SLOT(onGraphChanged(int)));
     connect(s_pMainFrame->m_pPolarTiles,    SIGNAL(graphChanged(int)),          SLOT(onGraphChanged(int)));
     connect(s_pMainFrame->m_pPolarTiles,    SIGNAL(varSetChanged(int)),         SLOT(onVarSetChanged(int)));
     connect(m_pActions->m_pResetFoilScale,  SIGNAL(triggered()), m_pOpPointWt,  SLOT(onResetFoilScale()));
@@ -643,14 +644,17 @@ void XDirect::createPolarCurves()
 
 void XDirect::fillBLXFoilCurves(OpPoint *pOpp, Graph *pGraph, bool bInviscid)
 {
-    Foil const*pOpFoil = Objects2d::foil(pOpp->foilName());
-
     pGraph->setYInverted(0,false);
+
+    int iStart = 1;
 
     switch(pGraph->yVariable(0))
     {
         case 0:  // Cp
         {
+            Foil const*pOpFoil = Objects2d::foil(pOpp->foilName());
+            if(!pOpFoil) break;
+
             pGraph->setYInverted(0, true);
             Curve *pCpv    = pGraph->addCurve();
             pCpv->setTheStyle(pOpp->theStyle());
@@ -670,7 +674,7 @@ void XDirect::fillBLXFoilCurves(OpPoint *pOpp, Graph *pGraph, bool bInviscid)
 
             for (int j=0; j<pOpFoil->nNodes(); j++)
             {
-                if(pOpp->bViscResults())    pCpv->appendPoint(pOpFoil->x(j), pOpp->m_Cpv.at(j));
+                if(pOpp->bViscResults())     pCpv->appendPoint(pOpFoil->x(j), pOpp->m_Cpv.at(j));
                 if(pOpp==s_pCurOpp && pCpi)  pCpi->appendPoint(pOpFoil->x(j), pOpp->m_Cpi.at(j));
             }
 
@@ -683,71 +687,52 @@ void XDirect::fillBLXFoilCurves(OpPoint *pOpp, Graph *pGraph, bool bInviscid)
         }
         case 1:  // Edge velocity
         {
-            double y[IVX][3];
-            memset(y, 0, IVX*3*sizeof(double));
-            double uei(0);
-
-            //---- fill compressible ue arrays
-
-            for (int ibl=2; ibl<=pOpp->m_BLXFoil.nside1; ibl++)
-            {
-                uei = pOpp->m_BLXFoil.uedg[ibl][1];
-                y[ibl][1] = uei * (1.0-pOpp->m_BLXFoil.tklam)
-                        / (1.0-pOpp->m_BLXFoil.tklam*(uei/pOpp->m_BLXFoil.qinf)*(uei/pOpp->m_BLXFoil.qinf));
-            }
-
-            for (int ibl=2; ibl<=pOpp->m_BLXFoil.nside2; ibl++)
-            {
-                uei = pOpp->m_BLXFoil.uedg[ibl][2];
-                y[ibl][2] = uei * (1.0-pOpp->m_BLXFoil.tklam)
-                        / (1.0-pOpp->m_BLXFoil.tklam*(uei/pOpp->m_BLXFoil.qinf)*(uei/pOpp->m_BLXFoil.qinf));
-            }
-
+            Curve *pTopCurve(nullptr), *pBotCurve(nullptr);
             if(s_bBLTopSide)
             {
-                Curve * pTopCurve(nullptr);
                 pTopCurve = pGraph->addCurve();
                 pTopCurve->setName("Top");
                 pTopCurve->setTheStyle(s_lsTopBL);
                 pOpp->appendCurve(pTopCurve);
-                for (int i=2; i<=pOpp->m_BLXFoil.nside1-1; i++)
-                    pTopCurve->appendPoint(pOpp->m_BLXFoil.xbl[i][1], y[i][1]);
+                for (int i=iStart; i<pOpp->m_BLXFoil.nside1; i++)
+                {
+                    pTopCurve->appendPoint(pOpp->m_BLXFoil.xbl[i][1], pOpp->m_BLXFoil.uedg[i][1]);
+                }
             }
             if(s_bBLBotSide)
             {
-                Curve * pBotCurve(nullptr);
                 pBotCurve = pGraph->addCurve();
                 pBotCurve->setName("Bottom");
                 pBotCurve->setTheStyle(s_lsBotBL);
                 pOpp->appendCurve(pBotCurve);
-                for (int i=2; i<=pOpp->m_BLXFoil.nside2-1; i++)
-                    pBotCurve->appendPoint(pOpp->m_BLXFoil.xbl[i][2], y[i][2]);
+                for (int i=iStart; i<pOpp->m_BLXFoil.nside2; i++)
+                {
+                    pBotCurve->appendPoint(pOpp->m_BLXFoil.xbl[i][2], pOpp->m_BLXFoil.uedg[i][2]);
+                }
             }
-
             break;
         }
         case 2:  // Dstar
         {
+            Curve *pTopCurve(nullptr), *pBotCurve(nullptr);
             if(s_bBLTopSide)
             {
-                Curve *pTopCurve(nullptr);
                 pTopCurve = pGraph->addCurve();
                 pTopCurve->setName("Top");
                 pTopCurve->setTheStyle(s_lsTopBL);
                 pOpp->appendCurve(pTopCurve);
-                for (int i=2; i<pOpp->m_BLXFoil.nside1; i++)
+                for (int i=iStart; i<pOpp->m_BLXFoil.nside1; i++)
                 {
                     pTopCurve->appendPoint(pOpp->m_BLXFoil.xbl[i][1], pOpp->m_BLXFoil.dstr[i][1]);
                 }
             }
             if(s_bBLBotSide)
             {
-                Curve *pBotCurve(nullptr);
                 pBotCurve = pGraph->addCurve();
                 pBotCurve->setName("Bottom");
                 pBotCurve->setTheStyle(s_lsBotBL);
                 pOpp->appendCurve(pBotCurve);
-                for (int i=2; i<pOpp->m_BLXFoil.nside2; i++)
+                for (int i=iStart; i<pOpp->m_BLXFoil.nside2; i++)
                 {
                     pBotCurve->appendPoint(pOpp->m_BLXFoil.xbl[i][2], pOpp->m_BLXFoil.dstr[i][2]);
                 }
@@ -765,7 +750,7 @@ void XDirect::fillBLXFoilCurves(OpPoint *pOpp, Graph *pGraph, bool bInviscid)
                 pTopCurve->setName("Top");
                 pOpp->appendCurve(pTopCurve);
 
-                for (int i=2; i<pOpp->m_BLXFoil.nside1; i++)
+                for (int i=iStart; i<pOpp->m_BLXFoil.nside1; i++)
                 {
                     pTopCurve->appendPoint(pOpp->m_BLXFoil.xbl[i][1], pOpp->m_BLXFoil.thet[i][1]);
                 }
@@ -778,7 +763,7 @@ void XDirect::fillBLXFoilCurves(OpPoint *pOpp, Graph *pGraph, bool bInviscid)
                 pBotCurve->setTheStyle(s_lsBotBL);
                 pOpp->appendCurve(pBotCurve);
 
-                for (int i=2; i<pOpp->m_BLXFoil.nside2; i++)
+                for (int i=iStart; i<pOpp->m_BLXFoil.nside2; i++)
                 {
                     pBotCurve->appendPoint(pOpp->m_BLXFoil.xbl[i][2], pOpp->m_BLXFoil.thet[i][2]);
                 }
@@ -795,9 +780,9 @@ void XDirect::fillBLXFoilCurves(OpPoint *pOpp, Graph *pGraph, bool bInviscid)
                 pTopCurve->setName("Top");
                 pTopCurve->setTheStyle(s_lsTopBL);
                 pOpp->appendCurve(pTopCurve);
-                for (int i=2; i<=pOpp->m_BLXFoil.nside2-1; i++)
+                for (int i=iStart; i<=pOpp->m_BLXFoil.nside1; i++)
                 {
-                    pTopCurve->appendPoint(pOpp->m_BLXFoil.xbl[i][2], pOpp->m_BLXFoil.Hk[i][2]);
+                    pTopCurve->appendPoint(pOpp->m_BLXFoil.xbl[i][1], pOpp->m_BLXFoil.Hk[i][1]);
                 }
             }
             if(s_bBLBotSide)
@@ -808,9 +793,9 @@ void XDirect::fillBLXFoilCurves(OpPoint *pOpp, Graph *pGraph, bool bInviscid)
                 pBotCurve->setTheStyle(s_lsBotBL);
                 pOpp->appendCurve(pBotCurve);
 
-                for (int i=2; i<=pOpp->m_BLXFoil.nside1-1; i++)
+                for (int i=iStart; i<=pOpp->m_BLXFoil.nside2-1; i++)
                 {
-                    pBotCurve->appendPoint(pOpp->m_BLXFoil.xbl[i][1], pOpp->m_BLXFoil.Hk[i][1]);
+                    pBotCurve->appendPoint(pOpp->m_BLXFoil.xbl[i][2], pOpp->m_BLXFoil.Hk[i][2]);
                 }
             }
 
@@ -1708,6 +1693,69 @@ void XDirect::onExportCurFoilToSVG()
 }
 
 
+void XDirect::onExportBLData()
+{
+    if(!s_pCurOpp) return;
+
+    xfl::enumTextFileType type = xfl::exportFileType();
+
+    QString FileName = QString::fromStdString(s_pCurOpp->name());
+    FileName = FileName.replace(" ", "");
+    QString filter;
+
+    QFileDialog fd(s_pMainFrame);
+
+    if(xfl::exportFileType()==xfl::TXT)   filter = "Text File (*.txt)";
+    else                                  filter = "Comma Separated Values (*.csv)";
+    fd.setDefaultSuffix(QString::fromStdString(xfl::textSeparator()));
+
+    FileName = fd.getSaveFileName(s_pMainFrame, tr("Export B/L/ data"),
+                                  SaveOptions::lastDirName() + "/"+FileName,
+                                  "Text File (*.txt);;Comma Separated Values (*.csv)",
+                                  &filter);
+
+    if(!FileName.length()) return;
+
+    int pos = FileName.lastIndexOf("/");
+    if(pos>0) SaveOptions::setLastDirName(FileName.left(pos));
+    pos = FileName.lastIndexOf(".csv");
+    if (pos>0) xfl::setExportFileType(xfl::CSV);
+    else       xfl::setExportFileType(xfl::TXT);
+
+    QString strong;
+    QFile DestFile(FileName);
+
+    if (!DestFile.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+
+    QTextStream out(&DestFile);
+
+    out << QString::fromStdString(fl5::versionName(true));
+    out << "\n";
+    strong = QString::fromStdString(s_pCurFoil->name())+ EOLch;
+    out << (strong);
+
+    if(type==xfl::TXT)
+        strong = QString("Alpha = %1,  Re = %2,  Ma= %3,  ACrit=%4\n\n")
+                     .arg(s_pCurOpp->aoa(),      5, 'f',1)
+                     .arg(s_pCurOpp->Reynolds(), 8, 'f',0)
+                     .arg(s_pCurOpp->Mach(),     6, 'f',4)
+                     .arg(s_pCurOpp->m_NCrit,    4, 'f',1);
+    else
+        strong = QString("Alpha =, %1,Re =, %2,Ma=, %3,ACrit =,%4\n\n")
+                     .arg(s_pCurOpp->aoa(),      5, 'f',1)
+                     .arg(s_pCurOpp->Reynolds(), 8, 'f',0)
+                     .arg(s_pCurOpp->Mach(),     6, 'f',4)
+                     .arg(s_pCurOpp->m_NCrit,    4, 'f',1);
+    out << (strong);
+
+    std::string strange = s_pCurOpp->m_BLXFoil.listBL(type);
+
+    out << QString::fromStdString(strange);
+    out << "\n";
+    DestFile.close();
+}
+
+
 void XDirect::onExportCurOpp()
 {
     if(!s_pCurFoil || !s_pCurPolar || !s_pCurOpp) return;
@@ -1718,19 +1766,12 @@ void XDirect::onExportCurOpp()
 
     QFileDialog fd(s_pMainFrame);
 
-    if(xfl::exportFileType()==xfl::TXT)
-    {
-        filter = "Text File (*.txt)";
-
-    }
-    else
-    {
-        filter = "Comma Separated Values (*.csv)";
-    }
+    if(xfl::exportFileType()==xfl::TXT)   filter = "Text File (*.txt)";
+    else                                  filter = "Comma Separated Values (*.csv)";
     fd.setDefaultSuffix(QString::fromStdString(xfl::textSeparator()));
 
-    FileName = fd.getSaveFileName(s_pMainFrame, "Export the operating point",
-                                  SaveOptions::lastDirName() + "/"+FileName+".stl",
+    FileName = fd.getSaveFileName(s_pMainFrame, tr("Export the operating point"),
+                                  SaveOptions::lastDirName() + "/"+FileName,
                                   "Text File (*.txt);;Comma Separated Values (*.csv)",
                                   &filter);
 
@@ -1744,7 +1785,7 @@ void XDirect::onExportCurOpp()
 
     QFile XFile(FileName);
 
-    if (!XFile.open(QIODevice::WriteOnly | QIODevice::Text)) return ;
+    if (!XFile.open(QIODevice::WriteOnly | QIODevice::Text)) return;
 
     QTextStream out(&XFile);
     out << onCopyCurOppData();
@@ -3546,6 +3587,8 @@ void XDirect::setOpp(OpPoint *pOpPoint)
     if(pOpPoint)
     {
         m_pOpPointWt->setOppData(oppData(s_pCurOpp));
+/*        std::cout << "BL data";
+        std::cout << pOpPoint->m_BLXFoil.listBL(xfl::exportFileType()) << std::endl;*/
     }
     else m_pOpPointWt->setOppData(QString());
 }

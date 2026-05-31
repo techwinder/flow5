@@ -65,6 +65,7 @@ GraphWt::GraphWt(QWidget *pParent) : QWidget(pParent)
     m_ZoomFactor = 1.0;
 
     m_pGraph = nullptr;
+    m_bIsEditable = true;
     m_bEnableContextMenu = false;
     m_bCurveStylePage = false;
 
@@ -828,7 +829,7 @@ void GraphWt::onGraphSettings()
 {
     GraphDlg grDlg(this);
     grDlg.showCurvePage(m_bCurveStylePage);
-    grDlg.setGraph(m_pGraph);
+    grDlg.setGraph(m_pGraph, m_bIsEditable);
 
     if(grDlg.exec() == QDialog::Accepted)
     {

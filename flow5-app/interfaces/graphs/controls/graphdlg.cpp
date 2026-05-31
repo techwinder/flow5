@@ -54,6 +54,8 @@ GraphDlg::GraphDlg(QWidget *pParent): QDialog(pParent)
 
     m_pParent = pParent;
 
+    m_bIsEditable = true;
+
     m_bCurveStylePage = false;
 
     m_pGraph   = nullptr;
@@ -218,7 +220,6 @@ void GraphDlg::keyPressEvent(QKeyEvent *pEvent)
 void GraphDlg::onActivePage(int index)
 {
     s_iActivePage = index;
-    //    m_pButtonBox->button(QDialogButtonBox::Apply)->setEnabled(m_pTabWidget->currentIndex()!=0);
     if(index==5)
     {
         resizeTableColumns();
@@ -233,9 +234,9 @@ void GraphDlg::onRightAxis(bool bChecked)
     m_plwYSel[1]->setEnabled(bChecked);
     m_pchYAuto[1]->setEnabled(bChecked);
     m_pchYInverted[1]->setEnabled(bChecked);
-    m_pdeYMin[1]->setEnabled(bChecked);
-    m_pdeYMax[1]->setEnabled(bChecked);
-    m_pdeYUnit[1]->setEnabled(bChecked);
+    m_pfeYMin[1]->setEnabled(bChecked);
+    m_pfeYMax[1]->setEnabled(bChecked);
+    m_pfeYUnit[1]->setEnabled(bChecked);
     m_pchYLog[1]->setEnabled(bChecked);
 
     m_plbYAxisStyle[1]->setEnabled(bChecked);
@@ -250,9 +251,9 @@ void GraphDlg::onRightAxis(bool bChecked)
 void GraphDlg::onAutoX()
 {
     bool bAuto = m_pchXAuto->checkState() == Qt::Checked;
-    m_pdeXMin->setEnabled(!bAuto);
-    m_pdeXMax->setEnabled(!bAuto);
-    m_pdeXUnit->setEnabled(!bAuto);
+    m_pfeXMin->setEnabled(!bAuto);
+    m_pfeXMax->setEnabled(!bAuto);
+    m_pfeXUnit->setEnabled(!bAuto);
     setApplied(false);
 }
 
@@ -264,9 +265,9 @@ void GraphDlg::onAutoY()
     if(pAutoY==m_pchYAuto[1]) iy=1;
 
     bool bAuto = m_pchYAuto[iy]->checkState() == Qt::Checked;
-    m_pdeYMin[iy]->setEnabled(!bAuto);
-    m_pdeYMax[iy]->setEnabled(!bAuto);
-    m_pdeYUnit[iy]->setEnabled(!bAuto);
+    m_pfeYMin[iy]->setEnabled(!bAuto);
+    m_pfeYMax[iy]->setEnabled(!bAuto);
+    m_pfeYUnit[iy]->setEnabled(!bAuto);
     setApplied(false);
 }
 
@@ -428,8 +429,8 @@ void GraphDlg::onOK()
 void GraphDlg::applyChanges()
 {
     m_pGraph->setAutoX(m_pchXAuto->isChecked());
-    m_pGraph->setXMin(m_pdeXMin->value());
-    m_pGraph->setXMax(m_pdeXMax->value());
+    m_pGraph->setXMin(m_pfeXMin->value());
+    m_pGraph->setXMax(m_pfeXMax->value());
     m_pGraph->setXLnScale(m_pchXLog->isChecked());
 
     if     (m_prbResetting->isChecked()) m_pGraph->setScaleType(GRAPH::RESETTING);
@@ -438,9 +439,9 @@ void GraphDlg::applyChanges()
     m_pGraph->setAutoY(0, m_pchYAuto[0]->isChecked());
     for(int iy=0; iy<2; iy++)
     {
-        m_pGraph->setYMin(iy, m_pdeYMin[iy]->value());
-        m_pGraph->setYMax(iy, m_pdeYMax[iy]->value());
-        m_pGraph->setYUnit(iy, m_pdeYUnit[iy]->value());
+        m_pGraph->setYMin(iy, m_pfeYMin[iy]->value());
+        m_pGraph->setYMax(iy, m_pfeYMax[iy]->value());
+        m_pGraph->setYUnit(iy, m_pfeYUnit[iy]->value());
         m_pGraph->setYLnScale(iy, m_pchYLog[iy]->isChecked());
     }
 
@@ -716,17 +717,19 @@ void GraphDlg::setButtonColors()
 
 void GraphDlg::setControls()
 {
+    m_pTabWidget->widget(0)->setEnabled(m_bIsEditable);
+
     m_pchXAuto->setChecked(m_pGraph->bAutoX());
     m_pchXLog->setChecked(m_pGraph->bXLogScale());
-    m_pdeXMin->setValue(m_pGraph->xMin());
-    m_pdeXMax->setValue(m_pGraph->xMax());
+    m_pfeXMin->setValue(m_pGraph->xMin());
+    m_pfeXMax->setValue(m_pGraph->xMax());
 
     for(int iy=0; iy<2; iy++)
     {
         m_pchYAuto[iy]->setChecked(m_pGraph->bAutoY(iy));
         m_pchYLog[iy]->setChecked(m_pGraph->bYLogScale(iy));
-        m_pdeYMin[iy]->setValue(m_pGraph->yMin(iy));
-        m_pdeYMax[iy]->setValue(m_pGraph->yMax(iy));
+        m_pfeYMin[iy]->setValue(m_pGraph->yMin(iy));
+        m_pfeYMax[iy]->setValue(m_pGraph->yMax(iy));
     }
 
     m_prbExpanding->setChecked(m_pGraph->scaleType()==GRAPH::EXPANDING);
@@ -738,13 +741,13 @@ void GraphDlg::setControls()
 
     onAutoX();
 
-    m_pdeYMin[0]->setEnabled(!m_pGraph->bAutoY(0));
-    m_pdeYMax[0]->setEnabled(!m_pGraph->bAutoY(0));
-    m_pdeYUnit[0]->setEnabled(!m_pGraph->bAutoY(0));
+    m_pfeYMin[0]->setEnabled(!m_pGraph->bAutoY(0));
+    m_pfeYMax[0]->setEnabled(!m_pGraph->bAutoY(0));
+    m_pfeYUnit[0]->setEnabled(!m_pGraph->bAutoY(0));
 
-    m_pdeYMin[1]->setEnabled(m_pGraph->hasRightAxis() && !m_pGraph->bAutoY(1));
-    m_pdeYMax[1]->setEnabled(m_pGraph->hasRightAxis() && !m_pGraph->bAutoY(1));
-    m_pdeYUnit[1]->setEnabled(m_pGraph->hasRightAxis() && !m_pGraph->bAutoY(1));
+    m_pfeYMin[1]->setEnabled(m_pGraph->hasRightAxis() && !m_pGraph->bAutoY(1));
+    m_pfeYMax[1]->setEnabled(m_pGraph->hasRightAxis() && !m_pGraph->bAutoY(1));
+    m_pfeYUnit[1]->setEnabled(m_pGraph->hasRightAxis() && !m_pGraph->bAutoY(1));
 
     setButtonColors();
 
@@ -824,8 +827,6 @@ void GraphDlg::setControls()
     onShowLegend(m_pchShowLegend->isChecked());
 
     setApplied(true);
-
-    //    m_pButtonBox->button(QDialogButtonBox::Apply)->setEnabled(m_pTabWidget->currentIndex()!=0);
 }
 
 
@@ -999,40 +1000,40 @@ void GraphDlg::setupLayout()
                 //        pScalePageLayout->addWidget(pUnitLabel,  6,1);
 
                 m_pchXAuto    = new QCheckBox("Auto scale");
-                m_pdeXMin     = new FloatEdit;
-                m_pdeXMax     = new FloatEdit;
+                m_pfeXMin     = new FloatEdit;
+                m_pfeXMax     = new FloatEdit;
 
-                m_pdeXUnit    = new FloatEdit;
+                m_pfeXUnit    = new FloatEdit;
                 m_pchXLog     = new QCheckBox("Log scale");
 
                 pScaleLayout->addWidget(pXAxis,       1,2, Qt::AlignHCenter | Qt::AlignBottom);
                 pScaleLayout->addWidget(m_pchXAuto,   3,2);
-                pScaleLayout->addWidget(m_pdeXMin,    4,2);
-                pScaleLayout->addWidget(m_pdeXMax,    5,2);
+                pScaleLayout->addWidget(m_pfeXMin,    4,2);
+                pScaleLayout->addWidget(m_pfeXMax,    5,2);
                 pScaleLayout->addWidget(m_pchXLog,    7,2);
 
                 for(int iy=0; iy<2; iy++)
                 {
                     m_pchYInverted[iy] = new QCheckBox("Inverted axis");
                     m_pchYAuto[iy]     = new QCheckBox("Auto scale");
-                    m_pdeYMin[iy]      = new FloatEdit;
-                    m_pdeYMax[iy]      = new FloatEdit;
-                    m_pdeYUnit[iy]     = new FloatEdit;
+                    m_pfeYMin[iy]      = new FloatEdit;
+                    m_pfeYMax[iy]      = new FloatEdit;
+                    m_pfeYUnit[iy]     = new FloatEdit;
                     m_pchYLog[iy]      = new QCheckBox("Log scale");
                 }
 
                 pScaleLayout->addWidget(pYAxis0,           1,3, Qt::AlignHCenter | Qt::AlignBottom);
                 pScaleLayout->addWidget(m_pchYInverted[0], 2,3);
                 pScaleLayout->addWidget(m_pchYAuto[0],     3,3);
-                pScaleLayout->addWidget(m_pdeYMin[0],      4,3);
-                pScaleLayout->addWidget(m_pdeYMax[0],      5,3);
+                pScaleLayout->addWidget(m_pfeYMin[0],      4,3);
+                pScaleLayout->addWidget(m_pfeYMax[0],      5,3);
                 pScaleLayout->addWidget(m_pchYLog[0],      7,3);
 
                 pScaleLayout->addWidget(pYAxis1,             1,4, Qt::AlignHCenter | Qt::AlignBottom);
                 pScaleLayout->addWidget(m_pchYInverted[1], 2,4);
                 pScaleLayout->addWidget(m_pchYAuto[1],     3,4);
-                pScaleLayout->addWidget(m_pdeYMin[1],      4,4);
-                pScaleLayout->addWidget(m_pdeYMax[1],      5,4);
+                pScaleLayout->addWidget(m_pfeYMin[1],      4,4);
+                pScaleLayout->addWidget(m_pfeYMax[1],      5,4);
                 pScaleLayout->addWidget(m_pchYLog[1],      7,4);
 
                 pScaleLayout->setRowStretch(8,1);
@@ -1212,9 +1213,10 @@ void GraphDlg::setupLayout()
 }
 
 
-void GraphDlg::setGraph(Graph *pGraph)
+void GraphDlg::setGraph(Graph *pGraph, bool bIsEditable)
 {
     m_pGraph = pGraph;
+    m_bIsEditable = bIsEditable;
     m_SaveGraph.copySettings(*m_pGraph);
     fillVariableList();
     if(m_bCurveStylePage) fillCurvePage();

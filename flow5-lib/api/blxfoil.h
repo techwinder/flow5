@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <string>
 
 
 #include <xfoil_params.h>
@@ -33,6 +34,8 @@ struct BLXFoil
 {
     public:
         BLXFoil();
+
+        std::string listBL(int iFormat=0) const;
 
         int nd1;                    /**< the number of top side BL points  */
         int nd2;                    /**< the number of bot side BL points  */

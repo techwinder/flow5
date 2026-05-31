@@ -55,6 +55,7 @@ class GraphWt : public QWidget
         void setLegendOrigin(QPoint const &pt) {m_LegendOrigin = pt;}
         QPointF const &legendOrigin() const {return m_LegendOrigin;}
 
+        void setEditable(bool bEditable) {m_bIsEditable=bEditable;}
         void enableContextMenu(bool bEnable) {m_bEnableContextMenu=bEnable;}
         void enableCurveStylePage(bool bEnable) {m_bCurveStylePage=bEnable;} // in graphdlg
 
@@ -113,8 +114,9 @@ class GraphWt : public QWidget
 
     protected:
 
-        bool m_bCurveStylePage; // in graphdlg
-        bool m_bEnableContextMenu;
+        bool m_bCurveStylePage;
+        bool m_bEnableContextMenu;   // default non-module specific menus
+        bool m_bIsEditable;          // pop-up graphs use shared CurveModel and are not editable
         QAction *m_pResetScales, *m_pGraphSettings;
         QAction *m_pToClipboard, *m_pToFile, *m_pToSVG;
         QAction *m_pShowGraphLegend;

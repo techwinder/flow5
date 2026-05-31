@@ -54,7 +54,7 @@ class GraphDlg : public QDialog
         GraphDlg(QWidget *pParent);
         ~GraphDlg();
         void setControls();
-        void setGraph(Graph* pGraph);
+        void setGraph(Graph* pGraph, bool bIsEditable=true);
         Graph* graph() {return m_pGraph;}
         bool bVariableChanged() const {return m_bVariableChanged;}
 
@@ -64,6 +64,8 @@ class GraphDlg : public QDialog
         int YSel(int iy) const {return m_YSel[iy];}
         void setXVariable(int XVar) {m_XSel=XVar;}
         void setYVariable(int iy, int YVar) {m_YSel[iy]=YVar;}
+
+        void setEditable(bool b) {m_bIsEditable=b;}
 
         static void setActivePage(int iPage);
         static void setWindowGeometry(QByteArray geom) {s_Geometry=geom;}
@@ -126,8 +128,6 @@ class GraphDlg : public QDialog
         QWidget *m_pParent;
 
         QTabWidget *m_pTabWidget;
-/*        QWidget *m_pScalePage, *m_pFontPage, *m_pGridPage;
-        QWidget *m_pVariablePage, *m_pLegendPage;*/
 
         QCheckBox *m_pchRightAxis;
         QListWidget *m_plwXSel;
@@ -144,12 +144,12 @@ class GraphDlg : public QDialog
         TextClrBtn*m_ptcbTitleClr, *m_ptcbLabelClr, *m_ptcbLegendClr;
 
         QCheckBox *m_pchXLog;
-        FloatEdit *m_pdeXMin, *m_pdeXMax, *m_pdeXUnit;
+        FloatEdit *m_pfeXMin, *m_pfeXMax, *m_pfeXUnit;
 
         QCheckBox *m_pchXAuto;
 
         QCheckBox *m_pchYAuto[2], *m_pchYInverted[2];
-        FloatEdit *m_pdeYMin[2], *m_pdeYMax[2], *m_pdeYUnit[2];
+        FloatEdit *m_pfeYMin[2], *m_pfeYMax[2], *m_pfeYUnit[2];
         QCheckBox *m_pchYLog[2];
 
         QRadioButton *m_prbExpanding, *m_prbResetting;
@@ -178,6 +178,8 @@ class GraphDlg : public QDialog
 
         bool m_bVariableChanged;
         bool m_bCurveStylePage;
+
+        bool m_bIsEditable; // if true, the variables can be changed
 
         static int s_iActivePage;
         static QByteArray s_Geometry;

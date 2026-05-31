@@ -199,6 +199,7 @@ class XDirect : public QObject
         void onEditCurPolar();
         void onEditCurPolarPts();
         void onExportAllPolars();
+        void onExportBLData();
         void onExportCpGraph();
         void onExportCurFoilToDat();
         void onExportCurFoilToSVG();

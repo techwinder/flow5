@@ -244,6 +244,8 @@ void XDirectMenus::createOppMenus()
             {
                 pExportMenu->addAction(pActions->m_pExportCurOpp);
                 pExportMenu->addAction(pActions->m_pCopyCurOppData);
+                pExportMenu->addSeparator();
+                pExportMenu->addAction(pActions->m_pExportBLData);
             }
             m_pActiveOppMenu->addSeparator();
             m_pActiveOppMenu->addAction(pActions->m_pDeleteCurOpp);

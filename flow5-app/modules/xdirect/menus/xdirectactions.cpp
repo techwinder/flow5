@@ -215,6 +215,9 @@ void XDirectActions::makeActions()
     m_pCopyCurOppData->setShortcut(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_C));
     connect(m_pCopyCurOppData, SIGNAL(triggered()), m_pXDirect, SLOT(onCopyCurOppData()));
 
+    m_pExportBLData = new QAction(tr("B.L. data to file"), this);
+    connect(m_pExportBLData, SIGNAL(triggered()), m_pXDirect, SLOT(onExportBLData()));
+
     m_pDeleteCurOpp = new QAction(tr("Delete"), this);
     connect(m_pDeleteCurOpp, SIGNAL(triggered()), m_pXDirect, SLOT(onDeleteCurOpp()));
 

@@ -430,11 +430,6 @@ void OpPointWt::mouseDoubleClickEvent (QMouseEvent *pEvent)
 }
 
 
-
-
-/**
- * The user has requested an edition of the settings of the active graph
- */
 void OpPointWt::onGraphSettings()
 {
     GraphDlg grDlg(this);

@@ -3645,7 +3645,8 @@ void MainFrame::onOpenGraphInNewWindow()
         {
             if(m_pXDirect->isBLView())
             {
-                pGraph = m_pXDirect->m_BLGraph[0];
+                if(m_pBLTiles->activeGraphWt())
+                    pGraph = m_pBLTiles->activeGraphWt()->graph();
             }
             else if(m_pXDirect->isOppView())
             {
@@ -3693,13 +3694,14 @@ void MainFrame::onOpenGraphInNewWindow(Graph *pGraph)
     pNewGraph->setVariables(pGraph->xVariable(), pGraph->yVariable(0), pGraph->yVariable(1));
     pNewGraph->setName(pGraph->name());
 
-    pNewGraph->setLegendVisible(true);
+//    pNewGraph->setLegendVisible(true);
     pNewGraph->setAuto(true);
     pNewGraph->setName(pGraph->name());
 
     m_GraphWidget.back()->setGraph(pNewGraph);
-    //    pGW->showLegend(true);
+;
     pGW->enableContextMenu(true);
+    pGW->setEditable(false);
     m_GraphWidget.back()->show();
     connect(m_GraphWidget.back(), SIGNAL(widgetClosed(GraphWt*)), SLOT(onGraphWidgetClosed(GraphWt*)));
     //    this->raise();

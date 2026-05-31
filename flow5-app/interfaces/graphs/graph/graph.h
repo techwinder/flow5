@@ -256,7 +256,7 @@ class Graph
         void drawYLogGrid(int iy, QPainter &painter) const;
         void drawYLogMinGrid(int iy, QPainter &painter) const;
 
-        void toFile(QFile &XFile, bool bCSV) const;
+        bool toFile(QFile &XFile, bool bCSV) const;
         void highlightPoint(QPainter &painter, const Curve *pCurve, int ref) const;
 
         void loadSettings(QSettings &settings);

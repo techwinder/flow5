@@ -831,7 +831,7 @@ void FoilExplorer::contextMenuEvent(QContextMenuEvent *pEvent)
     Polar *pPolar = s_pXDirect->curPolar();
     OpPoint *pOpp = s_pXDirect->curOpp();
 
-    if(pItem->level()==1)
+/*    if(pItem->level()==1)
     {
         pFoil = Objects2d::foil(pItem->name().toStdString());
         if(pFoil) strong  = QString::fromStdString(pFoil->name());
@@ -849,8 +849,9 @@ void FoilExplorer::contextMenuEvent(QContextMenuEvent *pEvent)
         pPolar = Objects2d::polar(pFoil, pPolarItem->name().toStdString());
         pOpp   = Objects2d::opPointAt(pFoil, pPolar, pItem->name().toDouble());
         strong = pItem->name();
-    }
+    }*/
 
+//    qInfo()<<"selection type"<<m_Selection << pFoil << pPolar << pOpp;
 
     if(m_Selection==FoilExplorer::OPPOINT && pOpp)
         s_pXDirect->m_pMenus->m_pActiveOppMenu->exec(pEvent->globalPos());

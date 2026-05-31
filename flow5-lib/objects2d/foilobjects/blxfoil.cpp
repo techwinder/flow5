@@ -24,6 +24,9 @@
 
 
 #include <cstring>
+#include <iostream>
+#include <format>
+#include <sstream>
 
 #include <blxfoil.h>
 
@@ -57,3 +60,76 @@ BLXFoil::BLXFoil()
 }
 
 
+
+std::string BLXFoil::listBL(int iFormat) const
+{
+    std::string OutString;
+    std::stringstream out;
+
+    double que = 0.5*qinf*qinf;
+
+    int iStart = 1;
+
+    out << "\nTop side\n";
+    if(iFormat==0) OutString = "    x         Hk     Ue/Vinf      Cf        Cd      A/A0       D*       Theta      CTq\n";
+    else           OutString = "x, Hk, Ue/Vinf, Cf, Cd, A/A0, D*, Theta, CTq\n";
+    out << (OutString);
+    for (int ibl=iStart; ibl<nside1; ibl++)
+    {
+        if(iFormat==0)
+            OutString = std::format("{:8.5f}  {:8.5f}  {:8.5f}  {:8.5f}  {:8.5f}  {:8.5f}  {:8.5f}  {:8.5f}  {:8.5f}\n",
+                                    xbl[ibl][1],
+                                    Hk[ibl][1],
+                                    uedg[ibl][1],
+                                    tau[ibl][1]/que,
+                                    dis[ibl][1]/qinf/qinf/qinf,
+                                    ctau[ibl][1],
+                                    dstr[ibl][1],
+                                    thet[ibl][1],
+                                    ctq[ibl][1]);
+        else
+            OutString = std::format("{:8.5f}, {:8.5f}, {:8.5f}, {:8.5f}, {:8.5f}, {:8.5f}, {:8.5f}, {:8.5f}, {:8.5f}\n",
+                                    xbl[ibl][1],
+                                    Hk[ibl][1],
+                                    uedg[ibl][1],
+                                    tau[ibl][1]/que,
+                                    dis[ibl][1]/qinf/qinf/qinf,
+                                    ctau[ibl][1],
+                                    dstr[ibl][1],
+                                    thet[ibl][1],
+                                    ctq[ibl][1]);
+        out << (OutString);
+    }
+
+    out << "\nBottom side\n";
+    if(iFormat==0) OutString = "    x         Hk     Ue/Vinf      Cf        Cd      A/A0       D*       Theta      CTq\n";
+    else           OutString = "x, Hk, Ue/Vinf, Cf, Cd, A/A0, D*, Theta, CTq\n";
+    out << (OutString);
+    for (int ibl=iStart; ibl<nside2; ibl++)
+    {
+        if(iFormat==0)
+            OutString = std::format("{:8.5f}  {:8.5f}  {:8.5f}  {:8.5f}  {:8.5f}  {:8.5f}  {:8.5f}  {:8.5f}  {:8.5f}\n",
+                                    xbl[ibl][2],
+                                    Hk[ibl][2],
+                                    uedg[ibl][2],
+                                    tau[ibl][2]/que,
+                                    dis[ibl][2]/qinf/qinf/qinf,
+                                    ctau[ibl][2],
+                                    dstr[ibl][2],
+                                    thet[ibl][2],
+                                    ctq[ibl][2]);
+        else
+            OutString = std::format("{:8.5f}, {:8.5f}, {:8.5f}, {:8.5f}, {:8.5f}, {:8.5f}, {:8.5f}, {:8.5f}, {:8.5f}\n",
+                                    xbl[ibl][2],
+                                    Hk[ibl][2],
+                                    uedg[ibl][2],
+                                    tau[ibl][2]/que,
+                                    dis[ibl][2]/qinf/qinf/qinf,
+                                    ctau[ibl][2],
+                                    dstr[ibl][2],
+                                    thet[ibl][2],
+                                    ctq[ibl][2]);
+        out << (OutString);
+    }
+    return out.str();
+}
