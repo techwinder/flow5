@@ -142,7 +142,7 @@ void BatchCalcDlg::setupLayout()
     }
 
     m_pLeftTabWt->addTab(pFrame, tr("Analyses"));
-    m_pLeftTabWt->addTab(m_pfrRangeVars, tr("Operating points"));
+    m_pLeftTabWt->addTab(m_pfrOpp, tr("Operating points"));
 
     QHBoxLayout *pBoxesLayout = new QHBoxLayout;
     {
@@ -298,6 +298,8 @@ void BatchCalcDlg::onCalculate()
         return;
     }
 
+    XFoil::setCancel(false);
+    XFoilTask::setCancelled(false);
     m_bCancel    = false;
     m_bIsRunning = true;
 
@@ -335,10 +337,31 @@ void BatchCalcDlg::onCalculate()
                 if(pFoil && pPolar)
                 {
                     m_AnalysisPair.push_back({pFoil, pPolar});
+                    FoilAnalysis &analysis = m_AnalysisPair.back();
+                    switch (analysis.m_pPolar->type())
+                    {
+                        case xfl::T1POLAR:
+                        case xfl::T2POLAR:
+                        {
+                            for (AnalysisRange const &rg : m_pT12RangeTable->ranges()) analysis.m_Range.push_back(rg);
+                            break;
+                        }
+                        case xfl::T4POLAR:
+                        {
+                            for (AnalysisRange const &rg : m_pT4RangeTable->ranges())  analysis.m_Range.push_back(rg);
+                            break;
+                        }
+                        case xfl::T6POLAR:
+                        {
+                            for (AnalysisRange const &rg : m_pT6RangeTable->ranges())  analysis.m_Range.push_back(rg);
+                            break;
+                        }
+                        default:
+                            break;
+                    }
                 }
             }
         }
-
     }
 
     if(m_AnalysisPair.isEmpty())
@@ -358,28 +381,13 @@ void BatchCalcDlg::onCalculate()
     strong = QString::asprintf("Found %d foil/polar pairs to calculate\n", m_nAnalysis);
     m_ppto->insertPlainText(strong);
 
-
     XFoilTask::setCancelled(false);
-
-    // failsafe: clean up any remaining tasks from a previous batch
-    if(m_Tasks.size()!=0)
-    {
-        m_ppto->appendPlainText("Uncleaned !\n");
-        for(uint it=0; it<m_Tasks.size(); it++)
-            delete m_Tasks.at(it);
-
-        m_Tasks.clear();
-    }
 
     QApplication::setOverrideCursor(Qt::BusyCursor);
 
-    m_ppto->appendPlainText("\nStarted/Done/Total\n");
+    batchLaunch();
 
-#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
-            QFuture<void> future = QtConcurrent::run(&BatchCalcDlg::batchLaunch, this);
-#else
-            QtConcurrent::run([this](){ this->batchLaunch(); });
-#endif
+//    QFuture<void> future = QtConcurrent::run(&BatchCalcDlg::batchLaunch, this);
 }
 
 

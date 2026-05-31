@@ -137,6 +137,7 @@ class XFoilTaskEvent : public QEvent
         {
         }
 
+        void setTask(XFoilTask *pTask) {m_pXFoilTask=pTask;}
         XFoilTask*task() {return m_pXFoilTask;}
 
     private:

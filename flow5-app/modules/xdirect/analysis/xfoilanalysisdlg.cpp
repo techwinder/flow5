@@ -304,24 +304,29 @@ void XFoilAnalysisDlg::runAsync()
 {
     m_pXFoilTask->setAnalysisStatus(xfl::RUNNING);
 
-    std::thread p(&XFoilTask::run, m_pXFoilTask);
+    std::thread workerthread(&XFoilTask::run, m_pXFoilTask);
 
+    // listen for messages and for end of task
     while(!m_pXFoilTask->isFinished())
     {
         // Access the Q under the lock:
         std::unique_lock<std::mutex> lck(m_pXFoilTask->m_mtx);
         m_pXFoilTask->m_cv.wait(lck, [this]() {return !m_pXFoilTask->m_theMsgQueue.empty();} );
 
-        std::string xoppreport = m_pXFoilTask->m_theMsgQueue.front();
-        m_pXFoilTask->m_theMsgQueue.pop();
+        std::string log;
+        while(!m_pXFoilTask->m_theMsgQueue.empty())
+        {
+            log +=  m_pXFoilTask->m_theMsgQueue.front();
+            m_pXFoilTask->m_theMsgQueue.pop();
+        }
 
         // forward to the UI thread for user notification
-        MessageEvent *pMsgEvent = new MessageEvent(xoppreport);
+        MessageEvent *pMsgEvent = new MessageEvent(log);
         qApp->postEvent(this, pMsgEvent);
     }
 
 
-    p.join();
+    workerthread.join();
 
     qApp->postEvent(this, new XFoilTaskEvent(m_pXFoilTask)); // done and clean
 }

@@ -64,7 +64,6 @@ bool BatchDlg::s_bAlpha    = true;
 
 
 
-bool BatchDlg::s_bUpdatePolarView = false;
 XDirect * BatchDlg::s_pXDirect;
 
 QByteArray BatchDlg::s_Geometry;
@@ -108,48 +107,59 @@ void BatchDlg::makeCommonWts()
 
         m_pLeftTabWt = new QTabWidget;
         {
-            m_pfrRangeVars = new QTabWidget;
+            m_pfrOpp = new QFrame;
             {
-                QFrame *pfrT12Range = new QFrame;
+                QVBoxLayout *pOppLayout = new QVBoxLayout;
                 {
-                    QVBoxLayout *pT12Layout = new QVBoxLayout;
+                    QTabWidget *pfrRangeVars = new QTabWidget;
                     {
-                        QHBoxLayout *pRangeSpecLayout = new QHBoxLayout;
+                        QFrame *pfrT12Range = new QFrame;
                         {
-                            QLabel *plabSpec = new QLabel(tr("Specify:"));
-                            m_prbAlpha = new QRadioButton(ALPHAch);
-                            m_prbCl = new QRadioButton("Cl");
-                            pRangeSpecLayout->addWidget(plabSpec);
-                            pRangeSpecLayout->addWidget(m_prbAlpha);
-                            pRangeSpecLayout->addWidget(m_prbCl);
-                            pRangeSpecLayout->addStretch();
+                            QVBoxLayout *pT12Layout = new QVBoxLayout;
+                            {
+                                QHBoxLayout *pRangeSpecLayout = new QHBoxLayout;
+                                {
+                                    QLabel *plabSpec = new QLabel(tr("Specify:"));
+                                    m_prbAlpha = new QRadioButton(ALPHAch);
+                                    m_prbCl = new QRadioButton("Cl");
+                                    pRangeSpecLayout->addWidget(plabSpec);
+                                    pRangeSpecLayout->addWidget(m_prbAlpha);
+                                    pRangeSpecLayout->addWidget(m_prbCl);
+                                    pRangeSpecLayout->addStretch();
+                                }
+
+                                m_pT12RangeTable = new AnalysisRangeTable(this);
+                                m_pT12RangeTable->setFoilPolar(true);
+                                m_pT12RangeTable->setName("Batch foil T12 ranges"); // debug use only
+
+                                pT12Layout->addLayout(pRangeSpecLayout);
+                                pT12Layout->addWidget(m_pT12RangeTable);
+                            }
+
+                            pfrT12Range->setLayout(pT12Layout);
                         }
 
-                        m_pT12RangeTable = new AnalysisRangeTable(this);
-                        m_pT12RangeTable->setFoilPolar(true);
-                        m_pT12RangeTable->setName("Batch foil T12 ranges"); // debug use only
+                        m_pT4RangeTable = new AnalysisRangeTable(this);
+                        m_pT4RangeTable->setFoilPolar(true);
+                        m_pT4RangeTable->setName("Batch foil T4 ranges"); // debug use only
 
-                        pT12Layout->addLayout(pRangeSpecLayout);
-                        pT12Layout->addWidget(m_pT12RangeTable);
+                        m_pT6RangeTable = new AnalysisRangeTable(this);
+                        m_pT6RangeTable->setFoilPolar(true);
+                        m_pT6RangeTable->setName("Batch foil T6 ranges"); // debug use only
+
+                        pfrRangeVars->addTab(pfrT12Range, "Type 12");
+                        pfrRangeVars->addTab(m_pT4RangeTable, "Type 4");
+                        pfrRangeVars->addTab(m_pT6RangeTable, "Type 6");
                     }
 
-                    pfrT12Range->setLayout(pT12Layout);
+                    m_pchStoreOpp = new QCheckBox(tr("Store operating points"));
+                    pOppLayout->addWidget(pfrRangeVars);
+                    pOppLayout->addWidget(m_pchStoreOpp);
                 }
-
-                m_pT4RangeTable = new AnalysisRangeTable(this);
-                m_pT4RangeTable->setFoilPolar(true);
-                m_pT4RangeTable->setName("Batch foil T4 ranges"); // debug use only
-
-                m_pT6RangeTable = new AnalysisRangeTable(this);
-                m_pT6RangeTable->setFoilPolar(true);
-                m_pT6RangeTable->setName("Batch foil T6 ranges"); // debug use only
-
-                m_pfrRangeVars->addTab(pfrT12Range, "Type 12");
-                m_pfrRangeVars->addTab(m_pT4RangeTable, "Type 4");
-                m_pfrRangeVars->addTab(m_pT6RangeTable, "Type 6");
+                m_pfrOpp->setLayout(pOppLayout);
             }
 
-            m_pLeftTabWt->addTab(m_pfrRangeVars, "Operating points");
+            m_pLeftTabWt->addTab(m_pfrOpp, "Operating points");
         }
 
         QFrame *pRightFrame = new QFrame;
@@ -165,21 +175,6 @@ void BatchDlg::makeCommonWts()
                 QFontMetrics fm(DisplayOptions::tableFont());
                 m_ppto->setMinimumWidth(67*fm.averageCharWidth());
 
-                m_pfrOptions = new QFrame;
-                {
-                    QVBoxLayout *pOptionsLayout = new QVBoxLayout;
-                    {
-                        m_pchStoreOpp        = new QCheckBox(tr("Store operating points"));
-
-                        m_pchUpdatePolarView = new QCheckBox(tr("Update polar view"));
-                        m_pchUpdatePolarView->setToolTip(tr("Update the polar graphs after the completion of each foil/polar pair.\nUncheck for increased analysis speed."));
-
-                        pOptionsLayout->addWidget(m_pchStoreOpp);
-                        pOptionsLayout->addWidget(m_pchUpdatePolarView);
-                    }
-                    m_pfrOptions->setLayout(pOptionsLayout);
-                }
-
                 m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close, this);
                 {
                     QPushButton *ppbClear = new QPushButton(tr("Clear output"));
@@ -193,8 +188,6 @@ void BatchDlg::makeCommonWts()
                     connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onButton(QAbstractButton*)));
                 }
 
-
-                pRightSideLayout->addWidget(m_pfrOptions);
                 pRightSideLayout->addWidget(m_ppto);
                 pRightSideLayout->addWidget(m_pButtonBox);
             }
@@ -208,32 +201,24 @@ void BatchDlg::makeCommonWts()
 
 void BatchDlg::cleanUp()
 {
-    for(uint it=0; it<m_Tasks.size(); it++)
-        delete m_Tasks.at(it);
-
-    m_Tasks.clear();
-
     if(m_pXFile->isOpen())
     {
         QTextStream out(m_pXFile);
         out<<m_ppto->toPlainText();
         m_pXFile->close();
     }
+
     m_pButtonBox->button(QDialogButtonBox::Close)->setEnabled(true);
     m_ppbAnalyze->setText(tr("Calculate"));
     m_bIsRunning = false;
-    m_bCancel    = false;
-    XFoil::setCancel(false);
+
     m_pButtonBox->button(QDialogButtonBox::Close)->setFocus();
-
-    //in case we cancelled, delete all Analyses that are left
-
 
     qApp->restoreOverrideCursor();
 }
 
 
-void BatchDlg::customEvent(QEvent * pEvent)
+void BatchDlg::customEvent(QEvent *pEvent)
 {
     if(pEvent->type() == MESSAGE_EVENT)
     {
@@ -245,15 +230,12 @@ void BatchDlg::customEvent(QEvent * pEvent)
         XFoilTaskEvent *pXFEvent = static_cast<XFoilTaskEvent *>(pEvent);
         m_nTaskDone++; //one down, more to go
         QString strong = QString::asprintf("%3d/%3d/%3d  ", m_nTaskStarted, m_nTaskDone, m_nAnalysis);
-        std::string str = "   ...Finished "+ pXFEvent->task()->foil()->name()+" / "+ pXFEvent->task()->polar()->name()+"\n";
+        if(m_bCancel) strong += "   ...Cancelled ";
+        else          strong += "   ...Finished ";
+        QString str =  QString::fromStdString(pXFEvent->task()->foil()->name()+" / "+ pXFEvent->task()->polar()->name())+EOLch;
 
-        m_ppto->onAppendQText(strong + QString::fromStdString(str));
+        m_ppto->onAppendQText(strong + str);
 
-        if(s_bUpdatePolarView)
-        {
-            s_pXDirect->createPolarCurves();
-            s_pXDirect->updateView();
-        }
 
         bool bStoreOpp = m_pchStoreOpp->isChecked();
         for(OpPoint *pOpp : pXFEvent->task()->operatingPoints())
@@ -261,21 +243,27 @@ void BatchDlg::customEvent(QEvent * pEvent)
             Objects2d::addOpPoint(pOpp, bStoreOpp);
             if(!bStoreOpp) delete pOpp;
         }
-    }
-    else if(pEvent->type()==XFOIL_BATCH_END_EVENT)
-    {
-        std::string strong;
-        if(m_bCancel) strong = "\n_____Analysis cancelled_____\n\n";
-        else          strong = "\n_____Analysis completed_____\n\n";
-        m_ppto->onAppendStdText(strong);
 
-        cleanUp();
+        delete pXFEvent->task();
+        pXFEvent->setTask(nullptr); // overkill
 
-        if(s_pXDirect->isPolarView() && s_bUpdatePolarView)
+        if(m_nTaskDone==m_nAnalysis || m_bCancel)
         {
-            s_pXDirect->createPolarCurves();
-            s_pXDirect->updateView();
+            if(m_bIsRunning)
+            {
+                cleanUp();
+            }
+
+            if(m_nTaskStarted==m_nTaskDone)
+            {
+                QString strong;
+                if(m_bCancel) strong  = "\n_____Cancelled_____\n\n";
+                else          strong  = "\n_____Done_____\n\n";
+                m_ppto->onAppendQText(strong);
+            }
         }
+        else
+            startOneTask();
     }
 }
 
@@ -284,7 +272,6 @@ void BatchDlg::connectBaseSignals()
 {
     connect(m_prbAlpha,           SIGNAL(clicked(bool)),                        SLOT(onAcl()));
     connect(m_prbCl,              SIGNAL(clicked(bool)),                        SLOT(onAcl()));
-    connect(m_pchUpdatePolarView, SIGNAL(clicked(bool)),                        SLOT(onUpdatePolarView()));
 }
 
 
@@ -336,7 +323,6 @@ void BatchDlg::initDialog()
     m_ppto->setFont(DisplayOptions::tableFont());
 
     m_pchStoreOpp->setChecked(XDirect::bStoreOpps());
-    m_pchUpdatePolarView->setChecked(s_bUpdatePolarView);
 
 
     if(s_bAlpha) m_prbAlpha->setChecked(true);
@@ -425,7 +411,6 @@ void BatchDlg::readParams()
 {
     s_bAlpha = m_prbAlpha->isChecked();
 
-    s_bUpdatePolarView = m_pchUpdatePolarView->isChecked();
     XDirect::setStoreOpps(m_pchStoreOpp->isChecked());
 }
 
@@ -472,111 +457,56 @@ void BatchDlg::hideEvent(QHideEvent *pEvent)
 }
 
 
-void BatchDlg::onUpdatePolarView()
+void BatchDlg::batchLaunch()
 {
-    s_bUpdatePolarView = m_pchUpdatePolarView->isChecked();
-    s_pXDirect->updateView();
+    m_ppto->appendPlainText("\nStarted/Done/Total\n\n");
+
+    int nTasks = std::min(QThread::idealThreadCount(), int(m_AnalysisPair.size()));
+
+    for(int i=0; i<nTasks; i++)
+    {
+        startOneTask();
+    }
 }
 
 
-void BatchDlg::batchLaunch()
+void BatchDlg::startOneTask()
 {
-    QString strong;
-
-    std::vector<std::thread> threads;
-
-    for(FoilAnalysis &analysis : m_AnalysisPair)
+    if(m_nTaskStarted>=m_AnalysisPair.size() || m_bCancel)
     {
-        XFoilTask *pXFoilTask = new XFoilTask();
-        m_Tasks.push_back(pXFoilTask);
+        //nothing left to launch
+    }
+    else if(m_bIsRunning)
+    {
+        FoilAnalysis &analysis = m_AnalysisPair[m_nTaskStarted];
 
-        analysis.m_pPolar->setVisible(true);
+        XFoilTask *pXFoilTask = new XFoilTask();
 
         pXFoilTask->setAoAAnalysis(s_bAlpha);
 
-        pXFoilTask->clearRanges();
-
-        switch (analysis.m_pPolar->type())
-        {
-            case xfl::T1POLAR:
-            case xfl::T2POLAR:
-            {
-                for (AnalysisRange const &rg : m_pT12RangeTable->ranges())
-                {
-                    pXFoilTask->appendRange(rg);
-                }
-
-                break;
-            }
-            case xfl::T4POLAR:
-            {
-                for (AnalysisRange const &rg : m_pT4RangeTable->ranges())
-                {
-                    pXFoilTask->appendRange(rg);
-                }
-
-                break;
-            }
-            case xfl::T6POLAR:
-            {
-                for (AnalysisRange const &rg : m_pT6RangeTable->ranges())
-                {
-                    pXFoilTask->appendRange(rg);
-                }
-
-                break;
-            }
-            default:
-                break;
-        }
+        pXFoilTask->setAnalysisRanges(analysis.m_Range);
 
         bool bStoreOpp = m_pchStoreOpp->isChecked();
         pXFoilTask->initialize(analysis.m_Foil, analysis.m_pPolar, bStoreOpp);
 
         //launch it
         m_nTaskStarted++;
+        QString strange = QString::asprintf("%3d/%3d/%3d  ", m_nTaskStarted, m_nTaskDone, m_nAnalysis);
+        strange += "Started "+QString::fromStdString(analysis.m_Foil.name()) + " / " + QString::fromStdString(analysis.m_pPolar->name()) + "\n";
+        qApp->postEvent(this, new MessageEvent(strange));
 
-        strong = QString::asprintf("%3d/%3d/%3d  ", m_nTaskStarted, m_nTaskDone, m_nAnalysis);
-        strong += QString::fromStdString("Starting "+ analysis.m_Foil.name()+'/'+analysis.m_pPolar->name() + "\n");
-        qApp->postEvent(this, new MessageEvent(strong));
-        threads.push_back(std::thread(&XFoilTask::run, pXFoilTask));
+        // using the Qt thread system for the QEvent mechanism
+        QFuture<void> future = QtConcurrent::run(&BatchDlg::runQTask, this, pXFoilTask);
+        (void)future;
     }
-
-    std::vector<bool> bFinished(m_Tasks.size(), false);
-    bool bAllFinished(false);
-    do
-    {
-        bAllFinished = true;
-        for(uint itask=0; itask<m_Tasks.size(); itask++)
-        {
-            XFoilTask*pTask = m_Tasks.at(itask);
-            if(pTask->isFinished())
-            {
-                if(!bFinished.at(itask))
-                {
-                    // notify
-                    XFoilTaskEvent *pTaskEvent = new XFoilTaskEvent(pTask);
-                    qApp->postEvent(this, pTaskEvent);
-                    // toggle flag
-                    bFinished[itask] = true;
-                }
-            }
-            else
-                bAllFinished = false;
-//            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-    }
-    while(!bAllFinished);
-
-    for(uint iblock=0; iblock<threads.size(); iblock++)
-    {
-        threads[iblock].join();
-
-    }
-
-    qApp->postEvent(this, new QEvent(XFOIL_BATCH_END_EVENT)); // done and clean
 }
 
 
-
+void BatchDlg::runQTask(XFoilTask *pTask)
+{
+    // start
+    pTask->run();
+    // done, notify
+    qApp->postEvent(this, new XFoilTaskEvent(pTask));
+}
 

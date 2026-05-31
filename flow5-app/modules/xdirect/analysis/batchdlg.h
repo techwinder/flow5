@@ -35,13 +35,6 @@
 #include <QListWidget>
 #include <QLabel>
 
-/*
-#include <QAbstractButton>
-#include <QGroupBox>
-#include <QModelIndex>
-#include <QPushButton>
-#include <QTimer>
- */
 
 #include <api/enums_objects.h>
 
@@ -79,11 +72,23 @@ class BatchDlg : public QDialog
         static void setXDirect(XDirect*pXDirect){s_pXDirect=pXDirect;}
 
     protected:
-        void cleanUp();
+
+        virtual void hideEvent(QHideEvent *pEvent) override;
+        virtual void showEvent(QShowEvent *pEvent) override;
         void customEvent(QEvent *pEvent) override;
-        void makeCommonWts();
+        void keyPressEvent(QKeyEvent  *pEvent) override;
+        void reject() override;
+
+        virtual void readParams();
 
         void batchLaunch();
+        void cleanUp();
+        void connectBaseSignals();
+        void makeCommonWts();
+        void runQTask(XFoilTask *pTask);
+        void setFileHeader();
+        void startOneTask();
+        void writeString(const QString &strong);
 
     protected slots:
         virtual void onCalculate() = 0;
@@ -92,28 +97,14 @@ class BatchDlg : public QDialog
         void onButton(QAbstractButton *pButton);
         void onClose();
         void onSpecChanged();
-        void onUpdatePolarView();
+
 
     protected:
-        void keyPressEvent(QKeyEvent  *pEvent) override;
-        virtual void showEvent(QShowEvent *pEvent) override;
-        virtual void hideEvent(QHideEvent *pEvent) override;
-        void reject() override;
-
-        void connectBaseSignals();
-        virtual void readParams();
-
-        void setFileHeader();
-        void writeString(const QString &strong);
-
-    protected:
-        QCheckBox *m_pchUpdatePolarView;
         QCheckBox *m_pchStoreOpp;
 
         QRadioButton *m_prbAlpha, *m_prbCl;
 
-        QTabWidget *m_pfrRangeVars;
-        QFrame *m_pfrOptions;
+        QFrame *m_pfrOpp;
 
         QDialogButtonBox *m_pButtonBox;
         QPushButton *m_ppbAnalyze;
@@ -126,28 +117,24 @@ class BatchDlg : public QDialog
         AnalysisRangeTable *m_pT4RangeTable;
         AnalysisRangeTable *m_pT6RangeTable;
 
-        bool m_bCancel;             /**< true if the user has clicked the cancel button */
-        bool m_bIsRunning;          /**< true until all the pairs of (foil, polar) have been calculated */
+        bool m_bCancel;
+        bool m_bIsRunning;
 
-        QFile *m_pXFile;                   /**< a pointer to the output log file */
+        QFile *m_pXFile;
 
-        Foil *m_pFoil;                  /**< a pointer to the current Foil */
+        Foil *m_pFoil;
 
     protected:
         int m_nTaskStarted;         /**< the number of started tasks */
         int m_nTaskDone;            /**< the number of finished tasks */
         int m_nAnalysis;            /**< the number of analysis pairs to run */
 
-        QVector<FoilAnalysis> m_AnalysisPair;  /**< the list of all analysis to be performed. Once performed, an analysis is removed from the list. */
-        std::vector<XFoilTask*> m_Tasks;
+        QVector<FoilAnalysis> m_AnalysisPair;
 
-
-    protected:
-        static bool s_bAlpha;              /**< true if the analysis should be performed for a range of aoa rather than lift coefficient */
+        static bool s_bAlpha;
 
         static QByteArray s_Geometry;
-        static XDirect* s_pXDirect;           /**< a void pointer to the unique instance of the QXDirect class */
-        static bool s_bUpdatePolarView;    /**< true if the polar graphs should be updated during the analysis */
+        static XDirect* s_pXDirect;
 
         static QByteArray s_HSplitterSizes;
 

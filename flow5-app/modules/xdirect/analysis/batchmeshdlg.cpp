@@ -198,7 +198,7 @@ void BatchMeshDlg::setupLayout()
 
     m_pLeftTabWt->addTab(m_plwNameList,  tr("Foils"));
     m_pLeftTabWt->addTab(m_pfrPolars,    tr("Polars"));
-    m_pLeftTabWt->addTab(m_pfrRangeVars, tr("Operating points"));
+    m_pLeftTabWt->addTab(m_pfrOpp,       tr("Operating points"));
 
     QHBoxLayout *pBoxesLayout = new QHBoxLayout;
     {
@@ -261,7 +261,6 @@ void BatchMeshDlg::initDialog()
 
     fillReModel();
 }
-
 
 
 void BatchMeshDlg::onSpecChanged()
@@ -701,6 +700,8 @@ void BatchMeshDlg::onCalculate()
         return;
     }
 
+    XFoil::setCancel(false);
+    XFoilTask::setCancelled(false);
     m_bCancel    = false;
     m_bIsRunning = true;
 
@@ -783,6 +784,28 @@ void BatchMeshDlg::onCalculate()
                         Objects2d::insertPolar(pNewPolar);
                     }
 
+                    switch (analysis.m_pPolar->type())
+                    {
+                        case xfl::T1POLAR:
+                        case xfl::T2POLAR:
+                        {
+                            for (AnalysisRange const &rg : m_pT12RangeTable->ranges()) analysis.m_Range.push_back(rg);
+                            break;
+                        }
+                        case xfl::T4POLAR:
+                        {
+                            for (AnalysisRange const &rg : m_pT4RangeTable->ranges())  analysis.m_Range.push_back(rg);
+                            break;
+                        }
+                        case xfl::T6POLAR:
+                        {
+                            for (AnalysisRange const &rg : m_pT6RangeTable->ranges())  analysis.m_Range.push_back(rg);
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+
 
                     m_nAnalysis++;
                 }
@@ -790,32 +813,20 @@ void BatchMeshDlg::onCalculate()
         }
     }
 
-
     strong = QString::asprintf("\nFound %d foil/polar pairs to calculate\n", m_nAnalysis);
     m_ppto->onAppendQText(strong);
 
-
     XFoilTask::setCancelled(false);
-
-    // failsafe: clean up any remaining tasks from a previous batch
-    if(m_Tasks.size()!=0)
-    {
-        m_ppto->appendPlainText("Uncleaned !\n");
-        for(uint it=0; it<m_Tasks.size(); it++)
-            delete m_Tasks.at(it);
-
-        m_Tasks.clear();
-    }
 
     QApplication::setOverrideCursor(Qt::BusyCursor);
 
-    m_ppto->appendPlainText("\nStarted/Done/Total\n");
+    batchLaunch();
 
-#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+/*#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
             QFuture<void> future = QtConcurrent::run(&BatchMeshDlg::batchLaunch, this);
 #else
             QtConcurrent::run([this](){ this->batchLaunch(); });
-#endif
+#endif*/
 }
 
 

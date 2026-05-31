@@ -59,7 +59,6 @@ class BatchMeshDlg : public BatchDlg
     private:
         void setupLayout();
 
-
     private slots:
         void onCalculate() override;
 

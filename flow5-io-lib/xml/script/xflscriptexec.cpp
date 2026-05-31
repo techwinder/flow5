@@ -185,7 +185,7 @@ void XflScriptExec::makeFoilAnalysisList()
             pFoilAnalysis->m_pPolar = pPolar;
 
 
-            pFoilAnalysis->range = m_pScriptReader->m_AlphaRange;
+            pFoilAnalysis->m_Range = m_pScriptReader->m_AlphaRange;
 
 
             Objects2d::insertPolar(pPolar);
@@ -249,7 +249,7 @@ void XflScriptExec::makeFoilAnalysisList()
                             pFoilAnalysis->m_pPolar = pPolar;
                             if(pPolar->type()<xfl::T4POLAR)
                             {
-                                pFoilAnalysis->range = m_pScriptReader->m_AlphaRange;
+                                pFoilAnalysis->m_Range = m_pScriptReader->m_AlphaRange;
                             }
                             else if(pPolar->isFixedLiftPolar())
                             {
@@ -894,7 +894,7 @@ void XflScriptExec::runFoilAnalyses()
 
         //initiate the task
         if(pAnalysis->m_pPolar->isType12())
-            pXFoilTask->setAnalysisRanges(pAnalysis->range);
+            pXFoilTask->setAnalysisRanges(pAnalysis->m_Range);
         pXFoilTask->initialize(pAnalysis, false);
 
         m_nTaskStarted++;

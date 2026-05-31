@@ -48,7 +48,7 @@ struct FoilAnalysis
     Foil m_Foil;                       /**< the Foil object to be analyzed by the thread; each task must have
                                             its own foil because the flap angle is variable */
     Polar *m_pPolar{nullptr};          /**< a pointer to the Polar object to be analyzed by the thread */
-    std::vector<AnalysisRange> range = std::vector<AnalysisRange>();
+    std::vector<AnalysisRange> m_Range = std::vector<AnalysisRange>();
 };
 
 
