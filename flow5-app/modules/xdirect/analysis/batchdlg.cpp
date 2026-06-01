@@ -61,7 +61,7 @@
 
 
 bool BatchDlg::s_bAlpha    = true;
-
+bool BatchDlg::s_bStoreOpp = false;
 
 
 XDirect * BatchDlg::s_pXDirect;
@@ -78,8 +78,9 @@ BatchDlg::BatchDlg(QWidget *pParent) : QDialog(pParent)
     m_pXFile = nullptr;
     m_pFoil = nullptr;
 
-    m_bCancel         = false;
-    m_bIsRunning      = false;
+    m_bChanged    = false;
+    m_bCancel     = false;
+    m_bIsRunning  = false;
 
     XFoil::setCancel(false);
 
@@ -322,7 +323,7 @@ void BatchDlg::initDialog()
     m_ppto->clear();
     m_ppto->setFont(DisplayOptions::tableFont());
 
-    m_pchStoreOpp->setChecked(XDirect::bStoreOpps());
+    m_pchStoreOpp->setChecked(s_bStoreOpp);
 
 
     if(s_bAlpha) m_prbAlpha->setChecked(true);
@@ -411,7 +412,7 @@ void BatchDlg::readParams()
 {
     s_bAlpha = m_prbAlpha->isChecked();
 
-    XDirect::setStoreOpps(m_pchStoreOpp->isChecked());
+    s_bStoreOpp = m_pchStoreOpp->isChecked();
 }
 
 
@@ -486,8 +487,8 @@ void BatchDlg::startOneTask()
 
         pXFoilTask->setAnalysisRanges(analysis.m_Range);
 
-        bool bStoreOpp = m_pchStoreOpp->isChecked();
-        pXFoilTask->initialize(analysis.m_Foil, analysis.m_pPolar, bStoreOpp);
+        s_bStoreOpp = m_pchStoreOpp->isChecked();
+        pXFoilTask->initialize(analysis.m_Foil, analysis.m_pPolar, s_bStoreOpp);
 
         //launch it
         m_nTaskStarted++;

@@ -81,6 +81,7 @@ class FL5LIB_EXPORT WingSection
         void setyProj(double y)  {m_YProj=y;}
         void setRightFoilName(std::string const &FoilName) {m_RightFoilName=FoilName;}
         void setLeftFoilName(std::string const &FoilName)  {m_LeftFoilName=FoilName;}
+        void setFoilNames(std::string const &LeftFoilName, std::string const &RightFoilName) {m_LeftFoilName = LeftFoilName; m_RightFoilName=RightFoilName;}
 
          // --------------- Variables -----------------------
 

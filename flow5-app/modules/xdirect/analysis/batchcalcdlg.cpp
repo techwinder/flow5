@@ -300,6 +300,7 @@ void BatchCalcDlg::onCalculate()
 
     XFoil::setCancel(false);
     XFoilTask::setCancelled(false);
+    m_bChanged   = true;
     m_bCancel    = false;
     m_bIsRunning = true;
 

@@ -2589,7 +2589,11 @@ bool MainFrame::loadSettings()
     settings.beginGroup("MainFrame");
     {
         SettingsFormat = settings.value("SettingsFormat").toInt();
-        if(SettingsFormat != SETTINGSFORMAT) return false;
+        if(SettingsFormat != SETTINGSFORMAT)
+        {
+            outputSettingsStatus(settings, true);
+            return false;
+        }
 
         PrefsDlg::setStyleName(settings.value("Style", PrefsDlg::styleName()).toString());
 
@@ -2811,19 +2815,61 @@ bool MainFrame::loadSettings()
     m_pXPlane->loadSettings(settings);
     m_pXSail->loadSettings(settings);
 
-    switch (settings.status())
-    {
-        case QSettings::NoError:
-            break;
-        case QSettings::AccessError:
-            qDebug("Settings load: Access error");
-            break;
-        case QSettings::FormatError:
-            qDebug("Settings load: Format error");
-            break;
-    }
+    outputSettingsStatus(settings, true);
 
     return true;
+}
+
+
+void MainFrame::outputSettingsStatus(QSettings const &settings, bool bLoad)
+{
+    QString filename = settings.fileName();
+    QFileInfo fi(filename);
+    if(bLoad)
+    {
+        if(fi.exists())
+        {
+            displayMessage(QString("Loading settings from the file %1\n").arg(filename), false, false);
+            switch (settings.status())
+            {
+                case QSettings::NoError:
+                    displayMessage("Loaded settings successfully\n\n", false, false);
+                    break;
+                case QSettings::AccessError:
+                    displayMessage("Settings access error during load\n\n", true, false);
+                    break;
+                case QSettings::FormatError:
+                    displayMessage("Settings format error during load\n\n", true, false);
+                    break;
+            }
+
+        }
+        else
+            displayMessage(QString("Settings file %1 not found\n\n").arg(filename), false, false);
+    }
+    else
+    {
+        if(!settings.isWritable())
+        {
+            QString strange;
+            strange = QString("The settings file %1 is not writable").arg(filename);
+            QMessageBox::warning(this, tr("Warning"), strange);
+        }
+        else
+        {
+            switch (settings.status())
+            {
+                case QSettings::NoError:
+                    break;
+                case QSettings::AccessError:
+                    QMessageBox::warning(this, tr("Warning"), "Settings access error during save\n\n");
+                    break;
+                case QSettings::FormatError:
+                    QMessageBox::warning(this, tr("Warning"), "Settings format error during save\n\n");
+                    break;
+            }
+        }
+    }
 }
 
 
@@ -2958,16 +3004,8 @@ void MainFrame::saveSettings()
     m_pXPlane->saveSettings(settings);
     m_pXSail->saveSettings(settings);
 
-    switch (settings.status()) {
-        case QSettings::NoError:
-            break;
-        case QSettings::AccessError:
-            qDebug("Settings save: Access error");
-            break;
-        case QSettings::FormatError:
-            qDebug("Settings save: Format error");
-            break;
-    }
+    outputSettingsStatus(settings, false);
+
 }
 
 

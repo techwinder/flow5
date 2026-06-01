@@ -109,6 +109,7 @@ class MainFrame : public QMainWindow
 
         bool loadSettings();
         void saveSettings();
+        void outputSettingsStatus(QSettings const &settings, bool bLoad);
 
         void executeScript(QString const &XmlScriptName, bool bShowProgressStdIO);
 

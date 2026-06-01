@@ -324,24 +324,12 @@ bool Flow5App::event(QEvent *pEvent)
             if(pFOEvent)
                 xfl::trace("Processing FileOpenEvent for " +pFOEvent->file() + "\n");
 
-#ifdef Q_OS_MAC
-/*           // load licence settings at this point because macOS calls this event
-            // and then launches an instance of flow5...
-            QSettings licencesettings(QSettings::NativeFormat, QSettings::UserScope,"flow5", "fl5_licence");
-            licencesettings.beginGroup("licence");
-            {
-                Lich::setEMail(licencesettings.value("email").toString());
-                loadCryptedKey(licencesettings);
-            }
-            licencesettings.endGroup(); */
-#endif
-
             iApp = m_pMainFrame->loadProjectFile(pFOEvent->file());
             switch (iApp)
             {
-                case xfl::XSAIL:    m_pMainFrame->onXSail();           break;
-                case xfl::XPLANE:   m_pMainFrame->onXPlane();          break;
-                case xfl::XDIRECT:  m_pMainFrame->onXDirect();         break;
+                case xfl::XSAIL:    m_pMainFrame->onXSail();      break;
+                case xfl::XPLANE:   m_pMainFrame->onXPlane();     break;
+                case xfl::XDIRECT:  m_pMainFrame->onXDirect();    break;
                 default:
                     break;
             }

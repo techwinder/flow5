@@ -99,25 +99,6 @@ void BLData::resizeData(int N, bool bResultsOnly)
     bConverged.resize(N, false);
     bTurbulent.resize(N, false);
 
-/*    Qi.fill(0);
-    Qv.fill(0);
-    CTau.fill(0);
-    CTq.fill(0);
-    Cd.fill(0);
-    Cf.fill(0);
-    tauw.fill(0);
-    H.fill(0);
-    HStar.fill(0);
-    delta3.fill(0);
-    dstar.fill(0);
-    nTS.fill(0);
-    theta.fill(0);
-    delta.fill(0);
-    gamtr.fill(0);*/
-
-/*    bConverged.fill(false);
-    bTurbulent.fill(false);*/
-
 }
 
 

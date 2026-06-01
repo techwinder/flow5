@@ -65,6 +65,7 @@ class BatchDlg : public QDialog
 
         void setFoil(Foil *pFoil) {m_pFoil=pFoil;}
 
+        bool hasChanges() const {return m_bChanged;}
 
         static void loadSettings(QSettings &settings);
         static void saveSettings(QSettings &settings);
@@ -120,6 +121,8 @@ class BatchDlg : public QDialog
         bool m_bCancel;
         bool m_bIsRunning;
 
+        bool m_bChanged;
+
         QFile *m_pXFile;
 
         Foil *m_pFoil;
@@ -132,6 +135,7 @@ class BatchDlg : public QDialog
         QVector<FoilAnalysis> m_AnalysisPair;
 
         static bool s_bAlpha;
+        static bool s_bStoreOpp;
 
         static QByteArray s_Geometry;
         static XDirect* s_pXDirect;

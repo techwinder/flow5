@@ -22,7 +22,7 @@
 
 
 #ifdef WIN32
-#include <Windows.h>
+    #include <Windows.h>
 #endif
 
 #if defined ACCELERATE_NEW_LAPACK
@@ -54,8 +54,6 @@ int main()
     std::string strange;
 
 #ifdef OPENBLAS
-
-    strange.clear();
     switch(openblas_get_parallel())
     {
         //        https://github.com/OpenMathLib/OpenBLAS/wiki/Faq/a15b786986841d2e4e4e84e3f2ecff9c3b263b32
@@ -68,8 +66,6 @@ int main()
     std::cout << strange << std::endl << std::endl;
 
 #elif defined INTEL_MKL
-
-    strange.clear();
     int nt = mkl_get_max_threads();
 
     mkl_set_dynamic(0);
@@ -94,7 +90,7 @@ int main()
     gmsh::initialize();
     gmsh::option::setNumber("General.Terminal", 0);
     gmsh::option::setNumber("Geometry.OCCParallel", 1.0);
-    gmsh::option::setNumber("General.NumThreads", 0);
+    gmsh::option::setNumber("General.NumThreads", 0); //Maximum number of threads used by Gmsh when compiled with OpenMP support (0: use system default, i.e. OMP_NUM_THREADS)
     //    gmsh::option::setNumber("Mesh.MaxNumThreads2D", 8); //Default value: 0; 0: use General.NumThreads
 
 
@@ -109,48 +105,40 @@ int main()
     // All units must be provided in I.S., i.e. meters and kg
 
     std::cout << "Creating the airfoils... "  << std::endl << std::endl;
+
+    int nPanels = 200;
+
     Foil *pFoilN2413 = new Foil;
-    if(!Objects2d::makeNacaFoil(pFoilN2413, 2413, 200))
-    {
-        // this should not happen
-        std::cerr << "Error making foil NACA 2413" << std::endl;
-        delete pFoilN2413;
-        return 0;
-    }
+    Objects2d::makeNacaFoil(pFoilN2413, 2413, nPanels);
     pFoilN2413->setName("NACA 2413");
     Objects2d::insertThisFoil(pFoilN2413);
 
     Foil *pFoilN0009 = new Foil;
-    if(!Objects2d::makeNacaFoil(pFoilN0009, 9, 200))
-    {
-        // this should not happen
-        std::cerr << "Error making foil NACA 0009" << std::endl;
-        delete pFoilN0009;
-        return 0;
-    }
+    Objects2d::makeNacaFoil(pFoilN0009, 9, nPanels);
     pFoilN0009->setName("NACA 0009");
     Objects2d::insertThisFoil(pFoilN0009);
-
 
     // set the style for these foils and their children objects, i.e. polars and operating points
     pFoilN0009->setTheStyle({true, Line::SOLID, 2, {31, 111, 231}, Line::NOSYMBOL});
     pFoilN2413->setTheStyle({true, Line::SOLID, 2, {231, 111, 31}, Line::NOSYMBOL});
 
     // repanel
-    int  npanels = 150;
+    nPanels = 150;
     double amp = 0.7; // 0.0: no bunching, 1.0: max. bunching
-    pFoilN0009->rePanel(npanels, amp);
-    pFoilN2413->rePanel(npanels, amp);
+    pFoilN0009->rePanel(nPanels, amp);
+    pFoilN2413->rePanel(nPanels, amp);
 
     // define the flaps
     pFoilN0009->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters but does not modify the geometry
-    pFoilN2413->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters but does not modify the geometry
+    // in the case of the wing there will be need for two NACA 2413:  one flapped, one not
+    Foil *pFoilN2413_flapped = new Foil(pFoilN2413); // duplicate
+    pFoilN2413_flapped->setName("NACA 2413 flapped");
+    pFoilN2413_flapped->setTEFlapData(true, 0.7, 0.5, 0.0); // stores the parameters but does not modify the geometry
+    Objects2d::insertThisFoil(pFoilN2413_flapped);
 
-
-
-    // Create and define a new xfl-type plane with a Nurbs type fuselage
+    // Create and define a new xfl-type plane with a NURBS type fuselage
     // This plane will be meshed for a thin surface calculation
-    std::cout << "Creating the plane"<<std::endl;
+    std::cout << "Creating the plane" << std::endl;
     PlaneXfl* pPlaneXfl = new PlaneXfl;
     {
         //Set the plane's name now to ensure the plane is inserted in alphabetical order
@@ -158,7 +146,8 @@ int main()
 
         // We insert the plane = store the pointer
         // This ensures that the heap memory will not be lost and will be released properly
-        // This should be done after the plane has been given a name
+        // This should be done after the plane has been given a name so that it is inserted
+        // in alphabetical order
         Objects3d::insertPlane(pPlaneXfl);
 
         // set the style for this plane's children objects, i.e. polars and operating points
@@ -175,8 +164,7 @@ int main()
             pWing->setName("Main wing"); // for user information only
             pWing->makeDefaultWing();
 
-            // The parts position and tilt angles in the plane's frame of reference are stored in the part itself.
-            // These fields belong in fact to the plane, so this may change in a future version
+            // The parts position and tilt angles are in the plane's frame of reference.
             // Position the mainwing
             // flow5 works internally in IS units and expects all input in IS + degrees
             pPlaneXfl->setWingPosition(pWing, 0,0,0);
@@ -195,45 +183,61 @@ int main()
 
             //insert a section between root and tip, i.e. between indexes 0 and 1
             pWing->insertSection(1);
+            pWing->insertSection(1);
 
             // Edit the geometry
             for(int isec=0; isec<pWing->nSections(); isec++)
             {
                 // Get a reference to the wing section for ease of access
                 WingSection &sec = pWing->section(isec);
-                sec.setLeftFoilName(pFoilN2413->name());
-                sec.setRightFoilName(pFoilN2413->name());
                 // the number of chordwise panels - must be the same for all sections
                 sec.setNX(13);
-                // set a moderate panel concentration at LE and TE
+                // set a moderate panel density at LE and TE
                 sec.setXDistType(xfl::TANH);
             }
 
-            //root section
+            // root section
             WingSection &sec0 = pWing->rootSection(); // or pWing->section(0);
+            // the goal is to leave the inner surface un-flapped
+            sec0.setFoilNames(pFoilN2413->name(), pFoilN2413->name()); // left and right
             sec0.setDihedral(3.5);
             sec0.setChord(0.25);
-            sec0.setNY(13);
+            sec0.setNY(2);
             sec0.setYDistType(xfl::UNIFORM);
 
-            // mid section
+            // second section is positioned just outside the fuselage to keep the fuselage's conforming to the wing
+            // irrespective of the flap deflection
             WingSection &sec1 = pWing->section(1);
-            sec1.setXOffset(0.03); // the offset in the X direction
-            sec1.setDihedral(7.5);
-            sec1.setYPosition(0.75);
-            sec1.setChord(0.200);
-            sec1.setTwist(-2.5); // degrees
-            sec1.setNY(19);
-            sec1.setYDistType(xfl::INV_EXP); // moderate panel concentration at wing tip
+            sec1.setFoilNames(pFoilN2413_flapped->name(), pFoilN2413_flapped->name()); // left and right
+            sec1.setXOffset(0.005); // the offset in the X direction
+            sec1.setDihedral(3.5);
+            sec1.setYPosition(0.08); // just outside the fuselage
+            sec1.setChord(0.240);
+            sec1.setTwist(0.0); // degrees
+            sec1.setNY(13);
+            sec1.setYDistType(xfl::EXP); // make a dense mesh at the inner flap edge
+
+
+            // mid section
+            WingSection &secmid = pWing->section(2);
+            secmid.setFoilNames(pFoilN2413_flapped->name(), pFoilN2413_flapped->name()); // left and right
+            secmid.setXOffset(0.03); // the offset in the X direction
+            secmid.setDihedral(7.5);
+            secmid.setYPosition(0.75);
+            secmid.setChord(0.200);
+            secmid.setTwist(-2.5); // degrees
+            secmid.setNY(13);
+            secmid.setYDistType(xfl::INV_EXP);
 
             // tip section
-            WingSection &sec2 = pWing->tipSection(); // or pWing->section(2);
-            sec2.setYPosition(1.47);
-            sec2.setXOffset(0.065); // the offset in the X direction
-            sec2.setChord(0.13);
-            sec2.setTwist(-3.5); // degrees
+            WingSection &sectip = pWing->tipSection(); // or pWing->section(2);
+            sectip.setFoilNames(pFoilN2413_flapped->name(), pFoilN2413_flapped->name()); // left and right
+            sectip.setYPosition(1.47);
+            sectip.setXOffset(0.065); // the offset in the X direction
+            sectip.setChord(0.13);
+            sectip.setTwist(-3.5); // degrees
 
-            //change the Aspect Ratio - why not?
+            //change the Aspect Ratio - just to demonstrate
             // first compute-update the geometry
             pWing->computeGeometry();
             // scale
@@ -247,13 +251,11 @@ int main()
         {
             pElev->setName("Elevator");
             pElev->makeDefaultStab();
+            pElev->setColor({173, 111, 57});
 
             //position the elevator
             pPlaneXfl->setWingPosition(pElev, 0.910, 0.0, 0.250);
             pPlaneXfl->setRyAngle(pElev, -2.5); // degrees
-
-            // Define the elevator
-            pElev->setColor({173, 111, 57});
 
             // define the inertia
             Inertia &inertia = pElev->inertia();
@@ -267,7 +269,7 @@ int main()
                 sec.setLeftFoilName(pFoilN0009->name());
                 sec.setRightFoilName(pFoilN0009->name());
                 // the number of chordwise panels - must be the same for all sections
-                sec.setNX(7); // prime numbers are perfect by nature
+                sec.setNX(7);
                 // set a moderate panel concentration at LE and TE
                 sec.setXDistType(xfl::TANH);
             }
@@ -323,8 +325,6 @@ int main()
 
             //position the fuse
             pPlaneXfl->setFusePos(0, {-0.450, 0.0, 0.0});
-            // equivalent to
-            //            pFuse->setPosition({-0.450, 0.0, 0.0});
 
             pFuse->setName("The fuse");  // for information only
             // add meta-data
@@ -334,7 +334,7 @@ int main()
             pFuse->setStructuralMass(0.75); // kg
 
             // scale frame nummber 4, i.e. index=3 since C-arrays start at index 0
-            pFuseNurbs->scaleFrame(0.7,0.7, 3);
+            pFuseNurbs->scaleFrame(0.7, 0.7, 3);
 
             // The default fuse is a bit too long
             pFuseNurbs->scale(0.95, 1.0, 1.0);
@@ -350,7 +350,7 @@ int main()
             pFuse->setGmshMaxSize(0.1); // m
 
             // Optional: make a triangular mesh
-            // In the present case, would be overwritten by the conforming mesh at the next step
+            // In the present case, would be overwritten by the conforming mesh at the next step anyway
             //            std::string logmsg;
             //            pFuse->makeDefaultTriMesh(logmsg, "");
 
@@ -375,9 +375,8 @@ int main()
 
         std::cout << "    Building the parts and their meshes" <<std::endl;
         {
-
             // Build the plane and the individual part meshes
-            // In the case of the fuselage this will create a default, non-conformant mesh.
+            // This will create a default, non-conformant mesh for the fuselage which will be overwritten at the next step
             bool bIgnoreFusePanels = false; // unused in the present case, only applicable to quad meshes
             bool bMakeTriMesh = true;
             pPlaneXfl->makePlane(bThickSurfaces, bIgnoreFusePanels, bMakeTriMesh);
@@ -393,9 +392,9 @@ int main()
             // this will overwrite the default fuselage mesh
             std::string log;
             plane::meshFuse(pPlaneXfl, indexes, bThickSurfaces, gmesh::FRONTALDELAUNAY, log, "   ");
-            std::cout << "    done Fuse mesh" << std::endl;
+            std::cout << "    done fuse mesh" << std::endl;
         }
-        std::cout << "done Plane creation" << std::endl<< std::endl;
+        std::cout << "done plane creation" << std::endl<< std::endl;
     }
 
     // Define an analysis
@@ -490,19 +489,7 @@ int main()
         // Create a vector of operating point parameters to calculate
         // Unlike in the foil case, the order of calculation is unimportant,
         // so there is no needed for ranges; an unordered list is what is needed
-        std::vector<double> opplist;
-        double oppmin = -5.0; // start at -5°
-        double oppmax = 11.0; // +11°
-        double inc = 4.0; // (°)
-        double opp = oppmin;
-        int i=1;
-        do
-        {
-            opplist.push_back(opp);
-            opp = oppmin + double(i++)*inc;
-        }
-        while(opp<oppmax);
-
+        std::vector<double> opplist{-1.0, 1.0, 3.0, 5.0, 7.0, 9.0, 11.0};
         pPlaneTask->setOppList(opplist);
 
 
@@ -528,7 +515,6 @@ int main()
     }
     std::cout << "Done calculation" << std::endl;
 
-
     // save the project; requires link to flow5-io-lib
     std::string logmsg;
     std::string projectfilepath;
@@ -537,9 +523,7 @@ int main()
     projectfilepath += "PlaneRun2.fl5";
 
 
-    io::saveProject(projectfilepath, logmsg);
-
-    if(logmsg.size()>0)
+    if(!io::saveProject(projectfilepath, logmsg))
     {
         // error saving
         std::cerr << logmsg << std::endl << std::endl;

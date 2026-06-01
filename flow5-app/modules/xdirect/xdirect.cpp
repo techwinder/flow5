@@ -1204,10 +1204,7 @@ void XDirect::onBatchAltAnalysis()
 {
     BatchCalcDlg *pBatchDlg = new BatchCalcDlg(s_pMainFrame);
     pBatchDlg->initDialog();
-
     pBatchDlg->exec();
-
-    delete pBatchDlg;
 
     setPolar();
     m_pFoilExplorer->fillModelView();
@@ -1216,7 +1213,10 @@ void XDirect::onBatchAltAnalysis()
     setControls();
     updateView();
 
-    emit projectModified();
+    if(pBatchDlg->hasChanges())
+        emit projectModified();
+
+    delete pBatchDlg;
 }
 
 
@@ -1228,7 +1228,6 @@ void XDirect::onBatchAnalysis()
 
     pBatchDlg->exec();
 
-    delete pBatchDlg;
 
     setPolar();
     m_pFoilExplorer->fillModelView();
@@ -1237,7 +1236,10 @@ void XDirect::onBatchAnalysis()
     setControls();
     updateView();
 
-    emit projectModified();
+    if(pBatchDlg->hasChanges())
+        emit projectModified();
+
+    delete pBatchDlg;
 }
 
 
