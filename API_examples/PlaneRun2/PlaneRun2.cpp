@@ -452,12 +452,14 @@ int main()
             // get a reference to the elevator's flap controls
             AngleControl &elevctrls = pPlPolar->flapCtrls(1);
             {
-                // the elevator's has been defined with two flaps
+                // the elevator has been defined with two flaps
                 elevctrls.setValue(0, +3);
                 elevctrls.setValue(1, +3);
             }
 
-            // the fin's flap is left to its default value = 0°
+            // The fin's flap is left to its default value = 0°
+            // A deflectd flap would break the conformity of fuselage and fin meshes
+            // which in this case wouldn't be a big deal anyway
         }
 
         // leave the rest of the fields to their default values
@@ -467,6 +469,7 @@ int main()
         PlanePolarNameMaker maker;
         std::string polarname = PlanePolarNameMaker::makeName(pPlaneXfl, pPlPolar);
         pPlPolar->setName(polarname);
+
         // Store the pointer to ensure that the object is not lost
         // This should be done after the polar has been given a name
         // since objects are referenced by their name and are stored
@@ -476,7 +479,7 @@ int main()
     }
 
 
-    // Run the analysis
+    // Run the calculation
     std::cout << "Building the plane calculation task"<<std::endl<< std::endl;
     PlaneTask *pPlaneTask = new PlaneTask;
     {
@@ -499,7 +502,7 @@ int main()
         pPlaneTask->run();
 
         // Results are automatically stored in the polar and
-        // in the planeOpp array, so no action needed
+        // in the PlaneOpp arrays, so no action needed
 
 
         // print the results
@@ -515,13 +518,13 @@ int main()
     }
     std::cout << "Done calculation" << std::endl;
 
+
     // save the project; requires link to flow5-io-lib
     std::string logmsg;
     std::string projectfilepath;
     projectfilepath  = std::filesystem::temp_directory_path().string();
     projectfilepath += std::filesystem::path::preferred_separator;
     projectfilepath += "PlaneRun2.fl5";
-
 
     if(!io::saveProject(projectfilepath, logmsg))
     {

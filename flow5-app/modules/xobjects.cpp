@@ -74,7 +74,7 @@ QStringList Objects3d::polarNames(Plane const*pPlane)
     {
         for(int i=0; i<nPolars(); i++)
         {
-            PlanePolar const *pPolar = plPolarAt(i);
+            PlanePolar const *pPolar = planePolarAt(i);
             if(pPolar->planeName()==pPlane->name())
                 names.push_back(QString::fromStdString(pPolar->name()));
         }
@@ -181,7 +181,7 @@ PlanePolar* Objects3d::insertNewPolar(PlanePolar *pNewWPolar, Plane const*pCurPl
     //check if this WPolar is already inserted
     for(int ip=0; ip<nPolars(); ip++)
     {
-         PlanePolar *pOldWPolar = plPolarAt(ip);
+         PlanePolar *pOldWPolar = planePolarAt(ip);
         if(pOldWPolar==pNewWPolar)
         {
             // already in the array, nothing to insert
@@ -193,7 +193,7 @@ PlanePolar* Objects3d::insertNewPolar(PlanePolar *pNewWPolar, Plane const*pCurPl
     QStringList NameList;
     for(int k=0; k<nPolars(); k++)
     {
-        PlanePolar *pWPolar = plPolarAt(k);
+        PlanePolar *pWPolar = planePolarAt(k);
         if(pCurPlane && pWPolar->planeName()==pCurPlane->name())
             NameList.append(QString::fromStdString(pWPolar->name()));
     }
@@ -212,7 +212,7 @@ PlanePolar* Objects3d::insertNewPolar(PlanePolar *pNewWPolar, Plane const*pCurPl
     if(!bExists)
     {
         //just insert the WPolar in alphabetical order
-        insertPlPolar(pNewWPolar);
+        insertPlanePolar(pNewWPolar);
         return pNewWPolar;
     }
 
@@ -228,7 +228,7 @@ PlanePolar* Objects3d::insertNewPolar(PlanePolar *pNewWPolar, Plane const*pCurPl
         PlanePolar *pWPolar = nullptr;
         for(int ipb=0; ipb<nPolars(); ipb++)
         {
-             PlanePolar *pOldWPolar = plPolarAt(ipb);
+             PlanePolar *pOldWPolar = planePolarAt(ipb);
             if(pCurPlane && pOldWPolar->name()==dlg.newName().toStdString() &&
                pOldWPolar->planeName()==pCurPlane->name())
             {
@@ -240,7 +240,7 @@ PlanePolar* Objects3d::insertNewPolar(PlanePolar *pNewWPolar, Plane const*pCurPl
         if(pWPolar)
         {
             //remove and delete its children POpps from the array
-            deletePlPolar(pWPolar);
+            deletePlanePolar(pWPolar);
 /*            for (int l=nPOpps()-1;l>=0; l--)
             {
                 PlaneOpp *pPOpp = POppAt(l);
@@ -266,7 +266,7 @@ PlanePolar* Objects3d::insertNewPolar(PlanePolar *pNewWPolar, Plane const*pCurPl
         //room has been made, insert the new WPolar in alphabetical order
         pNewWPolar->setName(dlg.newName().toStdString());
 
-        insertPlPolar(pNewWPolar);
+        insertPlanePolar(pNewWPolar);
         return pNewWPolar;
 
     }
@@ -279,7 +279,7 @@ PlanePolar* Objects3d::insertNewPolar(PlanePolar *pNewWPolar, Plane const*pCurPl
         //not rejected, no overwrite, else the user has selected a non-existing name, rename and insert
         pNewWPolar->setName(dlg.newName().toStdString());
 
-        insertPlPolar(pNewWPolar);
+        insertPlanePolar(pNewWPolar);
         return pNewWPolar;
 
     }
@@ -303,7 +303,7 @@ void Objects3d::renamePlane(QString const &PlaneName)
 
         for (int l=nPolars()-1;l>=0; l--)
         {
-            PlanePolar *pWPolar = plPolarAt(l);
+            PlanePolar *pWPolar = planePolarAt(l);
             if (pWPolar->planeName() == OldName.toStdString())
             {
                 pWPolar->setPlaneName(pPlane->name());
@@ -321,7 +321,7 @@ void Objects3d::renamePlane(QString const &PlaneName)
 }
 
 
-void Objects3d::renamePlPolar(PlanePolar *pWPolar, Plane const *pPlane)
+void Objects3d::renamePlanePolar(PlanePolar *pWPolar, Plane const *pPlane)
 {
     if(!pWPolar) return;
     PlanePolar *pOldWPolar(nullptr);
@@ -342,10 +342,10 @@ void Objects3d::renamePlPolar(PlanePolar *pWPolar, Plane const *pPlane)
         // so find and delete the existing WPolar with the new name
         for(int ipb=0; ipb<Objects3d::nPolars(); ipb++)
         {
-            pOldWPolar = Objects3d::plPolarAt(ipb);
+            pOldWPolar = Objects3d::planePolarAt(ipb);
             if(pOldWPolar->name()==dlg.newName().toStdString() && pOldWPolar->planeName()==pPlane->name())
             {
-                Objects3d::deletePlPolar(pOldWPolar);
+                Objects3d::deletePlanePolar(pOldWPolar);
                 break;
             }
         }
@@ -355,10 +355,10 @@ void Objects3d::renamePlPolar(PlanePolar *pWPolar, Plane const *pPlane)
     //remove the WPolar from its current position in the array
     for (int l=0; l<Objects3d::nPolars();l++)
     {
-        pOldWPolar = Objects3d::plPolarAt(l);
+        pOldWPolar = Objects3d::planePolarAt(l);
         if(pOldWPolar==pWPolar)
         {
-            Objects3d::removePlPolarAt(l);
+            Objects3d::removePlanePolarAt(l);
             break;
         }
     }
@@ -375,7 +375,7 @@ void Objects3d::renamePlPolar(PlanePolar *pWPolar, Plane const *pPlane)
 
     pWPolar->setName(dlg.newName().toStdString());
 
-    Objects3d::insertPlPolar(pWPolar);
+    Objects3d::insertPlanePolar(pWPolar);
 }
 
 

@@ -517,7 +517,7 @@ bool FileIO::serializeProjectXfl(QDataStream &ar, bool bIsStoring, PlanePolar *p
                 if(!pPlane || !pPlane->isXflType()) continue;
                 pPlaneXfl = dynamic_cast<PlaneXfl *>(pPlane);
                 double refarea=0;
-                Objects3d::appendPlPolar(pWPolar);
+                Objects3d::appendPlanePolar(pWPolar);
                 if(pWPolar->referenceDim()==xfl::PLANFORM)
                 {
                     refarea = pPlaneXfl->planformArea(pWPolar->bIncludeOtherWingAreas());
@@ -942,7 +942,7 @@ bool FileIO::serialize3dObjectsFl5(QDataStream &ar, bool bIsStoring, int Archive
         int nWPlrExt = 0;
         for(int iplr=0; iplr<Objects3d::nPolars(); iplr++)
         {
-            PlanePolar const *pWPolar = Objects3d::plPolarAt(iplr);
+            PlanePolar const *pWPolar = Objects3d::planePolarAt(iplr);
             if(pWPolar)
             {
                 if(pWPolar->isExternalPolar()) nWPlrExt++;
@@ -954,7 +954,7 @@ bool FileIO::serialize3dObjectsFl5(QDataStream &ar, bool bIsStoring, int Archive
         outputMessage(QString::asprintf("      Saving %d plane polars\n", nWPlr));
         for (int i=0; i<Objects3d::nPolars();i++)
         {
-            pPlPolar = Objects3d::plPolarAt(i);
+            pPlPolar = Objects3d::planePolarAt(i);
             if(pPlPolar && !pPlPolar->isExternalPolar()) serial::serializePlanePolarFl5v750(pPlPolar, ar, bIsStoring);
         }
         // save next the xfl type polars
@@ -962,7 +962,7 @@ bool FileIO::serialize3dObjectsFl5(QDataStream &ar, bool bIsStoring, int Archive
         outputMessage(QString::asprintf("      Saving %d external plane polars\n", nWPlrExt));
         for (int i=0; i<Objects3d::nPolars();i++)
         {
-            PlanePolar *pPlPolar = Objects3d::plPolarAt(i);
+            PlanePolar *pPlPolar = Objects3d::planePolarAt(i);
             PlanePolarExt *pPlPolarExt = dynamic_cast<PlanePolarExt*>(pPlPolar);
             if(pPlPolarExt)
             {
@@ -1051,7 +1051,7 @@ bool FileIO::serialize3dObjectsFl5(QDataStream &ar, bool bIsStoring, int Archive
                 pPlane = Objects3d::plane(pPlPolar->planeName());
                 if(pPlane)
                 {
-                    Objects3d::insertPlPolar(pPlPolar);
+                    Objects3d::insertPlanePolar(pPlPolar);
                     if(pPlPolar->referenceDim()==xfl::CUSTOM)
                     {
                     }
@@ -1100,7 +1100,7 @@ bool FileIO::serialize3dObjectsFl5(QDataStream &ar, bool bIsStoring, int Archive
                     pPlane = Objects3d::plane(pPlPolarExt->planeName());
                     if(pPlane)
                     {
-                        Objects3d::insertPlPolar(pPlPolarExt);
+                        Objects3d::insertPlanePolar(pPlPolarExt);
                     }
                     else delete pPlPolarExt;
                 }
@@ -1335,7 +1335,7 @@ bool FileIO::storePlaneFl5(Plane *pPlane, QDataStream &ar)
     int nWPlrExt = 0;
     for(int iplr=0; iplr<Objects3d::nPolars(); iplr++)
     {
-        PlanePolar const *pWPolar = Objects3d::plPolarAt(iplr);
+        PlanePolar const *pWPolar = Objects3d::planePolarAt(iplr);
         if(pWPolar && pWPolar->planeName()==pPlane->name())
         {
             if(pWPolar->isExternalPolar()) nWPlrExt++;
@@ -1348,7 +1348,7 @@ bool FileIO::storePlaneFl5(Plane *pPlane, QDataStream &ar)
     int nWPlr2=0;
     for (int i=0; i<Objects3d::nPolars();i++)
     {
-        PlanePolar *pWPolar = Objects3d::plPolarAt(i);
+        PlanePolar *pWPolar = Objects3d::planePolarAt(i);
         if(pWPolar && pWPolar->planeName()==pPlane->name() && !pWPolar->isExternalPolar())
         {
             serial::serializePlanePolarFl5v750(pWPolar, ar, bIsStoring);
@@ -1362,7 +1362,7 @@ bool FileIO::storePlaneFl5(Plane *pPlane, QDataStream &ar)
     ar <<nWPlrExt;
     for (int i=0; i<Objects3d::nPolars();i++)
     {
-        PlanePolar *pWPolar = Objects3d::plPolarAt(i);
+        PlanePolar *pWPolar = Objects3d::planePolarAt(i);
         PlanePolarExt *pWPolarExt = dynamic_cast<PlanePolarExt*>(pWPolar);
         if(pWPolarExt && pWPolarExt->planeName()==pPlane->name())
         {

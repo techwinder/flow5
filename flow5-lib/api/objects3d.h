@@ -60,8 +60,8 @@ namespace Objects3d
     FL5LIB_EXPORT  void deletePlane(Plane *pPlane, bool bDeleteResults=true);
     FL5LIB_EXPORT  void deletePlaneResults(const Plane *pPlane, bool bDeletePolars=false);
     FL5LIB_EXPORT  void deleteExternalPolars(Plane const*pPlane);
-    FL5LIB_EXPORT  void deleteWPolarResults(PlanePolar *pWPolar);
-    FL5LIB_EXPORT  void deletePlPolar(PlanePolar *pPlPolar);
+    FL5LIB_EXPORT  void deletePlanePolarResults(PlanePolar *pWPolar);
+    FL5LIB_EXPORT  void deletePlanePolar(PlanePolar *pPlPolar);
     FL5LIB_EXPORT  void deletePlaneOpp(PlaneOpp *pPOpp);
     FL5LIB_EXPORT  Plane* plane(const std::string &PlaneName);
     FL5LIB_EXPORT  Plane const* planeAt(const std::string &PlaneName);
@@ -75,11 +75,23 @@ namespace Objects3d
     FL5LIB_EXPORT  void insertPlane(Plane *pModPlane);
     FL5LIB_EXPORT  void renamePlane(Plane *pPlane, std::string const &newname);
 
-    FL5LIB_EXPORT  void addPlPolar(PlanePolar *pPPolar);
-    FL5LIB_EXPORT  void appendPlPolar(PlanePolar *pPPolar);
-    FL5LIB_EXPORT  void insertPlPolar(PlanePolar *pNewPPolar);
-    FL5LIB_EXPORT  inline void removePlPolarAt(int idx) {if(idx<0 ||idx>=int(s_oaPlanePolar.size())) return; s_oaPlanePolar.erase(s_oaPlanePolar.begin()+idx);}
-    FL5LIB_EXPORT  void renamePlPolar(PlanePolar *pWPolar, std::string const &newname);
+    FL5LIB_EXPORT  void addPlanePolar(PlanePolar *pPPolar);
+    FL5LIB_EXPORT  void appendPlanePolar(PlanePolar *pPPolar);
+    FL5LIB_EXPORT  void insertPlanePolar(PlanePolar *pNewPPolar);
+    /** @deprecated */
+    FL5LIB_EXPORT  inline void addPlPolar(PlanePolar *pPPolar) {addPlanePolar(pPPolar);}
+    /** @deprecated */
+    FL5LIB_EXPORT  inline void appendPlPolar(PlanePolar *pPPolar) {appendPlanePolar(pPPolar);}
+    /** @deprecated */
+    FL5LIB_EXPORT  inline void insertPlPolar(PlanePolar *pNewPPolar) {insertPlanePolar(pNewPPolar);}
+
+    FL5LIB_EXPORT  inline void removePlanePolarAt(int idx) {if(idx<0 ||idx>=int(s_oaPlanePolar.size())) return; s_oaPlanePolar.erase(s_oaPlanePolar.begin()+idx);}
+    FL5LIB_EXPORT  void renamePlanePolar(PlanePolar *pWPolar, std::string const &newname);
+
+    /** @deprecated */
+    FL5LIB_EXPORT  inline void removePlPolarAt(int idx) {removePlanePolarAt(idx);}
+    /** @deprecated */
+    FL5LIB_EXPORT  inline void renamePlPolar(PlanePolar *pPlPolar, std::string const &newname) {renamePlanePolar(pPlPolar, newname);}
 
     FL5LIB_EXPORT  void insertPlaneOpp(PlaneOpp *pPOpp);
     FL5LIB_EXPORT  bool containsPOpp(PlaneOpp *pPOpp);
@@ -91,18 +103,30 @@ namespace Objects3d
     FL5LIB_EXPORT  inline int nPOpps()   {return int(s_oaPlaneOpp.size());}
 
     FL5LIB_EXPORT  inline Plane* planeAt(int ip)    {if(ip>=0 && ip<int(s_oaPlane.size()))  return s_oaPlane.at(ip);  else return nullptr;}
-    FL5LIB_EXPORT  inline PlanePolar* plPolarAt(int iw)  {if(iw>=0 && iw<int(s_oaPlanePolar.size())) return s_oaPlanePolar.at(iw); else return nullptr;}
+    FL5LIB_EXPORT  inline PlanePolar* planePolarAt(int idx)  {if(idx>=0 && idx<int(s_oaPlanePolar.size())) return s_oaPlanePolar.at(idx); else return nullptr;}
+    /** @deprecated */
+    FL5LIB_EXPORT  inline PlanePolar* plPolarAt(int idx)  {return planePolarAt(idx);}
     FL5LIB_EXPORT  inline PlaneOpp* POppAt(int io)  {if(io>=0 && io<int(s_oaPlaneOpp.size()))   return s_oaPlaneOpp.at(io);   else return nullptr;}
 
     FL5LIB_EXPORT  int  newUniquePartIndex();
 
-    FL5LIB_EXPORT  void setPlPolarColor(const Plane *pPlane, PlanePolar *pWPolar, int darkfactor);
-
     FL5LIB_EXPORT  void setPlaneVisible(const Plane *pPlane, bool bVisible, bool bStabilityPolarsOnly);
-    FL5LIB_EXPORT  void setPlPolarVisible(PlanePolar *pWPolar, bool bVisible);
-
     FL5LIB_EXPORT  void setPlaneStyle(Plane *pPlane, LineStyle const &ls, bool bStipple, bool bWidth, bool bColor, bool bPoints, int darkfactor);
-    FL5LIB_EXPORT  void setPlPolarStyle(PlanePolar *pWPolar, LineStyle const &ls, bool bStyle, bool bWidth, bool bColor, bool bPoints, int darkfactor);
+
+    FL5LIB_EXPORT  void setPlanePolarVisible(PlanePolar *pPlanePolar, bool bVisible);
+    /** @deprecated */
+    FL5LIB_EXPORT  inline void setPlPolarVisible(PlanePolar *pPlPolar, bool bVisible) {setPlanePolarVisible(pPlPolar, bVisible);}
+
+    FL5LIB_EXPORT  void setPlanePolarColor(const Plane *pPlane, PlanePolar *pPlanePolar, int darkfactor);
+    /** @deprecated */
+    FL5LIB_EXPORT  inline void setPlPolarColor(const Plane *pPlane, PlanePolar *pWPolar, int darkfactor) {setPlanePolarColor(pPlane, pWPolar, darkfactor);}
+
+    FL5LIB_EXPORT  void setPlanePolarStyle(PlanePolar *pPlanePolar, LineStyle const &ls, bool bStyle, bool bWidth, bool bColor, bool bPoints, int darkfactor);
+    /** @deprecated */
+    FL5LIB_EXPORT  void setPlPolarStyle(PlanePolar *pPlanePolar, LineStyle const &ls, bool bStyle, bool bWidth, bool bColor, bool bPoints, int darkfactor);
+
+    FL5LIB_EXPORT  void setPlanePolarPOppStyle(PlanePolar const* pWPolar, bool bStipple, bool bWidth, bool bColor, bool bPoints, int darkfactor);
+    /** @deprecated */
     FL5LIB_EXPORT  void setPlPolarPOppStyle(PlanePolar const* pWPolar, bool bStipple, bool bWidth, bool bColor, bool bPoints, int darkfactor);
 
     FL5LIB_EXPORT  bool hasResults(Plane const*pPlane);

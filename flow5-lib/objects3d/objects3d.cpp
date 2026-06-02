@@ -234,7 +234,7 @@ void Objects3d::insertPlaneOpp(PlaneOpp *pPOpp)
 }
 
 
-void Objects3d::addPlPolar(PlanePolar *pWPolar)
+void Objects3d::addPlanePolar(PlanePolar *pWPolar)
 {
     if(!pWPolar) return;
 //    Plane const *pPlane = planeAt(pWPolar->planeName());
@@ -277,7 +277,7 @@ void Objects3d::addPlPolar(PlanePolar *pWPolar)
 }
 
 
-void Objects3d::appendPlPolar(PlanePolar *pWPolar)
+void Objects3d::appendPlanePolar(PlanePolar *pWPolar)
 {
     if(!pWPolar) return;
 //    Plane const *pPlane = planeAt(pWPolar->planeName());
@@ -315,7 +315,7 @@ void Objects3d::deletePlane(Plane *pPlane, bool bDeleteResults)
  * Deletes the WPolar and its PlaneOpp objects.
  * @param pPlPolar a pointer to the WPolar object which will be deleted
  */
-void Objects3d::deletePlPolar(PlanePolar *pPlPolar)
+void Objects3d::deletePlanePolar(PlanePolar *pPlPolar)
 {
     //remove and delete its children POpps from the array
     if(!pPlPolar)return;
@@ -421,7 +421,7 @@ void Objects3d::deleteExternalPolars(Plane const*pPlane)
 }
 
 
-void Objects3d::deleteWPolarResults(PlanePolar *pWPolar)
+void Objects3d::deletePlanePolarResults(PlanePolar *pWPolar)
 {
     pWPolar->clearPolarData();
     for(int i=Objects3d::nPOpps()-1; i>=0; --i)
@@ -520,9 +520,9 @@ void Objects3d::deleteObjects()
 }
 
 
-void Objects3d::setPlPolarColor(Plane const *pPlane, PlanePolar *pWPolar, int darkfactor)
+void Objects3d::setPlanePolarColor(Plane const *pPlane, PlanePolar *pPlanePolar, int darkfactor)
 {
-    if(!pPlane || !pWPolar) return;
+    if(!pPlane || !pPlanePolar) return;
     fl5Color clr = pPlane->lineColor();
     for(int ip=0; ip<nPolars(); ip++)
     {
@@ -531,7 +531,7 @@ void Objects3d::setPlPolarColor(Plane const *pPlane, PlanePolar *pWPolar, int da
             clr = clr.darker(darkfactor);
         }
     }
-    pWPolar->setLineColor(clr);
+    pPlanePolar->setLineColor(clr);
 }
 
 
@@ -555,7 +555,7 @@ void Objects3d::setPlaneStyle(Plane *pPlane, LineStyle const &ls, bool bStipple,
             }
             if(bPoints) pWPolar->setPointStyle(ls.m_Symbol);
 
-            setPlPolarPOppStyle(pWPolar, bStipple, bWidth, bColor, bPoints, darkfactor);
+            setPlanePolarPOppStyle(pWPolar, bStipple, bWidth, bColor, bPoints, darkfactor);
 
             pLastWPolar = pWPolar;
         }
@@ -596,11 +596,11 @@ void Objects3d::setPlaneVisible(const Plane *pPlane, bool bVisible, bool bStabil
 }
 
 
-void Objects3d::setPlPolarVisible(PlanePolar *pWPolar, bool bVisible)
+void Objects3d::setPlanePolarVisible(PlanePolar *pPlanePolar, bool bVisible)
 {
-    if(!pWPolar) return;
-    pWPolar->setVisible(bVisible);
-    Plane const*pPlane = plane(pWPolar->planeName());
+    if(!pPlanePolar) return;
+    pPlanePolar->setVisible(bVisible);
+    Plane const*pPlane = plane(pPlanePolar->planeName());
     if(!pPlane) return;
 
     for(int ipp=0; ipp<nPOpps(); ipp++)
@@ -608,7 +608,7 @@ void Objects3d::setPlPolarVisible(PlanePolar *pWPolar, bool bVisible)
         PlaneOpp *pPOpp = s_oaPlaneOpp.at(ipp);
         if(pPOpp->planeName().compare(pPlane->name())==0)
         {
-            if(pPOpp->polarName().compare(pWPolar->name())==0)
+            if(pPOpp->polarName().compare(pPlanePolar->name())==0)
                 pPOpp->setVisible(bVisible);
         }
     }
@@ -669,13 +669,13 @@ bool Objects3d::hasPOpps(PlanePolar const *pWPolar)
 }
 
 
-void Objects3d::insertPlPolar(PlanePolar *pWPolar)
+void Objects3d::insertPlanePolar(PlanePolar *pWPolar)
 {
     if(!pWPolar) return;
 
     for (int j=0; j<nPolars();j++)
     {
-        PlanePolar const *pOldWPolar = Objects3d::plPolarAt(j);
+        PlanePolar const *pOldWPolar = Objects3d::planePolarAt(j);
 
         //first index is the parent plane's name
         if (pWPolar->planeName().compare(pOldWPolar->planeName())<0)
@@ -701,20 +701,26 @@ void Objects3d::insertPlPolar(PlanePolar *pWPolar)
     }
 
     //something went wrong, no parent plane for this WPolar
-    Objects3d::appendPlPolar(pWPolar);
+    Objects3d::appendPlanePolar(pWPolar);
 }
 
-
-void Objects3d::setPlPolarStyle(PlanePolar *pWPolar, LineStyle const&ls, bool bStyle, bool bWidth, bool bColor, bool bPoints, int darkfactor)
+/** @deprecated */
+void Objects3d::setPlPolarStyle(PlanePolar *pPlanePolar, LineStyle const&ls, bool bStyle, bool bWidth, bool bColor, bool bPoints, int darkfactor)
 {
-    if(!pWPolar) return;
-    pWPolar->setTheStyle(ls);
-
-    setPlPolarPOppStyle(pWPolar, bStyle, bWidth, bColor, bPoints, darkfactor);
+    setPlanePolarStyle(pPlanePolar, ls, bStyle, bWidth, bColor, bPoints, darkfactor);
 }
 
 
-void Objects3d::setPlPolarPOppStyle(PlanePolar const* pWPolar, bool bStipple, bool bWidth, bool bColor, bool bPoints, int darkfactor)
+void Objects3d::setPlanePolarStyle(PlanePolar *pPlanePolar, LineStyle const&ls, bool bStyle, bool bWidth, bool bColor, bool bPoints, int darkfactor)
+{
+    if(!pPlanePolar) return;
+    pPlanePolar->setTheStyle(ls);
+
+    setPlanePolarPOppStyle(pPlanePolar, bStyle, bWidth, bColor, bPoints, darkfactor);
+}
+
+
+void Objects3d::setPlanePolarPOppStyle(PlanePolar const* pWPolar, bool bStipple, bool bWidth, bool bColor, bool bPoints, int darkfactor)
 {
     if(!pWPolar) return;
     PlaneOpp *pLastPOpp = nullptr;
@@ -827,7 +833,7 @@ void Objects3d::cleanObjects(std::string &log)
         {
             log += "Deleting the orphan plane polar " +
                     pOldWPolar->name() + "\n";
-            deletePlPolar(pOldWPolar);
+            deletePlanePolar(pOldWPolar);
         }
     }
 }
@@ -842,7 +848,7 @@ void Objects3d::updatePlPolarstoV750()
         if(!pPlane)
         {
             // redundant safety check
-            deletePlPolar(pOldWPolar);
+            deletePlanePolar(pOldWPolar);
         }
         else
         {
@@ -864,7 +870,7 @@ void Objects3d::renamePlane(Plane*pPlane, std::string const &newname)
 
     for (int l=0; l<nPolars(); l++)
     {
-        PlanePolar *pWPolar = plPolarAt(l);
+        PlanePolar *pWPolar = planePolarAt(l);
         if (pWPolar->planeName() == OldName)
         {
             pWPolar->setPlaneName(newname);
@@ -881,7 +887,7 @@ void Objects3d::renamePlane(Plane*pPlane, std::string const &newname)
 }
 
 
-void Objects3d::renamePlPolar(PlanePolar *pWPolar, const std::string &newname)
+void Objects3d::renamePlanePolar(PlanePolar *pWPolar, const std::string &newname)
 {
     if(!pWPolar) return;
 

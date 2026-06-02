@@ -828,7 +828,7 @@ bool io::exportAllWPolars(QString const &pathname, bool bCSV)
 
             for(int l=0; l<Objects3d::nPolars(); l++)
             {
-                PlanePolar const *pWPolar = Objects3d::plPolarAt(l);
+                PlanePolar const *pWPolar = Objects3d::planePolarAt(l);
                 if(!pWPolar) continue;
                 if(pWPolar->planeName().compare(pPlaneXfl->name())!=0) continue;
 
@@ -1027,7 +1027,7 @@ bool io::exportAllPOpps(const QString &pathname, bool bCSV, bool bPanelData)
 
             for(int l=0; l<Objects3d::nPolars(); l++)
             {
-                PlanePolar const *pWPolar = Objects3d::plPolarAt(l);
+                PlanePolar const *pWPolar = Objects3d::planePolarAt(l);
                 if(!pWPolar) continue;
                 if(pWPolar->planeName().compare(pPlaneXfl->name())!=0) continue;
                 QString PolarName = QString::fromStdString(pWPolar->name());

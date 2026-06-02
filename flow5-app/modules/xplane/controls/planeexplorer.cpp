@@ -194,7 +194,7 @@ void PlaneExplorer::updatePOpps()
 {
     for(int iPolar=0; iPolar<Objects3d::nPolars(); iPolar++)
     {
-        PlanePolar const*pWPolar = Objects3d::plPolarAt(iPolar);
+        PlanePolar const*pWPolar = Objects3d::planePolarAt(iPolar);
         addPOpps(pWPolar);
     }
 }
@@ -276,7 +276,7 @@ void PlaneExplorer::fillWPolars(ObjectTreeItem *pPlaneItem, const Plane *pPlane)
 
     for(int iPolar=0; iPolar<Objects3d::nPolars(); iPolar++)
     {
-        PlanePolar *pWPolar = Objects3d::plPolarAt(iPolar);
+        PlanePolar *pWPolar = Objects3d::planePolarAt(iPolar);
         if(!pWPolar) continue;
         if(pWPolar && pWPolar->planeName().compare(pPlane->name())==0)
         {
@@ -460,7 +460,7 @@ void PlaneExplorer::insertPlane(Plane* pPlane)
 
     for(int iwp=0; iwp<Objects3d::nPolars(); iwp++)
     {
-        PlanePolar const *pWPolar = Objects3d::plPolarAt(iwp);
+        PlanePolar const *pWPolar = Objects3d::planePolarAt(iwp);
         if(pWPolar->planeName().compare(pPlane->name())==0)
         {
             insertWPolar(pWPolar);
@@ -1196,7 +1196,7 @@ void PlaneExplorer::setOverallCheckStatus()
         bool bAllUnchecked = true;
         for(int io=0; io<Objects3d::nPolars(); io++)
         {
-            PlanePolar *const pWPolar = Objects3d::plPolarAt(io);
+            PlanePolar *const pWPolar = Objects3d::planePolarAt(io);
             if(pWPolar->isVisible()) bAllUnchecked = false;
             else                     bAllChecked   = false;
         }
@@ -1212,7 +1212,7 @@ void PlaneExplorer::setOverallCheckStatus()
         bool bAllUnchecked = true;
         for(int io=0; io<Objects3d::nPolars(); io++)
         {
-            PlanePolar *const pWPolar = Objects3d::plPolarAt(io);
+            PlanePolar *const pWPolar = Objects3d::planePolarAt(io);
             if(pWPolar->isStabilityPolar())
             {
                 if(pWPolar->isVisible()) bAllUnchecked = false;
@@ -1263,16 +1263,16 @@ void PlaneExplorer::onSetFilter()
     {
         for(int jp=0; jp<Objects3d::nPolars(); jp++)
         {
-            Objects3d::plPolarAt(jp)->setVisible(true);
+            Objects3d::planePolarAt(jp)->setVisible(true);
         }
     }
     else if(filters.size()==1)
     {
         for(int jp=0; jp<Objects3d::nPolars(); jp++)
         {
-            PlanePolar *pPlPolar = Objects3d::plPolarAt(jp);
+            PlanePolar *pPlPolar = Objects3d::planePolarAt(jp);
             bool bVisible = QString::fromStdString(pPlPolar->name()).contains(filter, Qt::CaseInsensitive);
-            Objects3d::setPlPolarVisible(pPlPolar, bVisible);
+            Objects3d::setPlanePolarVisible(pPlPolar, bVisible);
         }
 
         for(int ip=0; ip<Objects3d::nPlanes(); ip++)
@@ -1282,7 +1282,7 @@ void PlaneExplorer::onSetFilter()
             {
                 for(int jp=0; jp<Objects3d::nPolars(); jp++)
                 {
-                    PlanePolar *pPlPolar = Objects3d::plPolarAt(jp);
+                    PlanePolar *pPlPolar = Objects3d::planePolarAt(jp);
                     if(pPlPolar->planeName()==pPlane->name())
                         pPlPolar->setVisible(true);
                 }
@@ -1295,7 +1295,7 @@ void PlaneExplorer::onSetFilter()
         QString polarfilter = filters.at(1);
         for(PlanePolar *pPlPolar : Objects3d::planePolars())
         {
-            Objects3d::setPlPolarVisible(pPlPolar, false);
+            Objects3d::setPlanePolarVisible(pPlPolar, false);
         }
 
         for(Plane const *pPlane : Objects3d::planes())
@@ -1307,7 +1307,7 @@ void PlaneExplorer::onSetFilter()
                      if(pPlPolar->planeName()==pPlane->name())
                     {
                         if(QString::fromStdString(pPlPolar->name()).contains(polarfilter, Qt::CaseInsensitive))
-                            Objects3d::setPlPolarVisible(pPlPolar, true);
+                            Objects3d::setPlanePolarVisible(pPlPolar, true);
                     }
                 }
             }
@@ -1457,7 +1457,7 @@ void PlaneExplorer::onItemClicked(const QModelIndex &index)
             pLineMenu->exec(QCursor::pos());
             ls = pLineMenu->theStyle();
 
-            Objects3d::setPlPolarStyle(pWPolar, ls, pLineMenu->styleChanged(), pLineMenu->widthChanged(), pLineMenu->colorChanged(), pLineMenu->pointsChanged(), 100);
+            Objects3d::setPlanePolarStyle(pWPolar, ls, pLineMenu->styleChanged(), pLineMenu->widthChanged(), pLineMenu->colorChanged(), pLineMenu->pointsChanged(), 100);
             updateLineStyles();
             emit s_pXPlane->projectModified();
 
@@ -1518,9 +1518,9 @@ void PlaneExplorer::onToggleSelectedItem(ObjectTreeItem*, QModelIndex index)
         {
             Qt::CheckState state = polarState(pWPolar);
             if(state==Qt::PartiallyChecked || state==Qt::Unchecked)
-                Objects3d::setPlPolarVisible(pWPolar, true);
+                Objects3d::setPlanePolarVisible(pWPolar, true);
             else
-                Objects3d::setPlPolarVisible(pWPolar, false);
+                Objects3d::setPlanePolarVisible(pWPolar, false);
 
             updateVisibilityBoxes();
             emit s_pXPlane->projectModified();
