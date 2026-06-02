@@ -193,10 +193,12 @@ XPlane::XPlane(MainFrame *pMainFrame) : QObject()
     m_pPanelAnalysisDlg = new PlaneAnalysisDlg(s_pMainFrame);
     PlaneAnalysisDlg::setXPlane(this);
     connect(m_pPanelAnalysisDlg, SIGNAL(analysisFinished(PlanePolar*)), SLOT(onFinishAnalysis(PlanePolar*)));
+    connect(m_pPanelAnalysisDlg, SIGNAL(oppFinished()),                 SLOT(onResetCurves()));
 
     m_pLLTAnalysisDlg = new LLTAnalysisDlg(s_pMainFrame);
     LLTAnalysisDlg::setXPlane(this);
-    connect(m_pLLTAnalysisDlg, SIGNAL(analysisFinished(PlanePolar*)), SLOT(onFinishAnalysis(PlanePolar*)));
+    connect(m_pLLTAnalysisDlg,   SIGNAL(analysisFinished(PlanePolar*)), SLOT(onFinishAnalysis(PlanePolar*)));
+    connect(m_pLLTAnalysisDlg,   SIGNAL(lltOppFinished()),              SLOT(onResetCurves()));
 
     m_pCurPlane   = nullptr;
     m_pCurPOpp    = nullptr;
@@ -2064,11 +2066,12 @@ void XPlane::onDefineT7Polar()
 void XPlane::onBatchAnalysis()
 {
     BatchPlaneDlg BatchDlg(s_pMainFrame);
+    connect(&BatchDlg, SIGNAL(planeOppFinished()), SLOT(onResetCurves()));
+
     BatchDlg.exec();
     if(BatchDlg.bChanged())
     {
         m_pPlaneExplorer->updatePOpps();
-//        m_pPlaneTreeView->selectWPolar(m_pCurWPolar, false);
         emit projectModified();
     }
     m_bResetCurves = true;
@@ -2209,7 +2212,7 @@ void XPlane::onImportExternalPolar()
 
     EditPlrDlg wpDlg(s_pMainFrame);
     wpDlg.initDialog(nullptr, pNewPlPolar, nullptr);
-    connect(&wpDlg, SIGNAL(dataChanged()), this, SLOT(onResetWPolarCurves()));
+    connect(&wpDlg, SIGNAL(dataChanged()), this, SLOT(onResetCurves()));
 
     if (wpDlg.exec() != QDialog::Accepted)
     {
@@ -2255,7 +2258,7 @@ void XPlane::onEditCurPlPolarPts()
     EditPlrDlg epDlg(s_pMainFrame);
     epDlg.initDialog(nullptr, m_pCurPlPolar);
 
-    connect(&epDlg, SIGNAL(dataChanged()), this, SLOT(onResetWPolarCurves()));
+    connect(&epDlg, SIGNAL(dataChanged()), this, SLOT(onResetCurves()));
 
     Line::enumPointStyle iPoints = m_pCurPlPolar->pointStyle();
     m_pCurPlPolar->setPointStyle(Line::NOSYMBOL);
@@ -6550,7 +6553,7 @@ Plane *XPlane::duplicatePlane(Plane *pPlane) const
 }
 
 
-void XPlane::onResetWPolarCurves()
+void XPlane::onResetCurves()
 {
     m_bResetCurves=true;
     updateView();

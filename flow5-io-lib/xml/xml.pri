@@ -6,9 +6,6 @@ SOURCES += \
     xml/foil/xmlpolarwriter.cpp \
     xml/fuse/xmlfusereader.cpp \
     xml/fuse/xmlfusewriter.cpp \
-    xml/script/xflexecutor.cpp \
-    xml/script/xflscriptexec.cpp \
-    xml/script/xflscriptreader.cpp \
     xml/xflxmlreader.cpp \
     xml/xflxmlwriter.cpp \
     xml/xml_globals.cpp \

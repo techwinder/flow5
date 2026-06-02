@@ -55,7 +55,6 @@
 
 
 #include <api/fl5core.h>
-#include <api/xflscriptexec.h>
 
 #include <core/displayoptions.h>
 #include <core/saveoptions.h>

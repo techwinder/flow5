@@ -370,9 +370,9 @@ void BoatAnalysisDlg::runAsync()
     {
         // Access the Q under the lock:
         std::unique_lock<std::mutex> lck(m_pActiveTask->m_mtx);
-        m_pActiveTask->m_cv.wait(lck, [this]() {return !m_pActiveTask->m_theMsgQueue.empty();} );
-        VPWReport report = m_pActiveTask->m_theMsgQueue.front();
-        m_pActiveTask->m_theMsgQueue.pop();
+        m_pActiveTask->m_cv.wait(lck, [this]() {return !m_pActiveTask->m_QueueVPW.empty();} );
+        TaskReport report = m_pActiveTask->m_QueueVPW.front();
+        m_pActiveTask->m_QueueVPW.pop();
 
         if(report.m_Vortons.size()!=0)
             s_pXSail->setLiveVortons(report.m_Ctrl, report.m_Vortons);

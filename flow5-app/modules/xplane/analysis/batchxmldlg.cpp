@@ -47,21 +47,18 @@
 #include <api/planexfl.h>
 #include <api/task3d.h>
 #include <api/units.h>
+#include <api/utils-io.h>
 #include <api/xmlplanepolarreader.h>
 #include <api/xmlplanepolarwriter.h>
-#include <api/utils-io.h>
 
-#include <core/flow5events.h>
 #include <core/displayoptions.h>
-#include <core/xflcore.h>
-
+#include <core/flow5events.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/controls/analysisrangetable.h>
 #include <interfaces/controls/t8rangetable.h>
 #include <interfaces/editors/analysis3ddef/t1234578polardlg.h>
 #include <interfaces/editors/analysis3ddef/t6polardlg.h>
-#include <api/xflexecutor.h>
 #include <interfaces/widgets/customdlg/newnamedlg.h>
 #include <interfaces/widgets/customwts/actionitemmodel.h>
 #include <interfaces/widgets/customwts/cptableview.h>
@@ -69,6 +66,7 @@
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <interfaces/widgets/customwts/xfldelegate.h>
+#include <modules/script/xflexecutor.h>
 #include <modules/xplane/analysis/analysis3dsettings.h>
 #include <modules/xplane/xplane.h>
 

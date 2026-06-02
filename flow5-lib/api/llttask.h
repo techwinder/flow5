@@ -113,9 +113,9 @@ class LLTTask : public Task3d
         double alphaInduced(int k) const;
         double Beta(int m, int k) const;
         double Eta(int m) const;
-        void computeWing(double QInf, double Alpha, std::string &ErrMessage);
+        bool computeWing(double QInf, double Alpha, std::string &ErrMessage);
         void initializeVelocity(double alpha, double &QInf);
-        int iterate(double &QInf, double const Alpha);
+        bool iterate(double &QInf, double const Alpha, int &iter);
         void setBending(double QInf);
         bool setLinearSolution(double Alpha);
         void resetVariables();
@@ -135,7 +135,6 @@ class LLTTask : public Task3d
         std::vector<double> m_AoAList;   /**< The list of operating points to analyze */
 
         bool m_bConverged;                          /**< true if the analysis has converged  */
-        bool m_bWingOut;                            /**< true if the interpolation of viscous properties falls outside the polar mesh */
 
         double m_CDi;                               /**< The wing's induced drag coefficient */
         double m_CDv;                               /**< The wing's viscous drag coefficient */

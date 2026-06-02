@@ -86,20 +86,21 @@ void PlaneAnalysisDlg::setupLayout()
     m_plabTaskInfo = new QLabel;
     m_pButtonBox = new QDialogButtonBox();
     {
-        m_pchLiveVortons = new QCheckBox("Live VPW update");
+        m_pchLiveUpdate = new QCheckBox(tr("Live view update"));
+        m_pchLiveUpdate->setToolTip(tr("<p>Activate to update the active view in the plane module after the calculation of each operating point.</p>"));
         if(s_pXPlane && s_pXPlane->curPlPolar())
         {
-            m_pchLiveVortons->setChecked(Task3d::bLiveUpdate() && s_pXPlane->curPlPolar()->bVortonWake());
-            m_pchLiveVortons->setEnabled(s_pXPlane->curPlPolar()->bVortonWake());
+            m_pchLiveUpdate->setChecked(Task3d::bLiveUpdate());
+//            m_pchLiveVortons->setEnabled(s_pXPlane->curPlPolar()->bVortonWake());
         }
-        m_pButtonBox->addButton(m_pchLiveVortons, QDialogButtonBox::ActionRole);
-        connect(m_pchLiveVortons, SIGNAL(clicked(bool)), SLOT(onLiveVortons()));
+        m_pButtonBox->addButton(m_pchLiveUpdate, QDialogButtonBox::ActionRole);
+        connect(m_pchLiveUpdate, SIGNAL(clicked(bool)), SLOT(onLiveVortons()));
 
-        m_pchKeepOpenOnErrors = new QCheckBox("Keep opened on errors");
+        m_pchKeepOpenOnErrors = new QCheckBox(tr("Keep opened on errors"));
         m_pButtonBox->addButton(m_pchKeepOpenOnErrors, QDialogButtonBox::ActionRole);
         connect(m_pchKeepOpenOnErrors, SIGNAL(clicked(bool)), SLOT(onKeepOpenErrors()));
 
-        m_ppbStopIter = new QPushButton("End iterations");
+        m_ppbStopIter = new QPushButton(tr("End iterations"));
         m_pButtonBox->addButton(m_ppbStopIter, QDialogButtonBox::ActionRole);
         connect(m_ppbStopIter, SIGNAL(clicked(bool)), SLOT(onStopIterations()));
 
@@ -206,6 +207,13 @@ void PlaneAnalysisDlg::customEvent(QEvent *pEvent)
                 m_plabTaskInfo->setText(QString::asprintf("Processing %d/%d - ctrl parameter = %9.3f", qrhs+1, nrhs, ctrl));
         }
     }
+    else if(pEvent->type()==PLANE_POPP_EVENT)
+    {
+        if(m_pchLiveUpdate->isChecked())
+        {
+            emit oppFinished();
+        }
+    }
     else if(pEvent->type()==TASK3D_END_EVENT)
     {
         onTaskFinished();
@@ -245,7 +253,7 @@ void PlaneAnalysisDlg::onTaskFinished()
     onOutputMessage(strong);
 
     m_bHasErrors = m_pActiveTask->hasErrors();
-    m_ppbCloseDialog->setText("Close");
+    m_ppbCloseDialog->setText(tr("Close"));
 
     PlanePolar *pWPolar = m_pActiveTask->wPolar();
     cleanUp();
@@ -277,7 +285,7 @@ void PlaneAnalysisDlg::onCancelClose()
     if(m_pActiveTask && m_pActiveTask->isRunning())
     {
         cancelTask(m_pActiveTask);
-        m_ppbCloseDialog->setText("Close");
+        m_ppbCloseDialog->setText(tr("Close"));
     }
     else
         close();
@@ -330,7 +338,7 @@ bool PlaneAnalysisDlg::bIsRunning() const
 
 void PlaneAnalysisDlg::onLiveVortons()
 {
-    PlaneTask::setLiveUpdate(m_pchLiveVortons->isChecked());
+    PlaneTask::setLiveUpdate(m_pchLiveUpdate->isChecked());
 }
 
 
@@ -347,7 +355,7 @@ PlaneTask* PlaneAnalysisDlg::analyze(Plane *pPlane, PlanePolar *pPlPolar, std::v
 
     m_Clock.start(); // put pressure on something (Jerry)
 
-    m_ppbCloseDialog->setText("Cancel");
+    m_ppbCloseDialog->setText(tr("Cancel"));
     m_ppto->clear();
     m_plabTaskInfo->clear();
 
@@ -391,16 +399,23 @@ void PlaneAnalysisDlg::runAsync()
 
     std::thread p(&PlaneTask::run, m_pActiveTask);
 
-    while(!m_pActiveTask->isFinished() || !m_pActiveTask->m_theMsgQueue.empty())
+    while(!m_pActiveTask->isFinished() || !m_pActiveTask->m_QueueVPW.empty())
     {
         // Access the Q under the lock:
         std::unique_lock<std::mutex> lck(m_pActiveTask->m_mtx);
-        m_pActiveTask->m_cv.wait(lck, [this]() {return !m_pActiveTask->m_theMsgQueue.empty();} );
-        VPWReport report = m_pActiveTask->m_theMsgQueue.front();
-        m_pActiveTask->m_theMsgQueue.pop();
+        m_pActiveTask->m_cv.wait(lck, [this]() {return !m_pActiveTask->m_QueueVPW.empty();} );
+        TaskReport report = m_pActiveTask->m_QueueVPW.front();
+        m_pActiveTask->m_QueueVPW.pop();
 
         // forward to the UI thread for user notification
         qApp->postEvent(this, new MessageEvent(report.message()));
+
+        if(report.m_bEndOpp)
+        {
+            PlaneOppEvent *pEvent = new PlaneOppEvent(report.m_pPlane, report.m_pPlanePolar, report.m_Ctrl);
+            qApp->postEvent(this, pEvent);
+        }
+
 
         if(report.m_Vortons.size()!=0)
             s_pXPlane->setLiveVortons(report.m_Ctrl, report.m_Vortons);
@@ -410,3 +425,11 @@ void PlaneAnalysisDlg::runAsync()
 
     qApp->postEvent(this, new QEvent(TASK3D_END_EVENT)); // done and clean
 }
+
+
+
+
+
+
+
+

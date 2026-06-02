@@ -34,27 +34,38 @@
 #include <utils.h>
 
 
-struct VPWReport
+class Polar3d;
+class PanelAnalysis;
+class P4Analysis;
+class P3Analysis;
+class Plane;
+class PlanePolar;
+
+
+struct TaskReport
 {
     public:
-        VPWReport()
+        TaskReport()
         {
         }
 
         std::string const & message() const {return m_Msg;}
         void setMsg(std::string const &msg) {m_Msg=msg;}
-    public:
-        std::vector<std::vector<Vorton>> m_Vortons;
-        double m_Ctrl=0.0;
+        void setCtrl(double ctrl) {m_Ctrl=ctrl;}
+        void setEndOpp(bool b) {m_bEndOpp=b;}
+        void setPlane(Plane const*pPlane) {m_pPlane=pPlane;}
+        void setPlanePolar(PlanePolar const*pPlanePolar) {m_pPlanePolar=pPlanePolar;}
 
+    public:
+        Plane const *m_pPlane =  nullptr; // unused
+        PlanePolar const *m_pPlanePolar = nullptr; // unused
+        std::vector<std::vector<Vorton>> m_Vortons;
+        double m_Ctrl = 0.0;
+        bool m_bEndOpp = false; // true if this report marks the end of the calculation of an operating point
         std::string m_Msg;
 };
 
 
-class Polar3d;
-class PanelAnalysis;
-class P4Analysis;
-class P3Analysis;
 
 class FL5LIB_EXPORT Task3d
 {
@@ -92,6 +103,7 @@ class FL5LIB_EXPORT Task3d
 
 
         void traceVPWLog(double ctrl);
+        void traceEndOppLog(double ctrl);
 
         virtual void traceStdLog(const std::string &str);
 
@@ -152,10 +164,10 @@ class FL5LIB_EXPORT Task3d
         static bool s_bCancel;
 
     public:
-        // thread related variables to share the message queue with the calling threa
+        // thread related variables to share the message queue with the calling thread
         std::mutex m_mtx;
         std::condition_variable m_cv;
-        std::queue<VPWReport> m_theMsgQueue;
+        std::queue<TaskReport> m_QueueVPW;
 };
 
 

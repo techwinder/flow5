@@ -80,11 +80,11 @@ Task3d::~Task3d()
 void Task3d::traceStdLog(std::string const &str)
 {
     // notify the parent thread
-    VPWReport report;
+    TaskReport report;
     report.setMsg(str);
     // Access the Q under the lock:
     std::unique_lock<std::mutex> lck(m_mtx);
-    m_theMsgQueue.push(report);
+    m_QueueVPW.push(report);
     m_cv.notify_all();
 
     // output to the terminal
@@ -95,15 +95,27 @@ void Task3d::traceStdLog(std::string const &str)
 }
 
 
+void Task3d::traceEndOppLog(double ctrl)
+{
+    // notify the parent thread
+    TaskReport report;
+    report.setCtrl(ctrl);
+    report.setEndOpp(true);
+    std::unique_lock<std::mutex> lck(m_mtx);
+    m_QueueVPW.push(report);
+    m_cv.notify_all();
+    }
+
+
 void Task3d::traceVPWLog(double ctrl)
 {
-    VPWReport report;
+    TaskReport report;
     report.m_Ctrl = ctrl;
     report.m_Vortons = m_pPA->m_Vorton;
 
     // Access the Q under the lock:
     std::unique_lock<std::mutex> lck(m_mtx);
-    m_theMsgQueue.push(report);
+    m_QueueVPW.push(report);
     m_cv.notify_all();
 }
 

@@ -35,19 +35,19 @@
 #include <QFileInfo>
 #include <QDir>
 
-#include <api/xflexecutor.h>
+#include <modules/script/xflexecutor.h>
+#include <core/flow5events.h>
 
 #include <api/llttask.h>
 #include <api/objects3d.h>
 #include <api/planeopp.h>
+#include <api/planepolar.h>
+#include <api/planepolarnamemaker.h>
 #include <api/planetask.h>
 #include <api/planexfl.h>
 #include <api/task3d.h>
 #include <api/trimesh.h>
-#include <api/planepolar.h>
-#include <api/planepolarnamemaker.h>
 #include <api/utils-io.h>
-
 #include <api/xmlplanepolarreader.h>
 
 
@@ -816,9 +816,17 @@ void XflExecutor::runPanelTask(PlaneTask *pPlaneTask)
     {
         // Access the Q under the lock:
         std::unique_lock<std::mutex> lck(pPlaneTask->m_mtx);
-        pPlaneTask->m_cv.wait(lck, [pPlaneTask]() {return !pPlaneTask->m_theMsgQueue.empty();} );
-        VPWReport report = pPlaneTask->m_theMsgQueue.front();
-        pPlaneTask->m_theMsgQueue.pop();
+        pPlaneTask->m_cv.wait(lck, [pPlaneTask]() {return !pPlaneTask->m_QueueVPW.empty();} );
+        TaskReport report = pPlaneTask->m_QueueVPW.front();
+        pPlaneTask->m_QueueVPW.pop();
+
+
+        if(report.m_bEndOpp)
+        {
+            PlaneOppEvent *pEvent = new PlaneOppEvent(report.m_pPlane, report.m_pPlanePolar, report.m_Ctrl);
+            qApp->postEvent(m_pEventDest, pEvent);
+        }
+
 
         // forward to the UI thread for user notification
 //        qApp->postEvent(m_pEventDest, new MessageEvent(report.message()));

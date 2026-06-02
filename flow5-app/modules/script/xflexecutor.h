@@ -32,7 +32,6 @@
 #include <api/analysisrange.h>
 #include <api/t8opp.h>
 #include <api/utils.h>
-#include <flow5-io-lib_global.h>
 
 
 class Plane;
@@ -41,7 +40,7 @@ class LLTTask;
 class PlaneTask;
 class Task3d;
 
-class FL5IOLIB_EXPORT XflExecutor : public QObject
+class XflExecutor : public QObject
 {
     Q_OBJECT
 

@@ -35,7 +35,7 @@
 #include <QThreadPool>
 
 
-#include <api/xflscriptexec.h>
+#include <modules/script/xflscriptexec.h>
 
 
 #include <api/analysisrange.h>

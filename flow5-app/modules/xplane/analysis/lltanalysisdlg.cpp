@@ -345,6 +345,10 @@ void LLTAnalysisDlg::customEvent(QEvent *pEvent)
         m_pIterGraph->invalidate();
         m_pIterGraph->resetYLimits();
         m_pGraphWt->update();
+
+
+        emit lltOppFinished();
+
     }
     else if(pEvent->type()==TASK3D_END_EVENT)
     {
@@ -395,9 +399,9 @@ bool LLTAnalysisDlg::loadSettings(QSettings &settings)
 void LLTAnalysisDlg::analyze()
 {
     if(!m_pLLTTask->plane() || !m_pLLTTask->wPolar()) return;
-    //all set to launch the analysis
 
     m_pLLTTask->setKeepOpps(XPlane::bStoreOpps3d());
+    m_pLLTTask->setCancelled(false);
 
     WingXfl *pWing = m_pLLTTask->plane()->mainWing();
 

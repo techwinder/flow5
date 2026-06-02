@@ -2,11 +2,8 @@
 
 
 HEADERS += \
-    $$PWD/flow5-io.h \
-    $$PWD/utils-io.h \
-    $$PWD/xflexecutor.h \
-    $$PWD/xflscriptexec.h \
-    $$PWD/xflscriptreader.h \
+    api/flow5-io.h \
+    api/utils-io.h \
     api/fileio.h \
     api/flow5-io-lib_global.h \
     api/serialization.h \

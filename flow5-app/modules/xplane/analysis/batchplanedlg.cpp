@@ -47,7 +47,6 @@
 #include <api/planexfl.h>
 #include <api/task3d.h>
 #include <api/units.h>
-#include <api/xflexecutor.h>
 
 #include <core/displayoptions.h>
 #include <core/flow5events.h>
@@ -68,6 +67,7 @@
 #include <interfaces/widgets/mvc/objecttreedelegate.h>
 #include <interfaces/widgets/mvc/objecttreeitem.h>
 #include <interfaces/widgets/mvc/objecttreemodel.h>
+#include <modules/script/xflexecutor.h>
 #include <modules/xplane/analysis/analysis3dsettings.h>
 #include <modules/xplane/controls/planeexplorer.h>
 
@@ -332,6 +332,10 @@ void BatchPlaneDlg::customEvent(QEvent *pEvent)
     {
         MessageEvent const *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
         m_ppto->onAppendQText(pMsgEvent->msg());
+    }
+    else if(pEvent->type()==PLANE_POPP_EVENT)
+    {
+        emit planeOppFinished();
     }
     else if(pEvent->type()==TASK3D_END_EVENT)
     {
@@ -639,7 +643,7 @@ void BatchPlaneDlg::calculate()
 
     //run
     m_pExecutor = new XflExecutor();
-    m_pExecutor->setEventDestination(nullptr);
+    m_pExecutor->setEventDestination(this);
 
     QString logFileName = SaveOptions::newLogFileName();
     SaveOptions::setLastLogFileName(logFileName);

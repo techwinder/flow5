@@ -61,7 +61,6 @@ void LLTTask::resetVariables()
 {
     m_AoAList.clear();
     m_bConverged = false;
-    m_bWingOut   = false;
     m_bError = m_bWarning = false;
 
     m_QInf0 = 0.0;
@@ -189,7 +188,7 @@ double LLTTask::Beta(int m, int k) const
 }
 
 
-void LLTTask::computeWing(double QInf, double Alpha, std::string &ErrMessage)
+bool LLTTask::computeWing(double QInf, double Alpha, std::string &ErrMessage)
 {
     Foil* pFoil0(nullptr);
     Foil* pFoil1(nullptr);
@@ -205,7 +204,7 @@ void LLTTask::computeWing(double QInf, double Alpha, std::string &ErrMessage)
 
     bool bOutRe(false), bError(false);
     bool bPointOutRe(false), bPointOutAlpha(false);
-    m_bWingOut = false;
+    bool bWingOut = false;
 
     ErrorMessage.clear();
 
@@ -298,7 +297,7 @@ void LLTTask::computeWing(double QInf, double Alpha, std::string &ErrMessage)
             str = std::format(" ,  A+Ai+Twist = {:2f} could not be interpolated\n", Alpha+m_Ai.at(m) + m_Twist.at(m));
             ErrorMessage+=str;
 
-            m_bWingOut = true;
+            bWingOut = true;
             m_bConverged = false;
         }
         else if(bPointOutRe)
@@ -313,7 +312,7 @@ void LLTTask::computeWing(double QInf, double Alpha, std::string &ErrMessage)
             str = std::format(" ,  A+Ai+Twist = {:2f} is outside the flight envelope\n", Alpha+m_Ai.at(m) + m_Twist.at(m));
             ErrorMessage+=str;
 
-            m_bWingOut = true;
+            bWingOut = true;
         }
     }
 
@@ -350,6 +349,8 @@ void LLTTask::computeWing(double QInf, double Alpha, std::string &ErrMessage)
     (void)PitchingMoment;
 
     ErrMessage = ErrorMessage;
+
+    return bWingOut;
 }
 
 
@@ -473,17 +474,17 @@ double LLTTask::alphaInduced(int k) const
 }
 
 
-int LLTTask::iterate(double &QInf, double Alpha)
+bool LLTTask::iterate(double &QInf, double Alpha, int &iter)
 {
     Foil* pFoil0(nullptr);
     Foil* pFoil1(nullptr);
 
-    bool bOutRe(false), bError(false);
+    bool bOutRe(false), bOutAlpha(false);
     double tau (0);
 
     double maxa(0);
 
-    int iter = 0;
+    iter = 0;
     while(iter<s_IterLim)
     {
         maxa = 0.0;
@@ -501,7 +502,9 @@ int LLTTask::iterate(double &QInf, double Alpha)
         {
             double yob = cos(double(k)*PI/double(s_NLLTStations));
             m_pWing->getFoils(&pFoil0, &pFoil1, yob*m_pWing->planformSpan()/2.0, tau);
-            m_Cl[k] = Objects2d::getPlrPointFromAlpha(Polar::CL, pFoil0, pFoil1, m_Re.at(k), Alpha + m_Ai.at(k)+ m_Twist.at(k), tau, bOutRe, bError);
+            m_Cl[k] = Objects2d::getPlrPointFromAlpha(Polar::CL, pFoil0, pFoil1, m_Re.at(k), Alpha + m_Ai.at(k)+ m_Twist.at(k), tau, bOutRe, bOutAlpha);
+//            if(bOutRe || bOutAlpha) return false;
+
             if (m_pPlPolar->isFixedLiftPolar())
             {
                 Lift += Eta(k) * m_Cl.at(k) * m_Chord.at(k);
@@ -511,7 +514,11 @@ int LLTTask::iterate(double &QInf, double Alpha)
         if(m_pPlPolar->isFixedLiftPolar())
         {
             Lift *= m_pWing->aspectRatio() / m_pWing->planformSpan();
-            if(Lift<=0.0)  return -1;
+            if(Lift<=0.0)
+            {
+                iter = -1;
+                return false;
+            }
 
             QInf  = m_QInf0 / sqrt(Lift);
 
@@ -521,7 +528,8 @@ int LLTTask::iterate(double &QInf, double Alpha)
 
                 double yob = cos(double(k)*PI/double(s_NLLTStations));
                 m_pWing->getFoils(&pFoil0, &pFoil1, yob*m_pWing->planformSpan()/2.0, tau);
-                m_Cl[k] = Objects2d::getPlrPointFromAlpha(Polar::CL, pFoil0, pFoil1, m_Re.at(k), Alpha + m_Ai.at(k)+ m_Twist.at(k), tau, bOutRe, bError);
+                m_Cl[k] = Objects2d::getPlrPointFromAlpha(Polar::CL, pFoil0, pFoil1, m_Re.at(k), Alpha + m_Ai.at(k)+ m_Twist.at(k), tau, bOutRe, bOutAlpha);
+                if(bOutRe || bOutAlpha) return false;
             }
         }
 
@@ -534,16 +542,16 @@ int LLTTask::iterate(double &QInf, double Alpha)
         m_iter.push_back(iter);
         m_Max_a.push_back(maxa);
 
+
         iter++;
-        if(isCancelled()) return -1;
     }
-    return iter;
+
+    return !bOutRe && !bOutAlpha;
 }
 
 
 void LLTTask::initializeGeom()
 {
-    m_bWingOut = false;
     m_bConverged = false;
 
     if(m_pPlPolar->isFixedLiftPolar()) m_QInf0 = sqrt(2.*m_pPlPolar->mass()* 9.81 /m_pPlPolar->density()/m_pWing->planformArea());
@@ -611,7 +619,7 @@ bool LLTTask::alphaLoop()
 
         if(s_bInitCalc)
         {
-            double V;
+            double V(0);
             initializeVelocity(alpha, V);
             m_pPlPolar->setVelocity(V);
             setLinearSolution(alpha);
@@ -628,32 +636,33 @@ bool LLTTask::alphaLoop()
         traceStdLog(strange);
 
         double QInf = m_pPlPolar->velocity();
-        int iter = iterate(QInf, alpha);
+        int iter = 0;
 
-        if (iter==-1 && !isCancelled())
+        bool bSuccess = iterate(QInf, alpha, iter);
+
+        if (iter==-1)
         {
-            strange= "    ...negative Lift... Aborting\n";
+            strange= "    ...negative Lift... skipping\n";
             m_bError = true;
             s_bInitCalc = true;
             traceStdLog(strange);
         }
-        else if (iter<s_IterLim && !isCancelled())
+        else if (bSuccess && iter<s_IterLim)
         {
             //converged,
             strange= std::format("    ...converged after {:d} iterations\n", iter);
-            traceOpp(alpha, m_Max_a, strange);
+
 
             std::string str;
-            computeWing(m_pPlPolar->velocity(), alpha, str);// generates wing results,
+            bool bOut = computeWing(m_pPlPolar->velocity(), alpha, str);// generates wing results,
             traceStdLog(str);
-            if (m_bWingOut) m_bWarning = true;
-            PlaneOpp *pPOpp = createPlaneOpp(QInf, alpha, m_bWingOut);// Adds WOpp point and adds result to polar
+            if (bOut) m_bWarning = true;
+            PlaneOpp *pPOpp = createPlaneOpp(QInf, alpha, bOut);
 
             // store the results
             if(pPOpp)
             {
-                if(!pPOpp->isOut()) // discard failed visc interpolated opps
-                    m_pPlPolar->addPlaneOpPointData(pPOpp);
+                m_pPlPolar->addPlaneOpPointData(pPOpp);
 
                 if(m_bKeepOpps)
                 {
@@ -662,21 +671,31 @@ bool LLTTask::alphaLoop()
                 else
                 {
                     delete pPOpp;
-                    pPOpp = nullptr; // don't leave a pointer dangling
+                    pPOpp = nullptr;
                 }
+                s_bInitCalc = false;
+
+                traceOpp(alpha, m_Max_a, strange);
             }
-            s_bInitCalc = false;
         }
-        else
+        else if(!bSuccess)
         {
-            if (m_bWingOut) m_bWarning = true;
+            m_bWarning = true;
+            m_bError = true;
+            strange= "    ...failed interpolation, skipping\n";
+            traceStdLog(strange);
+            s_bInitCalc = true;
+        }
+        else if(iter>=s_IterLim)
+        {
+            m_bWarning = true;
             m_bError = true;
             strange= std::format("    ...unconverged after {:d} iterations out of {:d}\n", iter, s_IterLim);
-            traceOpp(alpha, m_Max_a, strange);
+            traceStdLog(strange);
             s_bInitCalc = true;
         }
 
-        strange = ALPHAstr + std::format("={:g}", alpha) + DEGstr;
+//        strange = ALPHAstr + std::format("={:g}", alpha) + DEGstr;
 
     }
 
@@ -804,7 +823,7 @@ PlaneOpp* LLTTask::createPlaneOpp(double QInf, double Alpha, bool bWingOut)
 
     pNewPOpp->m_bOut  = bWingOut;
 
-    mainwopp.m_bOut = m_bWingOut;
+    mainwopp.m_bOut = false; // discarding all failed interpolations
     mainwopp.m_AF = af;
 
     Vector3d N;

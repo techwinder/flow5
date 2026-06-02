@@ -91,6 +91,9 @@ class BatchPlaneDlg : public QDialog
         void onOption();
         void reject() override;
 
+    signals:
+        void planeOppFinished();
+
     private:
         bool m_bChanged;
         bool m_bHasErrors;

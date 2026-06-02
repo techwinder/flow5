@@ -92,6 +92,7 @@ class LLTAnalysisDlg : public QDialog
     signals:
         void analysisFinished(PlanePolar*);
 
+        void lltOppFinished();
 
     private slots:
         void onCancelAnalysis();

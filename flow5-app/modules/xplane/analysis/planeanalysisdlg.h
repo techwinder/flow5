@@ -73,6 +73,7 @@ class PlaneAnalysisDlg : public QDialog
 
 
     signals:
+        void oppFinished();
         void analysisFinished(PlanePolar*);
 
     protected slots:
@@ -96,7 +97,7 @@ class PlaneAnalysisDlg : public QDialog
         QElapsedTimer m_Clock;
 
         QCheckBox *m_pchKeepOpenOnErrors;
-        QCheckBox *m_pchLiveVortons;
+        QCheckBox *m_pchLiveUpdate;
 
         QLabel *m_plabTaskInfo;
         PlainTextOutput *m_ppto;

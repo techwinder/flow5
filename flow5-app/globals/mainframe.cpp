@@ -108,6 +108,7 @@
 #include <interfaces/widgets/customwts/logwt.h>
 #include <interfaces/widgets/line/linepicker.h>
 #include <interfaces/widgets/view/section2doptions.h>
+#include <modules/script/xflscriptexec.h>
 #include <modules/xdirect/controls/analysis2dctrls.h>
 #include <modules/xdirect/controls/foilexplorer.h>
 #include <modules/xdirect/controls/foiltable.h>
@@ -175,7 +176,6 @@
 #include <api/planepolar.h>
 #include <api/planexfl.h>
 #include <api/sailobjects.h>
-#include <api/xflscriptexec.h>
 
 
 xfl::enumApp MainFrame::s_iApp=xfl::NOAPP;

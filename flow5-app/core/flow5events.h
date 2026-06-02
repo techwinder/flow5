@@ -32,8 +32,7 @@ const QEvent::Type MESSAGE_EVENT             = static_cast<QEvent::Type>(QEvent:
 const QEvent::Type STREAMLINE_END_TASK_EVENT = static_cast<QEvent::Type>(QEvent::User + 102);
 const QEvent::Type XFOIL_TASK_END_EVENT      = static_cast<QEvent::Type>(QEvent::User + 103);
 const QEvent::Type XFOIL_BATCH_END_EVENT     = static_cast<QEvent::Type>(QEvent::User + 104);
-const QEvent::Type PLANE_END_TASK_EVENT      = static_cast<QEvent::Type>(QEvent::User + 105);
-const QEvent::Type PLANE_END_POPP_EVENT      = static_cast<QEvent::Type>(QEvent::User + 106);
+const QEvent::Type PLANE_POPP_EVENT          = static_cast<QEvent::Type>(QEvent::User + 106);
 const QEvent::Type VPW_UPDATE_EVENT          = static_cast<QEvent::Type>(QEvent::User + 107);
 const QEvent::Type OPTIM_ITER_EVENT          = static_cast<QEvent::Type>(QEvent::User + 108);
 const QEvent::Type OPTIM_END_EVENT           = static_cast<QEvent::Type>(QEvent::User + 109);
@@ -45,11 +44,12 @@ const QEvent::Type LLT_OPP_EVENT             = static_cast<QEvent::Type>(QEvent:
 const QEvent::Type TASK3D_END_EVENT        = static_cast<QEvent::Type>(QEvent::User + 116);
 
 
-
 class Foil;
-class Polar;
 class OpPoint;
 class Particle;
+class Plane;
+class PlanePolar;
+class Polar;
 class XFoilTask;
 
 
@@ -89,21 +89,22 @@ class StreamEndTaskEvent : public QEvent
 };
 
 
-class PlaneTaskEvent : public QEvent
+class PlaneOppEvent : public QEvent
 {
     public:
-        PlaneTaskEvent(void * pPlane, void *pWPolar): QEvent(PLANE_END_TASK_EVENT),
-            m_pPlane(pPlane),
-            m_pWPolar(pWPolar)
+        PlaneOppEvent(Plane const*pPlane, PlanePolar const*pPolar, double ctrl): QEvent(PLANE_POPP_EVENT),
+            m_pPlane(pPlane), m_pPlanePolar(pPolar), m_Ctrl(ctrl)
         {
         }
 
-        void * planePtr() const {return m_pPlane;}
-        void * wPolarPtr() const {return m_pWPolar;}
+        Plane const *plane() const {return m_pPlane;}
+        PlanePolar const *planePolar() const {return m_pPlanePolar;}
+        double oppCtrl() const {return m_Ctrl;}
 
     private:
-        void *m_pPlane;
-        void *m_pWPolar;
+        Plane const *m_pPlane;
+        PlanePolar const *m_pPlanePolar;
+        double m_Ctrl;
 };
 
 

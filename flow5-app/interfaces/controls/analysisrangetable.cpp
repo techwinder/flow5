@@ -364,7 +364,7 @@ int AnalysisRangeTable::readTable(QVector<AnalysisRange> &Range)
             }
             case xfl::T7POLAR:
             {
-                Range = {{true, 0,0,0}}; // dummy operating point
+//                Range = {{true, 0,0,0}}; // dummy operating point
                 s_T7Range = Range;
                 break;
             }
@@ -468,7 +468,8 @@ void AnalysisRangeTable::setControls(xfl::enumPolarType type)
     }
     else
     {
-        if(type!=m_PolarType || type==xfl::T7POLAR)
+        if(type!=m_PolarType)
+//        if(type!=m_PolarType || type==xfl::T7POLAR)
         {
             setEnabled(false);
             return;
@@ -796,19 +797,19 @@ void AnalysisRangeTable::loadSettings(QSettings &settings)
             s_T6Range.front() = {true, 0.0, 1.0, 0.25};
         }
 
-/*        nRange = settings.value("NStabRange", s_T7Range.size()).toInt();
+        nRange = settings.value("NStabRange", s_T7Range.size()).toInt();
         if(nRange>0)
         {
             s_T7Range.resize(nRange);
             for(int i=0; i<nRange; i++)
             {
                 s_T7Range[i].setActive(settings.value(QString::asprintf("RangeT7_%d_bActive", i), true).toBool());
-                s_T7Range[i].m_vMin = settings.value(QString::asprintf("RangeT7_%d_min", i), s_T7Range.at(i).m_vMin).toDouble();
-                s_T7Range[i].m_vMax = settings.value(QString::asprintf("RangeT7_%d_max", i), s_T7Range.at(i).m_vMax).toDouble();
-                s_T7Range[i].m_vInc = settings.value(QString::asprintf("RangeT7_%d_inc", i), s_T7Range.at(i).m_vInc).toDouble();
+                s_T7Range[i].m_vStart = settings.value(QString::asprintf("RangeT7_%d_min", i), s_T7Range.at(i).m_vStart).toDouble();
+                s_T7Range[i].m_vEnd   = settings.value(QString::asprintf("RangeT7_%d_max", i), s_T7Range.at(i).m_vEnd).toDouble();
+                s_T7Range[i].m_vInc   = settings.value(QString::asprintf("RangeT7_%d_inc", i), s_T7Range.at(i).m_vInc).toDouble();
             }
         }
-        else*/
+        else
         {
             // force one line
             s_T7Range.resize(1);

@@ -2218,6 +2218,7 @@ bool PlaneTask::T123458Loop()
 
         storePOpp(pPOpp);
 
+        traceEndOppLog(m_Alpha);
         traceStdLog("          Done operating point\n\n");
     }
 

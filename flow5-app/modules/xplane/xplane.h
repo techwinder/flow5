@@ -279,7 +279,7 @@ class XPlane : public QObject
         void onRenameCurPlPolar();
         void onResetCurPlPolar();
         void onResetFuseMesh();
-        void onResetWPolarCurves();
+        void onResetCurves();
         void onRootLocusView();
         void onScalePlane();
         void onScaleFuse();
