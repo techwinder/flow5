@@ -158,7 +158,7 @@ void XflExecutor::onCancel()
     Task3d::setCancelled(true);
     TriMesh::setCancelled(true); /// @todo whats-the-point?
 
-    traceLog("\n_____________Analysis cancellation request received_____________\n\n");
+    traceLog("\n_____________Calculation cancel request received_____________\n\n");
     emit cancelTask();
 }
 

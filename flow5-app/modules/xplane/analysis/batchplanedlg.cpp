@@ -173,31 +173,31 @@ void BatchPlaneDlg::setupLayout()
                         m_pT12RangeTable = new AnalysisRangeTable(this);
                         m_pT12RangeTable->setName("BatchModeDlg::t12");
                         m_pT12RangeTable->setPolarType(xfl::T1POLAR);
-                        m_pTabWidget->addTab(m_pT12RangeTable, "T12");
+                        m_pTabWidget->addTab(m_pT12RangeTable, "Type 12");
 
                         m_pT3RangeTable = new AnalysisRangeTable(this);
                         m_pT3RangeTable->setName("BatchModeDlg::t3");
                         m_pT3RangeTable->setPolarType(xfl::T3POLAR);
-                        m_pTabWidget->addTab(m_pT3RangeTable, "T3");
+                        m_pTabWidget->addTab(m_pT3RangeTable, "Type 3");
 
                         m_pT5RangeTable = new AnalysisRangeTable(this);
                         m_pT5RangeTable->setName("BatchModeDlg::t5");
                         m_pT5RangeTable->setPolarType(xfl::T5POLAR);
-                        m_pTabWidget->addTab(m_pT5RangeTable, "T5");
+                        m_pTabWidget->addTab(m_pT5RangeTable, "Type 5");
 
                         m_pT6RangeTable = new AnalysisRangeTable(this);
-                        m_pT6RangeTable->setName("T6");
+                        m_pT6RangeTable->setName("BatchModeDlg::t6");
                         m_pT6RangeTable->setPolarType(xfl::T6POLAR);
-                        m_pTabWidget->addTab(m_pT6RangeTable, "T6");
+                        m_pTabWidget->addTab(m_pT6RangeTable, "Type 6");
 
                         m_pT7RangeTable = new AnalysisRangeTable(this);
                         m_pT7RangeTable->setName("BatchModeDlg::t7");
                         m_pT7RangeTable->setPolarType(xfl::T7POLAR);
-                        m_pTabWidget->addTab(m_pT7RangeTable, "T7");
+                        m_pTabWidget->addTab(m_pT7RangeTable, "Type 7");
 
                         m_pT8Table = new T8RangeTable(this);
                         m_pT8Table->setName("BatchModeDlg::t8");
-                        m_pTabWidget->addTab(m_pT8Table, "T8");
+                        m_pTabWidget->addTab(m_pT8Table, "Type 8");
                     }
 
                     QHBoxLayout *pOptionLayout = new QHBoxLayout;
@@ -243,14 +243,19 @@ void BatchPlaneDlg::setupLayout()
 
                         m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close);
                         {
+                            m_pchLiveUpdate = new QCheckBox(tr("Live view update"));
+                            m_pchLiveUpdate->setToolTip(tr("<p>Activate to update the active view in the plane module after the calculation of each operating point.</p>"));
+                            m_pchLiveUpdate->setChecked(Task3d::bLiveUpdate());
+
                             QPushButton *ppbClear = new QPushButton("Clear output");
                             ppbClear->setToolTip(tr("<p>Clears the text output</p>"));
                             connect(ppbClear, SIGNAL(clicked()), m_ppto, SLOT(clear()));
                             m_ppbAnalyze =  new QPushButton("Calculate");
                             m_ppbAnalyze->setDefault(true);
                             m_ppbAnalyze->setAutoDefault(true);
-                            m_pButtonBox->addButton(ppbClear, QDialogButtonBox::ActionRole);
-                            m_pButtonBox->addButton(m_ppbAnalyze, QDialogButtonBox::ActionRole);
+                            m_pButtonBox->addButton(m_pchLiveUpdate , QDialogButtonBox::ActionRole);
+                            m_pButtonBox->addButton(ppbClear,         QDialogButtonBox::ActionRole);
+                            m_pButtonBox->addButton(m_ppbAnalyze,     QDialogButtonBox::ActionRole);
                             connect(m_pButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(onButton(QAbstractButton*)));
                         }
 
@@ -279,6 +284,10 @@ void BatchPlaneDlg::setupLayout()
 
 void BatchPlaneDlg::onButton(QAbstractButton *pButton)
 {
+    // read settings before closing
+    s_bStorePOpps  = m_pchStorePOpps->isChecked();
+    Task3d::setLiveUpdate(m_pchLiveUpdate->isChecked());
+
     if (m_pButtonBox->button(QDialogButtonBox::Close) == pButton) reject();
     else if(pButton == m_ppbAnalyze) calculate();
 }
@@ -335,7 +344,8 @@ void BatchPlaneDlg::customEvent(QEvent *pEvent)
     }
     else if(pEvent->type()==PLANE_POPP_EVENT)
     {
-        emit planeOppFinished();
+        if(Task3d::bLiveUpdate())
+            emit planeOppFinished();
     }
     else if(pEvent->type()==TASK3D_END_EVENT)
     {
@@ -485,10 +495,6 @@ void BatchPlaneDlg::onResizeColumns()
 }
 
 
-/**
-* Updates the text output in the dialog box and the log file.
-* @param msg the text message to append to the output widget and to the log file.
-*/
 void BatchPlaneDlg::onMessage(QString const &msg)
 {
     m_ppto->onAppendQText(msg);
@@ -511,6 +517,7 @@ void BatchPlaneDlg::calculate()
 
     //readData
     s_bStorePOpps  = m_pchStorePOpps->isChecked();
+    Task3d::setLiveUpdate(m_pchLiveUpdate->isChecked());
 
     // read operating ranges
     std::vector<double> t12opps, t3opps, t5opps, t6opps, t7opps;

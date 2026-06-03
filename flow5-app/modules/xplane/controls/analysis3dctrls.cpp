@@ -208,7 +208,7 @@ void Analysis3dCtrls::keyPressEvent(QKeyEvent *pEvent)
             }
             else
             {
-                s_pXPlane->onAnalyze();
+                s_pXPlane->onCalculate();
             }
             pEvent->accept();
             break;

@@ -968,7 +968,7 @@ void MainFrame::createXPlaneDockWindows()
     addDockWidget(Qt::RightDockWidgetArea, m_pdwAnalysis3d);
     m_pdwAnalysis3d->setWidget(m_pXPlane->m_pAnalysisControls);
 
-    m_pdwPlaneTree = new QDockWidget(tr("Plane Explorer"), this);
+    m_pdwPlaneTree = new QDockWidget(tr("Plane explorer"), this);
     m_pdwPlaneTree->setWidget(m_pXPlane->m_pPlaneExplorer);
     m_pdwPlaneTree->setObjectName(m_pdwPlaneTree->windowTitle());
     addDockWidget(Qt::LeftDockWidgetArea, m_pdwPlaneTree);

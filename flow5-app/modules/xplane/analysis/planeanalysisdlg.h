@@ -79,7 +79,6 @@ class PlaneAnalysisDlg : public QDialog
     protected slots:
         void onCancelClose();
         void onKeepOpenErrors();
-        void onLiveVortons();
         void onOutputMessage(const QString &msg);
         void onStopIterations();
         void onTaskFinished();

@@ -88,13 +88,9 @@ void PlaneAnalysisDlg::setupLayout()
     {
         m_pchLiveUpdate = new QCheckBox(tr("Live view update"));
         m_pchLiveUpdate->setToolTip(tr("<p>Activate to update the active view in the plane module after the calculation of each operating point.</p>"));
-        if(s_pXPlane && s_pXPlane->curPlPolar())
-        {
-            m_pchLiveUpdate->setChecked(Task3d::bLiveUpdate());
-//            m_pchLiveVortons->setEnabled(s_pXPlane->curPlPolar()->bVortonWake());
-        }
+        m_pchLiveUpdate->setChecked(Task3d::bLiveUpdate());
+
         m_pButtonBox->addButton(m_pchLiveUpdate, QDialogButtonBox::ActionRole);
-        connect(m_pchLiveUpdate, SIGNAL(clicked(bool)), SLOT(onLiveVortons()));
 
         m_pchKeepOpenOnErrors = new QCheckBox(tr("Keep opened on errors"));
         m_pButtonBox->addButton(m_pchKeepOpenOnErrors, QDialogButtonBox::ActionRole);
@@ -209,7 +205,8 @@ void PlaneAnalysisDlg::customEvent(QEvent *pEvent)
     }
     else if(pEvent->type()==PLANE_POPP_EVENT)
     {
-        if(m_pchLiveUpdate->isChecked())
+        Task3d::setLiveUpdate(m_pchLiveUpdate->isChecked());
+        if(Task3d::bLiveUpdate())
         {
             emit oppFinished();
         }
@@ -336,21 +333,16 @@ bool PlaneAnalysisDlg::bIsRunning() const
 }
 
 
-void PlaneAnalysisDlg::onLiveVortons()
-{
-    PlaneTask::setLiveUpdate(m_pchLiveUpdate->isChecked());
-}
-
-
 PlaneTask* PlaneAnalysisDlg::analyze(Plane *pPlane, PlanePolar *pPlPolar, std::vector<double> const &opplist, std::vector<T8Opp> const &ranges)
 {
     if(pPlane->name().compare(pPlPolar->planeName())!=0)
     {
         return nullptr;
     }
+
+    m_pchLiveUpdate->setChecked(Task3d::bLiveUpdate());
     Task3d::setCancelled(false);
     TriMesh::setCancelled(false);
-//    PanelAnalysis::setMultiThread(xfl::isMultiThreaded());
     PanelAnalysis::setMaxThreadCount(xfl::maxThreadCount());
 
     m_Clock.start(); // put pressure on something (Jerry)

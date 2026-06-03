@@ -367,7 +367,7 @@ XPlane::XPlane(MainFrame *pMainFrame) : QObject()
     }
 
     m_pAnalysisControls = new Analysis3dCtrls;
-    connect(m_pAnalysisControls->m_ppbAnalyze, SIGNAL(clicked()), SLOT(onAnalyze()));
+    connect(m_pAnalysisControls->m_ppbAnalyze, SIGNAL(clicked()), SLOT(onCalculate()));
 
     m_pStabTimeControls = new StabTimeCtrls;
 
@@ -1546,6 +1546,7 @@ bool XPlane::loadSettings(QSettings &settings)
         AeroDataDlg::setTemperature(settings.value("Temperature", AeroDataDlg::temperature()).toDouble());
         AeroDataDlg::setAltitude(   settings.value("Altitude", AeroDataDlg::altitude()).toDouble());
 
+        Task3d::setLiveUpdate(settings.value("LiveUpdate", Task3d::bLiveUpdate()).toBool());
     }
     settings.endGroup();
 
@@ -1681,13 +1682,13 @@ bool XPlane::saveSettings(QSettings &settings)
         settings.setValue("CurveMaxCL",       m_bMaxCL);
         xfl::saveLineSettings(settings,       m_TargetCurveStyle, "TargetCurveStyle");
 
-        settings.setValue("QuadratureOrder", Panel3::quadratureOrder());
-        settings.setValue("StorePlaneOpp",   s_bStoreOpps3d);
+        settings.setValue("QuadratureOrder",  Panel3::quadratureOrder());
+        settings.setValue("StorePlaneOpp",    s_bStoreOpps3d);
 
         switch(m_eView)
         {
             case XPlane::POPPVIEW:               settings.setValue("iView", 0);    break;
-            case XPlane::POLARVIEW:             settings.setValue("iView", 1);    break;
+            case XPlane::POLARVIEW:              settings.setValue("iView", 1);    break;
             case XPlane::W3DVIEW:                settings.setValue("iView", 2);    break;
             case XPlane::CPVIEW:                 settings.setValue("iView", 3);    break;
             case XPlane::STABTIMEVIEW:           settings.setValue("iView", 4);    break;
@@ -1696,7 +1697,10 @@ bool XPlane::saveSettings(QSettings &settings)
         }
 
         settings.setValue("Temperature", AeroDataDlg::temperature());
-        settings.setValue("Altitude", AeroDataDlg::altitude());
+        settings.setValue("Altitude",    AeroDataDlg::altitude());
+
+        settings.setValue("LiveUpdate",  Task3d::bLiveUpdate());
+
     }
     settings.endGroup();
 
@@ -1714,8 +1718,7 @@ bool XPlane::saveSettings(QSettings &settings)
     m_StabPlrGraph.at(0)->saveSettings(settings);
     m_StabPlrGraph.at(1)->saveSettings(settings);
 
-    for(int ig=0; ig<m_WPlrGraph.count(); ig++)
-        m_WPlrGraph[ig]->saveSettings(settings);
+    for(int ig=0; ig<m_WPlrGraph.count(); ig++) m_WPlrGraph[ig]->saveSettings(settings);
     for(int ig=0; ig<m_WingGraph.count(); ig++) m_WingGraph[ig]->saveSettings(settings);
     for(int ig=0; ig<m_TimeGraph.count(); ig++) m_TimeGraph[ig]->saveSettings(settings);
 
@@ -4504,7 +4507,7 @@ QString XPlane::planeOppData()
 }
 
 
-void XPlane::onAnalyze()
+void XPlane::onCalculate()
 {
     if(!m_pCurPlane || !m_pCurPlPolar)   return;
     if(m_pCurPlPolar->isExternalPolar()) return;

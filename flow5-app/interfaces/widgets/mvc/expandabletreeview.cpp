@@ -58,12 +58,12 @@ void ExpandableTreeView::initETV()
 {
     m_pLevelMinus   = new QAction(QIcon(":/icons/level-.png"),  "Collapse selected item",        this);
     m_pLevelPlus    = new QAction(QIcon(":/icons/level+.png"),  "Expand selected item",          this);
-    m_pLevel0Action = new QAction(QIcon(":/icons/level0.png"),  "Object level\tAlt+0",           this);
-    m_pLevel0Action->setShortcut(QKeySequence(Qt::ALT | Qt::Key_0));
-    m_pLevel1Action = new QAction(QIcon(":/icons/level1.png"),  "Polar level\tAlt+1",            this);
-    m_pLevel1Action->setShortcut(QKeySequence(Qt::ALT | Qt::Key_1));
-    m_pLevel2Action = new QAction(QIcon(":/icons/level2.png"),  "Operating point level\tAlt+2",  this);
-    m_pLevel2Action->setShortcut(QKeySequence(Qt::ALT | Qt::Key_2));
+    m_pLevel0Action = new QAction(QIcon(":/icons/level0.png"),  "Object level\tAlt+1",           this);
+    m_pLevel0Action->setShortcut(QKeySequence(Qt::ALT | Qt::Key_1));
+    m_pLevel1Action = new QAction(QIcon(":/icons/level1.png"),  "Polar level\tAlt+2",            this);
+    m_pLevel1Action->setShortcut(QKeySequence(Qt::ALT | Qt::Key_2));
+    m_pLevel2Action = new QAction(QIcon(":/icons/level2.png"),  "Operating point level\tAlt+3",  this);
+    m_pLevel2Action->setShortcut(QKeySequence(Qt::ALT | Qt::Key_3));
 
     m_pfrControls = new QFrame;
     {

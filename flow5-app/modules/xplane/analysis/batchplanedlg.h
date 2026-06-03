@@ -126,6 +126,8 @@ class BatchPlaneDlg : public QDialog
 
         QLabel *m_plabStatus;
 
+        QCheckBox* m_pchLiveUpdate;
+
         XflExecutor *m_pExecutor;
 
         static QMap<QString, bool> s_Analyses;

@@ -11,6 +11,7 @@ It is version 7 of the legacy project xflr5.
 - ~~Add plane imports from STL or OBJ meshes to the API~~
 - ~~Add fuselage imports from STL or OBJ meshes to the API~~
 - ~~Add fuselage imports from STEP files to the API~~
+- Clarify the sign conventions for the output of moments; see [discussion #62](https://github.com/techwinder/flow5/discussions/62). 
 - Either complete or remove currently inoperative features, e.g. plane optimization, advanced editors
 - Continue to clean the code and to improve the API 
 - Clean the documentation

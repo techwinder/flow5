@@ -198,7 +198,7 @@ class XPlane : public QObject
         void on3dView();
         void onAddCpSectionCurve();
         void onAdjustWingGraphToWingSpan();
-        void onAnalyze();
+        void onCalculate();
         void onAnimateModeSingle(bool bStep=true);
         void onAutoWPolarNameOptions();
         void onBatchAnalysis();
