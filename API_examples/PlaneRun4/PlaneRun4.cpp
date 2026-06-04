@@ -155,6 +155,9 @@ int main()
 
     // Create a plane from an xml file
     // Requires link to flow5-io-lib
+
+
+    // Before building, either copy the xml sub-directory into the build folder, or update the path below
     std::string xmlplanefilepath = "xml/plane.xml";
     std::string logmsg;
     std:: cout << "Making the plane from XML file" << std::endl;
@@ -232,15 +235,15 @@ int main()
     }
     else
     {
-        // In the present case we can ignore the name in the file
+        // In the present case we ignore the name in the file
         // and just attach the polar to the plane
         pPlPolar->setPlaneName(pPlaneXfl->name());
 
-        //  override viscous behaviour from file to keep it fast and simple
+        //  override the viscous behaviour from file to keep it fast and simple
         pPlPolar->setViscous(false);
 
         // Store the pointer.
-        Objects3d::insertPlPolar(pPlPolar);
+        Objects3d::insertPlanePolar(pPlPolar);
     }
 
     // Define and run the analysis
@@ -284,9 +287,7 @@ int main()
     projectfilepath += std::filesystem::path::preferred_separator;
     projectfilepath += "PlaneRun4.fl5";
 
-    io::saveProject(projectfilepath, logmsg);
-
-    if(logmsg.size()>0)
+    if(!io::saveProject(projectfilepath, logmsg))
     {
         // error saving
         std::cerr << logmsg << std::endl << std::endl;

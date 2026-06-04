@@ -727,7 +727,7 @@ void XflExecutor::runPlaneAnalyses()
 
         if(pPlaneTask)
         {
-            strong = "Launching plane analysis: " + QString::fromStdString(pPlaneTask->plane()->name()) + " / " + QString::fromStdString(pPlaneTask->wPolar()->name()) + "\n";
+            strong = "Launching plane analysis: " + QString::fromStdString(pPlaneTask->plane()->name()) + " / " + QString::fromStdString(pPlaneTask->planePolar()->name()) + "\n";
             traceLog(strong);
 
             emit taskStarted(ia);
@@ -775,7 +775,7 @@ void XflExecutor::runPanelTask(PlaneTask *pPlaneTask)
     // set the appropriate mesh for this task
     bool bThickSurfaces = true;
 
-    PlanePolar *pWPolar = pPlaneTask->wPolar();
+    PlanePolar *pWPolar = pPlaneTask->planePolar();
 
     if(pWPolar->isVLM())         bThickSurfaces = false;
     if(pWPolar->bThinSurfaces()) bThickSurfaces = false;

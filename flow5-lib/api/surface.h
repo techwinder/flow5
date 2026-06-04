@@ -138,7 +138,7 @@ class FL5LIB_EXPORT Surface
         void setFlap();
 
         void makeSideNodes(Fuse const *pTranslatedFuse, bool bDebug=false);
-        void makeSideNodeTask(int l, Fuse const *pTranslatedFuse, double alpha_dA, double alpha_dB);
+        void makeSideNodeTask(int l, Fuse const *pTranslatedFuse, double xRelA, double xRelB, double alpha_dA, double alpha_dB);
 
         void setTwist(bool bQuarterChord);
         void setTwist2();
@@ -347,11 +347,6 @@ class FL5LIB_EXPORT Surface
         Vector3d m_LB;              /**< the Surface's leading right point */
         Vector3d m_TA;              /**< the Surface's trailing left point */
         Vector3d m_TB;              /**< the Surface's trailing right point */
-
-        mutable double tmp_alpha_dA, tmp_alpha_dB;
-        mutable xfl::enumSurfacePosition tmp_pos;
-        mutable Fuse const*tmp_pFuse;
-
 
     public:
         static std::vector<Vector3d> s_DebugPts;

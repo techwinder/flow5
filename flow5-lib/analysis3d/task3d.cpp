@@ -158,15 +158,17 @@ void Task3d::advectVortons(double alpha, double beta, double QInf, int qrhs)
 {
     if(!m_pPolar3d->bVortonWake()) return;
 
+
+
     if(m_pP4A)
     {
-        tmp_Mu    = m_pP4A->m_Mu.data()    + qrhs*m_pP4A->nPanels();
-        tmp_Sigma = m_pP4A->m_Sigma.data() + qrhs*m_pP4A->nPanels();
+        m_VortonData.m_Mu    = m_pP4A->m_Mu.data()    + qrhs*m_pP4A->nPanels();
+        m_VortonData.m_Sigma = m_pP4A->m_Sigma.data() + qrhs*m_pP4A->nPanels();
     }
     else if(m_pP3A)
     {
-        tmp_Mu    = m_pP3A->m_Mu.data()    + qrhs*3*m_pP3A->nPanels();
-        tmp_Sigma = m_pP3A->m_Sigma.data() + qrhs  *m_pP3A->nPanels();
+        m_VortonData.m_Mu    = m_pP3A->m_Mu.data()    + qrhs*3*m_pP3A->nPanels();
+        m_VortonData.m_Sigma = m_pP3A->m_Sigma.data() + qrhs  *m_pP3A->nPanels();
     }
     else return;
 
@@ -174,9 +176,9 @@ void Task3d::advectVortons(double alpha, double beta, double QInf, int qrhs)
     // duplicate the existing vortons which will be replaced all at once at the end of the procedure
     std::vector<std::vector<Vorton>> newvortons = m_pPA->m_Vorton;
     double dl = m_pPolar3d->vortonL0() * m_pPolar3d->referenceChordLength(); //m
-    tmp_dt = dl/QInf;
-    tmp_VInf = objects::windDirection(alpha, beta)*QInf;
-    tmp_vortonwakelength = m_pPolar3d->VPWMaxLength()*m_pPolar3d->referenceChordLength();
+    m_VortonData.m_dt = dl/QInf;
+    m_VortonData.m_VInf = objects::windDirection(alpha, beta)*QInf;
+    m_VortonData.m_Vortonwakelength = m_pPolar3d->VPWMaxLength()*m_pPolar3d->referenceChordLength();
 
 
     bool bMultiThread = true;
@@ -187,7 +189,7 @@ void Task3d::advectVortons(double alpha, double beta, double QInf, int qrhs)
 
         for(unsigned int irow=0; irow<newvortons.size(); irow++)
         {
-            threads.push_back(std::thread(&Task3d::advectVortonRow, this, &newvortons[irow]));
+            threads.push_back(std::thread(&Task3d::advectVortonRow, this, &newvortons[irow], m_VortonData));
         }
 
         for(unsigned int irow=0; irow<newvortons.size(); irow++)
@@ -201,7 +203,7 @@ void Task3d::advectVortons(double alpha, double beta, double QInf, int qrhs)
     {
         for(unsigned int irow=0; irow<newvortons.size(); irow++)
         {
-            advectVortonRow(&newvortons[irow]);
+            advectVortonRow(&newvortons[irow], m_VortonData);
         }
     }
 
@@ -212,7 +214,7 @@ void Task3d::advectVortons(double alpha, double beta, double QInf, int qrhs)
 }
 
 
-void Task3d::advectVortonRow(std::vector<Vorton> *thisrow)
+void Task3d::advectVortonRow(std::vector<Vorton> *thisrow, VortonData const &data)
 {
     Vector3d VT1, VT2, translation, P1;
 
@@ -225,15 +227,15 @@ void Task3d::advectVortonRow(std::vector<Vorton> *thisrow)
             Vector3d const &P0 = vtn.position();
 
             //RK2
-            if(m_pPA)  m_pPA->getVelocityVector(P0, tmp_Mu, tmp_Sigma, VT1, Vortex::coreRadius(), false, false);
-            translation.set((tmp_VInf + VT1)*tmp_dt);
-            P1.set(P0 + translation*tmp_dt/2.0);
+            if(m_pPA)  m_pPA->getVelocityVector(P0, data.m_Mu, data.m_Sigma, VT1, Vortex::coreRadius(), false, false);
+            translation.set((data.m_VInf + VT1)*data.m_dt);
+            P1.set(P0 + translation*data.m_dt/2.0);
 
-            if(m_pPA)  m_pPA->getVelocityVector(P1, tmp_Mu, tmp_Sigma, VT2, Vortex::coreRadius(), false, false);
-            translation.set((tmp_VInf+VT2)*tmp_dt);
+            if(m_pPA)  m_pPA->getVelocityVector(P1, data.m_Mu, data.m_Sigma, VT2, Vortex::coreRadius(), false, false);
+            translation.set((data.m_VInf+VT2)*data.m_dt);
             vtn.translate(translation);
 
-            if(vtn.position().norm()>tmp_vortonwakelength)
+            if(vtn.position().norm()>data.m_Vortonwakelength)
                 vtn.setActive(false);
 
 /*                if(s_bVortonStretch)

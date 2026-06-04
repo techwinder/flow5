@@ -97,4 +97,7 @@ namespace io
     FL5IOLIB_EXPORT void exportSTEP(QString const & filename, NCollection_List<TopoDS_Shape> const &m_ShapesToExport, int index, QString &logmsg);
     FL5IOLIB_EXPORT void exportBRep(QString const & filename, NCollection_List<TopoDS_Shape> const &m_ShapesToExport, QString &logmsg);
 
+    FL5IOLIB_EXPORT void setSaveFoilOpps( bool b);
+    FL5IOLIB_EXPORT void setSavePlaneOpps(bool b);
+    FL5IOLIB_EXPORT void setSaveBoatOpps( bool b);
 }

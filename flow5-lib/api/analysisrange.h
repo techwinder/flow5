@@ -73,7 +73,7 @@ struct AnalysisRange
             double d=0;
             // correct potential input errors of range direction
             if(m_vEnd>m_vStart) d = m_vStart + double(iv) * fabs(vInc);
-            else              d = m_vStart - double(iv) * fabs(vInc);
+            else                d = m_vStart - double(iv) * fabs(vInc);
 
             vals.push_back(d);
         }

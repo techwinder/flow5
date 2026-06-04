@@ -60,7 +60,6 @@ int main()
 
 #ifdef OPENBLAS
 
-    strange.clear();
     switch(openblas_get_parallel())
     {
         //        https://github.com/OpenMathLib/OpenBLAS/wiki/Faq/a15b786986841d2e4e4e84e3f2ecff9c3b263b32
@@ -74,7 +73,6 @@ int main()
 
 #elif defined INTEL_MKL
 
-    strange.clear();
     int nt = mkl_get_max_threads();
 
     mkl_set_dynamic(0);
@@ -102,10 +100,10 @@ int main()
      *    if(!io::loadProject(loadfilepath, logload))
      *    {
      *        std::cerr << logload << std::endl;
-}
-*/
+     *    }
+    */
 
-    // either copy the STL sub-directory into the build folder, or update the path below
+    // Before building, either copy the STL sub-directory into the build folder, or update the path below
     std::string STLFilePath = "STL/plane_mesh.stl";
 //    std::string OBJFilePath = "/path/to/file.obj";
     std::string logmsg;
@@ -125,7 +123,7 @@ int main()
     }
     else
     {
-        //Set the plane's name now to ensure the plane is inserted in alphabetical order
+        //Set the plane's name now to ensure that the plane is inserted in alphabetical order
         pPlane->setName("Plane from STL");
 
         // We insert the plane = store the pointer
@@ -146,6 +144,7 @@ int main()
 
         pPlane->makePlane(false, false, false); // parameters are ignored
 
+        // Option to rotate the mesh  for instance if the STL mesh was defined in an other system of axes
 //        pPlane->rotate(Vector3d(), {1.0, 0.0, 0.0}, 90.0);
 
         // need to connect the panels before attempting to guess the T.E.
@@ -162,7 +161,9 @@ int main()
             std::cout << " done." << std::endl << std::endl;
         }
 
-        float GuessAngle = 25.0;
+        // All pair of triangles which form an angle less than the GuessAngle
+        // are assumed to be T.E. panels
+        float GuessAngle = 25.0; // degrees
 
         // The tricky part: no guarantee that the TE panels have been correctly identified, and no
         // available way to check using the API.

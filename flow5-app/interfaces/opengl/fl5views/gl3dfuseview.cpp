@@ -214,7 +214,7 @@ void gl3dFuseView::glRenderView()
         paintPartMasses(Vector3d(), 0.0, "Structural mass", m_pFuse->pointMasses(), m_iSelectedPartMass);
         //plot CG
         Vector3d Place(m_pFuse->CoG_t().x, m_pFuse->CoG_t().y, m_pFuse->CoG_t().z);
-        paintSphere(Place, W3dPrefs::s_MassRadius*2.0/double(m_glScalef),
+        paintSphere(Place, W3dPrefs::s_MassRadius*1.5/double(m_glScalef),
                     W3dPrefs::s_MassColor.darker());
 
         double delta = 0.02/double(m_glScalef);

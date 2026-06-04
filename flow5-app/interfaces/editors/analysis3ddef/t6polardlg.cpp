@@ -55,8 +55,8 @@ T6PolarDlg::T6PolarDlg(QWidget *pParent) : PlanePolarDlg(pParent)
 {
     setWindowTitle("Control analysis");
 
-    s_WPolar.setPointStyle(Line::BIGCIRCLE);
-    s_WPolar.setLineWidth(2);
+    s_PlPolar.setPointStyle(Line::BIGCIRCLE);
+    s_PlPolar.setLineWidth(2);
 
     m_pcptOppRange = nullptr;
     m_pOppRangeControlModel = nullptr;
@@ -67,7 +67,7 @@ T6PolarDlg::T6PolarDlg(QWidget *pParent) : PlanePolarDlg(pParent)
     m_pcptAngles = nullptr;
     m_pAngleControlModel = nullptr;
 
-    s_WPolar.setType(xfl::T6POLAR);
+    s_PlPolar.setType(xfl::T6POLAR);
 
     setupLayout();
     connectSignals();
@@ -104,7 +104,7 @@ void T6PolarDlg::connectSignals()
 
 void T6PolarDlg::fillOppRangePage()
 {
-    m_pchAdjustedVelocity->setChecked(s_WPolar.isAdjustedVelocity());
+    m_pchAdjustedVelocity->setChecked(s_PlPolar.isAdjustedVelocity());
 
     m_pOppRangeControlModel->setRowCount(4); // Vel, aoa, beta, phi
 
@@ -119,36 +119,36 @@ void T6PolarDlg::fillOppRangePage()
     ind = m_pOppRangeControlModel->index(0, 0, QModelIndex());
     m_pOppRangeControlModel->setData(ind, "V"+INFch);
     ind = m_pOppRangeControlModel->index(0, 1, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(0).ctrlMin()*Units::mstoUnit());
+    m_pOppRangeControlModel->setData(ind, s_PlPolar.m_OperatingRange.at(0).ctrlMin()*Units::mstoUnit());
     ind = m_pOppRangeControlModel->index(0, 2, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(0).ctrlMax()*Units::mstoUnit());
+    m_pOppRangeControlModel->setData(ind, s_PlPolar.m_OperatingRange.at(0).ctrlMax()*Units::mstoUnit());
     ind = m_pOppRangeControlModel->index(0, 3, QModelIndex());
     m_pOppRangeControlModel->setData(ind, Units::speedUnitQLabel());
 
     ind = m_pOppRangeControlModel->index(1, 0, QModelIndex());
     m_pOppRangeControlModel->setData(ind, ALPHAch);
     ind = m_pOppRangeControlModel->index(1, 1, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(1).ctrlMin());
+    m_pOppRangeControlModel->setData(ind, s_PlPolar.m_OperatingRange.at(1).ctrlMin());
     ind = m_pOppRangeControlModel->index(1, 2, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(1).ctrlMax());
+    m_pOppRangeControlModel->setData(ind, s_PlPolar.m_OperatingRange.at(1).ctrlMax());
     ind = m_pOppRangeControlModel->index(1, 3, QModelIndex());
     m_pOppRangeControlModel->setData(ind, DEGch);
 
     ind = m_pOppRangeControlModel->index(2, 0, QModelIndex());
     m_pOppRangeControlModel->setData(ind, BETAch);
     ind = m_pOppRangeControlModel->index(2, 1, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(2).ctrlMin());
+    m_pOppRangeControlModel->setData(ind, s_PlPolar.m_OperatingRange.at(2).ctrlMin());
     ind = m_pOppRangeControlModel->index(2, 2, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(2).ctrlMax());
+    m_pOppRangeControlModel->setData(ind, s_PlPolar.m_OperatingRange.at(2).ctrlMax());
     ind = m_pOppRangeControlModel->index(2, 3, QModelIndex());
     m_pOppRangeControlModel->setData(ind, DEGch);
 
     ind = m_pOppRangeControlModel->index(3, 0, QModelIndex());
     m_pOppRangeControlModel->setData(ind, PHIch);
     ind = m_pOppRangeControlModel->index(3, 1, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(3).ctrlMin());
+    m_pOppRangeControlModel->setData(ind, s_PlPolar.m_OperatingRange.at(3).ctrlMin());
     ind = m_pOppRangeControlModel->index(3, 2, QModelIndex());
-    m_pOppRangeControlModel->setData(ind, s_WPolar.m_OperatingRange.at(3).ctrlMax());
+    m_pOppRangeControlModel->setData(ind, s_PlPolar.m_OperatingRange.at(3).ctrlMax());
     ind = m_pOppRangeControlModel->index(3, 3, QModelIndex());
     m_pOppRangeControlModel->setData(ind, DEGch);
 }
@@ -163,24 +163,24 @@ void T6PolarDlg::fillInertiaPage()
 
     if(m_pPlane)
     {
-        if(s_WPolar.bAutoInertia())
+        if(s_PlPolar.bAutoInertia())
         {
-            s_WPolar.setMass(m_pPlane->totalMass());
-            s_WPolar.setCoG(m_pPlane->CoG_t());
-            s_WPolar.setIxx(m_pPlane->Ixx_t());
-            s_WPolar.setIyy(m_pPlane->Iyy_t());
-            s_WPolar.setIzz(m_pPlane->Izz_t());
-            s_WPolar.setIxz(m_pPlane->Ixz_t());
+            s_PlPolar.setMass(m_pPlane->totalMass());
+            s_PlPolar.setCoG(m_pPlane->CoG_t());
+            s_PlPolar.setIxx(m_pPlane->Ixx_t());
+            s_PlPolar.setIyy(m_pPlane->Iyy_t());
+            s_PlPolar.setIzz(m_pPlane->Izz_t());
+            s_PlPolar.setIxz(m_pPlane->Ixz_t());
         }
     }
     else
     {
-        s_WPolar.setMass(0);
-        s_WPolar.setCoG(Vector3d());
-        s_WPolar.setIxx(0);
-        s_WPolar.setIyy(0);
-        s_WPolar.setIzz(0);
-        s_WPolar.setIxz(0);
+        s_PlPolar.setMass(0);
+        s_PlPolar.setCoG(Vector3d());
+        s_PlPolar.setIxx(0);
+        s_PlPolar.setIyy(0);
+        s_PlPolar.setIzz(0);
+        s_PlPolar.setIxz(0);
     }
 
     m_pInertiaControlModel->setRowCount(3);
@@ -198,27 +198,27 @@ void T6PolarDlg::fillInertiaPage()
     ind = m_pInertiaControlModel->index(0, 0, QModelIndex());
     m_pInertiaControlModel->setData(ind, "Mass");
     ind = m_pInertiaControlModel->index(0, 1, QModelIndex());
-    m_pInertiaControlModel->setData(ind, s_WPolar.m_InertiaRange.at(0).ctrlMin()*Units::kgtoUnit());
+    m_pInertiaControlModel->setData(ind, s_PlPolar.m_InertiaRange.at(0).ctrlMin()*Units::kgtoUnit());
     ind = m_pInertiaControlModel->index(0, 2, QModelIndex());
-    m_pInertiaControlModel->setData(ind, s_WPolar.m_InertiaRange.at(0).ctrlMax()*Units::kgtoUnit());
+    m_pInertiaControlModel->setData(ind, s_PlPolar.m_InertiaRange.at(0).ctrlMax()*Units::kgtoUnit());
     ind = m_pInertiaControlModel->index(0, 3, QModelIndex());
     m_pInertiaControlModel->setData(ind, strMass);
 
     ind = m_pInertiaControlModel->index(1, 0, QModelIndex());
     m_pInertiaControlModel->setData(ind, "CoG_x");
     ind = m_pInertiaControlModel->index(1, 1, QModelIndex());
-    m_pInertiaControlModel->setData(ind, s_WPolar.m_InertiaRange.at(1).ctrlMin()*Units::mtoUnit());
+    m_pInertiaControlModel->setData(ind, s_PlPolar.m_InertiaRange.at(1).ctrlMin()*Units::mtoUnit());
     ind = m_pInertiaControlModel->index(1, 2, QModelIndex());
-    m_pInertiaControlModel->setData(ind, s_WPolar.m_InertiaRange.at(1).ctrlMax()*Units::mtoUnit());
+    m_pInertiaControlModel->setData(ind, s_PlPolar.m_InertiaRange.at(1).ctrlMax()*Units::mtoUnit());
     ind = m_pInertiaControlModel->index(1, 3, QModelIndex());
     m_pInertiaControlModel->setData(ind, strLen);
 
     ind = m_pInertiaControlModel->index(2, 0, QModelIndex());
     m_pInertiaControlModel->setData(ind, "CoG_z");
     ind = m_pInertiaControlModel->index(2, 1, QModelIndex());
-    m_pInertiaControlModel->setData(ind, s_WPolar.m_InertiaRange.at(2).ctrlMin()*Units::mtoUnit());
+    m_pInertiaControlModel->setData(ind, s_PlPolar.m_InertiaRange.at(2).ctrlMin()*Units::mtoUnit());
     ind = m_pInertiaControlModel->index(2, 2, QModelIndex());
-    m_pInertiaControlModel->setData(ind, s_WPolar.m_InertiaRange.at(2).ctrlMax()*Units::mtoUnit());
+    m_pInertiaControlModel->setData(ind, s_PlPolar.m_InertiaRange.at(2).ctrlMax()*Units::mtoUnit());
     ind = m_pInertiaControlModel->index(2, 3, QModelIndex());
     m_pInertiaControlModel->setData(ind, strLen);
 }
@@ -258,41 +258,41 @@ void T6PolarDlg::setViscous()
 
 void T6PolarDlg::initPolar3dDlg(Plane const *pPlane, PlanePolar const *pWPolar)
 {
-    if(s_WPolar.m_OperatingRange.size()<4) s_WPolar.m_OperatingRange.resize(4); // cleaning up old mistakes - first
+    if(s_PlPolar.m_OperatingRange.size()<4) s_PlPolar.m_OperatingRange.resize(4); // cleaning up old mistakes - first
 
     PlanePolarDlg::initPolar3dDlg(pPlane, pWPolar);
-    s_WPolar.setType(xfl::T6POLAR);
+    s_PlPolar.setType(xfl::T6POLAR);
 
-    if(s_WPolar.isLLTMethod()) s_WPolar.setVLM2();
+    if(s_PlPolar.isLLTMethod()) s_PlPolar.setVLM2();
     checkMethods();
 
     if(pWPolar)
     {
 //        m_bAutoName = false;
 //        m_plePolarName->setText(QString::fromStdString(pWPolar->name()));
-        s_WPolar.duplicateSpec(pWPolar);
-        s_WPolar.setName(pWPolar->name());
-        s_WPolar.setPlaneName(pWPolar->planeName());
+        s_PlPolar.duplicateSpec(pWPolar);
+        s_PlPolar.setName(pWPolar->name());
+        s_PlPolar.setPlaneName(pWPolar->planeName());
     }
     else
     {
 //        m_bAutoName = true;
-        s_WPolar.clearAngleRangeList();
-        if(s_WPolar.bAutoInertia()) s_WPolar.retrieveInertia(m_pPlane);
+        s_PlPolar.clearAngleRangeList();
+        if(s_PlPolar.bAutoInertia()) s_PlPolar.retrieveInertia(m_pPlane);
     }
 
 //    m_pchAutoName->setChecked(m_bAutoName);
 //    m_plePolarName->setEnabled(!m_bAutoName);
 
-    if(s_WPolar.m_OperatingRange.size()<4) s_WPolar.m_OperatingRange.resize(4); // cleaning up old mistakes
+    if(s_PlPolar.m_OperatingRange.size()<4) s_PlPolar.m_OperatingRange.resize(4); // cleaning up old mistakes
 
     if(pWPolar)
     {
-        s_WPolar.m_AngleRange = pWPolar->m_AngleRange;
+        s_PlPolar.m_AngleRange = pWPolar->m_AngleRange;
     }
     else
     {
-        s_WPolar.resetAngleRanges(m_pPlane);
+        s_PlPolar.resetAngleRanges(m_pPlane);
     }
 
     fillOppRangePage();
@@ -349,18 +349,18 @@ void T6PolarDlg::readAngleRangeData()
     if(! m_pPlane || !m_pPlane->isXflType()) return;
     PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pPlane);
 
-    s_WPolar.clearAngleRangeList();
+    s_PlPolar.clearAngleRangeList();
     int iCtrl=0;
     for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
     {
-        s_WPolar.m_AngleRange.push_back({});
-        s_WPolar.m_AngleRange.back().push_back({m_pAngleControlModel->index(iCtrl, 0, QModelIndex()).data().toString().toStdString(),
+        s_PlPolar.m_AngleRange.push_back({});
+        s_PlPolar.m_AngleRange.back().push_back({m_pAngleControlModel->index(iCtrl, 0, QModelIndex()).data().toString().toStdString(),
                                                 m_pAngleControlModel->index(iCtrl, 1, QModelIndex()).data().toDouble(),
                                                 m_pAngleControlModel->index(iCtrl, 2, QModelIndex()).data().toDouble()});
         iCtrl++;
         for(int ic=0; ic<pPlaneXfl->wingAt(iw)->nFlaps(); ic++)
         {
-            s_WPolar.m_AngleRange.back().push_back({m_pAngleControlModel->index(iCtrl, 0, QModelIndex()).data().toString().toStdString(),
+            s_PlPolar.m_AngleRange.back().push_back({m_pAngleControlModel->index(iCtrl, 0, QModelIndex()).data().toString().toStdString(),
                                                     m_pAngleControlModel->index(iCtrl, 1, QModelIndex()).data().toDouble(),
                                                     m_pAngleControlModel->index(iCtrl, 2, QModelIndex()).data().toDouble()});
             iCtrl++;
@@ -375,39 +375,39 @@ void T6PolarDlg::readOperatingData()
 {
     double d=0;
     QString strange;
-    s_WPolar.m_OperatingRange.resize(4);
+    s_PlPolar.m_OperatingRange.resize(4);
 
     // Velocity min-max
     strange = m_pOppRangeControlModel->index(0, 0, QModelIndex()).data().toString();
-    s_WPolar.m_OperatingRange[0].setName(strange.toStdString());
+    s_PlPolar.m_OperatingRange[0].setName(strange.toStdString());
     d = m_pOppRangeControlModel->index(0, 1, QModelIndex()).data().toDouble() / Units::mstoUnit();
-    s_WPolar.m_OperatingRange[0].setCtrlMin(d);
+    s_PlPolar.m_OperatingRange[0].setCtrlMin(d);
     d = m_pOppRangeControlModel->index(0, 2, QModelIndex()).data().toDouble() / Units::mstoUnit();
-    s_WPolar.m_OperatingRange[0].setCtrlMax(d);
+    s_PlPolar.m_OperatingRange[0].setCtrlMax(d);
 
     // aoa min-max
     strange = m_pOppRangeControlModel->index(1, 0, QModelIndex()).data().toString();
-    s_WPolar.m_OperatingRange[1].setName(strange.toStdString());
+    s_PlPolar.m_OperatingRange[1].setName(strange.toStdString());
     d = m_pOppRangeControlModel->index(1, 1, QModelIndex()).data().toDouble();
-    s_WPolar.m_OperatingRange[1].setCtrlMin(d);
+    s_PlPolar.m_OperatingRange[1].setCtrlMin(d);
     d = m_pOppRangeControlModel->index(1, 2, QModelIndex()).data().toDouble();
-    s_WPolar.m_OperatingRange[1].setCtrlMax(d);
+    s_PlPolar.m_OperatingRange[1].setCtrlMax(d);
 
     // sideslip min-max
     strange = m_pOppRangeControlModel->index(2, 0, QModelIndex()).data().toString();
-    s_WPolar.m_OperatingRange[2].setName(strange.toStdString());
+    s_PlPolar.m_OperatingRange[2].setName(strange.toStdString());
     d = m_pOppRangeControlModel->index(2, 1, QModelIndex()).data().toDouble();
-    s_WPolar.m_OperatingRange[2].setCtrlMin(d);
+    s_PlPolar.m_OperatingRange[2].setCtrlMin(d);
     d = m_pOppRangeControlModel->index(2, 2, QModelIndex()).data().toDouble() ;
-    s_WPolar.m_OperatingRange[2].setCtrlMax(d);
+    s_PlPolar.m_OperatingRange[2].setCtrlMax(d);
 
     // Bank min-max
     strange = m_pOppRangeControlModel->index(3, 0, QModelIndex()).data().toString();
-    s_WPolar.m_OperatingRange[3].setName(strange.toStdString());
+    s_PlPolar.m_OperatingRange[3].setName(strange.toStdString());
     d = m_pOppRangeControlModel->index(3, 1, QModelIndex()).data().toDouble();
-    s_WPolar.m_OperatingRange[3].setCtrlMin(d);
+    s_PlPolar.m_OperatingRange[3].setCtrlMin(d);
     d = m_pOppRangeControlModel->index(3, 2, QModelIndex()).data().toDouble();
-    s_WPolar.m_OperatingRange[3].setCtrlMax(d);
+    s_PlPolar.m_OperatingRange[3].setCtrlMax(d);
 }
 
 
@@ -418,27 +418,27 @@ void T6PolarDlg::readInertiaData()
 
     // mass min-max
     strange = m_pInertiaControlModel->index(0, 0, QModelIndex()).data().toString();
-    s_WPolar.m_InertiaRange[0].setName(strange.toStdString());
+    s_PlPolar.m_InertiaRange[0].setName(strange.toStdString());
     d = m_pInertiaControlModel->index(0, 1, QModelIndex()).data().toDouble() / Units::kgtoUnit();
-    s_WPolar.m_InertiaRange[0].setCtrlMin(d);
+    s_PlPolar.m_InertiaRange[0].setCtrlMin(d);
     d = m_pInertiaControlModel->index(0, 2, QModelIndex()).data().toDouble() / Units::kgtoUnit();
-    s_WPolar.m_InertiaRange[0].setCtrlMax(d);
+    s_PlPolar.m_InertiaRange[0].setCtrlMax(d);
 
     //CoG.x min-max
     strange = m_pInertiaControlModel->index(1, 0, QModelIndex()).data().toString();
-    s_WPolar.m_InertiaRange[1].setName(strange.toStdString());
+    s_PlPolar.m_InertiaRange[1].setName(strange.toStdString());
     d = m_pInertiaControlModel->index(1, 1, QModelIndex()).data().toDouble() / Units::mtoUnit();
-    s_WPolar.m_InertiaRange[1].setCtrlMin(d);
+    s_PlPolar.m_InertiaRange[1].setCtrlMin(d);
     d = m_pInertiaControlModel->index(1, 2, QModelIndex()).data().toDouble() / Units::mtoUnit();
-    s_WPolar.m_InertiaRange[1].setCtrlMax(d);
+    s_PlPolar.m_InertiaRange[1].setCtrlMax(d);
 
     //CoG.z min-max
     strange = m_pInertiaControlModel->index(2, 0, QModelIndex()).data().toString();
-    s_WPolar.m_InertiaRange[2].setName(strange.toStdString());
+    s_PlPolar.m_InertiaRange[2].setName(strange.toStdString());
     d = m_pInertiaControlModel->index(2, 1, QModelIndex()).data().toDouble() / Units::mtoUnit();
-    s_WPolar.m_InertiaRange[2].setCtrlMin(d);
+    s_PlPolar.m_InertiaRange[2].setCtrlMin(d);
     d = m_pInertiaControlModel->index(2, 2, QModelIndex()).data().toDouble() / Units::mtoUnit();
-    s_WPolar.m_InertiaRange[2].setCtrlMax(d);
+    s_PlPolar.m_InertiaRange[2].setCtrlMax(d);
 
     //for(int i=0; i<s_WPolar.m_InertiaRange.size(); i++)    qDebug("inange %d=  %7.3g  %7.3g", i, s_WPolar.m_InertiaRange.at(i).ctrlMin(), s_WPolar.m_InertiaRange.at(i).ctrlMax());
 }
@@ -448,13 +448,13 @@ void T6PolarDlg::readData()
 {
     PlanePolarDlg::readData();
 
-    if(s_WPolar.isVLM()) s_WPolar.setThinSurfaces(true);
+    if(s_PlPolar.isVLM()) s_PlPolar.setThinSurfaces(true);
 
     readOperatingData();
     readInertiaData();
     readAngleRangeData();
 
-    s_WPolar.setAdjustedVelocity(m_pchAdjustedVelocity->isChecked());
+    s_PlPolar.setAdjustedVelocity(m_pchAdjustedVelocity->isChecked());
 }
 
 
@@ -674,7 +674,7 @@ void T6PolarDlg::enableControls()
 
     m_prbLLTMethod->setEnabled(false);
 
-    m_prbVLM1Method->setEnabled(!s_WPolar.isBetaPolar() && fabs(s_WPolar.betaSpec())<PRECISION);
+    m_prbVLM1Method->setEnabled(!s_PlPolar.isBetaPolar() && fabs(s_PlPolar.betaSpec())<PRECISION);
 
     if(m_prbVLM1Method->isChecked() || m_prbVLM2Method->isChecked())
     {
@@ -688,7 +688,7 @@ void T6PolarDlg::enableControls()
         m_prbThickSurfaces->setEnabled(true);
     }*/
 
-    m_pcptInertia->setEnabled(!s_WPolar.bAutoInertia());
+    m_pcptInertia->setEnabled(!s_PlPolar.bAutoInertia());
     m_pcptOppRange->setRowHidden(0, m_pchAdjustedVelocity->isChecked());
 }
 
@@ -698,7 +698,7 @@ void T6PolarDlg::fillAngleControlList()
     if(!m_pPlane || !m_pPlane->isXflType()) return;
     PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pPlane);
 
-    m_pAngleControlModel->setRowCount(s_WPolar.nAngleRangeCtrls());//temporary
+    m_pAngleControlModel->setRowCount(s_PlPolar.nAngleRangeCtrls());//temporary
     QString  strong;
     QString strdeg = DEGch;
     QModelIndex ind;
@@ -712,10 +712,10 @@ void T6PolarDlg::fillAngleControlList()
         m_pAngleControlModel->setData(ind, strong);
 
         ind = m_pAngleControlModel->index(nctrls, 1, QModelIndex());
-        m_pAngleControlModel->setData(ind, s_WPolar.angleRange(iw, 0).ctrlMin());
+        m_pAngleControlModel->setData(ind, s_PlPolar.angleRange(iw, 0).ctrlMin());
 
         ind = m_pAngleControlModel->index(nctrls, 2, QModelIndex());
-        m_pAngleControlModel->setData(ind, s_WPolar.angleRange(iw, 0).ctrlMax());
+        m_pAngleControlModel->setData(ind, s_PlPolar.angleRange(iw, 0).ctrlMax());
 
         ind = m_pAngleControlModel->index(nctrls, 3, QModelIndex());
         m_pAngleControlModel->setData(ind, strdeg);
@@ -730,10 +730,10 @@ void T6PolarDlg::fillAngleControlList()
             m_pAngleControlModel->setData(ind, strong);
 
             ind = m_pAngleControlModel->index(iFlap+nctrls, 1, QModelIndex());
-            m_pAngleControlModel->setData(ind, s_WPolar.angleRange(iw, iFlapCtrl).ctrlMin());
+            m_pAngleControlModel->setData(ind, s_PlPolar.angleRange(iw, iFlapCtrl).ctrlMin());
 
             ind = m_pAngleControlModel->index(iFlap+nctrls, 2, QModelIndex());
-            m_pAngleControlModel->setData(ind, s_WPolar.angleRange(iw, iFlapCtrl).ctrlMax());
+            m_pAngleControlModel->setData(ind, s_PlPolar.angleRange(iw, iFlapCtrl).ctrlMax());
 
             ind = m_pAngleControlModel->index(iFlap+nctrls, 3, QModelIndex());
             m_pAngleControlModel->setData(ind, strdeg);
@@ -747,7 +747,7 @@ void T6PolarDlg::fillAngleControlList()
 
 void T6PolarDlg::onAdjustedVelocity()
 {
-    s_WPolar.setAdjustedVelocity(m_pchAdjustedVelocity->isChecked());
+    s_PlPolar.setAdjustedVelocity(m_pchAdjustedVelocity->isChecked());
     m_pcptOppRange->setRowHidden(0, m_pchAdjustedVelocity->isChecked());
     setPolar3dName();
 }
@@ -755,10 +755,10 @@ void T6PolarDlg::onAdjustedVelocity()
 
 void T6PolarDlg::onPlaneInertia()
 {
-    s_WPolar.setAutoInertia(m_pchAutoInertia->isChecked());
-    if(s_WPolar.bAutoInertia())
+    s_PlPolar.setAutoInertia(m_pchAutoInertia->isChecked());
+    if(s_PlPolar.bAutoInertia())
     {
-        s_WPolar.retrieveInertia(m_pPlane);
+        s_PlPolar.retrieveInertia(m_pPlane);
         fillInertiaPage();
     }
     else

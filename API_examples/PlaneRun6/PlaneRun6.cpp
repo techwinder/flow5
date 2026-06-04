@@ -101,28 +101,12 @@ int main()
     std::cout << "Creating the airfoils... "  << std::endl << std::endl;
 
     Foil *pFoilN2413 = new Foil;
-
-    if(!Objects2d::makeNacaFoil(pFoilN2413, 2413, 200))
-    {
-        // this should not happen
-        std::cerr << "Error making foil NACA 2413" << std::endl;
-        delete pFoilN2413;
-        return 0;
-    }
-
+    Objects2d::makeNacaFoil(pFoilN2413, 2413, 200);
     pFoilN2413->setName("NACA 2413");
     Objects2d::insertThisFoil(pFoilN2413);
 
     Foil *pFoilN0009 = new Foil;
-    if(!Objects2d::makeNacaFoil(pFoilN0009, 9, 200))
-    {
-        // this should not happen
-        std::cerr << "Error making foil NACA 0009" << std::endl;
-        delete pFoilN0009;
-        return 0;
-    }
-
-
+    Objects2d::makeNacaFoil(pFoilN0009, 9, 200);
     pFoilN0009->setName("NACA 0009");
     Objects2d::insertThisFoil(pFoilN0009);
 
@@ -148,9 +132,6 @@ int main()
     std::cout << "Creating the plane"<<std::endl;
     PlaneXfl* pPlaneXfl = new PlaneXfl;
     {
-        std::string description = "PW-5 Smyk World-class glider.\n"
-                                  "Author: Marek Cel\n"
-                                  "https://airshow.openvsp.org/vsp/C1S5HvELccHjhxiiV8Ra";
 
         //Set the plane's name now to ensure that it is inserted in alphabetical order
         pPlaneXfl->setName("Plane with STEP type fuselage");
@@ -186,8 +167,8 @@ int main()
         std::cout << logmsg << std::endl;
         if(!pFuseOcc)
         {
-            std::cerr << "Error importing the fuselage... aborting";
-            //            globals::deleteObjects();
+            std::cerr << "Error importing the fuselage... aborting\n\n";
+            globals::deleteObjects();
             return 0;
         }
         else
@@ -199,6 +180,11 @@ int main()
             // https://flow5.tech/docs/flow5_doc/Modelling/Fuse_CAD.html
 
             pFuseOcc->setName("STEP imported fuse");
+
+
+            std::string description = "PW-5 Smyk World-class glider.\n"
+                                      "Author: Marek Cel\n"
+                                      "https://airshow.openvsp.org/vsp/C1S5HvELccHjhxiiV8Ra";
             pFuseOcc->setDescription(description);
 
             // list what has been imported - for information only

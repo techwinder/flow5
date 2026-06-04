@@ -481,9 +481,9 @@ void SaveOptionsWt::readData()
     SaveOptions::s_bUseLastDir = m_prbUseLastDir->isChecked();
 
     SaveOptions::s_bAutoLoadLast = m_pchAutoLoadLast->isChecked();
-    FileIO::saveOpps(  m_pchOpps->isChecked());
-    FileIO::savePOpps( m_pchPOpps->isChecked());
-    FileIO::saveBtOpps(m_pchBtOpps->isChecked());
+    FileIO::setSaveFoilOpps(  m_pchOpps->isChecked());
+    FileIO::setSavePlaneOpps( m_pchPOpps->isChecked());
+    FileIO::setSaveBoatOpps(m_pchBtOpps->isChecked());
     SaveOptions::s_bAutoSave     = m_pchAutoSave->isChecked();
     SaveOptions::s_bXmlWingFoils = m_pchXmlWingFoils->isChecked();
 

@@ -63,11 +63,12 @@ class FL5LIB_EXPORT PlaneTask : public Task3d
         double ctrl() const {return m_Ctrl;}
         double aoa()  const {return m_Alpha;}
 
-        void setObjects(Plane *pPlane, PlanePolar *pWPolar);
+        void setObjects(Plane *pPlane, PlanePolar *pPlPolar);
         std::vector<PlaneOpp*> const & planeOppList() const {return m_PlaneOppList;}
 
         Plane *plane()  const {return m_pPlane;}
-        PlanePolar*wPolar() const {return m_pPlPolar;}
+        PlanePolar *planePolar() const {return m_pPlPolar;}
+
         void loop() override;
         bool initializeTask();
 

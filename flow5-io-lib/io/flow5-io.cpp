@@ -1727,5 +1727,8 @@ void io::exportBRep(QString const & filename, const NCollection_List<TopoDS_Shap
 }
 
 
+void io::setSaveFoilOpps( bool b) {FileIO::setSaveFoilOpps(b);}
+void io::setSavePlaneOpps(bool b) {FileIO::setSavePlaneOpps(b);}
+void io::setSaveBoatOpps( bool b) {FileIO::setSaveBoatOpps(b);}
 
 

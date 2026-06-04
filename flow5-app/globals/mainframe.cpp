@@ -1915,7 +1915,7 @@ void MainFrame::onSaveProject()
 
 void MainFrame::onSaveProjectAs()
 {
-    QString Filter = "flow5 Project File (*.fl5)";
+    QString Filter = "flow5 project file (*.fl5)";
 
     QString pathname = QFileDialog::getSaveFileName(this, "Save the project file",
                                                     m_FilePath,
@@ -2455,7 +2455,7 @@ void MainFrame::onSavePlaneAsProject()
     if(m_pXPlane->m_pCurPlane) strong = QString::fromStdString(m_pXPlane->m_pCurPlane->name())+".fl5";
 
     QString pathname;
-    QString Filter = "flow5 Project File (*.fl5)";
+    QString Filter = "flow5 project file (*.fl5)";
     QString FileName = strong;
 
     pathname = QFileDialog::getSaveFileName(this, "Save the project file",
@@ -2539,12 +2539,12 @@ void MainFrame::onSaveBoatAsProject()
     strong = QString::fromStdString(pBoat->name()).simplified()+".fl5";
 
     QString pathname;
-    QString Filter = "flow5 Project File (*.fl5)";
+    QString Filter = "flow5 project file (*.fl5)";
     QString FileName = strong;
 
     pathname = QFileDialog::getSaveFileName(this, "Save the project file",
                                             SaveOptions::lastDirName()+"/"+FileName,
-                                            "flow5 Project File (*.fl5)",
+                                            "flow5 project file (*.fl5)",
                                             &Filter);
 
     if(!pathname.length()) return;//nothing more to do

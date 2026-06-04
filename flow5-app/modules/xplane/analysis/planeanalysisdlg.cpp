@@ -194,7 +194,7 @@ void PlaneAnalysisDlg::customEvent(QEvent *pEvent)
         MessageEvent const *pMsgEvent = dynamic_cast<MessageEvent*>(pEvent);
         m_ppto->onAppendQText(pMsgEvent->msg());
 
-        if(m_pActiveTask && (m_pActiveTask->wPolar()->isType6() || m_pActiveTask->wPolar()->isType7()))
+        if(m_pActiveTask && (m_pActiveTask->planePolar()->isType6() || m_pActiveTask->planePolar()->isType7()))
         {
             double ctrl = m_pActiveTask->ctrl();
             int nrhs = m_pActiveTask->nRHS();
@@ -252,7 +252,7 @@ void PlaneAnalysisDlg::onTaskFinished()
     m_bHasErrors = m_pActiveTask->hasErrors();
     m_ppbCloseDialog->setText(tr("Close"));
 
-    PlanePolar *pWPolar = m_pActiveTask->wPolar();
+    PlanePolar *pWPolar = m_pActiveTask->planePolar();
     cleanUp();
 
     emit analysisFinished(pWPolar);
@@ -269,7 +269,7 @@ void PlaneAnalysisDlg::onStopIterations()
 {
     if(m_pActiveTask && m_pActiveTask->isRunning())
     {
-        if(m_pActiveTask->wPolar()->isType6() && m_pActiveTask->wPolar()->bVortonWake())
+        if(m_pActiveTask->planePolar()->isType6() && m_pActiveTask->planePolar()->bVortonWake())
         {
             m_pActiveTask->stopVPWIterations();
         }

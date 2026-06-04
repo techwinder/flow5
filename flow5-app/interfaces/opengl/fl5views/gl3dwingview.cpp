@@ -121,7 +121,7 @@ void gl3dWingView::glRenderView()
         paintPartMasses(Vector3d(0.0,0.0,0.0), 0.0, "Structural mass", m_pWing->pointMasses(), m_iSelectedPartMass);
 
         //plot CG
-        paintSphere(m_pWing->CoG_t(), W3dPrefs::s_MassRadius*2.0/double(m_glScalef), W3dPrefs::s_MassColor.darker());
+        paintSphere(m_pWing->CoG_t(), W3dPrefs::s_MassRadius*1.5/double(m_glScalef), W3dPrefs::s_MassColor.darker());
 
         double delta = 0.02/double(m_glScalef);
         glRenderText(m_pWing->CoG_t().x, m_pWing->CoG_t().y, m_pWing->CoG_t().z + delta,

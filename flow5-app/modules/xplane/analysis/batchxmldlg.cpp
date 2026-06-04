@@ -1297,7 +1297,7 @@ void BatchXmlDlg::onPlaneTaskStarted(int iTask)
 
     PlaneTask const *pPlaneTask = dynamic_cast<PlaneTask const*>(pTask);
     if(pPlaneTask)
-        strange += QString::fromStdString(pPlaneTask->plane()->name() + " / "+pPlaneTask->wPolar()->name());
+        strange += QString::fromStdString(pPlaneTask->plane()->name() + " / "+pPlaneTask->planePolar()->name());
 
     LLTTask *pLLTTask = dynamic_cast<LLTTask*>(pTask);
     if(pLLTTask)

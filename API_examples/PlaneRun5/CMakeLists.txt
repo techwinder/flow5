@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 SET(API_EXAMPLE "PlaneRun5")
+
 project(${API_EXAMPLE} LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)

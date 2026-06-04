@@ -45,9 +45,6 @@ int main()
 
     printf("Plane with STL fuselage - build and calculation\n\n");
 
-    // Configure LAPACK
-    std::string strange;
-
     // Start by creating the foils needed to build the wings
     // flow5 objects, i.e. foils, planes, boats and their polar and opp children
     // should always be allocated on the heap
@@ -56,27 +53,14 @@ int main()
 
     std::cout << "Creating the airfoils... "  << std::endl << std::endl;
     Foil *pFoilN2413 = new Foil;
-    if(!Objects2d::makeNacaFoil(pFoilN2413, 2413, 200))
-    {
-        // this should not happen
-        std::cerr << "Error making foil NACA 2413" << std::endl;
-        delete pFoilN2413;
-        return 0;
-    }
+    Objects2d::makeNacaFoil(pFoilN2413, 2413, 200);
     pFoilN2413->setName("NACA 2413");
     Objects2d::insertThisFoil(pFoilN2413);
 
     Foil *pFoilN0009 = new Foil;
-    if(!Objects2d::makeNacaFoil(pFoilN0009, 9, 200))
-    {
-        // this should not happen
-        std::cerr << "Error making foil NACA 0009" << std::endl;
-        delete pFoilN0009;
-        return 0;
-    }
+    Objects2d::makeNacaFoil(pFoilN0009, 9, 200);
     pFoilN0009->setName("NACA 0009");
     Objects2d::insertThisFoil(pFoilN0009);
-
 
     // set the style for these foils and their children objects, i.e. polars and operating points
     pFoilN0009->setTheStyle({true, Line::SOLID, 2, {31, 111, 231}, Line::NOSYMBOL});
@@ -110,11 +94,9 @@ int main()
         // set the style for this plane's children objects, i.e. polars and operating points
         pPlaneXfl->setTheStyle({true, Line::SOLID, 2, {71, 171, 231}, Line::NOSYMBOL});
 
-        // Build the default plane, i.e. the one displayed by default in the plane editor
-        // pPlaneXfl->makeDefaultPlane();
+        // Build the plane from scratch
 
-        // Build from scratch
-
+        // The parts can be added in any order
         // Start with the fuselage
         // Import it from a file
         std::cout << "    Importing the fuselage" << std::endl;
@@ -141,8 +123,9 @@ int main()
             // scale it down to make it the fuselage of a model glider
             pFuseStl->scale(0.3, 0.3, 0.3);
 
-            //position the fuse
-            // make sure that it does not touch or intersect the wings
+            // Position the fuse
+            // Make sure that it does not touch or intersect the wings
+            // since the mesh is un-modifiable and cannot be made conforming to the wing meshes
             pPlaneXfl->setFusePos(0, {-0.05, 0.0, 0.0});
 
             // The default fuse is a bit too long
@@ -159,10 +142,6 @@ int main()
             pWing->setName("Main wing"); // for user information only
             pWing->makeDefaultWing();
 
-            // The parts position and tilt angles in the plane's frame of reference are stored in the part itself.
-            // These fields belong in fact to the plane, so this may change in a future version
-            // Position the mainwing
-            // flow5 works internally in IS units and expects all input in IS + degrees
             pPlaneXfl->setWingPosition(0, 0.0, 0.0, 0.075);
 
             // define the wing
@@ -285,7 +264,7 @@ int main()
         std::cout << "    Building the parts and their meshes" <<std::endl;
         {
             // Build the plane and the individual part meshes
-            // In the case of the fuselage this will create a default, non-conformant mesh.
+            // In the case of the fuselage this will create a default, non-conforming mesh.
             bool bIgnoreFusePanels = false; // unused in the present case, only applicable to quad meshes
             bool bMakeTriMesh = true;
             pPlaneXfl->makePlane(bThickSurfaces, bIgnoreFusePanels, bMakeTriMesh);
@@ -302,10 +281,7 @@ int main()
     projectfilepath += std::filesystem::path::preferred_separator;
     projectfilepath += "PlaneRun5.fl5";
 
-
-    io::saveProject(projectfilepath, logmsg);
-
-    if(logmsg.size()>0)
+    if(!io::saveProject(projectfilepath, logmsg))
     {
         // error saving
         std::cerr << logmsg << std::endl << std::endl;

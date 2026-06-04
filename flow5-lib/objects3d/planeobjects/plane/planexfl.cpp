@@ -1860,17 +1860,17 @@ double PlaneXfl::flapPosition(AngleControl const &avlc, int iWing, int iFlap) co
 }
 
 
-void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstr)
+void PlaneXfl::setFlaps(PlanePolar const *pPlPolar, double ctrl, std::string &outstr)
 {
 //    auto t0 = std::chrono::high_resolution_clock::now();
-    assert(pWPolar->isType123458() || pWPolar->isType7());
+    assert(pPlPolar->isType123458() || pPlPolar->isType7());
 
     std::string outstring;
     std::string strange;
 
     outstring += "Setting flap positions\n";
 
-    if(pWPolar->isTriLinearMethod())
+    if(pPlPolar->isTriLinearMethod())
     {
         // make the node normals on the fly
         // node normals are required to compute local Cp coefficients at nodes
@@ -1884,13 +1884,13 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstr)
     {
         WingXfl const *pWing = wingAt(iw);
 
-        if(iw>=pWPolar->nFlapCtrls())
+        if(iw>=pPlPolar->nFlapCtrls())
         {
             outstring += "      No flap settings defined for " + pWing->name() + " ... skipping" + EOLstr;
             break; // correcting past errors
         }
 
-        AngleControl const &avlc = pWPolar->flapCtrls(iw);
+        AngleControl const &avlc = pPlPolar->flapCtrls(iw);
         if(!avlc.hasActiveAngle())
             continue;
 
@@ -1905,13 +1905,18 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstr)
             {
                 double flapangle = avlc.value(iFlap);
 
+                if(pPlPolar->isType7())
+                {
+                    flapangle *= ctrl; //the avlc.value is interpreted as a gain/ctrl unit
+                }
+
                 if (fabs(flapangle)>FLAPANGLEPRECISION)
                 {
                     strange = std::format("      rotating flap {:d} by {:g}", iFlap, flapangle) + DEGstr + EOLstr;
 
                     outstring += strange;
 
-                    if(pWPolar->isTriangleMethod())
+                    if(pPlPolar->isTriangleMethod())
                     {
                         for(unsigned int i=0; i<surf.flapPanel3().size(); i++)
                         {
@@ -1920,7 +1925,7 @@ void PlaneXfl::setFlaps(PlanePolar const *pWPolar, std::string &outstr)
                         }
                         rotateFlapNodes(m_TriMesh.panels(), nodes, surf, surf.hingePoint(), surf.hingeVector(), flapangle);
                     }
-                    else if(pWPolar->isQuadMethod())
+                    else if(pPlPolar->isQuadMethod())
                     {
                         for(int i4=0; i4<m_QuadMesh.nPanels(); i4++)
                         {

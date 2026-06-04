@@ -600,13 +600,11 @@ std::string PlaneOpp::name() const
     {
         case xfl::T8POLAR:
             strange  = std::format("{:.2f}", alpha()) + DEGstr + " ";
-            strange += std::format("{:.2f}", beta()) + DEGstr + " ";
+            strange += std::format("{:.2f}", beta())  + DEGstr + " ";
             strange += std::format("{:.2f}", QInf()*Units::mstoUnit()) + " " + Units::speedUnitLabel();
             break;
-        case xfl::T7POLAR:
-            strange = std::format("{:.3f}", alpha())  + DEGstr;
-            break;
         case xfl::T6POLAR:
+        case xfl::T7POLAR:
             strange = std::format("{:.3f}", ctrl());
             break;
         case xfl::T5POLAR:

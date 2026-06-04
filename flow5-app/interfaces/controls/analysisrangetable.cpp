@@ -49,7 +49,7 @@ QVector<AnalysisRange> AnalysisRangeTable::s_T3Range;
 QVector<AnalysisRange> AnalysisRangeTable::s_T4Range;
 QVector<AnalysisRange> AnalysisRangeTable::s_T5Range;
 QVector<AnalysisRange> AnalysisRangeTable::s_T6Range;
-QVector<AnalysisRange> AnalysisRangeTable::s_T7Range = {{false, 0,0,0}};
+QVector<AnalysisRange> AnalysisRangeTable::s_T7Range;
 QVector<AnalysisRange> AnalysisRangeTable::s_BtRange;
 
 
@@ -59,10 +59,9 @@ AnalysisRangeTable::AnalysisRangeTable(QWidget *pParent) : CPTableView(pParent)
     m_bFoilPolar = false;
     m_eRangeType = AnalysisRange::ALPHA;
 
-    QString tip(
-            tr("<p>Use this table to define one or more ranges for &alpha; or the control parameter.<br>"
-            "Click on the first column to activate/deactivate a range.<br>"
-            "Use the context menu to add or remove ranges.</p>"));
+    QString tip(tr("<p>Use this table to define one or more ranges for &alpha; or the control parameter.<br>"
+                   "Click on the first column to activate/deactivate a range.<br>"
+                   "Use the context menu to add or remove ranges.</p>"));
     setToolTip(tip);
 
     setCharSize(3,5);
@@ -468,8 +467,7 @@ void AnalysisRangeTable::setControls(xfl::enumPolarType type)
     }
     else
     {
-        if(type!=m_PolarType)
-//        if(type!=m_PolarType || type==xfl::T7POLAR)
+        if(type!=m_PolarType /*|| type==xfl::T7POLAR*/)
         {
             setEnabled(false);
             return;

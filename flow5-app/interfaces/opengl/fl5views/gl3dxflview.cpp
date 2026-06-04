@@ -365,18 +365,19 @@ void gl3dXflView::glDrawMasses(Plane const *pPlane)
         PlaneXfl const *pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
         for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
         {
-            if(pPlaneXfl->wingAt(iw))
+            WingXfl const *pWingXfl = pPlaneXfl->wingAt(iw);
+            if(pWingXfl && pWingXfl->isVisible())
             {
-                paintPartMasses(pPlaneXfl->wingPosition(iw), pPlaneXfl->wingAt(iw)->structuralMass(), QString::fromStdString(pPlaneXfl->wingAt(iw)->name()),
-                                pPlaneXfl->wingAt(iw)->pointMasses(), -1);
+                paintPartMasses(pPlaneXfl->wingPosition(iw), pWingXfl->structuralMass(), QString::fromStdString(pWingXfl->name()),
+                                pWingXfl->pointMasses(), -1);
             }
         }
 
         for(int ifuse=0; ifuse<pPlaneXfl->nFuse(); ifuse++)
         {
             Fuse const *pFuse = pPlaneXfl->fuseAt(ifuse);
-
-            paintPartMasses(pPlaneXfl->fusePos(ifuse), pFuse->structuralMass(), QString::fromStdString(pFuse->name()), pFuse->pointMasses(), -1);
+            if(pFuse && pFuse->isVisible())
+                paintPartMasses(pPlaneXfl->fusePos(ifuse), pFuse->structuralMass(), QString::fromStdString(pFuse->name()), pFuse->pointMasses(), -1);
         }
     }
 
@@ -384,11 +385,11 @@ void gl3dXflView::glDrawMasses(Plane const *pPlane)
 
     //plot CG
     Vector3d Place(pPlane->CoG_t());
-    paintSphere(Place, W3dPrefs::s_MassRadius*2.0/double(m_glScalef),
+    paintSphere(Place, W3dPrefs::s_MassRadius*1.5/double(m_glScalef),
                 W3dPrefs::s_MassColor.darker());
 
     glRenderText(Place.x, Place.y, Place.z + delta,
-                 "CoG "+QString("%1 ").arg(pPlane->totalMass()*Units::kgtoUnit(), 0,'f',2)
+                 "CoG "+QString::asprintf("%.2f ", pPlane->totalMass()*Units::kgtoUnit())
                  +Units::massUnitQLabel(), W3dPrefs::s_MassColor.darker(125), false, true);
 }
 

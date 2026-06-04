@@ -101,9 +101,9 @@ void SaveOptions::loadSettings(QSettings &settings)
         s_SaveInterval  = settings.value("AutoSaveInterval", 10).toInt();
         s_bAutoSave = false;
 
-        FileIO::saveOpps(  settings.value("SaveOpps",            FileIO::bOpps()).toBool());
-        FileIO::savePOpps( settings.value("SavePOpps",           FileIO::bPOpps()).toBool());
-        FileIO::saveBtOpps(settings.value("SaveBtOpps",          FileIO::bBtOpps()).toBool());
+        FileIO::setSaveFoilOpps(  settings.value("SaveOpps",            FileIO::bOpps()).toBool());
+        FileIO::setSavePlaneOpps( settings.value("SavePOpps",           FileIO::bPOpps()).toBool());
+        FileIO::setSaveBoatOpps(settings.value("SaveBtOpps",          FileIO::bBtOpps()).toBool());
 
         int k = settings.value("ExportFormat", 0).toInt();
         if(k) xfl::setExportFileType(xfl::CSV);

@@ -84,12 +84,7 @@ Surface::Surface()
 
     m_FirstStripPanelIndex = m_LastStripPanelIndex = -1;
 
-
-    tmp_alpha_dA = tmp_alpha_dB = 0;
-    tmp_pos=xfl::NOSURFACE;
-    tmp_pFuse=nullptr;
 }
-
 
 
 /**
@@ -425,7 +420,7 @@ void Surface::getSidePoints(xfl::enumSurfacePosition pos,
 {
     assert(xPointsA.size()==xPointsB.size());
 
-    tmp_pos = pos;
+
 
     Vector3d V = m_Normal * m_NormalA;
     Vector3d U = (m_TA - m_LA).normalized();
@@ -433,7 +428,7 @@ void Surface::getSidePoints(xfl::enumSurfacePosition pos,
     double sindA = -V.dot(U);
     if(sindA> 1.0) sindA = 1.0;
     if(sindA<-1.0) sindA = -1.0;
-    tmp_alpha_dA = asin(sindA);
+    double alpha_dA = asin(sindA);
 
     V = m_Normal * m_NormalB;
     U = (m_TB-m_LB).normalized();
@@ -441,14 +436,8 @@ void Surface::getSidePoints(xfl::enumSurfacePosition pos,
     double sindB = -V.dot(U);
     if(sindB> 1.0) sindB = 1.0;
     if(sindB<-1.0) sindB = -1.0;
-    tmp_alpha_dB = asin(sindB);
+    double alpha_dB = asin(sindB);
 
-    //    tmp_delta = -atan(m_Normal.y / m_Normal.z)*180.0/PI;
-    //    double delta = -atan2(Normal.y, Normal.z)*180.0/PI;
-
-    tmp_pFuse = pFuse;
-
-//    auto t0 = std::chrono::high_resolution_clock::now();
 
     std::vector<Node> nodeA(xPointsA.size());
     std::vector<Node> nodeB(xPointsB.size());
@@ -461,12 +450,12 @@ void Surface::getSidePoints(xfl::enumSurfacePosition pos,
         Node &ndA = nodeA[i];
         Node &ndB = nodeB[i];
 
-        double cosdA = cos(tmp_alpha_dA);
-        double cosdB = cos(tmp_alpha_dB);
+        double cosdA = cos(alpha_dA);
+        double cosdB = cos(alpha_dB);
 
         Vector3d I;
 
-        getSideNode(xRelA, false, tmp_pos, ndA);
+        getSideNode(xRelA, false, pos, ndA);
 
         //scale the thickness
         double Ox = xRelA;
@@ -474,36 +463,32 @@ void Surface::getSidePoints(xfl::enumSurfacePosition pos,
         double Oz = m_LA.z * (1.0-Ox) +  m_TA.z * Ox;
         ndA.y   = Oy +(ndA.y - Oy)/cosdA;
         ndA.z   = Oz +(ndA.z - Oz)/cosdA;
-        ndA.rotate(m_LA, (m_LA-m_TA).normalized(), +tmp_alpha_dA*180.0/PI);
+        ndA.rotate(m_LA, (m_LA-m_TA).normalized(), +alpha_dA*180.0/PI);
         //    NA[i].rotate(Vector3d(1.0,0.0,0.0), delta);
 
 
-        getSideNode(xRelB, true, tmp_pos, ndB);
+        getSideNode(xRelB, true, pos, ndB);
         Ox = xRelB;
         Oy = m_LB.y * (1.0-Ox) +  m_TB.y * Ox;
         Oz = m_LB.z * (1.0-Ox) +  m_TB.z * Ox;
         ndB.y   = Oy +(ndB.y - Oy)/cosdB;
         ndB.z   = Oz +(ndB.z - Oz)/cosdB;
-        ndB.rotate(m_LB, (m_LB-m_TB).normalized(), +tmp_alpha_dB*180.0/PI);
+        ndB.rotate(m_LB, (m_LB-m_TB).normalized(), +alpha_dB*180.0/PI);
         //    NB[i].rotate(Vector3d(1.0,0.0,0.0), delta);
 
-        if(tmp_pFuse && m_bIsCenterSurf && m_bIsLeftSurf)
+        if(pFuse && m_bIsCenterSurf && m_bIsLeftSurf)
         {
-            if(tmp_pFuse->intersectFuse(ndA, ndB, I, false))
+            if(pFuse->intersectFuse(ndA, ndB, I, false))
                 ndB.set(I);
         }
-        else if(tmp_pFuse && m_bIsCenterSurf && m_bIsRightSurf)
+        else if(pFuse && m_bIsCenterSurf && m_bIsRightSurf)
         {
-            if(tmp_pFuse->intersectFuse(ndB, ndA, I, true))
+            if(pFuse->intersectFuse(ndB, ndA, I, true))
                 ndA.set(I);
         }
 
     }
 
-/*    auto t1 = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-    qDebug("Surface::getSidePoints_2 {:g}ms", double(duration)/1000.0);
-*/
     for(unsigned int i=0; i<xPointsA.size(); i++)
     {
         PtA[i].set(nodeA.at(i));
@@ -685,14 +670,14 @@ void Surface::makeSideNodes(Fuse const*pTranslatedFuse, bool bDebug)
     double sindA = -V.dot(U);
     if(sindA> 1.0) sindA = 1.0;
     if(sindA<-1.0) sindA = -1.0;
-    tmp_alpha_dA = asin(sindA);
+    double alpha_dA = asin(sindA);
 
     V = m_Normal * m_NormalB;
     U = (m_TB-m_LB).normalized();
     double sindB = -V.dot(U);
     if(sindB> 1.0) sindB = 1.0;
     if(sindB<-1.0) sindB = -1.0;
-    tmp_alpha_dB = asin(sindB);
+    double alpha_dB = asin(sindB);
 
     m_SideA.resize(m_NXPanels+1);
     m_SideA_Bot.resize(m_NXPanels+1);
@@ -711,7 +696,8 @@ void Surface::makeSideNodes(Fuse const*pTranslatedFuse, bool bDebug)
         {
 
 //            futureSync.addFuture(QtConcurrent::run(&Surface::makeSideNodeTask, this, l, pTranslatedFuse, m_xPointA.at(l), m_xPointB.at(l)));
-            threads.push_back(std::thread(&Surface::makeSideNodeTask, this, l, pTranslatedFuse, m_xPointA.at(l), m_xPointB.at(l)));
+            threads.push_back(std::thread(&Surface::makeSideNodeTask, this,
+                                          l, pTranslatedFuse, m_xPointA.at(l), m_xPointB.at(l), alpha_dA, alpha_dB));
 
         }
 
@@ -725,7 +711,7 @@ void Surface::makeSideNodes(Fuse const*pTranslatedFuse, bool bDebug)
     {
         for (int l=0; l<=m_NXPanels; l++)
         {
-            makeSideNodeTask(l, pTranslatedFuse, m_xPointA.at(l), m_xPointB.at(l));
+            makeSideNodeTask(l, pTranslatedFuse, m_xPointA.at(l), m_xPointB.at(l), alpha_dA, alpha_dB);
         }
     }
     if(bDebug)
@@ -755,13 +741,13 @@ void Surface::makeSideNodes(Fuse const*pTranslatedFuse, bool bDebug)
 }
 
 
-void Surface::makeSideNodeTask(int l, Fuse const *pTranslatedFuse, double xRelA, double xRelB)
+void Surface::makeSideNodeTask(int l, Fuse const *pTranslatedFuse, double xRelA, double xRelB, double alpha_dA, double alpha_dB)
 {
     Vector3d I;
-    double cosdA = cos(tmp_alpha_dA);
-    double alpha_dA = tmp_alpha_dA * 180.0/PI;
-    double cosdB = cos(tmp_alpha_dB);
-    double alpha_dB = tmp_alpha_dB *180.0/PI;
+    double cosdA = cos(alpha_dA);
+    alpha_dA = alpha_dA * 180.0/PI;
+    double cosdB = cos(alpha_dB);
+    alpha_dB = alpha_dB *180.0/PI;
 
     Node node, nodeT, nodeB;
 

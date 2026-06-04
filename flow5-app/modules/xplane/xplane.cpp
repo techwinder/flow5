@@ -4893,11 +4893,11 @@ void XPlane::setPolar(PlanePolar *pPlPolar)
                 if(pPlaneXfl && m_pCurPlPolar->hasActiveFlap())
                 {
                     std::string strange;
-                    pPlaneXfl->setFlaps(m_pCurPlPolar, strange);
+                    pPlaneXfl->setFlaps(m_pCurPlPolar, 0.0, strange);
                 }
                 if(fabs(m_pCurPlPolar->phi())>AOAPRECISION)
                 {
-                    if(pPlaneXfl && m_pCurPlPolar->isQuadMethod())                pPlaneXfl->quadMesh().rotate(0,0,m_pCurPlPolar->phi());
+                    if(pPlaneXfl && m_pCurPlPolar->isQuadMethod())   pPlaneXfl->quadMesh().rotate(0,0,m_pCurPlPolar->phi());
                     else if(m_pCurPlPolar->isTriangleMethod())       m_pCurPlane->triMesh().rotate(0,0,m_pCurPlPolar->phi());
                 }
                 break;
@@ -5236,7 +5236,7 @@ PlaneOpp* XPlane::setPlaneOpp(PlaneOpp *pPOpp)
                 if(m_pCurPlPolar->hasActiveFlap())
                 {
                     std::string strange;
-                    pPlaneXfl->setFlaps(m_pCurPlPolar, strange);
+                    pPlaneXfl->setFlaps(m_pCurPlPolar, 0.0, strange);
                 }
                 break;
             }

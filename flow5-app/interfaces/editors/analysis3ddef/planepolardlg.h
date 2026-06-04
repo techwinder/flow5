@@ -40,7 +40,7 @@ class PlanePolarDlg : public Polar3dDlg
     public:
         PlanePolarDlg(QWidget *pParent);
 
-        static PlanePolar & staticWPolar() {return s_WPolar;}
+        static PlanePolar & staticWPolar() {return s_PlPolar;}
 
         static void loadSettings(QSettings &settings);
         static void saveSettings(QSettings &settings);
@@ -48,7 +48,7 @@ class PlanePolarDlg : public Polar3dDlg
     protected:
         virtual bool checkWPolarData();
         void enableControls() override;
-        virtual void initPolar3dDlg(const Plane *pPlane, const PlanePolar *pWPolar=nullptr);
+        virtual void initPolar3dDlg(const Plane *pPlane, const PlanePolar *pPlPolar=nullptr);
         void readData() override;
         void readFuseDragData();
         void readFluidProperties() override;
@@ -115,6 +115,6 @@ class PlanePolarDlg : public Polar3dDlg
         QFrame *m_pfrInterpolated, *m_pfrOntheFly;
         QCheckBox *m_pchViscousLoop;
 
-        static PlanePolar s_WPolar;
+        static PlanePolar s_PlPolar;
 };
 

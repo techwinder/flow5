@@ -1,7 +1,10 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-project(XFoilBatchRun LANGUAGES CXX)
+
+SET(API_EXAMPLE "XFoilBatchRun")
+project(${API_EXAMPLE} LANGUAGES CXX)
+
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -61,47 +64,47 @@ elseif(APPLE)
 
 endif ()
 
-add_executable(XFoilBatchRun xfoilbatchrun.cpp)
+add_executable(${API_EXAMPLE} xfoilbatchrun.cpp)
 
 
-target_link_libraries(XFoilBatchRun flow5-lib)
+target_link_libraries(${API_EXAMPLE} flow5-lib)
 if(FLOW5_IO)
-    target_link_libraries(XFoilBatchRun flow5-io-lib Qt6Core)
+    target_link_libraries(${API_EXAMPLE} flow5-io-lib Qt6Core)
 endif(FLOW5_IO)
 
 
 if(WIN32)
-    target_link_libraries(XFoilBatchRun XFoil1 flow5-io-lib)
-    target_link_libraries(XFoilBatchRun gmsh.dll.lib) # the file name is gmsh.dll.lib
+    target_link_libraries(${API_EXAMPLE} XFoil1 flow5-io-lib)
+    target_link_libraries(${API_EXAMPLE} gmsh.dll.lib) # the file name is gmsh.dll.lib
     if(USING_INTEL_MKL)
-        target_link_libraries(XFoilBatchRun mkl_rt)         # Intel® oneAPI Math Kernel Library Single Dynamic Library (SDL)
-#         target_link_libraries(XFoilBatchRun  libiomp5md ) # uses the OpenMP threading technology
-        target_link_libraries(XFoilBatchRun  tbb12 )        # uses the Intel TBB threading technology
+        target_link_libraries(${API_EXAMPLE} mkl_rt)         # Intel® oneAPI Math Kernel Library Single Dynamic Library (SDL)
+#         target_link_libraries(${API_EXAMPLE}  libiomp5md ) # uses the OpenMP threading technology
+        target_link_libraries(${API_EXAMPLE}  tbb12 )        # uses the Intel TBB threading technology
 
-        target_compile_definitions(XFoilBatchRun PUBLIC INTEL_MKL)
+        target_compile_definitions(${API_EXAMPLE} PUBLIC INTEL_MKL)
     endif()
 elseif (LINUX)
-    target_link_libraries(XFoilBatchRun XFoil)
-    target_link_libraries(XFoilBatchRun gmsh)
+    target_link_libraries(${API_EXAMPLE} XFoil)
+    target_link_libraries(${API_EXAMPLE} gmsh)
     if(USING_INTEL_MKL)
-        target_link_libraries(XFoilBatchRun mkl_core mkl_intel_lp64 mkl_gnu_thread)
-        target_compile_definitions(XFoilBatchRun PUBLIC INTEL_MKL)
+        target_link_libraries(${API_EXAMPLE} mkl_core mkl_intel_lp64 mkl_gnu_thread)
+        target_compile_definitions(${API_EXAMPLE} PUBLIC INTEL_MKL)
     else()
             # Fedora libs in /usr/lib64:
         #   openblas:  single-threaded library
         #   openblaso: built with USE_OPENMP=1
         #   openblasp: multi-threading without OMP
-        target_link_libraries(XFoilBatchRun openblasp)
-        target_compile_definitions(XFoilBatchRun PUBLIC OPENBLAS)
+        target_link_libraries(${API_EXAMPLE} openblasp)
+        target_compile_definitions(${API_EXAMPLE} PUBLIC OPENBLAS)
     endif()
 elseif (APPLE)
-    target_link_libraries(XFoilBatchRun XFoil lapack cblas gmsh)
-    target_compile_definitions(XFoilBatchRun PUBLIC ACCELERATE_NEW_LAPACK)
+    target_link_libraries(${API_EXAMPLE} XFoil lapack cblas gmsh)
+    target_compile_definitions(${API_EXAMPLE} PUBLIC ACCELERATE_NEW_LAPACK)
 endif ()
 
 
 include(GNUInstallDirs)
-install(TARGETS XFoilBatchRun
+install(TARGETS ${API_EXAMPLE}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

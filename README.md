@@ -21,7 +21,9 @@ It is version 7 of the legacy project xflr5.
 ## Implementation
 Please note that the API is still in an experimental state and subject to change. 
 
-The intent is to stabilize both the source code and the API by the end of 2026. Until then, expect major refactoring and deprecation or discontinuation of interfaces.
+The intent is to stabilize both the source code and the API by the end of 2026. 
+
+Even though the main part of the intended refactoring has been completed with v7.57, deprecation or even discontinuation of interfaces are still likely until the end of the year.
 
 ## Examples
 - XFoilRun: Construction of a NACA foil and calculation of a type 1 polar using XFoil.

@@ -950,11 +950,13 @@ void Graph::drawXGrid(QPainter &painter) const
         }
         else
         {
-            if      (m_XAxis.exponent()>0)   strLabel = QString(format).arg(xt, 6, 'f', 0);
+            if      (m_XAxis.exponent()>=0)  strLabel = QString(format).arg(xt, 6, 'f', 0);
             else if (m_XAxis.exponent()>=-1) strLabel = QString(format).arg(xt, 6, 'f', 1);
             else if (m_XAxis.exponent()>=-2) strLabel = QString(format).arg(xt, 6, 'f', 2);
             else if (m_XAxis.exponent()>=-3) strLabel = QString(format).arg(xt, 6, 'f', 3);
             else if (m_XAxis.exponent()>=-4) strLabel = QString(format).arg(xt, 7, 'f', 4);
+
+            strLabel = strLabel.trimmed();
 
             double w=0;
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 11, 0))
@@ -1014,8 +1016,8 @@ void Graph::drawXLogGrid(QPainter &painter) const
     if(!m_YAxis[0].bLogScale())
     {
         if(m_YAxis[0].origin()>=m_YAxis[0].axmin() && m_YAxis[0].origin()<=m_YAxis[0].axmax()) yp = m_YAxis[0].origin();
-        else if(m_YAxis[0].origin()>m_YAxis[0].axmax())                                 yp = m_YAxis[0].axmax();
-        else                                                                     yp = m_YAxis[0].axmin();
+        else if(m_YAxis[0].origin()>m_YAxis[0].axmax())                                        yp = m_YAxis[0].axmax();
+        else                                                                                   yp = m_YAxis[0].axmin();
     }
     else
     {

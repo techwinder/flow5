@@ -162,7 +162,7 @@ bool PlaneTask::initializeTask()
     {
         if(!m_pPlPolar->isViscOnTheFly())
         {
-            traceStdLog("Warning: XFoil on the fly calculations should be selected when TE flaps are active\n\n");
+            traceStdLog("Warning: XFoil on the fly calculations should be selected when T.E. flaps are active\n\n");
         }
     }
 
@@ -302,7 +302,7 @@ bool PlaneTask::initializeTask()
 
             std::string outstring;
             // rotate the flaps in position before connecting to prevent connections at flap edges if deflection is non-zero
-            if(pPlaneXfl) pPlaneXfl->setFlaps(m_pPlPolar, outstring);
+            if(pPlaneXfl) pPlaneXfl->setFlaps(m_pPlPolar, 0.0, outstring);
             traceStdLog(outstring);
 
             auto start = std::chrono::system_clock::now();
@@ -408,8 +408,8 @@ bool PlaneTask::initializeTask()
         }
     }
 
-    strange = std::format("Counted {:d} elements\n", m_pPA->nPanels());
-    strange += std::format("Matrix size = {:d}\n\n", m_pPA->matSize());
+    strange  = std::format("Counted {:d} elements\n", m_pPA->nPanels());
+    strange += std::format("Matrix size = {:d}\n\n",  m_pPA->matSize());
     traceStdLog(strange);
 
     if(isCancelled()) return false;
@@ -450,14 +450,14 @@ void PlaneTask::allocatePlaneResultArrays()
  }
 
 
-void PlaneTask::setObjects(Plane *pPlane, PlanePolar *pWPolar)
+ void PlaneTask::setObjects(Plane *pPlane, PlanePolar *pPlPolar)
 {
     m_pPlane = pPlane;
-    m_pPlPolar = pWPolar;
+    m_pPlPolar = pPlPolar;
     m_pPolar3d = m_pPlPolar;
 
     m_AF.resetAll();
-    m_AF.setReferenceDims(pWPolar->referenceArea(), pWPolar->referenceChordLength(), pWPolar->referenceSpanLength());
+    m_AF.setReferenceDims(pPlPolar->referenceArea(), pPlPolar->referenceChordLength(), pPlPolar->referenceSpanLength());
 
     PlaneXfl *pPlaneXfl = dynamic_cast<PlaneXfl*>(m_pPlane);
     if(pPlaneXfl)
@@ -1835,7 +1835,7 @@ PlaneOpp *PlaneTask::createPlaneOpp(double ctrl, double alpha, double beta, doub
         unsigned long N3 = N*3;
         if(Cp)    memcpy(pPOpp->m_Cp.data(),    Cp,      N3*sizeof(double));
         if(Gamma) memcpy(pPOpp->m_gamma.data(), Gamma,   N3*sizeof(double));
-        if(Sigma) memcpy(pPOpp->m_sigma.data(), Sigma,   N*sizeof(double));
+        if(Sigma) memcpy(pPOpp->m_sigma.data(), Sigma,   N *sizeof(double));
     }
     else if (m_pPlPolar->isQuadMethod())
     {
@@ -1929,75 +1929,109 @@ PlaneOpp *PlaneTask::createPlaneOpp(double ctrl, double alpha, double beta, doub
 
 bool PlaneTask::T7Loop()
 {
+    PlaneXfl *pPlaneXfl = dynamic_cast<PlaneXfl *>(m_pPlane);
+    if(!pPlaneXfl)
+    {
+        traceStdLog("Type 7 calculations are only available for xfl-type planes\nAborting\n\n");
+        return false;
+    }
+
     std::string str, outstring;
+    std::string log, strange;
 
     traceStdLog("\nSolving the problem... \n\n");
 
     m_pPA->m_nStations = m_pPlane->nStations();// for assertion checks only?
 
-    m_nRHS = 1;
-    m_qRHS = 0;
-
     m_Ctrl = 0.0;
     m_Beta = 0.0;
     m_Phi  = m_pPlPolar->phi();
 
-    m_pPA->makeWakePanels(objects::windDirection(0,0), false);
-
-    setLinearSolution();
-
-    traceStdLog("   Making unit panel velocities...");
-    m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0,0));
-    traceStdLog("   done\n");
-
-    Vector3d CoG = m_pPlPolar->CoGCtrl(m_Ctrl);
-    double mass = m_pPlPolar->massCtrl(m_Ctrl);
-
-    outstring.clear();
-
-    traceStdLog(outstring);
-    if(isCancelled()) return true;
-
-    // next find the balanced and trimmed conditions
-    double AlphaEq(0), u0(0);
-
-    traceStdLog("      Calculating trimmed conditions\n");
-
-    if(!m_pPA->computeTrimmedConditions(mass, CoG, AlphaEq, u0, m_pPlPolar->bFuseMi()))
+    for (m_qRHS=0; m_qRHS<m_nRHS; m_qRHS++)
     {
-        if(isCancelled()) return true;
-        //no zero moment alpha
-        str = std::format("      Unsuccessful attempt to trim the model for control position = {:.2f} - skipping.\n\n\n", m_Ctrl);
-        traceStdLog(str);
-        m_bError = true;
-    }
-    else
-    {
-        m_QInf = u0;
-
-        traceStdLog("      Calculating far field forces...\n");
-        computeInducedForces(AlphaEq, m_Beta, 1.0);
-        computeInducedDrag(AlphaEq, m_Beta, 1.0);
-        scaleResultsToSpeed(1.0, u0);
-
-        if (isCancelled()) return true;
-
-        str = "      Calculating Plane for "+ALPHAstr + std::format("={:.2f}", AlphaEq) + DEGstr + EOLstr;
-        traceStdLog(str);
-        PlaneOpp *pPOpp = computePlane(m_Ctrl, AlphaEq, m_Beta, m_Phi, u0, mass, CoG, false);
-        if(!pPOpp)
+        if(s_bCancel)
         {
-            traceStdLog("           Error generating the operating point... discarding\n\n");
-            return true;
+            m_AnalysisStatus = xfl::CANCELLED;
+            return false;
         }
 
-        if (isCancelled()) return true;
+        log.clear();
 
-        if(computeStability(pPOpp, true))
-        {          
-            storePOpp(pPOpp);
+        m_Ctrl = m_T7CtrlList.at(m_qRHS);
+        strange = std::format("\n   Processing control value= {:.3f}\n", m_Ctrl);
+        traceStdLog(strange);
+
+        m_pPlane->restoreMesh();
+        pPlaneXfl->setFlaps(m_pPlPolar, m_Ctrl, outstring);
+
+
+        if(m_pPlPolar->isQuadMethod())
+        {
+            m_pP4A->setQuadMesh(pPlaneXfl->quadMesh());
         }
-        traceStdLog("       Done operating point\n\n");
+
+        else if(m_pPlPolar->isTriangleMethod())
+        {
+            m_pP3A->setTriMesh(m_pPlane->triMesh());
+        }
+
+        m_pPA->makeWakePanels(objects::windDirection(0,0), false);
+
+        setLinearSolution();
+
+        traceStdLog("   Making unit panel velocities...");
+        m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0,0));
+        traceStdLog("   done\n");
+
+        Vector3d CoG = m_pPlPolar->CoGCtrl(m_Ctrl);
+        double mass = m_pPlPolar->massCtrl(m_Ctrl);
+
+        outstring.clear();
+
+        traceStdLog(outstring);
+        if(isCancelled()) return true;
+
+        // next find the balanced and trimmed conditions
+        double AlphaEq(0), u0(0);
+
+        traceStdLog("      Calculating trimmed conditions\n");
+
+        if(!m_pPA->computeTrimmedConditions(mass, CoG, AlphaEq, u0, m_pPlPolar->bFuseMi()))
+        {
+            if(isCancelled()) return true;
+            //no zero moment alpha
+            str = std::format("      Unsuccessful attempt to trim the model for control position = {:.2f} - skipping.\n\n\n", m_Ctrl);
+            traceStdLog(str);
+            m_bError = true;
+        }
+        else
+        {
+            m_QInf = u0;
+
+            traceStdLog("      Calculating far field forces...\n");
+            computeInducedForces(AlphaEq, m_Beta, 1.0);
+            computeInducedDrag(AlphaEq, m_Beta, 1.0);
+            scaleResultsToSpeed(1.0, u0);
+
+            if (isCancelled()) return true;
+
+            str = "      Calculating Plane for "+ALPHAstr + std::format("={:.2f}", AlphaEq) + DEGstr + EOLstr;
+            traceStdLog(str);
+            PlaneOpp *pPOpp = computePlane(m_Ctrl, AlphaEq, m_Beta, m_Phi, u0, mass, CoG, false);
+            if(!pPOpp)
+            {
+                traceStdLog("           Error generating the operating point... discarding\n\n");
+                return true;
+            }
+
+            if (isCancelled()) return true;
+
+            if(computeStability(pPOpp, true))
+            {
+                storePOpp(pPOpp);
+            }
+            traceStdLog("       Done operating point\n\n");
+        }
     }
 
     return true;

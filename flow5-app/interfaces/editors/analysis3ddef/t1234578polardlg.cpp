@@ -104,7 +104,7 @@ void T1234578PolarDlg::enableControls()
 
 //    m_prbType4->setEnabled(false);
 
-    switch (s_WPolar.type())
+    switch (s_PlPolar.type())
     {
         default:
         case xfl::T1POLAR:
@@ -164,17 +164,17 @@ void T1234578PolarDlg::enableControls()
         }
     }
 
-    m_pchViscAnalysis->setEnabled(s_WPolar.isPanelMethod());
+    m_pchViscAnalysis->setEnabled(s_PlPolar.isPanelMethod());
 
-    m_pfePlaneMass->setEnabled(!s_WPolar.bAutoInertia());
-    m_pfeXCoG->setEnabled(     !s_WPolar.bAutoInertia());
-    m_pfeZCoG->setEnabled(     !s_WPolar.bAutoInertia());
-    m_pfeIxx->setEnabled(      !s_WPolar.bAutoInertia());
-    m_pfeIyy->setEnabled(      !s_WPolar.bAutoInertia());
-    m_pfeIzz->setEnabled(      !s_WPolar.bAutoInertia());
-    m_pfeIxz->setEnabled(      !s_WPolar.bAutoInertia());
+    m_pfePlaneMass->setEnabled(!s_PlPolar.bAutoInertia());
+    m_pfeXCoG->setEnabled(     !s_PlPolar.bAutoInertia());
+    m_pfeZCoG->setEnabled(     !s_PlPolar.bAutoInertia());
+    m_pfeIxx->setEnabled(      !s_PlPolar.bAutoInertia());
+    m_pfeIyy->setEnabled(      !s_PlPolar.bAutoInertia());
+    m_pfeIzz->setEnabled(      !s_PlPolar.bAutoInertia());
+    m_pfeIxz->setEnabled(      !s_PlPolar.bAutoInertia());
 
-    if(s_WPolar.isBetaPolar())    m_prbVLM1Method->setEnabled(false);
+    if(s_PlPolar.isBetaPolar())    m_prbVLM1Method->setEnabled(false);
 }
 
 
@@ -183,11 +183,11 @@ void T1234578PolarDlg::initPolar3dDlg(const Plane *pPlane, const PlanePolar *pWP
     PlanePolarDlg::initPolar3dDlg(pPlane, pWPolar);
 
     if(pWPolar && pWPolar->isType6())
-        s_WPolar.setType(xfl::T1POLAR);
+        s_PlPolar.setType(xfl::T1POLAR);
 
-    if(s_WPolar.isType6()) s_WPolar.setType(xfl::T1POLAR);
+    if(s_PlPolar.isType6()) s_PlPolar.setType(xfl::T1POLAR);
 
-    switch(s_WPolar.type())
+    switch(s_PlPolar.type())
     {
         default:
         case xfl::T1POLAR:   m_prbType1->setChecked(true);   break;
@@ -200,39 +200,39 @@ void T1234578PolarDlg::initPolar3dDlg(const Plane *pPlane, const PlanePolar *pWP
     }
 
     // force viscous LLT
-    if(s_WPolar.isLLTMethod())
+    if(s_PlPolar.isLLTMethod())
     {
-        s_WPolar.setViscous(true);
+        s_PlPolar.setViscous(true);
         m_pchViscAnalysis->setChecked(true);
         m_prbViscFromCl->setChecked(true);
         m_prbViscFromAlpha->setChecked(false);
     }
 
     //initialize inertia
-    if(m_pPlane && s_WPolar.bAutoInertia())
+    if(m_pPlane && s_PlPolar.bAutoInertia())
     {
         fillInertiaPage();
-        s_WPolar.setMass(m_pPlane->totalMass());
-        s_WPolar.setCoG(m_pPlane->CoG_t());
+        s_PlPolar.setMass(m_pPlane->totalMass());
+        s_PlPolar.setCoG(m_pPlane->CoG_t());
     }
     else
     {
-        m_pfePlaneMass->setValue(s_WPolar.mass() * Units::kgtoUnit());
-        m_pfeXCoG->setValue(s_WPolar.CoG().x * Units::mtoUnit());
-        m_pfeZCoG->setValue(s_WPolar.CoG().z * Units::mtoUnit());
+        m_pfePlaneMass->setValue(s_PlPolar.mass() * Units::kgtoUnit());
+        m_pfeXCoG->setValue(s_PlPolar.CoG().x * Units::mtoUnit());
+        m_pfeZCoG->setValue(s_PlPolar.CoG().z * Units::mtoUnit());
     }
 
-    m_pfeQInf->setValue(s_WPolar.velocity()*Units::mstoUnit());
-    m_pfeAlphaSpec->setValue(s_WPolar.alphaSpec());
-    m_pfePhiSpec->setValue(s_WPolar.phi());
+    m_pfeQInf->setValue(s_PlPolar.velocity()*Units::mstoUnit());
+    m_pfeAlphaSpec->setValue(s_PlPolar.alphaSpec());
+    m_pfePhiSpec->setValue(s_PlPolar.phi());
 
 
-    m_pfePlaneMass->setValue(s_WPolar.mass()*Units::kgtoUnit());
+    m_pfePlaneMass->setValue(s_PlPolar.mass()*Units::kgtoUnit());
 
-    s_WPolar.setViscousLoop(false);
+    s_PlPolar.setViscousLoop(false);
     m_pchViscousLoop->setChecked(false);
 
-    disableVortonWake(s_WPolar);
+    disableVortonWake(s_PlPolar);
 
     setWingLoad();
     setReynolds();
@@ -244,8 +244,8 @@ void T1234578PolarDlg::initPolar3dDlg(const Plane *pPlane, const PlanePolar *pWP
 
     // for consistency with stab and control polars
     PlaneXfl const*pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pPlane);
-    s_WPolar.resetAngleRanges(pPlaneXfl);
-    s_WPolar.resizeFlapCtrls(pPlaneXfl);
+    s_PlPolar.resetAngleRanges(pPlaneXfl);
+    s_PlPolar.resizeFlapCtrls(pPlaneXfl);
 
     fillFlapControls();
     fillAVLCtrlList();
@@ -257,7 +257,7 @@ void T1234578PolarDlg::initPolar3dDlg(const Plane *pPlane, const PlanePolar *pWP
 
 void T1234578PolarDlg::setType7Polar()
 {
-    s_WPolar.setType(xfl::T7POLAR);
+    s_PlPolar.setType(xfl::T7POLAR);
 
     m_prbType1->setChecked(false);
     m_prbType2->setChecked(false);
@@ -284,9 +284,9 @@ void T1234578PolarDlg::onOK()
 
     if(!checkWPolarData()) return;
 
-    if(!s_WPolar.bAutoInertia())
+    if(!s_PlPolar.bAutoInertia())
     {
-        if(fabs(s_WPolar.mass())<PRECISION && s_WPolar.isFixedLiftPolar())
+        if(fabs(s_PlPolar.mass())<PRECISION && s_PlPolar.isFixedLiftPolar())
         {
             QMessageBox::warning(this, tr("Warning"), tr("Mass must be non-zero for type 2 polars"));
             m_pfePlaneMass->setFocus();
@@ -300,13 +300,13 @@ void T1234578PolarDlg::onOK()
 
 void T1234578PolarDlg::onPolarType()
 {
-    if     (m_prbType1->isChecked())    s_WPolar.setType(xfl::T1POLAR);
-    else if(m_prbType2->isChecked())    s_WPolar.setType(xfl::T2POLAR);
-    else if(m_prbType3->isChecked())    s_WPolar.setType(xfl::T3POLAR);
-    else if(m_prbType4->isChecked())    s_WPolar.setType(xfl::T4POLAR);
-    else if(m_prbType5->isChecked())    s_WPolar.setType(xfl::T5POLAR);
-    else if(m_prbType7->isChecked())    s_WPolar.setType(xfl::T7POLAR);
-    else if(m_prbType8->isChecked())    s_WPolar.setType(xfl::T8POLAR);
+    if     (m_prbType1->isChecked())    s_PlPolar.setType(xfl::T1POLAR);
+    else if(m_prbType2->isChecked())    s_PlPolar.setType(xfl::T2POLAR);
+    else if(m_prbType3->isChecked())    s_PlPolar.setType(xfl::T3POLAR);
+    else if(m_prbType4->isChecked())    s_PlPolar.setType(xfl::T4POLAR);
+    else if(m_prbType5->isChecked())    s_PlPolar.setType(xfl::T5POLAR);
+    else if(m_prbType7->isChecked())    s_PlPolar.setType(xfl::T7POLAR);
+    else if(m_prbType8->isChecked())    s_PlPolar.setType(xfl::T8POLAR);
 
     enableControls();
     setReynolds();
@@ -318,11 +318,11 @@ void T1234578PolarDlg::readData()
 {
     PlanePolarDlg::readData();
 
-    s_WPolar.setThinSurfaces(m_prbThinSurfaces->isChecked());
-    if(s_WPolar.isVLM()) s_WPolar.setThinSurfaces(true);
+    s_PlPolar.setThinSurfaces(m_prbThinSurfaces->isChecked());
+    if(s_PlPolar.isVLM()) s_PlPolar.setThinSurfaces(true);
 
-    s_WPolar.setBeta(0.0);
-    if(fabs(s_WPolar.betaSpec())>PRECISION)
+    s_PlPolar.setBeta(0.0);
+    if(fabs(s_PlPolar.betaSpec())>PRECISION)
     {
         if(m_prbVLM1Method->isChecked())
         {
@@ -337,11 +337,11 @@ void T1234578PolarDlg::readData()
     onFlapControls();
     readInertiaData();
 
-    s_WPolar.setVelocity(m_pfeQInf->value() / Units::mstoUnit());
-    s_WPolar.setAlphaSpec(m_pfeAlphaSpec->value());
-    s_WPolar.setPhi(m_pfePhiSpec->value());
+    s_PlPolar.setVelocity(m_pfeQInf->value() / Units::mstoUnit());
+    s_PlPolar.setAlphaSpec(m_pfeAlphaSpec->value());
+    s_PlPolar.setPhi(m_pfePhiSpec->value());
 
-    s_WPolar.setGroundHeight(m_pfeHeight->value() / Units::mtoUnit());
+    s_PlPolar.setGroundHeight(m_pfeHeight->value() / Units::mtoUnit());
 
     setWingLoad();
 }
@@ -579,9 +579,9 @@ void T1234578PolarDlg::setWingLoad()
 {
     QString str,str1, str2;
 
-    if(s_WPolar.referenceArea()>0)
+    if(s_PlPolar.referenceArea()>0)
     {
-        double WingLoad = s_WPolar.mass()/s_WPolar.referenceArea();//kg/dm2
+        double WingLoad = s_PlPolar.mass()/s_PlPolar.referenceArea();//kg/dm2
 
         str = tr("Wing loading = ") + QString::asprintf("%.3f ", WingLoad * Units::kgtoUnit() / Units::m2toUnit());
 
@@ -604,27 +604,27 @@ void T1234578PolarDlg::setReynolds()
         return;
     }
 
-    if(s_WPolar.isFixedSpeedPolar())
+    if(s_PlPolar.isFixedSpeedPolar())
     {
-        double RRe = m_pPlane->rootChord() * s_WPolar.velocity()/s_WPolar.viscosity();
+        double RRe = m_pPlane->rootChord() * s_PlPolar.velocity()/s_PlPolar.viscosity();
         strange =  tr("Root Re = %1").arg(RRe, 0, 'f', 0);
         lab = strange.rightJustified(37, ' ') + EOLch;
-        double SRe = m_pPlane->tipChord() * s_WPolar.velocity()/s_WPolar.viscosity();
+        double SRe = m_pPlane->tipChord() * s_PlPolar.velocity()/s_PlPolar.viscosity();
         strange = tr("Tip Re   = %1").arg(SRe, 0, 'f', 0);
         lab += strange.rightJustified(37, ' ');
         m_plabReInfo->setText(lab);
     }
-    else if(s_WPolar.isFixedLiftPolar())
+    else if(s_PlPolar.isFixedLiftPolar())
     {
-        double QCl = sqrt(2.* 9.81 /s_WPolar.density()* s_WPolar.mass() /s_WPolar.referenceArea());
+        double QCl = sqrt(2.* 9.81 /s_PlPolar.density()* s_PlPolar.mass() /s_PlPolar.referenceArea());
         strange = tr("V") + INFch + tr(".sqrt(Cl) = %1").arg(QCl, 0, 'f', 3) + strUnit;
         lab = strange.rightJustified(37, ' ') + EOLch;
 
-        double RRe = m_pPlane->rootChord() * QCl/s_WPolar.viscosity();
+        double RRe = m_pPlane->rootChord() * QCl/s_PlPolar.viscosity();
         strange = tr("Root Re.sqrt(Cl) = %1").arg(RRe, 0, 'f', 0);
         lab += strange.rightJustified(37, ' ') + EOLch;
 
-        double SRe = m_pPlane->tipChord() * QCl/s_WPolar.viscosity();
+        double SRe = m_pPlane->tipChord() * QCl/s_PlPolar.viscosity();
         strange = tr("Tip Re.sqrt(Cl) = %1").arg(SRe, 0, 'f', 0);
         lab += strange.rightJustified(37, ' ');
 
@@ -649,10 +649,10 @@ void T1234578PolarDlg::onAVLRowChanged(QModelIndex index)
 
     int row = index.row();
 
-    if(row==s_WPolar.nAVLCtrls())
+    if(row==s_PlPolar.nAVLCtrls())
     {
-        s_WPolar.addAVLControl();
-        s_WPolar.AVLCtrl(row).resizeValues(pPlaneXfl->nAVLGains());
+        s_PlPolar.addAVLControl();
+        s_PlPolar.AVLCtrl(row).resizeValues(pPlaneXfl->nAVLGains());
     }
 
     fillAVLGains();
@@ -669,13 +669,13 @@ void T1234578PolarDlg::fillAVLCtrlList()
         return;
     }
 
-    m_pAVLCtrlModel->setRowCount(s_WPolar.nAVLCtrls());
+    m_pAVLCtrlModel->setRowCount(s_PlPolar.nAVLCtrls());
     QModelIndex ind;
 
-    for(int ic=0; ic<s_WPolar.nAVLCtrls(); ic++)
+    for(int ic=0; ic<s_PlPolar.nAVLCtrls(); ic++)
     {
         ind = m_pAVLCtrlModel->index(ic, 0, QModelIndex());
-        m_pAVLCtrlModel->setData(ind, QString::fromStdString(s_WPolar.AVLCtrlName(ic)));
+        m_pAVLCtrlModel->setData(ind, QString::fromStdString(s_PlPolar.AVLCtrlName(ic)));
     }
 }
 
@@ -698,7 +698,7 @@ void T1234578PolarDlg::fillAVLGains()
     int iCtrl = idx.row();
 
 
-    AngleControl const &avlc = s_WPolar.m_AVLControls.at(iCtrl);
+    AngleControl const &avlc = s_PlPolar.m_AVLControls.at(iCtrl);
 
     m_pAVLGainModel->setRowCount(avlc.nValues());
 
@@ -716,7 +716,7 @@ void T1234578PolarDlg::fillAVLGains()
 
 void T1234578PolarDlg::readAVLCtrls()
 {
-    s_WPolar.clearAVLCtrls();
+    s_PlPolar.clearAVLCtrls();
 
     PlaneXfl const *pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pPlane);
     if(!pPlaneXfl) return;
@@ -731,7 +731,7 @@ void T1234578PolarDlg::readAVLCtrls()
         {
             avlc.setValue(ig, m_pAVLGainModel->index(ig, 1, QModelIndex()).data().toDouble());
         }
-        s_WPolar.addAVLControl(avlc);
+        s_PlPolar.addAVLControl(avlc);
     }
 }
 
@@ -786,11 +786,11 @@ void T1234578PolarDlg::onAppendAVLCtrl()
     if(!pPlaneXfl) return;
 
     AngleControl avlc;
-    avlc.setName((tr("new control_%1").arg(s_WPolar.nAVLCtrls()+1)).toStdString());
+    avlc.setName((tr("new control_%1").arg(s_PlPolar.nAVLCtrls()+1)).toStdString());
     avlc.resizeValues(pPlaneXfl->nAVLGains());
-    s_WPolar.addAVLControl(avlc);
+    s_PlPolar.addAVLControl(avlc);
     fillAVLCtrlList();
-    QModelIndex ind = m_pAVLCtrlModel->index(s_WPolar.nAVLCtrls()-1, 0);
+    QModelIndex ind = m_pAVLCtrlModel->index(s_PlPolar.nAVLCtrls()-1, 0);
     m_pcptAVLCtrls->setCurrentIndex(ind);
     fillAVLGains();
 }
@@ -803,8 +803,8 @@ void T1234578PolarDlg::onDuplicateAVLCtrl()
     QModelIndex ind = m_pcptAVLCtrls->selectionModel()->currentIndex();
     if(!ind.isValid()) return;
 
-    AngleControl avlc = s_WPolar.AVLCtrl(ind.row());
-    s_WPolar.insertAVLControl(ind.row()+1,avlc);
+    AngleControl avlc = s_PlPolar.AVLCtrl(ind.row());
+    s_PlPolar.insertAVLControl(ind.row()+1,avlc);
     fillAVLCtrlList();
     ind = m_pAVLCtrlModel->index(ind.row()+1, 0);
     m_pcptAVLCtrls->setCurrentIndex(ind);
@@ -820,9 +820,9 @@ void T1234578PolarDlg::onDeleteAVLCtrl()
     QModelIndex ind = m_pcptAVLCtrls->selectionModel()->currentIndex();
     if(!ind.isValid()) return;
     int iCtrl = ind.row();
-    if(iCtrl>=0 && iCtrl<s_WPolar.nAVLCtrls())
+    if(iCtrl>=0 && iCtrl<s_PlPolar.nAVLCtrls())
     {
-        s_WPolar.removeAVLControl(iCtrl);
+        s_PlPolar.removeAVLControl(iCtrl);
     }
     fillAVLCtrlList();
 }
@@ -834,9 +834,9 @@ void T1234578PolarDlg::onAVLCtrlChanged()
     if(!ind.isValid()) return;
 
     int iCtrl = ind.row();
-    if(iCtrl<0 || iCtrl>=s_WPolar.nAVLCtrls()) return;
+    if(iCtrl<0 || iCtrl>=s_PlPolar.nAVLCtrls()) return;
 
-    AngleControl &avlc = s_WPolar.AVLCtrl(iCtrl);
+    AngleControl &avlc = s_PlPolar.AVLCtrl(iCtrl);
     std::string name = m_pAVLCtrlModel->index(iCtrl, 0, QModelIndex()).data().toString().toStdString();
     avlc.setName(name);
 }
@@ -851,9 +851,9 @@ void T1234578PolarDlg::onAVLGainChanged()
     if(!ind.isValid()) return;
 
     int iCtrl = ind.row();
-    if(iCtrl<0 || iCtrl>=s_WPolar.nAVLCtrls()) return;
+    if(iCtrl<0 || iCtrl>=s_PlPolar.nAVLCtrls()) return;
 
-    AngleControl &avlc = s_WPolar.AVLCtrl(iCtrl);
+    AngleControl &avlc = s_PlPolar.AVLCtrl(iCtrl);
     std::string name = m_pAVLCtrlModel->index(iCtrl, 0, QModelIndex()).data().toString().toStdString();
     avlc.setName(name);
     avlc.resizeValues(pPlaneXfl->nAVLGains());
@@ -878,20 +878,20 @@ void T1234578PolarDlg::onMoveAVLCtrl()
     {
         if(sel>0)
         {
-            AngleControl ctrl = s_WPolar.AVLCtrl(sel);
-            s_WPolar.removeAVLControl(sel);
+            AngleControl ctrl = s_PlPolar.AVLCtrl(sel);
+            s_PlPolar.removeAVLControl(sel);
             sel--;
-            s_WPolar.insertAVLControl(sel, ctrl);
+            s_PlPolar.insertAVLControl(sel, ctrl);
         }
     }
     else
     {
-        if(ind.row()<s_WPolar.nAVLCtrls()-1)
+        if(ind.row()<s_PlPolar.nAVLCtrls()-1)
         {
-            AngleControl ctrl = s_WPolar.AVLCtrl(sel);
-            s_WPolar.removeAVLControl(sel);
+            AngleControl ctrl = s_PlPolar.AVLCtrl(sel);
+            s_PlPolar.removeAVLControl(sel);
             sel++;
-            s_WPolar.insertAVLControl(sel, ctrl);
+            s_PlPolar.insertAVLControl(sel, ctrl);
         }
     }
     fillAVLCtrlList();

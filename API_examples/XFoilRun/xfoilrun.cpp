@@ -25,15 +25,12 @@ int main()
     // Using seperate methods for creating and storing
     // Create
     Foil *pFoil2410 = new Foil;
-    if(!Objects2d::makeNacaFoil(pFoil2410, 2410, 200))
-    {
-        if(pFoil2410) delete pFoil2410;
-        return 0;
-    }
+    Objects2d::makeNacaFoil(pFoil2410, 2410, 200);
+    LineStyle ls = {true, Line::SOLID, 2, {155,31,71}, Line::NOSYMBOL};
+    pFoil2410->setTheStyle(ls);
     pFoil2410->setName("NACA 2410");
-
     // Store
-    Objects2d::insertThisFoil(pFoil2410);
+    Objects2d::insertThisFoil(pFoil2410);    
     std::cout <<"The foil "<< pFoil2410-> name() <<" has been created and added to the database" << std::endl<< std::endl;
 
     //    std::string coords = pFoil2410->listCoords();
@@ -103,7 +100,7 @@ int main()
 
     // print the content of the database if needed
 /*    for(OpPoint const *pOpp : Objects2d::operatingPoints())
-     {        *
+     {
      // filter on the foil and polar names (not necessary here)
      if(pOpp->foilName()==pFoil2410->name() && pOpp->polarName()==pPolar->name())
          printf("alpha=%5.2f, Cl=%9.5f, Cd=%9.5f\n", pOpp->m_Alpha, pOpp->m_Cl, pOpp->m_Cd);
@@ -122,6 +119,9 @@ int main()
     projectfilepath  = std::filesystem::temp_directory_path().string();
     projectfilepath += std::filesystem::path::preferred_separator;
     projectfilepath += "XFoilRun.fl5";
+
+    // the operating points are not saved by defaults, so change this
+    io::setSaveFoilOpps(true);
 
     if(!io::saveProject(projectfilepath, logmsg))
     {

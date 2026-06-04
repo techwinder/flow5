@@ -65,9 +65,9 @@ class FL5IOLIB_EXPORT FileIO : public QObject
         static bool bPOpps()  {return s_bSavePOpps;}
         static bool bBtOpps() {return s_bSaveBtOpps;}
 
-        static void saveOpps(bool b)   {s_bSaveOpps  =b;}
-        static void savePOpps(bool b)  {s_bSavePOpps =b;}
-        static void saveBtOpps(bool b) {s_bSaveBtOpps=b;}
+        static void setSaveFoilOpps( bool b) {s_bSaveOpps  =b;}
+        static void setSavePlaneOpps(bool b) {s_bSavePOpps =b;}
+        static void setSaveBoatOpps( bool b) {s_bSaveBtOpps=b;}
 
 
     private:

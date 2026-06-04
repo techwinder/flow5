@@ -66,6 +66,16 @@ struct TaskReport
 };
 
 
+struct VortonData
+{
+    // temp variables used in the parallelization of vorton row advects
+    double const *m_Mu=nullptr;
+    double const *m_Sigma=nullptr;
+    double m_dt=0.0;
+    double m_Vortonwakelength=0.0;
+    Vector3d m_VInf;
+};
+
 
 class FL5LIB_EXPORT Task3d
 {
@@ -92,7 +102,7 @@ class FL5LIB_EXPORT Task3d
         int nRHS() const {return m_nRHS;}
 
         void advectVortons(double alpha, double beta, double QInf, int qrhs);
-        void advectVortonRow(std::vector<Vorton> *thisrow);
+        void advectVortonRow(std::vector<Vorton> *thisrow, const VortonData &data);
 
 
         void stopVPWIterations() {m_bStopVPWIterations = true;}
@@ -145,11 +155,7 @@ class FL5LIB_EXPORT Task3d
         xfl::enumAnalysisStatus m_AnalysisStatus;
 
         // temp variables used in the parallelization of vorton row advects
-        double const *tmp_Mu;
-        double const *tmp_Sigma;
-        double tmp_dt;
-        double tmp_vortonwakelength;
-        Vector3d tmp_VInf;
+        VortonData m_VortonData;
 
         bool m_bKeepOpps;
         bool m_bStdOut;

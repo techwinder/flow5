@@ -60,56 +60,56 @@ std::string PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const 
     {
         switch(pWPolar->type())
         {
-        case xfl::T1POLAR:
-        {
-            plrname = std::format("-T1-{:.1f} ", pWPolar->velocity() * Units::mstoUnit());
-            plrname += strSpeedUnit;
-            break;
-        }
-        case xfl::T2POLAR:
-        {
-            plrname = "-T2";
-            break;
-        }
-        case xfl::T3POLAR:
-        {
-            plrname = "-T3";
-            break;
-        }
-        case xfl::T4POLAR: // deprecated, unused
-        {
-            plrname = "-T4-" + ALPHAstr + std::format("{:.1f}",pWPolar->alphaSpec()) + DEGstr;
-            break;
-        }
-        case xfl::T5POLAR:
-        {
-            plrname = "-T5-" + ALPHAstr + std::format("{:.1f}", pWPolar->alphaSpec())+DEGstr;
-            plrname += std::format("-{:.1f}",pWPolar->velocity() * Units::mstoUnit());
-            plrname += strSpeedUnit;
-            break;
-        }
-        case xfl::T6POLAR:
-        {
-            plrname = "-T6";
-            if(pWPolar->isAdjustedVelocity()) plrname+="/2";
-            else                              plrname+="/1";
-            break;
-        }
-        case xfl::T7POLAR:
-        {
-            plrname = "-T7";
-            break;
-        }
-        case xfl::T8POLAR:
-        {
-            plrname = "-T8";
-            break;
-        }
-        default:
-        {
-            plrname = "-Tx";
-            break;
-        }
+            case xfl::T1POLAR:
+            {
+                plrname = std::format("-T1-{:.1f} ", pWPolar->velocity() * Units::mstoUnit());
+                plrname += strSpeedUnit;
+                break;
+            }
+            case xfl::T2POLAR:
+            {
+                plrname = "-T2";
+                break;
+            }
+            case xfl::T3POLAR:
+            {
+                plrname = "-T3";
+                break;
+            }
+            case xfl::T4POLAR: // deprecated, unused
+            {
+                plrname = "-T4-" + ALPHAstr + std::format("{:.1f}",pWPolar->alphaSpec()) + DEGstr;
+                break;
+            }
+            case xfl::T5POLAR:
+            {
+                plrname = "-T5-" + ALPHAstr + std::format("{:.1f}", pWPolar->alphaSpec())+DEGstr;
+                plrname += std::format("-{:.1f}",pWPolar->velocity() * Units::mstoUnit());
+                plrname += strSpeedUnit;
+                break;
+            }
+            case xfl::T6POLAR:
+            {
+                plrname = "-T6";
+                if(pWPolar->isAdjustedVelocity()) plrname+="/2";
+                else                              plrname+="/1";
+                break;
+            }
+            case xfl::T7POLAR:
+            {
+                plrname = "-T7";
+                break;
+            }
+            case xfl::T8POLAR:
+            {
+                plrname = "-T8";
+                break;
+            }
+            default:
+            {
+                plrname = "-Tx";
+                break;
+            }
         }
     }
 
@@ -245,25 +245,23 @@ std::string PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const 
 
         switch(pWPolar->type())
         {
-        case xfl::T1POLAR:
-        case xfl::T2POLAR:
-        case xfl::T3POLAR:
-        case xfl::T5POLAR:
-        case xfl::T8POLAR:
-            if(pWPolar->hasActiveFlap())
-            {
-                if(pWPolar->flapCtrlsName().length()!=0)
-                    plrname += "-" + pWPolar->flapCtrlsName();
-            }
-            break;
-        case xfl::T6POLAR:
-            plrname += rangeControlNames(pPlaneXfl, pWPolar);
-            break;
-        case xfl::T7POLAR:
-            plrname += stabilityControlNames(pPlaneXfl, pWPolar);
-            break;
-        default:
-            break;
+            case xfl::T1POLAR:
+            case xfl::T2POLAR:
+            case xfl::T3POLAR:
+            case xfl::T5POLAR:
+            case xfl::T7POLAR:
+            case xfl::T8POLAR:
+                if(pWPolar->hasActiveFlap())
+                {
+                    if(pWPolar->flapCtrlsName().length()!=0)
+                        plrname += "-" + pWPolar->flapCtrlsName();
+                }
+                break;
+            case xfl::T6POLAR:
+                plrname += rangeControlNames(pPlaneXfl, pWPolar);
+                break;
+            default:
+                break;
         }
     }
 
@@ -322,48 +320,6 @@ std::string PlanePolarNameMaker::makeName(Plane const *pPlane, PlanePolar const 
 
     plrname = plrname.substr(1); //remove first character
 
-    return plrname;
-}
-
-
-std::string PlanePolarNameMaker::stabilityControlNames(const PlaneXfl *pPlane, const PlanePolar *pWPolar)
-{
-    if(!pPlane) return std::string();
-    if(!pWPolar || !pWPolar->isStabilityPolar()) return std::string();
-
-    std::string plrname;
-    /*
-    for(int iw=0; iw<pWPolar->m_AngleGain.size(); iw++)
-    {
-        bool bHasGain = false;
-        for(int ictrl=0; ictrl<pWPolar->m_AngleGain.at(iw).size(); ictrl++)
-        {
-            if(fabs(pWPolar->m_AngleGain.at(iw).at(ictrl))>ANGLEPRECISION)
-            {
-                bHasGain = true;
-                break;
-            }
-        }
-
-        if(bHasGain)
-        {
-            plrname += "-["+pPlane->wingAt(iw)->name();
-            if(pWPolar->m_AngleGain.at(iw).size()>0 && fabs(pWPolar->m_AngleGain.at(iw).at(0))>ANGLEPRECISION)
-            {
-                strong = std::format("(g{:.1f})", pWPolar->angleGain(iw,0));
-                plrname += "_"+strong;
-            }
-            for(int iFlap=1; iFlap<pWPolar->m_AngleGain.at(iw).size(); iFlap++)
-            {
-                if(fabs(pWPolar->angleGain(iw, iFlap))>ANGLEPRECISION)
-                {
-                    strong = std::format("F{:d}(g{:.1f})", iFlap, pWPolar->angleGain(iw, iFlap));
-                    plrname += "_"+strong;
-                }
-            }
-            plrname +="]";
-        }
-    }*/
     return plrname;
 }
 

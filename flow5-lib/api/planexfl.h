@@ -245,7 +245,7 @@ class FL5LIB_EXPORT PlaneXfl : public Plane
         int nFlaps(int iWing) const;
         int nFlaps() const;
         double flapPosition(const AngleControl &avlc, int iWing, int iFlap) const;
-        void setFlaps(PlanePolar const *pWPolar, std::string &outstring);
+        void setFlaps(PlanePolar const *pPlPolar, double ctrl, std::string &outstring);
 
         void setRangePositions4(PlanePolar const *pWPolar, double t, std::string &outstr);
         void setRangePositions3(PlanePolar const *pWPolar, double t, std::string &outstring);

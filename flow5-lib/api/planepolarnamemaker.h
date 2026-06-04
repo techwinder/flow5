@@ -41,7 +41,6 @@ class FL5LIB_EXPORT PlanePolarNameMaker
         PlanePolarNameMaker();
         static std::string makeName(const Plane *pPlane, const PlanePolar *pWPolar);
         static std::string rangeControlNames(const PlaneXfl *pPlane, const PlanePolar *pWPolar);
-        static std::string stabilityControlNames(PlaneXfl const *pPlane, PlanePolar const *pWPolar);
 
     private:
 

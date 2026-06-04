@@ -52,7 +52,7 @@
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 
-PlanePolar PlanePolarDlg::s_WPolar;
+PlanePolar PlanePolarDlg::s_PlPolar;
 
 
 
@@ -75,13 +75,13 @@ void PlanePolarDlg::makeCommonControls()
             m_pchAutoInertia = new QCheckBox(tr("Auto inertia"));
             QGridLayout *pInertiaDataLayout = new QGridLayout;
             {
-                pInertiaDataLayout->addWidget(new QLabel(tr("Plane mass =")), 1,1, Qt::AlignVCenter | Qt::AlignRight);
-                pInertiaDataLayout->addWidget(new QLabel(tr("X_CoG =")),      2,1, Qt::AlignVCenter | Qt::AlignRight);
-                pInertiaDataLayout->addWidget(new QLabel(tr("Z_CoG =")),      3,1, Qt::AlignVCenter | Qt::AlignRight);
-                pInertiaDataLayout->addWidget(new QLabel(tr("Ixx   =")),      4,1, Qt::AlignVCenter | Qt::AlignRight);
-                pInertiaDataLayout->addWidget(new QLabel(tr("Iyy   =")),      5,1, Qt::AlignVCenter | Qt::AlignRight);
-                pInertiaDataLayout->addWidget(new QLabel(tr("Izz   =")),      6,1, Qt::AlignVCenter | Qt::AlignRight);
-                pInertiaDataLayout->addWidget(new QLabel(tr("Ixz   =")),      7,1, Qt::AlignVCenter | Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("Plane mass =")), 1,1, Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("X_CoG =")),      2,1, Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("Z_CoG =")),      3,1, Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("Ixx   =")),      4,1, Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("Iyy   =")),      5,1, Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("Izz   =")),      6,1, Qt::AlignRight);
+                pInertiaDataLayout->addWidget(new QLabel(tr("Ixz   =")),      7,1, Qt::AlignRight);
                 m_pfePlaneMass  = new FloatEdit;
                 m_pfeXCoG = new FloatEdit;
                 m_pfeZCoG = new FloatEdit;
@@ -387,7 +387,7 @@ void PlanePolarDlg::makeCommonControls()
             m_pFlapModel->setColumnCount(2);
 
             QStringList labels;
-            labels << tr("Wing flap") << tr("Angle (") + DEGch + tr(")");
+            labels << tr("Wing flap") << tr("Angle (°)"); // temporary, will be updated depending on polar type
             m_pFlapModel->setHorizontalHeaderLabels(labels);
             m_pFlapModel->setHeaderData(0, Qt::Horizontal, Qt::AlignCenter, Qt::TextAlignmentRole);
             m_pFlapModel->setHeaderData(1, Qt::Horizontal, Qt::AlignCenter, Qt::TextAlignmentRole);
@@ -401,12 +401,13 @@ void PlanePolarDlg::makeCommonControls()
             m_pFlapDelegate->setPrecision({-1,3});
             m_pFlapTreeView->setItemDelegate(m_pFlapDelegate);
 
-            QLabel* plabNotes = new QLabel(tr("Notes:\n"
-                                           "\t(1) + sign means trailing edge down\n"
-                                           "\t(2) Flaps are numbered from left tip to right tip\n"
-                                           "\t(3) Use in conjunction with THIN surfaces\n"
-                                           "\t(4) Use in conjunction with XFoil on the fly calculations"));
-
+            QString notes = tr("Notes:\n"
+                               "\t(1) + sign means trailing edge down\n"
+                               "\t(2) Flaps are numbered from left tip to right tip\n"
+                               "\t(3) Use in conjunction with THIN surfaces\n"
+                               "\t(4) Use in conjunction with XFoil on the fly calculations\n"
+                               "\t(5) In the case of type 7, the values are interpreted as gains (°) / ctrl unit");
+            QLabel* plabNotes = new QLabel(notes);
             QLabel *pFlow5Link = new QLabel;
             pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Analysis/Flaps.html>https://flow5.tech/docs/flow5_doc/Analysis/Flaps.html</a>");
             pFlow5Link->setOpenExternalLinks(true);
@@ -433,10 +434,11 @@ void PlanePolarDlg::fillFlapControls()
         return;
     }
 
-    if(s_WPolar.nFlapCtrls() != pPlaneXfl->nWings())
-        s_WPolar.resizeFlapCtrls(pPlaneXfl); // cleaning up
+    if(s_PlPolar.nFlapCtrls() != pPlaneXfl->nWings())
+        s_PlPolar.resizeFlapCtrls(pPlaneXfl); // cleaning up
 
-    m_pleFlapSetName->setText(QString::fromStdString(s_WPolar.flapCtrlsName()));
+    std::string flapsetname = s_PlPolar.flapCtrlsName();
+    m_pleFlapSetName->setText(QString::fromStdString(flapsetname));
     m_pleFlapSetName->selectAll();
 
     QStandardItem *pRootItem = m_pFlapModel->invisibleRootItem();
@@ -446,7 +448,7 @@ void PlanePolarDlg::fillFlapControls()
     for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
     {
         WingXfl const *pWing = pPlaneXfl->wingAt(iw);
-        AngleControl const &avlc = s_WPolar.flapCtrls(iw);
+        AngleControl const &avlc = s_PlPolar.flapCtrls(iw);
         QList<QStandardItem *> pWingRowItems;
         pWingRowItems << new QStandardItem(QString::fromStdString(pWing->name())) << new QStandardItem(QString());
         pRootItem->appendRow(pWingRowItems);
@@ -509,65 +511,65 @@ void PlanePolarDlg::connectSignals()
 
 void PlanePolarDlg::onReset()
 {
-    s_WPolar.setDefaultSpec(m_pPlane);
-    initPolar3dDlg(m_pPlane, &s_WPolar);
+    s_PlPolar.setDefaultSpec(m_pPlane);
+    initPolar3dDlg(m_pPlane, &s_PlPolar);
     m_bAutoName = true;
     m_pchAutoName->setChecked(true);
     setPolar3dName();
 }
 
 
-void PlanePolarDlg::initPolar3dDlg(const Plane *pPlane, PlanePolar const *pWPolar)
+void PlanePolarDlg::initPolar3dDlg(const Plane *pPlane, PlanePolar const *pPlPolar)
 {
     m_pPlane = pPlane;
 
     if(m_pPlane)
-        s_WPolar.setPlaneName(m_pPlane->name());
+        s_PlPolar.setPlaneName(m_pPlane->name());
     else
-        s_WPolar.setPlaneName("");
-    m_plabParentObjectName->setText(QString::fromStdString(s_WPolar.planeName()));
+        s_PlPolar.setPlaneName("");
+    m_plabParentObjectName->setText(QString::fromStdString(s_PlPolar.planeName()));
 
-    if(pWPolar)
+    if(pPlPolar)
     {
         m_bAutoName = false;
         m_pchAutoName->setChecked(false);
-        s_WPolar.duplicateSpec(pWPolar);
-        s_WPolar.setName(pWPolar->name());
-        s_WPolar.setPlaneName(pWPolar->planeName());
+        s_PlPolar.duplicateSpec(pPlPolar);
+        s_PlPolar.setName(pPlPolar->name());
+        s_PlPolar.setPlaneName(pPlPolar->planeName());
     }
     else
     {
         m_pchAutoName->setChecked(true);
     }
 
-    m_plePolarName->setText(QString::fromStdString(s_WPolar.name()));
+    m_plePolarName->setText(QString::fromStdString(s_PlPolar.name()));
 
     checkMethods();
 
-    m_pchIncludeWingTipMi->setChecked(s_WPolar.bWingTipMi());
+    m_pchIncludeWingTipMi->setChecked(s_PlPolar.bWingTipMi());
 
     m_pchViscAnalysis->setEnabled(true);
-    m_pchViscAnalysis->setChecked(s_WPolar.isViscous());
-    m_prbViscInterpolated->setChecked(s_WPolar.isViscInterpolated());
-    m_prbViscOnTheFly->setChecked(!s_WPolar.isViscInterpolated());
-    m_prbViscFromCl->setChecked(s_WPolar.isViscFromCl());
-    m_prbViscFromAlpha->setChecked(!s_WPolar.isViscFromCl());
-    m_pfeNCrit ->setValuef(s_WPolar.NCrit());
-    m_pfeXTopTr->setValue(s_WPolar.XTrTop()*100.0);
-    m_pfeXBotTr->setValue(s_WPolar.XTrBot()*100.0);
-    m_pchTransAtHinge->setChecked(s_WPolar.bTransAtHinge());
-    m_pchViscousLoop->setChecked(s_WPolar.bViscousLoop());
+    m_pchViscAnalysis->setChecked(s_PlPolar.isViscous());
+    m_prbViscInterpolated->setChecked(s_PlPolar.isViscInterpolated());
+    m_prbViscOnTheFly->setChecked(!s_PlPolar.isViscInterpolated());
+    m_prbViscFromCl->setChecked(s_PlPolar.isViscFromCl());
+    m_prbViscFromAlpha->setChecked(!s_PlPolar.isViscFromCl());
+    m_pfeNCrit ->setValuef(s_PlPolar.NCrit());
+    m_pfeXTopTr->setValue(s_PlPolar.XTrTop()*100.0);
+    m_pfeXBotTr->setValue(s_PlPolar.XTrBot()*100.0);
+    m_pchTransAtHinge->setChecked(s_PlPolar.bTransAtHinge());
+    m_pchViscousLoop->setChecked(s_PlPolar.bViscousLoop());
 
-    m_prbArea1->setChecked(s_WPolar.referenceDim()==xfl::PLANFORM);
-    m_prbArea2->setChecked(s_WPolar.referenceDim()==xfl::PROJECTED);
-    m_prbArea3->setChecked(s_WPolar.referenceDim()==xfl::CUSTOM);
+    m_prbArea1->setChecked(s_PlPolar.referenceDim()==xfl::PLANFORM);
+    m_prbArea2->setChecked(s_PlPolar.referenceDim()==xfl::PROJECTED);
+    m_prbArea3->setChecked(s_PlPolar.referenceDim()==xfl::CUSTOM);
 
     if(pPlane)
     {
         if(pPlane->hasOtherWing())
         {
             m_pchOtherWings->setEnabled(true);
-            m_pchOtherWings->setChecked(s_WPolar.bIncludeOtherWingAreas());
+            m_pchOtherWings->setChecked(s_PlPolar.bIncludeOtherWingAreas());
         }
         else
         {
@@ -578,94 +580,104 @@ void PlanePolarDlg::initPolar3dDlg(const Plane *pPlane, PlanePolar const *pWPola
     else
     {
         m_pchOtherWings->setEnabled(true);
-        m_pchOtherWings->setChecked(s_WPolar.bIncludeOtherWingAreas());
+        m_pchOtherWings->setChecked(s_PlPolar.bIncludeOtherWingAreas());
     }
 
     if(m_prbArea1->isChecked())
     {
         if(pPlane)
         {
-            s_WPolar.setReferenceArea(m_pPlane->planformArea(s_WPolar.bIncludeOtherWingAreas()));
-            s_WPolar.setReferenceSpanLength(m_pPlane->planformSpan());
-            s_WPolar.setReferenceChordLength(m_pPlane->mac());
+            s_PlPolar.setReferenceArea(m_pPlane->planformArea(s_PlPolar.bIncludeOtherWingAreas()));
+            s_PlPolar.setReferenceSpanLength(m_pPlane->planformSpan());
+            s_PlPolar.setReferenceChordLength(m_pPlane->mac());
         }
         else
         {
-            s_WPolar.setReferenceArea(0);
-            s_WPolar.setReferenceSpanLength(0);
-            s_WPolar.setReferenceChordLength(0);
+            s_PlPolar.setReferenceArea(0);
+            s_PlPolar.setReferenceSpanLength(0);
+            s_PlPolar.setReferenceChordLength(0);
         }
-        m_pfeRefArea->setValue(s_WPolar.referenceArea()*Units::m2toUnit());
-        m_pfeRefSpan->setValue(s_WPolar.referenceSpanLength()*Units::mtoUnit());
+        m_pfeRefArea->setValue(s_PlPolar.referenceArea()*Units::m2toUnit());
+        m_pfeRefSpan->setValue(s_PlPolar.referenceSpanLength()*Units::mtoUnit());
     }
     else if(m_prbArea2->isChecked())
     {
         if(pPlane)
         {
-            s_WPolar.setReferenceArea(m_pPlane->projectedArea(s_WPolar.bIncludeOtherWingAreas()));
-            s_WPolar.setReferenceSpanLength(m_pPlane->projectedSpan());
-            s_WPolar.setReferenceChordLength(m_pPlane->mac());
+            s_PlPolar.setReferenceArea(m_pPlane->projectedArea(s_PlPolar.bIncludeOtherWingAreas()));
+            s_PlPolar.setReferenceSpanLength(m_pPlane->projectedSpan());
+            s_PlPolar.setReferenceChordLength(m_pPlane->mac());
         }
         else
         {
-            s_WPolar.setReferenceArea(0);
-            s_WPolar.setReferenceSpanLength(0);
-            s_WPolar.setReferenceChordLength(0);
+            s_PlPolar.setReferenceArea(0);
+            s_PlPolar.setReferenceSpanLength(0);
+            s_PlPolar.setReferenceChordLength(0);
         }
-        m_pfeRefArea->setValue(s_WPolar.referenceArea()*Units::m2toUnit());
-        m_pfeRefSpan->setValue(s_WPolar.referenceSpanLength()*Units::mtoUnit());
+        m_pfeRefArea->setValue(s_PlPolar.referenceArea()*Units::m2toUnit());
+        m_pfeRefSpan->setValue(s_PlPolar.referenceSpanLength()*Units::mtoUnit());
     }
     else if(m_prbArea3->isChecked())
     {
-        m_pfeRefArea->setValue(s_WPolar.referenceArea()*Units::m2toUnit());
-        m_pfeRefSpan->setValue(s_WPolar.referenceSpanLength()*Units::mtoUnit());
+        m_pfeRefArea->setValue(s_PlPolar.referenceArea()*Units::m2toUnit());
+        m_pfeRefSpan->setValue(s_PlPolar.referenceSpanLength()*Units::mtoUnit());
     }
-    m_pfeRefChord->setValue(s_WPolar.referenceChordLength()*Units::mtoUnit());
+    m_pfeRefChord->setValue(s_PlPolar.referenceChordLength()*Units::mtoUnit());
 
-    m_pchAutoInertia->setChecked(s_WPolar.bAutoInertia());
+    m_pchAutoInertia->setChecked(s_PlPolar.bAutoInertia());
 
-    m_pfeDensity->setValue(s_WPolar.density()*Units::densitytoUnit());
-    m_pfeViscosity->setValue(s_WPolar.viscosity()*Units::viscositytoUnit());
+    m_pfeDensity->setValue(s_PlPolar.density()*Units::densitytoUnit());
+    m_pfeViscosity->setValue(s_PlPolar.viscosity()*Units::viscositytoUnit());
 
-    //initialize ground data
-    m_pchGround->setChecked(s_WPolar.bGroundEffect());
-    m_pchFreeSurf->setChecked(s_WPolar.bFreeSurfaceEffect());
-    m_pfeHeight->setValue(s_WPolar.groundHeight()*Units::mtoUnit());
-    m_pfeHeight->setEnabled(s_WPolar.bGroundEffect() || s_WPolar.bFreeSurfaceEffect());
+    // flaps
+    QStringList labels;
+    if(s_PlPolar.isType7())
+        labels << tr("Wing flap") << tr("Angle (°/ctrl unit)");
+    else
+        labels << tr("Wing flap") << tr("Angle (°)");
+    m_pFlapModel->setHorizontalHeaderLabels(labels);
 
-    s_WPolar.setNXWakePanel4(std::max(s_WPolar.NXWakePanel4(),1));
-    s_WPolar.setTotalWakeLengthFactor(std::max(s_WPolar.totalWakeLengthFactor(),1.0));
-    s_WPolar.setWakePanelFactor(std::max(s_WPolar.wakePanelFactor(),1.0));
+    //Ground data
+    m_pchGround->setChecked(s_PlPolar.bGroundEffect());
+    m_pchFreeSurf->setChecked(s_PlPolar.bFreeSurfaceEffect());
+    m_pfeHeight->setValue(s_PlPolar.groundHeight()*Units::mtoUnit());
+    m_pfeHeight->setEnabled(s_PlPolar.bGroundEffect() || s_PlPolar.bFreeSurfaceEffect());
 
-    m_prbPanelWake->setChecked(!s_WPolar.bVortonWake());
-    m_prbVortonWake->setChecked(s_WPolar.bVortonWake());
-    m_pieNXWakePanels->setValue(s_WPolar.NXWakePanel4());
-    m_pfeWakeLength->setValue(s_WPolar.totalWakeLengthFactor());
-    m_pfeWakePanelFactor->setValue(s_WPolar.wakePanelFactor());
+    // Wake
+    s_PlPolar.setNXWakePanel4(std::max(s_PlPolar.NXWakePanel4(),1));
+    s_PlPolar.setTotalWakeLengthFactor(std::max(s_PlPolar.totalWakeLengthFactor(),1.0));
+    s_PlPolar.setWakePanelFactor(std::max(s_PlPolar.wakePanelFactor(),1.0));
 
-    m_pfeVPWBufferWake->setValue(s_WPolar.bufferWakeFactor());
-    m_pfeVPWLength->setValue(s_WPolar.VPWMaxLength());
-    m_pfeVortonCoreSize->setValue(s_WPolar.vortonCoreSize());
-    m_pfeVortonL0->setValue(s_WPolar.vortonL0());
-    m_pieVPWIterations->setValue(s_WPolar.VPWIterations());
-    setVPWUnits(s_WPolar);
+    m_prbPanelWake->setChecked(!s_PlPolar.bVortonWake());
+    m_prbVortonWake->setChecked(s_PlPolar.bVortonWake());
+    m_pieNXWakePanels->setValue(s_PlPolar.NXWakePanel4());
+    m_pfeWakeLength->setValue(s_PlPolar.totalWakeLengthFactor());
+    m_pfeWakePanelFactor->setValue(s_PlPolar.wakePanelFactor());
 
+    m_pfeVPWBufferWake->setValue(s_PlPolar.bufferWakeFactor());
+    m_pfeVPWLength->setValue(s_PlPolar.VPWMaxLength());
+    m_pfeVortonCoreSize->setValue(s_PlPolar.vortonCoreSize());
+    m_pfeVortonL0->setValue(s_PlPolar.vortonL0());
+    m_pieVPWIterations->setValue(s_PlPolar.VPWIterations());
+    setVPWUnits(s_PlPolar);
+
+    // fuse
     if((m_pPlane && m_pPlane->hasFuse()) || !m_pPlane)
     {
         PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
-        m_pchIncludeFuseMi->setChecked(s_WPolar.bFuseMi());
+        m_pchIncludeFuseMi->setChecked(s_PlPolar.bFuseMi());
         m_pchFuseDrag->setEnabled(true);
-        m_pchFuseDrag->setChecked(           s_WPolar.hasFuseDrag());
-        m_prbPSDrag->setChecked((            s_WPolar.fuseDragMethod()==PlanePolar::PRANDTLSCHLICHTING));
-        m_prbKSDrag->setChecked((            s_WPolar.fuseDragMethod()==PlanePolar::KARMANSCHOENHERR));
-        m_prbCustomFuseDrag->setChecked((    s_WPolar.fuseDragMethod()==PlanePolar::MANUALFUSECF));
-        m_prbPSDrag->setEnabled(             s_WPolar.hasFuseDrag());
-        m_prbKSDrag->setEnabled(             s_WPolar.hasFuseDrag());
-        m_prbCustomFuseDrag->setEnabled(     s_WPolar.hasFuseDrag());
-        m_pfeCustomFF->setEnabled(           s_WPolar.hasFuseDrag() && m_prbCustomFuseDrag->isChecked());
-        m_pfeCustomFF->setValue(             s_WPolar.customFuseCf());
+        m_pchFuseDrag->setChecked(           s_PlPolar.hasFuseDrag());
+        m_prbPSDrag->setChecked((            s_PlPolar.fuseDragMethod()==PlanePolar::PRANDTLSCHLICHTING));
+        m_prbKSDrag->setChecked((            s_PlPolar.fuseDragMethod()==PlanePolar::KARMANSCHOENHERR));
+        m_prbCustomFuseDrag->setChecked((    s_PlPolar.fuseDragMethod()==PlanePolar::MANUALFUSECF));
+        m_prbPSDrag->setEnabled(             s_PlPolar.hasFuseDrag());
+        m_prbKSDrag->setEnabled(             s_PlPolar.hasFuseDrag());
+        m_prbCustomFuseDrag->setEnabled(     s_PlPolar.hasFuseDrag());
+        m_pfeCustomFF->setEnabled(           s_PlPolar.hasFuseDrag() && m_prbCustomFuseDrag->isChecked());
+        m_pfeCustomFF->setValue(             s_PlPolar.customFuseCf());
 
-        m_plabFuseWettedArea->setEnabled(s_WPolar.hasFuseDrag());
+        m_plabFuseWettedArea->setEnabled(s_PlPolar.hasFuseDrag());
 
         if(pPlaneXfl && pPlaneXfl->fuseAt(0))
         {
@@ -681,12 +693,14 @@ void PlanePolarDlg::initPolar3dDlg(const Plane *pPlane, PlanePolar const *pWPola
     {
         m_pfrFuseDrag->setEnabled(false);
     }
-    m_plabFuseFormFactor->setEnabled(s_WPolar.hasFuseDrag());
-    m_plabFuseFormFactor->setEnabled(s_WPolar.hasFuseDrag());
-    m_plabFuseDragFormula->setEnabled(s_WPolar.hasFuseDrag());
+    m_plabFuseFormFactor->setEnabled(s_PlPolar.hasFuseDrag());
+    m_plabFuseFormFactor->setEnabled(s_PlPolar.hasFuseDrag());
+    m_plabFuseDragFormula->setEnabled(s_PlPolar.hasFuseDrag());
 
-    m_pExtraDragWt->initWt(&s_WPolar);
+    //Other
+    m_pExtraDragWt->initWt(&s_PlPolar);
 
+    //
     m_pgbWingSurf->setVisible(true);
     m_pgbFuseMi->setVisible(true);
     m_pgbHullBox->setVisible(false);
@@ -698,15 +712,15 @@ void PlanePolarDlg::readData()
     readMethodData();
     readViscousData();
 
-    m_pExtraDragWt->setExtraDragData(s_WPolar);
+    m_pExtraDragWt->setExtraDragData(s_PlPolar);
 
     readFuseDragData();
-    readWakeData(s_WPolar);
+    readWakeData(s_PlPolar);
 
     readFluidProperties();
     readReferenceDimensions();
 
-    setVPWUnits(s_WPolar);
+    setVPWUnits(s_PlPolar);
 //    setDensity(s_WPolar);
 }
 
@@ -715,118 +729,118 @@ void PlanePolarDlg::readMethodData()
 {
     if (m_prbLLTMethod->isChecked())
     {
-        s_WPolar.setAnalysisMethod(xfl::LLT);
-        s_WPolar.setViscous(true);
-        s_WPolar.setIgnoreBodyPanels(true);
-        s_WPolar.setIncludeWingTipMi(false);
-        s_WPolar.setIncludeFuseMi(false);
+        s_PlPolar.setAnalysisMethod(xfl::LLT);
+        s_PlPolar.setViscous(true);
+        s_PlPolar.setIgnoreBodyPanels(true);
+        s_PlPolar.setIncludeWingTipMi(false);
+        s_PlPolar.setIncludeFuseMi(false);
         m_pchViscAnalysis->setEnabled(true);
         m_prbViscFromCl->setEnabled(true);
     }
     else if (m_prbVLM1Method->isChecked())
     {
-        s_WPolar.setVLM1();
-        s_WPolar.setIgnoreBodyPanels(true);
-        s_WPolar.setIncludeWingTipMi(false);
-        s_WPolar.setIncludeFuseMi(false);
+        s_PlPolar.setVLM1();
+        s_PlPolar.setIgnoreBodyPanels(true);
+        s_PlPolar.setIncludeWingTipMi(false);
+        s_PlPolar.setIncludeFuseMi(false);
     }
     else if (m_prbVLM2Method->isChecked())
     {
-        s_WPolar.setVLM2();
-        s_WPolar.setIgnoreBodyPanels(true);
-        s_WPolar.setIncludeWingTipMi(false);
-        s_WPolar.setIncludeFuseMi(false);
+        s_PlPolar.setVLM2();
+        s_PlPolar.setIgnoreBodyPanels(true);
+        s_PlPolar.setIncludeWingTipMi(false);
+        s_PlPolar.setIncludeFuseMi(false);
     }
     else if (m_prbQuadMethod->isChecked())
     {
-        s_WPolar.setAnalysisMethod(xfl::QUADS);
-        s_WPolar.setIgnoreBodyPanels(false);
-        s_WPolar.setIncludeWingTipMi(m_pchIncludeWingTipMi->isChecked());
-        s_WPolar.setIncludeFuseMi(m_pchIncludeFuseMi->isChecked());
+        s_PlPolar.setAnalysisMethod(xfl::QUADS);
+        s_PlPolar.setIgnoreBodyPanels(false);
+        s_PlPolar.setIncludeWingTipMi(m_pchIncludeWingTipMi->isChecked());
+        s_PlPolar.setIncludeFuseMi(m_pchIncludeFuseMi->isChecked());
     }
     else if (m_prbTriUniMethod->isChecked())
     {
-        s_WPolar.setAnalysisMethod(xfl::TRIUNIFORM);
-        s_WPolar.setIgnoreBodyPanels(false);
-        s_WPolar.setIncludeWingTipMi(m_pchIncludeWingTipMi->isChecked());
-        s_WPolar.setIncludeFuseMi(m_pchIncludeFuseMi->isChecked());
+        s_PlPolar.setAnalysisMethod(xfl::TRIUNIFORM);
+        s_PlPolar.setIgnoreBodyPanels(false);
+        s_PlPolar.setIncludeWingTipMi(m_pchIncludeWingTipMi->isChecked());
+        s_PlPolar.setIncludeFuseMi(m_pchIncludeFuseMi->isChecked());
     }
     else if (m_prbTriLinMethod->isChecked())
     {
-        s_WPolar.setAnalysisMethod(xfl::TRILINEAR);
-        s_WPolar.setIgnoreBodyPanels(false);
-        s_WPolar.setIncludeWingTipMi(m_pchIncludeWingTipMi->isChecked());
-        s_WPolar.setIncludeFuseMi(m_pchIncludeFuseMi->isChecked());
+        s_PlPolar.setAnalysisMethod(xfl::TRILINEAR);
+        s_PlPolar.setIgnoreBodyPanels(false);
+        s_PlPolar.setIncludeWingTipMi(m_pchIncludeWingTipMi->isChecked());
+        s_PlPolar.setIncludeFuseMi(m_pchIncludeFuseMi->isChecked());
     }
 
-    s_WPolar.setTrefftz(true);
-    s_WPolar.setBoundaryCondition(xfl::DIRICHLET);
+    s_PlPolar.setTrefftz(true);
+    s_PlPolar.setBoundaryCondition(xfl::DIRICHLET);
 }
 
 
 void PlanePolarDlg::readViscousData()
 {
-    s_WPolar.setViscous(m_pchViscAnalysis->isChecked());
-    s_WPolar.setViscInterpolated(m_prbViscInterpolated->isChecked());
-    s_WPolar.setViscFromCl(m_prbViscFromCl->isChecked());
+    s_PlPolar.setViscous(m_pchViscAnalysis->isChecked());
+    s_PlPolar.setViscInterpolated(m_prbViscInterpolated->isChecked());
+    s_PlPolar.setViscFromCl(m_prbViscFromCl->isChecked());
 
-    s_WPolar.setNCrit(m_pfeNCrit->value());
-    s_WPolar.setXTrTop(m_pfeXTopTr->value()/100.0);
-    s_WPolar.setXTrBot(m_pfeXBotTr->value()/100.0);
-    s_WPolar.setTransAtHinge(m_pchTransAtHinge->isChecked());
+    s_PlPolar.setNCrit(m_pfeNCrit->value());
+    s_PlPolar.setXTrTop(m_pfeXTopTr->value()/100.0);
+    s_PlPolar.setXTrBot(m_pfeXBotTr->value()/100.0);
+    s_PlPolar.setTransAtHinge(m_pchTransAtHinge->isChecked());
 
-    s_WPolar.setViscousLoop(m_pchViscousLoop->isChecked());
+    s_PlPolar.setViscousLoop(m_pchViscousLoop->isChecked());
 }
 
 
 void PlanePolarDlg::readReferenceDimensions()
 {
-    s_WPolar.setIncludeOtherWingAreas(m_pchOtherWings->isChecked());
+    s_PlPolar.setIncludeOtherWingAreas(m_pchOtherWings->isChecked());
     if(m_prbArea1->isChecked())
     {
-        s_WPolar.setReferenceDim(xfl::PLANFORM);
+        s_PlPolar.setReferenceDim(xfl::PLANFORM);
         if(m_pPlane)
         {
-            s_WPolar.setReferenceArea(m_pPlane->planformArea(s_WPolar.bIncludeOtherWingAreas()));
-            s_WPolar.setReferenceSpanLength(m_pPlane->planformSpan());
-            s_WPolar.setReferenceChordLength(m_pPlane->mac());
+            s_PlPolar.setReferenceArea(m_pPlane->planformArea(s_PlPolar.bIncludeOtherWingAreas()));
+            s_PlPolar.setReferenceSpanLength(m_pPlane->planformSpan());
+            s_PlPolar.setReferenceChordLength(m_pPlane->mac());
         }
         else
         {
-            s_WPolar.setReferenceArea(0.0);
-            s_WPolar.setReferenceSpanLength(0.0);
-            s_WPolar.setReferenceChordLength(0.0);
+            s_PlPolar.setReferenceArea(0.0);
+            s_PlPolar.setReferenceSpanLength(0.0);
+            s_PlPolar.setReferenceChordLength(0.0);
         }
     }
     else if(m_prbArea2->isChecked())
     {
-        s_WPolar.setReferenceDim(xfl::PROJECTED);
+        s_PlPolar.setReferenceDim(xfl::PROJECTED);
         if(m_pPlane)
         {
-            s_WPolar.setReferenceArea(m_pPlane->projectedArea(s_WPolar.bIncludeOtherWingAreas()));
-            s_WPolar.setReferenceSpanLength(m_pPlane->projectedSpan());
-            s_WPolar.setReferenceChordLength(m_pPlane->mac());
+            s_PlPolar.setReferenceArea(m_pPlane->projectedArea(s_PlPolar.bIncludeOtherWingAreas()));
+            s_PlPolar.setReferenceSpanLength(m_pPlane->projectedSpan());
+            s_PlPolar.setReferenceChordLength(m_pPlane->mac());
         }
         else
         {
-            s_WPolar.setReferenceArea(0.0);
-            s_WPolar.setReferenceSpanLength(0.0);
-            s_WPolar.setReferenceChordLength(0.0);
+            s_PlPolar.setReferenceArea(0.0);
+            s_PlPolar.setReferenceSpanLength(0.0);
+            s_PlPolar.setReferenceChordLength(0.0);
         }
     }
     else if(m_prbArea3->isChecked())
     {
-        s_WPolar.setReferenceDim(xfl::CUSTOM);
-        s_WPolar.setReferenceArea(       m_pfeRefArea->value()  /Units::m2toUnit());
-        s_WPolar.setReferenceSpanLength( m_pfeRefSpan->value()  /Units::mtoUnit());
-        s_WPolar.setReferenceChordLength(m_pfeRefChord->value() /Units::mtoUnit());
+        s_PlPolar.setReferenceDim(xfl::CUSTOM);
+        s_PlPolar.setReferenceArea(       m_pfeRefArea->value()  /Units::m2toUnit());
+        s_PlPolar.setReferenceSpanLength( m_pfeRefSpan->value()  /Units::mtoUnit());
+        s_PlPolar.setReferenceChordLength(m_pfeRefChord->value() /Units::mtoUnit());
     }
 }
 
 
 bool PlanePolarDlg::checkWPolarData()
 {
-    if(s_WPolar.isVLM()) s_WPolar.setThinSurfaces(true);
+    if(s_PlPolar.isVLM()) s_PlPolar.setThinSurfaces(true);
 
     if(!m_plePolarName->text().length())
     {
@@ -834,20 +848,20 @@ bool PlanePolarDlg::checkWPolarData()
         m_plePolarName->setFocus();
         return false;
     }
-    s_WPolar.setName(m_plePolarName->text().toStdString());
+    s_PlPolar.setName(m_plePolarName->text().toStdString());
 
-    if(s_WPolar.referenceDim()==xfl::CUSTOM)
+    if(s_PlPolar.referenceDim()==xfl::CUSTOM)
     {
-        if(s_WPolar.referenceArea()<1.-6 || s_WPolar.referenceSpanLength()<1.e-4 || s_WPolar.referenceChordLength()<1.e-4)
+        if(s_PlPolar.referenceArea()<1.-6 || s_PlPolar.referenceSpanLength()<1.e-4 || s_PlPolar.referenceChordLength()<1.e-4)
         {
             QMessageBox::warning(this, tr("Warning"), tr("Invalid reference dimensions"));
             return false;
         }
     }
 
-    if(s_WPolar.bVortonWake())
+    if(s_PlPolar.bVortonWake())
     {
-        if(!s_WPolar.isType6() || s_WPolar.isLLTMethod() || s_WPolar.isVLM())
+        if(!s_PlPolar.isType6() || s_PlPolar.isLLTMethod() || s_PlPolar.isVLM())
         {
             QMessageBox::warning(this, tr("Warning"), tr("The vorton wake is only compatible with T6 analyses and panel methods"));
             return false;
@@ -861,15 +875,15 @@ void PlanePolarDlg::enableControls()
 {
     if(m_pPlane && !m_pPlane->isXflType())
     {
-        if(!s_WPolar.isTriangleMethod()) s_WPolar.setAnalysisMethod(xfl::TRIUNIFORM);
-        if(s_WPolar.isViscous())
+        if(!s_PlPolar.isTriangleMethod()) s_PlPolar.setAnalysisMethod(xfl::TRIUNIFORM);
+        if(s_PlPolar.isViscous())
         {
-            s_WPolar.setViscous(false);
+            s_PlPolar.setViscous(false);
             m_pchViscAnalysis->setChecked(false);
             m_pfrViscosity->setEnabled(false);
         }
-        if(s_WPolar.hasFuseDrag()) s_WPolar.setIncludeFuseDrag(false);
-        s_WPolar.setThickSurfaces(true);
+        if(s_PlPolar.hasFuseDrag()) s_PlPolar.setIncludeFuseDrag(false);
+        s_PlPolar.setThickSurfaces(true);
 
         m_prbThinSurfaces->setChecked(false);
         m_prbThickSurfaces->setChecked(true);
@@ -899,8 +913,8 @@ void PlanePolarDlg::enableControls()
     {
         m_prbThinSurfaces->setEnabled(true);
         m_prbThickSurfaces->setEnabled(true);
-        m_prbThinSurfaces->setChecked(s_WPolar.bThinSurfaces());
-        m_prbThickSurfaces->setChecked(!s_WPolar.bThinSurfaces());
+        m_prbThinSurfaces->setChecked(s_PlPolar.bThinSurfaces());
+        m_prbThickSurfaces->setChecked(!s_PlPolar.bThinSurfaces());
     }
 
     m_plePolarName->setEnabled(!m_pchAutoName->isChecked());
@@ -913,8 +927,8 @@ void PlanePolarDlg::enableControls()
     m_pfeWakeLength->setEnabled(true);
     m_pfeWakePanelFactor->setEnabled(true);
 
-    m_pgbFlatWakePanels->setEnabled(!s_WPolar.bVortonWake());
-    m_pgbVortonWake->setEnabled(s_WPolar.bVortonWake());
+    m_pgbFlatWakePanels->setEnabled(!s_PlPolar.bVortonWake());
+    m_pgbVortonWake->setEnabled(s_PlPolar.bVortonWake());
 
     bool bVisc = m_pchViscAnalysis->isChecked();
     m_prbViscInterpolated->setEnabled(bVisc);
@@ -924,7 +938,7 @@ void PlanePolarDlg::enableControls()
     m_pfrOntheFly->setEnabled(bVisc && m_prbViscOnTheFly->isChecked());
 
 
-    m_pchViscousLoop->setEnabled(s_WPolar.isType6() && m_pchViscAnalysis->isChecked() && m_prbViscInterpolated->isChecked());
+    m_pchViscousLoop->setEnabled(s_PlPolar.isType6() && m_pchViscAnalysis->isChecked() && m_prbViscInterpolated->isChecked());
 
     m_pfrInterpolated->setVisible(m_prbViscInterpolated->isChecked());
     m_pfrOntheFly->setVisible(m_prbViscOnTheFly->isChecked());
@@ -938,15 +952,15 @@ void PlanePolarDlg::enableControls()
 void PlanePolarDlg::setPolar3dName()
 {
     if(!m_bAutoName) return;
-    s_WPolar.setName(PlanePolarNameMaker::makeName(m_pPlane, &s_WPolar));
-    m_plePolarName->setText(QString::fromStdString(s_WPolar.name()));
+    s_PlPolar.setName(PlanePolarNameMaker::makeName(m_pPlane, &s_PlPolar));
+    m_plePolarName->setText(QString::fromStdString(s_PlPolar.name()));
 }
 
 
 void PlanePolarDlg::onNameOptions()
 {
     WPolarAutoNameDlg dlg;
-    dlg.initDialog(s_WPolar);
+    dlg.initDialog(s_PlPolar);
     dlg.exec();
     setPolar3dName();
 }
@@ -963,24 +977,24 @@ void PlanePolarDlg::onViscous()
 
 void PlanePolarDlg::checkMethods()
 {
-    if(s_WPolar.isLLTMethod())
+    if(s_PlPolar.isLLTMethod())
     {
         m_prbLLTMethod->setChecked(true);
     }
-    else if(s_WPolar.isVLM())
+    else if(s_PlPolar.isVLM())
     {
-        m_prbVLM1Method->setChecked( s_WPolar.isVLM1());
-        m_prbVLM2Method->setChecked(!s_WPolar.isVLM1());
+        m_prbVLM1Method->setChecked( s_PlPolar.isVLM1());
+        m_prbVLM2Method->setChecked(!s_PlPolar.isVLM1());
     }
-    else if(s_WPolar.isPanel4Method())
+    else if(s_PlPolar.isPanel4Method())
     {
         m_prbQuadMethod->setChecked(true);
     }
-    else if(s_WPolar.isTriUniformMethod())
+    else if(s_PlPolar.isTriUniformMethod())
     {
         m_prbTriUniMethod->setChecked(true);
     }
-    else if(s_WPolar.isTriLinearMethod())
+    else if(s_PlPolar.isTriLinearMethod())
     {
         m_prbTriLinMethod->setChecked(true);
     }
@@ -989,11 +1003,11 @@ void PlanePolarDlg::checkMethods()
 
 void PlanePolarDlg::readFluidProperties()
 {
-    s_WPolar.setDensity(m_pfeDensity->value() / Units::densitytoUnit());
-    s_WPolar.setViscosity(m_pfeViscosity->value() / Units::viscositytoUnit());
+    s_PlPolar.setDensity(m_pfeDensity->value() / Units::densitytoUnit());
+    s_PlPolar.setViscosity(m_pfeViscosity->value() / Units::viscositytoUnit());
 
-    s_WPolar.setGroundEffect(m_pchGround->isChecked());
-    s_WPolar.setGroundHeight(m_pfeHeight->value()/Units::mtoUnit());
+    s_PlPolar.setGroundEffect(m_pchGround->isChecked());
+    s_PlPolar.setGroundHeight(m_pfeHeight->value()/Units::mtoUnit());
 }
 
 
@@ -1002,19 +1016,19 @@ void PlanePolarDlg::readFuseDragData()
     if(!m_pPlane) return;
     if(m_pPlane->hasFuse())
     {
-        s_WPolar.setIncludeFuseDrag(m_pchFuseDrag->isChecked());
+        s_PlPolar.setIncludeFuseDrag(m_pchFuseDrag->isChecked());
         //        s_WPolar.setFuseFormFactor(m_pPlane->fuse(0)->formFactor());
-        if     (m_prbKSDrag->isChecked())   s_WPolar.setFuseDragMethod(PlanePolar::KARMANSCHOENHERR);
-        else if(m_prbPSDrag->isChecked()) s_WPolar.setFuseDragMethod(PlanePolar::PRANDTLSCHLICHTING);
+        if     (m_prbKSDrag->isChecked())   s_PlPolar.setFuseDragMethod(PlanePolar::KARMANSCHOENHERR);
+        else if(m_prbPSDrag->isChecked()) s_PlPolar.setFuseDragMethod(PlanePolar::PRANDTLSCHLICHTING);
         else if(m_prbCustomFuseDrag->isChecked())
         {
-            s_WPolar.setFuseDragMethod(PlanePolar::MANUALFUSECF);
-            s_WPolar.setCustomFuseCf(m_pfeCustomFF->value());
+            s_PlPolar.setFuseDragMethod(PlanePolar::MANUALFUSECF);
+            s_PlPolar.setCustomFuseCf(m_pfeCustomFF->value());
         }
     }
     else
     {
-        s_WPolar.setIncludeFuseDrag(false);
+        s_PlPolar.setIncludeFuseDrag(false);
         //        s_WPolar.setFuseFormFactor(1.0);
     }
 }
@@ -1032,24 +1046,24 @@ void PlanePolarDlg::onGroundEffect()
     {
         if(m_pchFreeSurf->isChecked()) m_pchGround->setChecked(false);
     }
-    s_WPolar.setGroundEffect(m_pchGround->isChecked());
-    s_WPolar.setFreeSurfaceEffect(m_pchFreeSurf->isChecked());
-    s_WPolar.setGroundHeight(m_pfeHeight->value()/Units::mtoUnit());
-    m_pfeHeight->setEnabled(s_WPolar.bGroundEffect() || s_WPolar.bFreeSurfaceEffect());
+    s_PlPolar.setGroundEffect(m_pchGround->isChecked());
+    s_PlPolar.setFreeSurfaceEffect(m_pchFreeSurf->isChecked());
+    s_PlPolar.setGroundHeight(m_pfeHeight->value()/Units::mtoUnit());
+    m_pfeHeight->setEnabled(s_PlPolar.bGroundEffect() || s_PlPolar.bFreeSurfaceEffect());
     setPolar3dName();
 }
 
 
 void PlanePolarDlg::onArea()
 {
-    s_WPolar.setIncludeOtherWingAreas(m_pchOtherWings->isChecked());
+    s_PlPolar.setIncludeOtherWingAreas(m_pchOtherWings->isChecked());
 
     if(m_prbArea1->isChecked())
     {
-        s_WPolar.setReferenceDim(xfl::PLANFORM);
+        s_PlPolar.setReferenceDim(xfl::PLANFORM);
         if(m_pPlane)
         {
-            m_pfeRefArea->setValue(m_pPlane->planformArea(s_WPolar.bIncludeOtherWingAreas())*Units::m2toUnit());
+            m_pfeRefArea->setValue(m_pPlane->planformArea(s_PlPolar.bIncludeOtherWingAreas())*Units::m2toUnit());
             m_pfeRefChord->setValue(m_pPlane->mac()*Units::mtoUnit());
             m_pfeRefSpan->setValue(m_pPlane->planformSpan()*Units::mtoUnit());
         }
@@ -1062,10 +1076,10 @@ void PlanePolarDlg::onArea()
     }
     else if(m_prbArea2->isChecked())
     {
-        s_WPolar.setReferenceDim(xfl::PROJECTED);
+        s_PlPolar.setReferenceDim(xfl::PROJECTED);
         if(m_pPlane)
         {
-            m_pfeRefArea->setValue(m_pPlane->projectedArea(s_WPolar.bIncludeOtherWingAreas())*Units::m2toUnit());
+            m_pfeRefArea->setValue(m_pPlane->projectedArea(s_PlPolar.bIncludeOtherWingAreas())*Units::m2toUnit());
             m_pfeRefSpan->setValue(m_pPlane->projectedSpan()*Units::mtoUnit());
             m_pfeRefChord->setValue(m_pPlane->mac()*Units::mtoUnit());
         }
@@ -1078,7 +1092,7 @@ void PlanePolarDlg::onArea()
     }
     else if(m_prbArea3->isChecked())
     {
-        s_WPolar.setReferenceDim(xfl::CUSTOM);
+        s_PlPolar.setReferenceDim(xfl::CUSTOM);
     }
 
     setPolar3dName();
@@ -1091,19 +1105,19 @@ void PlanePolarDlg::onAeroData()
     AeroDataDlg dlg;
     if(dlg.exec() == QDialog::Accepted)
     {
-        s_WPolar.setDensity(dlg.airDensity());
-        s_WPolar.setViscosity(dlg.kinematicViscosity());
-        m_pfeDensity->setValue(  s_WPolar.density()  * Units::densitytoUnit());
-        m_pfeViscosity->setValue(s_WPolar.viscosity()* Units::viscositytoUnit());
+        s_PlPolar.setDensity(dlg.airDensity());
+        s_PlPolar.setViscosity(dlg.kinematicViscosity());
+        m_pfeDensity->setValue(  s_PlPolar.density()  * Units::densitytoUnit());
+        m_pfeViscosity->setValue(s_PlPolar.viscosity()* Units::viscositytoUnit());
     }
 }
 
 
 void PlanePolarDlg::onVortonWake()
 {
-    s_WPolar.setVortonWake(m_prbVortonWake->isChecked());
-    m_pgbFlatWakePanels->setEnabled(!s_WPolar.bVortonWake());
-    m_pgbVortonWake->setEnabled(s_WPolar.bVortonWake());
+    s_PlPolar.setVortonWake(m_prbVortonWake->isChecked());
+    m_pgbFlatWakePanels->setEnabled(!s_PlPolar.bVortonWake());
+    m_pgbVortonWake->setEnabled(s_PlPolar.bVortonWake());
     setPolar3dName();
 }
 
@@ -1112,10 +1126,10 @@ void PlanePolarDlg::onFuseDrag()
 {
     m_pfrFuseDrag->setEnabled(m_pPlane->hasFuse());
 
-    s_WPolar.setIncludeFuseDrag(m_pchFuseDrag->isChecked());
-    m_plabFuseWettedArea->setEnabled(s_WPolar.hasFuseDrag());
-    m_plabFuseFormFactor->setEnabled(s_WPolar.hasFuseDrag());
-    m_plabFuseDragFormula->setEnabled(s_WPolar.hasFuseDrag());
+    s_PlPolar.setIncludeFuseDrag(m_pchFuseDrag->isChecked());
+    m_plabFuseWettedArea->setEnabled(s_PlPolar.hasFuseDrag());
+    m_plabFuseFormFactor->setEnabled(s_PlPolar.hasFuseDrag());
+    m_plabFuseDragFormula->setEnabled(s_PlPolar.hasFuseDrag());
 
     m_prbKSDrag->setEnabled(m_pchFuseDrag->isChecked());
     m_prbPSDrag->setEnabled(m_pchFuseDrag->isChecked());
@@ -1128,7 +1142,7 @@ void PlanePolarDlg::onFuseDrag()
 
 void PlanePolarDlg::onWingSurfaces()
 {
-    s_WPolar.setThinSurfaces(m_prbThinSurfaces->isChecked());
+    s_PlPolar.setThinSurfaces(m_prbThinSurfaces->isChecked());
     enableControls();
     setPolar3dName();
 }
@@ -1136,14 +1150,14 @@ void PlanePolarDlg::onWingSurfaces()
 
 void PlanePolarDlg::fillInertiaPage()
 {
-    m_pchAutoInertia->setChecked(s_WPolar.bAutoInertia());
-    m_pfePlaneMass->setValue(s_WPolar.mass()*Units::kgtoUnit());
-    m_pfeXCoG->setValue(s_WPolar.CoG().x*Units::mtoUnit());
-    m_pfeZCoG->setValue(s_WPolar.CoG().z*Units::mtoUnit());
-    m_pfeIxx->setValue(s_WPolar.Ixx()*Units::kgm2toUnit());
-    m_pfeIyy->setValue(s_WPolar.Iyy()*Units::kgm2toUnit());
-    m_pfeIzz->setValue(s_WPolar.Izz()*Units::kgm2toUnit());
-    m_pfeIxz->setValue(s_WPolar.Ixz()*Units::kgm2toUnit());
+    m_pchAutoInertia->setChecked(s_PlPolar.bAutoInertia());
+    m_pfePlaneMass->setValue(s_PlPolar.mass()*Units::kgtoUnit());
+    m_pfeXCoG->setValue(s_PlPolar.CoG().x*Units::mtoUnit());
+    m_pfeZCoG->setValue(s_PlPolar.CoG().z*Units::mtoUnit());
+    m_pfeIxx->setValue(s_PlPolar.Ixx()*Units::kgm2toUnit());
+    m_pfeIyy->setValue(s_PlPolar.Iyy()*Units::kgm2toUnit());
+    m_pfeIzz->setValue(s_PlPolar.Izz()*Units::kgm2toUnit());
+    m_pfeIxz->setValue(s_PlPolar.Ixz()*Units::kgm2toUnit());
 }
 
 
@@ -1151,19 +1165,19 @@ void PlanePolarDlg::readInertiaData()
 {
     if(m_pchAutoInertia->isChecked() && m_pPlane)
     {
-        s_WPolar.setAutoInertia(true);
-        s_WPolar.setInertia(m_pPlane->inertia());
+        s_PlPolar.setAutoInertia(true);
+        s_PlPolar.setInertia(m_pPlane->inertia());
     }
     else
     {
-        s_WPolar.setAutoInertia(false);
-        s_WPolar.setMass(m_pfePlaneMass->value()/Units::kgtoUnit());
-        s_WPolar.setCoGx(m_pfeXCoG->value()/Units::mtoUnit());
-        s_WPolar.setCoGz(m_pfeZCoG->value()/Units::mtoUnit());
-        s_WPolar.setIxx(m_pfeIxx->value()/Units::kgm2toUnit());
-        s_WPolar.setIyy(m_pfeIyy->value()/Units::kgm2toUnit());
-        s_WPolar.setIzz(m_pfeIzz->value()/Units::kgm2toUnit());
-        s_WPolar.setIxz(m_pfeIxz->value()/Units::kgm2toUnit());
+        s_PlPolar.setAutoInertia(false);
+        s_PlPolar.setMass(m_pfePlaneMass->value()/Units::kgtoUnit());
+        s_PlPolar.setCoGx(m_pfeXCoG->value()/Units::mtoUnit());
+        s_PlPolar.setCoGz(m_pfeZCoG->value()/Units::mtoUnit());
+        s_PlPolar.setIxx(m_pfeIxx->value()/Units::kgm2toUnit());
+        s_PlPolar.setIyy(m_pfeIyy->value()/Units::kgm2toUnit());
+        s_PlPolar.setIzz(m_pfeIzz->value()/Units::kgm2toUnit());
+        s_PlPolar.setIxz(m_pfeIxz->value()/Units::kgm2toUnit());
     }
 }
 
@@ -1186,17 +1200,17 @@ void PlanePolarDlg::loadSettings(QSettings &settings)
 {
     settings.beginGroup("PlanePolarDlg");
     {
-        s_WPolar.setAutoInertia(settings.value("StabPolarAutoInertia", true).toBool());
-        s_WPolar.setMass(       settings.value("StabPolarMass", 0.0).toDouble());
+        s_PlPolar.setAutoInertia(settings.value("StabPolarAutoInertia", true).toBool());
+        s_PlPolar.setMass(       settings.value("StabPolarMass", 0.0).toDouble());
         double x  = settings.value("StabPolarCoGx", 0.0).toDouble();
         double y  = settings.value("StabPolarCoGy", 0.0).toDouble();
         double z  = settings.value("StabPolarCoGz", 0.0).toDouble();
-        s_WPolar.setCoG({x,y,z});
-        s_WPolar.setIxx(settings.value("StabPolarCoGIxx", 0.0).toDouble());
-        s_WPolar.setIyy(settings.value("StabPolarCoGIyy", 0.0).toDouble());
-        s_WPolar.setIzz(settings.value("StabPolarCoGIzz", 0.0).toDouble());
-        s_WPolar.setIxz(settings.value("StabPolarCoGIxz", 0.0).toDouble());
-        s_WPolar.setAutoInertia(settings.value("bAutoInertia", false).toBool());
+        s_PlPolar.setCoG({x,y,z});
+        s_PlPolar.setIxx(settings.value("StabPolarCoGIxx", 0.0).toDouble());
+        s_PlPolar.setIyy(settings.value("StabPolarCoGIyy", 0.0).toDouble());
+        s_PlPolar.setIzz(settings.value("StabPolarCoGIzz", 0.0).toDouble());
+        s_PlPolar.setIxz(settings.value("StabPolarCoGIxz", 0.0).toDouble());
+        s_PlPolar.setAutoInertia(settings.value("bAutoInertia", false).toBool());
 
         s_Geometry = settings.value("WindowGeometry").toByteArray();
     }
@@ -1208,17 +1222,17 @@ void PlanePolarDlg::saveSettings(QSettings &settings)
 {
     settings.beginGroup("PlanePolarDlg");
     {
-        settings.setValue("bVLM1",                s_WPolar.isVLM1());
-        settings.setValue("bAutoInertia",         s_WPolar.bAutoInertia());
-        settings.setValue("StabPolarAutoInertia", s_WPolar.bAutoInertia());
-        settings.setValue("StabPolarMass",        s_WPolar.mass());
-        settings.setValue("StabPolarCoGx",        s_WPolar.CoG().x);
-        settings.setValue("StabPolarCoGy",        s_WPolar.CoG().y);
-        settings.setValue("StabPolarCoGz",        s_WPolar.CoG().z);
-        settings.setValue("StabPolarCoGIxx",      s_WPolar.Ixx());
-        settings.setValue("StabPolarCoGIyy",      s_WPolar.Iyy());
-        settings.setValue("StabPolarCoGIzz",      s_WPolar.Izz());
-        settings.setValue("StabPolarCoGIxz",      s_WPolar.Ixz());
+        settings.setValue("bVLM1",                s_PlPolar.isVLM1());
+        settings.setValue("bAutoInertia",         s_PlPolar.bAutoInertia());
+        settings.setValue("StabPolarAutoInertia", s_PlPolar.bAutoInertia());
+        settings.setValue("StabPolarMass",        s_PlPolar.mass());
+        settings.setValue("StabPolarCoGx",        s_PlPolar.CoG().x);
+        settings.setValue("StabPolarCoGy",        s_PlPolar.CoG().y);
+        settings.setValue("StabPolarCoGz",        s_PlPolar.CoG().z);
+        settings.setValue("StabPolarCoGIxx",      s_PlPolar.Ixx());
+        settings.setValue("StabPolarCoGIyy",      s_PlPolar.Iyy());
+        settings.setValue("StabPolarCoGIzz",      s_PlPolar.Izz());
+        settings.setValue("StabPolarCoGIxz",      s_PlPolar.Ixz());
 
 
         settings.setValue("WindowGeometry", s_Geometry);
@@ -1229,12 +1243,12 @@ void PlanePolarDlg::saveSettings(QSettings &settings)
 
 void PlanePolarDlg::onFlapControls()
 {
-    s_WPolar.clearFlapCtrls();
+    s_PlPolar.clearFlapCtrls();
 
     PlaneXfl const *pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pPlane);
     if(!pPlaneXfl) return;
 
-    s_WPolar.resizeFlapCtrls(pPlaneXfl);
+    s_PlPolar.resizeFlapCtrls(pPlaneXfl);
 
     QString setname = m_pleFlapSetName->text();
 
@@ -1245,9 +1259,9 @@ void PlanePolarDlg::onFlapControls()
 
         WingXfl const *pWing = pPlaneXfl->wingAt(iw);
 
-        if(iw>= s_WPolar.nFlapCtrls()) continue; //error
+        if(iw>= s_PlPolar.nFlapCtrls()) continue; //error
 
-        AngleControl &avlc = s_WPolar.flapCtrls(iw);
+        AngleControl &avlc = s_PlPolar.flapCtrls(iw);
         avlc.setName(setname.toStdString()); // optional meta-information
         avlc.resizeValues(pWing->nFlaps());
 

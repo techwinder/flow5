@@ -24,11 +24,7 @@ int main()
 
     // Create
     Foil *pFoil2410 = new Foil;
-    if(!Objects2d::makeNacaFoil(pFoil2410, 2410, 200))
-    {
-        if(pFoil2410) delete pFoil2410;
-        return 0;
-    }
+    Objects2d::makeNacaFoil(pFoil2410, 2410, 200);
     pFoil2410->setName(nacaname);
     pFoil2410->setLineColor({255,127,31});
     pFoil2410->setLineWidth(2);
