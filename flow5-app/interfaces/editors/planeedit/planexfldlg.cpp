@@ -161,7 +161,7 @@ void PlaneXflDlg::connectSignals()
     connect(m_pRemovePart,            SIGNAL(triggered(bool)), SLOT(onRemovePart()));
     connect(m_pDuplicatePart,         SIGNAL(triggered(bool)), SLOT(onDuplicatePart()));
     connect(m_pEditPartDef,           SIGNAL(triggered(bool)), SLOT(onEditPart()));
-//    connect(m_pEditPartObject,        SIGNAL(triggered(bool)), SLOT(onEditPart()));
+
     connect(m_pExportMeshSTL,         SIGNAL(triggered(bool)), SLOT(onExportMeshToSTLFile()));
     connect(m_pScalePlane,            SIGNAL(triggered(bool)), SLOT(onScalePlane()));
 
@@ -193,7 +193,6 @@ void PlaneXflDlg::connectSignals()
     connect(m_pglPlaneView,           SIGNAL(pickedNodePair(QPair<int,int>)), SLOT(onPickedNodePair(QPair<int,int>)));
 
     connect(m_pGMesherWt,             SIGNAL(outputMsg(QString)), m_ppto, SLOT(onAppendQText(QString)));
-//    connect(m_pGMesherWt,             SIGNAL(updateFuseView()),           SLOT(onUpdateMesh())); // redundant with events
 
     connect(m_pRestoreFuseMesh,       SIGNAL(triggered()),    SLOT(onResetFuseMesh()));
     connect(m_pFuseMesher,            SIGNAL(triggered()),    SLOT(onFuseMeshDlg()));
@@ -661,17 +660,17 @@ void PlaneXflDlg::makeActions()
     m_pResetFuse             = new QAction(tr("Restore geometry and mesh"),       this);
     m_pTessellation          = new QAction(tr("Fuse tessellation"),               this);
 
-    m_pPartInertia   = new QAction(tr("Inertia"), this);
-    m_pPartScale     = new QAction(tr("Scale"), this);
-    m_pMoveUp        = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowUp),   tr("Move Up"), this);
-    m_pMoveDown      = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowDown), tr("Move Down"), this);
+    m_pPartInertia           = new QAction(tr("Inertia"), this);
+    m_pPartScale             = new QAction(tr("Scale"), this);
+    m_pMoveUp                = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowUp),   tr("Move Up"), this);
+    m_pMoveDown              = new QAction(QApplication::style()->standardIcon(QStyle::SP_ArrowDown), tr("Move Down"), this);
 
     m_pExportMeshSTL = new QAction(tr("Export mesh to STL"), this);
 
     m_pPartMenu = new QMenu(tr("Selected Part"), this);
     {
         m_pPartMenu->addAction(m_pEditPartDef);
-//        m_pPartMenu->addAction(m_pEditPartObject);
+
         m_pPartMenu->addAction(m_pRemovePart);
         m_pPartMenu->addAction(m_pDuplicatePart);
         m_pPartMenu->addSeparator();
@@ -2322,6 +2321,7 @@ void PlaneXflDlg::onResizeColumns()
 
 void PlaneXflDlg::onPartItemClicked(QModelIndex index)
 {
+
     if(!index.isValid())
     {
     }
@@ -2363,14 +2363,15 @@ void PlaneXflDlg::onPartItemClicked(QModelIndex index)
         if(index.column()==7)
         {
             m_pcptParts->selectRow(index.row());
-            QRect itemrect = m_pcptParts->visualRect(index);
-            QPoint menupos = m_pcptParts->mapToGlobal(itemrect.topLeft());
+
             m_pPartMenu->setEnabled(index.row()>=0);
             m_pResetFuse->setEnabled(index.row()>=m_pPlaneXfl->nWings());
             m_pFlipNormals->setEnabled(index.row()>=m_pPlaneXfl->nWings());
             m_pTessellation->setEnabled(index.row()>=m_pPlaneXfl->nWings());
 
-            m_pPartMenu->exec(menupos, m_pEditPartDef);
+            QAction *pActivated = m_pPartMenu->exec(QCursor::pos());
+            (void)pActivated;
+//            if(pActivated) qDebug() << pActivated->text();
         }
     }
 }

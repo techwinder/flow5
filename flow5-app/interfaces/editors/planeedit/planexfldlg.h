@@ -211,7 +211,6 @@ class PlaneXflDlg : public PlaneDlg
         QAction *m_pScalePlane;
         QAction *m_pMoveUp, *m_pMoveDown;
         QAction *m_pRemovePart, *m_pDuplicatePart, *m_pEditPartDef;
-//        QAction *m_pEditPartObject;
         QAction *m_pInsertWing, *m_pInsertWingXml, *m_pInsertWingVSP, *m_pInsertWingOther;
         QAction *m_pInsertElev, *m_pInsertFin;
         QAction *m_pInsertFuseXflSpline, *m_pInsertFuseXflFlat, *m_pInsertFuseXflSections;

@@ -168,10 +168,13 @@ QModelIndex ObjectTreeModel::parent(const QModelIndex &index) const
         return QModelIndex();
 
     ObjectTreeItem *pChildItem = static_cast<ObjectTreeItem*>(index.internalPointer());
-    ObjectTreeItem *pParentItem = pChildItem->parentItem();
 
+    if(!pChildItem)   return QModelIndex();
+
+    ObjectTreeItem *pParentItem = pChildItem->parentItem();
+    if(!pParentItem) return QModelIndex();
     if (pParentItem == m_pRootItem)
-        return QModelIndex();
+        return QModelIndex();    
 
     return createIndex(pParentItem->row(), 0, pParentItem);
 }

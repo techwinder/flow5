@@ -137,7 +137,7 @@ void PlaneExplorer::setObjectProperties()
             }
             break;
         }
-        case PlaneExplorer::WPOLAR:
+        case PlaneExplorer::PLANEPOLAR:
         {
             if(s_pXPlane->m_pCurPlPolar && pPlane)
             {
@@ -240,7 +240,7 @@ void PlaneExplorer::fillModelView()
         LineStyle ls(pPlane->theStyle());
         ObjectTreeItem *pPlaneItem = m_pModel->appendRow(pRootItem, pPlane->name(), pPlane->theStyle(), planeState(pPlane));
 
-        fillWPolars(pPlaneItem, pPlane);
+        fillPlanePolars(pPlaneItem, pPlane);
     }
 }
 
@@ -261,7 +261,7 @@ void PlaneExplorer::updatePlane(const Plane *pPlane)
             m_pModel->blockSignals(true);
             {
                 m_pModel->removeRows(0, pItem->rowCount(), planeindex);
-                fillWPolars(pPlaneItem, pPlane);
+                fillPlanePolars(pPlaneItem, pPlane);
             }
             m_pModel->blockSignals(false);
             break;
@@ -270,7 +270,7 @@ void PlaneExplorer::updatePlane(const Plane *pPlane)
 }
 
 
-void PlaneExplorer::fillWPolars(ObjectTreeItem *pPlaneItem, const Plane *pPlane)
+void PlaneExplorer::fillPlanePolars(ObjectTreeItem *pPlaneItem, const Plane *pPlane)
 {
     if(!pPlane || !pPlaneItem) return;
 
@@ -368,7 +368,7 @@ void PlaneExplorer::onItemDoubleClicked(const QModelIndex &index)
         {
             s_pXPlane->onEditCurPlane();
         }
-        else if(m_Selection==PlaneExplorer::WPOLAR)
+        else if(m_Selection==PlaneExplorer::PLANEPOLAR)
         {
             s_pXPlane->onEditCurPlPolar();
         }
@@ -376,7 +376,7 @@ void PlaneExplorer::onItemDoubleClicked(const QModelIndex &index)
 }
 
 
-void PlaneExplorer::insertWPolar(const PlanePolar *pWPolar)
+void PlaneExplorer::insertPlanePolar(const PlanePolar *pWPolar)
 {
     if(!pWPolar) pWPolar = s_pXPlane->curPlPolar();
     if(!pWPolar) return;
@@ -463,7 +463,7 @@ void PlaneExplorer::insertPlane(Plane* pPlane)
         PlanePolar const *pWPolar = Objects3d::planePolarAt(iwp);
         if(pWPolar->planeName().compare(pPlane->name())==0)
         {
-            insertWPolar(pWPolar);
+            insertPlanePolar(pWPolar);
         }
     }
 
@@ -526,7 +526,7 @@ void PlaneExplorer::selectPlPolar(PlanePolar *pWPolar, bool bSelectPOpp)
                 ObjectTreeItem *pPolarItem = pPlaneItem->child(jr);
                 if(pPolarItem->name().compare(QString::fromStdString(pWPolar->name()), Qt::CaseInsensitive)==0)
                 {
-                    m_Selection = PlaneExplorer::WPOLAR;
+                    m_Selection = PlaneExplorer::PLANEPOLAR;
 
                     QModelIndex polarindex = m_pModel->index(jr, 0, planeindex);
                     if(polarindex.isValid())
@@ -652,7 +652,7 @@ QString PlaneExplorer::removePlane(QString const &planeName)
 }
 
 
-QString PlaneExplorer::removeWPolar(PlanePolar *pWPolar)
+QString PlaneExplorer::removePlanePolar(PlanePolar *pWPolar)
 {
     if(!pWPolar) return "";
 
@@ -695,7 +695,7 @@ QString PlaneExplorer::removeWPolar(PlanePolar *pWPolar)
 }
 
 
-void PlaneExplorer::removeWPolars(Plane const*pPlane)
+void PlaneExplorer::removePlanePolars(Plane const*pPlane)
 {
     if(!pPlane) return;
 
@@ -718,7 +718,7 @@ void PlaneExplorer::removeWPolars(Plane const*pPlane)
 }
 
 
-void PlaneExplorer::removeWPolarPOpps(PlanePolar const*pWPolar)
+void PlaneExplorer::removePlanePolarPOpps(PlanePolar const*pWPolar)
 {
     if(!pWPolar) return;
 
@@ -842,7 +842,7 @@ void PlaneExplorer::contextMenuEvent(QContextMenuEvent *pEvent)
 
     if     (m_Selection==PlaneExplorer::PLANEOPP && pPOpp)
         s_pXPlane->m_pMenus->m_pCurPOppCtxMenu->exec(pEvent->globalPos());
-    else if(m_Selection==PlaneExplorer::WPOLAR && pPlPolar)
+    else if(m_Selection==PlaneExplorer::PLANEPOLAR && pPlPolar)
         s_pXPlane->m_pMenus->m_pCurWPlrCtxMenu->exec(pEvent->globalPos());
     else if(m_Selection==PlaneExplorer::PLANE && pPlane)
         s_pXPlane->m_pMenus->m_pCurrentPlaneCtxMenu->exec(pEvent->globalPos());
@@ -863,7 +863,7 @@ void PlaneExplorer::keyPressEvent(QKeyEvent *pEvent)
         {
             if(m_Selection==PlaneExplorer::PLANEOPP && pPOpp)
                 s_pXPlane->onDeleteCurPOpp();
-            else if(m_Selection==PlaneExplorer::WPOLAR && pWPolar)
+            else if(m_Selection==PlaneExplorer::PLANEPOLAR && pWPolar)
                 s_pXPlane->onDeleteCurPlPolar();
             else if(m_Selection==PlaneExplorer::PLANE && pPlane)
                 s_pXPlane->onDeleteCurPlane();
@@ -1368,7 +1368,7 @@ void PlaneExplorer::setObjectFromIndex(QModelIndex index)
         s_pXPlane->setPolar(pWPolar);
         s_pXPlane->m_pCurPOpp = nullptr;
 
-        m_Selection = PlaneExplorer::WPOLAR;
+        m_Selection = PlaneExplorer::PLANEPOLAR;
     }
     else if(pSelectedItem->level()==3)
     {

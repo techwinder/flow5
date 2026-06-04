@@ -48,21 +48,21 @@ class PlaneExplorer : public QWidget
     friend class BatchModeDlg;
 
     public:
-    enum enumSelectionType {NOOBJECT, PLANE, WPOLAR, PLANEOPP, STABILITYMODE};
+    enum enumSelectionType {NOOBJECT, PLANE, PLANEPOLAR, PLANEOPP, STABILITYMODE};
 
     public:
         PlaneExplorer(QWidget *pParent = nullptr);
         ~PlaneExplorer();
 
         void insertPlane(Plane *pPlane);
-        void insertWPolar(const PlanePolar *pWPolar);
+        void insertPlanePolar(const PlanePolar *pWPolar);
 
         QString removePlane(const QString &planeName);
         QString removePlane(Plane *pPlane);
-        QString removeWPolar(PlanePolar *pWPolar);
-        void removeWPolars(const Plane *pPlane);
+        QString removePlanePolar(PlanePolar *pWPolar);
+        void removePlanePolars(const Plane *pPlane);
         void removePlaneOpp(PlaneOpp *pPOpp);
-        void removeWPolarPOpps(const PlanePolar *pWPolar);
+        void removePlanePolarPOpps(const PlanePolar *pWPolar);
 
         void selectPlane(Plane* pPlane);
         void selectPlPolar(PlanePolar *pWPolar, bool bSelectPOpp);
@@ -73,7 +73,7 @@ class PlaneExplorer : public QWidget
 
         void addPOpps(const PlanePolar *pWPolar=nullptr);
         void fillModelView();
-        void fillWPolars(ObjectTreeItem *pPlaneItem, const Plane *pPlane);
+        void fillPlanePolars(ObjectTreeItem *pPlaneItem, const Plane *pPlane);
         void updatePOpps();
 
         void selectObjects();
@@ -93,7 +93,7 @@ class PlaneExplorer : public QWidget
 
         enumSelectionType selectedType() const {return m_Selection;}
         bool isPlaneSelected()  const {return m_Selection==PLANE;}
-        bool isWPolarSelected() const {return m_Selection==WPOLAR;}
+        bool isWPolarSelected() const {return m_Selection==PLANEPOLAR;}
         bool isPlaneOpp()       const {return m_Selection==PLANEOPP;}
 
         void setOverallCheckStatus();

@@ -1929,7 +1929,7 @@ void XPlane::onDefineT6Polar()
         {
             m_pCurPOpp = nullptr;
             setPolar(pNewControlPolar);
-            m_pPlaneExplorer->insertWPolar(pNewControlPolar);
+            m_pPlaneExplorer->insertPlanePolar(pNewControlPolar);
             m_pPlaneExplorer->selectPlPolar(pNewControlPolar, false);
         }
         m_pgl3dXPlaneView->resetglGeom();
@@ -1988,7 +1988,7 @@ void XPlane::onDefineT123578Polar()
         if(pNewWPolar)
         {
             setPolar(pNewWPolar);
-            m_pPlaneExplorer->insertWPolar(pNewWPolar);
+            m_pPlaneExplorer->insertPlanePolar(pNewWPolar);
             m_pPlaneExplorer->selectPlPolar(pNewWPolar, false);
             m_pCurPOpp = nullptr;
         }
@@ -2050,7 +2050,7 @@ void XPlane::onDefineT7Polar()
         if(pNewWPolar)
         {
             setPolar(pNewWPolar);
-            m_pPlaneExplorer->insertWPolar(pNewWPolar);
+            m_pPlaneExplorer->insertPlanePolar(pNewWPolar);
             m_pPlaneExplorer->selectPlPolar(pNewWPolar, false);
             m_pCurPOpp = nullptr;
         }
@@ -2122,7 +2122,7 @@ void XPlane::onDuplicateCurAnalysis()
     if(pNewWPolar)
     {
         setPolar(pNewWPolar);
-        m_pPlaneExplorer->insertWPolar(pNewWPolar);
+        m_pPlaneExplorer->insertPlanePolar(pNewWPolar);
         m_pPlaneExplorer->selectPlPolar(pNewWPolar, false);
         m_pCurPOpp = nullptr;
     }
@@ -2175,7 +2175,7 @@ void XPlane::onDuplicateAnalyses()
             pNewWPolar->resizeFlapCtrls(pPlaneXfl); // source plane may not have the same number of flaps as dest plane
         }
         pNewWPolar = Objects3d::insertNewPolar(pNewWPolar, m_pCurPlane);
-        if(pNewWPolar) m_pPlaneExplorer->insertWPolar(pNewWPolar);
+        if(pNewWPolar) m_pPlaneExplorer->insertPlanePolar(pNewWPolar);
     }
 
     if(pNewWPolar)
@@ -2230,7 +2230,7 @@ void XPlane::onImportExternalPolar()
     if(pNewPlPolar)
     {
         setPolar(pNewPlPolar);
-        m_pPlaneExplorer->insertWPolar(pNewPlPolar);
+        m_pPlaneExplorer->insertPlanePolar(pNewPlPolar);
         m_pPlaneExplorer->selectPlPolar(pNewPlPolar, false);
         m_pCurPOpp = nullptr;
     }
@@ -2296,7 +2296,7 @@ void XPlane::onDeleteWPlrPOpps()
 
     emit projectModified();
 
-    m_pPlaneExplorer->removeWPolarPOpps(m_pCurPlPolar);
+    m_pPlaneExplorer->removePlanePolarPOpps(m_pCurPlPolar);
 
     for (int i=Objects3d::nPOpps()-1; i>=0; i--)
     {
@@ -2449,7 +2449,7 @@ void XPlane::onDeletePlanePOpps()
     {
         PlanePolar const *pWPolar = Objects3d::planePolarAt(iw);
         if(pWPolar->planeName()==m_pCurPlane->name())
-            m_pPlaneExplorer->removeWPolarPOpps(pWPolar);
+            m_pPlaneExplorer->removePlanePolarPOpps(pWPolar);
     }
 
     for (int i=Objects3d::nPOpps()-1; i>=0; i--)
@@ -2485,7 +2485,7 @@ void XPlane::onDeletePlaneWPolars()
 
     if(m_pCurPlane)
     {
-        m_pPlaneExplorer->removeWPolars(m_pCurPlane);
+        m_pPlaneExplorer->removePlanePolars(m_pCurPlane);
     }
 
     Objects3d::deletePlaneResults(m_pCurPlane, true);
@@ -2516,7 +2516,7 @@ void XPlane::onDeleteCurPlPolar()
 
 
     PlanePolar *pWPolarDel = m_pCurPlPolar; // in case of unfortunate signal/slot to setWPolar;
-    QString nextWPolarName = m_pPlaneExplorer->removeWPolar(m_pCurPlPolar);
+    QString nextWPolarName = m_pPlaneExplorer->removePlanePolar(m_pCurPlPolar);
     Objects3d::deletePlanePolar(pWPolarDel);
 
     m_pCurPOpp = nullptr;
@@ -2796,15 +2796,15 @@ Plane* XPlane::setModPlane(Plane *pModPlane, bool bUsed, bool bAsNew)
                               "Continue?</p>"));
         mdDlg.initDialog();
 
-        int Ans = mdDlg.exec();
+        int answer = mdDlg.exec();
 
-        if (Ans == QDialog::Rejected)
+        if (answer == QDialog::Rejected)
         {
             //restore geometry
             delete pModPlane; // clean up
             return nullptr;
         }
-        else if(Ans==20)
+        else if(answer==20)
         {
             //save mods to a new plane object
             Plane *pPlane = Objects3d::setModifiedPlane(pModPlane);
@@ -2832,7 +2832,10 @@ Plane* XPlane::setModPlane(Plane *pModPlane, bool bUsed, bool bAsNew)
         }
     }
 
-    // either not used, or the user has decided to go ahead and overwrite
+    // either not used, or the user has decided to go ahead and overwrite  
+    // clear the tree first to avoid invalid updates
+    m_pPlaneExplorer->removePlanePolars(m_pCurPlane);
+
     Objects3d::deletePlaneResults(m_pCurPlane, false); // delete polar data and operating points
     Objects3d::deletePlane(m_pCurPlane, false); // delete the plane, but keep the polars;
     m_pCurPlane = nullptr;
@@ -2841,13 +2844,12 @@ Plane* XPlane::setModPlane(Plane *pModPlane, bool bUsed, bool bAsNew)
     if(pModPlane->isXflType())
         pModPlane->setInitialized(false); // mark the plane for rebuild
 
-    m_pCurPOpp = nullptr; // all the plane's oppoints have been deleted
-
+    m_pCurPOpp = nullptr; // all the plane's operating points have been deleted
     setPlane(pModPlane);
     setPolar(m_pCurPlPolar);
 
     m_pPlaneExplorer->updatePlane(m_pCurPlane);
-//    m_pPlaneExplorer->selectObjects(); // redundant
+
     setControls();
 
     m_bResetCurves = true;
@@ -3885,7 +3887,7 @@ void XPlane::onEditCurPlPolar()
 
         setPolar(pNewWPolar);
 
-        m_pPlaneExplorer->insertWPolar(m_pCurPlPolar);
+        m_pPlaneExplorer->insertPlanePolar(m_pCurPlPolar);
         m_pPlaneExplorer->selectPlPolar(m_pCurPlPolar, false);
         updateView();
     }
@@ -3943,7 +3945,7 @@ void XPlane::onResetCurPlPolar()
     Objects3d::deletePlanePolarResults(m_pCurPlPolar);
     m_pCurPOpp = nullptr;
 
-    m_pPlaneExplorer->removeWPolarPOpps(m_pCurPlPolar);
+    m_pPlaneExplorer->removePlanePolarPOpps(m_pCurPlPolar);
     m_pPlaneExplorer->setObjectProperties();
     emit projectModified();
     m_bResetCurves = true;
@@ -4632,9 +4634,8 @@ Plane *XPlane::setPlane(Plane* pPlane)
     {
         return m_pCurPlane;
     }
-
-    Surface::s_DebugPts.clear();
-    Surface::s_DebugVecs.clear();
+//    Surface::s_DebugPts.clear();
+//    Surface::s_DebugVecs.clear();
 //    PanelAnalysis::s_DebugPts.clear();
 //    PanelAnalysis::s_DebugVecs.clear();
 
@@ -4658,6 +4659,7 @@ Plane *XPlane::setPlane(Plane* pPlane)
             Objects3d::makePlaneTriangulation(m_pCurPlane);
             QApplication::restoreOverrideCursor();
         }
+
         if(pPlane==m_pCurPlane)
         {
             std::string log;
@@ -4705,12 +4707,6 @@ Plane *XPlane::setPlane(Plane* pPlane)
         m_pCurPlane = pPlane;
 
 
-/*    if(m_pCurPlane && m_pCurPlane->hasFuse())
-    {
-        Fuse const *pFuse = m_pCurPlane->fuseAt(0);
-        std::cout <<m_pCurPlane->name() << "  Fuse length = "<<pFuse->length() << std::endl;
-    }*/
-
     m_pgl3dXPlaneView->setVisiblePanels(std::vector<Panel3>());
     m_pgl3dXPlaneView->setVisiblePanels(std::vector<Panel4>());
 
@@ -4738,12 +4734,15 @@ Plane *XPlane::setPlane(Plane* pPlane)
         if(m_pXPlaneWt) m_pXPlaneWt->updateObjectData();
         return nullptr;
     }
+
+
     if(!m_pCurPlane->isInitialized())
     {
         QApplication::setOverrideCursor(Qt::WaitCursor);
 
         // initialize on the fly when needed
         m_pCurPlane->makePlane(true, false, true);
+
         Objects3d::makePlaneTriangulation(m_pCurPlane);
 
         m_pgl3dXPlaneView->s_bResetglGeom = true;
@@ -4764,7 +4763,6 @@ Plane *XPlane::setPlane(Plane* pPlane)
 
     m_pgl3dXPlaneView->setPlane(m_pCurPlane);
     if(m_pXPlaneWt) m_pXPlaneWt->updateObjectData();
-
 
     bool bSetScale = (m_pgl3dXPlaneView->objectReferenceLength()<0.0);
     if(bSetScale)
@@ -6768,7 +6766,7 @@ void XPlane::onImportAnalysesFromXML()
             strange = "Associating the imported polar " + QString::fromStdString(pWPolar->name() + "to the plane " + pPlane->name());
             displayMessage(strange, true, false);
             pWPolar = Objects3d::insertNewPolar(pWPolar, pPlane);
-            m_pPlaneExplorer->insertWPolar(pWPolar);
+            m_pPlaneExplorer->insertPlanePolar(pWPolar);
         }
     }
 
