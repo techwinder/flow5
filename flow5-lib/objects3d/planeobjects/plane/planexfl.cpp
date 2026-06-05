@@ -24,6 +24,7 @@
 
 #include <format>
 #include <chrono>
+#include <thread>
 
 #include <planexfl.h>
 #include <fusenurbs.h>
@@ -1017,6 +1018,13 @@ void PlaneXfl::makeTriMesh(bool bThickSurfaces)
     {
         WingXfl *pWing = m_Wing[iw];
         pWing->makeTriPanels(m_RefTriMesh.nPanels(), m_RefTriMesh.nNodes(), bThickSurfaces);
+
+        for(int jSurf=0; jSurf<pWing->nSurfaces()-1; jSurf++)
+        {
+            pWing->connectSurfaceNodesToNext(jSurf, pWing->triMesh().panels(), true, bThickSurfaces);
+        }
+
+
         m_RefTriMesh.appendMesh(pWing->triMesh());
         if(pWing->isFin()) m_RefTriMesh.lastPanel().m_iPD = -1; // because there is no right tip patch
     }
@@ -1081,13 +1089,15 @@ bool PlaneXfl::connectTriMesh(bool bRefTriMesh, bool bConnectTE, bool )
 {
     TriMesh *pTriMesh = bRefTriMesh ? &m_RefTriMesh : &m_TriMesh;
 
+
     //make internal fuse connections
     for(int ifuse=0; ifuse<fuseCount(); ifuse++)
     {
         Fuse *pFuse = fuse(ifuse);
         int i1 = pFuse->firstPanel3Index();
         int n1 = pFuse->nPanel3();
-        pTriMesh->makeConnectionsFromNodePosition2(i1, n1, LENGTHPRECISION);
+//        pTriMesh->makeConnectionsFromNodePositions(i1, n1, LENGTHPRECISION);
+        pTriMesh->makeConnectionsFromNodeIndexes(i1, n1, false); // slightly faster
     }
 
     // make internal wing connections
@@ -1095,9 +1105,11 @@ bool PlaneXfl::connectTriMesh(bool bRefTriMesh, bool bConnectTE, bool )
     {
         // first the surface
         WingXfl const *pWing = m_Wing.at(iw);
+
         int i1 = pWing->firstPanel3Index();
         int n1 = pWing->nPanel3();
-        pTriMesh->makeConnectionsFromNodePosition2(i1, n1, 1.0e-4);
+//        pTriMesh->makeConnectionsFromNodePositions(i1, n1, 1.0e-4);
+        pTriMesh->makeConnectionsFromNodeIndexes(i1, n1, false); // slightly faster
     }
 
     pTriMesh->connectNodes();

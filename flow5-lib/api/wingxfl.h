@@ -311,7 +311,7 @@ class FL5LIB_EXPORT WingXfl : public Part
         void setNTipStrips(int nstrips) {m_nTipStrips=nstrips;}
 
         bool connectInnerSurfaces(std::vector<Panel3> &panels, bool bThickSurfaces);
-        bool connectSurfaceToNext(int iSurf, std::vector<Panel3> &panels, bool bConnectFlaps, bool bThickSurfaces);
+        bool connectSurfaceNodesToNext(int iSurf, std::vector<Panel3> &panels, bool bConnectFlaps, bool bThickSurfaces);
 
         bool hasCenterGap() const;
 

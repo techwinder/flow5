@@ -11,7 +11,7 @@ It is version 7 of the legacy project xflr5.
 - ~~Add plane imports from STL or OBJ meshes to the API~~
 - ~~Add fuselage imports from STL or OBJ meshes to the API~~
 - ~~Add fuselage imports from STEP files to the API~~
-- Clarify the sign conventions for the output of moments; see [discussion #62](https://github.com/techwinder/flow5/discussions/62). 
+- Clarify the sign conventions used for the output of moments; see [discussion #62](https://github.com/techwinder/flow5/discussions/62). 
 - Either complete or remove currently inoperative features, e.g. plane optimization, advanced editors
 - Continue to clean the code and to improve the API 
 - Clean the documentation
@@ -23,7 +23,7 @@ Please note that the API is still in an experimental state and subject to change
 
 The intent is to stabilize both the source code and the API by the end of 2026. 
 
-Even though the main part of the intended refactoring has been completed with v7.57, deprecation or even discontinuation of interfaces are still likely until the end of the year.
+Even though the main part of the intended refactoring will have been completed with v7.57, deprecation or even discontinuation of interfaces are still likely until the end of the year.
 
 ## Examples
 - XFoilRun: Construction of a NACA foil and calculation of a type 1 polar using XFoil.

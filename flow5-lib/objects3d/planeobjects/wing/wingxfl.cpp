@@ -950,7 +950,7 @@ bool WingXfl::connectInnerSurfaces(std::vector<Panel3> &panels, bool bThickSurfa
 }
 
 
-bool WingXfl::connectSurfaceToNext(int iSurf, std::vector<Panel3> &panels, bool bConnectFlaps, bool bThickSurfaces)
+bool WingXfl::connectSurfaceNodesToNext(int iSurf, std::vector<Panel3> &panels, bool bConnectFlaps, bool bThickSurfaces)
 {
     int coef = bThickSurfaces ? 2 : 1;
 
@@ -964,6 +964,7 @@ bool WingXfl::connectSurfaceToNext(int iSurf, std::vector<Panel3> &panels, bool 
         return true;
     }
 
+
     // connect the two surfaces;
     // this is done by setting the right side panels' node indexes to those of the left side panels;
     // 1 or two vertices are assigned for each right side panel
@@ -975,6 +976,10 @@ bool WingXfl::connectSurfaceToNext(int iSurf, std::vector<Panel3> &panels, bool 
         if(nr<0 || nr>=int(panels.size())) return false; // error
 
         Panel3 &pr = panels[nr];
+
+//        if(pr.index()==151 || pr.index()==152)
+//            int nada = 0;
+
 
         if(pr.isFlapPanel())
             if(!bConnectFlaps) continue;
@@ -992,8 +997,8 @@ bool WingXfl::connectSurfaceToNext(int iSurf, std::vector<Panel3> &panels, bool 
             {
                 //connect only same top bot mid positions
                 int nMerged = 0;
-                int vl[]{-1,-1}; // identify the vertices being merged
-                int vr[]{-1,-1};
+//                int vl[]{-1,-1}; // identify the vertices being merged
+//                int vr[]{-1,-1};
 
                 for(int ivr=0; ivr<3; ivr++)
                 {
@@ -1002,8 +1007,8 @@ bool WingXfl::connectSurfaceToNext(int iSurf, std::vector<Panel3> &panels, bool 
                         if(pr.vertexAt(ivr).isSame(pl.vertexAt(ivl), 0.0001))
                         {
                             pr.setVertex(ivr, pl.vertexAt(ivl));// could also only set the index
-                            vl[nMerged]=ivl;
-                            vr[nMerged]=ivr;
+//                            vl[nMerged]=ivl;
+//                            vr[nMerged]=ivr;
                             nMerged++;
                         }
                         if(nMerged>=2) break; // prevent further merges if small panels
@@ -1016,7 +1021,7 @@ bool WingXfl::connectSurfaceToNext(int iSurf, std::vector<Panel3> &panels, bool 
                     m_StripStartNodes[iSurf+2] = pr.vertexAt(2).index();
                 }
 
-                if(nMerged==2)
+/*                if(nMerged==2)
                 {
                     // two common vertices, the panels are neighbours
                     // identify the indexes of the common edges to assign neighbours
@@ -1026,7 +1031,7 @@ bool WingXfl::connectSurfaceToNext(int iSurf, std::vector<Panel3> &panels, bool 
                     pl.setNeighbour(nr, iEdgeL);
                     pr.setNeighbour(nl, iEdgeR);
                     break; // done; don't try to merge pr again, for instance with top or bot surface
-                }
+                }*/
             }
         }
     }
@@ -2488,7 +2493,7 @@ void WingXfl::exportToAVL(std::string &avlstring, int index, Vector3d const &T, 
     out << m_Name;
     out << EOLstr;
     out << "#Nchord    Cspace   [ Nspan Sspace ]\n";
-    out << std::format("{:d}        %3.1f\n", nXPanels(0), 1.0);
+    out << std::format("{:d}        {:3.1f}\n", nXPanels(0), 1.0);
 
     out << EOLstr;
     out << "ANGLE\n";
@@ -2543,7 +2548,7 @@ void WingXfl::exportToAVL(std::string &avlstring, int index, Vector3d const &T, 
             strong += str;
 
             assert(aSurface.foilA());
-            str = std::format("%5.3f  {:9.4f}   {:9.4f}  {:9.4f}   -1.0  ",
+            str = std::format("{:5.3f}  {:9.4f}   {:9.4f}  {:9.4f}   -1.0  ",
                     aSurface.foilA()->TEXHinge(),
                     aSurface.hingeVector().x,
                     aSurface.hingeVector().y,
@@ -2583,7 +2588,7 @@ void WingXfl::exportToAVL(std::string &avlstring, int index, Vector3d const &T, 
         strong += str;
 
         assert(aSurface.foilB());
-        str = std::format("%5.3f  {:9.4f}  {:9.4f}   {:9.4f}   -1.0  ",
+        str = std::format("{:5.3f}  {:9.4f}  {:9.4f}   {:9.4f}   -1.0  ",
                           aSurface.foilB()->TEXHinge(),
                           aSurface.hingeVector().x,
                           aSurface.hingeVector().y,
@@ -2635,17 +2640,18 @@ void WingXfl::getProperties(std::string &properties, std::string const &prefx) c
     props += prefix + "Sweep             =" + strange + DEGstr + "\n";
 
 
-    strange = std::format("VLM panels        =%d\n", quadTotal(true));
+    strange = std::format("VLM panels        ={:6d}\n", quadTotal(true));
     props += prefix + strange;
 
-    strange = std::format("Quad panels       =%d\n", quadTotal(false));
+    strange = std::format("Quad panels       ={:6d}\n", quadTotal(false));
     props += prefix + strange;
 
-    strange = std::format("Triangular panels =%d", nTriangles());
+    strange = std::format("Triangular panels ={:6d}", nTriangles());
     props += prefix + strange;
 
     properties = props;
 }
+
 
 void WingXfl::makeTriangulation(Fuse const *pFuse, int CHORDPANELS)
 {

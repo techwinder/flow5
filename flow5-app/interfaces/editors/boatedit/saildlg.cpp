@@ -1619,7 +1619,7 @@ void SailDlg::onConnectPanels()
     QApplication::setOverrideCursor(Qt::WaitCursor);
     m_ppto->onAppendQText("Connecting panels...");
     
-    m_pSail->triMesh().makeConnectionsFromNodePosition(true, true);
+    m_pSail->triMesh().makeConnectionsFromNodePositions(true, true);
     // duplicate the connections in the refpanels - will be used when defining the TE panels;
     Q_ASSERT(int(m_pSail->triangles().size())==m_pSail->nPanel3());
     m_pSail->saveConnections();
@@ -1632,7 +1632,6 @@ void SailDlg::onConnectPanels()
 
 void SailDlg::onCheckFreeEdges()
 {
-
     std::vector<Segment3d> freeedges;
 
     m_pSail->triMesh().getFreeEdges(freeedges);

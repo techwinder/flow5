@@ -243,7 +243,7 @@ bool PlaneSTL::connectTriMesh(bool bRefTriMesh, bool bConnectTE, bool bMultiThre
     bool bOK = true;
     if(bRefTriMesh)
     {
-        m_RefTriMesh.makeConnectionsFromNodePosition(bConnectTE, bMultiThreaded);
+        m_RefTriMesh.makeConnectionsFromNodePositions(bConnectTE, bMultiThreaded);
         m_RefTriMesh.connectNodes();
 
         std::vector<int>errorlist;
@@ -253,7 +253,7 @@ bool PlaneSTL::connectTriMesh(bool bRefTriMesh, bool bConnectTE, bool bMultiThre
     }
     else
     {
-        m_TriMesh.makeConnectionsFromNodePosition(bConnectTE, bMultiThreaded);
+        m_TriMesh.makeConnectionsFromNodePositions(bConnectTE, bMultiThreaded);
         m_TriMesh.connectNodes();
 
         std::vector<int>errorlist;

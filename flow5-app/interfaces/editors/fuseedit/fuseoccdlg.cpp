@@ -462,7 +462,7 @@ void FuseOccDlg::onConnectTriangles()
     QApplication::setOverrideCursor(Qt::WaitCursor);
     updateOutput(QString::asprintf("Connecting panels - node coincidence=%g", XflMesh::nodeMergeDistance()*Units::mtoUnit())+Units::lengthUnitQLabel()+"\n");
     int n = m_pFuse->nPanel3();
-    m_pFuse->triMesh().makeConnectionsFromNodePosition2(0, n, XflMesh::nodeMergeDistance());
+    m_pFuse->triMesh().makeConnectionsFromNodePositions(0, n, XflMesh::nodeMergeDistance());
 
     QString log(" ... done\n\n");
     updateOutput(log);

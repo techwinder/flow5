@@ -107,65 +107,67 @@ void BatchPlaneDlg::setupLayout()
     {
         m_psplHMain = new QSplitter(Qt::Horizontal, this);
         {
-            QFrame *pfrLeft = new QFrame;
+            QTabWidget *pLeftTabWt = new QTabWidget;
             {
-                QVBoxLayout *pLeftLayout = new QVBoxLayout;
+                QFrame *pfrLeft = new QFrame;
                 {
-                    m_psplVLeft = new QSplitter(Qt::Vertical, this);
+                    QVBoxLayout *pLeftLayout = new QVBoxLayout;
                     {
-                        m_pStruct = new ExpandableTreeView;
-                        m_pStruct->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
-                        m_pStruct->setSelectionMode(QAbstractItemView::MultiSelection);
-                        m_pStruct->setEditTriggers(QAbstractItemView::NoEditTriggers);
-                        m_pStruct->setUniformRowHeights(true);
-                        m_pStruct->setRootIsDecorated(true);
-                        m_pStruct->setFont(DisplayOptions::treeFont());
+                        m_psplVLeft = new QSplitter(Qt::Vertical, this);
+                        {
+                            m_pStruct = new ExpandableTreeView;
+                            m_pStruct->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+                            m_pStruct->setSelectionMode(QAbstractItemView::MultiSelection);
+                            m_pStruct->setEditTriggers(QAbstractItemView::NoEditTriggers);
+                            m_pStruct->setUniformRowHeights(true);
+                            m_pStruct->setRootIsDecorated(true);
+                            m_pStruct->setFont(DisplayOptions::treeFont());
 
-                        QStringList labels;
-                        labels << "Object"  << "1234567"<< "";
+                            QStringList labels;
+                            labels << "Object"  << "1234567"<< "";
 
-                        m_pModel = new ObjectTreeModel(this);
-                        m_pModel->setHeaderData(0, Qt::Horizontal, "Objects", Qt::DisplayRole);
-                        m_pModel->setHeaderData(1, Qt::Horizontal, "1234567890123", Qt::EditRole);
-                        m_pModel->setHeaderData(1, Qt::Horizontal, "1234567890123", Qt::DisplayRole);
-                        m_pModel->setHeaderData(2, Qt::Horizontal, "123", Qt::DisplayRole);
-                        m_pModel->setHeaderData(2, Qt::Horizontal, Qt::AlignRight, Qt::TextAlignmentRole);
-                        m_pStruct->setModel(m_pModel);
-                        m_pStruct->setRootIndex(QModelIndex());
+                            m_pModel = new ObjectTreeModel(this);
+                            m_pModel->setHeaderData(0, Qt::Horizontal, "Objects", Qt::DisplayRole);
+                            m_pModel->setHeaderData(1, Qt::Horizontal, "1234567890123", Qt::EditRole);
+                            m_pModel->setHeaderData(1, Qt::Horizontal, "1234567890123", Qt::DisplayRole);
+                            m_pModel->setHeaderData(2, Qt::Horizontal, "123", Qt::DisplayRole);
+                            m_pModel->setHeaderData(2, Qt::Horizontal, Qt::AlignRight, Qt::TextAlignmentRole);
+                            m_pStruct->setModel(m_pModel);
+                            m_pStruct->setRootIndex(QModelIndex());
 
-                        m_pStruct->hideColumn(1);
-                        m_pStruct->hideColumn(2);
-                        m_pStruct->header()->hide();
-                        m_pStruct->header()->setStretchLastSection(false);
-                        m_pStruct->header()->hide();
-                        m_pStruct->header()->setStretchLastSection(false);
-                        m_pStruct->header()->setSectionResizeMode(0, QHeaderView::Stretch);
-                        m_pStruct->header()->setSectionResizeMode(1, QHeaderView::Fixed);
-                        m_pStruct->header()->setSectionResizeMode(2, QHeaderView::Fixed);
-                        int av = DisplayOptions::treeFontStruct().averageCharWidth();
-                        m_pStruct->header()->resizeSection(1, 7*av);
-                        m_pStruct->header()->resizeSection(2, 3*av);
+                            m_pStruct->hideColumn(1);
+                            m_pStruct->hideColumn(2);
+                            m_pStruct->header()->hide();
+                            m_pStruct->header()->setStretchLastSection(false);
+                            m_pStruct->header()->hide();
+                            m_pStruct->header()->setStretchLastSection(false);
+                            m_pStruct->header()->setSectionResizeMode(0, QHeaderView::Stretch);
+                            m_pStruct->header()->setSectionResizeMode(1, QHeaderView::Fixed);
+                            m_pStruct->header()->setSectionResizeMode(2, QHeaderView::Fixed);
+                            int av = DisplayOptions::treeFontStruct().averageCharWidth();
+                            m_pStruct->header()->resizeSection(1, 7*av);
+                            m_pStruct->header()->resizeSection(2, 3*av);
 
-                        m_pDelegate = new ObjectTreeDelegate(this);
-                        m_pDelegate->showStyle(false);
-                        m_pStruct->setItemDelegate(m_pDelegate);
+                            m_pDelegate = new ObjectTreeDelegate(this);
+                            m_pDelegate->showStyle(false);
+                            m_pStruct->setItemDelegate(m_pDelegate);
 
-                        QItemSelectionModel *selectionModel = new QItemSelectionModel(m_pModel);
-                        m_pStruct->setSelectionModel(selectionModel);
-                        m_pptoObjectProps = new PlainTextOutput;
+                            QItemSelectionModel *selectionModel = new QItemSelectionModel(m_pModel);
+                            m_pStruct->setSelectionModel(selectionModel);
+                            m_pptoObjectProps = new PlainTextOutput;
 
-                        m_psplVLeft->addWidget(m_pStruct);
-                        m_psplVLeft->addWidget(m_pptoObjectProps);
+                            m_psplVLeft->addWidget(m_pStruct);
+                            m_psplVLeft->addWidget(m_pptoObjectProps);
+                        }
+                        pLeftLayout->addWidget(m_pStruct->cmdWidget());
+                        pLeftLayout->addWidget(m_psplVLeft);
+
                     }
-                    pLeftLayout->addWidget(m_pStruct->cmdWidget());
-                    pLeftLayout->addWidget(m_psplVLeft);
-
+                    pfrLeft->setLayout(pLeftLayout);
                 }
-                pfrLeft->setLayout(pLeftLayout);
-            }
 
-            QFrame*pfrMiddle = new QFrame;
-            {
+                QFrame*pfrMiddle = new QFrame;
+                {
                 QVBoxLayout *pMidLayout = new QVBoxLayout;
                 {
                     m_pTabWidget = new QTabWidget;
@@ -226,6 +228,10 @@ void BatchPlaneDlg::setupLayout()
                 pfrMiddle->setLayout(pMidLayout);
             }
 
+                pLeftTabWt->addTab(pfrLeft,   tr("Polar selection"));
+                pLeftTabWt->addTab(pfrMiddle, tr("Operating points"));
+            }
+
             QFrame *pfrRight = new QFrame;
             {
                 QVBoxLayout *pRangeFrameLayout = new QVBoxLayout;
@@ -270,8 +276,8 @@ void BatchPlaneDlg::setupLayout()
                 }
                 pfrRight->setLayout(pRangeFrameLayout);
             }
-            m_psplHMain->addWidget(pfrLeft);
-            m_psplHMain->addWidget(pfrMiddle);
+
+            m_psplHMain->addWidget(pLeftTabWt);
             m_psplHMain->addWidget(pfrRight);
             m_psplHMain->setChildrenCollapsible(false);
         }

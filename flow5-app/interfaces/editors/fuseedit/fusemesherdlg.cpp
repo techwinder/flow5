@@ -676,7 +676,7 @@ void FuseMesherDlg::onConnectTriangles()
     m_ppto->onAppendQText("Connecting panels...");
     onClearHighlighted();
 
-    m_pFuse->triMesh().makeConnectionsFromNodePosition(false);
+    m_pFuse->triMesh().makeConnectionsFromNodePositions(false);
     QString log(" ... done\n\n");
     m_ppto->onAppendQText(log);
     QApplication::restoreOverrideCursor();

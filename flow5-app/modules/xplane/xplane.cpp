@@ -193,12 +193,12 @@ XPlane::XPlane(MainFrame *pMainFrame) : QObject()
     m_pPanelAnalysisDlg = new PlaneAnalysisDlg(s_pMainFrame);
     PlaneAnalysisDlg::setXPlane(this);
     connect(m_pPanelAnalysisDlg, SIGNAL(analysisFinished(PlanePolar*)), SLOT(onFinishAnalysis(PlanePolar*)));
-    connect(m_pPanelAnalysisDlg, SIGNAL(oppFinished()),                 SLOT(onResetCurves()));
+    connect(m_pPanelAnalysisDlg, SIGNAL(oppFinished()),                 SLOT(onOppFinished()));
 
     m_pLLTAnalysisDlg = new LLTAnalysisDlg(s_pMainFrame);
     LLTAnalysisDlg::setXPlane(this);
     connect(m_pLLTAnalysisDlg,   SIGNAL(analysisFinished(PlanePolar*)), SLOT(onFinishAnalysis(PlanePolar*)));
-    connect(m_pLLTAnalysisDlg,   SIGNAL(lltOppFinished()),              SLOT(onResetCurves()));
+    connect(m_pLLTAnalysisDlg,   SIGNAL(lltOppFinished()),              SLOT(onOppFinished()));
 
     m_pCurPlane   = nullptr;
     m_pCurPOpp    = nullptr;
@@ -4571,6 +4571,14 @@ void XPlane::onCalculate()
 }
 
 
+void XPlane::onOppFinished()
+{
+    m_pCurPOpp = nullptr;
+    if(isPolarView() || isPOppView())
+        onResetCurves();
+}
+
+
 void XPlane::onFinishAnalysis(PlanePolar *pWPolar)
 {
     if(!pWPolar) return;
@@ -4741,7 +4749,7 @@ Plane *XPlane::setPlane(Plane* pPlane)
         QApplication::setOverrideCursor(Qt::WaitCursor);
 
         // initialize on the fly when needed
-        m_pCurPlane->makePlane(true, false, true);
+        m_pCurPlane->makePlane(true, false, false); // trimesh depends on the polar
 
         Objects3d::makePlaneTriangulation(m_pCurPlane);
 

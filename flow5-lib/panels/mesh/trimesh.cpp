@@ -34,6 +34,7 @@
 #include <units.h>
 #include <utils.h>
 
+
 bool TriMesh::s_bCancel = false;
 
 TriMesh::TriMesh() : XflMesh()
@@ -502,23 +503,23 @@ void TriMesh::connectMeshes(int i0, int n0, int i1, int n1)
 }
 
 
-void TriMesh::makeConnectionsFromNodePosition2(int i0, int np0, double MERGEDISTANCE)
+void TriMesh::makeConnectionsFromNodePositions(int iStart, int ntotal, double MERGEDISTANCE)
 {
-    if(i0+np0>nPanels())
+    if(iStart+ntotal>nPanels())
     {
-        std::string err = std::format("TriMesh::makeConnectionsFromNodePosition error: {:d} {:d} {:d}", i0, np0, int(nPanels()));
+        std::string err = std::format("TriMesh::makeConnectionsFromNodePosition error: {:d} {:d} {:d}", iStart, ntotal, int(nPanels()));
         std::cerr << err << std::endl;
         return;
     }
 
-    for(int it0=i0; it0<i0+np0; it0++)
+    for(int it0=iStart; it0<iStart+ntotal; it0++)
     {
         Panel3 &p0 = panel(it0);
         // search starting from the base panel's index
         // since neighbours are likely to have a close index
         if(p0.neighbourCount()==3) continue;  // no further connections for this panel
 
-        for(int it1=i0; it1<i0+np0; it1++)
+        for(int it1=iStart; it1<iStart+ntotal; it1++)
         {
             if(it0==it1) continue; // do not connect the panel to itself
             Panel3 &p1 = panel(it1);
@@ -572,8 +573,8 @@ void TriMesh::makeConnectionsFromNodePosition2(int i0, int np0, double MERGEDIST
                 }
             }
             if(p0.neighbourCount()==3) break;
-         }
-        
+        }
+
         if(s_bCancel) break;
     }
 }
@@ -584,7 +585,7 @@ void TriMesh::makeConnectionsFromNodePosition2(int i0, int np0, double MERGEDIST
  * Untested in multithread mode.
  * Slow.
  */
-void TriMesh::makeConnectionsFromNodePosition(bool bConnectTE, bool bMultiThread)
+void TriMesh::makeConnectionsFromNodePositions(bool bConnectTE, bool bMultiThread)
 {
     s_bCancel = false;
 
@@ -725,7 +726,7 @@ void TriMesh::connectPanelBlock(int iBlock, bool bConnectTE)
 
 
 /** connects the panels if they share two vertices with the same indexes */
-void TriMesh::makeConnectionsFromNodeIndexes(int i0, int n0, int i1, int n1)
+void TriMesh::makeConnectionsFromNodeIndexes(int i0, int n0, bool bConnectFlapPanels)
 {
     int ni[]{0,0,0};
     int nj[]{0,0,0};
@@ -739,12 +740,24 @@ void TriMesh::makeConnectionsFromNodeIndexes(int i0, int n0, int i1, int n1)
 
         for(int k=0; k<3; k++) ni[k] = p3i.nodeIndex(k);
 
-        for(int it1=i1; it1<i1+n1; it1++)
+        for(int it1=i0; it1<i0+n0; it1++)
         {
             if(it0==it1) continue; // do not connect the triangle to itself
 
             Panel3 &p3j = m_Panel3[it1];
             if(p3j.neighbourCount()==3) continue;  // no further connections for this panel
+
+
+            if(!bConnectFlapPanels)
+            {
+                // special case: do not connect adjacent flap panels lying on different surfaces
+                if(p3i.surfaceIndex() != p3j.surfaceIndex())
+                {
+                    if(p3i.isFlapPanel() || p3j.isFlapPanel())
+                        continue;
+                }
+            }
+
 
             for(int k=0; k<3; k++) nj[k] = p3j.nodeIndex(k);
 
@@ -784,7 +797,7 @@ void TriMesh::makeConnectionsFromNodeIndexes(int i0, int n0, int i1, int n1)
                                     }
                                     p3i.setNeighbour(it1, iEdge);
 
-                                    // process p3k first
+                                    // process p3j next
                                     // find the edge
 
                                     if (l==0)
