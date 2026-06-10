@@ -86,7 +86,6 @@ bool gl3dXPlaneView::s_bResetglMesh(true);
 bool gl3dXPlaneView::s_bResetglWake(true);
 bool gl3dXPlaneView::s_bResetglOpp(true);
 bool gl3dXPlaneView::s_bResetglLift(true);
-bool gl3dXPlaneView::s_bResetglMoments(true);
 bool gl3dXPlaneView::s_bResetglDrag(true);
 bool gl3dXPlaneView::s_bResetglDownwash(true);
 bool gl3dXPlaneView::s_bResetglPanelGamma(true);
@@ -111,7 +110,6 @@ gl3dXPlaneView::gl3dXPlaneView(QWidget *parent) : gl3dXflView(parent)
     s_bResetglWake       = true;
     s_bResetglOpp        = true;
     s_bResetglLift       = true;
-    s_bResetglMoments    = true;
     s_bResetglDrag       = true;
     s_bResetglDownwash   = true;
     s_bResetglPanelGamma = true;
@@ -127,8 +125,8 @@ gl3dXPlaneView::gl3dXPlaneView(QWidget *parent) : gl3dXflView(parent)
     m_PixLegend = QPixmap(107, 97);
     m_PixLegend.fill(Qt::transparent);
 
-    m_bShowCpScale    = false;
-
+    m_bShowCpScale  = false;
+    m_bWindAxes     = false;
     m_bPanelNormals = m_bNodeNormals = m_bVortices = false;
 
     m_FlowYPos = 0.0f;
@@ -178,7 +176,6 @@ void gl3dXPlaneView::resetglPOpp()
 {
     s_bResetglOpp        = true;
     s_bResetglLift       = true;
-    s_bResetglMoments    = true;
     s_bResetglDrag       = true;
     s_bResetglDownwash   = true;
     s_bResetglPanelGamma = true;
@@ -409,11 +406,6 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
         {
             paintColorSegments(m_pglXPlaneBuffers->m_vboPanelForces, 2.0f, Line::SOLID);
         }
-
-        if(m_pPOpp3dControls->m_bMoments)
-        {
-            paintSegments(m_pglXPlaneBuffers->m_vboMoments, W3dPrefs::s_MomentStyle);
-        }
     }
 
     if(isPicking())
@@ -637,10 +629,10 @@ void gl3dXPlaneView::glRenderGeometryBasedBuffers()
 
 void gl3dXPlaneView::glRenderPOppBasedBuffers()
 {
-    Plane    const *pPlane  = s_pXPlane->curPlane();
-    PlanePolar   const *pWPolar = s_pXPlane->curPlPolar();
-    PlaneOpp const *pPOpp   = s_pXPlane->curPOpp();
-    if(!pPlane || !pWPolar || !pPOpp) return;
+    Plane      const *pPlane   = s_pXPlane->curPlane();
+    PlanePolar const *pPlPolar = s_pXPlane->curPlPolar();
+    PlaneOpp   const *pPOpp    = s_pXPlane->curPOpp();
+    if(!pPlane || !pPlPolar || !pPOpp) return;
 
     if(pPlane->isXflType())
     {
@@ -667,10 +659,10 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
         {
             double sc = Opp3dScalesCtrls::partForceScale() / 10000.0;;
             // global force
-            double qDyn = 0.5*pWPolar->density()*pPOpp->QInf()*pPOpp->QInf();
+            double qDyn = 0.5*pPlPolar->density()*pPOpp->QInf()*pPOpp->QInf();
             Vector3d windD(objects::windDirection(pPOpp->alpha(), pPOpp->beta()));
             Vector3d force(pPOpp->m_AF.Fff() + windD * pPOpp->m_AF.viscousDrag());
-            paintThickArrow(pPOpp->m_AF.centreOfPressure(), force*qDyn*sc, xfl::fromfl5Clr(W3dPrefs::s_LiftStyle.m_Color), m_matModel);
+            paintThickArrow(pPOpp->m_AF.centreOfPressure(), force*qDyn*sc, xfl::fromfl5Clr(W3dPrefs::s_LiftStyle.m_Color), true, m_matModel);
 
             for(int iw=0; iw<pPOpp->nWOpps(); iw++)
             {
@@ -682,20 +674,70 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
         }
     }
 
+    if(m_pPOpp3dControls->m_bMoments || m_pPOpp3dControls->m_bCoG)
+    {
+        Vector3d CoG = pPOpp->cog();
+        CoG.rotateY(pPOpp->alpha());
+        CoG.rotateZ(pPOpp->beta());
+
+        if(m_pPOpp3dControls->m_bCoG)
+        {
+            paintIcoSphere(CoG, 0.025/m_glScalef, W3dPrefs::s_MassColor, true, false);
+            glRenderText(CoG+Vector3d(1,1,1)*0.04/m_glScalef, "CoG", W3dPrefs::s_MassColor);
+        }
+
+        if(m_pPOpp3dControls->m_bMoments)
+        {
+            QColor clr = W3dPrefs::s_MomentColor;
+            Vector3d M = pPOpp->aeroForces().Mi() + pPOpp->aeroForces().Mv();
+            double Q = 1./2.* pPlPolar->density()*pPOpp->QInf()*pPOpp->QInf();
+            M *= Q;
+            QString strange = QString::asprintf("M_wind_axes = (%.2f, %.2f, %.2f) ",
+                                                M.x*Units::NmtoUnit(),
+                                                M.y*Units::NmtoUnit(),
+                                                M.z*Units::NmtoUnit()) + Units::momentUnitQLabel();
+            double scale = 0.001; // additional display scale factor
+            M *= Opp3dScalesCtrls::momentScale()*scale / m_glScalef;
+
+            paintThickArrow(CoG, M, clr, true);
+            glRenderText(CoG+M+Vector3d(1,1,1)*0.03/double(m_glScalef), strange, clr);
+        }
+    }
+
     if(m_pPOpp3dControls->m_bStreamLines && !pPOpp->isLLTMethod())
     {
         if(!s_bResetglStream)
             paintStreamLines(m_pglXPlaneBuffers->m_vboStreamLines, m_StreamLineColours, StreamLineCtrls::nX());
     }
+#ifdef QT_DEBUG
+    if(m_bWindAxes && pPOpp)
+    {
+        m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView);
+        m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
+
+        QColor clr(215, 71, 31);
+        Vector3d I = pPOpp->aeroForces().CFWind().Idir();
+        Vector3d J = pPOpp->aeroForces().CFWind().Jdir();
+        Vector3d K = pPOpp->aeroForces().CFWind().Kdir();
+        paintThinArrow(Vector3d(), I, clr, 3.0, Line::DASHDOT);
+        paintThinArrow(Vector3d(), J, clr, 3.0, Line::DASHDOT);
+        paintThinArrow(Vector3d(), K, clr, 3.0, Line::DASHDOT);
+
+        const float delta = 0.015f;
+        glRenderText(I.x+3.0*delta, I.y+delta,     I.z+delta,     "x_wind", clr);
+        glRenderText(J.x+delta,     J.y+3.0*delta, J.z+delta,     "y_wind", clr);
+        glRenderText(K.x+delta,     K.y+delta,     K.z+3.0*delta, "z_wind", clr);
+    }
+#endif
 }
 
 
 void gl3dXPlaneView::glRenderView()
 {
     QMatrix4x4 modeMatrix;
-    Plane    const *pPlane  = s_pXPlane->curPlane();
-    PlanePolar   const *pWPolar = s_pXPlane->curPlPolar();
-    PlaneOpp const *pPOpp   = s_pXPlane->curPOpp();
+    Plane       const *pPlane  = s_pXPlane->curPlane();
+    PlanePolar  const *pWPolar = s_pXPlane->curPlPolar();
+    PlaneOpp    const *pPOpp   = s_pXPlane->curPOpp();
 
     if(!pPlane) return;
 
@@ -720,7 +762,6 @@ void gl3dXPlaneView::glRenderView()
     QMatrix4x4 vmMat(m_matView*m_matModel);
     QMatrix4x4 pvmMat(m_matProj*vmMat);
 
-//    m_pvmMatrix = m_matProj * m_matView * m_matModel;
     m_shadSurf.bind();
     {
         m_shadSurf.setUniformValue(m_locSurf.m_vmMatrix,  vmMat);
@@ -734,6 +775,7 @@ void gl3dXPlaneView::glRenderView()
     }
     m_shadLine.release();
 
+
     if(!m_pglXPlaneBuffers->m_LiveVortons.size())
         glRenderPanelBasedBuffers();
     else
@@ -743,6 +785,7 @@ void gl3dXPlaneView::glRenderView()
     }
 
     glRenderPOppBasedBuffers();
+
 
     if(pPOpp && m_pPOpp3dControls->isFlowActive()) glRenderFlow();
     else m_FlowTimer.stop();
@@ -774,10 +817,6 @@ void gl3dXPlaneView::glRenderView()
     m_shadLine.release();
     if(m_Segments.size())
         paintSegments(m_vboSegments, W3dPrefs::s_HighStyle, true);
-
-
-    vmMat = m_matView*m_matModel;
-    pvmMat = m_matProj*vmMat;
 
 
     glRenderGeometryBasedBuffers();
@@ -886,14 +925,23 @@ void gl3dXPlaneView::glRenderView()
 
 void gl3dXPlaneView::keyPressEvent(QKeyEvent *pEvent)
 {
-//    bool bShift = (pEvent->modifiers() & Qt::ShiftModifier);
-    bool bCtrl = (pEvent->modifiers() & Qt::ControlModifier);
+    bool bShift = (pEvent->modifiers() & Qt::ShiftModifier);
+    bool bCtrl  = (pEvent->modifiers() & Qt::ControlModifier);
+//    bool bAlt = (pEvent->modifiers() & Qt::AltModifier);
 
     if(pEvent->key()==Qt::Key_T)
     {
         if(bCtrl)
         {
             m_bTessellation = !m_bTessellation;
+            update();
+        }
+    }
+    else if(pEvent->key()==Qt::Key_F)
+    {
+        if(bShift)
+        {
+            m_bWindAxes = !m_bWindAxes;
             update();
         }
     }
@@ -2079,8 +2127,6 @@ void gl3dXPlaneView::glMake3dObjects()
                         pWing->makeTriangulation(pTranslatedFuse, W3dPrefs::s_iChordwiseRes);
                         gl::makeTriangles3Vtx(pWing->triangulation().triangles(), false, m_pglXPlaneBuffers->m_vboWingSurface[iw]);
                         gl::makeSegments(pWing->outline(), Vector3d(), m_pglXPlaneBuffers->m_vboWingOutline[iw]);
-//                        m_pglWingBuffers->glMakeWingGeometry(iw, pWing, pTranslatedFuse);
-//                        glMakeNodeNormals(pWing->triangulation().nodes(), Vector3d(), 0.05f, m_pglXPlaneBuffers->m_vboTessNormals);
                     }
 
                     delete pTranslatedFuse;
@@ -2096,32 +2142,8 @@ void gl3dXPlaneView::glMake3dObjects()
                     pWing->makeTriangulation(nullptr, W3dPrefs::s_iChordwiseRes);
                     gl::makeTriangles3Vtx(pWing->triangulation().triangles(), false, m_pglXPlaneBuffers->m_vboWingSurface[iw]);
                     gl::makeSegments(pWing->outline(), Vector3d(), m_pglXPlaneBuffers->m_vboWingOutline[iw]);
-//                    m_pglWingBuffers->glMakeWingGeometry(iw, pPlaneXfl->wingAt(iw), nullptr);
-//                    m_pglWingBuffers->glMakeWingOutline(iw, pPlaneXfl->wingAt(iw), nullptr);
-//                    glMakeNodeNormals(pWing->triangulation().nodes(), Vector3d(), 0.05f, m_vboTessNormals);
-//                    glMakeTriangleNormals(pWing->triangulation().triangles(), 0.05f, m_vboTessNormals);
-
                 }
             }
-
-/*
-            WingXfl const*main = pPlaneXfl->mainWing();
-
-            int degree = 3;
-            int nCtrlPoints = 11;
-            int nOutPoints = 37;
-
-                Surface const &surf = main->surfaceAt(0);
-                BSpline3d b3dtopleft, b3dbotleft, b3dtopright, b3dbotright;
-                TopoDS_Wire TopLeftWire, BotLeftWire, TopRightWire, BotRightWire;
-                surf.makeSectionSplines(true,  true, degree, nCtrlPoints, nOutPoints, b3dtopleft);
-                glMakeLineStrip(b3dtopleft.outputPts(), m_vboSplineTop);
-                surf.makeSectionSplines(false, true, degree, nCtrlPoints, nOutPoints, b3dbotleft);
-                glMakeLineStrip(b3dbotleft.outputPts(), m_vboSplineBot);
-
-*/
-
-
         }
         else if(pPlane->isSTLType())
         {
@@ -2149,7 +2171,7 @@ void gl3dXPlaneView::glMake3dObjects()
             {
                 PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
                 gl::makeQuadPanels(m_Panel4Visible, Vector3d(), m_pglXPlaneBuffers->m_vboMesh);
-                gl::makeQuadEdges(m_Panel4Visible, Vector3d(), m_pglXPlaneBuffers->m_vboMeshEdges);
+                gl::makeQuadEdges( m_Panel4Visible, Vector3d(), m_pglXPlaneBuffers->m_vboMeshEdges);
                 gl::makePanelNormals(pPlaneXfl->quadMesh().panels(), float(m_RefLength)/50.0f, m_pglXPlaneBuffers->m_vboPanelNormals);
 
 /*                if(pWPolar->isVLM1())
@@ -2292,9 +2314,9 @@ void gl3dXPlaneView::glMake3dObjects()
 
 void gl3dXPlaneView::glMakeOppBuffers()
 {
-    Plane    const *pPlane  = s_pXPlane->m_pCurPlane;
-    PlanePolar   const *pWPolar = s_pXPlane->m_pCurPlPolar;
-    PlaneOpp       *pPOpp   = s_pXPlane->m_pCurPOpp; // not const to make node values on the fly
+    Plane       const *pPlane  = s_pXPlane->m_pCurPlane;
+    PlanePolar  const *pWPolar = s_pXPlane->m_pCurPlPolar;
+    PlaneOpp          *pPOpp   = s_pXPlane->m_pCurPOpp; // not const to make node values on the fly
 
     if(!pPlane || !pWPolar) return;
     if(pWPolar && (pWPolar->planeName()!=pPlane->name()))     return; // failsafe
@@ -2356,7 +2378,7 @@ void gl3dXPlaneView::glMakeOppBuffers()
         }
         if(m_pPOpp3dControls->m_b3dCp)
         {
-            m_ColourLegend.setTitle(tr("Cp"));
+            m_ColourLegend.setTitle("Cp");
             m_ColourLegend.setRange(lmin, lmax);
             m_ColourLegend.makeLegend();
         }
@@ -2459,12 +2481,6 @@ void gl3dXPlaneView::glMakeOppBuffers()
             m_ColourLegend.makeLegend();
         }
         s_bResetglPanelForce = false;
-    }
-
-    if(m_pPOpp3dControls->m_bMoments && (s_bResetglMoments || s_bResetglOpp))
-    {
-        glMakeMoments(pPlane->planformSpan(), pWPolar, pPOpp, float(m_RefLength));
-        s_bResetglMoments = false;
     }
 
     if(pPlane->isXflType())
@@ -2596,7 +2612,6 @@ void gl3dXPlaneView::onUpdate3dScales()
     s_bResetglPanelCp        = true;
     s_bResetglPanelForce     = true;
     s_bResetglLift           = true;
-    s_bResetglMoments        = true;
     s_bResetglDrag           = true;
     s_bResetglDownwash       = true;
     s_bResetglGridVelocities = true;
@@ -3112,169 +3127,6 @@ void gl3dXPlaneView::glMakeLLTDragStrip(const PlaneXfl *pPlane, const PlanePolar
     m_pglXPlaneBuffers->m_vboViscousDrag.bind();
     m_pglXPlaneBuffers->m_vboViscousDrag.allocate(pVCdVertexArray.data(), bufferSize * int(sizeof(GLfloat)));
     m_pglXPlaneBuffers->m_vboViscousDrag.release();
-}
-
-
-void gl3dXPlaneView::glMakeMoments(double planformspan, PlanePolar const *pWPolar, PlaneOpp const *pPOpp, float reflength)
-{
-    //    The most common aeronautical convention defines
-    //    - the roll as acting about the longitudinal axis, positive with the starboard wing down.
-    //    - The yaw is about the vertical body axis, positive with the nose to starboard.
-    //    - Pitch is about an axis perpendicular to the longitudinal plane of symmetry, positive nose up.
-    //    -- Wikipedia flight dynamics --
-    if(!pWPolar || !pPOpp)
-    {
-        m_pglXPlaneBuffers->m_vboMoments.destroy();
-        return;
-    }
-
-    float angle=0.0;//radian
-    float endx(0), endy(0), endz(0), dx(0), dy(0), dz(0), xae(0), yae(0), zae(0);
-    float factor = 1.0;
-    float radius= float(planformspan)/4.0f;
-    float frac=0;
-
-    float ampL = float(0.5*pWPolar->density() * pWPolar->referenceArea() * pWPolar->referenceChordLength()
-                       *pPOpp->QInf()*pPOpp->QInf() * pPOpp->aeroForces().Cli() * double(Opp3dScalesCtrls::momentScale()))*factor;
-    float ampM = float(0.5*pWPolar->density() * pWPolar->referenceArea() * pWPolar->referenceSpanLength()
-                       *pPOpp->QInf()*pPOpp->QInf() * pPOpp->aeroForces().Cm() * double(Opp3dScalesCtrls::momentScale()))*factor;
-    float ampN = float(0.5*pWPolar->density() * pWPolar->referenceArea() * pWPolar->referenceSpanLength()
-                       *pPOpp->QInf()*pPOpp->QInf()*(pPOpp->aeroForces().Cn()) * double(Opp3dScalesCtrls::momentScale()))*factor;
-
-    float tiplength = 0.015f*reflength;
-    int nMomentPoints = 1000;
-
-    int nLines = (nMomentPoints+2)*3;//  (+2 end points)  x3 moments
-    QVector<float> momentVertexArray(nLines*2*3); //  x2 vertices x 3 components
-    int iv = 0;
-    //ROLLING MOMENT
-    float sign=1.0;
-    if (ampL>0.0f) sign = -1.0; else sign = 1.0;
-    for (int i=0; i<nMomentPoints; i++)
-    {
-        frac = sign * float(i)/float(nMomentPoints-1) * factor * ampL;
-        angle = PIf/180.0f * frac;
-        momentVertexArray[iv++] = radius*cos(angle);
-        momentVertexArray[iv++] = 0.0;
-        momentVertexArray[iv++] = radius*sin(angle);
-        frac = sign * float(i+1)/float(nMomentPoints-1) * factor * ampL;
-        angle = PIf/180.0f * frac;
-        momentVertexArray[iv++] = radius*cos(angle);
-        momentVertexArray[iv++] = 0.0;
-        momentVertexArray[iv++] = radius*sin(angle);
-    }
-
-    endy = radius*cos(angle);
-    endz = radius*sin(angle);
-    dy = tiplength;
-    dz = tiplength*sign;
-
-    yae = (radius-dy)*cos(angle) +dz *sin(angle);
-    zae = (radius-dy)*sin(angle) -dz *cos(angle);
-    momentVertexArray[iv++] = 0.0;
-    momentVertexArray[iv++] = endy;
-    momentVertexArray[iv++] = endz;
-    momentVertexArray[iv++] = 0.0;
-    momentVertexArray[iv++] = yae;
-    momentVertexArray[iv++] = zae;
-
-    yae = (radius+dy)*cos(angle) +dz *sin(angle);
-    zae = (radius+dy)*sin(angle) -dz *cos(angle);
-    momentVertexArray[iv++] = 0.0;
-    momentVertexArray[iv++] = endy;
-    momentVertexArray[iv++] = endz;
-    momentVertexArray[iv++] = 0.0;
-    momentVertexArray[iv++] = yae;
-    momentVertexArray[iv++] = zae;
-
-    //PITCHING MOMENT
-    if (ampM>0.0f) sign = -1.0f; else sign = 1.0f;
-    for (int i=0; i<nMomentPoints; i++)
-    {
-        frac = sign * float(i)/float(nMomentPoints-1) * factor * ampM;
-        angle = PIf/180.0f * frac;
-        momentVertexArray[iv++] = radius*cos(angle);
-        momentVertexArray[iv++] = 0.0;
-        momentVertexArray[iv++] = radius*sin(angle);
-        frac = sign * float(i+1)/float(nMomentPoints-1) * factor * ampM;
-        angle = PIf/180.0f * frac;
-        momentVertexArray[iv++] = radius*cos(angle);
-        momentVertexArray[iv++] = 0.0;
-        momentVertexArray[iv++] = radius*sin(angle);
-    }
-
-    endx = radius*cos(angle);
-    endz = radius*sin(angle);
-    dx = tiplength;
-    dz = tiplength*sign;
-
-    xae = (radius-dx)*cos(angle) +dz *sin(angle);
-    zae = (radius-dx)*sin(angle) -dz *cos(angle);
-    momentVertexArray[iv++] = endx;
-    momentVertexArray[iv++] = 0.0;
-    momentVertexArray[iv++] = endz;
-    momentVertexArray[iv++] = xae;
-    momentVertexArray[iv++] = 0.0;
-    momentVertexArray[iv++] = zae;
-
-    xae = (radius+dx)*cos(angle) +dz *sin(angle);
-    zae = (radius+dx)*sin(angle) -dz *cos(angle);
-    momentVertexArray[iv++] = endx;
-    momentVertexArray[iv++] = 0.0;
-    momentVertexArray[iv++] = endz;
-    momentVertexArray[iv++] = xae;
-    momentVertexArray[iv++] = 0.0;
-    momentVertexArray[iv++] = zae;
-
-    //YAWING MOMENT
-
-    if (ampN>0.0f) sign = -1.0f; else sign = 1.0f;
-    angle = 0.0;
-    for (int i=0; i<nMomentPoints; i++)
-    {
-        frac = sign * float(i)/float(nMomentPoints-1) * factor * ampN;
-        angle = PIf/180.0f * frac;
-        momentVertexArray[iv++] = radius*cos(angle);
-        momentVertexArray[iv++] = 0.0;
-        momentVertexArray[iv++] = radius*sin(angle);
-        frac = sign * float(i+1)/float(nMomentPoints-1) * factor * ampN;
-        angle = PIf/180.0f* frac;
-        momentVertexArray[iv++] = radius*cos(angle);
-        momentVertexArray[iv++] = 0.0;
-        momentVertexArray[iv++] = radius*sin(angle);
-
-    }
-
-    endx = -radius*cos(angle);
-    endy = -radius*sin(angle);
-    dx =   tiplength;
-    dy =  -tiplength*sign;
-
-    xae = (-radius+dx)*cos(angle) +dy *sin(angle);
-    yae = (-radius+dx)*sin(angle) -dy *cos(angle);
-    momentVertexArray[iv++] = endx;
-    momentVertexArray[iv++] = endy;
-    momentVertexArray[iv++] = 0.0;
-    momentVertexArray[iv++] = xae;
-    momentVertexArray[iv++] = yae;
-    momentVertexArray[iv++] = 0.0;
-
-    xae = (-radius-dx)*cos(angle) +dy *sin(angle);
-    yae = (-radius-dx)*sin(angle) -dy *cos(angle);
-    momentVertexArray[iv++] = endx;
-    momentVertexArray[iv++] = endy;
-    momentVertexArray[iv++] = 0.0;
-    momentVertexArray[iv++] = xae;
-    momentVertexArray[iv++] = yae;
-    momentVertexArray[iv++] = 0.0;
-
-
-    Q_ASSERT(iv==momentVertexArray.size());
-    m_pglXPlaneBuffers->m_vboMoments.destroy();
-    m_pglXPlaneBuffers->m_vboMoments.create();
-    m_pglXPlaneBuffers->m_vboMoments.bind();
-    m_pglXPlaneBuffers->m_vboMoments.allocate(momentVertexArray.data(), momentVertexArray.size()*int(sizeof(float)));
-    m_pglXPlaneBuffers->m_vboMoments.release();
 }
 
 

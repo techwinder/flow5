@@ -57,11 +57,10 @@
 
 #include <core/displayoptions.h>
 #include <core/xflcore.h>
-
-#include <core/xflcore.h>
 #include <interfaces/graphs/containers/graphwt.h>
 #include <interfaces/graphs/controls/graphoptions.h>
 #include <interfaces/graphs/graph/graph.h>
+#include <test/test3d/gl3daxesview.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <modules/xplane/analysis/planeanalysisdlg.h>
@@ -432,6 +431,8 @@ void Analysis3dSettings::setupLayout()
             pVPWFrame->setLayout(pVPWBoxLayout);
         }
 
+        m_pglAxesView = new gl3dAxesView;
+
         m_pTabWt->addTab(pCommonFrame,     tr("Common"));
         m_pTabWt->addTab(pLLTFrame,        "LLT");
         m_pTabWt->addTab(pVLMFrame,        "VLM");
@@ -440,6 +441,7 @@ void Analysis3dSettings::setupLayout()
         m_pTabWt->addTab(pViscLoopFrame,   tr("Viscous loop"));
         m_pTabWt->addTab(pVortexCoreFrame, tr("Vortex"));
         m_pTabWt->addTab(pVPWFrame,        tr("Vorton wake"));
+        m_pTabWt->addTab(m_pglAxesView,    tr("Moments"));
     }
 
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close | QDialogButtonBox::Reset);

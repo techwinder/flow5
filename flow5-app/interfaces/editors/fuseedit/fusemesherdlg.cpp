@@ -41,7 +41,6 @@
 
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
-#include <QButtonGroup>
 #include <QLabel>
 #include <QTabWidget>
 #include <QAction>

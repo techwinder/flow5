@@ -230,17 +230,17 @@ void PlaneExplorer::fillModelView()
 {
     m_pModel->removeRows(0, m_pModel->rowCount());
 
-    ObjectTreeItem *pRootItem = m_pModel->rootItem();
+//    ObjectTreeItem *pRootItem = m_pModel->rootItem();
 
     for(int iPlane=0; iPlane<Objects3d::nPlanes(); iPlane++)
     {
         Plane const *pPlane = Objects3d::planeAt(iPlane);
         if(!pPlane) continue;
 
-        LineStyle ls(pPlane->theStyle());
-        ObjectTreeItem *pPlaneItem = m_pModel->appendRow(pRootItem, pPlane->name(), pPlane->theStyle(), planeState(pPlane));
-
-        fillPlanePolars(pPlaneItem, pPlane);
+        ObjectTreeItem *pPlaneItem = insertPlane(pPlane); // in case-insensitive order
+//        ObjectTreeItem *pPlaneItem = m_pModel->appendRow(pRootItem, pPlane->name(), pPlane->theStyle(), planeState(pPlane));
+        (void)pPlaneItem;
+//        fillPlanePolars(pPlaneItem, pPlane);
     }
 }
 
@@ -428,10 +428,12 @@ void PlaneExplorer::insertPlanePolar(const PlanePolar *pWPolar)
 }
 
 
-void PlaneExplorer::insertPlane(Plane* pPlane)
+ObjectTreeItem *PlaneExplorer::insertPlane(Plane const* pPlane)
 {
     if(!pPlane) pPlane = s_pXPlane->curPlane();
-    if(!pPlane) return;
+    if(!pPlane) return nullptr;
+
+    ObjectTreeItem *pItm(nullptr);
 
     bool bInserted = false;
     for(int ir=0; ir<m_pModel->rowCount(); ir++)
@@ -441,12 +443,12 @@ void PlaneExplorer::insertPlane(Plane* pPlane)
         if(pItem->name().compare(QString::fromStdString(pPlane->name()))==0)
         {
             //A Plane of that name already exists
-            return;
+            return pItem;
         }
         else if(pItem->name().compare(QString::fromStdString(pPlane->name()), Qt::CaseInsensitive)>0)
         {
             //insert before
-            m_pModel->insertRow(m_pModel->rootItem(), ir, pPlane->name(), pPlane->theStyle(), planeState(pPlane));
+            pItm = m_pModel->insertRow(m_pModel->rootItem(), ir, pPlane->name(), pPlane->theStyle(), planeState(pPlane));
 //            m_pModel->rootItem()->insertRow(ir, pPlane->planeName(), pPlane->theStyle(), planeState(pPlane));
             bInserted = true;
             break;
@@ -455,7 +457,7 @@ void PlaneExplorer::insertPlane(Plane* pPlane)
     if(!bInserted)
     {
         //not inserted, append
-        m_pModel->appendRow(m_pModel->rootItem(), pPlane->name(), pPlane->theStyle(), planeState(pPlane));
+        pItm = m_pModel->appendRow(m_pModel->rootItem(), pPlane->name(), pPlane->theStyle(), planeState(pPlane));
     }
 
     for(int iwp=0; iwp<Objects3d::nPolars(); iwp++)
@@ -468,6 +470,8 @@ void PlaneExplorer::insertPlane(Plane* pPlane)
     }
 
     setOverallCheckStatus();
+
+    return pItm;
 }
 
 

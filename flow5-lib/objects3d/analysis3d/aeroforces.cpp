@@ -25,6 +25,7 @@
 #include <iostream>
 #include <format>
 
+#include <objects_global.h>
 #include <aeroforces.h>
 
 AeroForces::AeroForces()
@@ -40,7 +41,25 @@ void AeroForces::makeFrames()
     double cosa = cos(m_Alpha*PI/180.0);
     double sina = sin(m_Alpha*PI/180.0);
 
-    m_CFWind.setFrame(Origin, { cosa, 0,  sina},    {0,1,0},    {-sina, 0,  cosa});
+    // v7.57: modified the output of forces and moments to be in the "true" wind axes with the x-axis aligned with the sideslip;
+    //        formerly had the x-wind-axis in the x-z plane for consistency with AVL
+/*    Vector3d WindDir(1,0,0);
+    Vector3d WindSide(0,1,0);
+    Vector3d WindNormal(0,0,1);
+    WindDir.rotateY(-m_Alpha);
+    WindNormal.rotateY(-m_Alpha);
+
+    WindDir.rotateZ(m_Beta);
+    WindSide.rotateZ(m_Beta);*/
+
+    // Convention: sideslip is >0 if the wind is coming from the right
+    Vector3d WindDir    = objects::windDirection(m_Alpha, m_Beta);
+    Vector3d WindSide   = objects::windSide(     m_Alpha, m_Beta);
+    Vector3d WindNormal = objects::windNormal(   m_Alpha, m_Beta);
+
+    m_CFWind.setFrame(Origin, WindDir, WindSide, WindNormal);
+    //    m_CFWind.setFrame(Origin, { cosa, 0,  sina},    {0,1,0},    {-sina, 0,  cosa});
+
     m_CFStab.setFrame(Origin, {-cosa, 0, -sina},    {0,1,0},    { sina, 0, -cosa});
 }
 
@@ -141,6 +160,7 @@ void AeroForces::duplicate(AeroForces const & ac)
     m_Mv          = ac.m_Mv;
     m_M0          = ac.m_M0;
 }
+
 
 void AeroForces::resetAll()
 {

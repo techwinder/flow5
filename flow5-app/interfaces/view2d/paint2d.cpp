@@ -352,7 +352,7 @@ void xfl::drawSymbol(QPainter &painter, Line::enumPointStyle ptstyle, QColor con
     switch(ptstyle)
     {
         case Line::NOSYMBOL: break;
-        case Line::LITTLECIRCLE:
+        case Line::SMALLCIRCLE:
         {
             QBrush backBrush(bck);
             painter.setBrush(backBrush);
@@ -360,7 +360,7 @@ void xfl::drawSymbol(QPainter &painter, Line::enumPointStyle ptstyle, QColor con
             painter.drawEllipse(QPointF(x,y), ptSide*1.2, ptSide*1.2);
             break;
         }
-        case Line::LITTLECIRCLE_F:
+        case Line::SMALLCIRCLE_FILLED:
         {
             QBrush backBrush(xfl::fromfl5Clr(linecolor));
             painter.setBrush(backBrush);
@@ -376,7 +376,7 @@ void xfl::drawSymbol(QPainter &painter, Line::enumPointStyle ptstyle, QColor con
             painter.drawEllipse(QPointF(x,y), ptSide, ptSide);
             break;
         }
-        case Line::BIGCIRCLE_F:
+        case Line::BIGCIRCLE_FILLED:
         {
             QBrush backBrush(xfl::fromfl5Clr(linecolor));
             painter.setBrush(backBrush);
@@ -384,7 +384,7 @@ void xfl::drawSymbol(QPainter &painter, Line::enumPointStyle ptstyle, QColor con
             painter.drawEllipse(QPointF(x,y), ptSide, ptSide);
             break;
         }
-        case Line::LITTLESQUARE:
+        case Line::SMALLSQUARE:
         {
             QBrush backBrush(bck);
             painter.setBrush(backBrush);
@@ -393,7 +393,7 @@ void xfl::drawSymbol(QPainter &painter, Line::enumPointStyle ptstyle, QColor con
             painter.drawRect(rf);
             break;
         }
-        case Line::LITTLESQUARE_F:
+        case Line::SMALLSQUARE_FILLED:
         {
             QBrush backBrush(xfl::fromfl5Clr(linecolor));
             painter.setBrush(backBrush);
@@ -411,7 +411,7 @@ void xfl::drawSymbol(QPainter &painter, Line::enumPointStyle ptstyle, QColor con
             painter.drawRect(rf);
             break;
         }
-        case Line::BIGSQUARE_F:
+        case Line::BIGSQUARE_FILLED:
         {
             QBrush backBrush(xfl::fromfl5Clr(linecolor));
             painter.setBrush(backBrush);
@@ -435,7 +435,7 @@ void xfl::drawSymbol(QPainter &painter, Line::enumPointStyle ptstyle, QColor con
             painter.drawPolygon(points, 3);
             break;
         }
-        case Line::TRIANGLE_F:
+        case Line::TRIANGLE_FILLED:
         {
             QBrush backBrush(xfl::fromfl5Clr(linecolor));
             painter.setBrush(backBrush);
@@ -465,7 +465,7 @@ void xfl::drawSymbol(QPainter &painter, Line::enumPointStyle ptstyle, QColor con
             painter.drawPolygon(points, 3);
             break;
         }
-        case Line::TRIANGLE_INV_F:
+        case Line::TRIANGLE_INV_FILLED:
         {
             QBrush backBrush(xfl::fromfl5Clr(linecolor));
             painter.setBrush(backBrush);
@@ -480,7 +480,7 @@ void xfl::drawSymbol(QPainter &painter, Line::enumPointStyle ptstyle, QColor con
             painter.drawPolygon(points, 3);
             break;
         }
-        case Line::LITTLECROSS:
+        case Line::SMALLCROSS:
         {
             QBrush backBrush(bck);
             painter.setBrush(backBrush);

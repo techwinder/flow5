@@ -74,12 +74,11 @@ void glXPlaneBuffers::clearBuffers()
     if(m_vboContourClrs.isCreated())           m_vboContourClrs.destroy();
     if(m_vboContourLines.isCreated())          m_vboContourLines.destroy();
     if(m_vboCp.isCreated())                    m_vboCp.destroy();
-    if(m_vboDownwash.isCreated())                    m_vboDownwash.destroy();
+    if(m_vboDownwash.isCreated())              m_vboDownwash.destroy();
     if(m_vboFrames.isCreated())                m_vboFrames.destroy();
     if(m_vboGamma.isCreated())                 m_vboGamma.destroy();
     if(m_vboGridVelocities.isCreated())        m_vboGridVelocities.destroy();
     if(m_vboInducedDrag.isCreated())           m_vboInducedDrag.destroy();
-    if(m_vboMoments.isCreated())               m_vboMoments.destroy();
     if(m_vboNormals.isCreated())               m_vboNormals.destroy();
     if(m_vboPanelForces.isCreated())           m_vboPanelForces.destroy();
     if(m_vboPlaneStlTriangulation.isCreated()) m_vboPlaneStlTriangulation.destroy();

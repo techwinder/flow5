@@ -90,20 +90,20 @@ bool XflXmlReader::readTheStyle(LineStyle &theStyle)
 
             QString ptstyle = readElementText().trimmed();
             if     (ptstyle.compare("NOSYMBOL",           Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::NOSYMBOL;
-            else if(ptstyle.compare("LITTLECIRCLE",       Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::LITTLECIRCLE;
+            else if(ptstyle.compare("LITTLECIRCLE",       Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::SMALLCIRCLE;
             else if(ptstyle.compare("BIGCIRCLE",          Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::BIGCIRCLE;
-            else if(ptstyle.compare("LITTLESQUARE",       Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::LITTLESQUARE;
+            else if(ptstyle.compare("LITTLESQUARE",       Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::SMALLSQUARE;
             else if(ptstyle.compare("BIGSQUARE",          Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::BIGSQUARE;
             else if(ptstyle.compare("TRIANGLE",           Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::TRIANGLE;
             else if(ptstyle.compare("TRIANGLE_INV",       Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::TRIANGLE_INV;
-            else if(ptstyle.compare("LITTLECROSS",        Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::LITTLECROSS;
+            else if(ptstyle.compare("LITTLECROSS",        Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::SMALLCROSS;
             else if(ptstyle.compare("BIGCROSS",           Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::BIGCROSS;
-            else if(ptstyle.compare("LITTLECIRCLEFILLED", Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::LITTLECIRCLE_F;
-            else if(ptstyle.compare("BIGCIRCLEFILLED",    Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::BIGCIRCLE_F;
-            else if(ptstyle.compare("LITTLESQUAREFILLED", Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::LITTLESQUARE_F;
-            else if(ptstyle.compare("BIGSQUAREFILLED",    Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::BIGSQUARE_F;
-            else if(ptstyle.compare("TRIANGLEFILLED",     Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::TRIANGLE_F;
-            else if(ptstyle.compare("TRIANGLEFILLED_INV", Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::TRIANGLE_INV_F;
+            else if(ptstyle.compare("LITTLECIRCLEFILLED", Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::SMALLCIRCLE_FILLED;
+            else if(ptstyle.compare("BIGCIRCLEFILLED",    Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::BIGCIRCLE_FILLED;
+            else if(ptstyle.compare("LITTLESQUAREFILLED", Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::SMALLSQUARE_FILLED;
+            else if(ptstyle.compare("BIGSQUAREFILLED",    Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::BIGSQUARE_FILLED;
+            else if(ptstyle.compare("TRIANGLEFILLED",     Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::TRIANGLE_FILLED;
+            else if(ptstyle.compare("TRIANGLEFILLED_INV", Qt::CaseInsensitive)==0) theStyle.m_Symbol = Line::TRIANGLE_INV_FILLED;
         }
         else if (name().compare(QString("Color"), Qt::CaseInsensitive)==0) readColor(theStyle.m_Color);
         else skipCurrentElement();

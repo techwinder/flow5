@@ -52,7 +52,7 @@ void TessControlsDlg::setupLayout()
 
         QHBoxLayout *pOptionLayout = new QHBoxLayout;
         {
-            QButtonGroup *pGroup = new QButtonGroup;
+            QButtonGroup *pGroup = new QButtonGroup(this);
             {
                 m_prbOcc  = new QRadioButton("Occ");
                 m_prbGmsh = new QRadioButton("Gmsh");

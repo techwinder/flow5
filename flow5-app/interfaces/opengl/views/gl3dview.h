@@ -207,6 +207,8 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
         virtual void glRenderView();
         virtual void paintOverlay();
 
+        QMatrix4x4 rotationMatrix() const;
+
         void glMakeArcPoint(const ArcBall &arcball);
         void glMakeArcBall(ArcBall &arcball);
         void glMakeAxes();
@@ -230,7 +232,7 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
 
         void paintGl3();
         void paintArcBall();
-        void paintAxes();
+        void paintAxes(const LineStyle &ls, const QString &suffix);
         void paintXYCircle(QOpenGLBuffer &vbo, double xc, double yc, double radius, const QColor &circleColor);
         void paintXYCircle(QOpenGLBuffer &vbo, const Vector2d &place, double radius, const QColor &circleColor);
         void paintIcoSphere(const Vector3d &place, double radius, const fl5Color &color, bool bTriangles, bool bOutline);
@@ -253,7 +255,7 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
 
         void paintSegments(QOpenGLBuffer &vbo, LineStyle const &ls, bool bHigh = false);
         void paintSegments(QOpenGLBuffer &vbo, const QColor &clr, float thickness, Line::enumLineStipple stip=Line::SOLID, bool bHigh=false);
-        void paintThickArrow(Vector3d const &origin, const Vector3d& arrow, const QColor &clr, const QMatrix4x4 &m_ModelMatrix=QMatrix4x4());
+        void paintThickArrow(Vector3d const &origin, const Vector3d& arrow, const QColor &clr, bool bLight, const QMatrix4x4 &m_ModelMatrix=QMatrix4x4());
         void paintThinArrow(Vector3d const &origin, const Vector3d& arrow, LineStyle const &ls, QMatrix4x4 const ModelMatrix=QMatrix4x4());
         void paintThinArrow(Vector3d const &origin, const Vector3d& arrow, fl5Color const &clr, float w, Line::enumLineStipple stipple, QMatrix4x4 const ModelMatrix=QMatrix4x4());
         void paintThinArrow(Vector3d const &origin, const Vector3d& arrow, const QColor &clr, float w, Line::enumLineStipple stipple,   QMatrix4x4 const ModelMatrix=QMatrix4x4());

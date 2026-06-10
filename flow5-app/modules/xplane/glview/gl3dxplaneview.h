@@ -111,7 +111,6 @@ class gl3dXPlaneView : public gl3dXflView
         void glMakeTransitions(PlaneXfl const*pPlane, PlanePolar const*pWPolar, PlaneOpp const*pPOpp, QOpenGLBuffer &vbo) const;
         void glMakeDragStrip(     PlaneXfl const*pPlane, PlanePolar const*pWPolar, PlaneOpp const*pPOpp, bool bICd, bool bVCd);
         void glMakeLLTDragStrip(  PlaneXfl const*pPlane, PlanePolar const*pWPolar, PlaneOpp const*pPOpp, bool bICd, bool bVCd);
-        void glMakeMoments(double planformspan, PlanePolar const*pWPolar, PlaneOpp const*pPOpp, float reflength);
         void glMakeLiftStrip(     PlaneXfl const*pPlane, PlanePolar const*pWPolar, PlaneOpp const*pPOpp);
         void glMakeLLTLiftStrip(  PlaneXfl const*pPlane, PlanePolar const*pWPolar, PlaneOpp const*pPOpp);
 
@@ -163,6 +162,7 @@ class gl3dXPlaneView : public gl3dXflView
         bool m_bPanelNormals;
         bool m_bNodeNormals;
         bool m_bVortices;
+        bool m_bWindAxes;
 
         QPixmap m_PixLegend;
         ColourLegend m_ColourLegend;
@@ -211,7 +211,6 @@ class gl3dXPlaneView : public gl3dXflView
         static bool s_bResetglWake;               /**< true if the wake OpenGL list needs to be re-generated */
         static bool s_bResetglOpp;                /**< true if the OpenGL lists need to be re-generated */
         static bool s_bResetglLift;               /**< true if the OpenGL lists need to be re-generated */
-        static bool s_bResetglMoments;            /**< true if the OpenGL lists need to be re-generated */
         static bool s_bResetglDrag;               /**< true if the OpenGL lists need to be re-generated */
         static bool s_bResetglDownwash;           /**< true if the OpenGL lists need to be re-generated */
         static bool s_bResetglPanelGamma;         /**< true if the OpenGL lists need to be re-generated */

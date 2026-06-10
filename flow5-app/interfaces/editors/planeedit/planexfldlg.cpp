@@ -320,7 +320,7 @@ void PlaneXflDlg::setupLayout()
                                 QHBoxLayout *pSelLayout = new QHBoxLayout;
                                 {
                                     QLabel *plabAssyType = new QLabel(tr("Target assembly:"));
-                                    QButtonGroup *pGroup = new QButtonGroup;
+                                    QButtonGroup *pGroup = new QButtonGroup(this);
                                     {
                                         m_prbThin  = new QRadioButton(tr("Thin  surfaces"));
                                         m_prbThick = new QRadioButton(tr("Thick surfaces"));
@@ -1563,7 +1563,7 @@ void PlaneXflDlg::onInsertElevator()
         }
         if(pWing)
         {
-            pWing->scaleChord(chord/2.0);
+            pWing->scaleChord(chord/1.5);
             pWing->scaleSpan(span/5.0);
         }
         m_pPlaneXfl->wing(n)->setRx(0.0);
@@ -1598,8 +1598,8 @@ void PlaneXflDlg::onInsertFin()
         }
         if(pWing)
         {
-            pWing->scaleChord(chord/2.0);
-            pWing->scaleSpan(span/5.0);
+            pWing->scaleChord(chord);
+            pWing->scaleSpan(span/10.0);
         }
         m_pPlaneXfl->wing(n)->setRx(-90.0);
         m_pPlaneXfl->wing(n)->setPosition(span/3.0, 0.0, 0.0);

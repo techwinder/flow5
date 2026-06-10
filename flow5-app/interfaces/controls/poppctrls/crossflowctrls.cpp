@@ -29,7 +29,6 @@
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QTabWidget>
-#include <QButtonGroup>
 #include <QtConcurrent/QtConcurrent>
 
 #include "crossflowctrls.h"

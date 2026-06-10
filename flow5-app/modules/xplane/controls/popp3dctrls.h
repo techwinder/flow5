@@ -97,6 +97,7 @@ class POpp3dCtrls : public QTabWidget
         void onStreamlines(bool bStream);
         void onFlow(bool bFlow);
         void onFlaps();
+        void onCoG();
 
         void onWakePanels();
         void onVortons();
@@ -115,6 +116,7 @@ class POpp3dCtrls : public QTabWidget
         QCheckBox *m_pchStream, *m_pchFlow;
         QCheckBox *m_pchWakePanels, *m_pchVortons;
         QCheckBox *m_pchFlaps;
+        QCheckBox *m_pchCoG;
         QCheckBox *m_pchHPlane;
         QCheckBox *m_pchPickPanel;
 
@@ -137,6 +139,7 @@ class POpp3dCtrls : public QTabWidget
         bool m_bGamma;
         bool m_bPanelForce;
         bool m_b3dCp;
+        bool m_bCoG;
         bool m_bAnimateWOpp;                /**< true if there is an animation going on for an operating point */
         bool m_bAnimateWOppPlus;            /**< true if the animation is going in aoa crescending order */
         int m_posAnimateWOpp;       /**< the current animation aoa ind ex for WOpp animation */

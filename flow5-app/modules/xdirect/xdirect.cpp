@@ -1611,7 +1611,7 @@ void XDirect::onEditCurPolarPts()
     LineStyle style= s_pCurPolar->theStyle();
 
 
-    s_pCurPolar->setPointStyle(Line::LITTLECIRCLE);
+    s_pCurPolar->setPointStyle(Line::SMALLCIRCLE);
 
     m_bResetCurves = true;
     updateView();

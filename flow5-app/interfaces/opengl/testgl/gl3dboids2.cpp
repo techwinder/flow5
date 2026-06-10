@@ -26,7 +26,6 @@
 #include <QTime>
 #include <QGridLayout>
 #include <QGuiApplication>
-#include <QButtonGroup>
 #include <QRandomGenerator>
 #include <QFutureSynchronizer>
 #include <QtConcurrent/qtconcurrentrun.h>

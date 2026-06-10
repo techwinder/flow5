@@ -36,7 +36,9 @@
 #include <api/objects_global.h>
 
 #include <core/xflcore.h>
+#include <core/stlreaderdlg.h>
 #include <interfaces/controls/w3dprefs.h>
+#include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
 #include <interfaces/widgets/line/linebtn.h>
@@ -47,26 +49,26 @@
 Quaternion gl3dAxesView::s_ab_quat(-0.212012, 0.148453, -0.554032, -0.79124);
 QByteArray gl3dAxesView::s_Geometry;
 
-LineStyle gl3dAxesView::s_WindVecsStyle{true, Line::SOLID, 2, fl5Color(100,100,100),  Line::NOSYMBOL, "Wind vectors"};
-
-LineStyle gl3dAxesView::s_StabStyle = {true, Line::SOLID, 3, fl5Color(100,155,225),   Line::NOSYMBOL, "Stability axes"};
-LineStyle gl3dAxesView::s_BodyStyle = {true, Line::DASH,  3, fl5Color(225,100,155),   Line::NOSYMBOL, "Body axes"};
-LineStyle gl3dAxesView::s_WindStyle = {true, Line::DOT,   3, fl5Color(155,225,100),   Line::NOSYMBOL, "Wind axes"};
+LineStyle gl3dAxesView::s_WindVecsStyle = {true, Line::SOLID, 2, fl5Color(100,100,100),  Line::NOSYMBOL, "Wind vectors"};
+LineStyle gl3dAxesView::s_StabStyle     = {true, Line::DASH, 3, fl5Color( 71, 91,225),  Line::NOSYMBOL, "Stability axes"};
+LineStyle gl3dAxesView::s_WindStyle     = {true, Line::DASH,  3, fl5Color( 91,225, 71),  Line::NOSYMBOL, "Wind axes"};
 
 
 double gl3dAxesView::s_Alpha = 0.0;
 double gl3dAxesView::s_Beta  = 0.0;
 
-Vector3d gl3dAxesView::s_Vec;
+Vector3d gl3dAxesView::s_Vector;
 
 
 gl3dAxesView::gl3dAxesView(QWidget *pParent) : gl3dXflView(pParent)
 {
     setWindowTitle(tr("Axes test"));
     setupLayout();
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     connectSignals();
 
-    m_RefLength = 5.0;
+    m_bResetObject  = true;
+    m_RefLength = 1.0;
 
     onUpdateAxes();
 }
@@ -79,146 +81,105 @@ void gl3dAxesView::setupLayout()
         pFrame->setCursor(Qt::ArrowCursor);
         QVBoxLayout *pFrLayout = new QVBoxLayout;
         {
-            QGridLayout *pDataLayout = new QGridLayout;
+            QGroupBox *pgbWind = new QGroupBox(tr("Wind"));
             {
-                QLabel *plabAlpha = new QLabel("<p>&alpha;=</p>");
-                m_pdeAlpha = new FloatEdit(s_Alpha);
-                QLabel *plabBeta = new QLabel("<p>&beta;=</p>");
-                m_pdeBeta = new FloatEdit(s_Beta);
-                QLabel *plabDeg0 = new QLabel("<p>&deg;</p>");
-                QLabel *plabDeg1 = new QLabel("<p>&deg;</p>");
+                QGridLayout *pWindLayout = new QGridLayout;
+                {
+                    QLabel *plabAlpha = new QLabel("<p>&alpha;=</p>");
+                    m_pfeAlpha = new FloatEdit(s_Alpha);
+                    QLabel *plabBeta = new QLabel("<p>&beta;=</p>");
+                    m_pfeBeta = new FloatEdit(s_Beta);
+                    QLabel *plabDeg0 = new QLabel("<p>&deg;</p>");
+                    QLabel *plabDeg1 = new QLabel("<p>&deg;</p>");
 
-                m_pchWindVec = new QCheckBox(tr("Wind vectors"));
-                m_pchWindVec->setChecked(true);
-                m_plbWindVecs = new LineBtn(s_WindVecsStyle);
 
-                pDataLayout->addWidget(plabAlpha,     1,1, Qt::AlignRight);
-                pDataLayout->addWidget(m_pdeAlpha,    1,2);
-                pDataLayout->addWidget(plabDeg0,      1,3);
-                pDataLayout->addWidget(plabBeta,      2,1, Qt::AlignRight);
-                pDataLayout->addWidget(m_pdeBeta,     2,2);
-                pDataLayout->addWidget(plabDeg1,      2,3);
-                pDataLayout->addWidget(m_pchWindVec,  3,1);
-                pDataLayout->addWidget(m_plbWindVecs, 3,2);
-                pDataLayout->setColumnStretch(3,1);
+                    pWindLayout->addWidget(plabAlpha,     1,1, Qt::AlignRight);
+                    pWindLayout->addWidget(m_pfeAlpha,    1,2);
+                    pWindLayout->addWidget(plabDeg0,      1,3);
+                    pWindLayout->addWidget(plabBeta,      2,1, Qt::AlignRight);
+                    pWindLayout->addWidget(m_pfeBeta,     2,2);
+                    pWindLayout->addWidget(plabDeg1,      2,3);
+                    pWindLayout->setColumnStretch(3,1);
+                }
+                pgbWind->setLayout(pWindLayout);
             }
 
-            QGroupBox *pDisplayBox = new QGroupBox(tr("Display"));
+            QGroupBox *pgbDisplay = new QGroupBox(tr("Display"));
             {
                 QGridLayout *pDisplayLayout = new QGridLayout;
                 {
-                    m_pchGeomAxes      = new QCheckBox(tr("Geometric axes"));
+                    m_pchGeomAxes      = new QCheckBox(tr("Geometry axes"));
                     m_pchGeomAxes->setChecked(m_bAxes);
                     m_pchWindAxes      = new QCheckBox(tr("Wind axes"));
-                    m_pchBodyAxes      = new QCheckBox(tr("Body axes"));
                     m_pchStabilityAxes = new QCheckBox(tr("Stability axes"));
                     m_pchWindAxes->setChecked(true);
                     m_pchStabilityAxes->setChecked(true);
                     m_plbWind = new LineBtn(s_WindStyle);
                     m_plbStab = new LineBtn(s_StabStyle);
-                    m_plbBody = new LineBtn(s_BodyStyle);
                     pDisplayLayout->addWidget(m_pchGeomAxes,      1, 1);
-                    pDisplayLayout->addWidget(m_pchBodyAxes,      2, 1);
-                    pDisplayLayout->addWidget(m_plbBody,          2, 2);
                     pDisplayLayout->addWidget(m_pchWindAxes,      3, 1);
                     pDisplayLayout->addWidget(m_plbWind,          3, 2);
                     pDisplayLayout->addWidget(m_pchStabilityAxes, 4, 1);
                     pDisplayLayout->addWidget(m_plbStab,          4, 2);
                 }
-                pDisplayBox->setLayout(pDisplayLayout);
+                pgbDisplay->setLayout(pDisplayLayout);
             }
 
-            QGroupBox *pVectorBox = new QGroupBox(tr("Vector"));
+            QGroupBox *pgbVector = new QGroupBox(tr("Vector"));
             {
                 QGridLayout * pVectorLayout = new QGridLayout;
                 {
-                    m_pchVector = new QCheckBox(tr("Show"));
-                    m_pchVector->setChecked(false);
-
                     QLabel *plabX = new QLabel(tr("x="));
                     QLabel *plabY = new QLabel(tr("y="));
                     QLabel *plabZ = new QLabel(tr("z="));
-                    m_pdeX = new FloatEdit(s_Vec.x);
-                    m_pdeY = new FloatEdit(s_Vec.y);
-                    m_pdeZ = new FloatEdit(s_Vec.z);
-
-                    m_ppbConvert = new QPushButton(tr("Convert vector"));
-
-                    pVectorLayout->addWidget(m_pchVector, 1,1,1,2);
+                    m_pfeX = new FloatEdit(s_Vector.x);
+                    m_pfeY = new FloatEdit(s_Vector.y);
+                    m_pfeZ = new FloatEdit(s_Vector.z);
 
                     pVectorLayout->addWidget(plabX,  2,1);
-                    pVectorLayout->addWidget(m_pdeX, 2,2);
+                    pVectorLayout->addWidget(m_pfeX, 2,2);
                     pVectorLayout->addWidget(plabY,  3,1);
-                    pVectorLayout->addWidget(m_pdeY, 3,2);
+                    pVectorLayout->addWidget(m_pfeY, 3,2);
                     pVectorLayout->addWidget(plabZ,  4,1);
-                    pVectorLayout->addWidget(m_pdeZ, 4,2);
-                    pVectorLayout->addWidget(m_ppbConvert, 5,1,1,3);
+                    pVectorLayout->addWidget(m_pfeZ, 4,2);
                     pVectorLayout->setColumnStretch(3,1);
 
                 }
-                pVectorBox->setLayout(pVectorLayout);
+                pgbVector->setLayout(pVectorLayout);
             }
 
-
             m_ppto = new PlainTextOutput;
-            m_ppto->setMinimumSize(QSize(450,700));
+            m_ppto->setMinimumSize(QSize(450,210));
 
-            pFrLayout->addLayout(pDataLayout);
-            pFrLayout->addWidget(pDisplayBox);
-            pFrLayout->addWidget(pVectorBox);
+            pFrLayout->addWidget(pgbWind);
+            pFrLayout->addWidget(pgbDisplay);
+            pFrLayout->addWidget(pgbVector);
             pFrLayout->addWidget(m_ppto);
         }
         pFrame->setLayout(pFrLayout);
     }
-
 }
+
 
 void gl3dAxesView::connectSignals()
 {
-    connect(m_pdeAlpha,         SIGNAL(floatChanged(float)), SLOT(onUpdateAxes()));
-    connect(m_pdeBeta,          SIGNAL(floatChanged(float)), SLOT(onUpdateAxes()));
+    connect(m_pfeAlpha,         SIGNAL(floatChanged(float)),   SLOT(onUpdateAxes()));
+    connect(m_pfeBeta,          SIGNAL(floatChanged(float)),   SLOT(onUpdateAxes()));
+    connect(m_pfeAlpha,         SIGNAL(floatChanged(float)),   SLOT(onConvert()));
+    connect(m_pfeBeta,          SIGNAL(floatChanged(float)),   SLOT(onConvert()));
 
-    connect(m_pdeX,             SIGNAL(floatChanged(float)), SLOT(onConvert()));
-    connect(m_pdeY,             SIGNAL(floatChanged(float)), SLOT(onConvert()));
-    connect(m_pdeZ,             SIGNAL(floatChanged(float)), SLOT(onConvert()));
+    connect(m_pfeX,             SIGNAL(floatChanged(float)),   SLOT(onConvert()));
+    connect(m_pfeY,             SIGNAL(floatChanged(float)),   SLOT(onConvert()));
+    connect(m_pfeZ,             SIGNAL(floatChanged(float)),   SLOT(onConvert()));
 
-    connect(m_pchWindVec,       SIGNAL(clicked(bool)),  SLOT(update()));
 
-    connect(m_pchVector,        SIGNAL(clicked(bool)),  SLOT(update()));
+    connect(m_pchStabilityAxes, SIGNAL(clicked(bool)),         SLOT(onUpdateAxes()));
+    connect(m_pchWindAxes,      SIGNAL(clicked(bool)),         SLOT(onUpdateAxes()));
 
-    connect(m_pchBodyAxes,      SIGNAL(clicked(bool)),  SLOT(onUpdateAxes()));
-    connect(m_pchStabilityAxes, SIGNAL(clicked(bool)),  SLOT(onUpdateAxes()));
-    connect(m_pchWindAxes,      SIGNAL(clicked(bool)),  SLOT(onUpdateAxes()));
-    connect(m_ppbConvert,       SIGNAL(clicked(bool)),  SLOT(onConvert()));
-
-    connect(m_plbWindVecs,      SIGNAL(clickedLB(LineStyle)),  SLOT(onWindVecsStyle()));
-    connect(m_plbBody,          SIGNAL(clickedLB(LineStyle)),  SLOT(onBodyLineStyle()));
     connect(m_plbWind,          SIGNAL(clickedLB(LineStyle)),  SLOT(onWindLineStyle()));
     connect(m_plbStab,          SIGNAL(clickedLB(LineStyle)),  SLOT(onStabLineStyle()));
 
     connect(m_pchGeomAxes, SIGNAL(clicked(bool)), SLOT(onAxes(bool)));
-}
-
-
-void gl3dAxesView::onWindVecsStyle()
-{
-    LineMenu lm(nullptr, false);
-    lm.initMenu(s_WindVecsStyle);
-    lm.exec(QCursor::pos());
-
-    s_WindVecsStyle = lm.theStyle();
-    m_plbWindVecs->setTheStyle(s_WindVecsStyle);
-}
-
-
-void gl3dAxesView::onBodyLineStyle()
-{
-    LineMenu lm(nullptr, false);
-    lm.initMenu(s_BodyStyle);
-    lm.exec(QCursor::pos());
-
-    s_BodyStyle = lm.theStyle();
-    m_plbBody->setTheStyle(s_BodyStyle);
 }
 
 
@@ -253,12 +214,11 @@ void gl3dAxesView::loadSettings(QSettings &settings)
         s_Alpha = settings.value("alpha",  s_Alpha).toDouble();
         s_Beta  = settings.value("beta",   s_Beta).toDouble();
 
-        s_Vec.x     = settings.value("X",  s_Vec.x).toDouble();
-        s_Vec.y     = settings.value("Y",  s_Vec.y).toDouble();
-        s_Vec.z     = settings.value("Z",  s_Vec.z).toDouble();
+        s_Vector.x     = settings.value("X",  s_Vector.x).toDouble();
+        s_Vector.y     = settings.value("Y",  s_Vector.y).toDouble();
+        s_Vector.z     = settings.value("Z",  s_Vector.z).toDouble();
 
         xfl::loadLineSettings(settings, s_WindVecsStyle, "WindVecsStyle");
-        xfl::loadLineSettings(settings, s_BodyStyle, "BodyStyle");
         xfl::loadLineSettings(settings, s_WindStyle, "WindStyle");
         xfl::loadLineSettings(settings, s_StabStyle, "StabStyle");
     }
@@ -275,13 +235,12 @@ void gl3dAxesView::saveSettings(QSettings &settings)
         settings.setValue("alpha", s_Alpha);
         settings.setValue("beta",  s_Beta);
 
-        settings.setValue("X", s_Vec.x);
-        settings.setValue("Y", s_Vec.y);
-        settings.setValue("Z", s_Vec.z);
+        settings.setValue("X", s_Vector.x);
+        settings.setValue("Y", s_Vector.y);
+        settings.setValue("Z", s_Vector.z);
 
 
         xfl::saveLineSettings(settings, s_WindVecsStyle, "WindVecsStyle");
-        xfl::saveLineSettings(settings, s_BodyStyle, "BodyStyle");
         xfl::saveLineSettings(settings, s_WindStyle, "WindStyle");
         xfl::saveLineSettings(settings, s_StabStyle, "StabStyle");
     }
@@ -291,10 +250,10 @@ void gl3dAxesView::saveSettings(QSettings &settings)
 
 void gl3dAxesView::showEvent(QShowEvent *pEvent)
 {
+    gl3dXflView::showEvent(pEvent);
     if(W3dPrefs::s_bSaveViewPoints) restoreViewPoint(s_ab_quat);
     restoreGeometry(s_Geometry);
     reset3dScale();
-    pEvent->ignore();
 }
 
 
@@ -309,44 +268,45 @@ void gl3dAxesView::glRenderView()
 {
     Vector3d origin;
 
-    if(m_pchWindVec->isChecked())
-    {
-        paintThinArrow(origin, m_WindDir,    s_WindVecsStyle);
-        paintThinArrow(origin, m_WindNormal, s_WindVecsStyle);
-        paintThinArrow(origin, m_WindSide,   s_WindVecsStyle);
+    paintThinArrow(origin, s_Vector, Qt::red, 2, Line::SOLID);
 
-        glRenderText(m_WindDir,    "wind_dir",    s_WindVecsStyle.m_Color);
-        glRenderText(m_WindNormal+Vector3d(0,0,-0.05), "wind_normal", s_WindVecsStyle.m_Color);
-        glRenderText(m_WindSide+Vector3d(0,0,+0.05),   "wind_side",   s_WindVecsStyle.m_Color);
-    }
+    // wind arrow
+    Vector3d O(-0.75f/m_glScalef,0,0);
+    Vector3d W = objects::windDirection(s_Alpha, s_Beta) * 0.25f;
+    paintThickArrow(O, W*1.0f/m_glScalef, Qt::darkCyan, true);
+    glRenderText(O.x-0.015f/m_glScalef, O.y, O.z+0.015f/m_glScalef, "Wind", Qt::darkCyan);
 
-    if(m_pchVector->isChecked())   paintThinArrow(origin, s_Vec, Qt::red, 2, Line::SOLID);
-
-    if(m_pchBodyAxes->isChecked())
-    {
-        paintThinArrow(origin, m_CFBody.Idir(), s_BodyStyle);
-        paintThinArrow(origin, m_CFBody.Jdir(), s_BodyStyle);
-        paintThinArrow(origin, m_CFBody.Kdir(), s_BodyStyle);
-
-        glRenderText(m_CFBody.Idir(), "x_body", s_BodyStyle.m_Color);
-        glRenderText(m_CFBody.Jdir(), "y_body", s_BodyStyle.m_Color);
-        glRenderText(m_CFBody.Kdir(), "z_body", s_BodyStyle.m_Color);
-    }
 
     if(m_pchWindAxes->isChecked())
     {
-        CartesianFrame const &m_CFWind = m_AF.CFWind();
-        paintThinArrow(origin, m_CFWind.Idir(), s_WindStyle);
-        paintThinArrow(origin, m_CFWind.Jdir(), s_WindStyle);
-        paintThinArrow(origin, m_CFWind.Kdir(), s_WindStyle);
+        // fixed scale axis for the axes
+        QMatrix4x4 vm(m_matView);
+        m_matView = rotationMatrix();
+        m_matView.scale(m_glScalef, m_glScalef, m_glScalef);
+        m_matView.translate(m_glRotCenter.xf(), m_glRotCenter.yf(), m_glRotCenter.zf());
+        m_matView.scale(0.5f/m_glScalef, 0.5f/m_glScalef, 0.5f/m_glScalef);
 
-        glRenderText(m_CFWind.Idir(), "x_wind", s_WindStyle.m_Color);
-        glRenderText(m_CFWind.Jdir(), "y_wind", s_WindStyle.m_Color);
-        glRenderText(m_CFWind.Kdir()+Vector3d(0,0,+0.05), "z_wind", s_WindStyle.m_Color);
+        CartesianFrame const &CFWind = m_AF.CFWind();
+        paintThinArrow(origin, CFWind.Idir(), s_WindStyle);
+        paintThinArrow(origin, CFWind.Jdir(), s_WindStyle);
+        paintThinArrow(origin, CFWind.Kdir(), s_WindStyle);
+
+        glRenderText(CFWind.Idir(), "x_wind", s_WindStyle.m_Color);
+        glRenderText(CFWind.Jdir(), "y_wind", s_WindStyle.m_Color);
+        glRenderText(CFWind.Kdir()+Vector3d(0,0,+0.05), "z_wind", s_WindStyle.m_Color);
+
+        m_matView=vm; // leave things as they were
     }
 
     if(m_pchStabilityAxes->isChecked())
     {
+        // fixed scale axis for the axes
+        QMatrix4x4 vm(m_matView);
+        m_matView = rotationMatrix();
+        m_matView.scale(m_glScalef, m_glScalef, m_glScalef);
+        m_matView.translate(m_glRotCenter.xf(), m_glRotCenter.yf(), m_glRotCenter.zf());
+        m_matView.scale(0.5f/m_glScalef, 0.5f/m_glScalef, 0.5f/m_glScalef);
+
         CartesianFrame const &m_CFStab = m_AF.CFStab();
         paintThinArrow(origin, m_CFStab.Idir(), s_StabStyle);
         paintThinArrow(origin, m_CFStab.Jdir(), s_StabStyle);
@@ -355,24 +315,52 @@ void gl3dAxesView::glRenderView()
         glRenderText(m_CFStab.Idir(), "x_stab", s_StabStyle.m_Color);
         glRenderText(m_CFStab.Jdir()+Vector3d(0,0,-0.05), "y_stab", s_StabStyle.m_Color);
         glRenderText(m_CFStab.Kdir(), "z_stab", s_StabStyle.m_Color);
+
+        m_matView=vm; // leave things as they were
     }
+
+    m_shadSurf.bind();
+    {
+        m_shadSurf.setUniformValue(m_locSurf.m_vmMatrix,  m_matView*m_matModel);
+        m_shadSurf.setUniformValue(m_locSurf.m_pvmMatrix, m_matProj*m_matView*m_matModel);
+    }
+    m_shadSurf.release();
+    paintTriangles3Vtx(m_vboStlTriangulation, QColor(107,107,107), false, s_Light.m_bIsLightOn);
+
+    m_shadLine.bind();
+    {
+        m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView*m_matModel);
+        m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
+    }
+    m_shadLine.release();
+    paintSegments(m_vboStlOutline, W3dPrefs::s_OutlineStyle);
 }
 
 
 void gl3dAxesView::glMake3dObjects()
 {
+    if(m_bResetObject)
+    {
+        QFile StlFile(":/textfiles/stl_mesh.stl");
+        std::vector<Triangle3d> m_Triangles;
+        std::string name;
+        if(StlFile.open(QIODevice::ReadOnly))
+        {
+            QDataStream binstream(&StlFile);
+            StlReaderDlg::importStlBinaryFile(binstream, 0.0005, m_Triangles, name);
+
+            gl::makeTriangles3Vtx(m_Triangles, true, m_vboStlTriangulation);
+            gl::makeTrianglesOutline(m_Triangles, Vector3d(), m_vboStlOutline);
+        }
+
+        m_bResetObject = false;
+    }
 }
 
 
 void gl3dAxesView::onUpdateAxes()
 {
     readData();
-
-    m_WindDir    = objects::windDirection(s_Alpha, s_Beta);
-    m_WindSide   = objects::windSide(s_Alpha, s_Beta);
-    m_WindNormal = objects::windNormal(s_Alpha, s_Beta);
-
-    m_CFBody.setFrame(Vector3d(), {-1, 0, 0},  {0,1,0}, { 0, 0, -1});
 
     m_AF.setOpp(s_Alpha, s_Beta, 0.0, 1.0);
 
@@ -386,11 +374,11 @@ void gl3dAxesView::onUpdateAxes()
 
 void gl3dAxesView::readData()
 {
-    s_Alpha = m_pdeAlpha->value();
-    s_Beta  = m_pdeBeta->value();
-    s_Vec.x = m_pdeX->value();
-    s_Vec.y = m_pdeY->value();
-    s_Vec.z = m_pdeZ->value();
+    s_Alpha = m_pfeAlpha->value();
+    s_Beta  = m_pfeBeta->value();
+    s_Vector.x = m_pfeX->value();
+    s_Vector.y = m_pfeY->value();
+    s_Vector.z = m_pfeZ->value();
 }
 
 
@@ -398,30 +386,28 @@ void gl3dAxesView::onConvert()
 {
     update();
 
-    if(!m_pchVector->isChecked()) return;
-
     readData();
 
     QString strange;
 
-    Vector3d VBody = m_CFBody.globalToLocal(s_Vec);
-    Vector3d VWind = m_AF.CFWind().globalToLocal(s_Vec);
-    Vector3d VStab = m_AF.CFStab().globalToLocal(s_Vec);
+    Vector3d VWind = m_AF.CFWind().globalToLocal(s_Vector);
+    Vector3d VStab = m_AF.CFStab().globalToLocal(s_Vector);
 
-    strange = " to   Body     Wind     Stab\n";
-    strange += QString::asprintf("x= %7g  %7g  %7g\n", VBody.x, VWind.x, VStab.x);
-    strange += QString::asprintf("y= %7g  %7g  %7g\n", VBody.y, VWind.y, VStab.y);
-    strange += QString::asprintf("z= %7g  %7g  %7g\n", VBody.z, VWind.z, VStab.z);
-    m_ppto->onAppendQText(strange);
+    strange = " to        Wind          Stab\n";
+    strange += QString::asprintf("x=%13.3g %13.3g\n", VWind.x, VStab.x);
+    strange += QString::asprintf("y=%13.3g %13.3g\n", VWind.y, VStab.y);
+    strange += QString::asprintf("z=%13.3g %13.3g\n", VWind.z, VStab.z);
+    m_ppto->onAppendQText(strange + EOLch);
+
     // and back
-    VBody = m_CFBody.localToGlobal(VBody);
+/*    VBody = m_CFBody.localToGlobal(VBody);
     VWind = m_AF.CFWind().localToGlobal(VWind);
     VStab = m_AF.CFStab().localToGlobal(VStab);
     strange  = "from  Body     Wind     Stab\n";
-    strange += QString::asprintf("x= %7g  %7g  %7g\n", VBody.x, VWind.x, VStab.x);
-    strange += QString::asprintf("y= %7g  %7g  %7g\n", VBody.y, VWind.y, VStab.y);
-    strange += QString::asprintf("z= %7g  %7g  %7g\n", VBody.z, VWind.z, VStab.z);
-    m_ppto->onAppendQText(strange +"\n\n");
+    strange += QString::asprintf("x=%13.3g %13.3g %13.3g\n", VBody.x, VWind.x, VStab.x);
+    strange += QString::asprintf("y=%13.3g %13.3g %13.3g\n", VBody.y, VWind.y, VStab.y);
+    strange += QString::asprintf("z=%13.3g %13.3g %13.3g\n", VBody.z, VWind.z, VStab.z);
+    m_ppto->onAppendQText(strange +"\n\n");*/
 
 /*    m_ppto->onAppendQText("GeomToWindAxes:\n");
     Vector3d Vg = windToGeomAxes(s_Vec, s_Alpha, s_Beta);

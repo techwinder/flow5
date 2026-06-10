@@ -107,7 +107,7 @@ void TextOutputTestDlg::setupLayout()
                 connect(m_prbTableFnt, SIGNAL(clicked()), SLOT(onOutputFont()));
                 connect(m_prbTreeFnt,  SIGNAL(clicked()), SLOT(onOutputFont()));
 
-                QButtonGroup *pGroup = new QButtonGroup;
+                QButtonGroup *pGroup = new QButtonGroup(this);
                 {
                     pGroup->addButton(m_prbTextFnt);
                     pGroup->addButton(m_prbTableFnt);

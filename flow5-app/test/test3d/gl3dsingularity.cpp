@@ -179,7 +179,7 @@ void gl3dSingularity::glRenderView()
     }
     else if(m_prbVortex->isChecked())
     {
-        paintThickArrow(m_pVortex->vertexAt(0), m_pVortex->segment(), Qt::darkGreen);
+        paintThickArrow(m_pVortex->vertexAt(0), m_pVortex->segment(), Qt::darkGreen, true);
     }
 
     m_shadLine.bind();

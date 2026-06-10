@@ -40,6 +40,8 @@ class IntEdit;
 class FloatEdit;
 class Graph;
 class GraphWt;
+class gl3dAxesView;
+
 
 class Analysis3dSettings : public QDialog
 {
@@ -113,6 +115,8 @@ class Analysis3dSettings : public QDialog
 
         //Vortex particle wake
         QCheckBox *m_pchVortonRedist, *m_pchVortonStrengthEx;
+
+        gl3dAxesView *m_pglAxesView;
 
         static bool s_bKeepOpenOnErrors;
         static bool s_bStabDerivatives;

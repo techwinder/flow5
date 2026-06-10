@@ -465,10 +465,7 @@ int main()
     projectfilepath += std::filesystem::path::preferred_separator;
     projectfilepath += "PlaneRun6.fl5";
 
-
-    io::saveProject(projectfilepath, logmsg);
-
-    if(logmsg.size()>0)
+    if(!io::saveProject(projectfilepath, logmsg))
     {
         // error saving
         std::cerr << logmsg << std::endl << std::endl;

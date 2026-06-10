@@ -54,7 +54,7 @@ class PlaneExplorer : public QWidget
         PlaneExplorer(QWidget *pParent = nullptr);
         ~PlaneExplorer();
 
-        void insertPlane(Plane *pPlane);
+        ObjectTreeItem *insertPlane(const Plane *pPlane);
         void insertPlanePolar(const PlanePolar *pWPolar);
 
         QString removePlane(const QString &planeName);

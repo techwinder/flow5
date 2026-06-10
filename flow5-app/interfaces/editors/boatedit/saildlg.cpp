@@ -41,7 +41,6 @@
 #include <QMessageBox>
 #include <QColorDialog>
 #include <QHeaderView>
-#include <QButtonGroup>
 #include <QToolBar>
 
 #include "saildlg.h"

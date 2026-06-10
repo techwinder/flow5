@@ -37,9 +37,9 @@ namespace Line
     enum enumLineStipple {SOLID, DASH, DOT, DASHDOT, DASHDOTDOT, NOLINE};
 
     enum enumPointStyle{NOSYMBOL,
-                        LITTLECIRCLE,   BIGCIRCLE, LITTLESQUARE, BIGSQUARE, TRIANGLE, TRIANGLE_INV,
-                        LITTLECIRCLE_F, BIGCIRCLE_F, LITTLESQUARE_F, BIGSQUARE_F, TRIANGLE_F, TRIANGLE_INV_F,
-                        LITTLECROSS, BIGCROSS};
+                        SMALLCIRCLE,   BIGCIRCLE, SMALLSQUARE, BIGSQUARE, TRIANGLE, TRIANGLE_INV,
+                        SMALLCIRCLE_FILLED, BIGCIRCLE_FILLED, SMALLSQUARE_FILLED, BIGSQUARE_FILLED, TRIANGLE_FILLED, TRIANGLE_INV_FILLED,
+                        SMALLCROSS, BIGCROSS};
 }
 
 
@@ -154,17 +154,17 @@ struct LineStyle
         {
             default:
             case 0:  return Line::NOSYMBOL;
-            case 1:  return Line::LITTLECIRCLE;
+            case 1:  return Line::SMALLCIRCLE;
             case 2:  return Line::BIGCIRCLE;
-            case 3:  return Line::LITTLESQUARE;
+            case 3:  return Line::SMALLSQUARE;
             case 4:  return Line::BIGSQUARE;
             case 5:  return Line::TRIANGLE;
-            case 6:  return Line::LITTLECIRCLE_F;
-            case 7:  return Line::BIGCIRCLE_F;
-            case 8:  return Line::LITTLESQUARE_F;
-            case 9:  return Line::BIGSQUARE_F;
-            case 10: return Line::TRIANGLE_F;
-            case 11: return Line::LITTLECROSS;
+            case 6:  return Line::SMALLCIRCLE_FILLED;
+            case 7:  return Line::BIGCIRCLE_FILLED;
+            case 8:  return Line::SMALLSQUARE_FILLED;
+            case 9:  return Line::BIGSQUARE_FILLED;
+            case 10: return Line::TRIANGLE_FILLED;
+            case 11: return Line::SMALLCROSS;
             case 12: return Line::BIGCROSS;
         }
     }
@@ -176,19 +176,19 @@ struct LineStyle
         {
             default:
             case 0:  return Line::NOSYMBOL;
-            case 1:  return Line::LITTLECIRCLE;
+            case 1:  return Line::SMALLCIRCLE;
             case 2:  return Line::BIGCIRCLE;
-            case 3:  return Line::LITTLESQUARE;
+            case 3:  return Line::SMALLSQUARE;
             case 4:  return Line::BIGSQUARE;
             case 5:  return Line::TRIANGLE;
             case 6:  return Line::TRIANGLE_INV;
-            case 7:  return Line::LITTLECIRCLE_F;
-            case 8:  return Line::BIGCIRCLE_F;
-            case 9:  return Line::LITTLESQUARE_F;
-            case 10: return Line::BIGSQUARE_F;
-            case 11: return Line::TRIANGLE_F;
-            case 12: return Line::TRIANGLE_INV_F;
-            case 13: return Line::LITTLECROSS;
+            case 7:  return Line::SMALLCIRCLE_FILLED;
+            case 8:  return Line::BIGCIRCLE_FILLED;
+            case 9:  return Line::SMALLSQUARE_FILLED;
+            case 10: return Line::BIGSQUARE_FILLED;
+            case 11: return Line::TRIANGLE_FILLED;
+            case 12: return Line::TRIANGLE_INV_FILLED;
+            case 13: return Line::SMALLCROSS;
             case 14: return Line::BIGCROSS;
         }
     }
@@ -199,19 +199,19 @@ struct LineStyle
         switch (ptStyle)
         {
             case Line::NOSYMBOL:        return 0;
-            case Line::LITTLECIRCLE:    return 1;
+            case Line::SMALLCIRCLE:    return 1;
             case Line::BIGCIRCLE:       return 2;
-            case Line::LITTLESQUARE:    return 3;
+            case Line::SMALLSQUARE:    return 3;
             case Line::BIGSQUARE:       return 4;
             case Line::TRIANGLE:        return 5;
             case Line::TRIANGLE_INV:    return 6;
-            case Line::LITTLECIRCLE_F:  return 7;
-            case Line::BIGCIRCLE_F:     return 8;
-            case Line::LITTLESQUARE_F:  return 9;
-            case Line::BIGSQUARE_F:     return 10;
-            case Line::TRIANGLE_F:      return 11;
-            case Line::TRIANGLE_INV_F:  return 12;
-            case Line::LITTLECROSS:     return 13;
+            case Line::SMALLCIRCLE_FILLED:  return 7;
+            case Line::BIGCIRCLE_FILLED:     return 8;
+            case Line::SMALLSQUARE_FILLED:  return 9;
+            case Line::BIGSQUARE_FILLED:     return 10;
+            case Line::TRIANGLE_FILLED:      return 11;
+            case Line::TRIANGLE_INV_FILLED:  return 12;
+            case Line::SMALLCROSS:     return 13;
             case Line::BIGCROSS:        return 14;
         }
         return 0;

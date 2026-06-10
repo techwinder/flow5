@@ -111,7 +111,7 @@ class W3dPrefs : public QWidget
         void onHighlight();
         void onIDrag();
         void onMasses();
-        void onMoments();
+        void onMomentColor();
         void onOther3dChanged();
         void onOutline();
         void onRestoreDefaults();
@@ -147,12 +147,13 @@ class W3dPrefs : public QWidget
 
         LineBtn *m_plbHighlight, *m_plbSelect;
         LineBtn *m_plbAxis, *m_plbOutline, *m_plbMeshOutline, *m_plbTrans;
-        LineBtn *m_plbLift, *m_plbMoments, *m_plbInducedDrag, *m_plbViscousDrag, *m_plbVelocity;
+        LineBtn *m_plbLift, *m_plbInducedDrag, *m_plbViscousDrag, *m_plbVelocity;
         LineBtn *m_plbWind;
         LineBtn *m_plbFlowLines;
         LineBtn *m_plbStreamLines;
         QCheckBox *m_pchUseWingColour;
 
+        ColorBtn *m_pcbMomentColor;
         ColorBtn *m_pcbVortonColor;
         FloatEdit *m_pfeVortonRadius;
 
@@ -213,7 +214,6 @@ class W3dPrefs : public QWidget
 
         // results
         static LineStyle s_LiftStyle;
-        static LineStyle s_MomentStyle;
         static LineStyle s_VelocityStyle;
         static LineStyle s_IDragStyle;
         static LineStyle s_VDragStyle;
@@ -221,6 +221,8 @@ class W3dPrefs : public QWidget
         static LineStyle s_CpStyle;
         static LineStyle s_FlowStyle;
         static LineStyle s_StreamStyle;
+
+        static QColor s_MomentColor;
         static bool s_bUseWingColour;
 
         // panels

@@ -1259,7 +1259,7 @@ void PlanePolarDlg::onFlapControls()
 
         WingXfl const *pWing = pPlaneXfl->wingAt(iw);
 
-        if(iw>= s_PlPolar.nFlapCtrls()) continue; //error
+        if(iw>=s_PlPolar.nFlapCtrls()) continue; //error
 
         AngleControl &avlc = s_PlPolar.flapCtrls(iw);
         avlc.setName(setname.toStdString()); // optional meta-information
@@ -1267,7 +1267,7 @@ void PlanePolarDlg::onFlapControls()
 
         for(int iflap=0; iflap<pWingItem->rowCount(); iflap++)
         {
-            double flapangle =  m_pFlapModel->index(iflap, 1, wingindex).data().toDouble();
+            double flapangle = m_pFlapModel->index(iflap, 1, wingindex).data().toDouble();
             avlc.setValue(iflap, flapangle);
         }
     }

@@ -49,6 +49,9 @@ class StlReaderDlg : public QDialog
 
         bool importTrianglesFromMeshFile(const QString &FileName, double unitfactor);
 
+        static bool importStlBinaryFile(QDataStream &binstream, double unitfactor, std::vector<Triangle3d> &trianglelist,
+                                        std::string &solidname);
+
         static void loadSettings(QSettings &settings);
         static void saveSettings(QSettings &settings);
 

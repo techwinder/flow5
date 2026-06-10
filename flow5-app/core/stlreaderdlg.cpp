@@ -33,17 +33,17 @@
 
 #include "stlreaderdlg.h"
 
-#include <core/flow5events.h>
-#include <core/xflcore.h>
 
+
+#include <api/flow5-io.h>
+#include <api/units.h>
+#include <api/utils-io.h>
+
+#include <core/flow5events.h>
 #include <core/saveoptions.h>
 #include <core/xflcore.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
-
-#include <api/units.h>
-#include <api/flow5-io.h>
-#include <flow5-io.h>
 
 int StlReaderDlg::s_LengthUnitIndex = 0;
 QByteArray StlReaderDlg::s_Geometry;
@@ -263,3 +263,118 @@ bool StlReaderDlg::importTrianglesFromMeshFile(QString const &FileName, double u
     return bSuccess;
 }
 
+
+
+/** Used to read internal resources only since the OCCT reader does not recognize internal paths;
+    Do not move to flow5-io*/
+bool StlReaderDlg::importStlBinaryFile(QDataStream &binstream, double unitfactor, std::vector<Triangle3d> &trianglelist,
+                                       std::string &solidname)
+{
+    QString strong;
+    qint8  ch=0;
+
+    binstream.setByteOrder(QDataStream::LittleEndian);
+
+    solidname = "STL_binary_solid";
+    //80 character header, avoid word "solid"
+    //                       0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
+    for(int j=0; j<80;j++)
+    {
+        strong += " ";
+        binstream >> ch;
+        strong[j] = char(ch);
+    }
+
+    int nTriangles=0;
+    binstream >> nTriangles;
+
+    trianglelist.reserve(nTriangles);
+
+    Vector3d N, v[3];
+    float xmin=1.e10, xmax=-1.0e10;
+    float ymin=1.e10, ymax=-1.0e10;
+    float zmin=1.e10, zmax=-1.0e10;
+    float x=0, y=0, z=0;
+    float nx=0, ny=0, nz=0;
+    char buffer[12];
+    int nNegTriangles=0;
+
+    for (int j=0; j<nTriangles; j++)
+    {
+        // the normal
+        io::readFloat(binstream, nx);
+        io::readFloat(binstream, ny);
+        io::readFloat(binstream, nz);
+        N.set(double(nx), double(ny), double(nz));
+
+        for(int iv=0; iv<3; iv++)
+        {
+            //vertex 0
+            io::readFloat(binstream, x);
+            io::readFloat(binstream, y);
+            io::readFloat(binstream, z);
+            x *= float(unitfactor);
+            y *= float(unitfactor);
+            z *= float(unitfactor);
+            xmin = std::min(x,xmin);   xmax = std::max(x,xmax);
+            ymin = std::min(y,ymin);   ymax = std::max(y,ymax);
+            zmin = std::min(z,zmin);   zmax = std::max(z,zmax);
+            v[iv].set(double(x), double(y), double(z));
+
+        }
+
+        trianglelist.push_back({v[0], v[1], v[2]});
+        Triangle3d &t3d = trianglelist.back();
+        if(t3d.normal().dot(N)<.0)
+        {
+            // re-order vertices to have a positive oriented triangle
+            Vector3d tmp = t3d.vertexAt(1);
+            t3d.setVertex(1, t3d.vertexAt(2));
+            t3d.setVertex(2, tmp);
+            t3d.setTriangle();
+
+            nNegTriangles++;
+        }
+
+        t3d.setNormal(N);
+
+        //add, then remove if nullptr; this avoids double construction
+        /*        if(t3d.isNull())
+        {
+            trianglelist.pop_back();
+            nNullTriangles++;
+        }*/
+
+        //		trianglelist.last().displayNodes("BNodes==");
+        binstream.readRawData(buffer, 2);
+    }
+
+    QString logmsg;
+    strong = QString::asprintf("Read %d STL triangles, made %d panels\n", nTriangles, int(trianglelist.size()));
+    logmsg+=strong;
+    strong = QString::asprintf("Reordered vertices of %d inverted triangles\n", nNegTriangles);
+    logmsg+=strong;
+
+
+    if(nTriangles>0)
+    {
+        strong = QString::asprintf("   xmin=%13g  xmax=%13g\n", double(xmin), double(xmax));
+        logmsg+=strong;
+        strong = QString::asprintf("   ymin=%13g  ymax=%13g\n", double(ymin), double(ymax));
+        logmsg+=strong;
+        strong = QString::asprintf("   zmin=%13g  zmax=%13g\n", double(zmin), double(zmax));
+        logmsg+=strong;
+    }
+
+    double dimension = fabs(double(xmin));
+    dimension = std::max(dimension, fabs(double(xmax)));
+    dimension = std::max(dimension, fabs(double(ymin)));
+    dimension = std::max(dimension, fabs(double(ymax)));
+    dimension = std::max(dimension, fabs(double(zmin)));
+    dimension = std::max(dimension, fabs(double(zmax)));
+    //	dimension = sqrt((xmax-xmin)*(xmax-xmin) + (ymax-ymin)*(ymax-ymin) + (zmax-zmin)*(zmax-zmin));
+    strong = QString::asprintf("   Max. model size = %9.3g m\n", dimension);
+    logmsg+=strong;
+
+    return true;
+}

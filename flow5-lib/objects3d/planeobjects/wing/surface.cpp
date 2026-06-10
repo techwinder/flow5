@@ -420,11 +420,9 @@ void Surface::getSidePoints(xfl::enumSurfacePosition pos,
 {
     assert(xPointsA.size()==xPointsB.size());
 
-
-
     Vector3d V = m_Normal * m_NormalA;
     Vector3d U = (m_TA - m_LA).normalized();
-    //    double sindA = -V.dot(Vector3d(1.0,0.0,0.0));
+
     double sindA = -V.dot(U);
     if(sindA> 1.0) sindA = 1.0;
     if(sindA<-1.0) sindA = -1.0;
@@ -432,12 +430,13 @@ void Surface::getSidePoints(xfl::enumSurfacePosition pos,
 
     V = m_Normal * m_NormalB;
     U = (m_TB-m_LB).normalized();
-    //    double sindB = -V.dot(Vector3d(1.0,0.0,0.0));
+
     double sindB = -V.dot(U);
     if(sindB> 1.0) sindB = 1.0;
     if(sindB<-1.0) sindB = -1.0;
     double alpha_dB = asin(sindB);
 
+    double tmp_delta = -atan(m_Normal.y / m_Normal.z)*180.0/PI;
 
     std::vector<Node> nodeA(xPointsA.size());
     std::vector<Node> nodeB(xPointsB.size());
@@ -445,7 +444,6 @@ void Surface::getSidePoints(xfl::enumSurfacePosition pos,
     {
         double xRelA = xPointsA.at(i);
         double xRelB = xPointsB.at(i);
-//        getSidePoints_task(xRelA, xRelB, nodeA[i], nodeB[i]);
 
         Node &ndA = nodeA[i];
         Node &ndB = nodeB[i];
@@ -465,7 +463,7 @@ void Surface::getSidePoints(xfl::enumSurfacePosition pos,
         ndA.z   = Oz +(ndA.z - Oz)/cosdA;
         ndA.rotate(m_LA, (m_LA-m_TA).normalized(), +alpha_dA*180.0/PI);
         //    NA[i].rotate(Vector3d(1.0,0.0,0.0), delta);
-
+        ndA.normal().rotate(Vector3d(1.0,0.0,0.0), tmp_delta);
 
         getSideNode(xRelB, true, pos, ndB);
         Ox = xRelB;
@@ -475,6 +473,7 @@ void Surface::getSidePoints(xfl::enumSurfacePosition pos,
         ndB.z   = Oz +(ndB.z - Oz)/cosdB;
         ndB.rotate(m_LB, (m_LB-m_TB).normalized(), +alpha_dB*180.0/PI);
         //    NB[i].rotate(Vector3d(1.0,0.0,0.0), delta);
+        ndB.normal().rotate(Vector3d(1.0,0.0,0.0), tmp_delta);
 
         if(pFuse && m_bIsCenterSurf && m_bIsLeftSurf)
         {

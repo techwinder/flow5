@@ -866,7 +866,7 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
 /*            StripForce += (theforce_l + theforce_m)/2.0;
             StripForce += (theforce_m + theforce_r)/2.0;*/
 
-             StripForce += theforce_m*2.0;
+            StripForce += theforce_m*2.0;
 
             StripForce *= p3.trailingVortex().norm()/2.0; // two half segments
             StripForce *= m_pPolar3d->density() / qDyn;      // N/q

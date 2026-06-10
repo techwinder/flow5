@@ -98,7 +98,6 @@ class glXPlaneBuffers
         QOpenGLBuffer m_vboFrames;
         QOpenGLBuffer m_vboTrans;
         QOpenGLBuffer m_vboInducedDrag, m_vboViscousDrag;
-        QOpenGLBuffer m_vboMoments;
         QOpenGLBuffer m_vboStripLift;
         QOpenGLBuffer m_vboDownwash;
 

@@ -153,6 +153,9 @@ void FoilPolarDlg::setupLayout()
                 pFlightDataLayout->addWidget(m_pfeReynolds,      3,2);
                 pFlightDataLayout->addWidget(m_plabMach,         4,1, Qt::AlignRight);
                 pFlightDataLayout->addWidget(m_pfeMach,          4,2);
+                pFlightDataLayout->setColumnStretch(1,1);
+                pFlightDataLayout->setColumnStretch(2,1);
+                pFlightDataLayout->setColumnStretch(3,1);
             }
             pFlightSpecLayout->addLayout(pFlightDataLayout);
         }

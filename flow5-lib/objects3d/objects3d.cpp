@@ -761,8 +761,8 @@ void Objects3d::insertPlane(Plane *pModPlane)
 
     for (int l=0; l<nPlanes();l++)
     {
-        Plane *pPlane = planeAt(l);
-        if(pPlane == pModPlane)
+        Plane *pOldPlane = planeAt(l);
+        if(pOldPlane == pModPlane)
         {
             // remove the mod Plane from the array
             Objects3d::removePlaneAt(l);
@@ -773,8 +773,8 @@ void Objects3d::insertPlane(Plane *pModPlane)
     //and re-insert it
     for (int l=0; l<nPlanes();l++)
     {
-        Plane *pPlane = planeAt(l);
-        if(pPlane->name().compare(planename)>0)
+        Plane *pOldPlane = planeAt(l);
+        if(pOldPlane->name().compare(planename)>0)
         {
             //then insert before
             insertPlane(l, pModPlane);

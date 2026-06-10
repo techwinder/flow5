@@ -88,20 +88,20 @@ void XflXmlWriter::writeTheStyle(LineStyle const &theStyle)
         switch (theStyle.m_Symbol)
         {
             case Line::NOSYMBOL:        writeTextElement("PointStyle", "NOSYMBOL");            break;
-            case Line::LITTLECIRCLE:    writeTextElement("PointStyle", "LITTLECIRCLE");        break;
+            case Line::SMALLCIRCLE:    writeTextElement("PointStyle", "LITTLECIRCLE");        break;
             case Line::BIGCIRCLE:       writeTextElement("PointStyle", "BIGCIRCLE");           break;
-            case Line::LITTLESQUARE:    writeTextElement("PointStyle", "LITTLESQUARE");        break;
+            case Line::SMALLSQUARE:    writeTextElement("PointStyle", "LITTLESQUARE");        break;
             case Line::BIGSQUARE:       writeTextElement("PointStyle", "BIGSQUARE");           break;
             case Line::TRIANGLE:        writeTextElement("PointStyle", "TRIANGLE");            break;
             case Line::TRIANGLE_INV:    writeTextElement("PointStyle", "TRIANGLE_INV");        break;
-            case Line::LITTLECROSS:     writeTextElement("PointStyle", "LITTLECROSS");         break;
+            case Line::SMALLCROSS:     writeTextElement("PointStyle", "LITTLECROSS");         break;
             case Line::BIGCROSS:        writeTextElement("PointStyle", "BIGCROSS");            break;
-            case Line::LITTLECIRCLE_F:  writeTextElement("PointStyle", "LITTLECIRCLEFILLED");  break;
-            case Line::BIGCIRCLE_F:     writeTextElement("PointStyle", "BIGCIRCLEFILLED");     break;
-            case Line::LITTLESQUARE_F:  writeTextElement("PointStyle", "LITTLESQUAREFILLED");  break;
-            case Line::BIGSQUARE_F:     writeTextElement("PointStyle", "BIGSQUAREFILLED");     break;
-            case Line::TRIANGLE_F:      writeTextElement("PointStyle", "TRIANGLEFILLED");      break;
-            case Line::TRIANGLE_INV_F:  writeTextElement("PointStyle", "TRIANGLEFILLED_INV");  break;
+            case Line::SMALLCIRCLE_FILLED:  writeTextElement("PointStyle", "LITTLECIRCLEFILLED");  break;
+            case Line::BIGCIRCLE_FILLED:     writeTextElement("PointStyle", "BIGCIRCLEFILLED");     break;
+            case Line::SMALLSQUARE_FILLED:  writeTextElement("PointStyle", "LITTLESQUAREFILLED");  break;
+            case Line::BIGSQUARE_FILLED:     writeTextElement("PointStyle", "BIGSQUAREFILLED");     break;
+            case Line::TRIANGLE_FILLED:      writeTextElement("PointStyle", "TRIANGLEFILLED");      break;
+            case Line::TRIANGLE_INV_FILLED:  writeTextElement("PointStyle", "TRIANGLEFILLED_INV");  break;
         }
         writeTextElement("Width", QString("%1").arg(theStyle.m_Width));
         writeColor(theStyle.m_Color);

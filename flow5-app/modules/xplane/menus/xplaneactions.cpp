@@ -493,6 +493,7 @@ void XPlaneActions::makeActions()
     connect(m_pShowAnalysisWindow, SIGNAL(triggered()), m_pXPlane, SLOT(onOpenAnalysisWindow()));
 
     m_pAnalysis3dSettings = new QAction(tr("3d analysis settings"), m_pXPlane);
+    m_pAnalysis3dSettings->setShortcut(QKeySequence(Qt::ALT|Qt::Key_S));
     connect(m_pAnalysis3dSettings, SIGNAL(triggered()), m_pXPlane->s_pMainFrame, SLOT(on3dAnalysisSettings()));
 
     m_pShowPolarProps = new QAction(tr("Properties"), m_pXPlane);

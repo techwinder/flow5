@@ -67,6 +67,7 @@ namespace xfl
     FL5LIB_EXPORT  extern fl5Color Magenta;
     FL5LIB_EXPORT  extern fl5Color IndianRed;
     FL5LIB_EXPORT  extern fl5Color Turquoise;
+    FL5LIB_EXPORT  extern fl5Color PinkFlow;
 
 
 

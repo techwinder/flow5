@@ -569,8 +569,8 @@ bool PlaneTask::checkWPolarData(Plane const *pPlane, PlanePolar *pWPolar)
                 if(!pPlane->hasMainWing())
                 {
                     strange = "   warning: no main wing detected in plane:" + pPlane->name();
+                    logmsg += strange + EOLstr;
                 }
-                logmsg += strange;
                 m_bError = true;
             }
         }

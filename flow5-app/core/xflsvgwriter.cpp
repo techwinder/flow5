@@ -168,7 +168,7 @@ void XflSvgWriter::writePoint(double x, double y, LineStyle const &ls, QColor co
     switch(ls.m_Symbol)
     {
         case Line::NOSYMBOL: break;
-        case Line::LITTLECIRCLE:
+        case Line::SMALLCIRCLE:
         {
             double ptSide = 3.0;
             writeStartElement("circle");
@@ -182,7 +182,7 @@ void XflSvgWriter::writePoint(double x, double y, LineStyle const &ls, QColor co
             writeEndElement();
             break;
         }
-        case Line::LITTLECIRCLE_F:
+        case Line::SMALLCIRCLE_FILLED:
         {
             double ptSide = 3.0;
             writeStartElement("circle");
@@ -209,7 +209,7 @@ void XflSvgWriter::writePoint(double x, double y, LineStyle const &ls, QColor co
             writeEndElement();
             break;
         }
-        case Line::BIGCIRCLE_F:
+        case Line::BIGCIRCLE_FILLED:
         {
             double ptSide = 5.0;
             writeStartElement("circle");
@@ -222,7 +222,7 @@ void XflSvgWriter::writePoint(double x, double y, LineStyle const &ls, QColor co
             writeEndElement();
             break;
         }
-        case Line::LITTLESQUARE:
+        case Line::SMALLSQUARE:
         {
             double ptSide = 4.0;
             writeStartElement("rect");
@@ -237,7 +237,7 @@ void XflSvgWriter::writePoint(double x, double y, LineStyle const &ls, QColor co
             writeEndElement();
             break;
         }
-        case Line::LITTLESQUARE_F:
+        case Line::SMALLSQUARE_FILLED:
         {
             double ptSide = 4.0;
             writeStartElement("rect");
@@ -266,7 +266,7 @@ void XflSvgWriter::writePoint(double x, double y, LineStyle const &ls, QColor co
             writeEndElement();
             break;
         }
-        case Line::BIGSQUARE_F:
+        case Line::BIGSQUARE_FILLED:
         {
             double ptSide = 8.0;
             writeStartElement("rect");
@@ -322,7 +322,7 @@ void XflSvgWriter::writePoint(double x, double y, LineStyle const &ls, QColor co
             writeEndElement();
             break;
         }
-        case Line::TRIANGLE_F:
+        case Line::TRIANGLE_FILLED:
         {
             double ptSide = 5;
 
@@ -342,7 +342,7 @@ void XflSvgWriter::writePoint(double x, double y, LineStyle const &ls, QColor co
             writeEndElement();
             break;
         }
-        case Line::TRIANGLE_INV_F:
+        case Line::TRIANGLE_INV_FILLED:
         {
             double ptSide = 5;
 
@@ -362,7 +362,7 @@ void XflSvgWriter::writePoint(double x, double y, LineStyle const &ls, QColor co
             writeEndElement();
             break;
         }
-        case Line::LITTLECROSS:
+        case Line::SMALLCROSS:
         {
             int ptSide = 3;
             writeLine(int(x)-ptSide, int(y)-ptSide, int(x)+ptSide, int(y)+ptSide, ls);

@@ -77,6 +77,7 @@ bool W3dPrefs::s_bEnableClipPlane(true);
 bool W3dPrefs::s_bAutoAdjustScale(false);
 bool W3dPrefs::s_bWakePanels(false);
 
+
 double W3dPrefs::s_MassRadius(.017);
 QColor W3dPrefs::s_MassColor(95,128,99);
 
@@ -94,12 +95,12 @@ LineStyle W3dPrefs::s_OutlineStyle( true, Line::SOLID,   1, fl5Color(41,41,41), 
 LineStyle W3dPrefs::s_LiftStyle(    true, Line::SOLID,   3, fl5Color(105, 105, 105),      Line::NOSYMBOL);
 LineStyle W3dPrefs::s_VelocityStyle(true, Line::SOLID,   1, fl5Color(255, 100, 100),      Line::NOSYMBOL);
 LineStyle W3dPrefs::s_StreamStyle(  true, Line::DASH,    1, fl5Color(105, 105, 105),      Line::NOSYMBOL);
-LineStyle W3dPrefs::s_MomentStyle(  true, Line::DASH,    1, fl5Color(200, 177, 100),      Line::NOSYMBOL);
 LineStyle W3dPrefs::s_IDragStyle(   true, Line::DASH,    1, fl5Color(215,100,125),        Line::NOSYMBOL);
 LineStyle W3dPrefs::s_VDragStyle(   true, Line::DASH,    1, fl5Color(215,125,100),        Line::NOSYMBOL);
 LineStyle W3dPrefs::s_CpStyle(      true, Line::SOLID,   1, fl5Color(255,0,0),            Line::NOSYMBOL);
 LineStyle W3dPrefs::s_TransStyle(   true, Line::SOLID,   1, fl5Color(171, 103, 220),      Line::NOSYMBOL);
 LineStyle W3dPrefs::s_FlowStyle(    true, Line::SOLID,   2, fl5Color(101, 101, 231, 153), Line::NOSYMBOL);
+QColor W3dPrefs::s_MomentColor = QColor(149, 131, 113);
 
 bool W3dPrefs::s_bUseWingColour(false);
 
@@ -154,6 +155,7 @@ void W3dPrefs::connectSignals()
     connect(m_pcbWakePanelClr,       SIGNAL(clicked()),             SLOT(onWakePanelClr()));
     connect(m_pcbWaterColor,         SIGNAL(clicked()),             SLOT(onWaterColor()));
     connect(m_pcbWingPanelClr,       SIGNAL(clicked()),             SLOT(onWingPanelClr()));
+    connect(m_pcbMomentColor,        SIGNAL(clicked()),             SLOT(onMomentColor()));
 
     connect(m_plbAxis,               SIGNAL(clickedLB(LineStyle)),  SLOT(on3dAxis()));
     connect(m_plbContourLines,       SIGNAL(clickedLB(LineStyle)),  SLOT(onContourLines()));
@@ -162,7 +164,6 @@ void W3dPrefs::connectSignals()
     connect(m_plbInducedDrag,        SIGNAL(clickedLB(LineStyle)),  SLOT(onIDrag()));
     connect(m_plbLift,               SIGNAL(clickedLB(LineStyle)),  SLOT(onXCP()));
     connect(m_plbMeshOutline,        SIGNAL(clickedLB(LineStyle)),  SLOT(onVLMMesh()));
-    connect(m_plbMoments,            SIGNAL(clickedLB(LineStyle)),  SLOT(onMoments()));
     connect(m_plbOutline,            SIGNAL(clickedLB(LineStyle)),  SLOT(onOutline()));
     connect(m_plbSelect,             SIGNAL(clickedLB(LineStyle)),  SLOT(onSelect()));
     connect(m_plbStreamLines,        SIGNAL(clickedLB(LineStyle)),  SLOT(onStreamLines()));
@@ -246,13 +247,13 @@ void W3dPrefs::initWidgets()
     m_plbMeshOutline->setTheStyle(s_PanelStyle);
     m_plbLift->setTheStyle(s_LiftStyle);
     m_plbVelocity->setTheStyle(s_VelocityStyle);
-    m_plbMoments->setTheStyle(s_MomentStyle);
     m_plbInducedDrag->setTheStyle(s_IDragStyle);
     m_plbViscousDrag->setTheStyle(s_VDragStyle);
     m_plbFlowLines->setTheStyle(s_FlowStyle);
     m_plbStreamLines->setTheStyle(s_StreamStyle);
     m_pchUseWingColour->setChecked(s_bUseWingColour);
     m_plbTrans->setTheStyle(s_TransStyle);
+
 
     m_pcbWaterColor->setColor(s_WaterColor);
     m_pfeBoxX->setValue(s_BoxX*Units::mtoUnit());
@@ -269,6 +270,7 @@ void W3dPrefs::initWidgets()
     m_pcbWingPanelClr->setColor(s_WingPanelColor);
     m_pcbFlapPanelClr->setColor(s_FlapPanelColor);
     m_pcbWakePanelClr->setColor(s_WakePanelColor);
+    m_pcbMomentColor->setColor(s_MomentColor);
 
 //    m_prbOcc->setChecked(Fuse::isOccTessellator());
 //    m_prbFlow5->setChecked(!Fuse::isOccTessellator());
@@ -425,6 +427,9 @@ void W3dPrefs::setupLayout()
                 QLabel *plabWing        = new QLabel(tr("Wing panels:"));
                 QLabel *plabFlap        = new QLabel(tr("Flap panels:"));
                 QLabel *plabWake        = new QLabel(tr("Wake panels:"));
+                QLabel *plabVtnColour   = new QLabel(tr("Colour:"));
+                QLabel *plabVtnRadius   = new QLabel(tr("Radius:"));
+                QLabel *plabVtnViewport = new QLabel(tr("% viewport width"));
 
                 m_plbHighlight    = new LineBtn(this);
                 m_plbSelect       = new LineBtn(this);
@@ -434,7 +439,6 @@ void W3dPrefs::setupLayout()
                 m_plbOutline      = new LineBtn(this);
                 m_plbTrans        = new LineBtn(this);
                 m_plbLift         = new LineBtn(this);
-                m_plbMoments      = new LineBtn(this);
                 m_plbInducedDrag  = new LineBtn(this);
                 m_plbViscousDrag  = new LineBtn(this);
                 m_plbVelocity     = new LineBtn(this);
@@ -447,10 +451,11 @@ void W3dPrefs::setupLayout()
 
                 m_pchBackPanelClr  = new QCheckBox(tr("Use background color for mesh panels"));
                 m_plbMeshOutline   = new LineBtn(this);
-                m_pcbFusePanelClr = new ColorBtn;
-                m_pcbWingPanelClr = new ColorBtn;
-                m_pcbFlapPanelClr = new ColorBtn;
-                m_pcbWakePanelClr = new ColorBtn;
+                m_pcbFusePanelClr  = new ColorBtn;
+                m_pcbWingPanelClr  = new ColorBtn;
+                m_pcbFlapPanelClr  = new ColorBtn;
+                m_pcbWakePanelClr  = new ColorBtn;
+                m_pcbMomentColor   = new ColorBtn;
 
                 m_pfeVortonRadius  = new FloatEdit;
                 m_pcbVortonColor = new ColorBtn;
@@ -463,7 +468,6 @@ void W3dPrefs::setupLayout()
                 m_plbOutline->setBackground(true);
                 m_plbLift->setBackground(true);
                 m_plbTrans->setBackground(true);
-                m_plbMoments->setBackground(true);
                 m_plbInducedDrag->setBackground(true);
                 m_plbViscousDrag->setBackground(true);
                 m_plbVelocity->setBackground(true);
@@ -477,64 +481,64 @@ void W3dPrefs::setupLayout()
                 pColorGridLayout->setColumnStretch(3,1);
                 pColorGridLayout->setColumnStretch(4,2);
 
-                pColorGridLayout->addWidget(plabSel,             1,1, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbSelect,         1,2);
-                pColorGridLayout->addWidget(plabHigh,            1,3, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbHighlight,      1,4);
+                pColorGridLayout->addWidget(plabSel,                1,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbSelect,            1,2);
+                pColorGridLayout->addWidget(plabHigh,               1,3, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbHighlight,         1,4);
 
-                pColorGridLayout->addWidget(plabAxis,            2,1, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbAxis,           2,2);
+                pColorGridLayout->addWidget(plabAxis,               2,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbAxis,              2,2);
 
-                pColorGridLayout->addWidget(plabWind,            2,3, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbWind,           2,4);
+                pColorGridLayout->addWidget(plabWind,               2,3, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbWind,              2,4);
 
-                pColorGridLayout->addWidget(plabGeom,            4,1,1,4, Qt::AlignCenter);
-                pColorGridLayout->addWidget(plabOutline,         5,1, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(plabMasses,          5,3, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbOutline,        5,2);
-                pColorGridLayout->addWidget(m_pcbMassColor,     5,4);
+                pColorGridLayout->addWidget(plabGeom,               4,1,1,4, Qt::AlignHCenter);
+                pColorGridLayout->addWidget(plabOutline,            5,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(plabMasses,             5,3, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbOutline,           5,2);
+                pColorGridLayout->addWidget(m_pcbMassColor,         5,4);
 
-                pColorGridLayout->addWidget(plabMesh,            6,1,1,4, Qt::AlignCenter);
-                pColorGridLayout->addWidget(plabVLM,             7,1, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbMeshOutline,    7,2);
+                pColorGridLayout->addWidget(plabMesh,               6,1,1,4, Qt::AlignHCenter);
+                pColorGridLayout->addWidget(plabVLM,                7,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbMeshOutline,       7,2);
 
-                pColorGridLayout->addWidget(m_pchBackPanelClr,    8,1,1,4, Qt::AlignCenter);
-                pColorGridLayout->addWidget(plabFuse,             9,1, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_pcbFusePanelClr,   9,2);
-                pColorGridLayout->addWidget(plabWing,             9,3, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_pcbWingPanelClr,   9,4);
-                pColorGridLayout->addWidget(plabFlap,             10,1, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_pcbFlapPanelClr,   10,2);
-                pColorGridLayout->addWidget(plabWake,             10,3, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_pcbWakePanelClr,   10,4);
+                pColorGridLayout->addWidget(m_pchBackPanelClr,      8,1,1,4, Qt::AlignHCenter);
+                pColorGridLayout->addWidget(plabFuse,               9,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_pcbFusePanelClr,      9,2);
+                pColorGridLayout->addWidget(plabWing,               9,3, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_pcbWingPanelClr,      9,4);
+                pColorGridLayout->addWidget(plabFlap,               10,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_pcbFlapPanelClr,      10,2);
+                pColorGridLayout->addWidget(plabWake,               10,3, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_pcbWakePanelClr,      10,4);
 
-                pColorGridLayout->addWidget(plabResults,            11,1,1,4, Qt::AlignCenter);
-                pColorGridLayout->addWidget(plabLift,               12,1, Qt::AlignVCenter|Qt::AlignRight);
+                pColorGridLayout->addWidget(plabResults,            11,1,1,4, Qt::AlignHCenter);
+                pColorGridLayout->addWidget(plabLift,               12,1, Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbLift,              12,2);
-                pColorGridLayout->addWidget(plabMoments,            12,3, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbMoments,           12,4);
-                pColorGridLayout->addWidget(plabInducedDrag,        13,1, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbInducedDrag,       13,2);
-                pColorGridLayout->addWidget(plabViscousDrag,        13,3, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbViscousDrag,       13,4);
-                pColorGridLayout->addWidget(plabTopTr,              14,1, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbTrans,             14,2);
-                pColorGridLayout->addWidget(plabVelocity,           14,3, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbVelocity,          14,4);
+                pColorGridLayout->addWidget(plabMoments,            13,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_pcbMomentColor,       13,2);
+                pColorGridLayout->addWidget(plabInducedDrag,        15,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbInducedDrag,       15,2);
+                pColorGridLayout->addWidget(plabViscousDrag,        15,3, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbViscousDrag,       15,4);
+                pColorGridLayout->addWidget(plabTopTr,              16,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbTrans,             16,2);
+                pColorGridLayout->addWidget(plabVelocity,           16,3, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbVelocity,          16,4);
 
-                pColorGridLayout->addWidget(plabStream,             15,1, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbStreamLines,       15,2);
-                pColorGridLayout->addWidget(m_pchUseWingColour,     15, 3, 1, 2);
+                pColorGridLayout->addWidget(plabStream,             17,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbStreamLines,       17,2);
+                pColorGridLayout->addWidget(m_pchUseWingColour,     17, 3, 1, 2);
 
-                pColorGridLayout->addWidget(plabFlow,               16,1, Qt::AlignVCenter|Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbFlowLines,         16,2);
+                pColorGridLayout->addWidget(plabFlow,               18,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbFlowLines,         18,2);
 
-                pColorGridLayout->addWidget(plabVortons,                         17,1,1,4, Qt::AlignCenter);
-                pColorGridLayout->addWidget(new QLabel(tr("Colour:")),           18,1, Qt::AlignVCenter | Qt::AlignRight);
-                pColorGridLayout->addWidget(m_pcbVortonColor,                    18,2);
-                pColorGridLayout->addWidget(new QLabel(tr("Radius:")),           18,3, Qt::AlignVCenter | Qt::AlignRight);
-                pColorGridLayout->addWidget(m_pfeVortonRadius,                   18,4);
-                pColorGridLayout->addWidget(new QLabel(tr("% viewport width")),  18,5, Qt::AlignVCenter | Qt::AlignLeft);
+                pColorGridLayout->addWidget(plabVortons,            19,1,1,4, Qt::AlignHCenter);
+                pColorGridLayout->addWidget(plabVtnColour,          20,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_pcbVortonColor,       20,2);
+                pColorGridLayout->addWidget(plabVtnRadius,          20,3, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_pfeVortonRadius,      20,4);
+                pColorGridLayout->addWidget(plabVtnViewport,        20,5, Qt::AlignLeft);
 
             }
 
@@ -561,12 +565,12 @@ void W3dPrefs::setupLayout()
                             m_pfeBoxX = new FloatEdit;
                             m_pfeBoxY = new FloatEdit;
 
-                            pBoxSizeLayout->addWidget(plabX,       1, 1, Qt::AlignVCenter|Qt::AlignRight);
+                            pBoxSizeLayout->addWidget(plabX,       1, 1, Qt::AlignRight);
                             pBoxSizeLayout->addWidget(m_pfeBoxX,   1, 2);
-                            pBoxSizeLayout->addWidget(m_plabXUnit, 1, 3, Qt::AlignVCenter|Qt::AlignLeft);
-                            pBoxSizeLayout->addWidget(plabY,       2, 1, Qt::AlignVCenter|Qt::AlignRight);
+                            pBoxSizeLayout->addWidget(m_plabXUnit, 1, 3, Qt::AlignLeft);
+                            pBoxSizeLayout->addWidget(plabY,       2, 1, Qt::AlignRight);
                             pBoxSizeLayout->addWidget(m_pfeBoxY,   2, 2);
-                            pBoxSizeLayout->addWidget(m_plabYUnit, 2, 3, Qt::AlignVCenter|Qt::AlignLeft);
+                            pBoxSizeLayout->addWidget(m_plabYUnit, 2, 3, Qt::AlignLeft);
                             pBoxSizeLayout->setColumnStretch(3,1);
                         }
 
@@ -848,16 +852,6 @@ void W3dPrefs::onXCP()
 }
 
 
-void W3dPrefs::onMoments()
-{
-    LineMenu lm(nullptr, false);
-    lm.initMenu(s_MomentStyle);
-    lm.exec(QCursor::pos());
-    s_MomentStyle = lm.theStyle();
-    m_plbMoments->setTheStyle(s_MomentStyle);
-}
-
-
 void W3dPrefs::onVelocity()
 {
     LineMenu lm(nullptr, false);
@@ -921,6 +915,18 @@ void W3dPrefs::onMasses()
     {
         s_MassColor = clr;
         m_pcbMassColor->setColor(clr);
+    }
+    update();
+}
+
+
+void W3dPrefs::onMomentColor()
+{
+    QColor clr = QColorDialog::getColor(s_MomentColor, this, tr("Moment colour"), QColorDialog::ShowAlphaChannel);
+    if(clr.isValid())
+    {
+        s_MomentColor = clr;
+        m_pcbMomentColor->setColor(clr);
     }
     update();
 }
@@ -1048,7 +1054,6 @@ void W3dPrefs::saveSettings(QSettings &settings)
         xfl::saveLineSettings(settings, s_PanelStyle,     "PanelStyle");
         xfl::saveLineSettings(settings, s_OutlineStyle,   "OutlineStyle");
         xfl::saveLineSettings(settings, s_LiftStyle ,     "LiftForceStyle");
-        xfl::saveLineSettings(settings, s_MomentStyle,    "MomentStyle");
         xfl::saveLineSettings(settings, s_VDragStyle,     "VDragStyle");
         xfl::saveLineSettings(settings, s_IDragStyle,     "IDragStyle");
         xfl::saveLineSettings(settings, s_VelocityStyle,  "VelocityStyle");
@@ -1062,10 +1067,12 @@ void W3dPrefs::saveSettings(QSettings &settings)
         settings.setValue("NContourLines", s_NContourLines);
         xfl::saveLineSettings(settings, s_ContourLineStyle, "ContourLineStyle");
 
-        settings.setValue("VortonColour", s_VortonColor);
+        settings.setValue("VortonColour",  s_VortonColor);
         settings.setValue("VortonRadius", s_VortonRadius);
 
-        settings.setValue("UseWingColour", s_bUseWingColour);
+        settings.setValue("MomentColor",  s_MomentColor);
+
+        settings.setValue("UseWingColour",  s_bUseWingColour);
 
         settings.setValue("showWakePanels", s_bWakePanels);
 
@@ -1137,7 +1144,6 @@ void W3dPrefs::loadSettings(QSettings &settings)
         xfl::loadLineSettings(settings, s_PanelStyle,    "PanelStyle");
         xfl::loadLineSettings(settings, s_OutlineStyle,  "OutlineStyle");
         xfl::loadLineSettings(settings, s_LiftStyle,     "LiftForceStyle");
-        xfl::loadLineSettings(settings, s_MomentStyle,   "MomentStyle");
         xfl::loadLineSettings(settings, s_VDragStyle,    "VDragStyle");
         xfl::loadLineSettings(settings, s_IDragStyle,    "IDragStyle");
         xfl::loadLineSettings(settings, s_VelocityStyle, "VelocityStyle");
@@ -1151,36 +1157,38 @@ void W3dPrefs::loadSettings(QSettings &settings)
         s_NContourLines = settings.value("NContourLines", s_NContourLines).toInt();
         xfl::loadLineSettings(settings, s_ContourLineStyle, "ContourLineStyle");
 
-        s_VortonColor      = settings.value("VortonColour", s_VortonColor).value<QColor>();
-        s_VortonRadius     = settings.value("VortonRadius", s_VortonRadius).toDouble();
+        s_VortonColor       = settings.value("VortonColour", s_VortonColor).value<QColor>();
+        s_VortonRadius      = settings.value("VortonRadius", s_VortonRadius).toDouble();
 
-        s_bUseWingColour   = settings.value("UseWingColour", false).toBool();
+        s_bUseWingColour    = settings.value("UseWingColour", s_bUseWingColour).toBool();
 
-        s_WaterColor       = settings.value("WaterColor", s_WaterColor).value<QColor>();
-        s_BoxX             = settings.value("GroundBoxX",  s_BoxX).toDouble();
-        s_BoxY             = settings.value("GroundBoxY",  s_BoxY).toDouble();
+        s_MomentColor       = settings.value("MomentColor", s_MomentColor).value<QColor>();
 
-        s_MassColor        = settings.value("MassColor",  s_MassColor).value<QColor>();
+        s_WaterColor        = settings.value("WaterColor", s_WaterColor).value<QColor>();
+        s_BoxX              = settings.value("GroundBoxX",  s_BoxX).toDouble();
+        s_BoxY              = settings.value("GroundBoxY",  s_BoxY).toDouble();
 
-        s_bWakePanels      = settings.value("showWakePanels", true).toBool();
+        s_MassColor         = settings.value("MassColor",  s_MassColor).value<QColor>();
 
-        s_bUseBackClr      = settings.value("UseBackColor", true).toBool();
-        s_FusePanelColor   = settings.value("FusePanelClr", s_FusePanelColor).value<QColor>();
-        s_WingPanelColor   = settings.value("WingPanelClr", s_WingPanelColor).value<QColor>();
-        s_FlapPanelColor   = settings.value("FlapPanelClr", s_FlapPanelColor).value<QColor>();
-        s_WakePanelColor   = settings.value("WakePanelClr", s_WakePanelColor).value<QColor>();
+        s_bWakePanels       = settings.value("showWakePanels", true).toBool();
 
-        s_bEnableClipPlane = settings.value("EnableClipPlane",   s_bEnableClipPlane).toBool();
-        s_bShowRefLength   = settings.value("ShowRefLength",     s_bShowRefLength).toBool();
-        s_bAutoAdjustScale = settings.value("AutoAdjust3dScale", s_bAutoAdjustScale).toBool();
-        s_bSaveViewPoints  = settings.value("Save3dViewPoints",  s_bSaveViewPoints).toBool();
+        s_bUseBackClr       = settings.value("UseBackColor", true).toBool();
+        s_FusePanelColor    = settings.value("FusePanelClr", s_FusePanelColor).value<QColor>();
+        s_WingPanelColor    = settings.value("WingPanelClr", s_WingPanelColor).value<QColor>();
+        s_FlapPanelColor    = settings.value("FlapPanelClr", s_FlapPanelColor).value<QColor>();
+        s_WakePanelColor    = settings.value("WakePanelClr", s_WakePanelColor).value<QColor>();
+
+        s_bEnableClipPlane  = settings.value("EnableClipPlane",   s_bEnableClipPlane).toBool();
+        s_bShowRefLength    = settings.value("ShowRefLength",     s_bShowRefLength).toBool();
+        s_bAutoAdjustScale  = settings.value("AutoAdjust3dScale", s_bAutoAdjustScale).toBool();
+        s_bSaveViewPoints   = settings.value("Save3dViewPoints",  s_bSaveViewPoints).toBool();
 
 
-        s_iChordwiseRes    = settings.value("ChordwiseRes", s_iChordwiseRes).toInt();
-        s_iBodyAxialRes    = settings.value("BodyAxialRes", s_iBodyAxialRes).toInt();
-        s_iBodyHoopRes     = settings.value("BodyHoopRes",  s_iBodyHoopRes).toInt();
-        int iSailXRes      = settings.value("SailXRes",   Sail::iXRes()).toInt();
-        int iSailZRes      = settings.value("SailZRes",   Sail::iZRes()).toInt();
+        s_iChordwiseRes     = settings.value("ChordwiseRes", s_iChordwiseRes).toInt();
+        s_iBodyAxialRes     = settings.value("BodyAxialRes", s_iBodyAxialRes).toInt();
+        s_iBodyHoopRes      = settings.value("BodyHoopRes",  s_iBodyHoopRes).toInt();
+        int iSailXRes       = settings.value("SailXRes",   Sail::iXRes()).toInt();
+        int iSailZRes       = settings.value("SailZRes",   Sail::iZRes()).toInt();
         Sail::setTessellation(iSailXRes, iSailZRes);
 
         GmshParams params;
@@ -1215,63 +1223,30 @@ void W3dPrefs::resetDefaults()
 {
     s_bWakePanels = false;
 
-    s_SelectStyle   = LineStyle(true, Line::SOLID, 5, fl5Color(255,75,75),  Line::NOSYMBOL);
-    s_HighStyle     = LineStyle(true, Line::SOLID, 5, fl5Color(75,75,255),  Line::NOSYMBOL);
-
     s_WaterColor = QColor(51,77,89,100);
     s_MassColor  = QColor(95,128,99);
 
-    s_PanelStyle.m_Stipple    = Line::SOLID;
-    s_PanelStyle.m_Width      = 1;
-    s_PanelStyle.m_Color      = fl5Color(87,87,87);
-    s_AxisStyle.m_Stipple     = Line::DASHDOT;
-    s_AxisStyle.m_Width       = 1;
-    s_AxisStyle.m_Color       = fl5Color(150,150,150);
-    s_WindStyle.m_Stipple     = Line::DASHDOT;
-    s_WindStyle.m_Width       = 3;
-    s_WindStyle.m_Color       = fl5Color(75,75,75);
-    s_OutlineStyle.m_Stipple  = Line::SOLID;
-    s_OutlineStyle.m_Width    = 1;
-    s_OutlineStyle.m_Color    = fl5Color(41, 41, 41);
-    s_LiftStyle.m_Stipple     = Line::SOLID;
-    s_LiftStyle.m_Width       = 3;
-    s_LiftStyle.m_Color       = fl5Color(105, 105, 105);
-    s_MomentStyle.m_Stipple   = Line::SOLID;
-    s_MomentStyle.m_Width     = 2;
-    s_MomentStyle.m_Color     = fl5Color(200, 100, 100);
-
-    s_IDragStyle.m_Stipple    = Line::DASH;
-    s_IDragStyle.m_Width      = 2;
-    s_IDragStyle.m_Color      = fl5Color(215,100,125);
-    s_VDragStyle.m_Stipple    = Line::DASH;
-    s_VDragStyle.m_Width      = 2;
-    s_VDragStyle.m_Color      = fl5Color(215,125,100);
-
-    s_VelocityStyle.m_Stipple = Line::SOLID;
-    s_VelocityStyle.m_Width   = 2;
-    s_VelocityStyle.m_Color   = fl5Color(255, 100, 100);
-
-    s_CpStyle.m_Stipple = Line::SOLID;
-    s_CpStyle.m_Width   = 1;
-    s_CpStyle.m_Color   = fl5Color(255,0,0);
-
-    s_FlowStyle.m_Stipple = Line::SOLID;
-    s_FlowStyle.m_Width   = 2;
-    s_FlowStyle.m_Color   = fl5Color(101, 101, 231, 153);
-
-    s_StreamStyle.m_Stipple  = Line::DASH;
-    s_StreamStyle.m_Width    = 1;
-    s_StreamStyle.m_Color    = fl5Color(105, 105, 105);
-
-    s_TransStyle.m_Stipple = Line::SOLID;
-    s_TransStyle.m_Width   = 2;
-    s_TransStyle.m_Color   = fl5Color(171, 103, 220);
+    s_SelectStyle   = LineStyle(true, Line::SOLID,   5, fl5Color(255,35, 15),         Line::NOSYMBOL);
+    s_HighStyle     = LineStyle(true, Line::SOLID,   5, fl5Color(65,105,225),         Line::NOSYMBOL);
+    s_AxisStyle     = LineStyle(true, Line::DASHDOT, 1, fl5Color(150,150,150),        Line::NOSYMBOL);
+    s_WindStyle     = LineStyle(true, Line::SOLID,   3, fl5Color(75, 75, 75),         Line::NOSYMBOL);
+    s_PanelStyle    = LineStyle(true, Line::SOLID,   1, fl5Color(117, 117, 117),      Line::NOSYMBOL);
+    s_OutlineStyle  = LineStyle(true, Line::SOLID,   1, fl5Color(41,41,41),           Line::NOSYMBOL);
+    s_LiftStyle     = LineStyle(true, Line::SOLID,   3, fl5Color(105, 105, 105),      Line::NOSYMBOL);
+    s_VelocityStyle = LineStyle(true, Line::SOLID,   1, fl5Color(255, 100, 100),      Line::NOSYMBOL);
+    s_StreamStyle   = LineStyle(true, Line::DASH,    1, fl5Color(105, 105, 105),      Line::NOSYMBOL);
+    s_IDragStyle    = LineStyle(true, Line::DASH,    1, fl5Color(215,100,125),        Line::NOSYMBOL);
+    s_VDragStyle    = LineStyle(true, Line::DASH,    1, fl5Color(215,125,100),        Line::NOSYMBOL);
+    s_CpStyle       = LineStyle(true, Line::SOLID,   1, fl5Color(255,0,0),            Line::NOSYMBOL);
+    s_TransStyle    = LineStyle(true, Line::SOLID,   1, fl5Color(171, 103, 220),      Line::NOSYMBOL);
+    s_FlowStyle     = LineStyle(true, Line::SOLID,   2, fl5Color(101, 101, 231, 153), Line::NOSYMBOL);
 
     s_bUseBackClr = false;
     s_WingPanelColor = QColor(231,231,231);
     s_FusePanelColor = QColor(241,241,241);
     s_FlapPanelColor = QColor(227,227,227);
     s_WakePanelColor = QColor(215,215,215, 105);
+    s_MomentColor    = QColor(149, 131, 113);
 
     s_BoxX = s_BoxY = 10.0;
     s_NContourLines = 11;

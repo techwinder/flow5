@@ -205,7 +205,7 @@ void DFoilWt::paintFoils(QPainter &painter)
             double xa = (pFoil->TEHinge().x-0.5)  + 0.5;
             double ya =  pFoil->TEHinge().y;
             QPoint pt(int(xa*m_fScale + m_ptOffset.x()), int(-ya*m_fScale*m_fScaleY + m_ptOffset.y()));
-            xfl::drawSymbol(painter, Line::BIGCIRCLE_F, Qt::cyan, Qt::transparent, pt);
+            xfl::drawSymbol(painter, Line::BIGCIRCLE_FILLED, Qt::cyan, Qt::transparent, pt);
             painter.drawText(pt.x()-DisplayOptions::textFontStruct().width("T.E. hinge")-5, pt.y()+DisplayOptions::textFontStruct().height(), "T.E. hinge");
         }
     }

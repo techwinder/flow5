@@ -28,7 +28,6 @@
 
 #include <QDialogButtonBox>
 #include <QPushButton>
-#include <QButtonGroup>
 #include <QTabWidget>
 #include <QVBoxLayout>
 #include <QAction>

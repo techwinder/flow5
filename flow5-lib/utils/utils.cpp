@@ -54,6 +54,7 @@ fl5Color xfl::GreenYellow    = fl5Color(173,255,47);
 fl5Color xfl::Magenta        = fl5Color(255,0,255);
 fl5Color xfl::IndianRed      = fl5Color(205,92,92);
 fl5Color xfl::Turquoise      = fl5Color(64,224,208);
+fl5Color xfl::PinkFlow       = fl5Color(255,0,127);
 
 xfl::enumTextFileType xfl::s_ExportFileType = xfl::TXT;
 std::string xfl::s_CsvSeparator = ",";

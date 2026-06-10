@@ -28,7 +28,6 @@
 #include <QApplication>
 #include <QDesktopServices>
 #include <QHBoxLayout>
-#include <QButtonGroup>
 #include <QGroupBox>
 #include <QColorDialog>
 

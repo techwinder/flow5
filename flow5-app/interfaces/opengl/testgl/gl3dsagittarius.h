@@ -78,7 +78,7 @@ class gl3dSagittarius : public gl3dTestGLView
 
         IntEdit *m_pieSteps;
 
-        FloatEdit *m_pdeDt;
+        FloatEdit *m_pfeDt;
 
         QLabel *m_plabInfo;
         QCheckBox *m_pchMultiThread;

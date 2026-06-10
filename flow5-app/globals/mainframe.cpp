@@ -1360,6 +1360,14 @@ void MainFrame::keyPressEvent(QKeyEvent *pEvent)
                 }
                 break;
             }
+            case (Qt::Key_F2):
+            {
+                gl3dAxesView *pTestView =  new gl3dAxesView();
+                pTestView->setAttribute(Qt::WA_DeleteOnClose);
+                pTestView->show();
+                pTestView->activateWindow();
+                break;
+            }
             default:
                 pEvent->ignore();
                 return;

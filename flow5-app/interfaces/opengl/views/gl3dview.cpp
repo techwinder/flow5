@@ -1334,6 +1334,18 @@ void gl3dView::paintOverlay()
 }
 
 
+QMatrix4x4 gl3dView::rotationMatrix() const
+{
+    double m[16];
+    m_ArcBall.getRotationMatrix(m, true);
+    return QMatrix4x4(float(m[0]),  float(m[1]),  float(m[2]),  float(m[3]),
+                      float(m[4]),  float(m[5]),  float(m[6]),  float(m[7]),
+                      float(m[8]),  float(m[9]),  float(m[10]), float(m[11]),
+                      float(m[12]), float(m[13]), float(m[14]), float(m[15]));
+
+}
+
+
 void gl3dView::paintGl3()
 {
     //    makeCurrent();
@@ -1387,12 +1399,7 @@ void gl3dView::paintGl3()
     m_matView.setToIdentity();
     m_matModel.setToIdentity();
 
-    double m[16];
-    m_ArcBall.getRotationMatrix(m, true);
-    m_matView = QMatrix4x4(float(m[0]),  float(m[1]),  float(m[2]),  float(m[3]),
-                           float(m[4]),  float(m[5]),  float(m[6]),  float(m[7]),
-                           float(m[8]),  float(m[9]),  float(m[10]), float(m[11]),
-                           float(m[12]), float(m[13]), float(m[14]), float(m[15]));
+    m_matView = rotationMatrix();
 
     float s = 1.0;
     float width  = float(geometry().width());
@@ -1408,7 +1415,7 @@ void gl3dView::paintGl3()
         m_matView.scale(m_glScalef, m_glScalef, m_glScalef);
         m_matView.translate(m_glRotCenter.xf(), m_glRotCenter.yf(), m_glRotCenter.zf());
         m_matView.scale(0.5f/m_glScalef, 0.5f/m_glScalef, 0.5f/m_glScalef);
-        paintAxes();
+        paintAxes(W3dPrefs::s_AxisStyle, QString());
         m_matView=vm; // leave things as they were
     }
 
@@ -1947,7 +1954,7 @@ double gl3dView::drawReferenceLength()
 }
 
 
-void gl3dView::paintAxes()
+void gl3dView::paintAxes(LineStyle const &ls, QString const&suffix)
 {
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
 
@@ -1956,9 +1963,9 @@ void gl3dView::paintAxes()
         m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView*m_matModel);
         m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
         m_shadLine.setUniformValue(m_locLine.m_HasUniColor, 1);
-        m_shadLine.setUniformValue(m_locLine.m_UniColor, xfl::fromfl5Clr(W3dPrefs::s_AxisStyle.m_Color));
-        m_shadLine.setUniformValue(m_locLine.m_Pattern, gl::stipple(W3dPrefs::s_AxisStyle.m_Stipple));
-        m_shadLine.setUniformValue(m_locLine.m_Thickness, float(W3dPrefs::s_AxisStyle.m_Width));
+        m_shadLine.setUniformValue(m_locLine.m_UniColor, xfl::fromfl5Clr(ls.m_Color));
+        m_shadLine.setUniformValue(m_locLine.m_Pattern, gl::stipple(ls.m_Stipple));
+        m_shadLine.setUniformValue(m_locLine.m_Thickness, float(ls.m_Width));
         m_shadLine.setUniformValue(m_locLine.m_Viewport, QVector2D(float(m_GLViewRect.width()), float(m_GLViewRect.height())));
         m_vboAxes.bind();
         {
@@ -1975,9 +1982,9 @@ void gl3dView::paintAxes()
     m_shadLine.release();
 
     const float delta = 0.015f;
-    glRenderText(1.0+3.0*delta, 0.0+delta,     0.0+delta,     m_AxisTitle[0], DisplayOptions::textColor());
-    glRenderText(0.0+delta,     1.0+3.0*delta, 0.0+delta,     m_AxisTitle[1], DisplayOptions::textColor());
-    glRenderText(0.0+delta,     0.0+delta,     1.0+3.0*delta, m_AxisTitle[2], DisplayOptions::textColor());
+    glRenderText(1.0+3.0*delta, 0.0+delta,     0.0+delta,     m_AxisTitle[0]+suffix, DisplayOptions::textColor());
+    glRenderText(0.0+delta,     1.0+3.0*delta, 0.0+delta,     m_AxisTitle[1]+suffix, DisplayOptions::textColor());
+    glRenderText(0.0+delta,     0.0+delta,     1.0+3.0*delta, m_AxisTitle[2]+suffix, DisplayOptions::textColor());
 }
 
 
@@ -2217,7 +2224,7 @@ void gl3dView::loadSettings(QSettings &settings)
 /**
  * Renders an arrow composed of a cylinder and a cone, starting at origin, in the direction arrow and with length |arrow|
  */
-void gl3dView::paintThickArrow(Vector3d const &origin, const Vector3d& arrow, QColor const &clr, QMatrix4x4 const &ModelMatrix)
+void gl3dView::paintThickArrow(Vector3d const &origin, const Vector3d& arrow, QColor const &clr, bool bLight, QMatrix4x4 const &ModelMatrix)
 {
     float length = arrow.normf();
     if(fabsf(length)<LENGTHPRECISION) return; // zero length arrow to draw
@@ -2230,26 +2237,27 @@ void gl3dView::paintThickArrow(Vector3d const &origin, const Vector3d& arrow, QC
     A.normalize();
     QQuaternion qqt = QQuaternion::rotationTo(N, A);
     QMatrix4x4 ArrowDirectionMat;
+
     ArrowDirectionMat.rotate(qqt);
-    //    ArrowDirectionMat.translate(origin.xf(), origin.yf(), origin.zf());
     ArrowDirectionMat.scale(length);
 
     QMatrix4x4 ArrowMat; // identity
-    //    modelMat.translate(origin.xf(), origin.yf(), origin.zf());
-    ArrowMat.scale(0.3f,  0.3f,  1.0f); // squeeze the cylinder radially
-    ArrowMat.scale(0.8f, 0.8f, 0.8f); // make it 80% of the arrow's length
-    QMatrix4x4 pvmMatrix = m_matProj * m_matView * ModelMatrix *translation* ArrowDirectionMat * ArrowMat;
+    ArrowMat.scale(0.5f,  0.5f,  1.0f); // squeeze the cylinder radially
+    ArrowMat.scale(0.80f, 0.80f, 0.80); // make it 80% of the arrow's length
+    QMatrix4x4 matModel = ModelMatrix*translation* ArrowDirectionMat * ArrowMat;
+    QMatrix4x4 vmMatrix = m_matView * matModel;
+    QMatrix4x4 pvmMatrix = m_matProj * vmMatrix;
     m_shadSurf.bind();
     {
-        m_shadSurf.setUniformValue(m_locSurf.m_vmMatrix, m_matView*ModelMatrix * ArrowMat);
+        m_shadSurf.setUniformValue(m_locSurf.m_vmMatrix, vmMatrix);
         m_shadSurf.setUniformValue(m_locSurf.m_pvmMatrix, pvmMatrix);
     }
     m_shadSurf.release();
-    paintTriangles3Vtx(m_vboCylinder, clr, false, true);
+    paintTriangles3Vtx(m_vboCylinder, clr, false, bLight);
 
     m_shadLine.bind();
     {
-        m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView*ModelMatrix * ArrowMat);
+        m_shadLine.setUniformValue(m_locLine.m_vmMatrix, vmMatrix);
         m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, pvmMatrix);
     }
     m_shadLine.release();
@@ -2257,21 +2265,23 @@ void gl3dView::paintThickArrow(Vector3d const &origin, const Vector3d& arrow, QC
 
     ArrowMat.setToIdentity();
     ArrowMat.translate(0.0f, 0.0f, 0.8f);
-    ArrowMat.scale(0.2f, 0.2f, 0.2f); // make it 20% of the arrow's length
+    ArrowMat.scale(0.3f, 0.3f, 0.2f); // make it 20% of the arrow's length
     ArrowMat.scale(0.17f, 0.17f, 1.0f); // reduce the base diameter
+    matModel = ModelMatrix*translation* ArrowDirectionMat * ArrowMat;
+    vmMatrix = m_matView * matModel;
+    pvmMatrix = m_matProj * vmMatrix;
 
-    pvmMatrix = m_matProj * m_matView * ModelMatrix*translation* ArrowDirectionMat * ArrowMat ;
     m_shadSurf.bind();
     {
-        m_shadSurf.setUniformValue(m_locSurf.m_vmMatrix, m_matView*ModelMatrix * ArrowMat);
+        m_shadSurf.setUniformValue(m_locSurf.m_vmMatrix, vmMatrix);
         m_shadSurf.setUniformValue(m_locSurf.m_pvmMatrix, pvmMatrix);
     }
     m_shadSurf.release();
-    paintTriangles3Vtx(m_vboCone, clr, false, true);
+    paintTriangles3Vtx(m_vboCone, clr, false, bLight);
 
     m_shadLine.bind();
     {
-        m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView*ModelMatrix * ArrowMat);
+        m_shadLine.setUniformValue(m_locLine.m_vmMatrix, vmMatrix);
         m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, pvmMatrix);
     }
     m_shadLine.release();
@@ -2619,7 +2629,7 @@ void gl3dView::paintTriangleFan(QOpenGLBuffer &vbo, QColor const &clr, bool bLig
         vbo.bind();
         {
             m_shadSurf.setUniformValue(m_locSurf.m_UniColor, clr);
-
+            m_shadSurf.setUniformValue(m_locSurf.m_HasUniColor, 1);
             m_shadSurf.enableAttributeArray(m_locSurf.m_attrVertex);
             m_shadSurf.enableAttributeArray(m_locSurf.m_attrNormal);
             m_shadSurf.setAttributeBuffer(m_locSurf.m_attrVertex, GL_FLOAT, 0,                  3, stride * sizeof(GLfloat));
@@ -3329,25 +3339,29 @@ void gl3dView::glMakeArcPoint(ArcBall const&arcball)
  */
 void gl3dView::glMakeCylinder(float h, float r, int nz, int nh)
 {
-    int buffersize = 0;
-    buffersize += // lateral triangles
+    int ntriangles = 0;
+    ntriangles = // lateral triangles
         nz     // nz quads in the z direction
         * nh     // nh hoop quads
         * 2;     // 2 triangles/quad
 
     // top and bottom triangles
-    buffersize +=
+    ntriangles +=
         nh       // nh hoop triangles
         *2;      // top and bottom faces
 
+    std::vector<Triangle3d> triangles(ntriangles);
+
     // GLfloat count
-    buffersize *=
+    int buffersize = ntriangles*
         3      // 3 vertices/triangle to close the triangle
         * 6;     // (3 coords+3normal components)/ vertex
 
     QVector<GLfloat> CylVertexArray(buffersize);
 
-    int iv=0;
+//    int iv=0;
+
+    int it = 0;
     //side triangles
     for (int iz=0; iz<nz; iz++)
     {
@@ -3358,105 +3372,92 @@ void gl3dView::glMakeCylinder(float h, float r, int nz, int nh)
         {
             float theta  = float(iLat)  *2.0f*PIf/float(nh);
             float theta1 = float(iLat+1)*2.0f*PIf/float(nh);
-            GLfloat x  = r* cosf(theta);
-            GLfloat x1 = r* cosf(theta1);
-            GLfloat y  = r* sinf(theta);
-            GLfloat y1 = r* sinf(theta1);
 
-            // normal components
-            float nx = -cosf(theta);    float nx1 = -cosf(theta1);
-            float ny = -sinf(theta);    float ny1 = -sinf(theta1);
+            float nx = cosf(theta);    float nx1 = cosf(theta1);
+            float ny = sinf(theta);    float ny1 = sinf(theta1);
+            GLfloat x  = r* nx;
+            GLfloat x1 = r* nx1;
+            GLfloat y  = r* ny;
+            GLfloat y1 = r* ny1;
+
 
             // first triangle
-            CylVertexArray[iv++] = x;
-            CylVertexArray[iv++] = y;
-            CylVertexArray[iv++] = z;
-            CylVertexArray[iv++] = nx;
-            CylVertexArray[iv++] = ny;
-            CylVertexArray[iv++] = 0.0;
-
-            CylVertexArray[iv++] = x1;
-            CylVertexArray[iv++] = y1;
-            CylVertexArray[iv++] = z;
-            CylVertexArray[iv++] = nx1;
-            CylVertexArray[iv++] = ny1;
-            CylVertexArray[iv++] = 0.0;
-
-            CylVertexArray[iv++] = x1;
-            CylVertexArray[iv++] = y1;
-            CylVertexArray[iv++] = z1;
-            CylVertexArray[iv++] = nx1;
-            CylVertexArray[iv++] = ny1;
-            CylVertexArray[iv++] = 0.0;
+            Triangle3d &t0 = triangles[it++];
+            t0.setVertex(0, x, y, z);
+            t0.setNodeNormal(0, {nx, ny, 0});
+            t0.setVertex(1, x1, y1, z1);
+            t0.setNodeNormal(1, {nx1, ny1, 0});
+            t0.setVertex(2, x, y, z1);
+            t0.setNodeNormal(2, {nx, ny, 0});
+            t0.setTriangle();
 
             //second triangle
-            CylVertexArray[iv++] = x;
-            CylVertexArray[iv++] = y;
-            CylVertexArray[iv++] = z;
-            CylVertexArray[iv++] = nx;
-            CylVertexArray[iv++] = ny;
-            CylVertexArray[iv++] = 0.0;
+            Triangle3d &t1 = triangles[it++];
+            t1.setVertex(0, x, y, z);
+            t1.setNodeNormal(0, {nx, ny, 0});
+            t1.setVertex(1, x1, y1, z);
+            t1.setNodeNormal(1, {nx1, ny1, 0});
+            t1.setVertex(2, x1, y1, z1);
+            t1.setNodeNormal(2, {nx1, ny1, 0});
+            t1.setTriangle();
 
-            CylVertexArray[iv++] = x1;
-            CylVertexArray[iv++] = y1;
-            CylVertexArray[iv++] = z1;
-            CylVertexArray[iv++] = nx1;
-            CylVertexArray[iv++] = ny1;
-            CylVertexArray[iv++] = 0.0;
-
-            CylVertexArray[iv++] = x;
-            CylVertexArray[iv++] = y;
-            CylVertexArray[iv++] = z1;
-            CylVertexArray[iv++] = nx;
-            CylVertexArray[iv++] = ny;
-            CylVertexArray[iv++] = 0.0;
         }
     }
 
     // top and bottom triangles
-    for(int iz=0; iz<2; iz++)
+//    for(int iz=0; iz<2; iz++)
+//    {
+    float z = h;
+    float sign = 1.0f;
+    for (int iLat=0; iLat<nh; iLat++)
     {
-        float z = float(iz) * h;
-        float sign = iz==0 ? -1.0f : 1.0f;
-        for (int iLat=0; iLat<nh; iLat++)
-        {
-            float theta  = float(iLat)  *2.0f*PIf/float(nh);
-            float theta1 = float(iLat+1)*2.0f*PIf/float(nh);
-            GLfloat x  = r* cosf(theta);
-            GLfloat x1 = r* cosf(theta1);
-            GLfloat y  = r* sinf(theta);
-            GLfloat y1 = r* sinf(theta1);
+        float theta  = float(iLat)  *2.0f*PIf/float(nh);
+        float theta1 = float(iLat+1)*2.0f*PIf/float(nh);
+        GLfloat x  = r* cosf(theta);
+        GLfloat x1 = r* cosf(theta1);
+        GLfloat y  = r* sinf(theta);
+        GLfloat y1 = r* sinf(theta1);
 
-            // bot triangle
-            CylVertexArray[iv++] = 0.0f;
-            CylVertexArray[iv++] = 0.0f;
-            CylVertexArray[iv++] = z;
-            CylVertexArray[iv++] = 0.0f;
-            CylVertexArray[iv++] = 0.0f;
-            CylVertexArray[iv++] = sign;
+        // top triangle
+        Triangle3d &t0 = triangles[it++];
+        t0.setVertex(0, 0, 0, z);
+        t0.setNodeNormal(0, {0,0,sign});
+        t0.setVertex(1, x, y, z);
+        t0.setNodeNormal(1, {0,0,sign});
+        t0.setVertex(2, x1, y1, z);
+        t0.setNodeNormal(2, {0,0,sign});
+        t0.setTriangle();
 
-            CylVertexArray[iv++] = x;
-            CylVertexArray[iv++] = y;
-            CylVertexArray[iv++] = z;
-            CylVertexArray[iv++] = 0.0f;
-            CylVertexArray[iv++] = 0.0f;
-            CylVertexArray[iv++] = sign;
-
-            CylVertexArray[iv++] = x1;
-            CylVertexArray[iv++] = y1;
-            CylVertexArray[iv++] = z;
-            CylVertexArray[iv++] = 0.0f;
-            CylVertexArray[iv++] = 0.0f;
-            CylVertexArray[iv++] = sign;
-        }
     }
 
-    Q_ASSERT(iv==buffersize);
+    z = 0;
+    sign = -1.0f;
+    for (int iLat=0; iLat<nh; iLat++)
+    {
+        float theta  = float(iLat)  *2.0f*PIf/float(nh);
+        float theta1 = float(iLat+1)*2.0f*PIf/float(nh);
+        GLfloat x  = r* cosf(theta);
+        GLfloat x1 = r* cosf(theta1);
+        GLfloat y  = r* sinf(theta);
+        GLfloat y1 = r* sinf(theta1);
 
-    m_vboCylinder.create();
-    m_vboCylinder.bind();
-    m_vboCylinder.allocate(CylVertexArray.constData(), CylVertexArray.size() * int(sizeof(GLfloat)));
-    m_vboCylinder.release();
+        // bot triangle
+        Triangle3d &t0 = triangles[it++];
+        t0.setVertex(0, 0, 0, z);
+        t0.setNodeNormal(0, {0,0,sign});
+        t0.setVertex(1, x, y, z);
+        t0.setNodeNormal(1, {0,0,sign});
+        t0.setVertex(2, x1, y1, z);
+        t0.setNodeNormal(2, {0,0,sign});
+        t0.setTriangle();
+    }
+
+    //    }
+
+    Q_ASSERT(it==ntriangles);
+
+    gl::makeTriangles3Vtx(triangles, false, m_vboCylinder);
+
 
     // make the contour vbo, which are just the base circle
     // using GL_LINES since the circles are disjoint
@@ -3465,7 +3466,7 @@ void gl3dView::glMakeCylinder(float h, float r, int nz, int nh)
                  *2  // vertices
                  *3; // 3 coordinates
     CylVertexArray.resize(buffersize);
-    iv=0;
+    int iv=0;
 
     // top and bottom circles
     for(int iz=0; iz<2; iz++)
@@ -3606,7 +3607,6 @@ void gl3dView::glMakeUnitArrow()
 }
 
 
-
 /**
  Creates a vbo for a cylinder with height h and radius r, with axis Z
  */
@@ -3614,26 +3614,21 @@ void gl3dView::glMakeCone(float h, float rad, int nz, int nh)
 {
     //    int nz = 1;   // number of steps in the Z direction
     //    int nh = 10;  // number of hoop steps
-
-    int buffersize = 0;
-    buffersize += // lateral triangles
+    int nTriangles = 0;
+    nTriangles += // lateral triangles
         nz     // nz quads in the z direction
         * nh     // nh hoop quads
         //            * 2;     // 2 triangles/quad
         *1; // 1 triangle
     // top and bottom triangles
-    buffersize +=
+    nTriangles +=
         nh       // nh hoop triangles
         *1;      // bottom faces
 
-    // GLfloat count
-    buffersize *=
-        3      // 3 vertices/triangle
-        * 6;     // (3 coords+3normal components)/ vertex
 
-    QVector<GLfloat> VertexArray(buffersize);
-
-    int iv=0;
+    std::vector<Triangle3d> triangles(nTriangles);
+    int it = 0;
+    //    int iv=0;
     //side triangles
     for (int iz=0; iz<nz; iz++)
     {
@@ -3650,30 +3645,19 @@ void gl3dView::glMakeCone(float h, float rad, int nz, int nh)
             GLfloat y1 = rad* sinf(theta1);
 
             // normal components
-            float nx = -cosf(theta);    float nx1 = -cosf(theta1);
-            float ny = -sinf(theta);    float ny1 = -sinf(theta1);
+            float nx = cosf(theta);    float nx1 = cosf(theta1);
+            float ny = sinf(theta);    float ny1 = sinf(theta1);
+
+            Triangle3d &t0 = triangles[it++];
 
             // Only one triangle, the second is null
-            VertexArray[iv++] = x * (1.0f-z/h);
-            VertexArray[iv++] = y * (1.0f-z/h);
-            VertexArray[iv++] = z;
-            VertexArray[iv++] = nx;
-            VertexArray[iv++] = ny;
-            VertexArray[iv++] = 0.0;
+            t0.setVertex(0, x * (1.0f-z/h), y * (1.0f-z/h), z);
+            t0.setNodeNormal(0, {nx,ny,0.0});
+            t0.setVertex(1, x1 * (1.0f-z/h), y1 * (1.0f-z/h), z);
+            t0.setNodeNormal(1, {nx1,ny1,0.0});
+            t0.setVertex(2, x1 * (1.0f-z1/h), y1 * (1.0f-z1/h), z1);
+            t0.setNodeNormal(2, {nx1,ny1,0.0});
 
-            VertexArray[iv++] = x1 * (1.0f-z/h);
-            VertexArray[iv++] = y1 * (1.0f-z/h);
-            VertexArray[iv++] = z;
-            VertexArray[iv++] = nx1;
-            VertexArray[iv++] = ny1;
-            VertexArray[iv++] = 0.0;
-
-            VertexArray[iv++] = x1 * (1.0f-z1/h);
-            VertexArray[iv++] = y1 * (1.0f-z1/h);
-            VertexArray[iv++] = z1;
-            VertexArray[iv++] = nx1;
-            VertexArray[iv++] = ny1;
-            VertexArray[iv++] = 0.0;
         }
     }
 
@@ -3690,41 +3674,26 @@ void gl3dView::glMakeCone(float h, float rad, int nz, int nh)
         GLfloat y1 = rad* sinf(theta1);
 
         // bot triangle
-        VertexArray[iv++] = 0.0f;
-        VertexArray[iv++] = 0.0f;
-        VertexArray[iv++] = z;
-        VertexArray[iv++] = 0.0f;
-        VertexArray[iv++] = 0.0f;
-        VertexArray[iv++] = sign;
-
-        VertexArray[iv++] = x;
-        VertexArray[iv++] = y;
-        VertexArray[iv++] = z;
-        VertexArray[iv++] = 0.0f;
-        VertexArray[iv++] = 0.0f;
-        VertexArray[iv++] = sign;
-
-        VertexArray[iv++] = x1;
-        VertexArray[iv++] = y1;
-        VertexArray[iv++] = z;
-        VertexArray[iv++] = 0.0f;
-        VertexArray[iv++] = 0.0f;
-        VertexArray[iv++] = sign;
+        Triangle3d &t0 = triangles[it++];
+        t0.setVertex(0,0,0,z);
+        t0.setNodeNormal(0,{0,0,sign});
+        t0.setVertex(1,x1,y1,z);
+        t0.setNodeNormal(1,{0,0,sign});
+        //        t0.setTriangle();
+        t0.setVertex(2,x,y,z);
+        t0.setNodeNormal(2,{0,0,sign});
     }
 
-    Q_ASSERT(iv==buffersize);
-
-    m_vboCone.create();
-    m_vboCone.bind();
-    m_vboCone.allocate(VertexArray.constData(), VertexArray.size() * int(sizeof(GLfloat)));
-    m_vboCone.release();
+    Q_ASSERT(it==nTriangles);
+    gl::makeTriangles3Vtx(triangles, false, m_vboCone);
 
     // make the contour vbo, which is just the base circle
-    buffersize = (nh+1)*3; // nh+1 vertices * 3 for a line strip
-    VertexArray.resize(buffersize);
+    int buffersize = (nh+1)*3; // nh+1 vertices * 3 for a line strip
+    QVector<GLfloat> VertexArray(buffersize);
+
     z = 0.0;
     //    sign = -1.0f;
-    iv=0;
+    int iv=0;
     for (int iLat=0; iLat<=nh; iLat++)
     {
         float theta  = float(iLat)  *2.0f*PIf/float(nh);

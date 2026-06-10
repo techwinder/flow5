@@ -41,16 +41,16 @@
                     </li>
                     <li>Analysis
                         <ul>
-                        <li>fixed <a href="https://github.com/techwinder/flow5/issues/53">issue #53</a></li>
-                        <li>fixed <a href="https://github.com/techwinder/flow5/issues/55">issue #55</a></li>
-                        <li>fixed <a href="https://github.com/techwinder/flow5/issues/57">issue #57</a></li>
-                        <li>fixed <a href="https://github.com/techwinder/flow5/issues/60">issue #60</a></li>
-
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/53">issue #53</a></li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/55">issue #55</a></li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/57">issue #57</a></li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/60">issue #60</a></li>
                         </ul>
                     </li>
                     <li>Source code and API
                         <ul>
-                            <li>removed the dependency of <tt>flow5-lib</tt> on Qt6Core so that it uses instead the STL</li>
+                            <li>massive refactoring to expose more interfaces in the API</li>
+                            <li>removed the dependency of <tt>flow5-lib</tt> on Qt6Core so that it uses instead the C++ Standard Library</li>
                             <li>moved Qt-based I/O operations to <tt>flow5-io-lib</tt></li>
                             <li>added Gmsh meshing functionalities to the API</li>
                             <li>added plane imports from STL or OBJ meshes to the API</li>
@@ -63,6 +63,9 @@
                     <li>Post-processing
                         <ul>
                             <li>fixed <a href="https://github.com/techwinder/flow5/issues/58">issue #58</a></li>
+                            <li>changed the representation of the moments in the 3d view to a resultant vector</li>
+                            <li>modified the output of forces and moments to be in the "true" wind axes with the x-axis aligned with the sideslip;
+                                formerly had the x-wind-axis in the x-z plane of the geometry for consistency with AVL</li>
                         </ul>
                     </li>
                     <li>UI

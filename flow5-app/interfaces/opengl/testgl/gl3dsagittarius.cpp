@@ -89,9 +89,9 @@ gl3dSagittarius::gl3dSagittarius(QWidget *pParent) : gl3dTestGLView(pParent)
                 pLabTitle->setStyleSheet("font: bold");
 
                 QLabel *pLabInc = new QLabel(QString::asprintf("Increment (days) @%.0f Hz:", QGuiApplication::primaryScreen()->refreshRate()));
-                m_pdeDt = new FloatEdit(s_dt);
-                m_pdeDt->setPalette(palette);
-                m_pdeDt->setToolTip("This defines the time step used to move the stars.<br>"
+                m_pfeDt = new FloatEdit(s_dt);
+                m_pfeDt->setPalette(palette);
+                m_pfeDt->setToolTip("This defines the time step used to move the stars.<br>"
                                     "If the calculation is fast enough, the positions are updated in time for the next screen refresh.<br>"
                                     "Recommendation: 10 days for a smooth animation @60Hz.");
 
@@ -114,7 +114,7 @@ gl3dSagittarius::gl3dSagittarius(QWidget *pParent) : gl3dTestGLView(pParent)
 
                 pParamsLayout->addWidget(pLabTitle,          1, 1, 1, 2);
                 pParamsLayout->addWidget(pLabInc,            2, 1);
-                pParamsLayout->addWidget(m_pdeDt,            2, 2);
+                pParamsLayout->addWidget(m_pfeDt,            2, 2);
                 pParamsLayout->addWidget(plabSteps,          3, 1);
                 pParamsLayout->addWidget(m_pieSteps,         3, 2);
                 pParamsLayout->addWidget(m_pchMultiThread,   4, 1, 1, 2);
@@ -125,6 +125,7 @@ gl3dSagittarius::gl3dSagittarius(QWidget *pParent) : gl3dTestGLView(pParent)
                 m_pcbStar->addItem(m_Star.at(i).m_Name);
             m_pcbStar->setCurrentIndex(1); //S2
             connect(m_pcbStar, SIGNAL(activated(int)), SLOT(onStarSelection()));
+
             m_plabInfo = new QLabel("\n\n\n");
             m_plabInfo->setPalette(palette);
             m_plabInfo->setFont(DisplayOptions::tableFont());
@@ -184,6 +185,8 @@ gl3dSagittarius::gl3dSagittarius(QWidget *pParent) : gl3dTestGLView(pParent)
         wt::setWidgetStyle(pFrame, palette);
     }
 
+    m_pcbStar->setPalette(QPalette());
+
     setReferenceLength(20.0);
 
     onRestart();
@@ -226,7 +229,7 @@ void gl3dSagittarius::onStarSelection()
 void gl3dSagittarius::onRestart()
 {
     m_Started = m_Current; // to make sure the date is valid
-    s_dt = m_pdeDt->value();
+    s_dt = m_pfeDt->value();
 
     makeStars();
 
@@ -342,7 +345,7 @@ void gl3dSagittarius::makeStars()
 
 void gl3dSagittarius::onMoveStars()
 {
-    s_dt = m_pdeDt->value(); // days
+    s_dt = m_pfeDt->value(); // days
     m_Current = m_Current.addDays(s_dt);
 
     s_nStepsPerDay = m_pieSteps->value();
