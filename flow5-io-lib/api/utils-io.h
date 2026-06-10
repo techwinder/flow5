@@ -52,7 +52,7 @@ namespace io
 {
     fl5Color readQColor(QDataStream &ar);
     void readString(QDataStream &ar, std::string &strong);
-    void readFloat(QDataStream &inStream, float &f);
+    FL5IOLIB_EXPORT void readFloat(QDataStream &inStream, float &f);
     void writeFloat(QDataStream &outStream, float f);
 
     void writeString(QDataStream &ar, QString const &strong);

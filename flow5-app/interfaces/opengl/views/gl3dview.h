@@ -255,7 +255,7 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
 
         void paintSegments(QOpenGLBuffer &vbo, LineStyle const &ls, bool bHigh = false);
         void paintSegments(QOpenGLBuffer &vbo, const QColor &clr, float thickness, Line::enumLineStipple stip=Line::SOLID, bool bHigh=false);
-        void paintThickArrow(Vector3d const &origin, const Vector3d& arrow, const QColor &clr, bool bLight, const QMatrix4x4 &m_ModelMatrix=QMatrix4x4());
+        void paintThickArrow(Vector3d const &origin, const Vector3d& arrow, const QColor &clr, bool bLight, bool bFixedScale, const QMatrix4x4 &m_ModelMatrix=QMatrix4x4());
         void paintThinArrow(Vector3d const &origin, const Vector3d& arrow, LineStyle const &ls, QMatrix4x4 const ModelMatrix=QMatrix4x4());
         void paintThinArrow(Vector3d const &origin, const Vector3d& arrow, fl5Color const &clr, float w, Line::enumLineStipple stipple, QMatrix4x4 const ModelMatrix=QMatrix4x4());
         void paintThinArrow(Vector3d const &origin, const Vector3d& arrow, const QColor &clr, float w, Line::enumLineStipple stipple,   QMatrix4x4 const ModelMatrix=QMatrix4x4());

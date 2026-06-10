@@ -1,8 +1,8 @@
 /****************************************************************************
 
     flow5 application
-    Copyright (C) 2025 André Deperrois 
-    
+    Copyright (C) 2025 André Deperrois
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -41,7 +41,7 @@ class FloatEdit;
 class Graph;
 class GraphWt;
 class gl3dAxesView;
-
+class LineBtn;
 
 class Analysis3dSettings : public QDialog
 {
@@ -74,6 +74,9 @@ class Analysis3dSettings : public QDialog
         void onResetDefaults();
         void onButton(QAbstractButton *pButton);
         void onMakeVortexGraph();
+        void onUpdateAxes();
+        void onWindLineStyle();
+        void onStabLineStyle();
 
     private:
         void setupLayout();
@@ -116,6 +119,13 @@ class Analysis3dSettings : public QDialog
         //Vortex particle wake
         QCheckBox *m_pchVortonRedist, *m_pchVortonStrengthEx;
 
+        // Moments
+        FloatEdit *m_pfeAlpha, *m_pfeBeta;
+        QCheckBox *m_pchGeomAxes;
+        QCheckBox *m_pchWindAxes;
+        QCheckBox *m_pchStabilityAxes;
+
+        LineBtn *m_plbWind, *m_plbStab;
         gl3dAxesView *m_pglAxesView;
 
         static bool s_bKeepOpenOnErrors;
@@ -124,4 +134,3 @@ class Analysis3dSettings : public QDialog
         static int s_iPage;
         static QByteArray s_WindowGeometry;
 };
-

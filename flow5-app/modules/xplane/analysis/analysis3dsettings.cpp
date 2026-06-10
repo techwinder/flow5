@@ -1,8 +1,8 @@
 /****************************************************************************
 
     flow5 application
-    Copyright (C) 2025 André Deperrois 
-    
+    Copyright (C) 2025 André Deperrois
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -63,8 +63,9 @@
 #include <test/test3d/gl3daxesview.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
+#include <interfaces/widgets/line/linebtn.h>
+#include <interfaces/widgets/line/linemenu.h>
 #include <modules/xplane/analysis/planeanalysisdlg.h>
-
 
 bool Analysis3dSettings::s_bStabDerivatives = true;
 bool Analysis3dSettings::s_bKeepOpenOnErrors = true;
@@ -118,15 +119,15 @@ void Analysis3dSettings::setupLayout()
 {
     m_pTabWt = new QTabWidget;
     {
-        QFrame *pCommonFrame = new QFrame;
+        QFrame *pfrCommon = new QFrame;
         {
             QGridLayout *pGeomLayout = new QGridLayout;
             {
                 QLabel *plabnRHS  = new QLabel(tr("Max. number of operating points/analysis="));
                 m_pieMaxRHS = new IntEdit;
                 m_pieMaxRHS->setToolTip(tr("<p>Defines the maximum number of operating points to be calculated in a single run."
-                                          "Intended as a safety limit to prevent excessively lengthy analyses."
-                                          "</p>"));
+                                           "Intended as a safety limit to prevent excessively lengthy analyses."
+                                           "</p>"));
 
                 m_pchKeepOpenOnErrors  = new QCheckBox(tr("Keep analysis window opened on errors"));
 
@@ -134,18 +135,18 @@ void Analysis3dSettings::setupLayout()
                 QLabel *plabLength1     = new QLabel(Units::lengthUnitQLabel());
                 m_pfeMinPanelSize = new FloatEdit;
                 m_pfeMinPanelSize->setToolTip(tr("<p>Wing surfaces with span width less than this value will be ignored "
-                                              "in the mesh operation.<br>"
-                                              "This is to allow the definition of duplicate sections at a given span positions.</p>"));
+                                                 "in the mesh operation.<br>"
+                                                 "This is to allow the definition of duplicate sections at a given span positions.</p>"));
 
                 QLabel *plabRFF = new QLabel(tr("Far field factor="));
                 m_pfeRFF = new FloatEdit;
                 m_pfeRFF->setToolTip(tr("<p>RFF is the far-field radius factor used in the evaluation of influence coefficients. "
-                                          "If the evaluation point is at a distance greater than  RFF &times; panel_size, then the "
-                                          "panel is considered to be a point source or point doublet with strength = area &times; density.<br>"
-                                          "This reduces significantly the computation times at the expense of precision. Practically, "
-                                          "the difference is in the order of 0.5% at RFF=7.<br>"
-                                          "RFF=10 is the recommended value.<br>"
-                                          "Cf. Report NASA 4023 for a more detailed explanation.</p>"));
+                                        "If the evaluation point is at a distance greater than  RFF &times; panel_size, then the "
+                                        "panel is considered to be a point source or point doublet with strength = area &times; density.<br>"
+                                        "This reduces significantly the computation times at the expense of precision. Practically, "
+                                        "the difference is in the order of 0.5% at RFF=7.<br>"
+                                        "RFF=10 is the recommended value.<br>"
+                                        "Cf. Report NASA 4023 for a more detailed explanation.</p>"));
 
                 pGeomLayout->addWidget(m_pchKeepOpenOnErrors, 2,1,1,3);
                 pGeomLayout->addWidget(plabnRHS,              4,1, Qt::AlignRight);
@@ -158,10 +159,10 @@ void Analysis3dSettings::setupLayout()
                 pGeomLayout->setRowStretch(                   7,1);
                 pGeomLayout->setColumnStretch(                4,1);
             }
-            pCommonFrame->setLayout(pGeomLayout);
+            pfrCommon->setLayout(pGeomLayout);
         }
 
-        QFrame *pLLTFrame = new QFrame;
+        QFrame *pfrLLT = new QFrame;
         {
             QGridLayout *pLLTLayout = new QGridLayout;
             {
@@ -187,10 +188,10 @@ void Analysis3dSettings::setupLayout()
                 pLLTLayout->setRowStretch(   5,1);
                 pLLTLayout->setColumnStretch(5,4);
             }
-            pLLTFrame->setLayout(pLLTLayout);
+            pfrLLT->setLayout(pLLTLayout);
         }
 
-        QFrame *pVLMFrame = new QFrame;
+        QFrame *pfrVLM = new QFrame;
         {
             QGridLayout *pVLMLayout = new QGridLayout;
             {
@@ -214,10 +215,10 @@ void Analysis3dSettings::setupLayout()
                 pVLMLayout->setColumnStretch(3,5);
                 pVLMLayout->setRowStretch(4,1);
             }
-            pVLMFrame->setLayout(pVLMLayout);
+            pfrVLM->setLayout(pVLMLayout);
         }
 
-        QFrame *p3dPanelFrame = new QFrame;
+        QFrame *pfr3dPanel = new QFrame;
         {
             QVBoxLayout *p3dPanelLayout = new QVBoxLayout;
             {
@@ -246,10 +247,10 @@ void Analysis3dSettings::setupLayout()
                 p3dPanelLayout->addWidget(pTipLab);
                 p3dPanelLayout->addStretch();
             }
-            p3dPanelFrame->setLayout(p3dPanelLayout);
+            pfr3dPanel->setLayout(p3dPanelLayout);
         }
 
-        QFrame *pSolverFrame = new QFrame;
+        QFrame *pfrSolver = new QFrame;
         {
             QGridLayout *pPrecisionLayout = new QGridLayout;
             {
@@ -257,10 +258,10 @@ void Analysis3dSettings::setupLayout()
                 m_prbSinglePrecision = new QRadioButton(tr("Single precision, 4 bytes/value"));
                 m_prbDoublePrecision = new QRadioButton(tr("Double precision, 8 bytes/value (recommended)"));
                 QString precisiontip = tr("<p>This defines with what precision the influence matrix will be stored. "
-                                       "Single precision will use half the memory required for double precision. "
-                                       "Accuracy of the results may also be reduced by a few percent.<br>"
-                                       "Use single precision only for large calculations where memory allocation "
-                                       "may be an issue.</p>");
+                                          "Single precision will use half the memory required for double precision. "
+                                          "Accuracy of the results may also be reduced by a few percent.<br>"
+                                          "Use single precision only for large calculations where memory allocation "
+                                          "may be an issue.</p>");
                 pLabPrecision->setToolTip(precisiontip);
                 m_prbSinglePrecision->setToolTip(precisiontip);
                 m_prbDoublePrecision->setToolTip(precisiontip);
@@ -271,10 +272,10 @@ void Analysis3dSettings::setupLayout()
                 pPrecisionLayout->setRowStretch(4,1);
             }
 
-            pSolverFrame->setLayout(pPrecisionLayout);
+            pfrSolver->setLayout(pPrecisionLayout);
         }
 
-        QFrame *pViscLoopFrame = new QFrame;
+        QFrame *pfrViscLoop = new QFrame;
         {
             QGridLayout *pViscIterLayout = new QGridLayout;
             {
@@ -286,22 +287,22 @@ void Analysis3dSettings::setupLayout()
                 m_pfeViscPanelRelax = new FloatEdit(1.0);
                 m_pfeViscPanelRelax->setRange(0.0,1.0);
                 QString tip = tr("<p>The relaxation factor is a multiplier applied to the increase of virtual twist at each viscous iteration. "
-                              "At low Reynolds numbers, convergence may be improved by reducing this coefficient to a value less than 1."
-                              "The coefficient should always be greater than zero and less than 1.<br>"
-                              "Recommendation: 0.3 < relax < 0.7"
-                              "</p>");
+                                 "At low Reynolds numbers, convergence may be improved by reducing this coefficient to a value less than 1."
+                                 "The coefficient should always be greater than zero and less than 1.<br>"
+                                 "Recommendation: 0.3 < relax < 0.7"
+                                 "</p>");
                 m_pfeViscPanelRelax->setToolTip(tip);
 
                 m_pfeViscPanelTwistPrec    = new FloatEdit;
                 tip = tr("<p>This parameter controls the maximum acceptable error for virtual twist. "
-                      "Convergence is achieved if the max. increase of virtual twist from one "
-                      "viscous iteration to the next is less than this value.<br>"
-                      "Recommendation: 0.01&deg;</p>");
+                         "Convergence is achieved if the max. increase of virtual twist from one "
+                         "viscous iteration to the next is less than this value.<br>"
+                         "Recommendation: 0.01&deg;</p>");
                 m_pfeViscPanelTwistPrec->setToolTip(tip);
 
                 m_pieViscPanelIterMax      = new IntEdit;
                 tip = tr("<p>This parameter sets the maximum number of viscous iterations.<br>"
-                      "Recommendation: max. iter = 30</p>");
+                         "Recommendation: max. iter = 30</p>");
                 m_pieViscPanelIterMax->setToolTip(tip);
 
                 m_pchViscInitVTwist = new QCheckBox(tr("Initialize the virtual twist at each new operating point calculation"));
@@ -324,10 +325,10 @@ void Analysis3dSettings::setupLayout()
                 pViscIterLayout->setRowStretch(5,1);
                 pViscIterLayout->setColumnStretch(4,1);
             }
-            pViscLoopFrame->setLayout(pViscIterLayout);
+            pfrViscLoop->setLayout(pViscIterLayout);
         }
 
-        QFrame *pVortexCoreFrame = new QFrame;
+        QFrame *pfrVortexCore = new QFrame;
         {
             QHBoxLayout *pVortexLayout = new QHBoxLayout;
             {
@@ -335,7 +336,7 @@ void Analysis3dSettings::setupLayout()
                 {
                     QGridLayout *pVortexCoreLayout = new QGridLayout;
                     {
-                       QLabel *plabRadius = new QLabel("Core radius");
+                        QLabel *plabRadius = new QLabel("Core radius");
                         plabRadius->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
                         m_pfeCoreRadius    = new FloatEdit(Vortex::coreRadius());
                         QLabel *plabLength2 = new QLabel(Units::lengthUnitQLabel());
@@ -398,10 +399,10 @@ void Analysis3dSettings::setupLayout()
                 pVortexLayout->setStretchFactor(pLeftLayout, 1);
                 pVortexLayout->setStretchFactor(m_pVortexGraphWt, 3);
             }
-            pVortexCoreFrame->setLayout(pVortexLayout);
+            pfrVortexCore->setLayout(pVortexLayout);
         }
 
-        QFrame *pVPWFrame = new QFrame;
+        QFrame *pfrVPW = new QFrame;
         {
             QGridLayout *pVPWBoxLayout = new QGridLayout;
             {
@@ -428,20 +429,125 @@ void Analysis3dSettings::setupLayout()
                 pVPWBoxLayout->setColumnStretch(4,1);
             }
 
-            pVPWFrame->setLayout(pVPWBoxLayout);
+            pfrVPW->setLayout(pVPWBoxLayout);
         }
 
-        m_pglAxesView = new gl3dAxesView;
+        QFrame *pfrMoments = new QFrame;
+        {
+            QHBoxLayout *pMomentsLayout = new QHBoxLayout;
+            {
+                QVBoxLayout *pLeftLayout = new QVBoxLayout;
+                {
+                    QGroupBox *pgbWind = new QGroupBox(tr("Wind"));
+                    {
+                        QGridLayout *pWindLayout = new QGridLayout;
+                        {
+                            QLabel *plabAlpha = new QLabel("<p>&alpha;=</p>");
+                            m_pfeAlpha = new FloatEdit(gl3dAxesView::s_Alpha);
+                            QLabel *plabBeta = new QLabel("<p>&beta;=</p>");
+                            m_pfeBeta = new FloatEdit(gl3dAxesView::s_Beta);
+                            QLabel *plabDeg0 = new QLabel("<p>&deg;</p>");
+                            QLabel *plabDeg1 = new QLabel("<p>&deg;</p>");
 
-        m_pTabWt->addTab(pCommonFrame,     tr("Common"));
-        m_pTabWt->addTab(pLLTFrame,        "LLT");
-        m_pTabWt->addTab(pVLMFrame,        "VLM");
-        m_pTabWt->addTab(p3dPanelFrame,    tr("3d linear panels"));
-        m_pTabWt->addTab(pSolverFrame,     tr("Solver"));
-        m_pTabWt->addTab(pViscLoopFrame,   tr("Viscous loop"));
-        m_pTabWt->addTab(pVortexCoreFrame, tr("Vortex"));
-        m_pTabWt->addTab(pVPWFrame,        tr("Vorton wake"));
-        m_pTabWt->addTab(m_pglAxesView,    tr("Moments"));
+                            connect(m_pfeAlpha, SIGNAL(floatChanged(float)), SLOT(onUpdateAxes()));
+                            connect(m_pfeBeta,  SIGNAL(floatChanged(float)), SLOT(onUpdateAxes()));
+
+                            pWindLayout->addWidget(plabAlpha,     1,1, Qt::AlignRight);
+                            pWindLayout->addWidget(m_pfeAlpha,    1,2);
+                            pWindLayout->addWidget(plabDeg0,      1,3);
+                            pWindLayout->addWidget(plabBeta,      2,1, Qt::AlignRight);
+                            pWindLayout->addWidget(m_pfeBeta,     2,2);
+                            pWindLayout->addWidget(plabDeg1,      2,3);
+                            pWindLayout->setColumnStretch(3,1);
+                        }
+
+                        pgbWind->setLayout(pWindLayout);
+                    }
+
+                    QGroupBox *pgbDisplay= new QGroupBox(tr("Display"));
+                    {
+
+                    QGridLayout *pDisplayLayout = new QGridLayout;
+                    {
+                        QString tipgeom = tr("<p>The frame in which the geometry is defined, and which is displayed by default in all 3d views. "
+                                             "It is defined such that:"
+                                             "<ul>"
+                                             "  <li>the x-axis lies in a horizontal plane and points backwards</li>"
+                                             "  <li>the y-axis lies in a horizontal plane and points to the right</li>"
+                                             "</ul>"
+                                             "The geometric axes are a case of body axes i.e. they move with the body, as if painted on."
+                                             "</p>");
+                        QString tipwind = tr("<p> The frame such that"
+                                             "<ul>"
+                                             "  <li>the x-axis is aligned with the wind direction</li>"
+                                             "  <li>the z-axis lies in the x-z plane  and points upwards</li>"
+                                             "</ul>"
+                                             "</p>");
+
+                        QString tipstab = tr("<p>"
+                                             "The frame in which the stability derivatives are calculated.<br>"
+                                             "It is defined such that:"
+                                             "<ul>"
+                                             "  <li>the x-axis is rotated from the geometry x-axis by an angle 180&deg; - &alpha; around the geometry y-axis; i.e. it points forward</li>"
+                                             "  <li>the y-axis lies in a horizontal plane and points to the right; it is identical to the geometric y-axis</li>"
+                                             "</ul>"
+                                             "The stability axes are a case of body axes i.e. they move with the body, as if painted on. This is an assumption "
+                                             "required for the calculation of stability modes."
+                                             "</p>");
+
+                        m_pchGeomAxes      = new QCheckBox(tr("Geometry axes"));
+                        m_pchGeomAxes->setToolTip(tipgeom);
+
+                        m_pchWindAxes      = new QCheckBox(tr("Wind axes"));
+                        m_pchWindAxes->setToolTip(tipwind);
+
+                        m_pchStabilityAxes = new QCheckBox(tr("Stability axes"));
+                        m_pchStabilityAxes->setToolTip(tipstab);
+
+
+                        m_plbWind = new LineBtn(gl3dAxesView::s_WindStyle);
+                        m_plbStab = new LineBtn(gl3dAxesView::s_StabStyle);
+
+                        connect(m_pchGeomAxes,      SIGNAL(clicked(bool)),  SLOT(onUpdateAxes()));
+                        connect(m_pchStabilityAxes, SIGNAL(clicked(bool)),  SLOT(onUpdateAxes()));
+                        connect(m_pchWindAxes,      SIGNAL(clicked(bool)),  SLOT(onUpdateAxes()));
+
+                        connect(m_plbWind,          SIGNAL(clickedLB(LineStyle)),  SLOT(onWindLineStyle()));
+                        connect(m_plbStab,          SIGNAL(clickedLB(LineStyle)),  SLOT(onStabLineStyle()));
+
+
+                        pDisplayLayout->addWidget(m_pchGeomAxes,      1, 1);
+                        pDisplayLayout->addWidget(m_pchWindAxes,      2, 1);
+                        pDisplayLayout->addWidget(m_plbWind,          2, 2);
+                        pDisplayLayout->addWidget(m_pchStabilityAxes, 3, 1);
+                        pDisplayLayout->addWidget(m_plbStab,          3, 2);
+                    }
+
+                    pgbDisplay->setLayout(pDisplayLayout);
+                }
+
+                    pLeftLayout->addWidget(pgbWind);
+                    pLeftLayout->addWidget(pgbDisplay);
+                    pLeftLayout->addStretch();
+                }
+                m_pglAxesView = new gl3dAxesView;
+
+                pMomentsLayout->addLayout(pLeftLayout);
+                pMomentsLayout->addWidget(m_pglAxesView);
+                pMomentsLayout->setStretchFactor(m_pglAxesView, 1);
+            }
+            pfrMoments->setLayout(pMomentsLayout);
+        }
+
+        m_pTabWt->addTab(pfrCommon,     tr("Common"));
+        m_pTabWt->addTab(pfrLLT,        "LLT");
+        m_pTabWt->addTab(pfrVLM,        "VLM");
+        m_pTabWt->addTab(pfr3dPanel,    tr("3d linear panels"));
+        m_pTabWt->addTab(pfrSolver,     tr("Solver"));
+        m_pTabWt->addTab(pfrViscLoop,   tr("Viscous loop"));
+        m_pTabWt->addTab(pfrVortexCore, tr("Vortex"));
+        m_pTabWt->addTab(pfrVPW,        tr("Vorton wake"));
+        m_pTabWt->addTab(pfrMoments,    tr("Axes"));
     }
 
     m_pButtonBox = new QDialogButtonBox(QDialogButtonBox::Close | QDialogButtonBox::Reset);
@@ -553,6 +659,10 @@ void Analysis3dSettings::initDialog(int iPage)
     m_pfeVortexPos->setEnabled(false);
     m_pfeControlPos->setEnabled(false);
 
+    m_pchGeomAxes->setChecked(m_pglAxesView->bAxes());
+    m_pchWindAxes->setChecked(m_pglAxesView->s_bWindAxes);
+    m_pchStabilityAxes->setChecked(m_pglAxesView->s_bStabAxes);
+
     if(iPage>=0) s_iPage=iPage;
     m_pTabWt->setCurrentIndex(s_iPage);
 }
@@ -631,8 +741,8 @@ void Analysis3dSettings::setData()
     m_pieViscPanelIterMax->setValue(PlaneTask::maxViscIter());
 
     // Vortex particle wake
-//    m_pchVortonStrengthEx->setChecked(Task3d::bVortonStretch());
-//    m_pchVortonRedist->setChecked(Task3d::bVortonRedist());
+    //    m_pchVortonStrengthEx->setChecked(Task3d::bVortonStretch());
+    //    m_pchVortonRedist->setChecked(Task3d::bVortonRedist());
     m_pchVortonStrengthEx->setChecked(false);
     m_pchVortonRedist->setChecked(false);
     m_pchVortonStrengthEx->setEnabled(false);
@@ -772,4 +882,40 @@ void Analysis3dSettings::onMakeVortexGraph()
 }
 
 
+void Analysis3dSettings::onUpdateAxes()
+{
+    gl3dAxesView::s_Alpha = m_pfeAlpha->value();
+    gl3dAxesView::s_Beta  = m_pfeBeta->value();
+
+    m_pglAxesView->m_bAxes     = m_pchGeomAxes->isChecked();
+    gl3dAxesView::s_bStabAxes = m_pchStabilityAxes->isChecked();
+    gl3dAxesView::s_bWindAxes = m_pchWindAxes->isChecked();
+
+    m_pglAxesView->updateAxes();
+}
+
+
+
+void Analysis3dSettings::onWindLineStyle()
+{
+    LineMenu lm(nullptr, false);
+    lm.initMenu(gl3dAxesView::s_WindStyle);
+    lm.exec(QCursor::pos());
+
+    gl3dAxesView::s_WindStyle = lm.theStyle();
+    m_plbWind->setTheStyle(gl3dAxesView::s_WindStyle);
+    m_pglAxesView->update();
+}
+
+
+void Analysis3dSettings::onStabLineStyle()
+{
+    LineMenu lm(nullptr, false);
+    lm.initMenu(gl3dAxesView::s_StabStyle);
+    lm.exec(QCursor::pos());
+
+    gl3dAxesView::s_StabStyle = lm.theStyle();
+    m_plbStab->setTheStyle(gl3dAxesView::s_StabStyle);
+    m_pglAxesView->update();
+}
 

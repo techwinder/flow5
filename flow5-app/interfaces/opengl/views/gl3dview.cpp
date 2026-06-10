@@ -2221,13 +2221,14 @@ void gl3dView::loadSettings(QSettings &settings)
 }
 
 
-/**
- * Renders an arrow composed of a cylinder and a cone, starting at origin, in the direction arrow and with length |arrow|
- */
-void gl3dView::paintThickArrow(Vector3d const &origin, const Vector3d& arrow, QColor const &clr, bool bLight, QMatrix4x4 const &ModelMatrix)
+void gl3dView::paintThickArrow(Vector3d const &origin, const Vector3d& arrow, QColor const &clr, bool bLight, bool bFixedScale, QMatrix4x4 const &ModelMatrix)
 {
     float length = arrow.normf();
     if(fabsf(length)<LENGTHPRECISION) return; // zero length arrow to draw
+
+    float conefrac = 0.20f;
+
+    float scale = bFixedScale ? 1.0/m_glScalef : 1.0f;
 
     QMatrix4x4 translation;
     translation.translate(origin.xf(), origin.yf(), origin.zf());
@@ -2239,11 +2240,9 @@ void gl3dView::paintThickArrow(Vector3d const &origin, const Vector3d& arrow, QC
     QMatrix4x4 ArrowDirectionMat;
 
     ArrowDirectionMat.rotate(qqt);
-    ArrowDirectionMat.scale(length);
 
     QMatrix4x4 ArrowMat; // identity
-    ArrowMat.scale(0.5f,  0.5f,  1.0f); // squeeze the cylinder radially
-    ArrowMat.scale(0.80f, 0.80f, 0.80); // make it 80% of the arrow's length
+    ArrowMat.scale(0.2f*scale,  0.2f*scale,  (1.0f-conefrac)*length*scale);
     QMatrix4x4 matModel = ModelMatrix*translation* ArrowDirectionMat * ArrowMat;
     QMatrix4x4 vmMatrix = m_matView * matModel;
     QMatrix4x4 pvmMatrix = m_matProj * vmMatrix;
@@ -2264,9 +2263,8 @@ void gl3dView::paintThickArrow(Vector3d const &origin, const Vector3d& arrow, QC
     paintSegments(m_vboCylinderContour, clr.darker(), 1);
 
     ArrowMat.setToIdentity();
-    ArrowMat.translate(0.0f, 0.0f, 0.8f);
-    ArrowMat.scale(0.3f, 0.3f, 0.2f); // make it 20% of the arrow's length
-    ArrowMat.scale(0.17f, 0.17f, 1.0f); // reduce the base diameter
+    ArrowMat.translate(0.0f, 0.0f, (1.0f-conefrac)*length*scale);
+    ArrowMat.scale(0.02f*scale, 0.02f*scale, conefrac*length*scale);
     matModel = ModelMatrix*translation* ArrowDirectionMat * ArrowMat;
     vmMatrix = m_matView * matModel;
     pvmMatrix = m_matProj * vmMatrix;
@@ -3445,9 +3443,9 @@ void gl3dView::glMakeCylinder(float h, float r, int nz, int nh)
         Triangle3d &t0 = triangles[it++];
         t0.setVertex(0, 0, 0, z);
         t0.setNodeNormal(0, {0,0,sign});
-        t0.setVertex(1, x, y, z);
+        t0.setVertex(1, x1, y1, z);
         t0.setNodeNormal(1, {0,0,sign});
-        t0.setVertex(2, x1, y1, z);
+        t0.setVertex(2, x, y, z);
         t0.setNodeNormal(2, {0,0,sign});
         t0.setTriangle();
     }

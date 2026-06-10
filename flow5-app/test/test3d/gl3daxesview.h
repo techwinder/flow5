@@ -43,7 +43,9 @@ class LineBtn;
 
 class gl3dAxesView : public gl3dXflView
 {
-        Q_OBJECT
+    Q_OBJECT
+    friend class Analysis3dSettings;
+
     public:
         gl3dAxesView(QWidget *pParent = nullptr);
         static void loadSettings(QSettings &settings);
@@ -54,21 +56,14 @@ class gl3dAxesView : public gl3dXflView
         void glRenderView() override;
         void glMake3dObjects() override;
 
-        QSize sizeHint() const override {return QSize(1500,1000);}
+//        QSize sizeHint() const override {return QSize(1500,1000);}
 
         void showEvent(QShowEvent *pEvent) override;
         void hideEvent(QHideEvent *pEvent) override;
         bool intersectTheObject(Vector3d const &,  Vector3d const &, Vector3d &) override {return false;}
 
-        void readData();
-        void setupLayout();
-        void connectSignals();
 
-    private slots:
-        void onConvert();
-        void onUpdateAxes();
-        void onWindLineStyle();
-        void onStabLineStyle();
+        void updateAxes();
 
     private:
 
@@ -76,24 +71,15 @@ class gl3dAxesView : public gl3dXflView
 
         AeroForces m_AF;
 
-        FloatEdit *m_pfeAlpha, *m_pfeBeta;
-        FloatEdit *m_pfeX, *m_pfeY, *m_pfeZ;
-
-        PlainTextOutput *m_ppto;
-
-        QCheckBox *m_pchGeomAxes;
-        QCheckBox *m_pchWindAxes;
-        QCheckBox *m_pchStabilityAxes;
-
-        LineBtn *m_plbWind, *m_plbStab;
 
         QOpenGLBuffer m_vboStlTriangulation;
         QOpenGLBuffer m_vboStlOutline;
 
+        static bool s_bWindAxes;
+        static bool s_bStabAxes;
+
         static double s_Alpha;
         static double s_Beta;
-
-        static Vector3d s_Vector;
 
         static LineStyle s_WindVecsStyle;
         static LineStyle s_WindStyle, s_StabStyle;

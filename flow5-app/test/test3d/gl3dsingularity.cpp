@@ -164,14 +164,13 @@ void gl3dSingularity::onUpdateData()
 }
 
 
-
 void gl3dSingularity::glRenderView()
 {
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
 
     if(m_prbSource->isChecked())
     {
-        paintIcoSphere(Vector3d(), s_Radius/2.0f, xfl::CornFlowerBlue, true, false);
+        paintIcoSphere(Vector3d(), s_Radius/2.0f, xfl::PinkFlow, true, false);
     }
     else if(m_prbDoublet->isChecked())
     {
@@ -179,7 +178,7 @@ void gl3dSingularity::glRenderView()
     }
     else if(m_prbVortex->isChecked())
     {
-        paintThickArrow(m_pVortex->vertexAt(0), m_pVortex->segment(), Qt::darkGreen, true);
+        paintThickArrow(m_pVortex->vertexAt(0), m_pVortex->segment(), Qt::darkYellow, true, false);
     }
 
     m_shadLine.bind();

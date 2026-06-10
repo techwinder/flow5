@@ -662,7 +662,7 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
             double qDyn = 0.5*pPlPolar->density()*pPOpp->QInf()*pPOpp->QInf();
             Vector3d windD(objects::windDirection(pPOpp->alpha(), pPOpp->beta()));
             Vector3d force(pPOpp->m_AF.Fff() + windD * pPOpp->m_AF.viscousDrag());
-            paintThickArrow(pPOpp->m_AF.centreOfPressure(), force*qDyn*sc, xfl::fromfl5Clr(W3dPrefs::s_LiftStyle.m_Color), true, m_matModel);
+            paintThickArrow(pPOpp->m_AF.centreOfPressure(), force*qDyn*sc, xfl::fromfl5Clr(W3dPrefs::s_LiftStyle.m_Color), true, true, m_matModel);
 
             for(int iw=0; iw<pPOpp->nWOpps(); iw++)
             {
@@ -692,15 +692,23 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
             Vector3d M = pPOpp->aeroForces().Mi() + pPOpp->aeroForces().Mv();
             double Q = 1./2.* pPlPolar->density()*pPOpp->QInf()*pPOpp->QInf();
             M *= Q;
+            double scale = 0.001; // additional display scale factor
+            M *= Opp3dScalesCtrls::momentScale()*scale;
+            paintThickArrow(CoG, M, clr, true, true);
+
+            QMatrix4x4 vm(m_matView);
+            m_matView = rotationMatrix();
+            m_matView.translate(m_glRotCenter.xf()*m_glScalef, m_glRotCenter.yf()*m_glScalef, m_glRotCenter.zf()*m_glScalef);
+            m_matView.scale(m_glScalef);
+
             QString strange = QString::asprintf("M_wind_axes = (%.2f, %.2f, %.2f) ",
                                                 M.x*Units::NmtoUnit(),
                                                 M.y*Units::NmtoUnit(),
                                                 M.z*Units::NmtoUnit()) + Units::momentUnitQLabel();
-            double scale = 0.001; // additional display scale factor
-            M *= Opp3dScalesCtrls::momentScale()*scale / m_glScalef;
+            glRenderText(CoG+(M+Vector3d(1,1,1)*0.03)/m_glScalef, strange, clr);
 
-            paintThickArrow(CoG, M, clr, true);
-            glRenderText(CoG+M+Vector3d(1,1,1)*0.03/double(m_glScalef), strange, clr);
+            m_matView = vm;
+            m_matModel.setToIdentity();
         }
     }
 
