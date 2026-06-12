@@ -107,6 +107,7 @@ class W3dPrefs : public QWidget
         void onContourLines();
         void onVelocity();
         void onFlapPanelClr();
+        void onForceColor();
         void onFusePanelClr();
         void onHighlight();
         void onIDrag();
@@ -153,7 +154,7 @@ class W3dPrefs : public QWidget
         LineBtn *m_plbStreamLines;
         QCheckBox *m_pchUseWingColour;
 
-        ColorBtn *m_pcbMomentColor;
+        ColorBtn *m_pcbForceColor, *m_pcbMomentColor;
         ColorBtn *m_pcbVortonColor;
         FloatEdit *m_pfeVortonRadius;
 
@@ -222,6 +223,7 @@ class W3dPrefs : public QWidget
         static LineStyle s_FlowStyle;
         static LineStyle s_StreamStyle;
 
+        static QColor s_ForceColor;
         static QColor s_MomentColor;
         static bool s_bUseWingColour;
 

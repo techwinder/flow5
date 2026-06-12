@@ -77,7 +77,7 @@ class Opp3dScalesCtrls : public QWidget
         static void setDragScale(double scale)       {s_DragScale=scale;}
         static float panelForceScale() {return float(s_PanelForceScale);}
         static float liftScale()       {return float(s_LiftScale);}
-        static float partForceScale()  {return float(s_PartForceScale);}
+        static float forceScale()  {return float(s_PartForceScale);}
         static float momentScale()     {return float(s_MomentScale);}
         static float dragScale()       {return float(s_DragScale);}
 

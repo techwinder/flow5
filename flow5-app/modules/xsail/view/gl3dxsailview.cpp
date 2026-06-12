@@ -1126,7 +1126,7 @@ void gl3dXSailView::glRenderOppBuffers()
     if(m_pDisplayCtrls->s_bPartForces && pBtOpp && pBtPolar)
     {
         double qDyn = pBtPolar->qDyn(pBtOpp->ctrl());
-        double sc =  qDyn * double(Opp3dScalesCtrls::partForceScale())/1.0e5;
+        double sc =  qDyn * double(Opp3dScalesCtrls::forceScale())/1.0e5;
 
         paintThickArrow(pBtPolar->CoG(),
                         pBtOpp->m_AF.Fsum() *sc, xfl::fromfl5Clr(W3dPrefs::s_LiftStyle.m_Color), true, true, m_matModel);

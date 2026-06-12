@@ -47,8 +47,8 @@ std::vector<std::string> PlanePolar::s_VariableNames = {"Ctrl", ALPHAstr + " ("+
                                             "CL", "CD", "CD_viscous", "CD_induced", "CY", "Cm", "Cm_viscous",
                                             "Cm_pressure","Cl","Cn","Cn_viscous","Cn_pressure","CL/CD", "CL"+EXPstr+"(3/2)/CD", "1/sqrt(CL)",
                                             "Lift (N)", "Drag (N)",
-                                            "Fx_FF (N)", "Fy_FF (N)", "Fz_FF (N)",
-                                            "Fx_sum (N)", "Fy_sum (N)", "Fz_sum (N)",
+                                            "Fx_FF_wind (N)", "Fy_FF_wind (N)", "Fz_FF_wind (N)",
+                                            "Fx_sum_wind (N)", "Fy_sum_wind (N)", "Fz_sum_wind (N)",
                                             "Extra drag (N)", "Fuse drag (N)", "Cf_Fuse",
                                             "Vx (m/s)","Vz (m/s)",
                                             "V (m/s)", "Gamma", "L (N.m)", "M (N.m)",
@@ -509,8 +509,8 @@ void PlanePolar::setVariableNames()
                                                 "CL", "CD", "CD_viscous", "CD_induced", "CY", "Cm", "Cm_viscous",
                                                 "Cm_pressure","Cl","Cn","Cn_viscous","Cn_pressure","CL/CD", "CL"+EXPstr+"(3/2)/CD", "1/sqrt(CL)",
                                                 "Lift ("+strForce+")", "Drag ("+strForce+")",
-                                                "Fx_FF ("+strForce+")", "Fy_FF ("+strForce+")", "Fz_FF ("+strForce+")",
-                                                "Fx_sum ("+strForce+")", "Fy_sum ("+strForce+")", "Fz_sum ("+strForce+")",
+                                                "Fx_FF_wind ("+strForce+")", "Fy_FF_wind ("+strForce+")", "Fz_FF_wind ("+strForce+")",
+                                                "Fx_sum_wind ("+strForce+")", "Fy_sum_wind ("+strForce+")", "Fz_sum_wind ("+strForce+")",
                                                 "Extra drag ("+strForce+")", "Fuse drag ("+strForce+")", "Cf_Fuse",
                                                 "Vx ("+strSpeed+")","Vz ("+strSpeed+")",
                                                 "V ("+strSpeed+")", "Gamma", "L ("+ strMoment+")", "M ("+ strMoment+")",
@@ -544,6 +544,7 @@ double PlanePolar::variable(int iVariable, int index) const
 double PlanePolar::getVariable(int iVar, int index) const
 {
     Vector3d WindD = objects::windDirection(m_Alpha.at(index), m_Beta.at(index));
+    Vector3d WindS = objects::windSide(m_Alpha.at(index), m_Beta.at(index));
     Vector3d WindN = objects::windNormal(m_Alpha.at(index), m_Beta.at(index));
 
     AeroForces const &AF = m_AF.at(index);
@@ -582,12 +583,12 @@ double PlanePolar::getVariable(int iVar, int index) const
         case 19:
             return AF.Fff().dot(WindN) *q * Units::NtoUnit();
         case 20: return (AF.Fff().dot(WindD) +AF.CDv()*m_RefArea)*q * Units::NtoUnit();
-        case 21: return AF.fffx() *q * Units::NtoUnit();
-        case 22: return AF.fffy() *q * Units::NtoUnit();
-        case 23: return AF.fffz() *q * Units::NtoUnit();
-        case 24: return AF.fsumx()*q * Units::NtoUnit();
-        case 25: return AF.fsumy()*q * Units::NtoUnit();
-        case 26: return AF.fsumz()*q * Units::NtoUnit();
+        case 21: return AF.Fff().dot(WindD) *q * Units::NtoUnit();
+        case 22: return AF.Fff().dot(WindS) *q * Units::NtoUnit();
+        case 23: return AF.Fff().dot(WindN) *q * Units::NtoUnit();
+        case 24: return AF.Fsum().dot(WindD)*q * Units::NtoUnit();
+        case 25: return AF.Fsum().dot(WindS)*q * Units::NtoUnit();
+        case 26: return AF.Fsum().dot(WindN)*q * Units::NtoUnit();
         case 27: return extraDragForce(index) * Units::NtoUnit();
         case 28:
         {

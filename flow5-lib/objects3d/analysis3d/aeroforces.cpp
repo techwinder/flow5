@@ -43,14 +43,6 @@ void AeroForces::makeFrames()
 
     // v7.57: modified the output of forces and moments to be in the "true" wind axes with the x-axis aligned with the sideslip;
     //        formerly had the x-wind-axis in the x-z plane for consistency with AVL
-/*    Vector3d WindDir(1,0,0);
-    Vector3d WindSide(0,1,0);
-    Vector3d WindNormal(0,0,1);
-    WindDir.rotateY(-m_Alpha);
-    WindNormal.rotateY(-m_Alpha);
-
-    WindDir.rotateZ(m_Beta);
-    WindSide.rotateZ(m_Beta);*/
 
     // Convention: sideslip is >0 if the wind is coming from the right
     Vector3d WindDir    = objects::windDirection(m_Alpha, m_Beta);
@@ -186,17 +178,41 @@ void AeroForces::resetResults()
     m_M0.set(0.0,0.0,0.0);
 }
 
-void AeroForces::scaleForces(double q)
+
+Vector3d AeroForces::toWindAxes(Vector3d const &V) const
 {
-    m_Fff         *= q;
-    m_Fsum        *= q;
-    m_ProfileDrag *= q;
-    m_FuseDrag    *= q;
-    m_ExtraDrag   *= q;
-    m_Mi          *= q;
-    m_Mv          *= q;
+    return m_CFWind.globalToLocal(V);
 }
 
+
+Vector3d AeroForces::toStabilityAxes(Vector3d const &V) const
+{
+    return m_CFStab.globalToLocal(V);
+}
+
+
+Vector3d AeroForces::Fff_wind() const
+{
+    return m_CFWind.globalToLocal(m_Fff);
+}
+
+
+Vector3d AeroForces::Fsum_wind() const
+{
+    return m_CFWind.globalToLocal(m_Fsum);
+}
+
+
+Vector3d AeroForces::Mi_wind() const
+{
+    return m_CFWind.globalToLocal(m_Mi);
+}
+
+
+Vector3d AeroForces::Mv_wind() const
+{
+    return m_CFWind.globalToLocal(m_Mv);
+}
 
 
 void AeroForces::displayAF()

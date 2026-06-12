@@ -4,7 +4,6 @@
 #include <format>
 
 #include <api.h>
-#include <constants.h>
 #include <flow5-io.h>
 #include <foil.h>
 #include <fusestl.h>
@@ -12,20 +11,10 @@
 #include <objects2d.h>
 #include <objects3d.h>
 #include <planexfl.h>
-#include <planestl.h>
 
 
 #ifdef WIN32
 #include <Windows.h>
-#endif
-
-#if defined ACCELERATE_NEW_LAPACK
-#include <Accelerate/Accelerate.h>
-#define lapack_int int
-#elif defined INTEL_MKL
-#include <mkl.h>
-#elif defined OPENBLAS
-#include <openblas/cblas.h>
 #endif
 
 

@@ -657,19 +657,73 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
 
         if(m_pPOpp3dControls->m_bPartForces)
         {
-            double sc = Opp3dScalesCtrls::partForceScale() / 10000.0;;
+            m_matModel.setToIdentity();
+
+            double sc = Opp3dScalesCtrls::forceScale() / 200000.0;
             // global force
             double qDyn = 0.5*pPlPolar->density()*pPOpp->QInf()*pPOpp->QInf();
-            Vector3d windD(objects::windDirection(pPOpp->alpha(), pPOpp->beta()));
-            Vector3d force(pPOpp->m_AF.Fff() + windD * pPOpp->m_AF.viscousDrag());
-            paintThickArrow(pPOpp->m_AF.centreOfPressure(), force*qDyn*sc, xfl::fromfl5Clr(W3dPrefs::s_LiftStyle.m_Color), true, true, m_matModel);
+
+            Vector3d force(pPOpp->m_AF.Fff() + pPOpp->m_AF.viscousDragForce()); // geometry axes
+            force *= qDyn;
+            Vector3d force_w = pPOpp->aeroForces().toWindAxes(force);
+
+            //rotate to follow the display
+            force.rotateY(pPOpp->alpha());
+            force.rotateZ(pPOpp->beta());
+
+            Vector3d CoG = pPOpp->cog();
+            CoG.rotateY(pPOpp->alpha());
+            CoG.rotateZ(pPOpp->beta());
+
+            paintThickArrow(CoG, force*sc, W3dPrefs::s_ForceColor, true, true, m_matModel);
+
+            QMatrix4x4 vm(m_matView);
+            m_matView = rotationMatrix();
+            m_matView.translate(m_glRotCenter.xf()*m_glScalef, m_glRotCenter.yf()*m_glScalef, m_glRotCenter.zf()*m_glScalef);
+            m_matView.scale(m_glScalef);
+
+            QString strange = QString::asprintf("F_total_wind = (%.2f, %.2f, %.2f) ",
+                                                force_w.x*Units::NtoUnit(),
+                                                force_w.y*Units::NtoUnit(),
+                                                force_w.z*Units::NtoUnit()) + Units::forceUnitQLabel();
+            glRenderText(CoG+(force*sc+Vector3d(1,1,1)*0.03)/m_glScalef, strange, W3dPrefs::s_ForceColor);
+
+            m_matView = vm;
+            m_matModel.setToIdentity();
 
             for(int iw=0; iw<pPOpp->nWOpps(); iw++)
             {
                 WingOpp const &wopp = pPOpp->WOpp(iw);
-                force.set(wopp.m_AF.Fff()+ windD * wopp.m_AF.viscousDrag());
-                paintThinArrow(pPlaneXfl->rootQuarterPoint(iw), force*qDyn*sc,
-                               W3dPrefs::s_LiftStyle.m_Color, W3dPrefs::s_LiftStyle.m_Width, W3dPrefs::s_LiftStyle.m_Stipple, m_matModel);
+                force.set(wopp.m_AF.Fff()+ wopp.m_AF.viscousDragForce());
+                force *= qDyn;
+                force_w = pPOpp->aeroForces().toWindAxes(force);
+
+                //rotate to follow the display
+                force.rotateY(pPOpp->alpha());
+                force.rotateZ(pPOpp->beta());
+
+                Vector3d pt = pPlaneXfl->rootQuarterPoint(iw);
+                pt.rotateY(pPOpp->alpha());
+                pt.rotateZ(pPOpp->beta());
+
+                paintThickArrow(pt, force*sc, W3dPrefs::s_ForceColor.darker(), true, true, m_matModel);
+
+
+                QMatrix4x4 vm(m_matView);
+                m_matView = rotationMatrix();
+                m_matView.translate(m_glRotCenter.xf()*m_glScalef, m_glRotCenter.yf()*m_glScalef, m_glRotCenter.zf()*m_glScalef);
+                m_matView.scale(m_glScalef);
+
+                QString strange = QString::fromStdString(wopp.wingName()) + QString::asprintf(" F_wind = (%.2f, %.2f, %.2f) ",
+                                                    force_w.x*Units::NtoUnit(),
+                                                    force_w.y*Units::NtoUnit(),
+                                                    force_w.z*Units::NtoUnit()) + Units::forceUnitQLabel();
+                glRenderText(pt+(force*sc+Vector3d(1,1,1)*0.03)/m_glScalef, strange, W3dPrefs::s_ForceColor);
+
+                m_matView = vm;
+                m_matModel.setToIdentity();
+
+
             }
         }
     }

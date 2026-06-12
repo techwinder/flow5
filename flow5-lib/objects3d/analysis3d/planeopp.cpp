@@ -303,38 +303,46 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
 
     props += "\n";
 
-    if(pPlane && pPlane->isXflType() && pWPolar)
+    double qDyn = 0.5*pWPolar->density()*m_QInf*m_QInf;
+
+    if(pPlane && pWPolar)
     {
-        PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
-        double qDyn = 0.5*pWPolar->density()*m_QInf*m_QInf;
 
-        props += "Total force, body axes:\n";
-        Vector3d drag = WindD * m_AF.viscousDrag();
+        Vector3d Force  = m_AF.Fff()+m_AF.viscousDragForce();
+        Vector3d Moment = m_AF.Mi()+m_AF.Mv();
 
-        double fx = m_AF.fffx() + drag.x;
-        double mx = m_AF.Mi().x + m_AF.Mv().x;
-        fx *= qDyn * Units::NtoUnit();
-        mx *= qDyn * Units::NmtoUnit();
-        strong = std::format("   Fx={:9.3g} {:s}  Mx ={:9.3g} {:s}", fx, Units::forceUnitLabel().c_str(), mx, Units::momentUnitLabel().c_str());
-        props += strong + EOLstr;
+        Force  *= qDyn * Units::NtoUnit();
+        Moment *= qDyn * Units::NmtoUnit();
 
-        double fy = m_AF.fffy() + drag.y;
-        double my = m_AF.Mi().y + m_AF.Mv().y;
-        fy *= qDyn * Units::NtoUnit();
-        my *= qDyn * Units::NmtoUnit();
+        Vector3d Force_w = m_AF.toWindAxes(Force);
+        Vector3d Moment_w = m_AF.toWindAxes(Moment);
 
-        strong = std::format("   Fy={:9.3g} {:s}  My ={:9.3g} {:s}", fy, Units::forceUnitLabel().c_str(), my, Units::momentUnitLabel().c_str());
-        props += strong + EOLstr;
+        props += "Total force: Geom. axes   Wind axes\n";
+        strong = std::format("      Fx={:11.3f}  {:11.3f} ", Force.x, Force_w.x) + Units::forceUnitLabel();
+        props += strong + "\n";
 
-        double fz = m_AF.fffz() + drag.z;
-        double mz = m_AF.Mi().z + m_AF.Mv().z;
-        fz *= qDyn * Units::NtoUnit();
-        mz *= qDyn * Units::NmtoUnit();
+        strong = std::format("      Fy={:11.3f}  {:11.3f} ", Force.y, Force_w.y) + Units::forceUnitLabel();
+        props += strong +"\n";
 
-        strong = std::format("   Fz={:9.3g} {:s}  Mz ={:9.3g} {:s}", fz, Units::forceUnitLabel().c_str(), mz, Units::momentUnitLabel().c_str());
+        strong = std::format("      Fz={:11.3f}  {:11.3f} ", Force.z,  Force_w.z) + Units::forceUnitLabel();
+        props += strong + "\n";
+
+        strong = std::format("      Mx={:11.3f}  {:11.3f} ", Moment.x, Moment_w.x) + Units::momentUnitLabel();
+        props += strong + "\n";
+
+        strong = std::format("      My={:11.3f}  {:11.3f} ", Moment.y, Moment_w.y) + Units::momentUnitLabel();
+        props += strong + "\n";
+
+        strong = std::format("      Mz={:11.3f}  {:11.3f} ", Moment.z, Moment_w.z) + Units::momentUnitLabel();
         props += strong + "\n\n";
+    }
 
-        props += "Forces on parts, body axes:\n";
+
+    PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+    if(pPlaneXfl && pWPolar)
+    {
+
+        props += "Parts:       Geom. axes   Wind axes\n";
         for(unsigned int iw=0; iw<m_WingOpp.size(); iw++)
         {
             WingXfl const *pWing = pPlaneXfl->wingAt(iw);
@@ -342,28 +350,35 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
 
             if(pWing && pWOpp)
             {
-                Vector3d drag = WindD * pWOpp->m_AF.viscousDrag();
                 props += "  " + pWing->name() + ":\n";
-                double fx = pWOpp->m_AF.fffx() + drag.x;
-                double mx = pWOpp->m_AF.Mi().x + pWOpp->m_AF.Mv().x;
-                fx *= qDyn * Units::NtoUnit();
-                mx *= qDyn * Units::NmtoUnit();
-                strong = std::format("   Fx={:9.3g} {:s}  Mx ={:9.3g} {:s}", fx, Units::forceUnitLabel().c_str(), mx, Units::momentUnitLabel().c_str());
-                props += strong + EOLstr;
 
-                double fy = pWOpp->m_AF.fffy() + drag.y;
-                double my = pWOpp->m_AF.Mi().y + pWOpp->m_AF.Mv().y;
-                fy *= qDyn * Units::NtoUnit();
-                my *= qDyn * Units::NmtoUnit();
-                strong = std::format("   Fy={:9.3g} {:s}  My ={:9.3g} {:s}", fy, Units::forceUnitLabel().c_str(), my, Units::momentUnitLabel().c_str());
-                props += strong + EOLstr;
+                Vector3d DragForce = pWOpp->m_AF.viscousDragForce();
+                Vector3d Force  = pWOpp->m_AF.Fff()+DragForce;
+                Vector3d Moment = pWOpp->m_AF.Mi()+pWOpp->m_AF.Mv();
 
-                double fz = pWOpp->m_AF.fffz() + drag.z;
-                double mz = pWOpp->m_AF.Mi().z + pWOpp->m_AF.Mv().z;
-                fz *= qDyn * Units::NtoUnit();
-                mz *= qDyn * Units::NmtoUnit();
-                strong = std::format("   Fz={:9.3g} {:s}  Mz ={:9.3g} {:s}", fz, Units::forceUnitLabel().c_str(), mz, Units::momentUnitLabel().c_str());
-                props += strong + EOLstr;
+                Force  *= qDyn * Units::NtoUnit();
+                Moment *= qDyn * Units::NmtoUnit();
+
+                Vector3d Force_w = m_AF.toWindAxes(Force);
+                Vector3d Moment_w = m_AF.toWindAxes(Moment);
+
+                strong = std::format("      Fx={:11.3f}  {:11.3f} ", Force.x,  Force_w.x) + Units::forceUnitLabel();
+                props += strong + "\n";
+
+                strong = std::format("      Fy={:11.3f}  {:11.3f} ", Force.y,  Force_w.y) + Units::forceUnitLabel();
+                props += strong +"\n";
+
+                strong = std::format("      Fz={:11.3f}  {:11.3f} ", Force.z,  Force_w.z) + Units::forceUnitLabel();
+                props += strong + "\n";
+
+                strong = std::format("      Mx={:11.3f}  {:11.3f} ", Moment.x, Moment_w.x) + Units::momentUnitLabel();
+                props += strong + "\n";
+
+                strong = std::format("      My={:11.3f}  {:11.3f} ", Moment.y, Moment_w.y) + Units::momentUnitLabel();
+                props += strong + "\n";
+
+                strong = std::format("      Mz={:11.3f}  {:11.3f} ", Moment.z, Moment_w.z) + Units::momentUnitLabel();
+                props += strong + "\n\n";
             }
         }
 
@@ -371,29 +386,37 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
         {
             if(int(m_FuseAF.size())<=ifuse) break;  // FuseAF not defined if LLT
 
-            Vector3d drag = WindD * m_FuseAF.at(ifuse).viscousDrag();
-            Fuse const *pFuse = pPlaneXfl->fuseAt(ifuse);
+            Fuse const *pFuse = pPlaneXfl->fuseAt(ifuse);           
             props += "  " + pFuse->name() + ":\n";
-            double fx = m_FuseAF.at(ifuse).fffx() +drag.x;
-            double mx = m_FuseAF.at(ifuse).Mi().x + m_FuseAF.at(ifuse).Mv().x;
-            fx *= qDyn * Units::NtoUnit();
-            mx *= qDyn * Units::NmtoUnit();
-            strong = std::format("   Fx={:9.3g} {:s}  Mx ={:9.3g} {:s}", fx, Units::forceUnitLabel().c_str(), mx, Units::momentUnitLabel().c_str());
-            props += strong + EOLstr;
 
-            double fy = m_FuseAF.at(ifuse).fffx() + drag.y;
-            double my = m_FuseAF.at(ifuse).Mi().y + m_FuseAF.at(ifuse).Mv().y;
-            fy *= qDyn * Units::NtoUnit();
-            my *= qDyn * Units::NmtoUnit();
-            strong = std::format("   Fy={:9.3g} {:s}  My ={:9.3g} {:s}", fy, Units::forceUnitLabel().c_str(), my, Units::momentUnitLabel().c_str());
-            props += strong + EOLstr;
+            AeroForces const &AF = m_FuseAF.at(ifuse);
+            Vector3d DragForce = WindD * AF.fuseDrag();
+            Vector3d Force  = AF.Fff()+DragForce;
+            Vector3d Moment = AF.Mi()+AF.Mv();
 
-            double fz = m_FuseAF.at(ifuse).fffx() + drag.z;
-            double mz = m_FuseAF.at(ifuse).Mi().z + m_FuseAF.at(ifuse).Mv().z;
-            fz *= qDyn * Units::NtoUnit();
-            mz *= qDyn * Units::NmtoUnit();
-            strong = std::format("   Fz={:9.3g} {:s}  Mz ={:9.3g} {:s}", fz, Units::forceUnitLabel().c_str(), mz, Units::momentUnitLabel().c_str());
-            props += strong + EOLstr;
+            Force  *= qDyn * Units::NtoUnit();
+            Moment *= qDyn * Units::NmtoUnit();
+
+            Vector3d Force_w = m_AF.toWindAxes(Force);
+            Vector3d Moment_w = m_AF.toWindAxes(Moment);
+
+            strong = std::format("      Fx={:11.3f}  {:11.3f} ", Force.x, Force_w.x) + Units::forceUnitLabel();
+            props += strong + "\n";
+
+            strong = std::format("      Fy={:11.3f}  {:11.3f} ", Force.y, Force_w.y) + Units::forceUnitLabel();
+            props += strong +"\n";
+
+            strong = std::format("      Fz={:11.3f}  {:11.3f} ", Force.z,  Force_w.z) + Units::forceUnitLabel();
+            props += strong + "\n";
+
+            strong = std::format("      Mx={:11.3f}  {:11.3f} ", Moment.x, Moment_w.x) + Units::momentUnitLabel();
+            props += strong + "\n";
+
+            strong = std::format("      My={:11.3f}  {:11.3f} ", Moment.y, Moment_w.y) + Units::momentUnitLabel();
+            props += strong + "\n";
+
+            strong = std::format("      Mz={:11.3f}  {:11.3f} ", Moment.z, Moment_w.z) + Units::momentUnitLabel();
+            props += strong + "\n\n";
         }
     }
 
@@ -424,7 +447,7 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
     if(isType12358() || isType7())
     {
         props += "\n";
-        props += "Non-dimensional stability derivatives:\n";
+        props += "Non-dim. stability derivatives in stability axes:\n";
         props += std::format("  CXu = {:11g}\n", m_SD.CXu);
         props += std::format("  CZu = {:11g}\n", m_SD.CZu);
         props += std::format("  Cmu = {:11g}\n", m_SD.Cmu);
@@ -447,7 +470,7 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
 
         if(m_SD.ControlNames.size())
         {
-            props += "Non-dimensional control derivatives:\n";
+            props += "Non-dimensional control derivatives in stability axes:\n";
             for(unsigned int i=0; i<m_SD.ControlNames.size(); i++)
             {
                 props += "  " + m_SD.ControlNames.at(i) + EOLstr;

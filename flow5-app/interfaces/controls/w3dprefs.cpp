@@ -100,6 +100,7 @@ LineStyle W3dPrefs::s_VDragStyle(   true, Line::DASH,    1, fl5Color(215,125,100
 LineStyle W3dPrefs::s_CpStyle(      true, Line::SOLID,   1, fl5Color(255,0,0),            Line::NOSYMBOL);
 LineStyle W3dPrefs::s_TransStyle(   true, Line::SOLID,   1, fl5Color(171, 103, 220),      Line::NOSYMBOL);
 LineStyle W3dPrefs::s_FlowStyle(    true, Line::SOLID,   2, fl5Color(101, 101, 231, 153), Line::NOSYMBOL);
+QColor W3dPrefs::s_ForceColor  = QColor(113, 131, 149);
 QColor W3dPrefs::s_MomentColor = QColor(149, 131, 113);
 
 bool W3dPrefs::s_bUseWingColour(false);
@@ -155,6 +156,7 @@ void W3dPrefs::connectSignals()
     connect(m_pcbWakePanelClr,       SIGNAL(clicked()),             SLOT(onWakePanelClr()));
     connect(m_pcbWaterColor,         SIGNAL(clicked()),             SLOT(onWaterColor()));
     connect(m_pcbWingPanelClr,       SIGNAL(clicked()),             SLOT(onWingPanelClr()));
+    connect(m_pcbForceColor,         SIGNAL(clicked()),             SLOT(onForceColor()));
     connect(m_pcbMomentColor,        SIGNAL(clicked()),             SLOT(onMomentColor()));
 
     connect(m_plbAxis,               SIGNAL(clickedLB(LineStyle)),  SLOT(on3dAxis()));
@@ -270,6 +272,7 @@ void W3dPrefs::initWidgets()
     m_pcbWingPanelClr->setColor(s_WingPanelColor);
     m_pcbFlapPanelClr->setColor(s_FlapPanelColor);
     m_pcbWakePanelClr->setColor(s_WakePanelColor);
+    m_pcbForceColor->setColor(s_ForceColor);
     m_pcbMomentColor->setColor(s_MomentColor);
 
 //    m_prbOcc->setChecked(Fuse::isOccTessellator());
@@ -414,7 +417,8 @@ void W3dPrefs::setupLayout()
                 QLabel *plabWind        = new QLabel(tr("Wind"));
                 QLabel *plabOutline     = new QLabel(tr("Geometry outline"));
                 QLabel *plabTopTr       = new QLabel(tr("Transitions"));
-                QLabel *plabLift        = new QLabel(tr("Lift and forces"));
+                QLabel *plabLift        = new QLabel(tr("Lift"));
+                QLabel *plabForces      = new QLabel(tr("Forces"));
                 QLabel *plabMoments     = new QLabel(tr("Moments"));
                 QLabel *plabInducedDrag = new QLabel(tr("Induced drag"));
                 QLabel *plabViscousDrag = new QLabel(tr("Viscous drag"));
@@ -455,6 +459,7 @@ void W3dPrefs::setupLayout()
                 m_pcbWingPanelClr  = new ColorBtn;
                 m_pcbFlapPanelClr  = new ColorBtn;
                 m_pcbWakePanelClr  = new ColorBtn;
+                m_pcbForceColor    = new ColorBtn;
                 m_pcbMomentColor   = new ColorBtn;
 
                 m_pfeVortonRadius  = new FloatEdit;
@@ -513,10 +518,12 @@ void W3dPrefs::setupLayout()
                 pColorGridLayout->addWidget(m_pcbWakePanelClr,      10,4);
 
                 pColorGridLayout->addWidget(plabResults,            11,1,1,4, Qt::AlignHCenter);
-                pColorGridLayout->addWidget(plabLift,               12,1, Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbLift,              12,2);
-                pColorGridLayout->addWidget(plabMoments,            13,1, Qt::AlignRight);
-                pColorGridLayout->addWidget(m_pcbMomentColor,       13,2);
+                pColorGridLayout->addWidget(plabForces,             12,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_pcbForceColor,        12,2);
+                pColorGridLayout->addWidget(plabMoments,            12,3, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_pcbMomentColor,       12,4);
+                pColorGridLayout->addWidget(plabLift,               14,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbLift,              14,2);
                 pColorGridLayout->addWidget(plabInducedDrag,        15,1, Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbInducedDrag,       15,2);
                 pColorGridLayout->addWidget(plabViscousDrag,        15,3, Qt::AlignRight);
@@ -920,6 +927,18 @@ void W3dPrefs::onMasses()
 }
 
 
+void W3dPrefs::onForceColor()
+{
+    QColor clr = QColorDialog::getColor(s_ForceColor, this, tr("Force colour"), QColorDialog::ShowAlphaChannel);
+    if(clr.isValid())
+    {
+        s_ForceColor = clr;
+        m_pcbForceColor->setColor(clr);
+    }
+    update();
+}
+
+
 void W3dPrefs::onMomentColor()
 {
     QColor clr = QColorDialog::getColor(s_MomentColor, this, tr("Moment colour"), QColorDialog::ShowAlphaChannel);
@@ -1070,6 +1089,7 @@ void W3dPrefs::saveSettings(QSettings &settings)
         settings.setValue("VortonColour",  s_VortonColor);
         settings.setValue("VortonRadius", s_VortonRadius);
 
+        settings.setValue("ForceColor",   s_ForceColor);
         settings.setValue("MomentColor",  s_MomentColor);
 
         settings.setValue("UseWingColour",  s_bUseWingColour);
@@ -1162,6 +1182,7 @@ void W3dPrefs::loadSettings(QSettings &settings)
 
         s_bUseWingColour    = settings.value("UseWingColour", s_bUseWingColour).toBool();
 
+        s_ForceColor        = settings.value("ForceColor",  s_ForceColor).value<QColor>();
         s_MomentColor       = settings.value("MomentColor", s_MomentColor).value<QColor>();
 
         s_WaterColor        = settings.value("WaterColor", s_WaterColor).value<QColor>();
@@ -1246,6 +1267,7 @@ void W3dPrefs::resetDefaults()
     s_FusePanelColor = QColor(241,241,241);
     s_FlapPanelColor = QColor(227,227,227);
     s_WakePanelColor = QColor(215,215,215, 105);
+    s_ForceColor     = QColor(113, 131, 149);
     s_MomentColor    = QColor(149, 131, 113);
 
     s_BoxX = s_BoxY = 10.0;

@@ -46,7 +46,6 @@ struct FL5LIB_EXPORT  AeroForces
     void duplicate(AeroForces const & ac);
     void resetAll();
     void resetResults();
-    void scaleForces(double q);
 
     double alpha() const {return m_Alpha;}
     double beta()  const {return m_Beta;}
@@ -106,19 +105,23 @@ struct FL5LIB_EXPORT  AeroForces
     Vector3d const &M0() const {return m_M0;}              // N.m/q
 
     Vector3d const &Fff() const {return m_Fff;}            // N/q
+    Vector3d Fff_wind() const;            // N/q
     void setFff(Vector3d const &Fff) {m_Fff=Fff;}          // N/q
     void addFff(Vector3d const &Fff) {m_Fff+=Fff;}         // N/q
 
     Vector3d const &Fsum() const {return m_Fsum;}          // N/q
+    Vector3d Fsum_wind() const;            // N/q
     void setFsum(Vector3d const &Fsum) {m_Fsum=Fsum;}      // N/q
     void addFsum(Vector3d const &Fsum) {m_Fsum+=Fsum;}     // N/q
 
     Vector3d const &Mi() const {return m_Mi;}              // N.m/q
+    Vector3d Mi_wind() const;
     void setMi(Vector3d const &Mi) {m_Mi=Mi;}              // N.m/q
     void addMi(Vector3d const &Mi) {m_Mi+=Mi;}             // N.m/q
 
 
     Vector3d const &Mv() const {return m_Mv;}              // N.m/q
+    Vector3d Mv_wind() const;
     void setMv(Vector3d const &Mv) {m_Mv=Mv;}              // N.m/q
     void addMv(Vector3d const &Mv) {m_Mv+=Mv;}             // N.m/q
 
@@ -131,6 +134,7 @@ struct FL5LIB_EXPORT  AeroForces
     double fsumz() const {return m_Fsum.z;}
 
     double viscousDrag() const {return m_ProfileDrag + m_FuseDrag + m_ExtraDrag;}  //N/q
+    Vector3d viscousDragForce() const {return m_CFWind.Idir()*(m_ProfileDrag + m_FuseDrag + m_ExtraDrag);}  //N/q
 
     double profileDrag() const {return m_ProfileDrag;}  //N/q
     void setProfileDrag(double d) {m_ProfileDrag=d;}
@@ -143,6 +147,9 @@ struct FL5LIB_EXPORT  AeroForces
     double extraDrag() const {return m_ExtraDrag;}  //N/q
     void setExtraDrag(double d) {m_ExtraDrag=d;}
     void addExtraDrag(double d) {m_ExtraDrag+=d;}
+
+    Vector3d toWindAxes(Vector3d const &V) const;
+    Vector3d toStabilityAxes(Vector3d const &V) const;
 
     void displayAF();
 
@@ -160,7 +167,7 @@ struct FL5LIB_EXPORT  AeroForces
         double m_RefSpan;
         double m_RefChord;
 
-        double m_ProfileDrag;         /**< The viscous profile drag in wind axis (N/q) = VCD.refArea - Only non-zero component is Fv.x */
+        double m_ProfileDrag;         /**< The viscous profile drag in wind axes (N/q) = VCD.refArea - Only non-zero component is Fv.x */
         double m_FuseDrag;            /**< The viscous fuse drag in wind axis (N/q) = Cf.wettedArea m_AVLDrag- Only non-zero component is Fv.x */
         double m_ExtraDrag;           /**< The viscous extra drag + AVL type drag in wind axis (N/q) = Sum(coefs*area) - Only non-zero component is Fv.x */
 

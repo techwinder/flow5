@@ -724,14 +724,14 @@ void P3Analysis::inducedForce(int nPanel3, double QInf, double alpha, double bet
     double gLeft=0, gRight=0, gMid=0;
     //dynamic pressure, kg/m³
 
-    //   Define wind axis
+    //   Define wind axes
     Vector3d winddir = objects::windDirection(alpha, beta);
     VInf = winddir * QInf;
 
     double q = 0.5 * m_pPolar3d->density() * QInf * QInf;
     Vector3d StripForce; // body axes
 
-    double const *mu3    = m_Mu.data();
+    double const *mu3 = m_Mu.data();
     int m=0;
     for(int i3=0; i3<nPanel3; i3++)
     {
@@ -762,7 +762,8 @@ void P3Analysis::inducedForce(int nPanel3, double QInf, double alpha, double bet
 
             SpanResFF.m_Gamma[m] = gMid;
 
-            StripForce = VInf * p3.trailingVortex();
+            Vector3d vtx = p3.trailingVortex();
+            StripForce = VInf * vtx;
             StripForce *= gMid * m_pPolar3d->density();     // N
             StripForce *=  1.0/q;      // N/q
 
@@ -783,8 +784,8 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
                              Vector3d &Drag, SpanDistribs &SpanResFF) const
 {
     Vector3d left, right;
-    Vector3d Wg_l, Wg_m, Wg_r;
-    Vector3d u, mid;
+    Vector3d Wg_m;
+    Vector3d midwakept;
     Vector3d ForceBodyAxes; // Strip and global forces, body axes
     double gLeft(0), gRight(0), gMid(0);
 
@@ -795,7 +796,7 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
     double qDyn = 0.5 * m_pPolar3d->density() * QInf * QInf;
 
     Vector3d StripForce; // body axes
-    Vector3d theforce_l, theforce_m, theforce_r;
+    Vector3d theforce;
 
     //dynamic pressure, kg/m³
 
@@ -817,25 +818,19 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
             // get the last triangle of the wake column
             assert(p3.iWake()>=0 && p3.iWake()<nWakePanels());
             Panel3 const *p3W = m_WakePanel3.data() + p3.iWake();
-//            trailingWakePoint(p3W, left, right);
 
             // evaluate the induced drag at the half of the wake's length to avoid end effects
             // exact position is not significant, result is not affected by panel side singularities
 
             midWakePoint(p3W, left, right);
-            mid.set((left + right)/2.0);
+            midwakept.set((left + right)/2.0);
 
-//            getVelocityVector(left,  mu3, sigma3, Wg_l, 0.0001, true);
-            getVelocityVector(mid,   mu3, sigma3, Wg_m, 0.0001, true);
-//            getVelocityVector(right, mu3, sigma3, Wg_r, 0.0001, true);
+            getVelocityVector(midwakept,   mu3, sigma3, Wg_m, 0.0001, true);
 
-//            Wg_l *= 0.5;
             Wg_m *= 0.5;
-//            Wg_r *= 0.5;
 
 //s_DebugPts.push_back(mid);
 //s_DebugVecs.push_back(Wg_m);
-
 
             if(p3.isMidPanel())
             {
@@ -856,40 +851,23 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
                 gMid = (gLeft+gRight)/2.0;
             }
 
-            u.set(p3.trailingVortex());
-            u.normalize();
+            theforce = Wg_m * p3.trailingVortex() * gMid;
 
-//            theforce_l = Wg_l * u * gLeft;
-            theforce_m = Wg_m * u * gMid;
-//            theforce_r = Wg_r * u * gRight;
+            StripForce += theforce;
 
-/*            StripForce += (theforce_l + theforce_m)/2.0;
-            StripForce += (theforce_m + theforce_r)/2.0;*/
-
-            StripForce += theforce_m*2.0;
-
-            StripForce *= p3.trailingVortex().norm()/2.0; // two half segments
             StripForce *= m_pPolar3d->density() / qDyn;      // N/q
-            ForceBodyAxes += StripForce;      // N/q
-
+            ForceBodyAxes += StripForce;                     // N/q
 
             SpanResFF.m_Vd[m]  = Wg_m;
             SpanResFF.m_Ai[m]  = atan2(Wg_m.dot(surfacenormal), QInf)*180.0/PI;
             SpanResFF.m_ICd[m] = StripForce.dot(winddir) /SpanResFF.stripArea(m);
 
-#ifdef QT_DEBUG
-//qDebug("Wg[{:d}]  {:11g}  {:11g}  {:11g}", m, SpanResFF.m_Vd[m].x, SpanResFF.m_Vd[m].y, SpanResFF.m_Vd[m].z);
-//qDebug("Wg[{:d}]  {:11g}  {:11g}", m, p3.trailingVortex().norm(), Wg_m.norm());
-
-#endif
             m++;
         }
     }
 
     Drag.set(ForceBodyAxes);    // N/q, body axes
-//    Drag.listCoords("Drag: ");
 }
-
 
 
 /**
