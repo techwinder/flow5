@@ -504,7 +504,7 @@ void gl3dWingView::glMakeWingSectionHighlight_seg(WingXfl const *pWing, int iSec
     }
 
     std::vector<Node> PtTopLeft(CHORDPOINTS), PtTopRight(CHORDPOINTS), PtBotLeft(CHORDPOINTS), PtBotRight(CHORDPOINTS);
-    std::vector<Vector3d> NA(CHORDPOINTS), NB(CHORDPOINTS);
+
     std::vector<double> xdistrib;
     xfl::getPointDistribution(xdistrib, CHORDPOINTS-1, xfl::COSINE); // ensures good resolution at LE and TE
 
@@ -526,8 +526,8 @@ void gl3dWingView::glMakeWingSectionHighlight_seg(WingXfl const *pWing, int iSec
         int jSurf = pWing->nSurfaces()/2 - iSection;
 
         Surface const &lsurf = pWing->surfaceAt(jSurf);
-        lsurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, NA, NB, xdistrib, xdistrib);
-        lsurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, NA, NB, xdistrib, xdistrib);
+        lsurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, xdistrib, xdistrib);
+        lsurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, xdistrib, xdistrib);
 
         for(int i=0; i<CHORDPOINTS-1; i++)
         {
@@ -554,8 +554,8 @@ void gl3dWingView::glMakeWingSectionHighlight_seg(WingXfl const *pWing, int iSec
         jSurf = pWing->nSurfaces()/2 + iSection -1;
 
         Surface const &rsurf = pWing->surfaceAt(jSurf);
-        rsurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, NA, NB, xdistrib, xdistrib);
-        rsurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, NA, NB, xdistrib, xdistrib);
+        rsurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, xdistrib, xdistrib);
+        rsurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, xdistrib, xdistrib);
 
         for(int i=0; i<CHORDPOINTS-1; i++)
         {
@@ -587,8 +587,8 @@ void gl3dWingView::glMakeWingSectionHighlight_seg(WingXfl const *pWing, int iSec
             int jSurf = pWing->nSurfaces()-1 - iSection;
 
             Surface const &lsurf = pWing->surfaceAt(jSurf);
-            lsurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, NA, NB, xdistrib, xdistrib);
-            lsurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, NA, NB, xdistrib, xdistrib);
+            lsurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, xdistrib, xdistrib);
+            lsurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, xdistrib, xdistrib);
 
             for(int i=0; i<CHORDPOINTS-1; i++)
             {
@@ -616,8 +616,8 @@ void gl3dWingView::glMakeWingSectionHighlight_seg(WingXfl const *pWing, int iSec
             int jSurf = pWing->nSurfaces() - iSection;
 
             Surface const &lsurf = pWing->surfaceAt(jSurf);
-            lsurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, NA, NB, xdistrib, xdistrib);
-            lsurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, NA, NB, xdistrib, xdistrib);
+            lsurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, xdistrib, xdistrib);
+            lsurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, xdistrib, xdistrib);
 
             for(int i=0; i<CHORDPOINTS-1; i++)
             {

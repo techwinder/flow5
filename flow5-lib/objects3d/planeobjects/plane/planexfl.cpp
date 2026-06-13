@@ -360,12 +360,24 @@ void PlaneXfl::createWingSideNodes()
         pTranslatedFuse->translate(fusePos(0));
     }
 
+    std::vector<std::thread> threads;
+
     for(int iw=0; iw<nWings(); iw++)
     {
         WingXfl *pWing = wing(iw);
-        for (int j=0; j<pWing->nSurfaces(); j++)
-            pWing->surface(j).makeSideNodes(pTranslatedFuse);
+        for (int jsurf=0; jsurf<pWing->nSurfaces(); jsurf++)
+        {
+            Surface &surf = pWing->surface(jsurf);
+            threads.push_back(std::thread(&Surface::makeSideNodes, std::ref(surf), std::ref(pTranslatedFuse)));
+        }
     }
+
+    for(unsigned int i=0; i<threads.size(); i++)
+    {
+        threads[i].join();
+    }
+
+
     if(pTranslatedFuse) delete pTranslatedFuse;
 }
 
@@ -910,6 +922,7 @@ void PlaneXfl::swapIndexes(int k, int l)
 void PlaneXfl::makePlane(bool bThickSurfaces, bool bIgnoreFusePanels, bool bMakeTriMesh)
 {
     // start with the fuse, needed to construct surfaces
+
     for(int ifuse=0; ifuse<nFuse(); ifuse++)
     {
         Fuse *pFuse = fuse(ifuse);

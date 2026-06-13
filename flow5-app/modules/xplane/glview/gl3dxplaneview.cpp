@@ -2186,7 +2186,13 @@ void gl3dXPlaneView::glMake3dObjects()
                     for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
                     {
                         WingXfl *pWing = pPlaneXfl->wing(iw);
+//auto t0 = std::chrono::high_resolution_clock::now();
                         pWing->makeTriangulation(pTranslatedFuse, W3dPrefs::s_iChordwiseRes);
+
+/*auto t1 = std::chrono::high_resolution_clock::now();
+int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
+std::cout << pWing->name()<< std::format(":... done in {:g} ms", double(duration)/1000.0) <<std::endl;*/
+
                         gl::makeTriangles3Vtx(pWing->triangulation().triangles(), false, m_pglXPlaneBuffers->m_vboWingSurface[iw]);
                         gl::makeSegments(pWing->outline(), Vector3d(), m_pglXPlaneBuffers->m_vboWingOutline[iw]);
                     }

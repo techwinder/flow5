@@ -4698,7 +4698,6 @@ Plane *XPlane::setPlane(Plane* pPlane)
         }
     }
 
-
     m_pgl3dXPlaneView->s_bResetglGeom = true;
     m_pgl3dXPlaneView->resetglMesh();
     m_pgl3dXPlaneView->s_bResetglWake = true;
@@ -4743,7 +4742,6 @@ Plane *XPlane::setPlane(Plane* pPlane)
         return nullptr;
     }
 
-
     if(!m_pCurPlane->isInitialized())
     {
         QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -4752,6 +4750,7 @@ Plane *XPlane::setPlane(Plane* pPlane)
         m_pCurPlane->makePlane(true, false, false); // trimesh depends on the polar
 
         Objects3d::makePlaneTriangulation(m_pCurPlane);
+
         m_pgl3dXPlaneView->s_bResetglGeom = true;
         m_pgl3dXPlaneView->resetglMesh();
         m_pgl3dXPlaneView->s_bResetglWake = true;

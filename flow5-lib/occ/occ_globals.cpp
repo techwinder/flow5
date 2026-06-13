@@ -1,8 +1,8 @@
 /****************************************************************************
 
     flow5 application
-    Copyright (C) 2025 André Deperrois 
-    
+    Copyright (C) 2025 André Deperrois
+
     This file is part of flow5.
 
     flow5 is free software: you can redistribute it and/or modify it
@@ -285,7 +285,7 @@ void occ::listShapeProperties(TopoDS_Shape const &shape, std::string &props, std
 
     props = properties;
 
-//    double Xmin(LARGEVALUE), Ymin(LARGEVALUE), Zmin(LARGEVALUE), Xmax(-LARGEVALUE), Ymax(-LARGEVALUE), Zmax(-LARGEVALUE);
+    //    double Xmin(LARGEVALUE), Ymin(LARGEVALUE), Zmin(LARGEVALUE), Xmax(-LARGEVALUE), Ymax(-LARGEVALUE), Zmax(-LARGEVALUE);
     Vector3d BRL, TFR;
     occ::shapeBoundingBox(shape, BRL, TFR, false);
     logmsg = prefix + "Bounding box:\n";
@@ -303,7 +303,7 @@ void occ::listShapeProperties(TopoDS_Shape const &shape, std::string &props, std
 void occ::checkShape(TopoDS_Shape const &shape, std::string & logmsg, std::string const & prefix)
 {
     logmsg.clear();
-/*    logmsg += prefix + std::string("Shape status:\n");
+    /*    logmsg += prefix + std::string("Shape status:\n");
     logmsg += prefix + std::string("   checked:  ") + (shape.Checked()  ? "true" : "false") + std::string("\n");
     logmsg += prefix + std::string("   closed:   ") + (shape.Closed()   ? "true" : "false") + std::string("\n");
     logmsg += prefix + std::string("   convex:   ") + (shape.Convex()   ? "true" : "false") + std::string("\n");
@@ -528,8 +528,8 @@ void occ::makeFaceTriMesh(TopoDS_Face const &face, std::vector<Triangle3d> &tria
     std::vector<Segment3d> PSLG3d;
 
     // make a Quad3d from the TopoDS_Face
-//    BRepAdaptor_Surface surfaceadaptor(face);
-//    GeomAdaptor_Surface aGAS = surfaceadaptor.Surface();
+    //    BRepAdaptor_Surface surfaceadaptor(face);
+    //    GeomAdaptor_Surface aGAS = surfaceadaptor.Surface();
 
     // make a PSLG from the edges
     TopExp_Explorer facexplorer;
@@ -599,8 +599,8 @@ void occ::findWires(const TopoDS_Shape &theshape, TopoDS_Wire &theOuterWire, NCo
         nClosed++;
     }
     (void)nClosed;
-//    strange = std::format("   Includes {:d} closed wires\n", nClosed);
-//    logmsg += prefix + strange;
+    //    strange = std::format("   Includes {:d} closed wires\n", nClosed);
+    //    logmsg += prefix + strange;
 
     const TopoDS_Compound& openwires = shapeAnalyzer.GetOpenWires();
     int nOpen=0;
@@ -610,8 +610,8 @@ void occ::findWires(const TopoDS_Shape &theshape, TopoDS_Wire &theOuterWire, NCo
         nOpen++;
     }
     (void)nOpen;
-//    strange = std::format("   Includes {:d} open wires\n", nOpen);
-//    logmsg += prefix + strange;
+    //    strange = std::format("   Includes {:d} open wires\n", nOpen);
+    //    logmsg += prefix + strange;
 }
 
 
@@ -692,7 +692,7 @@ void occ::makeEdgeUniformSplitList(TopoDS_Face const &Face, TopoDS_Edge const &E
     double length = occ::edgeLength(Edge);
     int nSegs = std::max(1, int(std::round(length/maxlength)));
 
-/*    if(nSegs==1)
+    /*    if(nSegs==1)
     {
         uval.append({1.0e-5, 0.99999});
         return;
@@ -733,7 +733,7 @@ void occ::makeEdgeUniformSplitList(TopoDS_Face const &Face, TopoDS_Edge const &E
         std::cout << ("unknown error making EdgeUniformSplitList\n");
     }
 
-//    if(nSegs==1) qDebug("makeEdgeUniformSplitList  {:11g}  {:11g}  {:11g}", uval.at(0), uval.at(1), Precision::Confusion());
+    //    if(nSegs==1) qDebug("makeEdgeUniformSplitList  {:11g}  {:11g}  {:11g}", uval.at(0), uval.at(1), Precision::Confusion());
 
 }
 
@@ -779,7 +779,7 @@ void occ::makeEdgeUniformSplitList(TopoDS_Edge const &Edge, double maxlength, st
         std::cout << ("unknown error making EdgeUniformSplitList\n");
     }
 
-//    if(nSegs==1) qDebug("makeEdgeUniformSplitList  {:11g}  {:11g}  {:11g}", uval.at(0), uval.at(1), Precision::Confusion());
+    //    if(nSegs==1) qDebug("makeEdgeUniformSplitList  {:11g}  {:11g}  {:11g}", uval.at(0), uval.at(1), Precision::Confusion());
 
 }
 
@@ -844,7 +844,7 @@ void occ::makeEdgeSplitList(TopoDS_Edge const &Edge, double maxlength, double ma
             length = std::max(length, dl);
             if(length>maxlength) break; // another loop iteration is required
 
-/*            double h = distanceToLine3d(V0, V1, V12);
+            /*            double h = distanceToLine3d(V0, V1, V12);
             deflection = std::max(deflection, h);
             if(deflection>maxdeflection) break; // another loop iteration is required*/
         }
@@ -859,7 +859,7 @@ void occ::makeEdgeSplitList(TopoDS_Edge const &Edge, double maxlength, double ma
     for(unsigned int i=0; i<uval.size(); i++)
     {
         uval[i] = (uval.at(i)-u0)/range;
-//        hCurve->D0(uval.at(i), P0);
+        //        hCurve->D0(uval.at(i), P0);
     }
 }
 
@@ -930,7 +930,7 @@ double occ::wireLength(TopoDS_Wire const &wire)
 /** calculates measures of the Face's geometric length
  * in the parametric u and v directions */
 void occ::faceAverageSize(TopoDS_Face const &face,
-                     double &ulength, double &vlength, double &uRange, double &vRange)
+                          double &ulength, double &vlength, double &uRange, double &vRange)
 {
     int NMEASURES = 5;
 
@@ -972,7 +972,7 @@ void occ::faceAverageSize(TopoDS_Face const &face,
             urowlength += pnts[iu*NMEASURES+jv].Distance(pnts[(iu+1)*NMEASURES+jv]);
         }
         ulength += urowlength;
-//        ulength = std::max(ulength, urowlength);
+        //        ulength = std::max(ulength, urowlength);
     }
     ulength *=1.0/double(NMEASURES);
 
@@ -985,7 +985,7 @@ void occ::faceAverageSize(TopoDS_Face const &face,
             vcollength += pnts[iu*NMEASURES+jv].Distance(pnts[iu*NMEASURES+jv+1]);
         }
         vlength += vcollength;
-//        vlength = std::max(vlength, vcollength);
+        //        vlength = std::max(vlength, vcollength);
     }
     vlength *=1.0/double(NMEASURES);
 }
@@ -1023,7 +1023,7 @@ void occ::stitchFaces(double stitchprecision, TopoDS_Shape &theshape, TopoDS_She
     logmsg += std::format("   Nb of free edges={:d}\n", stitcher.NbFreeEdges());
     logmsg += std::format("   Nb of contiguous edges={:d}\n", stitcher.NbContigousEdges());
 
-/*    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
+    /*    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
     After a successful sewing operation all faces have a coherent orientation.*/
 
     try
@@ -1065,7 +1065,7 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
         logmsg += "No wing to process\n";
         return;
     }
-//    logmsg.clear();
+    //    logmsg.clear();
     std::string strong = "Processing wing "+ pWing->name() + "\n";
     logmsg += strong;
 
@@ -1109,8 +1109,8 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
             else
             {
                 TopoDS_Face theLeftTipPatch = FaceMaker.Face();
-//                logmsg += "     TIP LEFT SHAPE IS type "+shapeType(theLeftTipPatch) +"\n");
-//                FaceList.Append(theLeftTipPatch);
+                //                logmsg += "     TIP LEFT SHAPE IS type "+shapeType(theLeftTipPatch) +"\n");
+                //                FaceList.Append(theLeftTipPatch);
                 try
                 {
                     stitcher.Add(theLeftTipPatch);
@@ -1136,7 +1136,7 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
                     logmsg += "   Some other error\n";
                 }
 
-//                logmsg += "     Added LEFT TIP PATCH\n");
+                //                logmsg += "     Added LEFT TIP PATCH\n");
             }
         }
         if(surf.isTipRight())
@@ -1165,10 +1165,10 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
             else
             {
                 TopoDS_Face theRightTipPatch = FaceMaker.Face();
-//                logmsg += "   TIP RIGHT SHAPE IS "+shapeType(theRightTipPatch) +"\n");
-//                FaceList.Append(theRightTipPatch);
+                //                logmsg += "   TIP RIGHT SHAPE IS "+shapeType(theRightTipPatch) +"\n");
+                //                FaceList.Append(theRightTipPatch);
                 stitcher.Add(theRightTipPatch);
-//                logmsg += "   Added RIGHT TIP PATCH\n");
+                //                logmsg += "   Added RIGHT TIP PATCH\n");
             }
         }
 
@@ -1204,7 +1204,7 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
         }
 
         TopoDS_Shape TopShape = TopSweeper.Shape();
-//        logmsg += "     Top surface has type " + shapeType(TopShape) + "\n");
+        //        logmsg += "     Top surface has type " + shapeType(TopShape) + "\n");
 
         TopExp_Explorer shapeExplorer;
         for (shapeExplorer.Init(TopShape, TopAbs_FACE); shapeExplorer.More(); shapeExplorer.Next())
@@ -1237,7 +1237,7 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
         }
 
         TopoDS_Shape BotShape = BotSweeper.Shape();
-//        logmsg += "     BOT surface has type " + shapeType(BotShape) + "\n");
+        //        logmsg += "     BOT surface has type " + shapeType(BotShape) + "\n");
 
         for (shapeExplorer.Init(BotShape, TopAbs_FACE); shapeExplorer.More(); shapeExplorer.Next())
         {
@@ -1251,8 +1251,8 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
     logmsg += std::format("   Nb of free edges={:d}\n", stitcher.NbFreeEdges());
     logmsg += std::format("   Nb of contiguous edges={:d}\n", stitcher.NbContigousEdges());
 
-//    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
-//    After a successful sewing operation all faces have a coherent orientation.
+    //    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
+    //    After a successful sewing operation all faces have a coherent orientation.
 
     try
     {
@@ -1271,7 +1271,7 @@ void occ::makeWingShape(WingXfl const *pWing, double stitchprecision, TopoDS_Sha
                 return;
             }
             wingshape = solidMaker.Shape();
-//            wingshape = TopoDS::Shell(sewedshape);
+            //            wingshape = TopoDS::Shell(sewedshape);
 
             logmsg += "   Wing stitching result is " + occ::shapeType(wingshape) + "\n";
 
@@ -1294,10 +1294,9 @@ bool occ::makeFoilWires(Surface const &aSurf,
 {
     int nPoints = int(aSurf.xDistribA().size());
     std::vector<Node> PtA_T(nPoints),  PtA_B(nPoints), PtB_T(nPoints), PtB_B(nPoints);
-    std::vector<Vector3d> NA(nPoints), NB(nPoints);
 
-    aSurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtA_T, PtB_T, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
-    aSurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtA_B, PtB_B, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
+    aSurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtA_T, PtB_T, aSurf.xDistribA(), aSurf.xDistribB());
+    aSurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtA_B, PtB_B, aSurf.xDistribA(), aSurf.xDistribB());
 
     // LEFT FOIL
     //TOP Wire
@@ -1365,9 +1364,8 @@ bool occ::makeFoilMidWires(Surface const &aSurf,TopoDS_Wire & LeftWire, TopoDS_W
 {
     int nPoints = int(aSurf.xDistribA().size());
     std::vector<Node> PtA(nPoints), PtB(nPoints);
-    std::vector<Vector3d> NA(nPoints), NB(nPoints);
 
-    aSurf.getSidePoints(xfl::MIDSURFACE, nullptr, PtA, PtB, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
+    aSurf.getSidePoints(xfl::MIDSURFACE, nullptr, PtA, PtB, aSurf.xDistribA(), aSurf.xDistribB());
 
     // LEFT FOIL
     if(!makePolyLineWire(PtA, LeftWire, logmsg))
@@ -1443,7 +1441,7 @@ bool occ::makePolyLineWire(std::vector<Node> const &nd, TopoDS_Wire &theWire, st
 bool occ::makeSplineWire(BSpline3d const &spline, TopoDS_Wire &wire, std::string &logmsg)
 {
     Handle(Geom_BSplineCurve) thespline;
-//    if(!makeOCCSplineFromPoints(spline.controlPoints(), thespline, logmsg))
+    //    if(!makeOCCSplineFromPoints(spline.controlPoints(), thespline, logmsg))
     if(!occ::makeOCCSplineFromBSpline3d(spline, thespline, logmsg))
     {
         return false;
@@ -1487,7 +1485,6 @@ void occ::makeSurfaceWires(WingXfl const *pWing, double scalefactor, NCollection
 {
     TopoDS_Wire TLWire, BLWire;
     std::vector<Node> PtA_T, PtA_B, PtB_T, PtB_B;
-    std::vector<Vector3d> NA, NB;
 
     // make leading and trailing edges
     BRepBuilderAPI_MakePolygon LETEPolyMaker;
@@ -1533,11 +1530,9 @@ void occ::makeSurfaceWires(WingXfl const *pWing, double scalefactor, NCollection
         PtB_T.resize(nPoints);
         PtA_B.resize(nPoints);
         PtB_B.resize(nPoints);
-        NA.resize(nPoints);
-        NB.resize(nPoints);
 
-        aSurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtA_T, PtB_T, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
-        aSurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtA_B, PtB_B, NA, NB, aSurf.xDistribA(), aSurf.xDistribB());
+        aSurf.getSidePoints(xfl::TOPSURFACE, nullptr, PtA_T, PtB_T, aSurf.xDistribA(), aSurf.xDistribB());
+        aSurf.getSidePoints(xfl::BOTSURFACE, nullptr, PtA_B, PtB_B, aSurf.xDistribA(), aSurf.xDistribB());
 
         // LEFT FOIL
         //TOP Wire
@@ -1676,7 +1671,7 @@ void occ::makeFaceRuledTriangulation(TopoDS_Face const &face, std::vector<Vector
         u0 = umin+double(i-1)*du;
         u1 = umin+double(i)  *du;
         if(u0<=umin) u0=umin+PRECISION;
-//        if(u1>=umax) v1=umax-PRECISION;
+        //        if(u1>=umax) v1=umax-PRECISION;
         pt00 = aGAS.Value(u0,v0);
         pt10 = aGAS.Value(u1,v0);
 
@@ -1911,15 +1906,15 @@ bool occ::importSTEP(const std::string &filename, NCollection_List<TopoDS_Shape>
     std::string strange;
 
     logg.clear();
-//    logmsg += "   Assuming file length unit is mm - scale the model and re-tessellate if necessary\n";
+    //    logmsg += "   Assuming file length unit is mm - scale the model and re-tessellate if necessary\n";
 
-//    TCollection_AsciiString  aFilePath = std::string::fromStdString(filename).toUtf8().data();
+    //    TCollection_AsciiString  aFilePath = std::string::fromStdString(filename).toUtf8().data();
     TCollection_AsciiString  aFilePath = filename.c_str();
     STEPControl_Reader aReader;
     Interface_Static::SetCVal("xstep.cascade.unit", "M"); // because flow5 works in metres and OpenCascade in millimetres
-//    std::cout    <<"importSTEP xstep.cascade.unit IVAL "<<Interface_Static::IVal("xstep.cascade.unit") << std::endl;
-//    std::cout    <<"importSTEP xstep.cascade.unit CVAL "<<Interface_Static::CVal("xstep.cascade.unit") << std::endl;
-//    std::cout    <<"importSTEP xstep.cascade.unit RVAL "<<Interface_Static::RVal("xstep.cascade.unit") << std::endl;
+    //    std::cout    <<"importSTEP xstep.cascade.unit IVAL "<<Interface_Static::IVal("xstep.cascade.unit") << std::endl;
+    //    std::cout    <<"importSTEP xstep.cascade.unit CVAL "<<Interface_Static::CVal("xstep.cascade.unit") << std::endl;
+    //    std::cout    <<"importSTEP xstep.cascade.unit RVAL "<<Interface_Static::RVal("xstep.cascade.unit") << std::endl;
 
     IFSelect_ReturnStatus status = aReader.ReadFile(aFilePath.ToCString());
     NCollection_Sequence<TCollection_AsciiString> theUnitLengthNames;
@@ -1931,10 +1926,10 @@ bool occ::importSTEP(const std::string &filename, NCollection_List<TopoDS_Shape>
         aReader.FileUnits(theUnitLengthNames, theUnitAngleNames, theUnitSolidAngleNames);
 
         // Unit in which the file was written does not seem to matter: OCC converts the shapes to meters.
-//        NCollection_Sequence<TCollection_AsciiString>::Iterator iter(theUnitLengthNames);
-//        for (; iter.More(); iter.Next())
-//            std::cout << "TheStepUnits: " << iter.Value().ToCString() <<std::endl;
-//        std::cout << "Length unit factor from file = " << aReader.SystemLengthUnit() << std::endl;
+        //        NCollection_Sequence<TCollection_AsciiString>::Iterator iter(theUnitLengthNames);
+        //        for (; iter.More(); iter.Next())
+        //            std::cout << "TheStepUnits: " << iter.Value().ToCString() <<std::endl;
+        //        std::cout << "Length unit factor from file = " << aReader.SystemLengthUnit() << std::endl;
 
 
         Handle(StepData_StepModel)  stepmodel = aReader.StepModel();
@@ -1943,7 +1938,7 @@ bool occ::importSTEP(const std::string &filename, NCollection_List<TopoDS_Shape>
             logg += "   Unknown error importing STEP model\n";
             return false;
         }
-//        std::cout << "STEP model unit" << stepmodel->LocalLengthUnit() << std::endl;
+        //        std::cout << "STEP model unit" << stepmodel->LocalLengthUnit() << std::endl;
 
         int nbr = aReader.NbRootsForTransfer();
         std::string strong;
@@ -1995,7 +1990,7 @@ bool occ::importSTEP(const std::string &filename, NCollection_List<TopoDS_Shape>
 
         double unit = Units::mtoUnit();
         strong  =             "Bounding box limits of imported SHAPEs:\n"
-              "                    x           y           z\n";
+                 "                    x           y           z\n";
         strong += std::format("   botleft = {:11g} {:11g} {:11g} ", BRL.x*unit, BRL.y*unit, BRL.z*unit) + Units::lengthUnitLabel() + EOLstr;
         strong += std::format("   topright= {:11g} {:11g} {:11g} ", TFR.x*unit, TFR.y*unit, TFR.z*unit) + Units::lengthUnitLabel() + EOLstr;
 
@@ -2007,7 +2002,7 @@ bool occ::importSTEP(const std::string &filename, NCollection_List<TopoDS_Shape>
 
         strong = std::format("   Setting reference length for SHAPEs = {:7.2f} meters\n\n", dimension);
         logg += strong;
-/*        Handle(ShapeFix_Shell) SFS = new ShapeFix_Shell();
+        /*        Handle(ShapeFix_Shell) SFS = new ShapeFix_Shell();
         for(NCollection_List<TopoDS_Shape>::Iterator bodyIt(occbody.m_Shell); bodyIt.More(); bodyIt.Next())
         {
             TopoDS_Shell aShell = TopoDS::Shell(bodyIt.Value());
@@ -2109,7 +2104,7 @@ bool occ::intersectShape(TopoDS_Shape const &aShape, Segment3d const &seg, Vecto
     for(shapeexplorer.Init(aShape, TopAbs_FACE); shapeexplorer.More(); shapeexplorer.Next())
     {
         TopoDS_Face const &aFace = TopoDS::Face(shapeexplorer.Current());
-//        IntCurvesFace_Intersector intersector(aFace, Precision::Confusion());
+        //        IntCurvesFace_Intersector intersector(aFace, Precision::Confusion());
         IntCurvesFace_Intersector intersector(aFace, Precision::Confusion(), false);
 
         intersector.Perform(gpline, -100, 100);
@@ -2143,7 +2138,7 @@ void occ::intersectShape(TopoDS_Shape const &aShape, std::vector<Segment3d> cons
     IntCurvesFace_ShapeIntersector intersector;
     I.resize(segs.size());
     bIntersect.resize(segs.size());
-//    Geom_Line line(gpline);
+    //    Geom_Line line(gpline);
     TopExp_Explorer shapeexplorer;
     for(shapeexplorer.Init(aShape,TopAbs_FACE); shapeexplorer.More(); shapeexplorer.Next())
     {
@@ -2186,7 +2181,7 @@ bool occ::makeEquiTriangle(TopoDS_Face const &aFace, Segment3d const &baseseg, d
 
     // remove the boundaries;  in case the projection falls outside,
     // this prevents OCC from returning an invalid solution with u=umin or umax
-/*    umin += 1.e-6;    umax -=1.e-6; */
+    /*    umin += 1.e-6;    umax -=1.e-6; */
 
     Handle(Geom_Surface) aSurface = BRep_Tool::Surface(aFace);
     GeomAPI_ProjectPointOnSurf projector;
@@ -2202,7 +2197,7 @@ bool occ::makeEquiTriangle(TopoDS_Face const &aFace, Segment3d const &baseseg, d
         gp_Pnt P3(V3.x, V3.y, V3.z);
 
         try {
-//            projector.Init(P3, aSurface, umin, umax, vmin, vmax, Extrema_ExtAlgo::Extrema_ExtAlgo_Grad);
+            //            projector.Init(P3, aSurface, umin, umax, vmin, vmax, Extrema_ExtAlgo::Extrema_ExtAlgo_Grad);
             projector.Init(P3, aSurface);
 
             if(!projector.IsDone())
@@ -2221,7 +2216,7 @@ bool occ::makeEquiTriangle(TopoDS_Face const &aFace, Segment3d const &baseseg, d
             }
             npts = projector.NbPoints();
             nearest = projector.NearestPoint();
-/*            double drel = P3.Distance(nearest)/maxedgelength;
+            /*            double drel = P3.Distance(nearest)/maxedgelength;
             if(drel>0.1)
             {
                 // large curvature, reduce the height and try again
@@ -2391,7 +2386,7 @@ bool occ::makeXflNurbsfromOccNurbs(Handle(Geom_BSplineSurface) occnurbs, NURBSSu
         }
     }
 
-/*    for(int ifr=0; ifr<xflnurbs.frameCount(); ifr++)
+    /*    for(int ifr=0; ifr<xflnurbs.frameCount(); ifr++)
     {
         Frame &fr = xflnurbs.frame(ifr);
         for(int ic=0; ic<xflnurbs.framePointCount(); ic++)
@@ -2417,7 +2412,7 @@ bool occ::makeOCCSplineFromPoints(std::vector<Vector3d> const &pointlist, Handle
     try
     {
         theSpline = splineMaker.Curve();
-/*        qDebug()<<"theSpline"<<theSpline->Degree()<<theSpline->Continuity()<<theSpline->IsRational();
+        /*        qDebug()<<"theSpline"<<theSpline->Degree()<<theSpline->Continuity()<<theSpline->IsRational();
         qDebug()<<"   knots"<<theSpline->Knots().Lower()<<theSpline->Knots().Upper();
         for(int i=theSpline->Knots().Lower(); i<=theSpline->Knots().Upper(); i++)
             qDebug()<<"       "<<theSpline->Knot(i)<<theSpline->Multiplicity(i);
@@ -2467,11 +2462,11 @@ bool occ::makeOCCSplineFromBSpline3d_0(BSpline3d const &b3d, Handle(Geom_BSpline
     try
     {
         hspline = new Geom_BSplineCurve(poles, weights, knots, mults, p);
-//        qDebug()<<"theSpline"<<hspline->Degree()<<hspline->Continuity()<<hspline->IsRational();
-//        qDebug()<<"   knots"<<hspline->Knots().Lower()<<hspline->Knots().Upper();
-//        for(int i=hspline->Knots().Lower(); i<=hspline->Knots().Upper(); i++)
-//            qDebug()<<"       "<<hspline->Knot(i)<<hspline->Multiplicity(i);
-//        qDebug()<<"_____";
+        //        qDebug()<<"theSpline"<<hspline->Degree()<<hspline->Continuity()<<hspline->IsRational();
+        //        qDebug()<<"   knots"<<hspline->Knots().Lower()<<hspline->Knots().Upper();
+        //        for(int i=hspline->Knots().Lower(); i<=hspline->Knots().Upper(); i++)
+        //            qDebug()<<"       "<<hspline->Knot(i)<<hspline->Multiplicity(i);
+        //        qDebug()<<"_____";
     }
     catch (Standard_ConstructionError const &e)
     {
@@ -2530,7 +2525,7 @@ bool occ::makeOCCSplineFromBSpline3d(BSpline3d const &b3d, Handle(Geom_BSplineCu
     try
     {
         hspline = new Geom_BSplineCurve(poles, weights, knots, mults, b3d.degree());
-/*        qDebug()<<"theSpline"<<hspline->Degree()<<hspline->Continuity()<<hspline->IsRational();
+        /*        qDebug()<<"theSpline"<<hspline->Degree()<<hspline->Continuity()<<hspline->IsRational();
         qDebug()<<"   knots"<<hspline->Knots().Lower()<<hspline->Knots().Upper();
         for(int i=hspline->Knots().Lower(); i<=hspline->Knots().Upper(); i++)
             qDebug()<<"       "<<hspline->Knot(i)<<hspline->Multiplicity(i);
@@ -2766,7 +2761,7 @@ void occ::scaleShape(TopoDS_Shape &shape, double scalefactor)
     BRepBuilderAPI_Transform thescaler(Scale);
 
     thescaler.Perform(shape, true);
-//    shape = thescaler.Shape();
+    //    shape = thescaler.Shape();
 }
 
 
@@ -2792,7 +2787,7 @@ void occ::rotateShape(TopoDS_Shape &shape, Vector3d const &O, Vector3d const &ax
     BRepBuilderAPI_Transform theRotation(Rot);
 
     theRotation.Perform(shape, true);
-//    shape = theRotation.Shape();
+    //    shape = theRotation.Shape();
 }
 
 
@@ -2841,7 +2836,7 @@ bool occ::makeWing2NurbsShape(WingXfl const *pWing, double stitchprecision, int 
             WireMaker.Add(TopWire);
             WireMaker.Add(BotWire);
 
-/*            Handle(Geom_BSplineCurve) HTopCurve, HBotCurve;
+            /*            Handle(Geom_BSplineCurve) HTopCurve, HBotCurve;
             surf.makeSectionSplines(true,  true, HTopCurve);
             surf.makeSectionSplines(false, true, HBotCurve);
 qDebug()<<"occspliness"<<HBotCurve->Degree()<<HBotCurve->NbPoles()<<HTopCurve->Degree()<<HTopCurve->NbPoles();
@@ -2975,7 +2970,7 @@ qDebug()<<"occspliness"<<HBotCurve->Degree()<<HBotCurve->NbPoles()<<HTopCurve->D
 
             if(iside==0) NURBSface.Reverse();
             stitcher.Add(NURBSface);
-/*
+            /*
 
 Surface::s_DebugPts.clear();
 Surface::s_DebugVecs.clear();
@@ -3007,8 +3002,8 @@ for(int iu=1; iu<3; iu++)
     logg += std::format("   Nb of contiguous edges = {:d}\n", stitcher.NbContigousEdges());
     logg += std::format("   Nb of multiple edges   = {:d}\n", stitcher.NbMultipleEdges());
 
-//    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
-//    After a successful sewing operation all faces have a coherent orientation.
+    //    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
+    //    After a successful sewing operation all faces have a coherent orientation.
 
     try
     {
@@ -3034,7 +3029,7 @@ for(int iu=1; iu<3; iu++)
             logg += strange +"\n";
 
             checkShape(wingshape, str, "   ");
-/*            BRepCheck_Analyzer ShapeAnalyzer(wingshape);
+            /*            BRepCheck_Analyzer ShapeAnalyzer(wingshape);
             if(ShapeAnalyzer.IsValid()) logmsg += "   Shape topology is VALID\n\n";
             else                        logmsg += "   Shape topology is NOT VALID\n";*/
         }
@@ -3081,7 +3076,7 @@ bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int 
         Surface const &surf = pWing->surfaceAt(iSurf);
 
         if(!surf.makeSectionHalfSpline(xfl::TOPSURFACE,  true, degree, nCtrlPoints, nOutPoints, b3dtopleft) ||
-           !makeSplineWire(b3dtopleft, TopLeftWire, str))
+            !makeSplineWire(b3dtopleft, TopLeftWire, str))
         {
             logg += str;
             logg += std::format("   Error making top left spline of surface {:d}", iSurf);
@@ -3089,7 +3084,7 @@ bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int 
         }
 
         if(!surf.makeSectionHalfSpline(xfl::BOTSURFACE, true, degree, nCtrlPoints, nOutPoints, b3dbotleft) ||
-           !makeSplineWire(b3dbotleft, BotLeftWire, str))
+            !makeSplineWire(b3dbotleft, BotLeftWire, str))
         {
             logg += str;
             logg += std::format("   Error making bottom left spline of surface {:d}", iSurf);
@@ -3097,7 +3092,7 @@ bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int 
         }
 
         if(!surf.makeSectionHalfSpline(xfl::TOPSURFACE,  false, degree, nCtrlPoints, nOutPoints, b3dtopright) ||
-           !makeSplineWire(b3dtopright, TopRightWire, str))
+            !makeSplineWire(b3dtopright, TopRightWire, str))
         {
             logg += str;
             logg += std::format("   Error making top right spline of surface {:d}", iSurf);
@@ -3105,7 +3100,7 @@ bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int 
         }
 
         if(!surf.makeSectionHalfSpline(xfl::BOTSURFACE, false, degree, nCtrlPoints, nOutPoints, b3dbotright) ||
-           !makeSplineWire(b3dbotright, BotRightWire, str))
+            !makeSplineWire(b3dbotright, BotRightWire, str))
         {
             logg += str;
             logg += std::format("   Error making bottom right spline of surface {:d}", iSurf);
@@ -3174,8 +3169,8 @@ bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int 
 
         // Top sweep
         BRepOffsetAPI_ThruSections TopSweeper(false, true);
-//        qDebug()<<"topsweeeper"<<TopSweeper.ParType()<<TopSweeper.MaxDegree()<<TopSweeper.UseSmoothing()<<TopSweeper.Continuity();
-/*        TopSweeper.CheckCompatibility(true);
+        //        qDebug()<<"topsweeeper"<<TopSweeper.ParType()<<TopSweeper.MaxDegree()<<TopSweeper.UseSmoothing()<<TopSweeper.Continuity();
+        /*        TopSweeper.CheckCompatibility(true);
         TopSweeper.SetSmoothing(false);
         TopSweeper.SetParType(Approx_IsoParametric);
         TopSweeper.SetContinuity(GeomAbs_C0); */
@@ -3189,8 +3184,8 @@ bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int 
 
         try
         {
-//            TopSweeper.Build(); // does nothing according to OCC doc
-//            BotSweeper.Build(); // does nothing according to OCC doc
+            //            TopSweeper.Build(); // does nothing according to OCC doc
+            //            BotSweeper.Build(); // does nothing according to OCC doc
             TopoDS_Shape TopSweptShape = TopSweeper.Shape(); // calls Build according to OCC doc
             TopoDS_Shape BotSweptShape = BotSweeper.Shape();
             stitcher.Add(TopSweptShape);
@@ -3215,8 +3210,8 @@ bool occ::makeWingSplineSweep(WingXfl const *pWing, double stitchprecision, int 
     // stitch
     stitcher.Perform();
 
-//    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
-//    After a successful sewing operation all faces have a coherent orientation.
+    //    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
+    //    After a successful sewing operation all faces have a coherent orientation.
 
     try
     {
@@ -3266,7 +3261,7 @@ bool occ::makeWingSweepMidSection(WingXfl const *pWing, TopoDS_Shape &midshape, 
 {
     // Sweep the mid section
     BRepOffsetAPI_ThruSections Sweeper(false, false, 1.0e-4);
-/*        Sweeper.CheckCompatibility(true);
+    /*        Sweeper.CheckCompatibility(true);
         Sweeper.SetSmoothing(false);
         Sweeper.SetParType(Approx_IsoParametric);
         Sweeper.SetContinuity(GeomAbs_C0); */
@@ -3367,7 +3362,7 @@ bool occ::makeWingSplineSweepMultiSections(WingXfl const *pWing, double stitchpr
     BRepOffsetAPI_ThruSections TopSweeper(false, false);
     BRepOffsetAPI_ThruSections BotSweeper(false, false);
 
-/*   // No effect
+    /*   // No effect
     TopSweeper.SetMaxDegree(1);
     TopSweeper.SetContinuity(GeomAbs_C0);
     TopSweeper.SetParType(Approx_IsoParametric);*/
@@ -3501,8 +3496,8 @@ bool occ::makeWingSplineSweepMultiSections(WingXfl const *pWing, double stitchpr
     logmsg += std::format("   Nb of free edges={:d}\n", stitcher.NbFreeEdges());
     logmsg += std::format("   Nb of contiguous edges={:d}\n", stitcher.NbContigousEdges());
 
-//    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
-//    After a successful sewing operation all faces have a coherent orientation.
+    //    If all faces have been sewn correctly, the result is a shell. Otherwise, it is a compound.
+    //    After a successful sewing operation all faces have a coherent orientation.
 
     try
     {
@@ -3521,7 +3516,7 @@ bool occ::makeWingSplineSweepMultiSections(WingXfl const *pWing, double stitchpr
                 return false;
             }
             wingshape = solidMaker.Shape();
-//            wingshape = TopoDS::Shell(sewedshape);
+            //            wingshape = TopoDS::Shell(sewedshape);
 
             logmsg += "   Wing stitching result is " +shapeType(wingshape) + "\n";
 
@@ -3551,9 +3546,9 @@ bool occ::makeWingSplineSweepSolid(WingXfl const *pWing, double , int degree, in
     logmsg += strange;
 
     BRepOffsetAPI_ThruSections Sweeper(true, false);
-//    Sweeper.SetMaxDegree(1);                  // No effect
-//    Sweeper.SetContinuity(GeomAbs_C0);        // No effect
-//    Sweeper.SetParType(Approx_IsoParametric); // No effect
+    //    Sweeper.SetMaxDegree(1);                  // No effect
+    //    Sweeper.SetContinuity(GeomAbs_C0);        // No effect
+    //    Sweeper.SetParType(Approx_IsoParametric); // No effect
 
     BSpline3d b3dtop, b3dbot;
 
@@ -3900,7 +3895,7 @@ void occ::shapeFixSmallEdges(TopoDS_Shape const &shape, TopoDS_Shape &result,
 
 
 void occ::shapeFixGaps(TopoDS_Shape const &shape, TopoDS_Shape &result,
-                      float precision, float mintol, float maxtol)
+                       float precision, float mintol, float maxtol)
 {
     Handle(ShapeFix_Wireframe) SFWF = new ShapeFix_Wireframe;
 

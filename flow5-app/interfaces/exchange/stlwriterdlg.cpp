@@ -413,7 +413,6 @@ void STLWriterDlg::makeSTLTriangulation(const WingXfl *pWingXfl, std::vector<Tri
     std::vector<Node> PtTopRight(CHORDPANELS+1);
     std::vector<Node> PtBotLeft(CHORDPANELS+1);
     std::vector<Node> PtBotRight(CHORDPANELS+1);
-    std::vector<Vector3d> NA(CHORDPANELS+1), NB(CHORDPANELS+1);
     std::vector<double> xdistrib;
     xfl::getPointDistribution(xdistrib, CHORDPANELS, xfl::COSINE); // ensures good resolution at LE and TE
 
@@ -425,11 +424,11 @@ void STLWriterDlg::makeSTLTriangulation(const WingXfl *pWingXfl, std::vector<Tri
 
         for(int is=0; is<SPANPANELS; is++)
         {
-            surf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, NA, NB, xdistrib, xdistrib);
+            surf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, xdistrib, xdistrib);
             for(uint ip=0; ip<PtTopLeft.size(); ip++) PtTopLeft[ip] *=scalefactor;
             for(uint ip=0; ip<PtTopLeft.size(); ip++) PtTopRight[ip]*=scalefactor;
 
-            surf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, NA, NB, xdistrib, xdistrib);
+            surf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, xdistrib, xdistrib);
             for(uint ip=0; ip<PtBotLeft.size(); ip++) PtBotLeft[ip] *=scalefactor;
             for(uint ip=0; ip<PtBotLeft.size(); ip++) PtBotRight[ip]*=scalefactor;
 
@@ -499,9 +498,9 @@ void STLWriterDlg::makeSTLTriangulation(const WingXfl *pWingXfl, std::vector<Tri
         Surface const &surf = pWingXfl->surfaceAt(j);
         if(surf.isTipLeft())
         {
-            surf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, NA, NB, xdistrib, xdistrib);
+            surf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, xdistrib, xdistrib);
             for(uint ip=0; ip<PtTopLeft.size(); ip++) PtTopLeft[ip] *=scalefactor;
-            surf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, NA, NB, xdistrib, xdistrib);
+            surf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, xdistrib, xdistrib);
             for(uint ip=0; ip<PtTopLeft.size(); ip++) PtBotLeft[ip] *=scalefactor;
 
             for(int ic=0; ic<CHORDPANELS; ic++)
@@ -518,9 +517,9 @@ void STLWriterDlg::makeSTLTriangulation(const WingXfl *pWingXfl, std::vector<Tri
 
         if(surf.isTipRight())
         {
-            surf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, NA, NB, xdistrib, xdistrib);
+            surf.getSidePoints(xfl::TOPSURFACE, nullptr, PtTopLeft, PtTopRight, xdistrib, xdistrib);
             for(uint ip=0; ip<PtTopRight.size(); ip++) PtTopRight[ip]*=scalefactor;
-            surf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, NA, NB, xdistrib, xdistrib);
+            surf.getSidePoints(xfl::BOTSURFACE, nullptr, PtBotLeft, PtBotRight, xdistrib, xdistrib);
             for(uint ip=0; ip<PtBotRight.size(); ip++) PtBotRight[ip]*=scalefactor;
 
             for(int ic=0; ic<CHORDPANELS; ic++)

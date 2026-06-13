@@ -415,7 +415,7 @@ void Surface::getSideNode(double xRel, bool bRight, xfl::enumSurfacePosition pos
 /** Intersects exactly the TOPO_DS_SHELL so that wing and fuse and wing meshes connect */
 void Surface::getSidePoints(xfl::enumSurfacePosition pos,
                               const Fuse *pFuse,
-                              std::vector<Node> &PtA, std::vector<Node> &PtB, std::vector<Vector3d> &NA, std::vector<Vector3d> &NB,
+                              std::vector<Node> &PtA, std::vector<Node> &PtB,
                               std::vector<double> const &xPointsA, std::vector<double> const &xPointsB) const
 {
     assert(xPointsA.size()==xPointsB.size());
@@ -492,8 +492,8 @@ void Surface::getSidePoints(xfl::enumSurfacePosition pos,
     {
         PtA[i].set(nodeA.at(i));
         PtB[i].set(nodeB.at(i));
-        NA[i].set(nodeA.at(i).normal());
-        NB[i].set(nodeB.at(i).normal());
+        PtA[i].setNormal(nodeA.at(i).normal());
+        PtB[i].setNormal(nodeB.at(i).normal());
     }
 }
 
@@ -662,7 +662,7 @@ void Surface::setFlap()
  * Creates the master points of the mesh on the left and right ends.
  * @param pTranslatedFuse a pointer to the Fuse object, or NULL if none.
  */
-void Surface::makeSideNodes(Fuse const*pTranslatedFuse, bool bDebug)
+void Surface::makeSideNodes(Fuse const*pTranslatedFuse)
 {
     Vector3d V = m_Normal * m_NormalA;
     Vector3d U = (m_TA - m_LA).normalized();
@@ -685,39 +685,11 @@ void Surface::makeSideNodes(Fuse const*pTranslatedFuse, bool bDebug)
     m_SideB_Bot.resize(m_NXPanels+1);
     m_SideB_Top.resize(m_NXPanels+1);
 
-    auto t0 = std::chrono::high_resolution_clock::now();
-    bool bMultihread = false;  // multithreading slows task down 5x
-
-    if(bMultihread)
+    // multithreading slows task down 5x - too many threads
+    // parallelized this method instead
+    for (int l=0; l<=m_NXPanels; l++)
     {
-        std::vector<std::thread> threads;
-        for (int l=0; l<=m_NXPanels; l++)
-        {
-
-//            futureSync.addFuture(QtConcurrent::run(&Surface::makeSideNodeTask, this, l, pTranslatedFuse, m_xPointA.at(l), m_xPointB.at(l)));
-            threads.push_back(std::thread(&Surface::makeSideNodeTask, this,
-                                          l, pTranslatedFuse, m_xPointA.at(l), m_xPointB.at(l), alpha_dA, alpha_dB));
-
-        }
-
-        for (int l=0; l<=m_NXPanels; l++)
-        {
-            threads[l].join();
-        }
-//        std::cout << "makeSideNodes joined all " << m_NXPanels << "threads" <<std::endl;
-    }
-    else
-    {
-        for (int l=0; l<=m_NXPanels; l++)
-        {
-            makeSideNodeTask(l, pTranslatedFuse, m_xPointA.at(l), m_xPointB.at(l), alpha_dA, alpha_dB);
-        }
-    }
-    if(bDebug)
-    {
-        auto t1 = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-        std::cout << std::format("Surface::makeSideNodes {:g} ms", double(duration)/1000.0) << std::endl;
+        makeSideNodeTask(l, pTranslatedFuse, m_xPointA.at(l), m_xPointB.at(l), alpha_dA, alpha_dB);
     }
 
     //merge trailing edge nodes in case the foil has a T.E. gap
@@ -730,13 +702,6 @@ void Surface::makeSideNodes(Fuse const*pTranslatedFuse, bool bDebug)
     Node = (m_SideB_Bot[0] + m_SideB_Top[0])/2.0;
     m_SideB_Bot[0].set(Node);
     m_SideB_Top[0].set(Node);
-
-    if(bDebug)
-    {
-        s_DebugPts.clear();
-        for(unsigned int i=0; i<m_SideA_Top.size(); i++) s_DebugPts.push_back(m_SideA_Top.at(i));
-        for(unsigned int i=0; i<m_SideA_Top.size(); i++) s_DebugPts.push_back(m_SideB_Top.at(i));
-    }
 }
 
 
@@ -1928,7 +1893,7 @@ bool Surface::makeSectionHalfSpline(xfl::enumSurfacePosition pos, bool bLeft, in
     std::vector<double> xdistrib;
     xfl::getPointDistribution(xdistrib, nOutPoints-1, xfl::COSINE); // ensures good resolution at LE and TE
 
-    getSidePoints(pos, nullptr, PtA, PtB, NA, NB, xdistrib, xdistrib);
+    getSidePoints(pos, nullptr, PtA, PtB, xdistrib, xdistrib);
 
     if(bLeft)
     {

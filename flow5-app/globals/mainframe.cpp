@@ -2317,6 +2317,7 @@ void MainFrame::onXPlane()
     {
         displayMessage("Setting planes, polars and operating points...", false);
         m_pXPlane->cancelStreamLines();
+
         m_pXPlane->setPlane();
 
         displayMessage(" done\n\n", false);

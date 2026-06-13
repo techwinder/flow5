@@ -125,7 +125,7 @@ class FL5LIB_EXPORT Surface
         void getSection(double const &tau, double &Chord, double &Area, Vector3d &PtC4) const;
         inline void getYDist(int k, double &y1, double &y2) const;
 
-        void getSidePoints(xfl::enumSurfacePosition pos, const Fuse *pFuse, std::vector<Node> &PtA, std::vector<Node> &PtB, std::vector<Vector3d> &NA, std::vector<Vector3d> &NB, const std::vector<double> &xPointsA, const std::vector<double> &xPointsB) const;
+        void getSidePoints(xfl::enumSurfacePosition pos, const Fuse *pFuse, std::vector<Node> &PtA, std::vector<Node> &PtB, const std::vector<double> &xPointsA, const std::vector<double> &xPointsB) const;
 
         void init();
         void clearQuadFlapMesh(){m_FlapNode4.clear();  m_FlapPanel4.clear();}
@@ -137,7 +137,7 @@ class FL5LIB_EXPORT Surface
         inline void setNormal();
         void setFlap();
 
-        void makeSideNodes(Fuse const *pTranslatedFuse, bool bDebug=false);
+        void makeSideNodes(Fuse const *pTranslatedFuse);
         void makeSideNodeTask(int l, Fuse const *pTranslatedFuse, double xRelA, double xRelB, double alpha_dA, double alpha_dB);
 
         void setTwist(bool bQuarterChord);
