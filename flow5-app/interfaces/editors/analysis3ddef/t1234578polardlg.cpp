@@ -415,13 +415,13 @@ void T1234578PolarDlg::setupLayout()
                 {
                     QHBoxLayout *pAlphaLayout = new QHBoxLayout;
                     {
-                        QLabel *pLabAlpha = new QLabel("<p>&alpha; =</p>");
+                        QLabel *plabAlpha = new QLabel("<p>&alpha; =</p>");
                         m_pfeAlphaSpec = new FloatEdit;
-                        QLabel *pLabDeg = new QLabel("<p>&deg;</p>");
+                        QLabel *plabDeg = new QLabel("<p>&deg;</p>");
 
-                        pAlphaLayout->addWidget(pLabAlpha, 0, Qt::AlignRight);
+                        pAlphaLayout->addWidget(plabAlpha, 0, Qt::AlignRight);
                         pAlphaLayout->addWidget(m_pfeAlphaSpec);
-                        pAlphaLayout->addWidget(pLabDeg);
+                        pAlphaLayout->addWidget(plabDeg);
                     }
                     m_pfrAlpha->setLayout(pAlphaLayout);
                 }
@@ -430,14 +430,14 @@ void T1234578PolarDlg::setupLayout()
                 {
                     QHBoxLayout *pPhiLayout = new QHBoxLayout;
                     {
-                        QLabel *pLabPhi = new QLabel(tr("<p>&phi; =</p>"));
+                        QLabel *plabPhi = new QLabel(tr("<p>&phi; =</p>"));
                         m_pfePhiSpec = new FloatEdit;
                         m_pfePhiSpec->setToolTip(tr("<p>The bank angle</p>"));
-                        QLabel *pLabDeg = new QLabel(tr("<p>&deg;</p>"));
+                        QLabel *plabDeg = new QLabel(tr("<p>&deg;</p>"));
 
-                        pPhiLayout->addWidget(pLabPhi, 0, Qt::AlignRight);
+                        pPhiLayout->addWidget(plabPhi, 0, Qt::AlignRight);
                         pPhiLayout->addWidget(m_pfePhiSpec);
-                        pPhiLayout->addWidget(pLabDeg);
+                        pPhiLayout->addWidget(plabDeg);
                     }
                     m_pfrPhi->setLayout(pPhiLayout);
                 }

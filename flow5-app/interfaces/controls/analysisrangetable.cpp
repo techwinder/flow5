@@ -78,8 +78,8 @@ AnalysisRangeTable::AnalysisRangeTable(QWidget *pParent) : CPTableView(pParent)
     m_pRangeModel->setRowCount(1);//temporary
     m_pRangeModel->setColumnCount(4);
     m_pRangeModel->setHeaderData(0, Qt::Horizontal, QString());
-    m_pRangeModel->setHeaderData(1, Qt::Horizontal, tr("Min."));
-    m_pRangeModel->setHeaderData(2, Qt::Horizontal, tr("Max."));
+    m_pRangeModel->setHeaderData(1, Qt::Horizontal, tr("Start"));
+    m_pRangeModel->setHeaderData(2, Qt::Horizontal, tr("End"));
     m_pRangeModel->setHeaderData(3, Qt::Horizontal, DELTACAPch);
     setModel(m_pRangeModel);
 

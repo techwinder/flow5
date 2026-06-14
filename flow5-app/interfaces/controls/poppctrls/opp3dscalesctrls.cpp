@@ -175,23 +175,23 @@ void Opp3dScalesCtrls::setupLayout()
                 m_pesVelocity->setTickInterval(50);
                 m_pesVelocity->setTickPosition(QSlider::TicksBelow);
 
-                QLabel *pLab1 = new QLabel(tr("Part forces:"));
-                QLabel *pLab2 = new QLabel(tr("Panel forces:"));
-                QLabel *pLab3 = new QLabel(tr("Strip lift:"));
-                QLabel *pLab4 = new QLabel(tr("Moments:"));
-                QLabel *pLab5 = new QLabel(tr("Drag:"));
-                QLabel *pLab6 = new QLabel(tr("Velocity:"));
+                QLabel *plab1 = new QLabel(tr("Forces:"));
+                QLabel *plab4 = new QLabel(tr("Moment:"));
+                QLabel *plab2 = new QLabel(tr("Panel forces:"));
+                QLabel *plab3 = new QLabel(tr("Strip lift:"));
+                QLabel *plab5 = new QLabel(tr("Drag:"));
+                QLabel *plab6 = new QLabel(tr("Velocity:"));
 
-                pScaleLayout->addWidget(pLab1,             2, 1, Qt::AlignVCenter | Qt::AlignRight);
-                pScaleLayout->addWidget(pLab2,             3, 1, Qt::AlignVCenter | Qt::AlignRight);
-                pScaleLayout->addWidget(pLab3,             4, 1, Qt::AlignVCenter | Qt::AlignRight);
-                pScaleLayout->addWidget(pLab4,             5, 1, Qt::AlignVCenter | Qt::AlignRight);
-                pScaleLayout->addWidget(pLab5,             6, 1, Qt::AlignVCenter | Qt::AlignRight);
-                pScaleLayout->addWidget(pLab6,             7, 1, Qt::AlignVCenter | Qt::AlignRight);
+                pScaleLayout->addWidget(plab1,             2, 1, Qt::AlignVCenter | Qt::AlignRight);
+                pScaleLayout->addWidget(plab4,             3, 1, Qt::AlignVCenter | Qt::AlignRight);
+                pScaleLayout->addWidget(plab2,             4, 1, Qt::AlignVCenter | Qt::AlignRight);
+                pScaleLayout->addWidget(plab3,             5, 1, Qt::AlignVCenter | Qt::AlignRight);
+                pScaleLayout->addWidget(plab5,             6, 1, Qt::AlignVCenter | Qt::AlignRight);
+                pScaleLayout->addWidget(plab6,             7, 1, Qt::AlignVCenter | Qt::AlignRight);
                 pScaleLayout->addWidget(m_pesPartForce,    2, 2);
-                pScaleLayout->addWidget(m_pesPanelForce,   3, 2);
-                pScaleLayout->addWidget(m_pesLiftScale,    4, 2);
-                pScaleLayout->addWidget(m_pesMoment,       5, 2);
+                pScaleLayout->addWidget(m_pesMoment,       3, 2);
+                pScaleLayout->addWidget(m_pesPanelForce,   4, 2);
+                pScaleLayout->addWidget(m_pesLiftScale,    5, 2);
                 pScaleLayout->addWidget(m_pesDrag,         6, 2);
                 pScaleLayout->addWidget(m_pesVelocity,     7, 2);
             }

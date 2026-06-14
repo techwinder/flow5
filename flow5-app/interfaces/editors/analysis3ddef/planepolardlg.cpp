@@ -72,7 +72,7 @@ void PlanePolarDlg::makeCommonControls()
     {
         QVBoxLayout *pInertiaPageLayout = new QVBoxLayout;
         {
-            m_pchAutoInertia = new QCheckBox(tr("Auto inertia"));
+            m_pchAutoInertia = new QCheckBox(tr("Use plane inertia"));
             QGridLayout *pInertiaDataLayout = new QGridLayout;
             {
                 pInertiaDataLayout->addWidget(new QLabel(tr("Plane mass =")), 1,1, Qt::AlignRight);
@@ -401,12 +401,15 @@ void PlanePolarDlg::makeCommonControls()
             m_pFlapDelegate->setPrecision({-1,3});
             m_pFlapTreeView->setItemDelegate(m_pFlapDelegate);
 
-            QString notes = tr("Notes:\n"
-                               "\t(1) + sign means trailing edge down\n"
-                               "\t(2) Flaps are numbered from left tip to right tip\n"
-                               "\t(3) Use in conjunction with THIN surfaces\n"
-                               "\t(4) Use in conjunction with XFoil on the fly calculations\n"
-                               "\t(5) In the case of type 7, the values are interpreted as gains (°) / ctrl unit");
+            QString notes = tr("<p>Notes:"
+                               "<ol>"
+                               "<li> + sign means trailing edge down</li>"
+                               "<li> Flaps are numbered from left tip to right tip</li>"
+                               "<li> Use in conjunction with THIN surfaces</li>"
+                               "<li> Use in conjunction with XFoil on the fly calculations</li>"
+                               "<li> In the case of type 7, the values are interpreted as gains (°) / ctrl unit</li>"
+                               "</ol>"
+                               "</p>");
             QLabel* plabNotes = new QLabel(notes);
             QLabel *pFlow5Link = new QLabel;
             pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Analysis/Flaps.html>https://flow5.tech/docs/flow5_doc/Analysis/Flaps.html</a>");

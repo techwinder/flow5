@@ -216,9 +216,8 @@ void FuseDlg::makeWidgets()
 
             m_pteDescription = new QTextEdit;
             m_pteDescription->setToolTip(tr("Enter here a short description for the fuselage"));
-
             pMetaLayout->addWidget(m_pleName,        2,1,1,3);
-            pMetaLayout->addWidget(m_pcbColor,  2,4);
+            pMetaLayout->addWidget(m_pcbColor,       2,4);
             pMetaLayout->addWidget(m_pteDescription, 3,1,2,4);
         }
         m_pMetaFrame->setLayout(pMetaLayout);

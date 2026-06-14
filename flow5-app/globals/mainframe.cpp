@@ -178,6 +178,7 @@
 #include <api/sailobjects.h>
 
 
+
 xfl::enumApp MainFrame::s_iApp=xfl::NOAPP;
 
 QString MainFrame::s_XflProjectPath;
@@ -251,29 +252,34 @@ MainFrame::MainFrame(QWidget *parent) : QMainWindow(parent)
 
     m_bManualCheck = false;
 
-    loadSettings();
-
-    updateRecentFileActions();
-
     QString strange;
+
+#ifdef QT_DEBUG
+    QString sysinfo;
+    xfl::listSysInfo(sysinfo);
+    displayMessage(sysinfo + "\n", false);
+
     QScreen const *pScreen = QGuiApplication::primaryScreen();
     strange = QString::asprintf("Screen:\n   size=(%d,%d)\n   logical dots/inch=%.2f\n   pixel ratio = %.2f\n",
                                 pScreen->size().width(), pScreen->size().height(),
                                 pScreen->logicalDotsPerInch(),
                                 pScreen->devicePixelRatio());
 #if (QT_VERSION >= QT_VERSION_CHECK(6, 2, 0))
-    strange += QString::asprintf("Paint       device pixel ratio = %g\n\n", devicePixelRatio());
-    strange += QString::asprintf("Application device pixel ratio = %g\n\n", qApp->devicePixelRatio());
+    strange += QString::asprintf("   paint       device pixel ratio = %g\n", devicePixelRatio());
+    strange += QString::asprintf("   application device pixel ratio = %g\n", qApp->devicePixelRatio());
 #else
     strange += QString::asprintf("Application device pixel ratio = %d\n\n", devicePixelRatio());
 #endif
-
     gl2dView::setImageSize(pScreen->size());
-
     displayMessage(strange + EOLch, false);
+#endif
 
-    strange = tr("Directories:") + "\n";
-    strange += tr("   Last used :       ") + SaveOptions::lastDirName() + EOLch;
+    loadSettings();
+
+    updateRecentFileActions();
+
+    strange  = tr("Directories:") + "\n";
+    strange += tr("   Last used :       ") + SaveOptions::lastDirName()       + EOLch;
     strange += tr("   Foil .dat files:  ") + SaveOptions::datFoilDirName() + EOLch;
     strange += tr("   Polar .plr files: ") + SaveOptions::plrPolarDirName() + EOLch;
     strange += tr("   Plane .xml files: ") + SaveOptions::xmlPlaneDirName() + EOLch;

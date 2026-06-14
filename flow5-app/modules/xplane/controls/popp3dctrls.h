@@ -93,6 +93,7 @@ class POpp3dCtrls : public QTabWidget
         void onShowTransitions();
         void onDownwash();
         void onPartForces();
+        void onTotalForce();
         void onMoment();
         void onStreamlines(bool bStream);
         void onFlow(bool bFlow);
@@ -111,7 +112,7 @@ class POpp3dCtrls : public QTabWidget
 
         QCheckBox *m_pchGamma, *m_pchCp, *m_pchPanelForce;
         QCheckBox *m_pchStripLift, *m_pchIDrag, *m_pchVDrag, *m_pchTrans;
-        QCheckBox *m_pchPartForces;
+        QCheckBox *m_pchTotalForce, *m_pchPartForces;
         QCheckBox *m_pchMoment, *m_pchDownwash;
         QCheckBox *m_pchStream, *m_pchFlow;
         QCheckBox *m_pchWakePanels, *m_pchVortons;
@@ -129,6 +130,7 @@ class POpp3dCtrls : public QTabWidget
         bool m_bXBot;                       /**< true if the transition on the bottom surface should be displayed in the operating point or in 3D view >*/
         bool m_bLiftStrip;                  /**< true if the lift curve should be displayed in the operating point or in the 3D view >*/
         bool m_bDownwash;                   /**< true if the arrows represeting downwash are to be displayed in the 3D openGl view */
+        bool m_bTotalForce;                 /**< true if the arrow representing thje resultant force is to be displayed in the 3D openGl view */
         bool m_bPartForces;                 /**< true if the arrows representing Part Forces are to be displayed in the 3D openGl view */
         bool m_bMoments;                    /**< true if the arrows representing moments are to be displayed in the 3D openGl view */
         bool m_bStreamLines;                /**< true if the streamlines should be displayed in the operating point or 3D view*/

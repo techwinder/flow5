@@ -218,18 +218,18 @@ void xfl::listSysInfo(QString &info)
 {
     info.clear();
     QString prefix = "   ";
-    info += "System info:";
-    info += prefix + "bootUniqueId:            " + QSysInfo::bootUniqueId();
-    info += prefix + "buildAbi:                " + QSysInfo::buildAbi(); // Application Binary Interface
-    info += prefix + "buildCpuArchitecture:    " + QSysInfo::buildCpuArchitecture();
-    info += prefix + "currentCpuArchitecture:  " + QSysInfo::currentCpuArchitecture();
-    info += prefix + "kernelType:              " + QSysInfo::kernelType();
-    info += prefix + "kernelVersion:           " + QSysInfo::kernelVersion();
-    info += prefix + "machineHostName:         " + QSysInfo::machineHostName();
-    info += prefix + "machineUniqueId:         " + QSysInfo::machineUniqueId();
-    info += prefix + "prettyProductName:       " + QSysInfo::prettyProductName();
-    info += prefix + "productType:             " + QSysInfo::productType();
-    info += prefix + "productVersion:          " + QSysInfo::productVersion();
+    info += "System info:\n";
+    info += prefix + "bootUniqueId:            " + QSysInfo::bootUniqueId() + "\n";
+    info += prefix + "buildAbi:                " + QSysInfo::buildAbi() + "\n"; // Application Binary Interface
+    info += prefix + "buildCpuArchitecture:    " + QSysInfo::buildCpuArchitecture() + "\n";
+    info += prefix + "currentCpuArchitecture:  " + QSysInfo::currentCpuArchitecture() + "\n";
+    info += prefix + "kernelType:              " + QSysInfo::kernelType() + "\n";
+    info += prefix + "kernelVersion:           " + QSysInfo::kernelVersion() + "\n";
+    info += prefix + "machineHostName:         " + QSysInfo::machineHostName() + "\n";
+    info += prefix + "machineUniqueId:         " + QSysInfo::machineUniqueId() + "\n";
+    info += prefix + "prettyProductName:       " + QSysInfo::prettyProductName() + "\n";
+    info += prefix + "productType:             " + QSysInfo::productType() + "\n";
+    info += prefix + "productVersion:          " + QSysInfo::productVersion() + "\n";
     info += "\n";
 
 }

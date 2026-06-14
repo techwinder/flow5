@@ -175,11 +175,31 @@ void AnalysisSelDlg::initDialog(Foil const*pCurFoil, Plane const*pCurPlane, Boat
     }
     else if(pCurPlane)
     {
-        m_Object = PLANE;
-        m_plabTitle->setText(QString::fromStdString(pCurPlane->name())+tr(":\nSelect the analyses to duplicate"));
+        // make a case insensitive list of plane names
+        QStringList names;
         for(int iPlane=0; iPlane<Objects3d::nPlanes(); iPlane++)
         {
             Plane const *pPlane = Objects3d::planeAt(iPlane);
+            QString name = QString::fromStdString(pPlane->name());
+            bool bInserted = false;
+            for(int i=0; i<names.size(); i++)
+            {
+                if(name.compare(names.at(i), Qt::CaseInsensitive)<0)
+                {
+                    names.insert(i, name);
+                    bInserted = true;
+                    break;
+                }
+            }
+            if(!bInserted)
+                names.push_back(name);
+        }
+
+        m_Object = PLANE;
+        m_plabTitle->setText(QString::fromStdString(pCurPlane->name())+tr(":\nSelect the analyses to duplicate"));
+        for(int iPlane=0; iPlane<names.size(); iPlane++)
+        {
+            Plane const *pPlane = Objects3d::plane(names.at(iPlane).toStdString());
             if(!pPlane) continue;
 
             LineStyle ls(pPlane->theStyle());

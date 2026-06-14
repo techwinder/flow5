@@ -68,6 +68,7 @@ POpp3dCtrls::POpp3dCtrls(gl3dXflView*p3dView, QWidget *pParent) : QTabWidget(pPa
     m_bPanelForce     = false;
     m_b3dCp           = false;
     m_bDownwash       = false;
+    m_bTotalForce     = false;
     m_bPartForces     = false;
     m_bFlaps          = false;
     m_bCoG            = false;
@@ -135,8 +136,10 @@ void POpp3dCtrls::setupLayout()
                 m_pchPanelForce     = new QCheckBox(tr("F/s=q.Cp"));
                 m_pchPanelForce->setToolTip(tr("<p>Display the pressures &frac12; &rho; V<sup>2</sup> Cp acting on the panels</p>"));
                 m_pchStripLift      = new QCheckBox(tr("Strip lift"));
-                m_pchPartForces     = new QCheckBox(tr("Forces"));
-                m_pchPartForces->setToolTip(tr("Resulting forces in wind axes"));
+                m_pchTotalForce     = new QCheckBox(tr("Resultant force"));
+                m_pchTotalForce->setToolTip(tr("Resulting force in wind axes"));
+                m_pchPartForces     = new QCheckBox(tr("Part forces"));
+                m_pchPartForces->setToolTip(tr("Resulting part forces in wind axes"));
                 m_pchIDrag          = new QCheckBox(tr("Induced drag"));
                 m_pchVDrag          = new QCheckBox(tr("Viscous drag"));
                 m_pchTrans          = new QCheckBox(tr("Transitions"));
@@ -148,7 +151,7 @@ void POpp3dCtrls::setupLayout()
                 m_pchCoG            = new QCheckBox(tr("CoG"));
                 m_pchFlow           = new QCheckBox(tr("Flow"));
                 m_pchFlow->setToolTip(tr("<p>Launches an animation of the flow around the model.<br>"
-                                      "The parameters are set in the last tab of the scales widget.</p>"));
+                                      "Requires OpenGL 4.3+.</p>"));
                 m_pchWakePanels     = new QCheckBox(tr("Wake panels"));
                 m_pchWakePanels->setToolTip(tr("<p>T6 polars only</p>"));
                 m_pchVortons        = new QCheckBox(tr("Vortons"));
@@ -175,12 +178,13 @@ void POpp3dCtrls::setupLayout()
                 pCheckDispLayout->addWidget(m_pchGamma,            2, 2);
                 pCheckDispLayout->addWidget(m_pchStripLift,        3, 1);
                 pCheckDispLayout->addWidget(m_pchPanelForce,       3, 2);
-                pCheckDispLayout->addWidget(m_pchPartForces,       4, 1);
-                pCheckDispLayout->addWidget(m_pchMoment,           4, 2);
-                pCheckDispLayout->addWidget(m_pchIDrag,            5, 1);
-                pCheckDispLayout->addWidget(m_pchVDrag,            5, 2);
-                pCheckDispLayout->addWidget(m_pchTrans,            6, 1);
-                pCheckDispLayout->addWidget(m_pchDownwash,         6, 2);
+                pCheckDispLayout->addWidget(m_pchTotalForce,       4, 1);
+                pCheckDispLayout->addWidget(m_pchPartForces,       4, 2);
+                pCheckDispLayout->addWidget(m_pchMoment,           5, 1);
+                pCheckDispLayout->addWidget(m_pchIDrag,            6, 1);
+                pCheckDispLayout->addWidget(m_pchVDrag,            6, 2);
+                pCheckDispLayout->addWidget(m_pchTrans,            7, 1);
+                pCheckDispLayout->addWidget(m_pchDownwash,         7, 2);
                 pCheckDispLayout->addWidget(m_pchStream,           8, 1);
                 pCheckDispLayout->addWidget(m_pchFlow,             8, 2);
                 pCheckDispLayout->addWidget(m_pchWakePanels,       9, 1);
@@ -232,6 +236,7 @@ void POpp3dCtrls::connectSignals()
     connect(m_pchCp,            SIGNAL(clicked()),     SLOT(on3dCp()));
     connect(m_pchPanelForce,    SIGNAL(clicked()),     SLOT(onPanelForce()));
     connect(m_pchStripLift,     SIGNAL(clicked()),     SLOT(onStripLift()));
+    connect(m_pchTotalForce,    SIGNAL(clicked()),     SLOT(onTotalForce()));
     connect(m_pchPartForces,    SIGNAL(clicked()),     SLOT(onPartForces()));
     connect(m_pchIDrag,         SIGNAL(clicked()),     SLOT(onShowIDrag()));
     connect(m_pchVDrag,         SIGNAL(clicked()),     SLOT(onShowVDrag()));
@@ -276,16 +281,18 @@ void POpp3dCtrls::POpp3dCtrls::updateUnits()
 void POpp3dCtrls::setControls()
 {
     m_pgl3dCtrls->setControls();
+    m_pStab3dCtrls->setControls();
 
-    PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(s_pXPlane->curPlane());
-    PlanePolar const *pWPolar = s_pXPlane->curPlPolar();
-    PlaneOpp const *pPOpp = s_pXPlane->curPOpp();
+    PlaneXfl   const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(s_pXPlane->curPlane());
+    PlanePolar const *pWPolar   = s_pXPlane->curPlPolar();
+    PlaneOpp   const *pPOpp     = s_pXPlane->curPOpp();
 
     m_pchFlaps->setEnabled(           pPlaneXfl && pPlaneXfl->nFlaps()>0);
     m_pchGamma->setEnabled(           pPOpp && !pPOpp->isLLTMethod());
     m_pchCp->setEnabled(              pPOpp && !pPOpp->isLLTMethod());
     m_pchPanelForce->setEnabled(      pPOpp && !pPOpp->isLLTMethod());
     m_pchStripLift->setEnabled(       pPOpp);
+    m_pchTotalForce->setEnabled(      pPOpp);
     m_pchPartForces->setEnabled(      pPOpp);
     m_pchTrans->setEnabled(           pPOpp);
     m_pchIDrag->setEnabled(           pPOpp);
@@ -317,6 +324,7 @@ void POpp3dCtrls::setControls()
     m_pchMoment->setChecked(m_bMoments);
     m_pchPOppAnimate->setEnabled(pPOpp);
     m_pchPanelForce->setChecked(m_bPanelForce);
+    m_pchTotalForce->setChecked(m_bTotalForce);
     m_pchPartForces->setChecked(m_bPartForces);
     m_pchStream->setChecked(m_bStreamLines);
     m_pchStripLift->setChecked(m_bLiftStrip);
@@ -381,6 +389,7 @@ void POpp3dCtrls::loadSettings(QSettings &settings)
         m_bICd          = settings.value("bICd",        false).toBool();
         m_bVCd          = settings.value("bVCd",        false).toBool();
         m_bDownwash     = settings.value("bDownwash",   false).toBool();
+        m_bTotalForce   = settings.value("bTotalForce", false).toBool();
         m_bPartForces   = settings.value("bPartForces", false).toBool();
         m_bFlaps        = settings.value("bFlaps",      false).toBool();
         m_bMoments      = settings.value("bMoments",    false).toBool();
@@ -406,6 +415,7 @@ void POpp3dCtrls::saveSettings(QSettings &settings)
         settings.setValue("bXBot",       m_bXBot);
         settings.setValue("bLiftStrip",  m_bLiftStrip);
         settings.setValue("bDownwash",   m_bDownwash);
+        settings.setValue("bTotalForce", m_bTotalForce);
         settings.setValue("bPartForces", m_bPartForces);
         settings.setValue("bFlaps",      m_bFlaps);
         settings.setValue("bMoments",    m_bMoments);
@@ -571,6 +581,13 @@ void POpp3dCtrls::onStripLift()
 {
     m_bLiftStrip     = m_pchStripLift->isChecked();
     if(!m_bAnimateWOpp) m_pgl3dXPlaneView->update();
+}
+
+
+void POpp3dCtrls::onTotalForce()
+{
+    m_bTotalForce = m_pchTotalForce->isChecked();
+    m_pgl3dXPlaneView->update();
 }
 
 

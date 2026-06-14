@@ -4514,6 +4514,8 @@ void XPlane::onCalculate()
     if(!m_pCurPlane || !m_pCurPlPolar)   return;
     if(m_pCurPlPolar->isExternalPolar()) return;
 
+    stopAnimate();
+
     PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pCurPlane);
     if(pPlaneXfl)
     {
@@ -5001,7 +5003,7 @@ void XPlane::stopAnimate()
 
     if(m_pCurPlane)
     {
-        setPlaneOpp(m_pCurPOpp);
+//        setPlaneOpp(m_pCurPOpp);
         m_pPlaneExplorer->selectPlaneOpp(m_pCurPOpp);
     }
 }
@@ -5198,6 +5200,8 @@ PlaneOpp* XPlane::setPlaneOpp(PlaneOpp *pPOpp)
 
     if(!pPOpp)
     {
+        stopAnimate();
+
         //nothing left to try
         if(m_pPanelResultTest) m_pPanelResultTest->setAnalysis(m_pCurPlane, m_pCurPlPolar, m_pCurPOpp);
 
@@ -5220,6 +5224,8 @@ PlaneOpp* XPlane::setPlaneOpp(PlaneOpp *pPOpp)
             m_pPOpp3dCtrls->m_pStab3dCtrls->setMode(m_pCurPOpp);
         }
     }
+    else
+        m_pPOpp3dCtrls->m_pStab3dCtrls->stopAnimate();
 
 
     if(m_pCurPlane)

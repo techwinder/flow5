@@ -95,37 +95,37 @@ void FuseXflDefDlg::connectSignals()
 {
     connectFuseXflSignals();
 
-    connect(m_ppbUndo, SIGNAL(clicked()), SLOT(onUndo()));
-    connect(m_ppbRedo, SIGNAL(clicked()), SLOT(onRedo()));
+    connect(m_ppbUndo,         SIGNAL(clicked()),              SLOT(onUndo()));
+    connect(m_ppbRedo,         SIGNAL(clicked()),              SLOT(onRedo()));
 
-    connect(m_pslBunchAmp,        SIGNAL(sliderReleased()),  SLOT(onNURBSPanels()));
+    connect(m_pslBunchAmp,     SIGNAL(sliderReleased()),       SLOT(onNURBSPanels()));
 
-    connect(m_pieNHoopPanels,     SIGNAL(intChanged(int)), SLOT(onNURBSPanels()));
-    connect(m_pieNXPanels,        SIGNAL(intChanged(int)), SLOT(onNURBSPanels()));
-    connect(m_pcbXDegree,         SIGNAL(activated(int)),    SLOT(onSelChangeXDegree(int)));
-    connect(m_pcbHoopDegree,      SIGNAL(activated(int)),    SLOT(onSelChangeHoopDegree(int)));
+    connect(m_pieNHoopPanels,  SIGNAL(intChanged(int)),        SLOT(onNURBSPanels()));
+    connect(m_pieNXPanels,     SIGNAL(intChanged(int)),        SLOT(onNURBSPanels()));
+    connect(m_pcbXDegree,      SIGNAL(activated(int)),         SLOT(onSelChangeXDegree(int)));
+    connect(m_pcbHoopDegree,   SIGNAL(activated(int)),         SLOT(onSelChangeHoopDegree(int)));
 
     // table signals
-    connect(m_pcptFrameTable, SIGNAL(clicked(QModelIndex)),   SLOT(onFrameItemClicked(QModelIndex)));
-    connect(m_pcptFrameTable, SIGNAL(dataPasted()),           SLOT(onFrameCellChanged()));
-    connect(m_pFrameDelegate,  SIGNAL(closeEditor(QWidget*)), SLOT(onFrameCellChanged()));
+    connect(m_pcptFrameTable,  SIGNAL(clicked(QModelIndex)),   SLOT(onFrameItemClicked(QModelIndex)));
+    connect(m_pcptFrameTable,  SIGNAL(dataPasted()),           SLOT(onFrameCellChanged()));
+    connect(m_pFrameDelegate,  SIGNAL(closeEditor(QWidget*)),  SLOT(onFrameCellChanged()));
     connect(m_pcptFrameTable->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(onSelectFrame(QModelIndex)));
 
-    connect(m_pcptPointTable, SIGNAL(clicked(QModelIndex)),   SLOT(onPointItemClicked(QModelIndex)));
-    connect(m_pcptPointTable, SIGNAL(dataPasted()),           SLOT(onPointCellChanged()));
-    connect(m_pPointDelegate,  SIGNAL(closeEditor(QWidget*)), SLOT(onPointCellChanged()));
+    connect(m_pcptPointTable,  SIGNAL(clicked(QModelIndex)),   SLOT(onPointItemClicked(QModelIndex)));
+    connect(m_pcptPointTable,  SIGNAL(dataPasted()),           SLOT(onPointCellChanged()));
+    connect(m_pPointDelegate,  SIGNAL(closeEditor(QWidget*)),  SLOT(onPointCellChanged()));
 
-    connect(m_pcptFrameTable, SIGNAL(tableResized()), SLOT(onResizeTables()));
+    connect(m_pcptFrameTable,  SIGNAL(tableResized()),         SLOT(onResizeTables()));
 
-    connect(m_pFuseLineView, SIGNAL(selectedChanged(int)),  SLOT(onFrameClickedIn2dView()));
-    connect(m_pFrameView,    SIGNAL(selectedChanged(int)),  SLOT(onPointClickedIn2dView()));
+    connect(m_pFuseLineView,   SIGNAL(selectedChanged(int)),   SLOT(onFrameClickedIn2dView()));
+    connect(m_pFrameView,      SIGNAL(selectedChanged(int)),   SLOT(onPointClickedIn2dView()));
 
-    connect(m_pFuseLineView, SIGNAL(mouseDragReleased()),   SLOT(onUpdateFuseDlg()));
-    connect(m_pFrameView,    SIGNAL(mouseDragReleased()),   SLOT(onUpdateFuseDlg()));
+    connect(m_pFuseLineView,   SIGNAL(mouseDragReleased()),    SLOT(onUpdateFuseDlg()));
+    connect(m_pFrameView,      SIGNAL(mouseDragReleased()),    SLOT(onUpdateFuseDlg()));
 
-    connect(m_pFrameView,    SIGNAL(frameSelected(int)),    SLOT(onSelectFrame(int)));
+    connect(m_pFrameView,      SIGNAL(frameSelected(int)),     SLOT(onSelectFrame(int)));
 
-    connect(m_pfeFitPrecision, SIGNAL(floatChanged(float)), SLOT(onFitPrecision()));
+    connect(m_pfeFitPrecision, SIGNAL(floatChanged(float)),    SLOT(onFitPrecision()));
 }
 
 
@@ -754,7 +754,6 @@ void FuseXflDefDlg::setControls()
     }
     else if(m_pFuseXfl->isSplineType() || m_pFuseXfl->isSectionType())
     {
-        m_pNURBSParams->show();
         m_pcptFrameTable->hideColumn(1);
         m_pcptPointTable->hideColumn(2);
     }
@@ -821,7 +820,6 @@ void FuseXflDefDlg::setupLayout()
             {
                 m_pNURBSParams = new QFrame;
                 {
-//                    m_pNURBSParams->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
                     QVBoxLayout *pParamsLayout = new QVBoxLayout;
                     {
                         m_pgbUVParams = new QGroupBox(tr("UV parameters"));
@@ -834,12 +832,6 @@ void FuseXflDefDlg::setupLayout()
                                 m_pcbXDegree = new QComboBox;
                                 m_pcbHoopDegree = new QComboBox;
 
-/*                                pLab1->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
-                                pLab2->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
-                                pLab3->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
-                                m_pcbXDegree->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
-                                m_pcbHoopDegree->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
-*/
                                 pSplineParamsLayout->addWidget(plab1,1,2, Qt::AlignCenter);
                                 pSplineParamsLayout->addWidget(plab2,1,3, Qt::AlignCenter);
                                 pSplineParamsLayout->addWidget(plab3,2,1, Qt::AlignRight);

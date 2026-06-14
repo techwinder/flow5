@@ -1711,7 +1711,7 @@ void XDirect::onExportBLData()
     else                                  filter = "Comma Separated Values (*.csv)";
     fd.setDefaultSuffix(QString::fromStdString(xfl::textSeparator()));
 
-    FileName = fd.getSaveFileName(s_pMainFrame, tr("Export B/L/ data"),
+    FileName = fd.getSaveFileName(s_pMainFrame, tr("Export BL data"),
                                   SaveOptions::lastDirName() + "/"+FileName,
                                   "Text File (*.txt);;Comma Separated Values (*.csv)",
                                   &filter);

@@ -655,7 +655,7 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
                 paintThinArrow(m_CpSections.at(i), m_CpSections.at(i).normal(), W3dPrefs::s_LiftStyle);
         }
 
-        if(m_pPOpp3dControls->m_bPartForces)
+        if(m_pPOpp3dControls->m_bTotalForce)
         {
             m_matModel.setToIdentity();
 
@@ -682,7 +682,7 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
             m_matView.translate(m_glRotCenter.xf()*m_glScalef, m_glRotCenter.yf()*m_glScalef, m_glRotCenter.zf()*m_glScalef);
             m_matView.scale(m_glScalef);
 
-            QString strange = QString::asprintf("F_total_wind = (%.2f, %.2f, %.2f) ",
+            QString strange = QString::asprintf("F_wind = (%.2f, %.2f, %.2f) ",
                                                 force_w.x*Units::NtoUnit(),
                                                 force_w.y*Units::NtoUnit(),
                                                 force_w.z*Units::NtoUnit()) + Units::forceUnitQLabel();
@@ -690,6 +690,14 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
 
             m_matView = vm;
             m_matModel.setToIdentity();
+        }
+
+        if(m_pPOpp3dControls->m_bPartForces)
+        {
+            Vector3d force, force_w;
+            double sc = Opp3dScalesCtrls::forceScale() / 200000.0;
+
+            double qDyn = 0.5*pPlPolar->density()*pPOpp->QInf()*pPOpp->QInf();
 
             for(int iw=0; iw<pPOpp->nWOpps(); iw++)
             {
@@ -743,23 +751,24 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
         if(m_pPOpp3dControls->m_bMoments)
         {
             QColor clr = W3dPrefs::s_MomentColor;
-            Vector3d M = pPOpp->aeroForces().Mi() + pPOpp->aeroForces().Mv();
+            Vector3d Moment = pPOpp->aeroForces().Mi() + pPOpp->aeroForces().Mv();
             double Q = 1./2.* pPlPolar->density()*pPOpp->QInf()*pPOpp->QInf();
-            M *= Q;
+            Moment *= Q;
+
             double scale = 0.001; // additional display scale factor
-            M *= Opp3dScalesCtrls::momentScale()*scale;
-            paintThickArrow(CoG, M, clr, true, true);
+            Vector3d Mdisplay = Moment * (Opp3dScalesCtrls::momentScale()*scale);
+            paintThickArrow(CoG, Mdisplay, clr, true, true);
 
             QMatrix4x4 vm(m_matView);
             m_matView = rotationMatrix();
             m_matView.translate(m_glRotCenter.xf()*m_glScalef, m_glRotCenter.yf()*m_glScalef, m_glRotCenter.zf()*m_glScalef);
             m_matView.scale(m_glScalef);
 
-            QString strange = QString::asprintf("M_wind_axes = (%.2f, %.2f, %.2f) ",
-                                                M.x*Units::NmtoUnit(),
-                                                M.y*Units::NmtoUnit(),
-                                                M.z*Units::NmtoUnit()) + Units::momentUnitQLabel();
-            glRenderText(CoG+(M+Vector3d(1,1,1)*0.03)/m_glScalef, strange, clr);
+            QString strange = QString::asprintf("M_wind = (%.2f, %.2f, %.2f) ",
+                                                Moment.x*Units::NmtoUnit(),
+                                                Moment.y*Units::NmtoUnit(),
+                                                Moment.z*Units::NmtoUnit()) + Units::momentUnitQLabel();
+            glRenderText(CoG+(Mdisplay+Vector3d(1,1,1)*0.03)/m_glScalef, strange, clr);
 
             m_matView = vm;
             m_matModel.setToIdentity();
@@ -848,6 +857,10 @@ void gl3dXPlaneView::glRenderView()
 
     glRenderPOppBasedBuffers();
 
+    // restore
+    m_matModel = modeMatrix;
+    vmMat = m_matView*m_matModel;
+    pvmMat = m_matProj*vmMat;
 
     if(pPOpp && m_pPOpp3dControls->isFlowActive()) glRenderFlow();
     else m_FlowTimer.stop();
@@ -869,7 +882,6 @@ void gl3dXPlaneView::glRenderView()
             m_matModel.rotate(pPOpp->beta(), 0.0f, 0.0f, 1.0f);
         }
     }
-
 
     m_shadLine.bind();
     {

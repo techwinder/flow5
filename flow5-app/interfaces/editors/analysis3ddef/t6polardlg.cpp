@@ -461,9 +461,9 @@ void T6PolarDlg::readData()
 void T6PolarDlg::setupLayout()
 {
     QString strLen, strMass, strInertia, strArea;
-    strArea = Units::areaUnitQLabel();
-    strLen = Units::lengthUnitQLabel();
-    strMass = Units::massUnitQLabel();
+    strArea    = Units::areaUnitQLabel();
+    strLen     = Units::lengthUnitQLabel();
+    strMass    = Units::massUnitQLabel();
     strInertia = strMass+"."+strLen+QString::fromUtf8("²");
 
     QWidget *pOppRangePage = new QWidget(this);
@@ -502,11 +502,11 @@ void T6PolarDlg::setupLayout()
                     pixmap.load(":/images/V_h_inv.png");
                 else
                     pixmap.load(":/images/V_h.png");
-                QLabel * pLabVh = new QLabel();
-                pLabVh->setPixmap(pixmap);
-                pLabVh->setAlignment(Qt::AlignLeft |Qt::AlignVCenter);
+                QLabel * plabVh = new QLabel();
+                plabVh->setPixmap(pixmap);
+                plabVh->setAlignment(Qt::AlignLeft |Qt::AlignVCenter);
                 pVhLayout->addWidget(m_pchAdjustedVelocity);
-                pVhLayout->addWidget(pLabVh);
+                pVhLayout->addWidget(plabVh);
                 pVhLayout->addStretch();
             }
 
@@ -515,18 +515,18 @@ void T6PolarDlg::setupLayout()
                           "This is the equivalent of a Type 2 fixed lift polar.</p>");
             m_pchAdjustedVelocity->setToolTip(tip);
 
-            QLabel* pParamLabel = new QLabel();
+            QLabel* plabParam = new QLabel();
             QPixmap pixmap;
             if(DisplayOptions::isDarkMode())
                 pixmap.load(":/images/param_inv.png");
             else
                 pixmap.load(":/images/param.png");
-            pParamLabel->setPixmap(pixmap);
-            pParamLabel->setAlignment(Qt::AlignLeft |Qt::AlignVCenter);
+            plabParam->setPixmap(pixmap);
+            plabParam->setAlignment(Qt::AlignLeft |Qt::AlignVCenter);
 
             pOppRangePageLayout->addLayout(pVhLayout);
             pOppRangePageLayout->addWidget(m_pcptOppRange);
-            pOppRangePageLayout->addWidget(pParamLabel);
+            pOppRangePageLayout->addWidget(plabParam);
             pOppRangePage->setLayout(pOppRangePageLayout);
         }
     }
@@ -559,18 +559,18 @@ void T6PolarDlg::setupLayout()
             m_pInertiaCtrlDelegate->setPrecision({2,3,3,-1});
             m_pInertiaCtrlDelegate->setEditable({false, true, true, false});
 
-            QLabel* pParamLabel = new QLabel();
+            QLabel* plabParam = new QLabel();
             QPixmap pixmap;
             if(DisplayOptions::isDarkMode())
                 pixmap.load(":/images/param_inv.png");
             else
                 pixmap.load(":/images/param.png");
-            pParamLabel->setPixmap(pixmap);
-            pParamLabel->setAlignment(Qt::AlignLeft |Qt::AlignVCenter);
+            plabParam->setPixmap(pixmap);
+            plabParam->setAlignment(Qt::AlignLeft |Qt::AlignVCenter);
 
             pMassControlPageLayout->addWidget(m_pchAutoInertia);
             pMassControlPageLayout->addWidget(m_pcptInertia);
-            pMassControlPageLayout->addWidget(pParamLabel);
+            pMassControlPageLayout->addWidget(plabParam);
 
             pMassControlPage->setLayout(pMassControlPageLayout);
         }
@@ -606,36 +606,36 @@ void T6PolarDlg::setupLayout()
 
             m_pAngleCtrlDelegate->setPrecision({2,3,3,-1}); m_pAngleCtrlDelegate->setEditable({false, true, true, false});
 
-            QLabel* pNotes = new QLabel(tr("Notes:"));
-            QLabel* pSignLabel = new QLabel(tr("(1)\t+ sign means trailing edge down"));
+            QLabel* plabNotes = new QLabel(tr("Notes:"));
+            QLabel* plabSign  = new QLabel(tr("(1)\t+ sign means trailing edge down"));
 
             QHBoxLayout *pAngleParamLayout = new QHBoxLayout;
             {
-                QLabel* pAngleLabel = new QLabel(tr("(2)\tThe angles are ADDED to the preset wing and flap angles:"));
-                pAngleLabel->setAlignment(Qt::AlignLeft |Qt::AlignVCenter);
-                QLabel* pParamLabel = new QLabel();
+                QLabel* plabAngle = new QLabel(tr("(2)\tThe angles are ADDED to the preset wing and flap angles:"));
+                plabAngle->setAlignment(Qt::AlignLeft |Qt::AlignVCenter);
+                QLabel* plabParam = new QLabel();
                 QPixmap pixmap;
                 if(DisplayOptions::isDarkMode())
                     pixmap.load(":/images/control_angles_inv.png");
                 else
                     pixmap.load(":/images/control_angles.png");
-                pParamLabel->setPixmap(pixmap);
-                pParamLabel->setAlignment(Qt::AlignLeft |Qt::AlignVCenter);
+                plabParam->setPixmap(pixmap);
+                plabParam->setAlignment(Qt::AlignLeft |Qt::AlignVCenter);
 
-                pAngleParamLayout->addWidget(pAngleLabel);
-                pAngleParamLayout->addWidget(pParamLabel);
+                pAngleParamLayout->addWidget(plabAngle);
+                pAngleParamLayout->addWidget(plabParam);
                 pAngleParamLayout->addStretch();
             }
 
-            QLabel* pOriginLabel = new QLabel(tr("(3)\tThe center of rotations are the wings leading point at the root chord"));
-            QLabel* pNumberLabel = new QLabel(tr("(4)\tFlaps are numbered from left tip to right tip"));
+            QLabel* plabOrigin = new QLabel(tr("(3)\tThe center of rotations are the wings leading point at the root chord"));
+            QLabel* plabNumber = new QLabel(tr("(4)\tFlaps are numbered from left tip to right tip"));
 
             pAngleControlPageLayout->addWidget(m_pcptAngles);
-            pAngleControlPageLayout->addWidget(pNotes);
-            pAngleControlPageLayout->addWidget(pSignLabel);
+            pAngleControlPageLayout->addWidget(plabNotes);
+            pAngleControlPageLayout->addWidget(plabSign);
             pAngleControlPageLayout->addLayout(pAngleParamLayout);
-            pAngleControlPageLayout->addWidget(pOriginLabel);
-            pAngleControlPageLayout->addWidget(pNumberLabel);
+            pAngleControlPageLayout->addWidget(plabOrigin);
+            pAngleControlPageLayout->addWidget(plabNumber);
             pAngleControlPage->setLayout(pAngleControlPageLayout);
         }
     }

@@ -239,6 +239,12 @@ void Stab3dCtrls::setControls()
     m_pslAnimAmplitude->setSliderPosition(int(s_Amplitude*100.0));
     m_pfeModeStep->setValue(s_dt);
 
+    bool bEnable = s_pXPlane->curPOpp() && s_pXPlane->curPOpp()->isType7();
+    m_ppbAnimate->setEnabled(bEnable);
+    if(!bEnable) m_ppbAnimate->setChecked(false);
+
+    m_ppbAnimateRestart->setEnabled(bEnable);
+
     updateDof();
 }
 
@@ -406,7 +412,6 @@ void Stab3dCtrls::getPosition(PlaneOpp const*pPOpp, int iMode, double t)
             m_ModeState[0] = vabs[0]*exp(sigma*t)/(s2+o2) * (sigma*cos(omega*t+phi[0])+omega*sin(omega*t+phi[0]));
             m_ModeState[2] = vabs[1]*exp(sigma*t)/(s2+o2) * (sigma*cos(omega*t+phi[1])+omega*sin(omega*t+phi[1]));
             m_ModeState[4] = vabs[2]*exp(sigma*t)/(s2+o2) * (sigma*cos(omega*t+phi[2])+omega*sin(omega*t+phi[2]));
-            //        m_ModeState[4] = norm*vabs[3]*exp(sigma*t)*cos(omega*t+phi[3]);
 
             //add u0 x theta_sum to z component
             double theta_sum = vabs[3]*exp(sigma*t)/(s2+o2) * (sigma*cos(omega*t+phi[3])+omega*sin(omega*t+phi[3]));
