@@ -3,22 +3,16 @@
 #include <filesystem>
 
 #include <api.h>
-#include <constants.h>
 #include <flow5-io.h>
 #include <foil.h>
 #include <objects2d.h>
-#include <objects2d_globals.h>
 #include <objects3d.h>
-#include <oppoint.h>
 #include <panelanalysis.h>
-#include <planeopp.h>
 #include <planepolar.h>
 #include <planepolarnamemaker.h>
 #include <planetask.h>
 #include <planexfl.h>
-#include <polar.h>
 #include <units.h>
-#include <xfoiltask.h>
 
 #ifdef WIN32
     #include <Windows.h>

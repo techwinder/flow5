@@ -831,16 +831,16 @@ std::string Panel4::properties(bool bLong) const
 
 /*    for(int i=0; i<4; i++)
     {
-        strange = std::format("  Node{:d}:  %13.5g  %13.5g  %13.5g\n", i, m_Node[i].x, m_Node[i].y, m_Node[i].z);
+        strange = std::format("  Node{:d}:  {:13.5g}  {:13.5g}  {:13.5g}\n", i, m_Node[i].x, m_Node[i].y, m_Node[i].z);
         props += strange;
     }*/
-    strange = std::format("  Nd_LA:  %13.5g  %13.5g  %13.5g\n", LA().x, LA().y, LA().z);
+    strange = std::format("  Nd_LA:  {:13.5g}  {:13.5g}  {:13.5g}\n", LA().x, LA().y, LA().z);
     props += strange;
-    strange = std::format("  Nd_LB:  %13.5g  %13.5g  %13.5g\n", LB().x, LB().y, LB().z);
+    strange = std::format("  Nd_LB:  {:13.5g}  {:13.5g}  {:13.5g}\n", LB().x, LB().y, LB().z);
     props += strange;
-    strange = std::format("  Nd_TA:  %13.5g  %13.5g  %13.5g\n", TA().x, TA().y, TA().z);
+    strange = std::format("  Nd_TA:  {:13.5g}  {:13.5g}  {:13.5g}\n", TA().x, TA().y, TA().z);
     props += strange;
-    strange = std::format("  Nd_TB:  %13.5g  %13.5g  %13.5g\n", TB().x, TB().y, TB().z);
+    strange = std::format("  Nd_TB:  {:13.5g}  {:13.5g}  {:13.5g}\n", TB().x, TB().y, TB().z);
     props += strange;
 
     strange = std::format("  Normal: {:13.7f}  {:13.7f}  {:13.7f}\n", m_Normal.x, m_Normal.y, m_Normal.z);

@@ -144,21 +144,13 @@ win32-msvc {
     DEFINES += INTEL_MKL   #only option in Windows
     INCLUDEPATH += "C:\Program Files (x86)\Intel\oneAPI\mkl\latest\include"
 
-
-
-    LIBS += -L"C:/Program Files (x86)/Intel/oneAPI/mkl/latest/lib"
-#    LIBS += -L"C:/Program Files (x86)/Intel/oneAPI/compiler/latest/lib"   # to link with libiomp5md
-    LIBS += -L"C:/Program Files (x86)/Intel/oneAPI/tbb/latest/lib"        # to link with tbb12
-#https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-windows/2025-2/selecting-libraries-to-link-with.html
-#    LIBS += -lmkl_intel_lp64_dll
-#    LIBS += -lmkl_core_dll
-#    LIBS += -lmkl_intel_thread_dll -llibiomp5md  # for multithreading
-#    LIBS += -lmkl_sequential_dll
-#https://www.intel.com/content/www/us/en/docs/onemkl/developer-guide-windows/2023-0/using-the-single-dynamic-library.html
-#You can simplify your link line through the use of the Intel® oneAPI Math Kernel Library Single Dynamic Library (SDL).
-    LIBS += -lmkl_rt
-#    LIBS += -llibiomp5md  # uses the OpenMP threading technology
-    LIBS += -ltbb12        # uses the Intel TBB threading technology
+    LIBS += -L"C:\Program Files (x86)\Intel\oneAPI\mkl\latest\bin"
+    LIBS += -L"C:\Program Files (x86)\Intel\oneAPI\mkl\latest\lib"
+    LIBS += -L"C:\Program Files (x86)\Intel\oneAPI\compiler\latest\bin"
+    LIBS += -L"C:\Program Files (x86)\Intel\oneAPI\compiler\latest\lib"
+    LIBS += -lmkl_intel_lp64_dll
+    LIBS += -lmkl_core_dll
+    LIBS += -lmkl_intel_thread_dll -llibiomp5md  # for multithreading
 
 
 #--------------------- GMSH ------------------------

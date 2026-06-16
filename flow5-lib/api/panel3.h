@@ -156,8 +156,9 @@ class FL5LIB_EXPORT Panel3 : public Panel
             return -1;
         }
 
-        bool isLeftSidePanel() const {return m_bIsLeftPanel;}
-        void setLeftSidePanel(bool bLeft) {m_bIsLeftPanel = bLeft;}
+        bool isLeftPanel() const {return m_bIsLeftPanel;}
+        bool isRightPanel() const {return !m_bIsLeftPanel;}
+        void setLeftPanel(bool bLeft) {m_bIsLeftPanel = bLeft;}
 
         inline bool isEdgePoint(Vector3d const &PtGlobal) const;
         inline bool isPointInTriangle(Vector3d const &PtLocal) const;

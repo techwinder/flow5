@@ -1247,7 +1247,7 @@ int TriMesh::makeWakePanels(std::vector<Panel3> &Panel3List,
                         p3wU->setFrame(Bl1, Br, Bl);
                         p3wU->setIndex(mw);
                         p3wU->setLeftWingPanel(true);
-                        p3wU->setLeftSidePanel(true);
+                        p3wU->setLeftPanel(true);
                         p3wU->setAsWakePanel();
                         p3wU->m_iPU = nx>0? mw-1 : -1;
                         p3wU->m_iPD = mw+1;
@@ -1255,7 +1255,7 @@ int TriMesh::makeWakePanels(std::vector<Panel3> &Panel3List,
                         p3wD->setFrame(Br1, Br, Bl1);
                         p3wD->setIndex(mw+1);
                         p3wD->setLeftWingPanel(true);
-                        p3wD->setLeftSidePanel(false);
+                        p3wD->setLeftPanel(false);
                         p3wD->setAsWakePanel();
                         p3wD->m_iPU = mw;
                         p3wD->m_iPD = nx<nxWakePanel4-1? mw+2 : -1;
@@ -1277,7 +1277,7 @@ int TriMesh::makeWakePanels(std::vector<Panel3> &Panel3List,
                         p3wU->setFrame(Br1, Br, Bl);
                         p3wU->setIndex(mw);
                         p3wU->setLeftWingPanel(false);
-                        p3wU->setLeftSidePanel(false);
+                        p3wU->setLeftPanel(false);
                         p3wU->setAsWakePanel();
                         p3wU->m_iPU = nx>0? mw-1 : -1;
                         p3wU->m_iPD = mw+1;
@@ -1285,7 +1285,7 @@ int TriMesh::makeWakePanels(std::vector<Panel3> &Panel3List,
                         p3wD->setFrame(Bl1, Br1, Bl);
                         p3wD->setIndex(mw+1);
                         p3wD->setLeftWingPanel(false);
-                        p3wD->setLeftSidePanel(true);
+                        p3wD->setLeftPanel(true);
                         p3wD->setAsWakePanel();
                         p3wD->m_iPU = mw;
                         p3wD->m_iPD = nx<nxWakePanel4-1? mw+2 : -1;

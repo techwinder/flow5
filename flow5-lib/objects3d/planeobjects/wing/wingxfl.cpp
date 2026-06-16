@@ -993,9 +993,9 @@ bool WingXfl::connectSurfaceNodesToNext(int iSurf, std::vector<Panel3> &panels, 
 
             if(nl<0 || nl>=int(panels.size())) return false; // error
 
+            //connect only same top bot mid positions
             if(pl.surfacePosition()==pr.surfacePosition())
             {
-                //connect only same top bot mid positions
                 int nMerged = 0;
 //                int vl[]{-1,-1}; // identify the vertices being merged
 //                int vr[]{-1,-1};
@@ -1034,6 +1034,22 @@ bool WingXfl::connectSurfaceNodesToNext(int iSurf, std::vector<Panel3> &panels, 
                 }*/
             }
         }
+
+/*        if(ir>0)
+        {
+            // correct streamwise connections
+            // correct rear left node
+            if(pr.isLeftPanel())
+            {
+                pr.setNodeIndex(1, panels[nr-1].nodeIndex(2));
+                pr.setNodeIndex(2, panels[nr-1].nodeIndex(1));
+            }
+            else
+            {
+                pr.setNodeIndex(1, panels[nr-1].nodeIndex(0));
+                pr.setNodeIndex(2, panels[nr-1].nodeIndex(2));
+            }
+        }*/
     }
     return true;
 }

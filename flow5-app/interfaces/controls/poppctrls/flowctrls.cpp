@@ -237,13 +237,6 @@ void FlowCtrls::setupLayout()
         m_plabFPS = new QLabel(tr("FPS"));
         m_plabFPS->setFont(DisplayOptions::tableFont());
 
-        QLabel *pFlow5Link = new QLabel;
-        pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Releases/v722.html>https://flow5.tech/docs/flow5_doc/Releases/v722.html</a>");
-        pFlow5Link->setOpenExternalLinks(true);
-        pFlow5Link->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
-        pFlow5Link->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
-
-
         pFlowLayout->addWidget(plabOGLVersion);
         pFlowLayout->addWidget(pgbBox);
         pFlowLayout->addWidget(pgbODE);
@@ -252,8 +245,6 @@ void FlowCtrls::setupLayout()
 
         pFlowLayout->addStretch();
         pFlowLayout->addWidget(m_plabFPS);
-        pFlowLayout->addWidget(pFlow5Link);
-
     }
     setLayout(pFlowLayout);
 }

@@ -337,7 +337,7 @@ bool P3LinAnalysis::scalarProductWake(Panel3 const &panel0, int iWake, double *s
                 phiW[2] += phiWG[2]*coef;
             }
 
-            if(p3w.isLeftSidePanel())
+            if(p3w.isLeftPanel())
             {
                 // left  panel, nodes 0&2 contribute to left side, node 1 contributes to right side
                 if(m_pPolar3d->bNeumann()|| panel0.isMidPanel())

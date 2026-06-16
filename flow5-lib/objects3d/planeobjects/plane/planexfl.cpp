@@ -1032,9 +1032,10 @@ void PlaneXfl::makeTriMesh(bool bThickSurfaces)
         WingXfl *pWing = m_Wing[iw];
         pWing->makeTriPanels(m_RefTriMesh.nPanels(), m_RefTriMesh.nNodes(), bThickSurfaces);
 
+        bool bConnectFlaps = false;
         for(int jSurf=0; jSurf<pWing->nSurfaces()-1; jSurf++)
         {
-            pWing->connectSurfaceNodesToNext(jSurf, pWing->triMesh().panels(), true, bThickSurfaces);
+            pWing->connectSurfaceNodesToNext(jSurf, pWing->triMesh().panels(), bConnectFlaps, bThickSurfaces);
         }
 
 
@@ -1121,8 +1122,8 @@ bool PlaneXfl::connectTriMesh(bool bRefTriMesh, bool bConnectTE, bool )
 
         int i1 = pWing->firstPanel3Index();
         int n1 = pWing->nPanel3();
-//        pTriMesh->makeConnectionsFromNodePositions(i1, n1, 1.0e-4);
-        pTriMesh->makeConnectionsFromNodeIndexes(i1, n1, false); // slightly faster
+        pTriMesh->makeConnectionsFromNodePositions(i1, n1, 1.0e-4);
+//        pTriMesh->makeConnectionsFromNodeIndexes(i1, n1, false); // slightly faster
     }
 
     pTriMesh->connectNodes();

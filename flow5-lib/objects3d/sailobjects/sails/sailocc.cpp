@@ -73,7 +73,6 @@ void SailOcc::shapesToBreps()
 void SailOcc::makeTriangulation(int , int )
 {
     // moved out of fl5-lib to avoid dependency to gmsh
-//    int nada = 0;
 }
 
 

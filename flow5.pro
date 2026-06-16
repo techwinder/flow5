@@ -15,3 +15,7 @@ SUBDIRS = \
 
 TRANSLATIONS = meta/translations/flow5_zh_CN.ts \
                meta/translations/flow5_fr_FR.ts \
+
+DISTFILES += \
+                LICENSE \
+                README.md

@@ -745,7 +745,7 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
         if(m_pPOpp3dControls->m_bCoG)
         {
             paintIcoSphere(CoG, 0.025/m_glScalef, W3dPrefs::s_MassColor, true, false);
-            glRenderText(CoG+Vector3d(1,1,1)*0.04/m_glScalef, "CoG", W3dPrefs::s_MassColor);
+            glRenderText(CoG+Vector3d(1,1,1)*0.03/m_glScalef, "CoG", W3dPrefs::s_MassColor);
         }
 
         if(m_pPOpp3dControls->m_bMoments)

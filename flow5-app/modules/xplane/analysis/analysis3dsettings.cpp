@@ -526,9 +526,17 @@ void Analysis3dSettings::setupLayout()
                     pgbDisplay->setLayout(pDisplayLayout);
                 }
 
+                    QLabel *pFlow5Link = new QLabel;
+                    pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Analysis/Frames.html>https://flow5.tech/docs/flow5_doc/Analysis/Frames.html</a>");
+                    pFlow5Link->setOpenExternalLinks(true);
+                    pFlow5Link->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
+                    pFlow5Link->setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+
+
                     pLeftLayout->addWidget(pgbWind);
                     pLeftLayout->addWidget(pgbDisplay);
                     pLeftLayout->addStretch();
+                    pLeftLayout->addWidget(pFlow5Link);
                 }
                 m_pglAxesView = new gl3dAxesView;
 

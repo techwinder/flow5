@@ -327,7 +327,6 @@ void PrefsDlg::setupLayout()
 
     QGroupBox *pgbMultiThreadOptions = new QGroupBox(tr("Multithreading"));
     {
-
         QVBoxLayout *pThreadLayout = new QVBoxLayout;
         {
             QLabel *plabIdealCount = new QLabel(tr("Maximum thread count supported by the OS = %1").arg(QThread::idealThreadCount()));
@@ -406,8 +405,6 @@ void PrefsDlg::setupLayout()
             pThreadLayout->addWidget(m_pchMKLDynamic);
             pThreadLayout->addStretch();
         }
-
-
         pgbMultiThreadOptions->setLayout(pThreadLayout);
     }
 

@@ -459,10 +459,10 @@ std::string Panel3::properties(bool bLong) const
     strange += Units::lengthUnitLabel() + "\n";
     props += strange;
 
-    strange = std::format("  Area    = %.5g ", m_SignedArea*Units::m2toUnit());
+    strange = std::format("  Area    = {:.5g} ", m_SignedArea*Units::m2toUnit());
     props += strange + Units::areaUnitLabel() + "\n";
 
-    strange = std::format("  Angles  = (%5.1f, %5.1f, %5.1f)", m_Angle[0], m_Angle[1], m_Angle[2]);
+    strange = std::format("  Angles  = ({:5.1f}, {:5.1f}, {:5.1f})", m_Angle[0], m_Angle[1], m_Angle[2]);
     props += strange + DEGstr + "\n";
 
     strange = std::format("  Edges   = ({:9.3f}, {:9.3f}, {:9.3f}) ",
@@ -485,8 +485,10 @@ std::string Panel3::properties(bool bLong) const
         props += strange;
     }
 
-
     props += "\n";
+    props += m_bIsLeftWingPanel ? "  Left wing panel\n" : "  Right wing panel\n";
+    props += m_bIsLeftPanel ? "  Left panel\n" : "  Right panel\n";
+
     switch(m_Pos)
     {
         case xfl::BOTSURFACE:  strange = "  BOTTOM SURFACE\n";   break;

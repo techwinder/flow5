@@ -4,23 +4,13 @@
 #include <format>
 
 #include <api.h>
-#include <constants.h>
 #include <flow5-io.h>
-#include <foil.h>
-#include <fusenurbs.h>
-#include <gmesh_globals.h>
-#include <objects2d.h>
 #include <objects3d.h>
-#include <oppoint.h>
 #include <panelanalysis.h>
-#include <planeopp.h>
 #include <planepolar.h>
 #include <planepolarnamemaker.h>
 #include <planestl.h>
 #include <planetask.h>
-#include <planexfl.h>
-#include <polar.h>
-#include <xfoiltask.h>
 
 
 #ifdef WIN32
@@ -139,7 +129,7 @@ int main()
 
         // set the reference dimensions
         pPlane->setRefArea(0.2); // m²
-        pPlane->setRefChord(0.02); // m
+        pPlane->setRefChord(0.2); // m
         pPlane->setRefSpan(2.0); //m
 
         pPlane->makePlane(false, false, false); // parameters are ignored
@@ -163,7 +153,7 @@ int main()
 
         // All pair of triangles which form an angle less than the GuessAngle
         // are assumed to be T.E. panels
-        float GuessAngle = 25.0; // degrees
+        float GuessAngle = 19.0; // degrees
 
         // The tricky part: no guarantee that the TE panels have been correctly identified, and no
         // available way to check using the API.

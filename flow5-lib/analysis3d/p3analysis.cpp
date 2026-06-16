@@ -205,7 +205,7 @@ void P3Analysis::getDebugPotential(Vector3d const &C, bool bSelf, double const *
                     {
                         // whether p3 is on the left or right wing, node 1 is its left trailing node and node 2 is its right trailing node
                         // if p3w is a left  wake panel, node 0 and 2 are left  side and node 1 is right side
-                        if(p3w->isLeftSidePanel())  phi += ((phiD[0]+phiD[2])*Mu[3*i3+1] +  phiD[1]         *Mu[3*i3+2]) *sign;
+                        if(p3w->isLeftPanel())  phi += ((phiD[0]+phiD[2])*Mu[3*i3+1] +  phiD[1]         *Mu[3*i3+2]) *sign;
                         // if p3w is a right wake panel, node 0 and 1 are right side and node 2 is left side
                         else                        phi += ( phiD[2]         *Mu[3*i3+1] + (phiD[0]+phiD[1])*Mu[3*i3+2]) *sign;
                     }
@@ -320,7 +320,7 @@ void P3Analysis::velocityVectorBlock(int iBlock, Vector3d const &C, Vector3d *VT
                 // do not use RFF approximation for wake panels?
                 getDoubletInfluence(C, *p3w, Vd, nullptr, data.coreradius, false);
 
-                if(p3w->isLeftSidePanel())
+                if(p3w->isLeftPanel())
                 {
                     VT->x += ((Vd[0].x+Vd[2].x)*mu3left +  Vd[1].x       *mu3right) *sign;
                     VT->y += ((Vd[0].y+Vd[2].y)*mu3left +  Vd[1].y       *mu3right) *sign;
@@ -422,7 +422,7 @@ double P3Analysis::getPotential(Vector3d const &C, double const *mu, double cons
 
                 // whether p3 is on the left or right wing, node 1 is its left trailing node and node 2 is its right trailing node
                 // if p3w is a left  wake panel, node 0 and 2 are left  side and node 1 is right side
-                if(p3w->isLeftSidePanel())
+                if(p3w->isLeftPanel())
                     phiT += ((phiBasis[0]+phiBasis[2])*mu[3*i3+1] + phiBasis[1] *mu[3*i3+2]) *sign;
                 // if p3w is a right wake panel, node 0 and 1 are right side and node 2 is right side
                 else

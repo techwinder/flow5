@@ -1265,19 +1265,19 @@ void Surface::makeTriPanels(std::vector<Panel3> &panel3list, std::vector<Node> &
                 {
                     p3Dtmp.setFrame(nodes, iLB, iTA, iTB);
                     p3Utmp.setFrame(nodes, iLA, iTA, iLB);
-                    p3Utmp.setLeftSidePanel(true);
+                    p3Utmp.setLeftPanel(true);
                 }
                 else if(side==xfl::BOTSURFACE)
                 {
                     p3Dtmp.setFrame(nodes, iLB, iTB, iTA);
                     p3Utmp.setFrame(nodes, iLA, iLB, iTA);
-                    p3Utmp.setLeftSidePanel(true);
+                    p3Utmp.setLeftPanel(true);
                 }
                 else
                 {
                     p3Dtmp.setFrame(nodes, iTB, iTA, iLA);
                     p3Utmp.setFrame(nodes, iTB, iLA, iLB);
-                    p3Dtmp.setLeftSidePanel(true);
+                    p3Dtmp.setLeftPanel(true);
                 }
 
                 if(l==0)
@@ -1299,19 +1299,19 @@ void Surface::makeTriPanels(std::vector<Panel3> &panel3list, std::vector<Node> &
                 {
                     p3Dtmp.setFrame(nodes, iLA, iTA, iTB);
                     p3Utmp.setFrame(nodes, iTB, iLB, iLA);// so that (l,m) is same as opposite panel on right surface
-                    p3Dtmp.setLeftSidePanel(true);
+                    p3Dtmp.setLeftPanel(true);
                 }
                 else if(side==xfl::BOTSURFACE)
                 {
                     p3Dtmp.setFrame(nodes, iLA, iTB, iTA);
                     p3Utmp.setFrame(nodes, iLA, iLB, iTB);
-                    p3Dtmp.setLeftSidePanel(true);
+                    p3Dtmp.setLeftPanel(true);
                 }
                 else
                 {
                     p3Dtmp.setFrame(nodes, iTB, iTA, iLB);
                     p3Utmp.setFrame(nodes, iTA, iLA, iLB);
-                    p3Utmp.setLeftSidePanel(true);
+                    p3Utmp.setLeftPanel(true);
                 }
                 if(l==0)
                 {

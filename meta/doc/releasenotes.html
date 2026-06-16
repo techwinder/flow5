@@ -22,7 +22,7 @@
                 <br>
                 <br>
                 <h3>
-                    flow5 v7.57, , 2026
+                    flow5 v7.57, June 15, 2026
                 </h3>
                 <ul>
                     <li>General
@@ -66,7 +66,8 @@
                             <li>changed the representation of the moments in the 3d view to a resultant vector</li>
                             <li>modified the output of forces and moments to be in the "true" wind axes with the x-axis aligned with the sideslip;
                                 formerly had the x-wind-axis in the x-z plane of the geometry for consistency with AVL</li>
-                            <li>changed the output of forces in the polar graphs to be in wind axes instead of geometry axes</li>
+                            <li>changed the output of forces to be in <a href=https://flow5.tech/docs/flow5_doc/Analysis/Frames.html>wind axes instead of geometry axes</a>
+                                in the polar graphs and in the 3d view</li>
                             <li>changed the display origin of the total force in the 3d plane view from the centre of pressure to the operating point's CoG</li>
                         </ul>
                     </li>
@@ -75,12 +76,11 @@
                             <li>improved the performance of the wing editor</li>
                             <li>added an option to update graphs during a plane polar calculation</li>
                             <li>fixed a potential crash-bug when editing a plane with operating points</li>
+                            <li>code optimization for faster UI responses</li>
                         </ul>
                     </li>
                     <li>Other
                         <ul>
-                            <li>packaged the Windows binaries with Intel's MKL TBB threading library instead of the OpenMP library
-                            to possibly avoid threading conflicts with Gmsh</li>
                         </ul>
                     </li>
                 </ul>

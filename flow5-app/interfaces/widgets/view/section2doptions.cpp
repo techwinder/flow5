@@ -143,7 +143,6 @@ void Section2dOptions::setupLayout()
         {
             m_pGridControl = new GridControl;
             pGridDataLayout->addWidget(m_pGridControl);
-            pGridDataLayout->addStretch();
         }
         m_pGroupBox.back()->setLayout(pGridDataLayout);
     }
