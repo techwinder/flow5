@@ -290,7 +290,7 @@ int Surface::makeTipNodes(std::vector<Node> &nodes, bool bLeft, int nStrips) con
  */
 void Surface::makePanelNodes(std::vector<Node> &nodes, bool bMakeLeftNodes, bool bMidSurface) const
 {
-    double y1=0, y2=0;
+    double y1(0), y2(0);
     Node node;
     std::vector<Node> lefttiplist;
     int n0 = int(nodes.size());
@@ -308,6 +308,7 @@ void Surface::makePanelNodes(std::vector<Node> &nodes, bool bMakeLeftNodes, bool
                 node = m_SideA.at(l);
                 node.setSurfacePosition(xfl::MIDSURFACE);
                 node.setIndex(n0);
+                node.setFlapNode(l<m_NXFlap);
 
                 lefttiplist.push_back(node);
                 n0++;
@@ -321,6 +322,7 @@ void Surface::makePanelNodes(std::vector<Node> &nodes, bool bMakeLeftNodes, bool
                 node = m_SideA_Bot.at(l)*(1.0-y1) + m_SideB_Bot.at(l)*y1;
                 node.setSurfacePosition(xfl::BOTSURFACE);
                 node.setIndex(n0);
+                node.setFlapNode(l<m_NXFlap);
 
                 lefttiplist.push_back(node);
                 n0++;
@@ -331,7 +333,7 @@ void Surface::makePanelNodes(std::vector<Node> &nodes, bool bMakeLeftNodes, bool
                 node = m_SideA_Top.at(l)*(1.0-y1) + m_SideB_Top.at(l)*y1;
                 node.setSurfacePosition(xfl::TOPSURFACE);
                 node.setIndex(n0);
-
+                node.setFlapNode(l<m_NXFlap);
 
                 lefttiplist.push_back(node);
                 n0++;
@@ -352,6 +354,7 @@ void Surface::makePanelNodes(std::vector<Node> &nodes, bool bMakeLeftNodes, bool
                 node = m_SideA.at(l)*(1.0-y2) + m_SideB.at(l)*y2;
                 node.setSurfacePosition(xfl::MIDSURFACE);
                 node.setIndex(n0);
+                node.setFlapNode(l<m_NXFlap);
 
                 nodes.push_back(node);
                 n0++;
@@ -365,6 +368,7 @@ void Surface::makePanelNodes(std::vector<Node> &nodes, bool bMakeLeftNodes, bool
                 node = m_SideA_Bot.at(l)*(1.0-y2) + m_SideB_Bot.at(l)*y2;
                 node.setSurfacePosition(xfl::BOTSURFACE);
                 node.setIndex(n0);
+                node.setFlapNode(l<m_NXFlap);
 
                 nodes.push_back(node);
                 n0++;
@@ -375,6 +379,7 @@ void Surface::makePanelNodes(std::vector<Node> &nodes, bool bMakeLeftNodes, bool
                 node = m_SideA_Top.at(l)*(1.0-y2) + m_SideB_Top.at(l)*y2;
                 node.setSurfacePosition(xfl::TOPSURFACE);
                 node.setIndex(n0);
+                node.setFlapNode(l<m_NXFlap);
 
                 nodes.push_back(node);
                 n0++;

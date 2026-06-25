@@ -51,13 +51,13 @@ class WingXfl;
 class gl3dGeomControls;
 class gl3dWingView;
 
-class WingDefDlg : public XflDialog
+class WingXflDlg : public XflDialog
 {
     Q_OBJECT
 
     public:
-        WingDefDlg(QWidget *pParent=nullptr);
-        ~WingDefDlg();
+        WingXflDlg(QWidget *pParent=nullptr);
+        ~WingXflDlg();
 
         void makeWingTable();
         void initDialog(WingXfl*pWing);

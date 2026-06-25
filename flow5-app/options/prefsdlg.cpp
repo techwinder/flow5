@@ -272,8 +272,7 @@ void PrefsDlg::setupLayout()
                     {
                         QLabel *plabMouseWheel = new QLabel(tr("Mouse wheel scale factor:"));
                         m_pfeScaleFactor = new FloatEdit;
-                        m_pfeScaleFactor->setToolTip(tr("Define the percentage increase by which the views should be zoomed in or out\n"
-                                                        "when using the mouse wheel."));
+                        m_pfeScaleFactor->setToolTip(tr("<p>Define the percentage increase by which the views should be zoomed in or out when using the mouse wheel.</p>"));
                         QLabel *plabComment = new QLabel(tr("%; Set a negative value to reverse the direction"));
 
                         pScaleLayout->addWidget(plabMouseWheel);

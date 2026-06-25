@@ -59,7 +59,7 @@ struct SurfaceInertia
     std::vector<double> ElemVolume;
     std::vector<Vector3d> PtVolume;
     Vector3d SurfCoG;
-    double  SurfVolume =  0.0;
+    double SurfVolume =  0.0;
 };
 
 
@@ -71,7 +71,7 @@ class FL5LIB_EXPORT WingXfl : public Part
     friend class  PlaneXflDlg;
     friend struct SpanDistribs;
     friend class  Surface;
-    friend class  WingDefDlg;
+    friend class  WingXflDlg;
     friend class  WingDlg;
     friend class  XMLPlaneReader;
 

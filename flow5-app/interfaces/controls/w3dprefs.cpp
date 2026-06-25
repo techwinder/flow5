@@ -64,7 +64,7 @@
 #include <interfaces/widgets/line/linemenu.h>
 
 
-W3dPrefs::eBackground W3dPrefs::s_eBackground(UNIFORM);
+W3dPrefs::eBackground W3dPrefs::s_eBackground(W3dPrefs::UNIFORM);
 QString W3dPrefs::s_ImagePath;
 
 QColor W3dPrefs::s_ColourGrad1 = QColor(61,79,91);
@@ -89,7 +89,8 @@ int W3dPrefs::s_AnimationTime(500); //ms
 LineStyle W3dPrefs::s_SelectStyle(  true, Line::SOLID,   5, fl5Color(255,35, 15),         Line::NOSYMBOL);
 LineStyle W3dPrefs::s_HighStyle(    true, Line::SOLID,   5, fl5Color(65,105,225),         Line::NOSYMBOL);
 LineStyle W3dPrefs::s_AxisStyle(    true, Line::DASHDOT, 1, fl5Color(150,150,150),        Line::NOSYMBOL);
-LineStyle W3dPrefs::s_WindStyle(    true, Line::SOLID,   3, fl5Color(75, 75, 75),         Line::NOSYMBOL);
+LineStyle W3dPrefs::s_WindStyle(    true, Line::DASHDOT, 1, fl5Color( 75, 125, 175),      Line::NOSYMBOL);
+LineStyle W3dPrefs::s_StabStyle(    true, Line::DASHDOT, 1, fl5Color(175, 125, 75),       Line::NOSYMBOL);
 LineStyle W3dPrefs::s_PanelStyle(   true, Line::SOLID,   1, fl5Color(117, 117, 117),      Line::NOSYMBOL);
 LineStyle W3dPrefs::s_OutlineStyle( true, Line::SOLID,   1, fl5Color(41,41,41),           Line::NOSYMBOL);
 LineStyle W3dPrefs::s_LiftStyle(    true, Line::SOLID,   3, fl5Color(105, 105, 105),      Line::NOSYMBOL);
@@ -172,7 +173,8 @@ void W3dPrefs::connectSignals()
     connect(m_plbTrans,              SIGNAL(clickedLB(LineStyle)),  SLOT(onTransition()));
     connect(m_plbVelocity,           SIGNAL(clickedLB(LineStyle)),  SLOT(onVelocity()));
     connect(m_plbViscousDrag,        SIGNAL(clickedLB(LineStyle)),  SLOT(onVDrag()));
-    connect(m_plbWind,               SIGNAL(clickedLB(LineStyle)),  SLOT(onWind()));
+    connect(m_plbStab,               SIGNAL(clickedLB(LineStyle)),  SLOT(onStabAxes()));
+    connect(m_plbWind,               SIGNAL(clickedLB(LineStyle)),  SLOT(onWindAxes()));
 }
 
 
@@ -245,6 +247,7 @@ void W3dPrefs::initWidgets()
 
     m_plbAxis->setTheStyle(s_AxisStyle);
     m_plbWind->setTheStyle(s_WindStyle);
+    m_plbStab->setTheStyle(s_StabStyle);
     m_plbOutline->setTheStyle(s_OutlineStyle);
     m_plbMeshOutline->setTheStyle(s_PanelStyle);
     m_plbLift->setTheStyle(s_LiftStyle);
@@ -414,7 +417,8 @@ void W3dPrefs::setupLayout()
                 QLabel *plabSel         = new QLabel(tr("Selected"));
                 QLabel *plabHigh        = new QLabel(tr("Highlighted"));
                 QLabel *plabAxis        = new QLabel(tr("Axes"));
-                QLabel *plabWind        = new QLabel(tr("Wind"));
+                QLabel *plabStab        = new QLabel(tr("Stability axes"));
+                QLabel *plabWind        = new QLabel(tr("Wind axes"));
                 QLabel *plabOutline     = new QLabel(tr("Geometry outline"));
                 QLabel *plabTopTr       = new QLabel(tr("Transitions"));
                 QLabel *plabLift        = new QLabel(tr("Lift"));
@@ -439,6 +443,7 @@ void W3dPrefs::setupLayout()
                 m_plbSelect       = new LineBtn(this);
 
                 m_plbAxis         = new LineBtn(this);
+                m_plbStab         = new LineBtn(this);
                 m_plbWind         = new LineBtn(this);
                 m_plbOutline      = new LineBtn(this);
                 m_plbTrans        = new LineBtn(this);
@@ -469,6 +474,7 @@ void W3dPrefs::setupLayout()
                 m_plbSelect->setBackground(true);
 
                 m_plbAxis->setBackground(true);
+                m_plbStab->setBackground(true);
                 m_plbWind->setBackground(true);
                 m_plbOutline->setBackground(true);
                 m_plbLift->setBackground(true);
@@ -494,8 +500,10 @@ void W3dPrefs::setupLayout()
                 pColorGridLayout->addWidget(plabAxis,               2,1, Qt::AlignRight);
                 pColorGridLayout->addWidget(m_plbAxis,              2,2);
 
-                pColorGridLayout->addWidget(plabWind,               2,3, Qt::AlignRight);
-                pColorGridLayout->addWidget(m_plbWind,              2,4);
+                pColorGridLayout->addWidget(plabWind,               3,1, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbWind,              3,2);
+                pColorGridLayout->addWidget(plabStab,               3,3, Qt::AlignRight);
+                pColorGridLayout->addWidget(m_plbStab,              3,4);
 
                 pColorGridLayout->addWidget(plabGeom,               4,1,1,4, Qt::AlignHCenter);
                 pColorGridLayout->addWidget(plabOutline,            5,1, Qt::AlignRight);
@@ -772,7 +780,6 @@ void W3dPrefs::onOutline()
 void W3dPrefs::on3dAxis()
 {
     LineMenu lm(nullptr, false);
-    //    lm.enableSubMenus(true, true, true, false);
     lm.initMenu(s_AxisStyle);
     lm.exec(QCursor::pos());
 
@@ -784,7 +791,6 @@ void W3dPrefs::on3dAxis()
 void W3dPrefs::onHighlight()
 {
     LineMenu lm(nullptr, false);
-    //    lm.enableSubMenus(true, true, true, false);
     lm.initMenu(s_HighStyle);
     lm.exec(QCursor::pos());
 
@@ -796,7 +802,6 @@ void W3dPrefs::onHighlight()
 void W3dPrefs::onSelect()
 {
     LineMenu lm(nullptr, false);
-    //    lm.enableSubMenus(true, true, true, false);
     lm.initMenu(s_SelectStyle);
     lm.exec(QCursor::pos());
 
@@ -805,10 +810,20 @@ void W3dPrefs::onSelect()
 }
 
 
-void W3dPrefs::onWind()
+void W3dPrefs::onStabAxes()
 {
     LineMenu lm(nullptr, false);
-    //    lm.enableSubMenus(true, true, true, false);
+    lm.initMenu(s_StabStyle);
+    lm.exec(QCursor::pos());
+
+    s_StabStyle = lm.theStyle();
+    m_plbStab->setTheStyle(s_StabStyle);
+}
+
+
+void W3dPrefs::onWindAxes()
+{
+    LineMenu lm(nullptr, false);
     lm.initMenu(s_WindStyle);
     lm.exec(QCursor::pos());
 
@@ -1069,6 +1084,7 @@ void W3dPrefs::saveSettings(QSettings &settings)
         xfl::saveLineSettings(settings, s_AxisStyle, "AxisStyle");
         xfl::saveLineSettings(settings, s_HighStyle,      "HighlightStyle");
         xfl::saveLineSettings(settings, s_SelectStyle,    "SelectionStyle");
+        xfl::saveLineSettings(settings, s_StabStyle,      "StabStyle");
         xfl::saveLineSettings(settings, s_WindStyle,      "WindStyle");
         xfl::saveLineSettings(settings, s_PanelStyle,     "PanelStyle");
         xfl::saveLineSettings(settings, s_OutlineStyle,   "OutlineStyle");
@@ -1160,6 +1176,7 @@ void W3dPrefs::loadSettings(QSettings &settings)
         xfl::loadLineSettings(settings, s_AxisStyle,     "AxisStyle");
         xfl::loadLineSettings(settings, s_HighStyle,     "HighlightStyle");
         xfl::loadLineSettings(settings, s_SelectStyle,   "SelectionStyle");
+        xfl::loadLineSettings(settings, s_StabStyle,     "StabStyle");
         xfl::loadLineSettings(settings, s_WindStyle,     "WindStyle");
         xfl::loadLineSettings(settings, s_PanelStyle,    "PanelStyle");
         xfl::loadLineSettings(settings, s_OutlineStyle,  "OutlineStyle");
@@ -1247,10 +1264,13 @@ void W3dPrefs::resetDefaults()
     s_WaterColor = QColor(51,77,89,100);
     s_MassColor  = QColor(95,128,99);
 
-    s_SelectStyle   = LineStyle(true, Line::SOLID,   5, fl5Color(255,35, 15),         Line::NOSYMBOL);
-    s_HighStyle     = LineStyle(true, Line::SOLID,   5, fl5Color(65,105,225),         Line::NOSYMBOL);
-    s_AxisStyle     = LineStyle(true, Line::DASHDOT, 1, fl5Color(150,150,150),        Line::NOSYMBOL);
-    s_WindStyle     = LineStyle(true, Line::SOLID,   3, fl5Color(75, 75, 75),         Line::NOSYMBOL);
+    s_SelectStyle   = LineStyle(true, Line::SOLID,   5, fl5Color(255,  35,  15),       Line::NOSYMBOL);
+    s_HighStyle     = LineStyle(true, Line::SOLID,   5, fl5Color( 65, 105, 225),       Line::NOSYMBOL);
+    s_AxisStyle     = LineStyle(true, Line::DASHDOT, 1, fl5Color(150, 150, 150),       Line::NOSYMBOL);
+    s_WindStyle     = LineStyle(true, Line::DASHDOT, 1, fl5Color( 75, 125,  175),      Line::NOSYMBOL);
+    s_StabStyle     = LineStyle(true, Line::DASHDOT, 1, fl5Color(175, 125,  75),       Line::NOSYMBOL);
+
+
     s_PanelStyle    = LineStyle(true, Line::SOLID,   1, fl5Color(117, 117, 117),      Line::NOSYMBOL);
     s_OutlineStyle  = LineStyle(true, Line::SOLID,   1, fl5Color(41,41,41),           Line::NOSYMBOL);
     s_LiftStyle     = LineStyle(true, Line::SOLID,   3, fl5Color(105, 105, 105),      Line::NOSYMBOL);

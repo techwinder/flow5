@@ -51,7 +51,7 @@ class T1234578PolarDlg : public PlanePolarDlg
 
     public:
         T1234578PolarDlg(QWidget *pParent);
-        void initPolar3dDlg(Plane const *pPlane, PlanePolar const *pWPolar=nullptr) override;
+        void initPolar3dDlg(Plane const *pPlane, PlanePolar const *pPolar=nullptr) override;
         void setType7Polar();
 
     private:
@@ -89,7 +89,7 @@ class T1234578PolarDlg : public PlanePolarDlg
     private:
 
         FloatEdit *m_pfeQInf;
-        FloatEdit *m_pfeAlphaSpec, *m_pfePhiSpec;
+        FloatEdit *m_pfeAlphaSpec, *m_pfeBetaSpec, *m_pfePhiSpec;
 
         QRadioButton *m_prbType1, *m_prbType2, *m_prbType3, *m_prbType4, *m_prbType5, *m_prbType7, *m_prbType8;
 

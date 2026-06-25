@@ -65,9 +65,7 @@ HEADERS += \
     $$PWD/fuseedit/shapefixerdlg.h \
     $$PWD/fuseedit/xflfuseedit/fuseframewt.h \
     $$PWD/fuseedit/xflfuseedit/fuselinewt.h \
-    $$PWD/fuseedit/xflfuseedit/fusexfldefdlg.h \
     $$PWD/fuseedit/xflfuseedit/fusexfldlg.h \
-    $$PWD/fuseedit/xflfuseedit/fusexflobjectdlg.h \
     $$PWD/importobjectdlg.h \
     $$PWD/inertia/partinertiadelegate.h \
     $$PWD/inertia/partinertiadlg.h \
@@ -87,10 +85,10 @@ HEADERS += \
     $$PWD/scaledlg.h \
     $$PWD/shapedlg.h \
     $$PWD/translatedlg.h \
-    $$PWD/wingedit/wingdefdlg.h \
     $$PWD/wingedit/wingscaledlg.h \
     $$PWD/wingedit/wingsectiondelegate.h \
     $$PWD/wingedit/wingsectionmodel.h \
+    $$PWD/wingedit/wingxfldlg.h
 
 
 
@@ -150,9 +148,7 @@ SOURCES += \
     $$PWD/fuseedit/shapefixerdlg.cpp \
     $$PWD/fuseedit/xflfuseedit/fuseframewt.cpp \
     $$PWD/fuseedit/xflfuseedit/fuselinewt.cpp \
-    $$PWD/fuseedit/xflfuseedit/fusexfldefdlg.cpp \
     $$PWD/fuseedit/xflfuseedit/fusexfldlg.cpp \
-    $$PWD/fuseedit/xflfuseedit/fusexflobjectdlg.cpp \
     $$PWD/importobjectdlg.cpp \
     $$PWD/inertia/partinertiadelegate.cpp \
     $$PWD/inertia/partinertiadlg.cpp \
@@ -172,9 +168,9 @@ SOURCES += \
     $$PWD/scaledlg.cpp \
     $$PWD/shapedlg.cpp \
     $$PWD/translatedlg.cpp \
-    $$PWD/wingedit/wingdefdlg.cpp \
     $$PWD/wingedit/wingscaledlg.cpp \
     $$PWD/wingedit/wingsectiondelegate.cpp \
     $$PWD/wingedit/wingsectionmodel.cpp \
+    $$PWD/wingedit/wingxfldlg.cpp
 
 

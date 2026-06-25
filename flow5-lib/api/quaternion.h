@@ -91,6 +91,8 @@ class FL5LIB_EXPORT Quaternion
         void toEulerAngles(double &roll, double &pitch, double &yaw) const;
         void fromEulerAngles(double roll, double pitch, double yaw);
 
+        void fromTaitBryanAngles(double roll, double pitch, double yaw);
+
         inline void from2UnitVectors(Vector3d const &A, Vector3d const &B);
 
         void slerp(const Quaternion &qt0, const Quaternion &qt1, double t);

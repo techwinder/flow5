@@ -245,7 +245,7 @@ void PlaneOpp::getProperties(Plane const *pPlane, PlanePolar const *pWPolar, std
 
     if(fabs(m_Beta)>ANGLEPRECISION)
     {
-        strong = "Beta  = "+ std::format(" {:9.3f}", m_Beta);
+        strong = BETAstr +"     = "+ std::format(" {:9.3f}", m_Beta);
         props += strong + DEGstr +"\n";
     }
     props += "\n";

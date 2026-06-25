@@ -662,8 +662,6 @@ void gl3dView::on3dFlipV()
     m_QuatEnd = m_QuatStart*qtflip;
     m_ArcBall.setQuat(m_QuatEnd);
 
-    //    memcpy(m_ArcBall.m_MatCurrent, ab_new, 16*sizeof(float));
-
     startRotationTimer();
     emit viewModified();
 }
@@ -713,7 +711,6 @@ void gl3dView::on3dTop()
 }
 
 
-//SHIFT + Y
 void gl3dView::on3dLeft()
 {
     stopDynamicTimer();
@@ -726,7 +723,7 @@ void gl3dView::on3dLeft()
     emit viewModified();
 }
 
-//Y
+
 void gl3dView::on3dRight()
 {
     stopDynamicTimer();
@@ -1410,11 +1407,17 @@ void gl3dView::paintGl3()
 
     if(m_bAxes)
     {
-        // fixed scale axis for the axis
+        // fixed scale for the axes
         QMatrix4x4 vm(m_matView);
         m_matView.scale(m_glScalef, m_glScalef, m_glScalef);
         m_matView.translate(m_glRotCenter.xf(), m_glRotCenter.yf(), m_glRotCenter.zf());
         m_matView.scale(0.5f/m_glScalef, 0.5f/m_glScalef, 0.5f/m_glScalef);
+        m_shadLine.bind();
+        {
+            m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView*m_matModel);
+            m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
+        }
+
         paintAxes(W3dPrefs::s_AxisStyle, QString());
         m_matView=vm; // leave things as they were
     }
@@ -1960,8 +1963,6 @@ void gl3dView::paintAxes(LineStyle const &ls, QString const&suffix)
 
     m_shadLine.bind();
     {
-        m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView*m_matModel);
-        m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
         m_shadLine.setUniformValue(m_locLine.m_HasUniColor, 1);
         m_shadLine.setUniformValue(m_locLine.m_UniColor, xfl::fromfl5Clr(ls.m_Color));
         m_shadLine.setUniformValue(m_locLine.m_Pattern, gl::stipple(ls.m_Stipple));

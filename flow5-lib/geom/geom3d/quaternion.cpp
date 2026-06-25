@@ -206,6 +206,35 @@ void Quaternion::toEulerAngles(double &roll, double &pitch, double &yaw) const
     yaw   *= 180.0/PI;
 }
 
+/*
+ https://en.wikipedia.org/wiki/Euler_angles#Tait-Bryan_angles
+ The second type of formalism is called Tait-Bryan angles, after Scottish mathematical physicist
+ Peter Guthrie Tait (1831–1901) and English applied mathematician George H. Bryan (1864–1928).
+ It is the convention normally used for aerospace applications, so that zero degrees elevation
+ represents the horizontal attitude. Tait-Bryan angles represent the orientation of the aircraft
+ with respect to the world frame. */
+ /* with help from https://marc-b-reynolds.github.io/math/2017/04/18/TaitEuler.html */
+void Quaternion::fromTaitBryanAngles(double roll, double pitch, double yaw)
+{
+    double psi   = yaw   * PI/180.0;
+    double theta = pitch * PI/180.0;
+    double phi   = roll  * PI/180.0;
+
+    double cpsi2   = cos(psi/2.0);
+    double spsi2   = sin(psi/2.0);
+    double ctheta2 = cos(theta/2.0);
+    double stheta2 = sin(theta/2.0);
+    double cphi2   = cos(phi/2.0);
+    double sphi2   = sin(phi/2.0);
+
+    double w = cphi2 * ctheta2 * cpsi2 + sphi2 * stheta2 * spsi2;
+    double x = sphi2 * ctheta2 * cpsi2 - cphi2 * stheta2 * spsi2;
+    double y = cphi2 * stheta2 * cpsi2 + sphi2 * ctheta2 * spsi2;
+    double z = cphi2 * ctheta2 * spsi2 - sphi2 * stheta2 * cpsi2;
+
+    set(w,x,y,z);
+}
+
 
 /**
  * In computer graphics, Slerp is shorthand for spherical linear interpolation, introduced by Ken Shoemake

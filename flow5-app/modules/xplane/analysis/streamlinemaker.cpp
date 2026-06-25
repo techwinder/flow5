@@ -52,14 +52,10 @@ double StreamlineMaker::m_L0=0.1;
 double StreamlineMaker::m_XFactor=1.01;
 */
 
-StreamlineMaker::StreamlineMaker(QObject *pParent) : QRunnable()
+StreamlineMaker::StreamlineMaker() : QRunnable()
 {
-    m_pParent = pParent;
+    m_pOpp3d = nullptr;
 
-    m_Mu    = nullptr;
-    m_Sigma = nullptr;
-
-    m_QInf = m_Alpha = m_Beta = 0;
     m_NX = 50;
     m_L0 = 0.1;
     m_XFactor = 1.0;
@@ -91,14 +87,9 @@ void StreamlineMaker::initializeLineMaker(int index, float *pStreamVertexArray, 
 }
 
 
-void StreamlineMaker::setOpp(Polar3d const*pPolar3d, double QInf, double alpha, double beta, double const*mu, double const*sigma)
+void StreamlineMaker::setOpp3d(Opp3d const*pOpp3d)
 {
-    m_pPolar3d=pPolar3d;
-    m_QInf  = QInf;
-    m_Alpha = alpha;
-    m_Beta  = beta;
-    m_Mu    = mu;
-    m_Sigma = sigma;
+    m_pOpp3d = pOpp3d;
 }
 
 
@@ -109,8 +100,8 @@ void StreamlineMaker::run()
     Vector3d VT, Vel;
 
     Vector3d winddir, VInf;
-    winddir = objects::windDirection(0.0, m_Beta);// alpha=because the wake panels are rotated by aoa
-    VInf = winddir * m_QInf;
+    winddir = m_pOpp3d->aeroForces().CFWind().Idir();
+    VInf = winddir * m_pOpp3d->QInf();
 
     // calculate total wake length and compare it to max. length, i.e. the wake length
     double l0 = m_L0;
@@ -159,9 +150,9 @@ void StreamlineMaker::run()
             C0 = C;
 
             if(m_pP4Analysis)
-                m_pP4Analysis->getVelocityVector(C,  m_Mu, m_Sigma, Vel, Vortex::coreRadius(), false, true);
+                m_pP4Analysis->getVelocityVector(C, m_pOpp3d->gamma().data(), m_pOpp3d->sigma().data(), Vel, Vortex::coreRadius(), false, true);
             else if(m_pP3Analysis)
-                m_pP3Analysis->getVelocityVector(C,  m_Mu, m_Sigma, Vel, Vortex::coreRadius(), false, true);
+                m_pP3Analysis->getVelocityVector(C, m_pOpp3d->gamma().data(), m_pOpp3d->sigma().data(), Vel, Vortex::coreRadius(), false, true);
 
 
             if(Vel.norm()/VInf.norm()>0.5)
@@ -200,8 +191,7 @@ void StreamlineMaker::run()
     }
 //    qDebug("  last  %13.9f  %13.9f  %13.9f", C.x + m_TC.x, C.y + m_TC.y, C.z + m_TC.z);
 
-    if(m_pParent)
-        qApp->postEvent(static_cast<QObject*>(m_pParent), new StreamEndTaskEvent(m_Index));
+//    if(m_pParent)        qApp->postEvent(static_cast<QObject*>(m_pParent), new StreamEndTaskEvent(m_Index));
 }
 
 

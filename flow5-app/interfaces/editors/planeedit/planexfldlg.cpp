@@ -83,14 +83,13 @@
 #include <interfaces/editors/fuseedit/fusemesherdlg.h>
 #include <interfaces/editors/fuseedit/fuseoccdlg.h>
 #include <interfaces/editors/fuseedit/fusestldlg.h>
-#include <interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.h>
-#include <interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.h>
+#include <interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.h>
 #include <interfaces/editors/importobjectdlg.h>
 #include <interfaces/editors/inertia/partinertiadlg.h>
 #include <interfaces/editors/inertia/planexflinertiadlg.h>
 #include <interfaces/editors/planeedit/planepartdelegate.h>
 #include <interfaces/editors/planeedit/planepartmodel.h>
-#include <interfaces/editors/wingedit/wingdefdlg.h>
+#include <interfaces/editors/wingedit/wingxfldlg.h>
 #include <interfaces/editors/wingedit/wingscaledlg.h>
 #include <interfaces/exchange/stlwriterdlg.h>
 #include <interfaces/mesh/gmesherwt.h>
@@ -1663,7 +1662,7 @@ void PlaneXflDlg::editWing(WingXfl *pWing)
     WingXfl modWing;
     modWing.duplicate(pWing);
 
-    WingDefDlg *pWingDlg = new WingDefDlg(this);
+    WingXflDlg *pWingDlg = new WingXflDlg(this);
 
     pWingDlg->hideSaveAsNew();
 
@@ -1682,7 +1681,7 @@ void PlaneXflDlg::editWing(WingXfl *pWing)
 }
 
 
-void PlaneXflDlg::editFuse(int iFuse, bool bAdvanced)
+void PlaneXflDlg::editFuse(int iFuse)
 {
     Fuse *pFuse = m_pPlaneXfl->fuse(iFuse);
 
@@ -1691,9 +1690,7 @@ void PlaneXflDlg::editFuse(int iFuse, bool bAdvanced)
         FuseXfl *pFuse = dynamic_cast<FuseXfl*>(m_pPlaneXfl->fuse(iFuse));
         Fuse* pMemBody = pFuse->clone();
 
-        FuseXflDlg *pXflFuseDlg = nullptr;
-        if(bAdvanced) pXflFuseDlg = new FuseXflObjectDlg(this);
-        else          pXflFuseDlg = new FuseXflDefDlg(this);
+        FuseXflDlg *pXflFuseDlg = new FuseXflDlg(this);
 
         pXflFuseDlg->enableName(false);
         pXflFuseDlg->initDialog(pFuse);
@@ -1717,7 +1714,7 @@ void PlaneXflDlg::editFuse(int iFuse, bool bAdvanced)
         FuseSections* pFuseSections = dynamic_cast<FuseSections*>(pFuse);
 
         FuseXflDlg *pXflFuseDlg = nullptr;
-        pXflFuseDlg = new FuseXflDefDlg(this);
+        pXflFuseDlg = new FuseXflDlg(this);
 
         pXflFuseDlg->enableName(false);
         pXflFuseDlg->initDialog(pFuseSections);
@@ -2161,8 +2158,7 @@ void PlaneXflDlg::onEditPart()
     else if(row>=m_pPlaneXfl->nWings())
     {
         int iFuse = row-m_pPlaneXfl->nWings();
-        bool bAdvanced = false;
-        editFuse(iFuse, bAdvanced);
+        editFuse(iFuse);
     }
 }
 
@@ -2321,7 +2317,6 @@ void PlaneXflDlg::onResizeColumns()
 
 void PlaneXflDlg::onPartItemClicked(QModelIndex index)
 {
-
     if(!index.isValid())
     {
     }
@@ -2371,7 +2366,7 @@ void PlaneXflDlg::onPartItemClicked(QModelIndex index)
 
             QAction *pActivated = m_pPartMenu->exec(QCursor::pos());
             (void)pActivated;
-//            if(pActivated) qDebug() << pActivated->text();
+
         }
     }
 }

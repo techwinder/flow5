@@ -83,7 +83,7 @@ class PlaneXflDlg : public PlaneDlg
         void connectSignals();
 
         void editWing(WingXfl *pWing);
-        void editFuse(int iFuse, bool bAdvanced=false);
+        void editFuse(int iFuse);
         void readParams();
 
         void setControls() override;

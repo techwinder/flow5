@@ -28,8 +28,8 @@
 
 #include <string>
 
-#define MAJOR_VERSION    7
-#define MINOR_VERSION    57
+#define MAJOR_VERSION     7
+#define MINOR_VERSION    58
 
 
 namespace fl5

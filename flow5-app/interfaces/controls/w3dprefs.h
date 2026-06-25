@@ -126,7 +126,8 @@ class W3dPrefs : public QWidget
         void onWakePanelClr();
         void onVortonClr();
         void onWaterColor();
-        void onWind();
+        void onStabAxes();
+        void onWindAxes();
         void onWingPanelClr();
         void onXCP();
         void onUpdateUnits();
@@ -149,7 +150,7 @@ class W3dPrefs : public QWidget
         LineBtn *m_plbHighlight, *m_plbSelect;
         LineBtn *m_plbAxis, *m_plbOutline, *m_plbMeshOutline, *m_plbTrans;
         LineBtn *m_plbLift, *m_plbInducedDrag, *m_plbViscousDrag, *m_plbVelocity;
-        LineBtn *m_plbWind;
+        LineBtn * m_plbStab, *m_plbWind;
         LineBtn *m_plbFlowLines;
         LineBtn *m_plbStreamLines;
         QCheckBox *m_pchUseWingColour;
@@ -210,6 +211,7 @@ class W3dPrefs : public QWidget
         static LineStyle s_HighStyle;
         static LineStyle s_AxisStyle;
         static LineStyle s_WindStyle;
+        static LineStyle s_StabStyle;
         static LineStyle s_PanelStyle;
         static LineStyle s_OutlineStyle;
 

@@ -182,10 +182,10 @@ class gl3dView : public QOpenGLWidget, protected QOpenGLExtraFunctions
         void on3dFlipV();
         virtual void on3dBot();
         virtual void on3dTop();
-        void on3dLeft();
-        void on3dRight();
-        void on3dFront();
-        void on3dRear();
+        virtual void on3dLeft();
+        virtual void on3dRight();
+        virtual void on3dFront();
+        virtual void on3dRear();
         void on3dReset();
         void onAxes(bool bChecked) {m_bAxes = bChecked; update();}
         void onClipPlane(int pos);

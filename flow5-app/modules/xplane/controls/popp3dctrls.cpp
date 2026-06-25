@@ -29,19 +29,21 @@
 #include <QApplication>
 #include <QGridLayout>
 #include <QVBoxLayout>
-#include <QAction>
+#include <QButtonGroup>
+//#include <QAction>
 
 #include "popp3dctrls.h"
+
 #include <core/xflcore.h>
 #include <interfaces/controls/poppctrls/crossflowctrls.h>
 #include <interfaces/controls/poppctrls/flowctrls.h>
 #include <interfaces/controls/poppctrls/opp3dscalesctrls.h>
 #include <interfaces/controls/poppctrls/streamlinesctrls.h>
+#include <interfaces/opengl/controls/fine3dcontrols.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <modules/xplane/controls/stab3dctrls.h>
 #include <modules/xplane/glview/gl3dxplaneview.h>
 #include <modules/xplane/xplane.h>
-#include <interfaces/opengl/controls/fine3dcontrols.h>
 
 #include <api/objects3d.h>
 #include <api/planeopp.h>
@@ -77,7 +79,9 @@ POpp3dCtrls::POpp3dCtrls(gl3dXflView*p3dView, QWidget *pParent) : QTabWidget(pPa
     m_bWakePanels     = false;
     m_bVortons        = false;
     m_bHPlane         = false;
+    m_bStabAxes       = m_bWindAxes = false;
     m_bAnimateWOpp    = false;
+    m_bGeomView       = false;
 
     m_bAnimateWOppPlus   = true;
     m_pTimerWOpp= new QTimer(this);
@@ -149,11 +153,20 @@ void POpp3dCtrls::setupLayout()
                 m_pchStream         = new QCheckBox(tr("Streamlines"));
                 m_pchFlaps          = new QCheckBox(tr("Flaps"));
                 m_pchCoG            = new QCheckBox(tr("CoG"));
+                m_pchWind           = new QCheckBox(tr("Wind axes"));
+                m_pchWind->setToolTip("<p>The frame of reference in which the forces and moments are output.</p>");
+                m_pchStab           = new QCheckBox(tr("Stability axes"));
+                m_pchStab->setToolTip("<p>The frame of reference in which the stability derivatives are calculated and output.<br>For information only.</p>");
                 m_pchFlow           = new QCheckBox(tr("Flow"));
                 m_pchFlow->setToolTip(tr("<p>Launches an animation of the flow around the model.<br>"
                                       "Requires OpenGL 4.3+.</p>"));
                 m_pchWakePanels     = new QCheckBox(tr("Wake panels"));
-                m_pchWakePanels->setToolTip(tr("<p>T6 polars only</p>"));
+                m_pchWakePanels->setToolTip(tr("<p>"
+                                               "The wake panels are constructed in the direction of the geometry's x-axis, and the calculations "
+                                               "are run with this horizontal set of wake panels.<br>"
+                                               "However for the post-processing <u>only</u> the wake panels are rotated and aligned with the direction of the wind's x-axis. "
+                                               "This is necessary to calculate the streamlines and to animate the flow in a realistic manner."
+                                               "</p>"));
                 m_pchVortons        = new QCheckBox(tr("Vortons"));
                 m_pchVortons->setToolTip(tr("<p>T6 polars + VPW only</p>"));
                 m_pchHPlane         = new QCheckBox(tr("Ground/Free surface"));
@@ -174,6 +187,7 @@ void POpp3dCtrls::setupLayout()
                 m_pslAnimPOppSpeed->setSliderPosition(250);
                 m_pslAnimPOppSpeed->setTickInterval(50);
                 m_pslAnimPOppSpeed->setTickPosition(QSlider::TicksBelow);
+
                 pCheckDispLayout->addWidget(m_pchCp,               2, 1);
                 pCheckDispLayout->addWidget(m_pchGamma,            2, 2);
                 pCheckDispLayout->addWidget(m_pchStripLift,        3, 1);
@@ -191,16 +205,46 @@ void POpp3dCtrls::setupLayout()
                 pCheckDispLayout->addWidget(m_pchVortons,          9, 2);
                 pCheckDispLayout->addWidget(m_pchCoG,             10, 1);
                 pCheckDispLayout->addWidget(m_pchFlaps,           10, 2);
-                pCheckDispLayout->addWidget(m_pchHPlane,          11, 1);
-                pCheckDispLayout->addWidget(m_pchPickPanel,       13, 1);
+                pCheckDispLayout->addWidget(m_pchWind,            11, 1);
+                pCheckDispLayout->addWidget(m_pchStab,            11, 2);
+                pCheckDispLayout->addWidget(m_pchHPlane,          12, 1);
+                pCheckDispLayout->addWidget(m_pchPickPanel,       12, 2);
                 pCheckDispLayout->addWidget(m_pchPOppAnimate,     15, 1);
                 pCheckDispLayout->addWidget(m_pslAnimPOppSpeed,   15, 2);
 
-                pCheckDispLayout->setRowStretch(13,1);
+                pCheckDispLayout->setRowStretch(16,1);
                 pCheckDispLayout->setColumnStretch(1,1);
                 pCheckDispLayout->setColumnStretch(2,1);
 
                 pCheckDispLayout->setSpacing(0);
+            }
+
+            m_pfrView = new QFrame;
+            {
+                QHBoxLayout *pViewLayout = new QHBoxLayout;
+                {
+                    QLabel *plabView = new QLabel(tr("Use:"));
+                    QButtonGroup *pGroup = new QButtonGroup(this);
+                    {
+                        QString tip = tr("<p>"
+                                         "The selection defines in which frame of reference the button actions and the commands "
+                                         "'X', 'Shift+X', 'Y', etc. will be understood.<br>"
+                                         "Defaults to geometry axes if no operating point is selected.<br>"
+                                         "Recommendation: do the post-processing in wind axes."
+                                         "</p>");
+                        m_prbGeom = new QRadioButton(tr("Geometry axes"));
+                        m_prbWind = new QRadioButton(tr("Wind axes"));
+                        m_prbGeom->setToolTip(tip);
+                        m_prbWind->setToolTip(tip);
+                        pGroup->addButton(m_prbGeom);
+                        pGroup->addButton(m_prbWind);
+                    }
+                    pViewLayout->addWidget(plabView);
+                    pViewLayout->addWidget(m_prbGeom);
+                    pViewLayout->addWidget(m_prbWind);
+                    pViewLayout->addStretch();
+                }
+                m_pfrView->setLayout(pViewLayout);
             }
 
             m_pgl3dCtrls = new gl3dGeomControls(m_pgl3dXPlaneView, WingLayout, false);
@@ -209,6 +253,8 @@ void POpp3dCtrls::setupLayout()
             m_pgl3dCtrls->showHighlightCtrl(false);
 
             p3dLayout->addLayout(pCheckDispLayout);
+            p3dLayout->addWidget(m_pfrView);
+            p3dLayout->addStretch();
             p3dLayout->addWidget(m_pgl3dCtrls);
         }
         pfr3dPage->setLayout(p3dLayout);
@@ -244,6 +290,8 @@ void POpp3dCtrls::connectSignals()
     connect(m_pchPickPanel,     SIGNAL(clicked()),     SLOT(on3dPickCp()));
     connect(m_pchMoment,        SIGNAL(clicked()),     SLOT(onMoment()));
     connect(m_pchCoG,           SIGNAL(clicked()),     SLOT(onCoG()));
+    connect(m_pchStab,          SIGNAL(clicked()),     SLOT(onStabAxes()));
+    connect(m_pchWind,          SIGNAL(clicked()),     SLOT(onWindAxes()));
     connect(m_pchDownwash,      SIGNAL(clicked()),     SLOT(onDownwash()));
     connect(m_pchWakePanels,    SIGNAL(clicked()),     SLOT(onWakePanels()));
     connect(m_pchVortons,       SIGNAL(clicked()),     SLOT(onVortons()));
@@ -256,6 +304,8 @@ void POpp3dCtrls::connectSignals()
 
     connect(m_pTimerWOpp,       SIGNAL(timeout()), SLOT(onAnimatePOppSingle()));
 
+    connect(m_prbGeom,          SIGNAL(clicked()),     SLOT(onAxesView()));
+    connect(m_prbWind,          SIGNAL(clicked()),     SLOT(onAxesView()));
 }
 
 
@@ -284,7 +334,7 @@ void POpp3dCtrls::setControls()
     m_pStab3dCtrls->setControls();
 
     PlaneXfl   const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(s_pXPlane->curPlane());
-    PlanePolar const *pWPolar   = s_pXPlane->curPlPolar();
+    PlanePolar const *pPlPolar  = s_pXPlane->curPlPolar();
     PlaneOpp   const *pPOpp     = s_pXPlane->curPOpp();
 
     m_pchFlaps->setEnabled(           pPlaneXfl && pPlaneXfl->nFlaps()>0);
@@ -299,8 +349,12 @@ void POpp3dCtrls::setControls()
     m_pchVDrag->setEnabled(           pPOpp);
     m_pchDownwash->setEnabled(        pPOpp);
     m_pchCoG->setEnabled(             pPOpp);
+    m_pchStab->setEnabled(            pPOpp);
+    m_pchWind->setEnabled(            pPOpp);
     m_pchMoment->setEnabled(          pPOpp && !pPOpp->isLLTMethod());
     m_pchStream->setEnabled(          pPOpp && !pPOpp->isLLTMethod());
+    m_pchPickPanel->setEnabled(       pPlPolar);
+
 #ifdef Q_OS_MAC
     m_pchFlow->setEnabled(false);
 #else
@@ -313,14 +367,20 @@ void POpp3dCtrls::setControls()
     else m_pchFlow->setEnabled(pPOpp && pPOpp->isTriUniformMethod());
 #endif
 
+    m_pfrView->setEnabled(pPOpp);
+    m_prbGeom->setChecked(m_bGeomView);
+    m_prbWind->setChecked(!m_bGeomView);
+
     m_pchCp->setChecked(m_b3dCp);
     m_pchDownwash->setChecked(m_bDownwash);
     m_pchFlaps->setChecked(m_bFlaps);
     m_pchGamma->setChecked(m_bGamma);
-    m_pchHPlane->setChecked(pWPolar && pWPolar->bHPlane() && m_bHPlane);
-    m_pchHPlane->setEnabled(pWPolar && pWPolar->bHPlane());
+    m_pchHPlane->setChecked(pPlPolar && pPlPolar->bHPlane() && m_bHPlane);
+    m_pchHPlane->setEnabled(pPlPolar && pPlPolar->bHPlane());
     m_pchIDrag->setChecked(m_bICd);
     m_pchCoG->setChecked(m_bCoG);
+    m_pchStab->setChecked(m_bStabAxes);
+    m_pchWind->setChecked(m_bWindAxes);
     m_pchMoment->setChecked(m_bMoments);
     m_pchPOppAnimate->setEnabled(pPOpp);
     m_pchPanelForce->setChecked(m_bPanelForce);
@@ -331,8 +391,6 @@ void POpp3dCtrls::setControls()
     m_pchTrans->setChecked(m_bXTop);
     m_pchVDrag->setChecked(m_bVCd);
     m_pslAnimPOppSpeed->setEnabled(pPOpp && m_pchPOppAnimate->isChecked());
-
-
     m_pchPickPanel->setChecked(m_pgl3dXPlaneView->isPicking());
 
     if(pPOpp && pPOpp->isLLTMethod())
@@ -361,9 +419,8 @@ void POpp3dCtrls::setControls()
     m_pchHPlane->setChecked(m_bHPlane);
 
     m_pchWakePanels->setChecked(m_bWakePanels);
-    m_pchWakePanels->setEnabled(pWPolar && pWPolar->isType6());
-    m_pchWakePanels->setEnabled(pWPolar);
-
+    m_pchWakePanels->setEnabled(pPlPolar && pPlPolar->isType6());
+    m_pchWakePanels->setEnabled(pPlPolar);
 }
 
 
@@ -397,6 +454,7 @@ void POpp3dCtrls::loadSettings(QSettings &settings)
         m_bWakePanels   = settings.value("bWakePanels", false).toBool();
         m_bVortons      = settings.value("bVortons",    false).toBool();
         m_bHPlane       = settings.value("bGround",     false).toBool();
+        m_bGeomView     = settings.value("bGeomView",   true).toBool();
     }
     settings.endGroup();
 }
@@ -423,6 +481,7 @@ void POpp3dCtrls::saveSettings(QSettings &settings)
         settings.setValue("bWakePanels", m_bWakePanels);
         settings.setValue("bVortons",    m_bVortons);
         settings.setValue("bground",     m_bHPlane);
+        settings.setValue("bGeomView",   m_bGeomView);
     }
     settings.endGroup();
 }
@@ -612,6 +671,20 @@ void POpp3dCtrls::onCoG()
 }
 
 
+void POpp3dCtrls::onWindAxes()
+{
+    m_bWindAxes = m_pchWind->isChecked();
+    m_pgl3dXPlaneView->update();
+}
+
+
+void POpp3dCtrls::onStabAxes()
+{
+    m_bStabAxes = m_pchStab->isChecked();
+    m_pgl3dXPlaneView->update();
+}
+
+
 void POpp3dCtrls::onShowIDrag()
 {
     m_bICd = m_pchIDrag->isChecked();
@@ -678,6 +751,13 @@ void POpp3dCtrls::onGround()
 void POpp3dCtrls::onStreamlines(bool bStream)
 {
     m_bStreamLines = bStream;
+    m_pgl3dXPlaneView->update();
+}
+
+
+void POpp3dCtrls::onAxesView()
+{
+    m_bGeomView = m_prbGeom->isChecked();
     m_pgl3dXPlaneView->update();
 }
 

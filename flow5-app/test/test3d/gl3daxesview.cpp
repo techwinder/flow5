@@ -34,6 +34,7 @@
 #include "gl3daxesview.h"
 
 #include <api/objects_global.h>
+#include <api/utils.h>
 
 #include <core/xflcore.h>
 #include <core/stlreaderdlg.h>
@@ -50,8 +51,6 @@ Quaternion gl3dAxesView::s_ab_quat(-0.212012, 0.148453, -0.554032, -0.79124);
 QByteArray gl3dAxesView::s_Geometry;
 
 LineStyle gl3dAxesView::s_WindVecsStyle = {true, Line::SOLID, 2, fl5Color(100,100,100),  Line::NOSYMBOL, "Wind"};
-LineStyle gl3dAxesView::s_StabStyle     = {true, Line::DASH,  2, fl5Color( 71, 91,225),  Line::NOSYMBOL, "Stability axes"};
-LineStyle gl3dAxesView::s_WindStyle     = {true, Line::DASH,  2, fl5Color( 91,225, 71),  Line::NOSYMBOL, "Wind axes"};
 
 
 double gl3dAxesView::s_Alpha = 0.0;
@@ -85,8 +84,6 @@ void gl3dAxesView::loadSettings(QSettings &settings)
         s_Beta  = settings.value("beta",   s_Beta).toDouble();
 
         xfl::loadLineSettings(settings, s_WindVecsStyle, "WindVecsStyle");
-        xfl::loadLineSettings(settings, s_WindStyle, "WindStyle");
-        xfl::loadLineSettings(settings, s_StabStyle, "StabStyle");
 
         s_bWindAxes = settings.value("bWindAxes", s_bWindAxes).toBool();
         s_bStabAxes = settings.value("bStabAxes", s_bStabAxes).toBool();
@@ -106,8 +103,6 @@ void gl3dAxesView::saveSettings(QSettings &settings)
 
 
         xfl::saveLineSettings(settings, s_WindVecsStyle, "WindVecsStyle");
-        xfl::saveLineSettings(settings, s_WindStyle, "WindStyle");
-        xfl::saveLineSettings(settings, s_StabStyle, "StabStyle");
 
         settings.setValue("bWindAxes", s_bWindAxes);
         settings.setValue("bStabAxes", s_bStabAxes);
@@ -135,60 +130,64 @@ void gl3dAxesView::hideEvent(QHideEvent *)
 
 void gl3dAxesView::glRenderView()
 {
-    Vector3d origin;
+    QMatrix4x4 m(m_matModel);
+    QMatrix4x4 vm(m_matView);
 
     // wind arrow
     Vector3d O(-0.75f/m_glScalef,0,0);
     Vector3d W = objects::windDirection(s_Alpha, s_Beta) * 0.25f;
     paintThickArrow(O, W, xfl::fromfl5Clr(W3dPrefs::s_WindStyle.m_Color), true, true);
-
-    QMatrix4x4 vm(m_matView);
     m_matView = rotationMatrix();
     m_matView.translate(m_glRotCenter.xf()*m_glScalef, m_glRotCenter.yf()*m_glScalef, m_glRotCenter.zf()*m_glScalef);
     m_matView.scale(m_glScalef);
     glRenderText(O.x-0.015f/m_glScalef, O.y, O.z+0.015f/m_glScalef, "Wind", Qt::darkCyan);
     m_matView = vm;
 
-    if(s_bWindAxes)
+    if(s_bWindAxes || s_bStabAxes)
     {
-        // fixed scale axis for the axes
-        QMatrix4x4 vm(m_matView);
+        // fixed scale for the axes
         m_matView = rotationMatrix();
         m_matView.scale(m_glScalef, m_glScalef, m_glScalef);
         m_matView.translate(m_glRotCenter.xf(), m_glRotCenter.yf(), m_glRotCenter.zf());
         m_matView.scale(0.5f/m_glScalef, 0.5f/m_glScalef, 0.5f/m_glScalef);
 
-        CartesianFrame const &CFWind = m_AF.CFWind();
-        paintThinArrow(origin, CFWind.Idir(), s_WindStyle);
-        paintThinArrow(origin, CFWind.Jdir(), s_WindStyle);
-        paintThinArrow(origin, CFWind.Kdir(), s_WindStyle);
+        m_matModel.setToIdentity();
+        m_matModel.rotate(180.0-s_Alpha, 0, 1, 0);
 
-        glRenderText(CFWind.Idir(), "x_wind", s_WindStyle.m_Color);
-        glRenderText(CFWind.Jdir(), "y_wind", s_WindStyle.m_Color);
-        glRenderText(CFWind.Kdir()+Vector3d(0,0,+0.05), "z_wind", s_WindStyle.m_Color);
+        if(s_bStabAxes)
+        {
+            m_shadLine.bind();
+            {
+                m_shadLine.setUniformValue(m_locLine.m_vmMatrix,  m_matView*m_matModel);
+                m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
+            }
+            m_shadLine.release();
 
-        m_matView=vm; // leave things as they were
-    }
+            paintAxes(W3dPrefs::s_StabStyle, "_stab");
+        }
 
-    if(s_bStabAxes)
-    {
-        // fixed scale axis for the axes
-        QMatrix4x4 vm(m_matView);
-        m_matView = rotationMatrix();
-        m_matView.scale(m_glScalef, m_glScalef, m_glScalef);
-        m_matView.translate(m_glRotCenter.xf(), m_glRotCenter.yf(), m_glRotCenter.zf());
-        m_matView.scale(0.5f/m_glScalef, 0.5f/m_glScalef, 0.5f/m_glScalef);
+        if(s_bWindAxes)
+        {
+            CartesianFrame const &CFWind = m_AF.CFWind();
 
-        CartesianFrame const &m_CFStab = m_AF.CFStab();
-        paintThinArrow(origin, m_CFStab.Idir(), s_StabStyle);
-        paintThinArrow(origin, m_CFStab.Jdir(), s_StabStyle);
-        paintThinArrow(origin, m_CFStab.Kdir(), s_StabStyle);
+            m_matModel.setToIdentity();
+            m_matModel.rotate(-s_Alpha, 0, 1, 0);
+            m_matModel.rotate(-s_Beta,  CFWind.Kdir().x,  CFWind.Kdir().y,  CFWind.Kdir().z);
 
-        glRenderText(m_CFStab.Idir(), "x_stab", s_StabStyle.m_Color);
-        glRenderText(m_CFStab.Jdir()+Vector3d(0,0,-0.05), "y_stab", s_StabStyle.m_Color);
-        glRenderText(m_CFStab.Kdir(), "z_stab", s_StabStyle.m_Color);
+            m_shadLine.bind();
+            {
+                m_shadLine.setUniformValue(m_locLine.m_vmMatrix,  m_matView*m_matModel);
+                m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
+            }
+            m_shadLine.release();
 
-        m_matView=vm; // leave things as they were
+            paintAxes(W3dPrefs::s_WindStyle, "_wind");
+
+        }
+
+        // leave things as they were
+        m_matView  = vm;
+        m_matModel = m;
     }
 
     m_shadSurf.bind();

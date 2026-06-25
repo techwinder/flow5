@@ -90,7 +90,6 @@ class XPlaneActions : public QObject
 
         QAction *m_pEditPlaneAct, *m_pEditPlaneDescriptionAct;
         QAction *m_pScalePlaneAct, *m_pTranslatePlaneAct;
-        QAction *m_pOptimizeAct;
 //        QAction *m_pEditWingObject, *m_pEditStabObject, *m_pEditFinObject;
         QAction *m_pEditWingDef, *m_pEditStabDef, *m_pEditFinDef;
         QAction *m_pExportWingXml, *m_pExportWingCAD, *m_pExportWingTessToStl, *m_pExportWingMeshToStl;

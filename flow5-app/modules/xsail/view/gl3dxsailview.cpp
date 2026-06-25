@@ -1859,7 +1859,7 @@ bool gl3dXSailView::glMakeStreamLines(std::vector<Panel3> const &panel3list, Boa
         Pt[in] = C;
         TPt[in] = TC;
 
-        pMaker->setOpp(s_pXSail->curBtPolar(), pBtOpp->QInf(), 0.0, -pBtOpp->beta(), pBtOpp->gamma().data(), pBtOpp->sigma().data());
+        pMaker->setOpp3d(pBtOpp);
         if     (s_pXSail->curBtPolar()->isTriUniformMethod()) pMaker->setP3Analysis(m_pP3UniAnalysis);
         else if(s_pXSail->curBtPolar()->isTriLinearMethod())  pMaker->setP3Analysis(m_pP3LinAnalysis);
         pMaker->initializeLineMaker(in, StreamVertexArray.data()+iv, Pt[in], v0List[in], TPt[in],
@@ -1869,8 +1869,6 @@ bool gl3dXSailView::glMakeStreamLines(std::vector<Panel3> const &panel3list, Boa
 #else
         futureSync.addFuture(QtConcurrent::run(&StreamlineMaker::run, pMaker));
 #endif
-
-//        pMaker->run();
          iv += (StreamLineCtrls::nX()+1)*3;
     }
     futureSync.waitForFinished();

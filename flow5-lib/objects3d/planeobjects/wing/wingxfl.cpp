@@ -977,79 +977,50 @@ bool WingXfl::connectSurfaceNodesToNext(int iSurf, std::vector<Panel3> &panels, 
 
         Panel3 &pr = panels[nr];
 
-//        if(pr.index()==151 || pr.index()==152)
-//            int nada = 0;
-
-
-        if(pr.isFlapPanel())
-            if(!bConnectFlaps) continue;
+//        if(pr.isFlapPanel() && !bConnectFlaps) continue;
 
         for(int il=0; il<sl.NXPanels()*2*coef; il++)  // top and bottom * 2 triangles
         {
             int nl = sl.m_LastStripPanelIndex + il;
             Panel3 &pl = panels[nl];
-            if(pl.isFlapPanel() && !bConnectFlaps)
-                continue;
+//            if(pl.isFlapPanel() && !bConnectFlaps) continue;
 
             if(nl<0 || nl>=int(panels.size())) return false; // error
 
             //connect only same top bot mid positions
-            if(pl.surfacePosition()==pr.surfacePosition())
-            {
-                int nMerged = 0;
-//                int vl[]{-1,-1}; // identify the vertices being merged
-//                int vr[]{-1,-1};
+            if(pl.surfacePosition()!=pr.surfacePosition()) continue;
 
-                for(int ivr=0; ivr<3; ivr++)
+            int nMerged = 0;
+
+            for(int ivr=0; ivr<3; ivr++)
+            {
+                for(int ivl=0; ivl<3; ivl++)
                 {
-                    for(int ivl=0; ivl<3; ivl++)
+                    Node const &rightnode = pr.vertexAt(ivr);
+                    Node const &leftnode  = pl.vertexAt(ivl);
+
+                    if(!bConnectFlaps)
                     {
-                        if(pr.vertexAt(ivr).isSame(pl.vertexAt(ivl), 0.0001))
-                        {
-                            pr.setVertex(ivr, pl.vertexAt(ivl));// could also only set the index
-//                            vl[nMerged]=ivl;
-//                            vr[nMerged]=ivr;
-                            nMerged++;
-                        }
-                        if(nMerged>=2) break; // prevent further merges if small panels
+                        if(rightnode.isFlapNode() || leftnode.isFlapNode()) continue;
+                    }
+
+                    if(rightnode.isSame(leftnode, 0.0001))
+                    {
+                        pr.setVertex(ivr, leftnode);// could also only set the index
+                        nMerged++;
                     }
                     if(nMerged>=2) break; // prevent further merges if small panels
                 }
-
-                if(ir==0 && bThickSurfaces)
-                {
-                    m_StripStartNodes[iSurf+2] = pr.vertexAt(2).index();
-                }
-
-/*                if(nMerged==2)
-                {
-                    // two common vertices, the panels are neighbours
-                    // identify the indexes of the common edges to assign neighbours
-                    int iEdgeL = 3-vl[0]-vl[1];
-                    int iEdgeR = 3-vr[0]-vr[1];
-
-                    pl.setNeighbour(nr, iEdgeL);
-                    pr.setNeighbour(nl, iEdgeR);
-                    break; // done; don't try to merge pr again, for instance with top or bot surface
-                }*/
+                if(nMerged>=2) break; // prevent further merges if small panels
             }
+
+            if(ir==0 && bThickSurfaces)
+            {
+                m_StripStartNodes[iSurf+2] = pr.vertexAt(2).index();
+            }
+
         }
 
-/*        if(ir>0)
-        {
-            // correct streamwise connections
-            // correct rear left node
-            if(pr.isLeftPanel())
-            {
-                pr.setNodeIndex(1, panels[nr-1].nodeIndex(2));
-                pr.setNodeIndex(2, panels[nr-1].nodeIndex(1));
-            }
-            else
-            {
-                pr.setNodeIndex(1, panels[nr-1].nodeIndex(0));
-                pr.setNodeIndex(2, panels[nr-1].nodeIndex(2));
-            }
-        }*/
     }
     return true;
 }

@@ -210,10 +210,10 @@ class FL5LIB_EXPORT Polar3d : public XflObject
         bool isExternalPolar()   const {return m_Type==xfl::EXTERNALPOLAR;}
 
         double betaSpec()  const   {return m_BetaSpec;}
-        void setBeta(double b) {m_BetaSpec=b;}
+        void setBetaSpec(double b) {m_BetaSpec=b;}
 
         double phi()   const   {return m_BankAngle;}
-        void setPhi(double f) {m_BankAngle=f;}
+        void setPhiSpec(double f) {m_BankAngle=f;}
 
 
         double mass() const {return m_Mass;}

@@ -42,34 +42,35 @@ class FL5LIB_EXPORT Node : public Vector3d
         Vector3d m_Normal;                        /** the node's normal */
         int m_Index;                              /** the index of the node in the global node array */
         bool m_bTrailing;                         /** true if the node is trailing, false otherwise */
+        bool m_bFlap;                             /** true if constructed on a flap; the LE nodes of the flaps are not constructed as flap nodes */
         xfl::enumSurfacePosition m_Position;      /** defines on which type of surface the node is positioned */
         int m_SurfaceIndex;                       /** defines to which surface the node belongs */
 
     public:
         Node() :
-            m_Index{-1},  m_bTrailing{false}, m_Position{xfl::NOSURFACE}, m_SurfaceIndex{-1}
+            m_Index{-1},  m_bTrailing{false}, m_bFlap(false), m_Position{xfl::NOSURFACE}, m_SurfaceIndex{-1}
         {
         }
 
         Node(double xx, double yy, double zz) :
-            Vector3d(xx,yy,zz), m_Index{-1},  m_bTrailing{false}, m_Position{xfl::NOSURFACE}, m_SurfaceIndex{-1}
+            Vector3d(xx,yy,zz), m_Index{-1},  m_bTrailing{false}, m_bFlap(false), m_Position{xfl::NOSURFACE}, m_SurfaceIndex{-1}
         {
         }
 
         Node(Vector3d const &v3d) :
-            Vector3d(v3d), m_Index{-1},  m_bTrailing{false}, m_Position{xfl::NOSURFACE}, m_SurfaceIndex{-1}
+            Vector3d(v3d), m_Index{-1},  m_bTrailing{false}, m_bFlap(false), m_Position{xfl::NOSURFACE}, m_SurfaceIndex{-1}
 
         {
         }
 
         Node(double xx, double yy, double zz, Vector3d const &N, int idx=-1, xfl::enumSurfacePosition pos=xfl::NOSURFACE) :
-            Vector3d(xx,yy,zz), m_Normal{N}, m_Index{idx}, m_bTrailing{false}, m_Position{pos}, m_SurfaceIndex{-1}
+            Vector3d(xx,yy,zz), m_Normal{N}, m_Index{idx}, m_bTrailing{false}, m_bFlap{false}, m_Position{pos}, m_SurfaceIndex{-1}
         {
 
         }
 
         Node(Vector3d const &v3d, Vector3d const &N, int idx=-1, xfl::enumSurfacePosition pos=xfl::NOSURFACE) :
-            Vector3d(v3d), m_Normal{N}, m_Index{idx}, m_bTrailing{false}, m_Position{pos}, m_SurfaceIndex{-1}
+            Vector3d(v3d), m_Normal{N}, m_Index{idx}, m_bTrailing{false}, m_bFlap{false}, m_Position{pos}, m_SurfaceIndex{-1}
 
         {
         }
@@ -102,9 +103,10 @@ class FL5LIB_EXPORT Node : public Vector3d
             x = node.x;
             y = node.y;
             z = node.z;
-            m_Index = node.index();
-            m_Position = node.m_Position;
-
+            m_Index     = node.index();
+            m_Position  = node.m_Position;
+            m_bTrailing = node.m_bTrailing;
+            m_bFlap     = node.m_bFlap;
             m_Normal.copy(node.normal());
             m_TriangleIndex = node.m_TriangleIndex;
             m_NeighbourIndex = node.m_NeighbourIndex;
@@ -125,6 +127,8 @@ class FL5LIB_EXPORT Node : public Vector3d
 
         void flipNormal() {m_Normal.reverse();}
 
+        void setFlapNode(bool bFlap) {m_bFlap=bFlap;}
+        bool isFlapNode() const {return m_bFlap;}
 
         // neighbour nodes
         void setTrailing(bool bTrailing) {m_bTrailing=bTrailing;}

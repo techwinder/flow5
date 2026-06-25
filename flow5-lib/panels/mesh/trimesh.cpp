@@ -753,8 +753,7 @@ void TriMesh::makeConnectionsFromNodeIndexes(int i0, int n0, bool bConnectFlapPa
                 // special case: do not connect adjacent flap panels lying on different surfaces
                 if(p3i.surfaceIndex() != p3j.surfaceIndex())
                 {
-                    if(p3i.isFlapPanel() || p3j.isFlapPanel())
-                        continue;
+//                    if(p3i.isFlapPanel() || p3j.isFlapPanel())                        continue;
                 }
             }
 

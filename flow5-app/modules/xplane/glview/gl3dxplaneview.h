@@ -107,12 +107,15 @@ class gl3dXPlaneView : public gl3dXflView
         void resizeGL(int width, int h) override;
         void hideEvent(QHideEvent *) override;
 
-        void glMakeLLTTransitions(PlaneXfl const*pPlane, PlanePolar const*pWPolar, PlaneOpp const*pPOpp, QOpenGLBuffer &vbo) const;
-        void glMakeTransitions(PlaneXfl const*pPlane, PlanePolar const*pWPolar, PlaneOpp const*pPOpp, QOpenGLBuffer &vbo) const;
-        void glMakeDragStrip(     PlaneXfl const*pPlane, PlanePolar const*pWPolar, PlaneOpp const*pPOpp, bool bICd, bool bVCd);
-        void glMakeLLTDragStrip(  PlaneXfl const*pPlane, PlanePolar const*pWPolar, PlaneOpp const*pPOpp, bool bICd, bool bVCd);
-        void glMakeLiftStrip(     PlaneXfl const*pPlane, PlanePolar const*pWPolar, PlaneOpp const*pPOpp);
-        void glMakeLLTLiftStrip(  PlaneXfl const*pPlane, PlanePolar const*pWPolar, PlaneOpp const*pPOpp);
+        void makeDragStrip(     PlaneXfl const*pPlane, PlanePolar const*pPlPolar, PlaneOpp const*pPOpp, bool bICd, bool bVCd);
+        void makeLiftStrip(     PlaneXfl const*pPlane, PlaneOpp const*pPOpp);
+        void makeTransitions(   PlaneXfl const*pPlane, PlaneOpp const*pPOpp, QOpenGLBuffer &vbo) const;
+        void makeDownwash(      PlaneXfl const*pPlane, PlaneOpp const *pPOpp, QVector<Vector3d> &points, QVector<Vector3d> &arrows) const;
+        void makeLLTDragStrip(  PlaneXfl const*pPlane, PlanePolar const*pPlPolar, PlaneOpp const*pPOpp, bool bICd, bool bVCd);
+        void makeLLTLiftStrip(  PlaneXfl const*pPlane, PlaneOpp const*pPOpp);
+        void makeLLTTransitions(PlaneXfl const*pPlane, PlaneOpp const*pPOpp, QOpenGLBuffer &vbo) const;
+        void makeLLTDownwash(   PlaneXfl const*pPlane, PlaneOpp const *pPOpp, QVector<Vector3d> &points, QVector<Vector3d> &arrows) const;
+
 
         void glRenderPanelBasedBuffers();
         void glRenderGeometryBasedBuffers();
@@ -129,12 +132,6 @@ class gl3dXPlaneView : public gl3dXflView
         void makeQuadVelocityBlock(int iBlock, const QVector<Vector3d> &C, const double *mu, const double *sigma, Vector3d *VField) const;
         void makeTriVelocityBlock( int iBlock, const QVector<Vector3d> &C, const double *mu, const double *sigma, Vector3d *VField) const;
 
-        void makeLLTDownwash(const PlaneXfl *pPlane, const PlanePolar *pWPolar, const PlaneOpp *pPOpp,
-                             QVector<Vector3d> &points,QVector<Vector3d> &arrows) const;
-        void makeDownwash(const PlaneXfl *pPlane, const PlanePolar *pWPolar, const PlaneOpp *pPOpp,
-                          QVector<Vector3d> &points, QVector<Vector3d> &arrows) const;
-
-
         void glMake3dObjects() override;
         void glMakeOppBuffers();
         void glMakeFlowBuffers();
@@ -146,11 +143,19 @@ class gl3dXPlaneView : public gl3dXflView
 
         void moveBoids();
 
-    public slots:
+    private slots:
         void onCancelThreads();
         void onPartSelClicked() override;
         void onUpdate3dScales();
         void onUpdate3dStreamlines();
+
+
+        void on3dBot() override;
+        void on3dTop() override;
+        void on3dLeft() override;
+        void on3dRight() override;
+        void on3dFront() override;
+        void on3dRear() override;
 
     private:
         static XPlane *s_pXPlane;
@@ -162,7 +167,6 @@ class gl3dXPlaneView : public gl3dXflView
         bool m_bPanelNormals;
         bool m_bNodeNormals;
         bool m_bVortices;
-        bool m_bWindAxes;
 
         QPixmap m_PixLegend;
         ColourLegend m_ColourLegend;

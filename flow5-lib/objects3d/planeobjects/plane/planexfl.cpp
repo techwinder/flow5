@@ -1038,7 +1038,6 @@ void PlaneXfl::makeTriMesh(bool bThickSurfaces)
             pWing->connectSurfaceNodesToNext(jSurf, pWing->triMesh().panels(), bConnectFlaps, bThickSurfaces);
         }
 
-
         m_RefTriMesh.appendMesh(pWing->triMesh());
         if(pWing->isFin()) m_RefTriMesh.lastPanel().m_iPD = -1; // because there is no right tip patch
     }
@@ -1122,8 +1121,8 @@ bool PlaneXfl::connectTriMesh(bool bRefTriMesh, bool bConnectTE, bool )
 
         int i1 = pWing->firstPanel3Index();
         int n1 = pWing->nPanel3();
-        pTriMesh->makeConnectionsFromNodePositions(i1, n1, 1.0e-4);
-//        pTriMesh->makeConnectionsFromNodeIndexes(i1, n1, false); // slightly faster
+//        pTriMesh->makeConnectionsFromNodePositions(i1, n1, 1.0e-4);
+        pTriMesh->makeConnectionsFromNodeIndexes(i1, n1, false); // slightly faster
     }
 
     pTriMesh->connectNodes();

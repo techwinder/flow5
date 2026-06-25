@@ -81,7 +81,7 @@
 #include <interfaces/editors/fuseedit/bodyscaledlg.h>
 #include <interfaces/editors/fuseedit/fuseoccdlg.h>
 #include <interfaces/editors/fuseedit/fusestldlg.h>
-#include <interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.h>
+#include <interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.h>
 #include <api/gmesh_globals.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <interfaces/opengl/fl5views/gl3dboatview.h>
@@ -917,7 +917,7 @@ void BoatDlg::editHull(int iFuse)
         FuseXfl *pFuse = dynamic_cast<FuseXfl*>(m_pBoat->hull(iFuse));
         Fuse const *pMemBody = pFuse->clone();
 
-        FuseXflDefDlg glbDlg(this);
+        FuseXflDlg glbDlg(this);
         glbDlg.hideSaveAsNew();
         glbDlg.enableName(false);
         glbDlg.initDialog(pFuse);

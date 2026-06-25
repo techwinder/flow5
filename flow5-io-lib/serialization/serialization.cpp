@@ -2028,7 +2028,7 @@ bool serial::serializePlanePolarXfl(PlanePolar *pPolar, QDataStream &ar, bool bI
         ar >> d0 >> d1 >> d2;
         pPolar->setVelocity(d0);
         pPolar->setAlphaSpec(d1);
-        pPolar->setBeta(d2);
+        pPolar->setBetaSpec(d2);
 
         // Last store the array data
         // assumes the arrays have been cleared previously
@@ -2913,8 +2913,8 @@ bool serial::serializePolar3dFl5v726(Polar3d *pPolar, QDataStream &ar, bool bIsS
         pPolar->setViscosity(d1);
 
         //ATTITUDE
-        ar >> dble; pPolar->setBeta(dble);
-        ar >> dble; pPolar->setPhi(dble);
+        ar >> dble; pPolar->setBetaSpec(dble);
+        ar >> dble; pPolar->setPhiSpec(dble);
 
         // DEFAULT INERTIA DATA
         ar >> boolean; pPolar->setAutoInertia(boolean);
@@ -3162,8 +3162,8 @@ bool serial::serializePolar3dFl5v750(Polar3d *pPolar, QDataStream &ar, bool bIsS
         pPolar->setViscosity(d1);
 
         //ATTITUDE
-        ar >> dble; pPolar->setBeta(dble);
-        ar >> dble; pPolar->setPhi(dble);
+        ar >> dble; pPolar->setBetaSpec(dble);
+        ar >> dble; pPolar->setPhiSpec(dble);
 
 
         // DEFAULT INERTIA

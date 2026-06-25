@@ -59,8 +59,11 @@ std::string Node::properties() const
     std::string strong, str;
 
     props.append(std::format("Node {:d}:\n", m_Index));
-    props.append(std::format("   position= ({:9g}, {:9g}, {:9g})\n", x, y, z));
-    props.append(std::format("   normal  = ({:9g}, {:9g}, {:9g})\n", m_Normal.x, m_Normal.y, m_Normal.z));
+    props.append(std::format("   position = ({:9g}, {:9g}, {:9g})\n", x, y, z));
+    props.append(std::format("   normal   = ({:9g}, {:9g}, {:9g})\n", m_Normal.x, m_Normal.y, m_Normal.z));
+    if(m_bTrailing) props.append("   Node is Trailing\n");
+    if(m_bFlap)     props.append("   Node is on flap\n");
+    props.append(std::format("Surface index = {:d}:\n", m_SurfaceIndex));
 
     strong.clear();
     for(unsigned int i=0; i<m_TriangleIndex.size(); i++)

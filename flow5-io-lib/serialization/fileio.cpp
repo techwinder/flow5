@@ -439,7 +439,7 @@ bool FileIO::serializeProjectXfl(QDataStream &ar, bool bIsStoring, PlanePolar *p
             ar >> d;    pMetaWPolar->setDensity(d);
             ar >> d;    pMetaWPolar->setViscosity(d);
             ar >> d;    pMetaWPolar->setAlphaSpec(d);
-            ar >> d;    pMetaWPolar->setBeta(d);
+            ar >> d;    pMetaWPolar->setBetaSpec(d);
 
             bool b=false;
             ar >> b;  // pMetaWPolar->setTilted(b);

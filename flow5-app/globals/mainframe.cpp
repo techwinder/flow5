@@ -70,7 +70,7 @@
 #include <interfaces/editors/boatedit/saildlg.h>
 #include <interfaces/editors/foiledit/foildlg.h>
 #include <interfaces/editors/fuseedit/fusemesherdlg.h>
-#include <interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.h>
+#include <interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.h>
 #include <interfaces/editors/planeedit/planexfldlg.h>
 #include <interfaces/graphs/containers/fastgraphwt.h>
 #include <interfaces/graphs/controls/graphdlg.h>
@@ -3586,8 +3586,8 @@ void MainFrame::onPreferences()
 
     if(Section2dOptions::isModified())
     {
-        FuseXflDefDlg::setFrameGrid(Section2dOptions::grid());
-        FuseXflDefDlg::setBodyLineGrid(Section2dOptions::grid());
+        FuseXflDlg::setFrameGrid(Section2dOptions::grid());
+        FuseXflDlg::setBodyLineGrid(Section2dOptions::grid());
         m_pDFoilWt->setGrid(Section2dOptions::grid());
         m_pDFoilWt->setAutoUnits();
         FoilDlg::setGrid(Section2dOptions::grid());

@@ -825,7 +825,7 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
             midWakePoint(p3W, left, right);
             midwakept.set((left + right)/2.0);
 
-            getVelocityVector(midwakept,   mu3, sigma3, Wg_m, 0.0001, true);
+            getVelocityVector(midwakept, mu3, sigma3, Wg_m, 0.0001, true);
 
             Wg_m *= 0.5;
 

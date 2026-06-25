@@ -38,7 +38,7 @@
 #include <QMessageBox>
 #include <QModelIndex>
 
-#include "wingdefdlg.h"
+#include "wingxfldlg.h"
 
 #include <api/foil.h>
 #include <api/objects2d.h>
@@ -71,27 +71,27 @@
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 
-QByteArray WingDefDlg::s_Geometry;
+QByteArray WingXflDlg::s_Geometry;
 
-double WingDefDlg::s_MaxEdgeLength=0.5;
-double WingDefDlg::s_MaxEdgeDeflection = 45; //degrees
-double WingDefDlg::s_QualityBound = sqrt(2.0);
-int WingDefDlg::s_MaxMeshIter = 1;
+double WingXflDlg::s_MaxEdgeLength=0.5;
+double WingXflDlg::s_MaxEdgeDeflection = 45; //degrees
+double WingXflDlg::s_QualityBound = sqrt(2.0);
+int WingXflDlg::s_MaxMeshIter = 1;
 
-bool WingDefDlg::s_bAxes       = true;
-bool WingDefDlg::s_bOutline    = true;
-bool WingDefDlg::s_bSurfaces   = true;
-bool WingDefDlg::s_bVLMPanels  = false;
-bool WingDefDlg::s_bShowMasses = false;
-bool WingDefDlg::s_bFoilNames  = false;
+bool WingXflDlg::s_bAxes       = true;
+bool WingXflDlg::s_bOutline    = true;
+bool WingXflDlg::s_bSurfaces   = true;
+bool WingXflDlg::s_bVLMPanels  = false;
+bool WingXflDlg::s_bShowMasses = false;
+bool WingXflDlg::s_bFoilNames  = false;
 
-Quaternion WingDefDlg::s_ab_quat(-0.212012, 0.148453, -0.554032, -0.79124);
+Quaternion WingXflDlg::s_ab_quat(-0.212012, 0.148453, -0.554032, -0.79124);
 
-QByteArray WingDefDlg::s_HSplitterSizes;
-QByteArray WingDefDlg::s_VSplitterSizes;
+QByteArray WingXflDlg::s_HSplitterSizes;
+QByteArray WingXflDlg::s_VSplitterSizes;
 
 
-WingDefDlg::WingDefDlg(QWidget *pParent) : XflDialog(pParent)
+WingXflDlg::WingXflDlg(QWidget *pParent) : XflDialog(pParent)
 {
     setWindowTitle(tr("Wing editor"));
     setWindowFlag(Qt::WindowMinMaxButtonsHint);
@@ -149,12 +149,12 @@ WingDefDlg::WingDefDlg(QWidget *pParent) : XflDialog(pParent)
 }
 
 
-WingDefDlg::~WingDefDlg()
+WingXflDlg::~WingXflDlg()
 {
 }
 
 
-void WingDefDlg::connectSignals()
+void WingXflDlg::connectSignals()
 {
     connectWingSignals();
 
@@ -176,7 +176,7 @@ void WingDefDlg::connectSignals()
 }
 
 
-void WingDefDlg::makeWingTable()
+void WingXflDlg::makeWingTable()
 {
     m_pcptSections = new CPTableView(this);
     m_pcptSections->setEditable(true);
@@ -205,7 +205,7 @@ void WingDefDlg::makeWingTable()
 }
 
 
-void WingDefDlg::setupLayout()
+void WingXflDlg::setupLayout()
 {
     QFrame *pLeftSideFrame = new QFrame;
     {
@@ -311,7 +311,7 @@ void WingDefDlg::setupLayout()
 }
 
 
-void WingDefDlg::initDialog(WingXfl*pWing)
+void WingXflDlg::initDialog(WingXfl*pWing)
 {
     m_iSection = 0;
 
@@ -344,7 +344,7 @@ void WingDefDlg::initDialog(WingXfl*pWing)
 }
 
 
-void WingDefDlg::showEvent(QShowEvent *pEvent)
+void WingXflDlg::showEvent(QShowEvent *pEvent)
 {
     XflDialog::showEvent(pEvent);
     restoreGeometry(s_Geometry);
@@ -369,7 +369,7 @@ void WingDefDlg::showEvent(QShowEvent *pEvent)
 }
 
 
-void WingDefDlg::hideEvent(QHideEvent *pEvent)
+void WingXflDlg::hideEvent(QHideEvent *pEvent)
 {
     XflDialog::hideEvent(pEvent);
     s_Geometry = saveGeometry();
@@ -388,7 +388,7 @@ void WingDefDlg::hideEvent(QHideEvent *pEvent)
 }
 
 
-void WingDefDlg::resizeEvent(QResizeEvent *)
+void WingXflDlg::resizeEvent(QResizeEvent *)
 {
     if(m_pWing)    m_pglWingView->setReferenceLength(m_pWing->planformSpan());
     //    m_pglWingView->reset3dScale();
@@ -417,13 +417,13 @@ void WingDefDlg::resizeEvent(QResizeEvent *)
 }
 
 
-void WingDefDlg::onWingTableContextMenu(QPoint)
+void WingXflDlg::onWingTableContextMenu(QPoint)
 {
     m_pTableContextMenu->exec(QCursor::pos());
 }
 
 
-void WingDefDlg::onSide()
+void WingXflDlg::onSide()
 {
     m_bRightSide = m_prbRightSide->isChecked();
     m_pSectionModel->setEditSide(m_bRightSide);
@@ -438,7 +438,7 @@ void WingDefDlg::onSide()
 }
 
 
-void WingDefDlg::onWingSides()
+void WingXflDlg::onWingSides()
 {
     m_pWing->setTwoSided(m_pchTwoSided->isChecked());
     m_pWing->setClosedInnerSide(m_pchCloseInnerSide->isChecked());
@@ -470,7 +470,7 @@ void WingDefDlg::onWingSides()
 }
 
 
-void WingDefDlg::onTipStrips()
+void WingXflDlg::onTipStrips()
 {
     int nStrips = m_pieTipStrips->value();
     nStrips = std::max(1, nStrips);
@@ -489,14 +489,14 @@ void WingDefDlg::onTipStrips()
 }
 
 
-void WingDefDlg::updateData()
+void WingXflDlg::updateData()
 {
     m_pcptSections->closePersistentEditor(m_pcptSections->currentIndex());
     m_pSectionModel->updateData();
 }
 
 
-void WingDefDlg::setCurrentSection(int iSection)
+void WingXflDlg::setCurrentSection(int iSection)
 {
     QModelIndex index = m_pSectionModel->index(iSection,0);
     m_pcptSections->setCurrentIndex(index);
@@ -505,7 +505,7 @@ void WingDefDlg::setCurrentSection(int iSection)
 
 
 
-void WingDefDlg::onWingTableClicked(QModelIndex index)
+void WingXflDlg::onWingTableClicked(QModelIndex index)
 {
     if(!index.isValid()) return;
     switch(index.column())
@@ -536,7 +536,7 @@ void WingDefDlg::onWingTableClicked(QModelIndex index)
 }
 
 
-void WingDefDlg::onRowChanged(const QModelIndex &currentindex, const QModelIndex &)
+void WingXflDlg::onRowChanged(const QModelIndex &currentindex, const QModelIndex &)
 {
     if(currentindex.row()>=m_pWing->nSections())
     {
@@ -552,7 +552,7 @@ void WingDefDlg::onRowChanged(const QModelIndex &currentindex, const QModelIndex
 }
 
 
-void WingDefDlg::onCellChanged()
+void WingXflDlg::onCellChanged()
 {
     m_bChanged = true;
 
@@ -573,20 +573,20 @@ void WingDefDlg::onCellChanged()
 }
 
 
-void WingDefDlg::onCopy()
+void WingXflDlg::onCopy()
 {
     m_pcptSections->copySelection();
 }
 
 
-void WingDefDlg::onPaste()
+void WingXflDlg::onPaste()
 {
     m_pcptSections->pasteClipboard();
     m_bChanged = true;
 }
 
 
-void WingDefDlg::readParams()
+void WingXflDlg::readParams()
 {
     if(!m_pWing) return;
 
@@ -604,7 +604,7 @@ void WingDefDlg::readParams()
 }
 
 
-void WingDefDlg::loadSettings(QSettings &settings)
+void WingXflDlg::loadSettings(QSettings &settings)
 {
     settings.beginGroup("WingDefDlg");
     {
@@ -622,7 +622,7 @@ void WingDefDlg::loadSettings(QSettings &settings)
 }
 
 
-void WingDefDlg::saveSettings(QSettings &settings)
+void WingXflDlg::saveSettings(QSettings &settings)
 {
     settings.beginGroup("WingDefDlg");
     {
@@ -641,7 +641,7 @@ void WingDefDlg::saveSettings(QSettings &settings)
 }
 
 
-void WingDefDlg::setControls()
+void WingXflDlg::setControls()
 {
     m_pleWingName->setEnabled(true);
 
@@ -657,7 +657,7 @@ void WingDefDlg::setControls()
 }
 
 
-void WingDefDlg::makeCommonWts()
+void WingXflDlg::makeCommonWts()
 {
     m_pglWingView = new gl3dWingView(this);
     m_pglWingView->showPartFrame(false);
@@ -700,7 +700,7 @@ void WingDefDlg::makeCommonWts()
 }
 
 
-void WingDefDlg::onSurfaceColor()
+void WingXflDlg::onSurfaceColor()
 {
     QColor clr = QColorDialog::getColor(xfl::fromfl5Clr(m_pWing->color()), this, tr("Surface colour"), QColorDialog::ShowAlphaChannel);
 
@@ -715,7 +715,7 @@ void WingDefDlg::onSurfaceColor()
 }
 
 
-void WingDefDlg::onWingColor(QColor clr)
+void WingXflDlg::onWingColor(QColor clr)
 {
     if(!m_pWing) return;
 
@@ -731,7 +731,7 @@ void WingDefDlg::onWingColor(QColor clr)
 
 
 
-void WingDefDlg::contextMenuEvent(QContextMenuEvent *pEvent)
+void WingXflDlg::contextMenuEvent(QContextMenuEvent *pEvent)
 {
     QRect r = m_pglWingView->geometry();
 
@@ -765,7 +765,7 @@ void WingDefDlg::contextMenuEvent(QContextMenuEvent *pEvent)
 }
 
 
-bool WingDefDlg::checkWing()
+bool WingXflDlg::checkWing()
 {
     if(!m_pWing->name().length())
     {
@@ -824,14 +824,14 @@ bool WingDefDlg::checkWing()
 }
 
 
-void WingDefDlg::computeGeometry()
+void WingXflDlg::computeGeometry()
 {
     m_pWing->computeGeometry();
     m_pWing->createSurfaces(Vector3d(0.0,0.0,0.0), 0.0, 0.0);
 }
 
 
-void WingDefDlg::connectWingSignals()
+void WingXflDlg::connectWingSignals()
 {
     connect(m_pleWingName,           SIGNAL(editingFinished()), SLOT(onMetaDataChanged()));
     connect(m_ppteDescription,      SIGNAL(textChanged()),     SLOT(onMetaDataChanged()));
@@ -861,7 +861,7 @@ void WingDefDlg::connectWingSignals()
 }
 
 
-void WingDefDlg::keyPressEvent(QKeyEvent *pEvent)
+void WingXflDlg::keyPressEvent(QKeyEvent *pEvent)
 {
     /*    bool bShift = false;
     if(event->modifiers() & Qt::ShiftModifier)   bShift =true;*/
@@ -927,7 +927,7 @@ void WingDefDlg::keyPressEvent(QKeyEvent *pEvent)
 }
 
 
-void WingDefDlg::onMetaDataChanged()
+void WingXflDlg::onMetaDataChanged()
 {
     m_bDescriptionChanged=true;
 
@@ -936,7 +936,7 @@ void WingDefDlg::onMetaDataChanged()
 }
 
 
-void WingDefDlg::onDeleteSection()
+void WingXflDlg::onDeleteSection()
 {
     if(m_iSection <0 || m_iSection>m_pWing->nSections()) return;
     if(m_iSection==0)
@@ -962,7 +962,7 @@ void WingDefDlg::onDeleteSection()
 }
 
 
-void WingDefDlg::onInertia()
+void WingXflDlg::onInertia()
 {
     WingXfl wing(*m_pWing);
 
@@ -976,7 +976,7 @@ void WingDefDlg::onInertia()
 }
 
 
-void WingDefDlg::updateWingOutput()
+void WingXflDlg::updateWingOutput()
 {
     computeGeometry();
     setWingProps();
@@ -989,7 +989,7 @@ void WingDefDlg::updateWingOutput()
 }
 
 
-void WingDefDlg::onInsertNBefore()
+void WingXflDlg::onInsertNBefore()
 {
     if(m_iSection>m_pWing->nSections()) return;
 
@@ -1020,7 +1020,7 @@ void WingDefDlg::onInsertNBefore()
 }
 
 
-void WingDefDlg::onInsertNAfter()
+void WingXflDlg::onInsertNAfter()
 {
     if(m_iSection <0 || m_iSection>=m_pWing->nSections()) return;
 
@@ -1065,7 +1065,7 @@ void WingDefDlg::onInsertNAfter()
 }
 
 
-void WingDefDlg::insertNSectionsAfter(int n0, int nsec)
+void WingXflDlg::insertNSectionsAfter(int n0, int nsec)
 {
     int ny =  int (double(m_pWing->nYPanels(n0))*1.0/double(nsec+1));
     ny = std::max(1,ny);
@@ -1095,7 +1095,7 @@ void WingDefDlg::insertNSectionsAfter(int n0, int nsec)
 }
 
 
-void WingDefDlg::onDuplicateSection()
+void WingXflDlg::onDuplicateSection()
 {
     if(m_iSection <0 || m_iSection>=m_pWing->nSections()) return;
 
@@ -1131,7 +1131,7 @@ void WingDefDlg::onDuplicateSection()
 }
 
 
-void WingDefDlg::onResetSection()
+void WingXflDlg::onResetSection()
 {
     int n = m_iSection;
 
@@ -1150,7 +1150,7 @@ void WingDefDlg::onResetSection()
 }
 
 
-void WingDefDlg::onOK()
+void WingXflDlg::onOK()
 {
     readParams();
 
@@ -1171,7 +1171,7 @@ void WingDefDlg::onOK()
 }
 
 
-void WingDefDlg::onResetMesh()
+void WingXflDlg::onResetMesh()
 {
     VLMSetAutoMesh();
     updateData();
@@ -1180,7 +1180,7 @@ void WingDefDlg::onResetMesh()
 }
 
 
-void WingDefDlg::onTranslateWing()
+void WingXflDlg::onTranslateWing()
 {
     if(!m_pWing) return;
     TranslateDlg dlg(this);
@@ -1196,7 +1196,7 @@ void WingDefDlg::onTranslateWing()
 }
 
 
-void WingDefDlg::onScaleWing()
+void WingXflDlg::onScaleWing()
 {
     WingScaleDlg dlg(this);
     dlg.initDialog(m_pWing->m_PlanformSpan,
@@ -1227,13 +1227,13 @@ void WingDefDlg::onScaleWing()
 }
 
 
-void WingDefDlg::accept()
+void WingXflDlg::accept()
 {
     done(QDialog::Accepted);
 }
 
 
-void WingDefDlg::reject()
+void WingXflDlg::reject()
 {
     if(m_bChanged && xfl::bConfirmDiscard())
     {
@@ -1252,7 +1252,7 @@ void WingDefDlg::reject()
 }
 
 
-void WingDefDlg::setWingProps()
+void WingXflDlg::setWingProps()
 {
     if(!m_pWing) return;
     //Updates the wing's properties after a change of geometry
@@ -1263,7 +1263,7 @@ void WingDefDlg::setWingProps()
 }
 
 
-void WingDefDlg::onButton(QAbstractButton *pButton)
+void WingXflDlg::onButton(QAbstractButton *pButton)
 {
     if      (m_pButtonBox->button(QDialogButtonBox::Save) == pButton)     onOK();
     else if (m_pButtonBox->button(QDialogButtonBox::Discard) == pButton)  reject();
@@ -1271,13 +1271,13 @@ void WingDefDlg::onButton(QAbstractButton *pButton)
 }
 
 
-void WingDefDlg::onSplitterMoved()
+void WingXflDlg::onSplitterMoved()
 {
     resizeEvent(nullptr);
 }
 
 
-int WingDefDlg::VLMGetPanelTotal()
+int WingXflDlg::VLMGetPanelTotal()
 {
     double MinPanelSize=0;
     if(WingXfl::minSurfaceLength()>0.0) MinPanelSize = WingXfl::minSurfaceLength();
@@ -1297,7 +1297,7 @@ int WingDefDlg::VLMGetPanelTotal()
 }
 
 
-bool WingDefDlg::VLMSetAutoMesh(int total)
+bool WingXflDlg::VLMSetAutoMesh(int total)
 {
     m_bChanged = true;
     //split (NYTotal) panels on each side proportionnaly to length, and space evenly
@@ -1337,7 +1337,7 @@ bool WingDefDlg::VLMSetAutoMesh(int total)
 }
 
 
-void WingDefDlg::onExportWingToCADFile()
+void WingXflDlg::onExportWingToCADFile()
 {
     std::string logmsg;
     TopoDS_Shape wingshape;
@@ -1348,7 +1348,7 @@ void WingDefDlg::onExportWingToCADFile()
 }
 
 
-void WingDefDlg::onExportWingToStlFile()
+void WingXflDlg::onExportWingToStlFile()
 {
     if (!m_pWing) return;
 
@@ -1358,7 +1358,7 @@ void WingDefDlg::onExportWingToStlFile()
 }
 
 
-void WingDefDlg::onExportWingToXML()
+void WingXflDlg::onExportWingToXML()
 {
     QString filter = "XML file (*.xml)";
     QString FileName, strong;
@@ -1384,7 +1384,7 @@ void WingDefDlg::onExportWingToXML()
 }
 
 
-void WingDefDlg::onNodeDistance()
+void WingXflDlg::onNodeDistance()
 {
     m_pglWingView->setPicking(m_pglControls->getDistance() ? xfl::MESHNODE : xfl::NOPICK);
     if(!m_pglControls->getDistance()) m_pglWingView->clearMeasure();
@@ -1393,7 +1393,7 @@ void WingDefDlg::onNodeDistance()
 }
 
 
-void WingDefDlg::onPickedNodePair(QPair<int, int> nodepair)
+void WingXflDlg::onPickedNodePair(QPair<int, int> nodepair)
 {
     if(nodepair.first <0 || nodepair.first >=int(m_pglWingView->nodes().size())) return;
     if(nodepair.second<0 || nodepair.second>=int(m_pglWingView->nodes().size())) return;

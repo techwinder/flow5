@@ -65,15 +65,14 @@
 #include <interfaces/editors/fuseedit/fuseoccdlg.h>
 #include <interfaces/editors/fuseedit/fusestldlg.h>
 #include <interfaces/editors/fuseedit/shapefixerdlg.h>
-#include <interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.h>
-#include <interfaces/editors/fuseedit/xflfuseedit/fusexflobjectdlg.h>
+#include <interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.h>
 #include <interfaces/editors/inertia/partinertiadlg.h>
 #include <interfaces/editors/inertia/planestlinertiadlg.h>
 #include <interfaces/editors/inertia/planexflinertiadlg.h>
 #include <interfaces/editors/planeedit/planestldlg.h>
 #include <interfaces/editors/planeedit/planexfldlg.h>
 #include <interfaces/editors/translatedlg.h>
-#include <interfaces/editors/wingedit/wingdefdlg.h>
+#include <interfaces/editors/wingedit/wingxfldlg.h>
 #include <interfaces/editors/wingedit/wingscaledlg.h>
 #include <interfaces/exchange/cadexportdlg.h>
 #include <interfaces/exchange/stlwriterdlg.h>
@@ -88,7 +87,6 @@
 #include <interfaces/opengl/controls/fine3dcontrols.h>
 #include <interfaces/opengl/controls/gllightdlg.h>
 #include <interfaces/opengl/globals/gl_globals.h>
-#include <interfaces/optim/optimplanedlg.h>
 #include <interfaces/widgets/customdlg/doublevaluedlg.h>
 #include <interfaces/widgets/customdlg/intvaluedlg.h>
 #include <interfaces/widgets/customdlg/moddlg.h>
@@ -1569,10 +1567,9 @@ bool XPlane::loadSettings(QSettings &settings)
     ExtraDragDlg::loadSettings(settings);
     FuseOccDlg::loadSettings(settings);
     FuseStlDlg::loadSettings(settings);
-    FuseXflDefDlg::loadSettings(settings);
+    FuseXflDlg::loadSettings(settings);
     GLLightDlg::loadSettings(settings);
     LLTAnalysisDlg::loadSettings(settings);
-    OptimPlaneDlg::loadSettings(settings);
     PanelCheckDlg::loadSettings(settings);
     PartInertiaDlg::loadSettings(settings);
     PlaneAnalysisDlg::loadSettings(settings);
@@ -1586,7 +1583,7 @@ bool XPlane::loadSettings(QSettings &settings)
     ShapeFixerDlg::loadSettings(settings);
     StlReaderDlg::loadSettings(settings);
     WPolarAutoNameDlg::loadSettings(settings);
-    WingDefDlg::loadSettings(settings);
+    WingXflDlg::loadSettings(settings);
     WingSelDlg::loadSettings(settings);
     WingExportDlg::loadSettings(settings);
     XPlaneWt::loadSettings(settings);
@@ -1739,10 +1736,9 @@ bool XPlane::saveSettings(QSettings &settings)
     ExtraDragDlg::saveSettings(settings);
     FuseOccDlg::saveSettings(settings);
     FuseStlDlg::saveSettings(settings);
-    FuseXflDefDlg::saveSettings(settings);
+    FuseXflDlg::saveSettings(settings);
     GLLightDlg::saveSettings(settings);
     LLTAnalysisDlg::saveSettings(settings);
-    OptimPlaneDlg::saveSettings(settings);
     PanelCheckDlg::saveSettings(settings);
     PartInertiaDlg::saveSettings(settings);
     PlaneAnalysisDlg::saveSettings(settings);
@@ -1756,7 +1752,7 @@ bool XPlane::saveSettings(QSettings &settings)
     ShapeFixerDlg::saveSettings(settings);
     StlReaderDlg::saveSettings(settings);
     WPolarAutoNameDlg::saveSettings(settings);
-    WingDefDlg::saveSettings(settings);
+    WingXflDlg::saveSettings(settings);
     WingSelDlg::saveSettings(settings);
     WingExportDlg::saveSettings(settings);
     XPlaneWt::saveSettings(settings);
@@ -2576,12 +2572,7 @@ void XPlane::onEditCurFuse()
     {
         FuseXfl *pModFuseXfl = dynamic_cast<FuseXfl*>(pModFuse);
 
-        QAction *pSenderAction = qobject_cast<QAction *>(sender());
-        if (!pSenderAction) return;
-
-        FuseXflDlg *pXflFDFlg = nullptr;
-        if     (pSenderAction==m_pActions->m_pEditFuse)       pXflFDFlg = new FuseXflDefDlg(s_pMainFrame);
-        else if(pSenderAction==m_pActions->m_pEditFuseObject) pXflFDFlg = new FuseXflObjectDlg(s_pMainFrame);
+        FuseXflDlg *pXflFDFlg = new FuseXflDlg(s_pMainFrame);
         if(!pXflFDFlg) return;
         pXflFDFlg->initDialog(pModFuseXfl);
         iExitCode = pXflFDFlg->exec();
@@ -2596,8 +2587,7 @@ void XPlane::onEditCurFuse()
     {
         FuseSections *pModFuseXfl = dynamic_cast<FuseSections*>(pModFuse);
 
-        FuseXflDlg *pXflFDFlg = nullptr;
-        pXflFDFlg = new FuseXflDefDlg(s_pMainFrame);
+        FuseXflDlg *pXflFDFlg = new FuseXflDlg(s_pMainFrame);
         pXflFDFlg->initDialog(pModFuseXfl);
         iExitCode = pXflFDFlg->exec();
         if(iExitCode==QDialog::Rejected) return;
@@ -3077,10 +3067,10 @@ void XPlane::onEditCurWing()
         return;
     }
 
-    WingDefDlg *pWngDlg = nullptr;
+    WingXflDlg *pWngDlg = nullptr;
     if(pSenderAction==m_pActions->m_pEditWingDef || pSenderAction==m_pActions->m_pEditStabDef || pSenderAction==m_pActions->m_pEditFinDef)
     {
-        pWngDlg = new WingDefDlg(s_pMainFrame);
+        pWngDlg = new WingXflDlg(s_pMainFrame);
     }
     if(!pWngDlg)
     {
@@ -5267,12 +5257,17 @@ PlaneOpp* XPlane::setPlaneOpp(PlaneOpp *pPOpp)
         }
     }
 
-    if(pPlaneXfl && m_pCurPOpp->isQuadMethod())
+/*    if(pPlaneXfl && m_pCurPOpp->isQuadMethod())
         pPlaneXfl->quadMesh().rotate(m_pCurPOpp->alpha(), m_pCurPOpp->beta(), m_pCurPOpp->phi());
     else if(m_pCurPOpp->isTriangleMethod())
-        m_pCurPlane->triMesh().rotate(m_pCurPOpp->alpha(), m_pCurPOpp->beta(), m_pCurPOpp->phi());
+        m_pCurPlane->triMesh().rotate(m_pCurPOpp->alpha(), m_pCurPOpp->beta(), m_pCurPOpp->phi());*/
 
-    Vector3d WindDir(1,0,0);
+    if(pPlaneXfl && m_pCurPOpp->isQuadMethod())
+        pPlaneXfl->quadMesh().rotate(0,0, m_pCurPOpp->phi());
+    else if(m_pCurPOpp->isTriangleMethod())
+        m_pCurPlane->triMesh().rotate(0,0, m_pCurPOpp->phi());
+
+    Vector3d WindDir = m_pCurPOpp->aeroForces().CFWind().Idir();
     // extend the wake behind the plane's last trailing point;
 
     if(m_pCurPOpp->isType6())
@@ -6795,49 +6790,6 @@ void XPlane::onImportAnalysesFromXML()
     m_pgl3dXPlaneView->resetglPOpp();
     updateView();
 }
-
-
-void XPlane::onOptim3d()
-{
-    PlaneXfl const*pPlaneXfl = dynamic_cast<PlaneXfl const*>(m_pCurPlane);
-
-    OptimPlaneDlg o3d(s_pMainFrame);
-    if(s_Objectives.isEmpty())
-    {
-        s_Objectives = {OptObjective("Cl",          0, true,   0.55, 0.005, xfl::EQUALIZE),
-                        OptObjective("Cd",          1, true,   0.03, 0.000, xfl::MINIMIZE),
-                        OptObjective("Cl/Cd",       2, false,  21.0, 0.000, xfl::MAXIMIZE),
-                        OptObjective("Cl^(3/2)/Cd", 3, false,  20.0, 0.000, xfl::MAXIMIZE),
-                        OptObjective("Cm",          4, false,  0.00, 0.010, xfl::EQUALIZE),
-                        OptObjective("m.g.Vz",      5, false, 500.0, 0.000, xfl::MINIMIZE)};
-    }
-
-    o3d.setObjectives(s_Objectives);
-    o3d.initDialog(pPlaneXfl);
-    o3d.exec();
-    if(o3d.bChanged())
-    {
-        emit projectModified();
-
-        setPlane(o3d.bestPlane());
-
-        m_pPlaneExplorer->fillModelView();
-        m_pPlaneExplorer->update();
-        m_pPlaneExplorer->selectPlane(o3d.bestPlane());
-
-        m_pCurPlPolar = nullptr;
-        m_pCurPOpp = nullptr;
-        setPlane();
-
-        m_pgl3dXPlaneView->resetglMesh();
-        setControls();
-    }
-
-    s_Objectives = o3d.objectives();
-
-    updateView();
-}
-
 
 
 void XPlane::displayStdMessage(std::string const &msg, bool bShowWindow, bool bStatusBar, int duration)

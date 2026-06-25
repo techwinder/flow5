@@ -6,7 +6,8 @@ It is version 7 of the legacy project xflr5.
 
 # Remaining developments 
 - Fix bugs and implement minor improvements depending on user requests
-- Either complete or remove currently inoperative features, e.g. plane optimization, advanced editors
+- ~~Either complete or remove currently inoperative features, e.g. plane optimization, advanced editors~~
+- Consider adding force location to extra-drag input
 - Continue to clean the code and to improve the API 
 - Clean the documentation
 

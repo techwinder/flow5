@@ -116,11 +116,6 @@ void XPlaneActions::makeActions()
     m_pEditPlaneDescriptionAct = new QAction(tr("Edit description"), m_pXPlane);
     connect(m_pEditPlaneDescriptionAct, SIGNAL(triggered()), m_pXPlane, SLOT(onEditCurPlaneDescription()));
 
-    m_pOptimizeAct = new QAction(tr("Optimize"), m_pXPlane);
-    m_pOptimizeAct->setStatusTip(tr("Opens the module to optimize the active plane"));
-    m_pOptimizeAct->setShortcut(Qt::Key_F11);
-    connect(m_pOptimizeAct, SIGNAL(triggered()), m_pXPlane, SLOT(onOptim3d()));
-
     m_pScalePlaneAct = new QAction(tr("Scale"), m_pXPlane);
     m_pScalePlaneAct->setStatusTip(tr("Shows a form to edit the active plane"));
     connect(m_pScalePlaneAct, SIGNAL(triggered()), m_pXPlane, SLOT(onScalePlane()));

@@ -29,7 +29,6 @@
 
 // Custom event identifier
 const QEvent::Type MESSAGE_EVENT             = static_cast<QEvent::Type>(QEvent::User + 101);
-const QEvent::Type STREAMLINE_END_TASK_EVENT = static_cast<QEvent::Type>(QEvent::User + 102);
 const QEvent::Type XFOIL_TASK_END_EVENT      = static_cast<QEvent::Type>(QEvent::User + 103);
 const QEvent::Type XFOIL_BATCH_END_EVENT     = static_cast<QEvent::Type>(QEvent::User + 104);
 const QEvent::Type PLANE_POPP_EVENT          = static_cast<QEvent::Type>(QEvent::User + 106);
@@ -70,22 +69,6 @@ class MessageEvent : public QEvent
 
     private:
         QString m_Msg;
-};
-
-
-class StreamEndTaskEvent : public QEvent
-{
-    public:
-        StreamEndTaskEvent(int index): QEvent(STREAMLINE_END_TASK_EVENT),
-            m_Index(index)
-        {
-            m_Index=-1;
-        }
-
-        int index() const {return m_Index;}
-
-    private:
-        int m_Index=-1;
 };
 
 

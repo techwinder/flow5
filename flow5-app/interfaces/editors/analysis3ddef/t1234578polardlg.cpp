@@ -88,6 +88,7 @@ void T1234578PolarDlg::connectSignals()
     connect(m_pfePlaneMass,    SIGNAL(floatChanged(float)),  SLOT(onEditingFinished()));
     connect(m_pfeQInf,         SIGNAL(floatChanged(float)),  SLOT(onEditingFinished()));
     connect(m_pfeAlphaSpec,    SIGNAL(floatChanged(float)),  SLOT(onEditingFinished()));
+    connect(m_pfeBetaSpec,     SIGNAL(floatChanged(float)),  SLOT(onEditingFinished()));
     connect(m_pfePhiSpec,      SIGNAL(floatChanged(float)),  SLOT(onEditingFinished()));
 
     connect(m_pcptAVLCtrls->selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), SLOT(onAVLRowChanged(QModelIndex)));
@@ -178,11 +179,11 @@ void T1234578PolarDlg::enableControls()
 }
 
 
-void T1234578PolarDlg::initPolar3dDlg(const Plane *pPlane, const PlanePolar *pWPolar)
+void T1234578PolarDlg::initPolar3dDlg(const Plane *pPlane, const PlanePolar *pPlPolar)
 {
-    PlanePolarDlg::initPolar3dDlg(pPlane, pWPolar);
+    PlanePolarDlg::initPolar3dDlg(pPlane, pPlPolar);
 
-    if(pWPolar && pWPolar->isType6())
+    if(pPlPolar && pPlPolar->isType6())
         s_PlPolar.setType(xfl::T1POLAR);
 
     if(s_PlPolar.isType6()) s_PlPolar.setType(xfl::T1POLAR);
@@ -224,6 +225,7 @@ void T1234578PolarDlg::initPolar3dDlg(const Plane *pPlane, const PlanePolar *pWP
 
     m_pfeQInf->setValue(s_PlPolar.velocity()*Units::mstoUnit());
     m_pfeAlphaSpec->setValue(s_PlPolar.alphaSpec());
+    m_pfeBetaSpec->setValue(s_PlPolar.betaSpec());
     m_pfePhiSpec->setValue(s_PlPolar.phi());
 
 
@@ -321,7 +323,6 @@ void T1234578PolarDlg::readData()
     s_PlPolar.setThinSurfaces(m_prbThinSurfaces->isChecked());
     if(s_PlPolar.isVLM()) s_PlPolar.setThinSurfaces(true);
 
-    s_PlPolar.setBeta(0.0);
     if(fabs(s_PlPolar.betaSpec())>PRECISION)
     {
         if(m_prbVLM1Method->isChecked())
@@ -339,7 +340,8 @@ void T1234578PolarDlg::readData()
 
     s_PlPolar.setVelocity(m_pfeQInf->value() / Units::mstoUnit());
     s_PlPolar.setAlphaSpec(m_pfeAlphaSpec->value());
-    s_PlPolar.setPhi(m_pfePhiSpec->value());
+    s_PlPolar.setBetaSpec(m_pfeBetaSpec->value());
+    s_PlPolar.setPhiSpec(m_pfePhiSpec->value());
 
     s_PlPolar.setGroundHeight(m_pfeHeight->value() / Units::mtoUnit());
 
@@ -378,7 +380,7 @@ void T1234578PolarDlg::setupLayout()
                 pFlow5Link->setText("<a href=https://flow5.tech/docs/flow5_doc/Analysis/T8_polars.html>https://flow5.tech/docs/flow5_doc/Analysis/T8_polars.html</a>");
                 pFlow5Link->setOpenExternalLinks(true);
                 pFlow5Link->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse);
-                pFlow5Link->setAlignment(Qt::AlignVCenter| Qt::AlignRight);
+//                pFlow5Link->setAlignment(Qt::AlignVCenter| Qt::AlignRight);
 
                 pAnalysisTypeLayout->addWidget(m_prbType1);
                 pAnalysisTypeLayout->addWidget(m_prbType2);
@@ -395,53 +397,17 @@ void T1234578PolarDlg::setupLayout()
             {
                 QPixmap pixmap;
                 m_plabVh = new QLabel();
-                if(DisplayOptions::isDarkMode())
-                    pixmap.load(":/images/V_h_inv.png");
-                else
-                    pixmap.load(":/images/V_h.png");
+                if(DisplayOptions::isDarkMode()) pixmap.load(":/images/V_h_inv.png");
+                else                             pixmap.load(":/images/V_h.png");
 
                 m_plabVh->setPixmap(pixmap);
                 m_plabVh->setAlignment(Qt::AlignHCenter |Qt::AlignVCenter);
 
                 m_plabGlide = new QLabel();
-                if(DisplayOptions::isDarkMode())
-                    pixmap.load(":/images/V_glide_inv.png");
-                else            pixmap.load(":/images/V_glide.png");
+                if(DisplayOptions::isDarkMode()) pixmap.load(":/images/V_glide_inv.png");
+                else                             pixmap.load(":/images/V_glide.png");
                 m_plabGlide->setPixmap(pixmap);
                 m_plabGlide->setAlignment(Qt::AlignHCenter |Qt::AlignVCenter);
-
-
-                m_pfrAlpha = new QFrame;
-                {
-                    QHBoxLayout *pAlphaLayout = new QHBoxLayout;
-                    {
-                        QLabel *plabAlpha = new QLabel("<p>&alpha; =</p>");
-                        m_pfeAlphaSpec = new FloatEdit;
-                        QLabel *plabDeg = new QLabel("<p>&deg;</p>");
-
-                        pAlphaLayout->addWidget(plabAlpha, 0, Qt::AlignRight);
-                        pAlphaLayout->addWidget(m_pfeAlphaSpec);
-                        pAlphaLayout->addWidget(plabDeg);
-                    }
-                    m_pfrAlpha->setLayout(pAlphaLayout);
-                }
-
-                m_pfrPhi = new QFrame;
-                {
-                    QHBoxLayout *pPhiLayout = new QHBoxLayout;
-                    {
-                        QLabel *plabPhi = new QLabel(tr("<p>&phi; =</p>"));
-                        m_pfePhiSpec = new FloatEdit;
-                        m_pfePhiSpec->setToolTip(tr("<p>The bank angle</p>"));
-                        QLabel *plabDeg = new QLabel(tr("<p>&deg;</p>"));
-
-                        pPhiLayout->addWidget(plabPhi, 0, Qt::AlignRight);
-                        pPhiLayout->addWidget(m_pfePhiSpec);
-                        pPhiLayout->addWidget(plabDeg);
-                    }
-                    m_pfrPhi->setLayout(pPhiLayout);
-                }
-
 
                 m_pfrQInf = new QFrame;
                 {
@@ -460,12 +426,59 @@ void T1234578PolarDlg::setupLayout()
                     m_pfrQInf->setLayout(pQinfLayout);
                 }
 
+                m_pfrAlpha = new QFrame;
+                {
+                    QHBoxLayout *pAlphaLayout = new QHBoxLayout;
+                    {
+                        QLabel *plabAlpha = new QLabel("<p>&alpha; =</p>");
+                        m_pfeAlphaSpec = new FloatEdit;
+                        QLabel *plabDeg = new QLabel("<p>&deg;</p>");
+
+                        pAlphaLayout->addWidget(plabAlpha, 0, Qt::AlignRight);
+                        pAlphaLayout->addWidget(m_pfeAlphaSpec);
+                        pAlphaLayout->addWidget(plabDeg);
+                    }
+                    m_pfrAlpha->setLayout(pAlphaLayout);
+                }
+
+
+                QFrame *m_pfrBeta = new QFrame;
+                {
+                    QHBoxLayout *pBetaLayout = new QHBoxLayout;
+                    {
+                        QLabel *plabBeta = new QLabel("<p>&beta; =</p>");
+                        m_pfeBetaSpec = new FloatEdit;
+                        QLabel *plabDeg = new QLabel("<p>&deg;</p>");
+
+                        pBetaLayout->addWidget(plabBeta, 0, Qt::AlignRight);
+                        pBetaLayout->addWidget(m_pfeBetaSpec);
+                        pBetaLayout->addWidget(plabDeg);
+                    }
+                    m_pfrBeta->setLayout(pBetaLayout);
+                }
+
+                m_pfrPhi = new QFrame;
+                {
+                    QHBoxLayout *pPhiLayout = new QHBoxLayout;
+                    {
+                        QLabel *plabPhi = new QLabel(tr("<p>&phi; =</p>"));
+                        m_pfePhiSpec = new FloatEdit;
+                        m_pfePhiSpec->setToolTip(tr("<p>The bank angle</p>"));
+                        QLabel *plabDeg = new QLabel(tr("<p>&deg;</p>"));
+
+                        pPhiLayout->addWidget(plabPhi, 0, Qt::AlignRight);
+                        pPhiLayout->addWidget(m_pfePhiSpec);
+                        pPhiLayout->addWidget(plabDeg);
+                    }
+                    m_pfrPhi->setLayout(pPhiLayout);
+                }
+
                 m_frFlightInfo = new QFrame;
                 {
                     QVBoxLayout *pFlightLayout = new QVBoxLayout;
                     {
-                        m_plabWingLoad  = new QLabel(tr("Wing loading = 0.033 kg/dm2"));
-                        m_plabReInfo    = new QLabel(tr("Re info"));
+                        m_plabWingLoad  = new QLabel("Wing loading = 0.033 kg/dm2");
+                        m_plabReInfo    = new QLabel("Re info");
 
                         m_plabWingLoad->setFont(fixedfnt);
                         m_plabReInfo->setFont(fixedfnt);
@@ -476,9 +489,10 @@ void T1234578PolarDlg::setupLayout()
                     m_frFlightInfo->setLayout(pFlightLayout);
                 }
 
-                pRightLayout->addWidget(m_pfrPhi);
                 pRightLayout->addWidget(m_pfrQInf);
                 pRightLayout->addWidget(m_pfrAlpha);
+                pRightLayout->addWidget(m_pfrBeta);
+                pRightLayout->addWidget(m_pfrPhi);
                 pRightLayout->addWidget(m_plabVh);
                 pRightLayout->addWidget(m_plabGlide);
                 pRightLayout->addStretch();
@@ -487,8 +501,8 @@ void T1234578PolarDlg::setupLayout()
 
 
             pPolarTypePageLayout->addLayout(pAnalysisTypeLayout);
-            pPolarTypePageLayout->addStretch();
             pPolarTypePageLayout->addLayout(pRightLayout);
+            pPolarTypePageLayout->setStretchFactor(pAnalysisTypeLayout, 1);
         }
         pfrPolarType ->setLayout(pPolarTypePageLayout);
     }

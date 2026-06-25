@@ -90,6 +90,8 @@ void PlanePolar::setDefaults()
 
 
     m_AlphaSpec = 0.0;
+    m_BetaSpec  = 0.0;
+
     m_AnalysisMethod = xfl::TRIUNIFORM;
     m_BC = xfl::DIRICHLET;
 
@@ -448,52 +450,51 @@ void PlanePolar::duplicateSpec(Polar3d const *pPolar3d)
     Polar3d::duplicateSpec(pPolar3d);
 
     if(!pPolar3d->isPlanePolar()) return;
-    PlanePolar const *pWPolar = dynamic_cast<PlanePolar const *>(pPolar3d);
+    PlanePolar const *pPlPolar = dynamic_cast<PlanePolar const *>(pPolar3d);
 
-    m_bThinSurfaces = pWPolar->bThinSurfaces();
+    m_bThinSurfaces = pPlPolar->bThinSurfaces();
 
 
-    m_Type  = pWPolar->m_Type;
+    m_Type  = pPlPolar->m_Type;
 
-    m_QInfSpec    = pWPolar->m_QInfSpec;
-    m_AlphaSpec   = pWPolar->m_AlphaSpec;
-    m_BankAngle   = pWPolar->m_BankAngle;
+    m_QInfSpec    = pPlPolar->m_QInfSpec;
+    m_AlphaSpec   = pPlPolar->m_AlphaSpec;
 
-    if(pWPolar->isBetaPolar()) m_BetaSpec = 0.0;
-    else                       m_BetaSpec = pWPolar->m_BetaSpec;
+    if(pPlPolar->isBetaPolar()) m_BetaSpec = 0.0;
+    else                       m_BetaSpec = pPlPolar->m_BetaSpec;
 
-    m_theStyle = pWPolar->theStyle();
+    m_theStyle = pPlPolar->theStyle();
 
-    m_bViscLoop = pWPolar->m_bViscLoop;
+    m_bViscLoop = pPlPolar->m_bViscLoop;
 
     // general aerodynamic data - specific to a polar
-    m_bAdjustedVelocity = pWPolar->m_bAdjustedVelocity;
+    m_bAdjustedVelocity = pPlPolar->m_bAdjustedVelocity;
 
-    m_OperatingRange  = pWPolar->m_OperatingRange;
-    m_InertiaRange    = pWPolar->m_InertiaRange;
-    m_AngleRange      = pWPolar->m_AngleRange;
+    m_OperatingRange  = pPlPolar->m_OperatingRange;
+    m_InertiaRange    = pPlPolar->m_InertiaRange;
+    m_AngleRange      = pPlPolar->m_AngleRange;
 
-    m_RefArea         = pWPolar->m_RefArea;//for lift and drag calculations
-    m_RefChord        = pWPolar->m_RefChord;// for moment calculations
-    m_RefSpan         = pWPolar->m_RefSpan;//for moment calculations
-    m_bOtherWingsArea = pWPolar->m_bOtherWingsArea;
+    m_RefArea         = pPlPolar->m_RefArea;//for lift and drag calculations
+    m_RefChord        = pPlPolar->m_RefChord;// for moment calculations
+    m_RefSpan         = pPlPolar->m_RefSpan;//for moment calculations
+    m_bOtherWingsArea = pPlPolar->m_bOtherWingsArea;
 
     //Inertia properties
-    m_bAutoInertia = pWPolar->m_bAutoInertia;
+    m_bAutoInertia = pPlPolar->m_bAutoInertia;
 
-    m_FlapControls   = pWPolar->m_FlapControls;
-    m_AVLControls = pWPolar->m_AVLControls;
+    m_FlapControls   = pPlPolar->m_FlapControls;
+    m_AVLControls = pPlPolar->m_AVLControls;
 
-    m_bWingTipMi  = pWPolar->m_bWingTipMi;
-    m_bFuseMi     = pWPolar->m_bFuseMi;
-    m_bFuseDrag   = pWPolar->m_bFuseDrag;
+    m_bWingTipMi  = pPlPolar->m_bWingTipMi;
+    m_bFuseMi     = pPlPolar->m_bFuseMi;
+    m_bFuseDrag   = pPlPolar->m_bFuseDrag;
 
-    m_FuseDragMethod = pWPolar->m_FuseDragMethod;
-    m_FuseCf         = pWPolar->m_FuseCf;
+    m_FuseDragMethod = pPlPolar->m_FuseDragMethod;
+    m_FuseCf         = pPlPolar->m_FuseCf;
 
-    m_ExtraDrag = pWPolar->m_ExtraDrag;
-    m_bAVLDrag  = pWPolar->m_bAVLDrag;
-    m_AVLSpline.duplicate(pWPolar->m_AVLSpline);
+    m_ExtraDrag = pPlPolar->m_ExtraDrag;
+    m_bAVLDrag  = pPlPolar->m_bAVLDrag;
+    m_AVLSpline.duplicate(pPlPolar->m_AVLSpline);
 }
 
 

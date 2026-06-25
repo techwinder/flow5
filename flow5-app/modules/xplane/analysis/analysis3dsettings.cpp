@@ -61,6 +61,7 @@
 #include <interfaces/graphs/controls/graphoptions.h>
 #include <interfaces/graphs/graph/graph.h>
 #include <test/test3d/gl3daxesview.h>
+#include <interfaces/controls/w3dprefs.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/line/linebtn.h>
@@ -505,8 +506,8 @@ void Analysis3dSettings::setupLayout()
                         m_pchStabilityAxes->setToolTip(tipstab);
 
 
-                        m_plbWind = new LineBtn(gl3dAxesView::s_WindStyle);
-                        m_plbStab = new LineBtn(gl3dAxesView::s_StabStyle);
+                        m_plbWind = new LineBtn(W3dPrefs::s_WindStyle);
+                        m_plbStab = new LineBtn(W3dPrefs::s_StabStyle);
 
                         connect(m_pchGeomAxes,      SIGNAL(clicked(bool)),  SLOT(onUpdateAxes()));
                         connect(m_pchStabilityAxes, SIGNAL(clicked(bool)),  SLOT(onUpdateAxes()));
@@ -903,15 +904,14 @@ void Analysis3dSettings::onUpdateAxes()
 }
 
 
-
 void Analysis3dSettings::onWindLineStyle()
 {
     LineMenu lm(nullptr, false);
-    lm.initMenu(gl3dAxesView::s_WindStyle);
+    lm.initMenu(W3dPrefs::s_WindStyle);
     lm.exec(QCursor::pos());
 
-    gl3dAxesView::s_WindStyle = lm.theStyle();
-    m_plbWind->setTheStyle(gl3dAxesView::s_WindStyle);
+    W3dPrefs::s_WindStyle = lm.theStyle();
+    m_plbWind->setTheStyle(W3dPrefs::s_WindStyle);
     m_pglAxesView->update();
 }
 
@@ -919,11 +919,11 @@ void Analysis3dSettings::onWindLineStyle()
 void Analysis3dSettings::onStabLineStyle()
 {
     LineMenu lm(nullptr, false);
-    lm.initMenu(gl3dAxesView::s_StabStyle);
+    lm.initMenu(W3dPrefs::s_StabStyle);
     lm.exec(QCursor::pos());
 
-    gl3dAxesView::s_StabStyle = lm.theStyle();
-    m_plbStab->setTheStyle(gl3dAxesView::s_StabStyle);
+    W3dPrefs::s_StabStyle = lm.theStyle();
+    m_plbStab->setTheStyle(W3dPrefs::s_StabStyle);
     m_pglAxesView->update();
 }
 

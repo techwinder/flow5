@@ -87,7 +87,7 @@
 #include <interfaces/editors/fuseedit/bodyscaledlg.h>
 #include <interfaces/editors/fuseedit/fuseoccdlg.h>
 #include <interfaces/editors/fuseedit/fusestldlg.h>
-#include <interfaces/editors/fuseedit/xflfuseedit/fusexfldefdlg.h>
+#include <interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.h>
 #include <interfaces/editors/translatedlg.h>
 #include <interfaces/exchange/cadexportdlg.h>
 #include <interfaces/exchange/stlwriterdlg.h>
@@ -2215,7 +2215,7 @@ void XSail::onEditHull()
         FuseXfl *pXflFuse = dynamic_cast<FuseXfl*>(pFuse);
         Fuse *pMemBody = pXflFuse->clone();
 
-        FuseXflDefDlg glbDlg(s_pMainFrame);
+        FuseXflDlg glbDlg(s_pMainFrame);
         glbDlg.enableName(false);
         glbDlg.initDialog(pXflFuse);
 

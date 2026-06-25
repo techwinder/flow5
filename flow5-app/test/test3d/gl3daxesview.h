@@ -82,7 +82,6 @@ class gl3dAxesView : public gl3dXflView
         static double s_Beta;
 
         static LineStyle s_WindVecsStyle;
-        static LineStyle s_WindStyle, s_StabStyle;
 
         static QByteArray s_Geometry;
         static Quaternion s_ab_quat;
