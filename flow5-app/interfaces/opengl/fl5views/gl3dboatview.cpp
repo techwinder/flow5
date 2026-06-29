@@ -291,6 +291,8 @@ void gl3dBoatView::resizeSailBuffers(int nSails)
 
 void gl3dBoatView::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     if(!m_pBoat) return;
     QMatrix4x4 vmMat(m_matView*m_matModel);
     QMatrix4x4 pvmMat(m_matProj*vmMat);

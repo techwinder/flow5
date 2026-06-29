@@ -186,6 +186,8 @@ void gl3dSolarSys::initializeGL()
 
 void gl3dSolarSys::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
     QMatrix4x4 vmMat(m_matView*m_matModel);
     QMatrix4x4 pvmMat(m_matProj*vmMat);

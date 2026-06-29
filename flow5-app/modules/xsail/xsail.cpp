@@ -1360,7 +1360,6 @@ BoatOpp *XSail::setBtOpp(double ctrl)
 
     if(pNewBtOpp==m_pCurBtOpp)
     {
-//        s_pMainFrame->m_pgl3dScales->enableFlowControls();
         return pNewBtOpp;
     }
 
@@ -1380,7 +1379,6 @@ BoatOpp *XSail::setBtOpp(BoatOpp *pBoatOpp)
     {
         m_pgl3dXSailView->setBotRightOutput(QString());
         if(m_pCurBoat) m_pCurBoat->restoreMesh();
-//        s_pMainFrame->m_pgl3dScales->enableFlowControls();
         return nullptr;
     }
 
@@ -1404,8 +1402,6 @@ BoatOpp *XSail::setBtOpp(BoatOpp *pBoatOpp)
     m_pgl3dXSailView->resetFlow();
     m_pgl3dXSailView->s_bResetglWake = true;
 
-//    s_pMainFrame->m_pgl3dScales->makeXSailVelocityVectors();
-//    s_pMainFrame->m_pgl3dScales->enableFlowControls();
     return m_pCurBtOpp;
 }
 

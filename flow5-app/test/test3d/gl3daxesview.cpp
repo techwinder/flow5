@@ -130,6 +130,8 @@ void gl3dAxesView::hideEvent(QHideEvent *)
 
 void gl3dAxesView::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     QMatrix4x4 m(m_matModel);
     QMatrix4x4 vm(m_matView);
 

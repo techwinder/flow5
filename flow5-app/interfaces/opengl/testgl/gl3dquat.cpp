@@ -29,13 +29,15 @@
 
 #include "gl3dquat.h"
 
-#include <core/xflcore.h>
 #include <api/utils.h>
+
 #include <core/displayoptions.h>
-#include <interfaces/widgets/globals/wt_globals.h>
-#include <interfaces/widgets/customwts/intedit.h>
+#include <core/xflcore.h>
+#include <interfaces/controls/w3dprefs.h>
 #include <interfaces/widgets/customwts/floatedit.h>
+#include <interfaces/widgets/customwts/intedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>
+#include <interfaces/widgets/globals/wt_globals.h>
 
 QByteArray gl3dQuat::s_Geometry;
 Quaternion gl3dQuat::s_Quat(0.0f, 0.0f, 0.0f, 0.0f);
@@ -237,6 +239,8 @@ void gl3dQuat::glMake3dObjects()
 
 void gl3dQuat::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
 
 //    QMatrix4x4 vmMat(m_matView*m_matModel);

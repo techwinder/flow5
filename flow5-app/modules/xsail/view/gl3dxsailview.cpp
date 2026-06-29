@@ -754,6 +754,10 @@ void gl3dXSailView::initializeGL()
             m_shadFlowLoc.m_NPanels      = m_shadFlow.uniformLocation("npanels");
             m_shadFlowLoc.m_Dt           = m_shadFlow.uniformLocation("dt");
             m_shadFlowLoc.m_VInf         = m_shadFlow.uniformLocation("vinf");
+            m_shadFlowLoc.m_WindDir      = m_shadFlow.uniformLocation("winddir");
+            m_shadFlowLoc.m_WindSide     = m_shadFlow.uniformLocation("windside");
+            m_shadFlowLoc.m_WindNormal   = m_shadFlow.uniformLocation("windnormal");
+
             m_shadFlowLoc.m_TopLeft      = m_shadFlow.uniformLocation("topleft");
             m_shadFlowLoc.m_BotRight     = m_shadFlow.uniformLocation("botright");
             m_shadFlowLoc.m_VtnCoreSize  = m_shadFlow.uniformLocation("VtnCoreSize");
@@ -771,6 +775,8 @@ void gl3dXSailView::initializeGL()
 
 void gl3dXSailView::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     if(!s_pXSail->curBoat()) return;
 #ifdef QT_DEBUG
     for(int i=0; i<int(PanelAnalysis::s_DebugPts.size()); i++)
@@ -2461,6 +2467,7 @@ void gl3dXSailView::glMakeFlowBuffers()
 
 void gl3dXSailView::makeBoids()
 {
+ //   Boat      const *pBoat    = s_pXSail->curBoat();
     BoatPolar const *pBtPolar = s_pXSail->curBtPolar();
     if(!pBtPolar)
     {
@@ -2468,18 +2475,18 @@ void gl3dXSailView::makeBoids()
         return;
     }
 
-     int nBoids = FlowCtrls::s_FlowNGroups * GROUP_SIZE;
-     m_Boid.resize(nBoids);
-     for(int inboid=0; inboid<nBoids; inboid++)
-     {
-         Boid & boid = m_Boid[inboid];
-         boid.m_Position.x = FlowCtrls::flowTopLeft().x + QRandomGenerator::global()->generateDouble() * (FlowCtrls::flowBotRight().x-FlowCtrls::flowTopLeft().x);
-         boid.m_Position.y = FlowCtrls::flowTopLeft().y + QRandomGenerator::global()->generateDouble() * (FlowCtrls::flowBotRight().y-FlowCtrls::flowTopLeft().y);
-         boid.m_Position.z = FlowCtrls::flowTopLeft().z + QRandomGenerator::global()->generateDouble() * (FlowCtrls::flowBotRight().z-FlowCtrls::flowTopLeft().z);
+    int nBoids = FlowCtrls::s_FlowNGroups * GROUP_SIZE;
+    m_Boid.resize(nBoids);
+    for(int inboid=0; inboid<nBoids; inboid++)
+    {
+        Boid & boid = m_Boid[inboid];
+        boid.m_Position.x = FlowCtrls::flowTopLeft().x + QRandomGenerator::global()->generateDouble() * (FlowCtrls::flowBotRight().x-FlowCtrls::flowTopLeft().x);
+        boid.m_Position.y = FlowCtrls::flowTopLeft().y + QRandomGenerator::global()->generateDouble() * (FlowCtrls::flowBotRight().y-FlowCtrls::flowTopLeft().y);
+        boid.m_Position.z = FlowCtrls::flowTopLeft().z + QRandomGenerator::global()->generateDouble() * (FlowCtrls::flowBotRight().z-FlowCtrls::flowTopLeft().z);
 
-         boid.Index = inboid;
-         boid.m_Velocity.set(0.1,0,0);
-     }
+        boid.Index = inboid;
+        boid.m_Velocity.set(0.1,0,0);
+    }
 }
 
 
@@ -2559,7 +2566,7 @@ void gl3dXSailView::restartFlow()
 
 void gl3dXSailView::glRenderFlow()
 {
-    Boat      const *pBoat  = s_pXSail->curBoat();
+    Boat      const *pBoat    = s_pXSail->curBoat();
     BoatPolar const *pBtPolar = s_pXSail->curBtPolar();
     BoatOpp   const *pBtOpp   = s_pXSail->curBtOpp();
     if(!pBoat || !pBtPolar || !pBtOpp) return;

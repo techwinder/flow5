@@ -5257,17 +5257,12 @@ PlaneOpp* XPlane::setPlaneOpp(PlaneOpp *pPOpp)
         }
     }
 
-/*    if(pPlaneXfl && m_pCurPOpp->isQuadMethod())
+    if(pPlaneXfl && m_pCurPOpp->isQuadMethod())
         pPlaneXfl->quadMesh().rotate(m_pCurPOpp->alpha(), m_pCurPOpp->beta(), m_pCurPOpp->phi());
     else if(m_pCurPOpp->isTriangleMethod())
-        m_pCurPlane->triMesh().rotate(m_pCurPOpp->alpha(), m_pCurPOpp->beta(), m_pCurPOpp->phi());*/
+        m_pCurPlane->triMesh().rotate(m_pCurPOpp->alpha(), m_pCurPOpp->beta(), m_pCurPOpp->phi());
 
-    if(pPlaneXfl && m_pCurPOpp->isQuadMethod())
-        pPlaneXfl->quadMesh().rotate(0,0, m_pCurPOpp->phi());
-    else if(m_pCurPOpp->isTriangleMethod())
-        m_pCurPlane->triMesh().rotate(0,0, m_pCurPOpp->phi());
-
-    Vector3d WindDir = m_pCurPOpp->aeroForces().CFWind().Idir();
+    Vector3d WindDir(1,0,0);
     // extend the wake behind the plane's last trailing point;
 
     if(m_pCurPOpp->isType6())

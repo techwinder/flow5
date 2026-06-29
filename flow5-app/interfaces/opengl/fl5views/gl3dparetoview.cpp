@@ -50,6 +50,8 @@ bool gl3dParetoView::intersectTheObject(Vector3d const &, Vector3d const &, Vect
 
 void gl3dParetoView::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     double rad = 0.019;
     QMatrix4x4 vmMat(m_matView*m_matModel);
     QMatrix4x4 pvmMat(m_matProj*vmMat);

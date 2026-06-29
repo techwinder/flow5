@@ -27,6 +27,7 @@
 #include <QApplication>
 #include <QSurfaceFormat>
 
+
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
@@ -164,7 +165,6 @@ int main(int argc, char *argv[])
 
     Flow5App app(argc, argv);
     Flow5App::setApplicationDisplayName("flow5");
-
 
     if(app.done()) return 0;
     else           return app.exec();

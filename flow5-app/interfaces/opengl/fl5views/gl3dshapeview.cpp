@@ -79,6 +79,8 @@ gl3dShapeView::~gl3dShapeView()
 
 void gl3dShapeView::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     QMatrix4x4 vmMat(m_matView*m_matModel);
     QMatrix4x4 pvmMat(m_matProj*vmMat);
     m_shadSurf.bind();

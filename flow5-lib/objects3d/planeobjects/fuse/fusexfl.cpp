@@ -926,7 +926,7 @@ void FuseXfl::setPanelPos()
     {
         double x = double(i)/double(m_nxNurbsPanels);
 //        m_XPanelPos.append(bunchedParameter(m_nurbs.bunchDist(), m_nurbs.bunchAmplitude(), x));
-        m_XPanelPos.push_back(sigmoid(-(m_nurbs.bunchAmplitude())*0.85, x));
+        m_XPanelPos.push_back(math::sigmoid(-(m_nurbs.bunchAmplitude())*0.85, x));
     }
 }
 

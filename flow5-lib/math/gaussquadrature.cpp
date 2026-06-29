@@ -75,13 +75,13 @@ bool GaussQuadrature::makeCoefficients(int degree)
 bool GaussQuadrature::computeWeights()
 {
     //compute polynomial coefficients
-    Legendre(_n, _p.data());
+    math::Legendre(_n, _p.data());
 
     //compute roots, all real
     complex<double> *roots = new complex<double>[_n+1];
     std::vector<double> pol(_n+1,0);
 
-    if(!LinBairstow(pol.data(), roots, _n))
+    if(!math::LinBairstow(pol.data(), roots, _n))
     {
         //clean up
         delete [] roots;

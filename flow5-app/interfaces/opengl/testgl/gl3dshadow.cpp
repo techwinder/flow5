@@ -239,6 +239,8 @@ void gl3dShadow::glMake3dObjects()
 
 void gl3dShadow::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     updateLightMatrix();
 
     // 1. first render to depth map

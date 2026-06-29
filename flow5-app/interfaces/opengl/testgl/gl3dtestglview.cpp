@@ -40,6 +40,8 @@ gl3dTestGLView::gl3dTestGLView(QWidget *pParent) : gl3dView (pParent)
 
 void gl3dTestGLView::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     float dist = 1.0f;
     float satrad = 0.15f;
 

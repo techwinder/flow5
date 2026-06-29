@@ -268,6 +268,8 @@ void gl3dBoids::glMake3dObjects()
 
 void gl3dBoids::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     m_matModel.setToIdentity();
     QMatrix4x4 vmMat(m_matView*m_matModel);
     QMatrix4x4 pvmMat(m_matProj*vmMat);

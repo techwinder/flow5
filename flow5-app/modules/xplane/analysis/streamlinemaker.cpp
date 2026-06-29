@@ -100,7 +100,8 @@ void StreamlineMaker::run()
     Vector3d VT, Vel;
 
     Vector3d winddir, VInf;
-    winddir = m_pOpp3d->aeroForces().CFWind().Idir();
+//    winddir = m_pOpp3d->aeroForces().CFWind().Idir();
+    winddir.set(1,0,0);
     VInf = winddir * m_pOpp3d->QInf();
 
     // calculate total wake length and compare it to max. length, i.e. the wake length

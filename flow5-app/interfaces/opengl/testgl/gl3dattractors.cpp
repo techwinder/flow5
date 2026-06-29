@@ -216,6 +216,8 @@ void gl3dAttractors::keyPressEvent(QKeyEvent *pEvent)
 
 void gl3dAttractors::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     m_shadLine.bind();
     {
         m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView*m_matModel);

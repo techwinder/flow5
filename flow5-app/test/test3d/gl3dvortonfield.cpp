@@ -213,6 +213,8 @@ bool gl3dVortonField::intersectTheObject(const Vector3d &AA, const Vector3d &BB,
 
 void gl3dVortonField::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     QMatrix4x4 vmMat(m_matView*m_matModel);
     QMatrix4x4 pvmMat(m_matProj*vmMat);
 

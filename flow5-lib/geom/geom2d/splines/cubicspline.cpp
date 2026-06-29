@@ -528,8 +528,8 @@ void CubicSpline::rePanel(int N)
     {
         double t = double(i)/double(N-1);
 
-        if     (m_BunchType==Spline::DOUBLESIG) u = doubleSigmoid(-m_BunchAmp, t);
-        else if(m_BunchType==Spline::SIGMOID)   u = sigmoid(-m_BunchAmp, t);
+        if     (m_BunchType==Spline::DOUBLESIG) u = math::doubleSigmoid(-m_BunchAmp, t);
+        else if(m_BunchType==Spline::SIGMOID)   u = math::sigmoid(-m_BunchAmp, t);
         else                                    u = t; // UNIFORM length spacing
 
         for(unsigned int j=0; j<m_segVal.size()-1; j++)

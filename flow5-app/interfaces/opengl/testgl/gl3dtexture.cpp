@@ -790,6 +790,8 @@ void gl3dTexture::glMake3dObjects()
 
 void gl3dTexture::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
 
     glEnable(GL_DEPTH_TEST);

@@ -864,16 +864,16 @@ bool PlaneOpp::solveEigenvalues(std::string &logmsg)
     int i=0;
 
 
-    characteristicPol(m_ALong, pLong);
+    math::characteristicPol(m_ALong, pLong);
 
-    if(!LinBairstow(pLong, rLong, 4))
+    if(!math::LinBairstow(pLong, rLong, 4))
     {
         log += "       Error extracting longitudinal eigenvalues\n";
         return false;
     }
 
     //sort them
-    sortComplex(rLong, 4);
+    math::sortComplex(rLong, 4);
 
     for(i=0; i<4; i++)
     {
@@ -885,16 +885,16 @@ bool PlaneOpp::solveEigenvalues(std::string &logmsg)
     }
 
 
-    characteristicPol(m_ALat, pLat);
+    math::characteristicPol(m_ALat, pLat);
 
-    if(!LinBairstow(pLat, rLat, 4))
+    if(!math::LinBairstow(pLat, rLat, 4))
     {
         log += "       Error extracting lateral eigenvalues\n";
         return false;
     }
 
     //sort them
-    sortComplex(rLat, 4);
+    math::sortComplex(rLat, 4);
 
     for(i=0; i<4; i++)
     {

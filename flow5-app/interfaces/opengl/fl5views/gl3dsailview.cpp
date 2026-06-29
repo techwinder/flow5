@@ -275,6 +275,8 @@ void gl3dSailView::glMakeSailNormals(Sail const*pSail, float length, QOpenGLBuff
 
 void gl3dSailView::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     if(!m_pSail) return;
     QMatrix4x4 vmMat(m_matView*m_matModel);
     QMatrix4x4 pvmMat(m_matProj*vmMat);

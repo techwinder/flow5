@@ -177,7 +177,7 @@ double LLTTask::Beta(int m, int k) const
     double fr = double(s_NLLTStations);
 
     if (m==k) b = 180.0*fr/8.0/PI/sin(fk*PI/fr);
-    else if (isEven(m+k)) b=0.0;
+    else if (math::isEven(m+k)) b=0.0;
     else
     {
         double c1 = 180.0/4.0/PI/fr/sin(fk*PI/fr);
@@ -828,10 +828,11 @@ PlaneOpp* LLTTask::createPlaneOpp(double QInf, double Alpha, bool bWingOut)
 
     Vector3d N;
     double Cb =0.0;
+    double qDyn = 0.5 * m_pPlPolar->density() * QInf* QInf;
     for (int l=0; l<nStation; l++)
     {
         int ll = nStation-l;
-        maindist.m_StripPos[l]       = -m_SpanPos.at(ll);
+        maindist.m_StripPos[l]      = -m_SpanPos.at(ll);
         maindist.m_StripArea[l]     =  m_StripArea.at(ll);
         maindist.m_Ai[l]            =  m_Ai.at(ll);
         maindist.m_Cl[l]            =  m_Cl.at(ll);
@@ -847,7 +848,7 @@ PlaneOpp* LLTTask::createPlaneOpp(double QInf, double Alpha, bool bWingOut)
         maindist.m_XTrTop[l]        =  m_XTrTop.at(ll);
         maindist.m_XTrBot[l]        =  m_XTrBot.at(ll);
         maindist.m_BendingMoment[l] =  m_BendingMoment.at(ll);
-        maindist.m_F[l].set( 0,0,q*pWing->projectedArea()*m_Cl.at(ll));
+        maindist.m_F[l].set( 0,0,qDyn*m_StripArea.at(l)*m_Cl.at(ll));
         maindist.m_Vd[l].set(0,0,QInf*tan(m_Ai[ll]*PI/180.0));
 
         m_pWing->surfacePoint(0.25, maindist.m_StripPos[l], xfl::MIDSURFACE, maindist.m_PtC4[l], N);

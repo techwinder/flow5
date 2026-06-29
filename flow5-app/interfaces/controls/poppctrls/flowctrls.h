@@ -66,9 +66,10 @@ class FlowCtrls : public QWidget
         static void setXPlane(XPlane *pXPlane) {s_pXPlane=pXPlane;}
         static void setXSail(XSail *pXSail) {s_pXSail=pXSail;}
 
-
         static Vector3d flowTopLeft() {return s_FlowTopLeft;}
         static Vector3d flowBotRight() {return s_FlowBotRight;}
+
+        static bool bUniformSeed() {return s_bUniform;}
 
         static void loadSettings(QSettings &settings);
         static void saveSettings(QSettings &settings);
@@ -97,6 +98,8 @@ class FlowCtrls : public QWidget
         FloatEdit *m_pfeTop,  *m_pfeBot;
         FloatEdit *m_pfeLeft, *m_pfeRight;
 
+        QRadioButton *m_prbUniform, *m_prbGaussian;
+
         IntEdit *m_pieNGroups;
         FloatEdit *m_pfeDt;
 
@@ -115,5 +118,6 @@ class FlowCtrls : public QWidget
         static flowODE s_ODE;
         static Vector3d s_FlowTopLeft, s_FlowBotRight;
 
+        static bool s_bUniform;
 };
 

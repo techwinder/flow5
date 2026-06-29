@@ -289,6 +289,8 @@ void gl3dQuadField::keyPressEvent(QKeyEvent *pEvent)
 
 void gl3dQuadField::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     QMatrix4x4 vmMat, pvmMat;
     vmMat = m_matView*m_matModel;
     pvmMat = m_matProj*vmMat;

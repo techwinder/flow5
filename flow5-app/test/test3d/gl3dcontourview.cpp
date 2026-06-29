@@ -129,6 +129,8 @@ void gl3dContourView::keyPressEvent(QKeyEvent *pEvent)
 
 void gl3dContourView::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     QMatrix4x4 vmMat(m_matView*m_matModel);
     QMatrix4x4 pvmMat(m_matProj*vmMat);
     m_shadLine.bind();

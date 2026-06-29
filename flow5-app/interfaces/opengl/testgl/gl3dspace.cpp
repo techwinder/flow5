@@ -258,6 +258,8 @@ void gl3dSpace::glMake3dObjects()
 
 void gl3dSpace::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     double radius = double(s_SphereRadius)/5500.0/m_glScalef;
 
     m_matModel.setToIdentity();

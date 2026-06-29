@@ -81,7 +81,6 @@ POpp3dCtrls::POpp3dCtrls(gl3dXflView*p3dView, QWidget *pParent) : QTabWidget(pPa
     m_bHPlane         = false;
     m_bStabAxes       = m_bWindAxes = false;
     m_bAnimateWOpp    = false;
-    m_bGeomView       = false;
 
     m_bAnimateWOppPlus   = true;
     m_pTimerWOpp= new QTimer(this);
@@ -219,41 +218,12 @@ void POpp3dCtrls::setupLayout()
                 pCheckDispLayout->setSpacing(0);
             }
 
-            m_pfrView = new QFrame;
-            {
-                QHBoxLayout *pViewLayout = new QHBoxLayout;
-                {
-                    QLabel *plabView = new QLabel(tr("Use:"));
-                    QButtonGroup *pGroup = new QButtonGroup(this);
-                    {
-                        QString tip = tr("<p>"
-                                         "The selection defines in which frame of reference the button actions and the commands "
-                                         "'X', 'Shift+X', 'Y', etc. will be understood.<br>"
-                                         "Defaults to geometry axes if no operating point is selected.<br>"
-                                         "Recommendation: do the post-processing in wind axes."
-                                         "</p>");
-                        m_prbGeom = new QRadioButton(tr("Geometry axes"));
-                        m_prbWind = new QRadioButton(tr("Wind axes"));
-                        m_prbGeom->setToolTip(tip);
-                        m_prbWind->setToolTip(tip);
-                        pGroup->addButton(m_prbGeom);
-                        pGroup->addButton(m_prbWind);
-                    }
-                    pViewLayout->addWidget(plabView);
-                    pViewLayout->addWidget(m_prbGeom);
-                    pViewLayout->addWidget(m_prbWind);
-                    pViewLayout->addStretch();
-                }
-                m_pfrView->setLayout(pViewLayout);
-            }
-
             m_pgl3dCtrls = new gl3dGeomControls(m_pgl3dXPlaneView, WingLayout, false);
             m_pgl3dCtrls->showTessCtrl(false);
             m_pgl3dCtrls->showNormalCtrl(false);
             m_pgl3dCtrls->showHighlightCtrl(false);
 
             p3dLayout->addLayout(pCheckDispLayout);
-            p3dLayout->addWidget(m_pfrView);
             p3dLayout->addStretch();
             p3dLayout->addWidget(m_pgl3dCtrls);
         }
@@ -303,9 +273,6 @@ void POpp3dCtrls::connectSignals()
     connect(m_pslAnimPOppSpeed, SIGNAL(sliderMoved(int)), SLOT(onAnimatePOppSpeed(int)));
 
     connect(m_pTimerWOpp,       SIGNAL(timeout()), SLOT(onAnimatePOppSingle()));
-
-    connect(m_prbGeom,          SIGNAL(clicked()),     SLOT(onAxesView()));
-    connect(m_prbWind,          SIGNAL(clicked()),     SLOT(onAxesView()));
 }
 
 
@@ -366,10 +333,6 @@ void POpp3dCtrls::setControls()
     }
     else m_pchFlow->setEnabled(pPOpp && pPOpp->isTriUniformMethod());
 #endif
-
-    m_pfrView->setEnabled(pPOpp);
-    m_prbGeom->setChecked(m_bGeomView);
-    m_prbWind->setChecked(!m_bGeomView);
 
     m_pchCp->setChecked(m_b3dCp);
     m_pchDownwash->setChecked(m_bDownwash);
@@ -454,7 +417,6 @@ void POpp3dCtrls::loadSettings(QSettings &settings)
         m_bWakePanels   = settings.value("bWakePanels", false).toBool();
         m_bVortons      = settings.value("bVortons",    false).toBool();
         m_bHPlane       = settings.value("bGround",     false).toBool();
-        m_bGeomView     = settings.value("bGeomView",   true).toBool();
     }
     settings.endGroup();
 }
@@ -481,7 +443,6 @@ void POpp3dCtrls::saveSettings(QSettings &settings)
         settings.setValue("bWakePanels", m_bWakePanels);
         settings.setValue("bVortons",    m_bVortons);
         settings.setValue("bground",     m_bHPlane);
-        settings.setValue("bGeomView",   m_bGeomView);
     }
     settings.endGroup();
 }
@@ -755,11 +716,6 @@ void POpp3dCtrls::onStreamlines(bool bStream)
 }
 
 
-void POpp3dCtrls::onAxesView()
-{
-    m_bGeomView = m_prbGeom->isChecked();
-    m_pgl3dXPlaneView->update();
-}
 
 
 void POpp3dCtrls::stopFlow()

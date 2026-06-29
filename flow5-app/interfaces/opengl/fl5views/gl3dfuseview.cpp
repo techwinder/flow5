@@ -91,6 +91,8 @@ void gl3dFuseView::setFuse(Fuse const* pFuse)
 
 void gl3dFuseView::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     if(!m_pFuse) return;
 //    auto t0 = std::chrono::high_resolution_clock::now();
     QMatrix4x4 vmMat(m_matView*m_matModel);

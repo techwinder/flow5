@@ -24,6 +24,7 @@
 
 #define _MATH_DEFINES_DEFINED
 
+#include <cmath>
 
 
 #include <QApplication>
@@ -532,9 +533,7 @@ void gl3dXPlaneView::glRenderPanelBasedBuffers()
  */
 void gl3dXPlaneView::glRenderGeometryBasedBuffers()
 {
-    Plane    const *pPlane    = s_pXPlane->curPlane();
-    PlaneXfl const *pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
-
+    Plane const *pPlane  = s_pXPlane->curPlane();
     if(!pPlane) return;
 
     if(m_bShowMasses) glDrawMasses(pPlane);
@@ -554,8 +553,9 @@ void gl3dXPlaneView::glRenderGeometryBasedBuffers()
     }
     m_shadLine.release();
 
-    if(pPlaneXfl)
+    if(pPlane->isXflType())
     {
+        PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
         for(int ifuse=0; ifuse<pPlaneXfl->nFuse(); ifuse++)
         {
             if(ifuse>=m_pglXPlaneBuffers->m_vboFuseTriangulation.size()) break;
@@ -568,7 +568,7 @@ void gl3dXPlaneView::glRenderGeometryBasedBuffers()
                     if(m_bSurfaces)
                     {
                         paintTriangles3Vtx(m_pglXPlaneBuffers->m_vboFuseTriangulation[ifuse], pFuse->color(), false, isLightOn());
-//                        if(m_bTessellation)             paintNormals(m_pglXPlaneBuffers->m_vboTessNormals);
+                        //                        if(m_bTessellation)             paintNormals(m_pglXPlaneBuffers->m_vboTessNormals);
                     }
                     if(m_bOutline)
                     {
@@ -635,10 +635,10 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
     PlaneOpp   const *pPOpp    = s_pXPlane->curPOpp();
     if(!pPlane || !pPlPolar || !pPOpp) return;
 
-    PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
-
-    if(pPlaneXfl)
+    if(pPlane->isXflType())
     {
+        PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+
         if(m_pPOpp3dControls->m_bXTop || m_pPOpp3dControls->m_bXBot)
             paintSegments(m_pglXPlaneBuffers->m_vboTrans,     W3dPrefs::s_TransStyle);
         if(m_pPOpp3dControls->m_bDownwash)
@@ -656,6 +656,43 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
                 paintThinArrow(m_CpSections.at(i), m_CpSections.at(i).normal(), W3dPrefs::s_LiftStyle);
         }
 
+        if(m_pPOpp3dControls->m_bTotalForce)
+        {
+            m_matModel.setToIdentity();
+
+            double sc = Opp3dScalesCtrls::forceScale() / 200000.0;
+            // global force
+            double qDyn = 0.5*pPlPolar->density()*pPOpp->QInf()*pPOpp->QInf();
+
+            Vector3d force(pPOpp->m_AF.Fff() + pPOpp->m_AF.viscousDragForce()); // geometry axes
+            force *= qDyn;
+            Vector3d force_w = pPOpp->aeroForces().toWindAxes(force);
+
+            //rotate to follow the display
+            force.rotateY(pPOpp->alpha());
+            force.rotateZ(pPOpp->beta());
+
+            Vector3d CoG = pPOpp->cog();
+            CoG.rotateY(pPOpp->alpha());
+            CoG.rotateZ(pPOpp->beta());
+
+            paintThickArrow(CoG, force*sc, W3dPrefs::s_ForceColor, true, true, m_matModel);
+
+            QMatrix4x4 vm(m_matView);
+            m_matView = rotationMatrix();
+            m_matView.translate(m_glRotCenter.xf()*m_glScalef, m_glRotCenter.yf()*m_glScalef, m_glRotCenter.zf()*m_glScalef);
+            m_matView.scale(m_glScalef);
+
+            QString strange = QString::asprintf("F_wind = (%.2f, %.2f, %.2f) ",
+                                                force_w.x*Units::NtoUnit(),
+                                                force_w.y*Units::NtoUnit(),
+                                                force_w.z*Units::NtoUnit()) + Units::forceUnitQLabel();
+            glRenderText(CoG+(force*sc+Vector3d(1,1,1)*0.03)/m_glScalef, strange, W3dPrefs::s_ForceColor);
+
+            m_matView = vm;
+            m_matModel.setToIdentity();
+        }
+
         if(m_pPOpp3dControls->m_bPartForces)
         {
             Vector3d force, force_w;
@@ -671,12 +708,12 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
                 force_w = pPOpp->aeroForces().toWindAxes(force);
 
                 //rotate to follow the display
-//                force.rotateY(pPOpp->alpha());
-//                force.rotateZ(pPOpp->beta());
+                force.rotateY(pPOpp->alpha());
+                force.rotateZ(pPOpp->beta());
 
                 Vector3d pt = pPlaneXfl->rootQuarterPoint(iw);
-//                pt.rotateY(pPOpp->alpha());
-//                pt.rotateZ(pPOpp->beta());
+                pt.rotateY(pPOpp->alpha());
+                pt.rotateZ(pPOpp->beta());
 
                 paintThickArrow(pt, force*sc, W3dPrefs::s_ForceColor.darker(), true, true, m_matModel);
 
@@ -687,59 +724,24 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
                 m_matView.scale(m_glScalef);
 
                 QString strange = QString::fromStdString(wopp.wingName()) + QString::asprintf(" F_wind = (%.2f, %.2f, %.2f) ",
-                                                    force_w.x*Units::NtoUnit(),
-                                                    force_w.y*Units::NtoUnit(),
-                                                    force_w.z*Units::NtoUnit()) + Units::forceUnitQLabel();
+                                                                                              force_w.x*Units::NtoUnit(),
+                                                                                              force_w.y*Units::NtoUnit(),
+                                                                                              force_w.z*Units::NtoUnit()) + Units::forceUnitQLabel();
                 glRenderText(pt+(force*sc+Vector3d(1,1,1)*0.03)/m_glScalef, strange, W3dPrefs::s_ForceColor);
 
                 m_matView = vm;
                 m_matModel.setToIdentity();
+
+
             }
         }
-    }
-
-    if(m_pPOpp3dControls->m_bTotalForce)
-    {
-        m_matModel.setToIdentity();
-
-        double sc = Opp3dScalesCtrls::forceScale() / 200000.0;
-        // global force
-        double qDyn = 0.5*pPlPolar->density()*pPOpp->QInf()*pPOpp->QInf();
-
-        Vector3d force(pPOpp->m_AF.Fff() + pPOpp->m_AF.viscousDragForce()); // geometry axes
-        force *= qDyn;
-        Vector3d force_w = pPOpp->aeroForces().toWindAxes(force);
-
-        //rotate to follow the display
-//        force.rotateY(pPOpp->alpha());
-//        force.rotateZ(pPOpp->beta());
-
-        Vector3d CoG = pPOpp->cog();
-//        CoG.rotateY(pPOpp->alpha());
-//        CoG.rotateZ(pPOpp->beta());
-
-        paintThickArrow(CoG, force*sc, W3dPrefs::s_ForceColor, true, true, m_matModel);
-
-        QMatrix4x4 vm(m_matView);
-        m_matView = rotationMatrix();
-        m_matView.translate(m_glRotCenter.xf()*m_glScalef, m_glRotCenter.yf()*m_glScalef, m_glRotCenter.zf()*m_glScalef);
-        m_matView.scale(m_glScalef);
-
-        QString strange = QString::asprintf("F_wind = (%.2f, %.2f, %.2f) ",
-                                            force_w.x*Units::NtoUnit(),
-                                            force_w.y*Units::NtoUnit(),
-                                            force_w.z*Units::NtoUnit()) + Units::forceUnitQLabel();
-        glRenderText(CoG+(force*sc+Vector3d(1,1,1)*0.03)/m_glScalef, strange, W3dPrefs::s_ForceColor);
-
-        m_matView = vm;
-        m_matModel.setToIdentity();
     }
 
     if(m_pPOpp3dControls->m_bMoments || m_pPOpp3dControls->m_bCoG)
     {
         Vector3d CoG = pPOpp->cog();
-//        CoG.rotateY(pPOpp->alpha());
-//        CoG.rotateZ(pPOpp->beta());
+        CoG.rotateY(pPOpp->alpha());
+        CoG.rotateZ(pPOpp->beta());
 
         if(m_pPOpp3dControls->m_bCoG)
         {
@@ -780,73 +782,35 @@ void gl3dXPlaneView::glRenderPOppBasedBuffers()
             paintStreamLines(m_pglXPlaneBuffers->m_vboStreamLines, m_StreamLineColours, StreamLineCtrls::nX());
     }
 
+
     if(pPOpp && (m_pPOpp3dControls->m_bWindAxes || m_pPOpp3dControls->m_bStabAxes))
     {
         QMatrix4x4 m(m_matModel);
         QMatrix4x4 vm(m_matView);
 
-
-        // fixed scale for the axes
         m_matView = rotationMatrix();
-        m_matView.scale(m_glScalef, m_glScalef, m_glScalef);
-        m_matView.translate(m_glRotCenter.xf(), m_glRotCenter.yf(), m_glRotCenter.zf());
-        m_matView.scale(0.5f/m_glScalef, 0.5f/m_glScalef, 0.5f/m_glScalef);
-
-        m_matModel.setToIdentity();
-        m_matModel.rotate(180.0-pPOpp->alpha(), 0, 1, 0);
 
         if(m_pPOpp3dControls->m_bStabAxes)
         {
-            m_shadLine.bind();
-            {
-                m_shadLine.setUniformValue(m_locLine.m_vmMatrix,  m_matView*m_matModel);
-                m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
-            }
-            m_shadLine.release();
+            m_matModel.setToIdentity();
+            // invert the z axis
+            m_matModel.rotate(180.0, 0, 1, 0);
+            // hack: cancel the sideslip angle
+            m_matModel.rotate(-pPOpp->beta(), 0, 0, 1);
 
             paintAxes(W3dPrefs::s_StabStyle, "_stab");
         }
 
         if(m_pPOpp3dControls->m_bWindAxes)
         {
-            CartesianFrame const &CFWind = pPOpp->aeroForces().CFWind();
-
-            m_matModel.setToIdentity();
-            m_matModel.rotate(-pPOpp->alpha(), 0, 1, 0);
-            m_matModel.rotate(-pPOpp->beta(),  CFWind.Kdir().x,  CFWind.Kdir().y,  CFWind.Kdir().z);
-
-            m_shadLine.bind();
-            {
-                m_shadLine.setUniformValue(m_locLine.m_vmMatrix,  m_matView*m_matModel);
-                m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
-            }
-            m_shadLine.release();
-
+            m_matModel.setToIdentity(); // because the geometry itself is rotated
             paintAxes(W3dPrefs::s_WindStyle, "_wind");
-
         }
 
         // leave things as they were
         m_matView  = vm;
         m_matModel = m;
-
-/*        m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView);
-        m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
-
-        QColor clr(215, 71, 31);
-        Vector3d I = pPOpp->aeroForces().CFWind().Idir();
-        Vector3d J = pPOpp->aeroForces().CFWind().Jdir();
-        Vector3d K = pPOpp->aeroForces().CFWind().Kdir();
-        paintThinArrow(Vector3d(), I, clr, 3.0, Line::DASHDOT);
-        paintThinArrow(Vector3d(), J, clr, 3.0, Line::DASHDOT);
-        paintThinArrow(Vector3d(), K, clr, 3.0, Line::DASHDOT);
-
-        const float delta = 0.015f;
-        glRenderText(I.x+3.0*delta, I.y+delta,     I.z+delta,     "x_wind", clr);
-        glRenderText(J.x+delta,     J.y+3.0*delta, J.z+delta,     "y_wind", clr);
-        glRenderText(K.x+delta,     K.y+delta,     K.z+3.0*delta, "z_wind", clr);*/
     }
-
 }
 
 
@@ -856,6 +820,21 @@ void gl3dXPlaneView::glRenderView()
     Plane       const *pPlane  = s_pXPlane->curPlane();
     PlanePolar  const *pWPolar = s_pXPlane->curPlPolar();
     PlaneOpp    const *pPOpp   = s_pXPlane->curPOpp();
+
+    m_matPOpp.setToIdentity();
+    if(pPOpp)
+    {
+        CartesianFrame const &CFWind = pPOpp->aeroForces().CFWind();
+        m_matPOpp.rotate(pPOpp->alpha(), 0, 1, 0);
+        m_matPOpp.rotate(pPOpp->beta(),  CFWind.Kdir().x,  CFWind.Kdir().y,  CFWind.Kdir().z);
+    }
+
+    if(m_bAxes)
+    {
+        m_matModel = m_matPOpp;
+        paintAxes(W3dPrefs::s_AxisStyle, QString());
+        m_matModel.setToIdentity();
+    }
 
     if(!pPlane) return;
 
@@ -913,7 +892,7 @@ void gl3dXPlaneView::glRenderView()
     else m_FlowTimer.stop();
 
     // We use the model matrix to apply alpha and beta rotations to the geometry.
-/*    if(m_pglXPlaneBuffers->m_LiveVortons.size())
+    if(m_pglXPlaneBuffers->m_LiveVortons.size())
     {
         //apply aoa rotation
         m_matModel.rotate(float(m_pglXPlaneBuffers->m_LiveAlpha),0.0f,1.0f,0.0f);
@@ -928,7 +907,7 @@ void gl3dXPlaneView::glRenderView()
         {
             m_matModel.rotate(pPOpp->beta(), 0.0f, 0.0f, 1.0f);
         }
-    }*/
+    }
 
     m_shadLine.bind();
     {
@@ -944,7 +923,7 @@ void gl3dXPlaneView::glRenderView()
 
     // restore unit identity model matrix for panel-ray intersections
     m_matModel.setToIdentity();
-//        m_pvmMatrix = m_matProj * m_matView * m_matModel;
+    //        m_pvmMatrix = m_matProj * m_matView * m_matModel;
 
 
     if(bPickNode() && m_bMeshPanels)
@@ -989,7 +968,7 @@ void gl3dXPlaneView::glRenderView()
 
     paintMeasure();
 
-/*
+    /*
 #ifdef QT_DEBUG
     m_stackInterval.push_back(QTime::currentTime().msecsSinceStartOfDay());
 
@@ -1043,7 +1022,6 @@ void gl3dXPlaneView::glRenderView()
 
 }
 
-
 void gl3dXPlaneView::keyPressEvent(QKeyEvent *pEvent)
 {
 //    bool bShift = (pEvent->modifiers() & Qt::ShiftModifier);
@@ -1056,6 +1034,15 @@ void gl3dXPlaneView::keyPressEvent(QKeyEvent *pEvent)
         {
             m_bTessellation = !m_bTessellation;
             update();
+        }
+    }
+    else if(pEvent->key()==Qt::Key_Space)
+    {
+        if(m_FlowTimer.isActive())
+            m_FlowTimer.stop();
+        else
+        {
+            m_FlowTimer.start(FLOWPERIOD);
         }
     }
     else if(pEvent->key()==Qt::Key_Escape)
@@ -1124,8 +1111,15 @@ void gl3dXPlaneView::initializeGL()
             m_shadFlowLoc.m_NPanels      = m_shadFlow.uniformLocation("npanels");
             m_shadFlowLoc.m_Dt           = m_shadFlow.uniformLocation("dt");
             m_shadFlowLoc.m_VInf         = m_shadFlow.uniformLocation("vinf");
+            m_shadFlowLoc.m_WindDir      = m_shadFlow.uniformLocation("winddir");
+            m_shadFlowLoc.m_WindSide     = m_shadFlow.uniformLocation("windside");
+            m_shadFlowLoc.m_WindNormal   = m_shadFlow.uniformLocation("windnormal");
+
             m_shadFlowLoc.m_TopLeft      = m_shadFlow.uniformLocation("topleft");
             m_shadFlowLoc.m_BotRight     = m_shadFlow.uniformLocation("botright");
+
+            m_shadFlowLoc.m_UniformSeed  = m_shadFlow.uniformLocation("uniformseed");
+
             m_shadFlowLoc.m_VtnCoreSize  = m_shadFlow.uniformLocation("VtnCoreSize");
             m_shadFlowLoc.m_NVorton      = m_shadFlow.uniformLocation("nvortons");
             m_shadFlowLoc.m_UniColor     = m_shadFlow.uniformLocation("UniformColor");
@@ -1166,15 +1160,15 @@ bool gl3dXPlaneView::glMakeStreamLines(const std::vector<Panel3> &panel3list, st
 
     if(!s_pXPlane->curPlane()) return false;
 
-    Plane    const *pPlane = s_pXPlane->curPlane();
-    PlaneXfl const *pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+    Plane const *pPlane = s_pXPlane->curPlane();
+    PlaneXfl const * pPlaneXfl = nullptr;
+    if(pPlane->isXflType()) pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
 
     StreamlineMaker::cancelTasks(false);
 
     Vector3d C, VA, TC;
 
     VA.set(cos(pPOpp->alpha()*PI/180.0), 0, -sin(pPOpp->alpha()*PI/180.0));
-    VA.set(1,0,0);
 
     QVector<int> pointindexes;
     QVector<Vector3d> points;
@@ -1195,7 +1189,7 @@ bool gl3dXPlaneView::glMakeStreamLines(const std::vector<Panel3> &panel3list, st
                     // since this point falls by construction on a wake line, move
                     // its endpoint slightly outwards, and reduce the vector's length
                     VA = p3.TELeftBisector();
-    //                VA*= s_pXPlane->m_pCurPlane->rootChord()/50.0;
+                    //                VA*= s_pXPlane->m_pCurPlane->rootChord()/50.0;
                     v0List.append(VA);
                     if(pPlaneXfl && W3dPrefs::s_bUseWingColour)
                     {
@@ -1216,7 +1210,7 @@ bool gl3dXPlaneView::glMakeStreamLines(const std::vector<Panel3> &panel3list, st
                     // since this point falls by construction on a wake line, move
                     // its endpoint slightly outwards, and reduce the vector's length
                     VA = p3.TELeftBisector();
-    //                VA*= s_pXPlane->m_pCurPlane->rootChord()/50.0;
+                    //                VA*= s_pXPlane->m_pCurPlane->rootChord()/50.0;
                     v0List.append(VA);
                     if(pPlaneXfl && W3dPrefs::s_bUseWingColour)
                     {
@@ -1238,7 +1232,7 @@ bool gl3dXPlaneView::glMakeStreamLines(const std::vector<Panel3> &panel3list, st
     {
         double y0 = 0;
         int n= StreamLineCtrls::nStreamLines();
-        if(isOdd(n)) n++;
+        if(math::isOdd(n)) n++;
         double range = objectReferenceLength();
 
         for(int i=0; i<n/2; i++)
@@ -1257,7 +1251,7 @@ bool gl3dXPlaneView::glMakeStreamLines(const std::vector<Panel3> &panel3list, st
     {
         double z0 = 0;
         int n= StreamLineCtrls::nStreamLines();
-        if(isOdd(n)) n++;
+        if(math::isOdd(n)) n++;
         double range = objectReferenceLength();
 
         for(int i=0; i<n/2; i++)
@@ -1290,17 +1284,14 @@ bool gl3dXPlaneView::glMakeStreamLines(const std::vector<Panel3> &panel3list, st
         m_pP3UniAnalysis->initializeAnalysis(s_pXPlane->curPlPolar(),0);
         m_pP3UniAnalysis->setTriMesh(s_pXPlane->curPlane()->triMesh());
         m_pP3UniAnalysis->setVortons(pPOpp->m_Vorton);
-        //    m_pP3UniAnalysis->makeWakePanels(Vector3d(1.0, 0.0, 0.0), s_pXPlane->curPlPolar()->bVortonWake());
-        m_pP3UniAnalysis->makeWakePanels(pPOpp->aeroForces().CFWind().Idir(), s_pXPlane->curPlPolar()->bVortonWake());
     }
     else if(s_pXPlane->curPlPolar()->isTriLinearMethod())
     {
         m_pP3LinAnalysis->initializeAnalysis(s_pXPlane->curPlPolar(),0);
         m_pP3LinAnalysis->setTriMesh(s_pXPlane->curPlane()->triMesh());
         m_pP3LinAnalysis->setVortons(pPOpp->m_Vorton);
-        //    m_pP3UniAnalysis->makeWakePanels(Vector3d(1.0, 0.0, 0.0), s_pXPlane->curPlPolar()->bVortonWake());
-        m_pP3LinAnalysis->makeWakePanels(pPOpp->aeroForces().CFWind().Idir(), s_pXPlane->curPlPolar()->bVortonWake());
     }
+    m_pP3UniAnalysis->makeWakePanels(Vector3d(1.0, 0.0, 0.0), s_pXPlane->curPlPolar()->bVortonWake());
 
 
     // multithreaded mode only
@@ -1314,9 +1305,9 @@ bool gl3dXPlaneView::glMakeStreamLines(const std::vector<Panel3> &panel3list, st
         if(StreamLineCtrls::startAtTE())
         {
             C = TC = nodelist.at(pointindexes.at(in)) + Vector3d(StreamLineCtrls::XOffset()*range, 0.0, StreamLineCtrls::ZOffset()*range);
-//                TC.rotateY(refPoint, pPOpp->alpha());
+            //                TC.rotateY(refPoint, pPOpp->alpha());
             TC -= C;
-//                v0List[in].rotateY( pPOpp->alpha());
+            //                v0List[in].rotateY( pPOpp->alpha());
         }
         else if(StreamLineCtrls::startAtYLine())
         {
@@ -1337,11 +1328,11 @@ bool gl3dXPlaneView::glMakeStreamLines(const std::vector<Panel3> &panel3list, st
         pLineMaker->initializeLineMaker(in, StreamVertexArray.data()+iv, C, v0List[in], TC,
                                         StreamLineCtrls::nX(), StreamLineCtrls::l0(), StreamLineCtrls::XFactor());
 
- #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
         futureSync.addFuture(QtConcurrent::run(pLineMaker, &StreamlineMaker::run));
 
 #else
-            futureSync.addFuture(QtConcurrent::run(&StreamlineMaker::run, pLineMaker));
+        futureSync.addFuture(QtConcurrent::run(&StreamlineMaker::run, pLineMaker));
 #endif
         iv += (StreamLineCtrls::nX()+1)*3;
     }
@@ -1368,9 +1359,9 @@ bool gl3dXPlaneView::glMakeStreamLines(std::vector<Panel4> const &panel4list, Pl
 {
     if(m_pglXPlaneBuffers->m_vboStreamLines.isCreated()) m_pglXPlaneBuffers->m_vboStreamLines.destroy();
     if(!pPOpp) return false;
-    Plane    const *pPlane    = s_pXPlane->curPlane();
-    PlaneXfl const *pPlaneXfl = dynamic_cast<PlaneXfl*>(s_pXPlane->curPlane());
-    if(!pPlane || !pPlaneXfl) return false;
+    if(!s_pXPlane->curPlane() || !s_pXPlane->curPlane()->isXflType()) return false;
+
+    PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl*>(s_pXPlane->curPlane());
 
     StreamlineMaker::cancelTasks(false);
 
@@ -1405,7 +1396,7 @@ bool gl3dXPlaneView::glMakeStreamLines(std::vector<Panel4> const &panel4list, Pl
                     // since this point falls by construction on a wake line, move
                     // its endpoint slightly outwards, and reduce the vector's length
                     VA = p4.TELeftBisector();
-    //                VA*= s_pXPlane->m_pCurPlane->rootChord()/50.0;
+                    //                VA*= s_pXPlane->m_pCurPlane->rootChord()/50.0;
                     v0List.append(VA);
                     if(W3dPrefs::s_bUseWingColour)
                     {
@@ -1437,7 +1428,7 @@ bool gl3dXPlaneView::glMakeStreamLines(std::vector<Panel4> const &panel4list, Pl
                     // since this point falls by construction on a wake line, move
                     // its endpoint slightly outwards, and reduce the vector's length
                     VA = p4.TELeftBisector();
-    //                VA*= s_pXPlane->m_pCurPlane->rootChord()/50.0;
+                    //                VA*= s_pXPlane->m_pCurPlane->rootChord()/50.0;
                     v0List.append(VA);
                     if(W3dPrefs::s_bUseWingColour)
                     {
@@ -1502,7 +1493,7 @@ bool gl3dXPlaneView::glMakeStreamLines(std::vector<Panel4> const &panel4list, Pl
     int iv = 0;
     StreamlineMaker::cancelTasks(false);
 
-    if(m_pP4Analysis->polar3d()!=s_pXPlane->curPlPolar())
+    if(m_pP4Analysis->polar3d()!=s_pXPlane->curPlPolar() && s_pXPlane->curPlane()->isXflType())
     {
         PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl*>(s_pXPlane->curPlane());
         m_pP4Analysis->setQuadMesh(pPlaneXfl->refQuadMesh());
@@ -1516,16 +1507,16 @@ bool gl3dXPlaneView::glMakeStreamLines(std::vector<Panel4> const &panel4list, Pl
     QApplication::setOverrideCursor(Qt::WaitCursor);
     QFutureSynchronizer<void> futureSync;
     QVector<StreamlineMaker*> makers;
-//    double range = gl3dScales::referenceLength();
+    //    double range = gl3dScales::referenceLength();
 
     for (int in=0; in<m_NStreamLines; in++)
     {
         if(StreamLineCtrls::startAtTE())
         {
             C = TC = points.at(in);
-//                TC.rotateY(refPoint, pPOpp->alpha());
+            //                TC.rotateY(refPoint, pPOpp->alpha());
             TC -= C;
-//                v0List[in].rotateY( pPOpp->alpha());
+            //                v0List[in].rotateY( pPOpp->alpha());
         }
         else if(StreamLineCtrls::startAtYLine())
         {
@@ -1633,16 +1624,16 @@ void gl3dXPlaneView::computeP3VelocityVectors(Opp3d const *pPOpp, QVector<Vector
         m_pP3UniAnalysis->setTriMesh(pPlane->triMesh());
         m_pP3UniAnalysis->initializeAnalysis(s_pXPlane->curPlPolar(), 0);
         m_pP3UniAnalysis->setVortons(pPOpp->m_Vorton);
-//        m_pP3UniAnalysis->makeWakePanels(Vector3d(1.0,0,0), pWPolar->bVortonWake());
-        m_pP3UniAnalysis->makeWakePanels(pPOpp->aeroForces().CFWind().Idir(), pWPolar->bVortonWake());
+        m_pP3UniAnalysis->makeWakePanels(Vector3d(1.0,0,0), pWPolar->bVortonWake());
+//        m_pP3UniAnalysis->makeWakePanels(pPOpp->aeroForces().CFWind().Idir(), pWPolar->bVortonWake());
     }
     else if(s_pXPlane->curPlPolar()->isTriLinearMethod())
     {
         m_pP3LinAnalysis->setTriMesh(pPlane->triMesh());
         m_pP3LinAnalysis->initializeAnalysis(s_pXPlane->curPlPolar(), 0);
         m_pP3LinAnalysis->setVortons(pPOpp->m_Vorton);
-//        m_pP3LinAnalysis->makeWakePanels(Vector3d(1.0,0,0), pWPolar->bVortonWake());
-        m_pP3LinAnalysis->makeWakePanels(pPOpp->aeroForces().CFWind().Idir(), pWPolar->bVortonWake());
+        m_pP3LinAnalysis->makeWakePanels(Vector3d(1.0,0,0), pWPolar->bVortonWake());
+//        m_pP3LinAnalysis->makeWakePanels(pPOpp->aeroForces().CFWind().Idir(), pWPolar->bVortonWake());
     }
 
     if(bMultithread)
@@ -2172,13 +2163,27 @@ void gl3dXPlaneView::glMake3dObjects()
     Plane      *pPlane  = s_pXPlane->curPlane();
     PlaneXfl    const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
     PlanePolar  const *pPlPolar = s_pXPlane->curPlPolar();
-//    PlaneOpp const *pPOpp   = s_pXPlane->curPOpp();
+    PlaneOpp    const *pPOpp   = s_pXPlane->curPOpp();
+
+    if(s_bResetglOpp && pPOpp)
+    {
+        // Tait Bryant angles
+        // https://en.wikipedia.org/wiki/Euler_angles#Tait%E2%80%93Bryan_angles
+        // For an aircraft, they can be obtained with three rotations around its principal axes if done
+        // in the proper order and starting from a frame coincident with the reference frame.
+        //    A yaw will obtain the bearing,
+        //    a pitch will yield the elevation, and
+        //    a roll gives the bank angle.
+        m_matPOpp.setToIdentity();
+        m_matPOpp.rotate(pPOpp->beta(),  {0,0,1});
+        m_matPOpp.rotate(pPOpp->alpha(), {-std::sinf(pPOpp->beta()*PI/180.0), std::cosf(pPOpp->beta()*PI/180.0), 0.0f});
+    }
 
     if(s_bResetglGeom)
     {
         QApplication::setOverrideCursor(Qt::WaitCursor);
 
-        if(pPlaneXfl)
+        if(pPlane->isXflType())
         {
             PlaneXfl *pPlaneXfl = dynamic_cast<PlaneXfl*>(pPlane);
             // initialize buffer arrays
@@ -2205,9 +2210,9 @@ void gl3dXPlaneView::glMake3dObjects()
                 {
                     FuseXfl const *pTranslatedXflFuse = dynamic_cast<FuseXfl const*>(pFuse);
                     gl::makeTriangulation3Vtx(pTranslatedXflFuse->triangulation(), pPlaneXfl->fusePos(ifuse),
-                                            m_pglXPlaneBuffers->m_vboFuseTriangulation[ifuse],
-                                            pTranslatedXflFuse->isFlatFaceType());
-//                    glMakeNodeNormals(pTranslatedXflFuse->triangulation().nodes(), Vector3d(), 0.05f, m_pglXPlaneBuffers->m_vboTessNormals);
+                                              m_pglXPlaneBuffers->m_vboFuseTriangulation[ifuse],
+                                              pTranslatedXflFuse->isFlatFaceType());
+                    //                    glMakeNodeNormals(pTranslatedXflFuse->triangulation().nodes(), Vector3d(), 0.05f, m_pglXPlaneBuffers->m_vboTessNormals);
                     int nPts = pFuse->isSplineType() ? 30 : 1;
                     gl::glMakeShellOutline(pFuse->shells(), pPlaneXfl->fusePos(ifuse), m_pglXPlaneBuffers->m_vboBodyOutline[ifuse], nPts);
                     if(pFuse->isSplineType())
@@ -2222,13 +2227,13 @@ void gl3dXPlaneView::glMake3dObjects()
                 else if(pFuse->isOccType())
                 {
                     gl::makeTriangulation3Vtx(pFuse->triangulation(), pPlaneXfl->fusePos(ifuse),
-                                            m_pglXPlaneBuffers->m_vboFuseTriangulation[ifuse], false);
+                                              m_pglXPlaneBuffers->m_vboFuseTriangulation[ifuse], false);
                     gl::glMakeShellOutline(pFuse->shells(), pPlaneXfl->fusePos(ifuse), m_pglXPlaneBuffers->m_vboBodyOutline[ifuse]);
                 }
                 else if(pFuse->isStlType())
                 {
                     gl::makeTriangulation3Vtx(pFuse->triangulation(), pPlaneXfl->fusePos(ifuse),
-                                            m_pglXPlaneBuffers->m_vboFuseTriangulation[ifuse], true);
+                                              m_pglXPlaneBuffers->m_vboFuseTriangulation[ifuse], true);
                     gl::makeTrianglesOutline(pFuse->triangles(), pPlaneXfl->fusePos(ifuse),  m_pglXPlaneBuffers->m_vboBodyOutline[ifuse]);
                 }
 
@@ -2244,12 +2249,7 @@ void gl3dXPlaneView::glMake3dObjects()
                     for(int iw=0; iw<pPlaneXfl->nWings(); iw++)
                     {
                         WingXfl *pWing = pPlaneXfl->wing(iw);
-//auto t0 = std::chrono::high_resolution_clock::now();
                         pWing->makeTriangulation(pTranslatedFuse, W3dPrefs::s_iChordwiseRes);
-
-/*auto t1 = std::chrono::high_resolution_clock::now();
-int duration = std::chrono::duration_cast<std::chrono::microseconds>(t1 - t0).count();
-std::cout << pWing->name()<< std::format(":... done in {:g} ms", double(duration)/1000.0) <<std::endl;*/
 
                         gl::makeTriangles3Vtx(pWing->triangulation().triangles(), false, m_pglXPlaneBuffers->m_vboWingSurface[iw]);
                         gl::makeSegments(pWing->outline(), Vector3d(), m_pglXPlaneBuffers->m_vboWingOutline[iw]);
@@ -2275,7 +2275,7 @@ std::cout << pWing->name()<< std::format(":... done in {:g} ms", double(duration
         {
             PlaneSTL const *pPlaneSTL = dynamic_cast<PlaneSTL const*>(s_pXPlane->m_pCurPlane);
             gl::makeTriangulation3Vtx(pPlaneSTL->triangulation(), Vector3d(),
-                                                   m_pglXPlaneBuffers->m_vboPlaneStlTriangulation, true);
+                                      m_pglXPlaneBuffers->m_vboPlaneStlTriangulation, true);
             gl::makeTrianglesOutline(pPlaneSTL->triangles(), Vector3d(), m_pglXPlaneBuffers->m_vboPlaneStlOutline);
         }
 
@@ -2293,14 +2293,14 @@ std::cout << pWing->name()<< std::format(":... done in {:g} ms", double(duration
     {
         if(pPlPolar)
         {
-            if(pPlPolar->isQuadMethod() && pPlaneXfl)
+            if(pPlPolar->isQuadMethod() && pPlane->isXflType())
             {
                 PlaneXfl const* pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
                 gl::makeQuadPanels(m_Panel4Visible, Vector3d(), m_pglXPlaneBuffers->m_vboMesh);
                 gl::makeQuadEdges( m_Panel4Visible, Vector3d(), m_pglXPlaneBuffers->m_vboMeshEdges);
                 gl::makePanelNormals(pPlaneXfl->quadMesh().panels(), float(m_RefLength)/50.0f, m_pglXPlaneBuffers->m_vboPanelNormals);
 
-/*                if(pWPolar->isVLM1())
+                /*                if(pWPolar->isVLM1())
                 {
                     m_Vortices.resize(m_Panel4Visible.size()*3);
                     for(int i4=0; i4<m_Panel4Visible.size(); i4++)
@@ -2334,18 +2334,18 @@ std::cout << pWing->name()<< std::format(":... done in {:g} ms", double(duration
 
             }
             else if(pPlPolar->isTriangleMethod())
-            {                
+            {
                 gl::makeTriPanels(m_Panel3Visible, Vector3d(), m_pglXPlaneBuffers->m_vboMesh);
                 gl::makeTriEdges(m_Panel3Visible, Vector3d(), m_pglXPlaneBuffers->m_vboMeshEdges);
 
                 if(m_bPanelNormals)
                     gl::makePanelNormals(pPlane->triMesh().panels(), float(m_RefLength)/15.0f,
-                                       m_pglXPlaneBuffers->m_vboPanelNormals);
+                                         m_pglXPlaneBuffers->m_vboPanelNormals);
                 else if(m_bNodeNormals)
                 {
                     // Node normals are not required for the analysis or the display, so need to make them on the fly
                     gl::makeNodeNormals(pPlane->triMesh().nodes(), Vector3d(), float(m_RefLength)/15.0f,
-                                      m_pglXPlaneBuffers->m_vboPanelNormals);
+                                        m_pglXPlaneBuffers->m_vboPanelNormals);
                 }
 
                 std::vector<Panel3> p3High;
@@ -2369,9 +2369,9 @@ std::cout << pWing->name()<< std::format(":... done in {:g} ms", double(duration
 
     if(m_pPOpp3dControls->m_bWakePanels && (s_bResetglMesh || s_bResetglWake))
     {
-        if(pPlPolar /* && pPOpp */)
+        if(pPlPolar)
         {
-            if(pPlPolar->isQuadMethod() && pPlaneXfl)
+            if(pPlPolar->isQuadMethod() && pPlane->isXflType())
             {
                 std::vector<Panel4> qVec = std::vector<Panel4>(pPlaneXfl->quadMesh().wakePanels().begin(), pPlaneXfl->quadMesh().wakePanels().end());
                 gl::makeQuadPanels(qVec, Vector3d(), m_pglXPlaneBuffers->m_vboWakePanels);
@@ -2379,8 +2379,6 @@ std::cout << pWing->name()<< std::format(":... done in {:g} ms", double(duration
             }
             else if(pPlPolar->isTriangleMethod())
             {
-//                gl::makeTriPanels(pPlane->triMesh().wakePanels(), Vector3d(), m_pglXPlaneBuffers->m_vboWakePanels);
-//                gl::makeTriEdges( pPlane->triMesh().wakePanels(), Vector3d(), m_pglXPlaneBuffers->m_vboWakeEdges);
                 if(pPlPolar->isTriUniformMethod())
                 {
                     gl::makeTriPanels(m_pP3UniAnalysis->wakePanels(), Vector3d(), m_pglXPlaneBuffers->m_vboWakePanels);
@@ -2390,14 +2388,13 @@ std::cout << pWing->name()<< std::format(":... done in {:g} ms", double(duration
                 {
                     gl::makeTriPanels(m_pP3LinAnalysis->wakePanels(), Vector3d(), m_pglXPlaneBuffers->m_vboWakePanels);
                     gl::makeTriEdges( m_pP3LinAnalysis->wakePanels(), Vector3d(), m_pglXPlaneBuffers->m_vboWakeEdges);
-                }
-            }
+                }            }
         }
         s_bResetglWake = false;
     }
 
-    glMakeOppBuffers();
-    glMakeFlowBuffers();
+    makeOppBuffers();
+    makeFlowBuffers();
 
     if(s_bResetglMesh && pPlPolar && pPlPolar->bHPlane())
     {
@@ -2448,15 +2445,14 @@ std::cout << pWing->name()<< std::format(":... done in {:g} ms", double(duration
 }
 
 
-void gl3dXPlaneView::glMakeOppBuffers()
+void gl3dXPlaneView::makeOppBuffers()
 {
-    Plane       const *pPlane    = s_pXPlane->m_pCurPlane;
-    PlaneXfl    const *pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
-    PlanePolar  const *pPlPolar  = s_pXPlane->m_pCurPlPolar;
-    PlaneOpp          *pPOpp     = s_pXPlane->m_pCurPOpp; // not const to make node values on the fly
+    Plane       const *pPlane  = s_pXPlane->m_pCurPlane;
+    PlanePolar  const *pWPolar = s_pXPlane->m_pCurPlPolar;
+    PlaneOpp          *pPOpp   = s_pXPlane->m_pCurPOpp; // not const to make node values on the fly
 
-    if(!pPlane || !pPlPolar) return;
-    if(pPlPolar && (pPlPolar->planeName()!=pPlane->name()))     return; // failsafe
+    if(!pPlane || !pWPolar) return;
+    if(pWPolar && (pWPolar->planeName()!=pPlane->name()))     return; // failsafe
 
     if(m_pglXPlaneBuffers->m_LiveVortons.size() && s_bResetglVortons)
     {
@@ -2465,14 +2461,14 @@ void gl3dXPlaneView::glMakeOppBuffers()
     }
 
     if(!pPOpp) return;
-    if(pPOpp->polarName()!=pPlPolar->name() || pPOpp->planeName()!=pPlPolar->planeName()) return;
+    if(pPOpp->polarName()!=pWPolar->name() || pPOpp->planeName()!=pWPolar->planeName()) return;
 
     if(s_bResetglPanelCp || s_bResetglOpp || s_bResetglMesh)
     {
         double lmin=0, lmax=0;
         if(m_pPOpp3dControls->m_b3dCp)
         {
-            if(pPlPolar && pPlPolar->isQuadMethod())
+            if(pWPolar && pWPolar->isQuadMethod())
             {
                 lmin =Opp3dScalesCtrls::CpMin();
                 lmax =Opp3dScalesCtrls::CpMax();
@@ -2480,7 +2476,7 @@ void gl3dXPlaneView::glMakeOppBuffers()
                 if(Opp3dScalesCtrls::isAutoCpScale()) m_pPOpp3dControls->m_pOpp3dScalesCtrls->updateCpRange(lmin, lmax);
 
             }
-            else if(pPlPolar && pPlPolar->isTriangleMethod())
+            else if(pWPolar && pWPolar->isTriangleMethod())
             {
                 if(pPOpp->isTriUniformMethod())
                 {
@@ -2508,7 +2504,7 @@ void gl3dXPlaneView::glMakeOppBuffers()
                     }
 
                     gl::makeTriLinColorMap(m_Panel3Visible, pPlane->triMesh().nodes(), pPOpp->m_NodeValue,
-                                         lmin, lmax, m_pglXPlaneBuffers->m_vboCp);
+                                           lmin, lmax, m_pglXPlaneBuffers->m_vboCp);
 
                 }
             }
@@ -2527,12 +2523,12 @@ void gl3dXPlaneView::glMakeOppBuffers()
         double lmin(0), lmax(0);
         if(m_pPOpp3dControls->m_bGamma)
         {
-            if(pPlPolar && pPlPolar->isQuadMethod())
+            if(pWPolar && pWPolar->isQuadMethod())
             {
                 lmin =Opp3dScalesCtrls::s_GammaMin;
                 lmax =Opp3dScalesCtrls::s_GammaMax;
                 gl::makeQuadNodeClrMap(m_Panel4Visible, pPOpp->m_gamma, lmin, lmax, Opp3dScalesCtrls::s_bAutoGammaScale,
-                                     m_pglXPlaneBuffers->m_vboGamma);
+                                       m_pglXPlaneBuffers->m_vboGamma);
                 if(Opp3dScalesCtrls::s_bAutoGammaScale) m_pPOpp3dControls->m_pOpp3dScalesCtrls->updateGammaRange(lmin, lmax);
             }
             else if(pPOpp->isTriUniformMethod())
@@ -2540,7 +2536,7 @@ void gl3dXPlaneView::glMakeOppBuffers()
                 lmin =Opp3dScalesCtrls::s_GammaMin;
                 lmax =Opp3dScalesCtrls::s_GammaMax;
                 gl::makeTriUniColorMap(m_Panel3Visible, pPOpp->m_gamma, lmin, lmax, Opp3dScalesCtrls::s_bAutoGammaScale,
-                                   m_pglXPlaneBuffers->m_vboGamma);
+                                       m_pglXPlaneBuffers->m_vboGamma);
                 if(Opp3dScalesCtrls::s_bAutoGammaScale) m_pPOpp3dControls->m_pOpp3dScalesCtrls->updateGammaRange(lmin, lmax);
             }
             else if(pPOpp->isTriLinearMethod())
@@ -2563,7 +2559,7 @@ void gl3dXPlaneView::glMakeOppBuffers()
                 }
 
                 gl::makeTriLinColorMap(m_Panel3Visible,  pPlane->triMesh().nodes(),
-                                     pPOpp->m_NodeValue, lmin, lmax, m_pglXPlaneBuffers->m_vboGamma);
+                                       pPOpp->m_NodeValue, lmin, lmax, m_pglXPlaneBuffers->m_vboGamma);
             }
         }
         if(m_pPOpp3dControls->m_bGamma)
@@ -2578,24 +2574,24 @@ void gl3dXPlaneView::glMakeOppBuffers()
     if(s_bResetglPanelForce || s_bResetglOpp || s_bResetglMesh)
     {
         double lmin(0), lmax(0);
-        if (m_pPOpp3dControls->m_bPanelForce && pPlPolar && pPOpp)
+        if (m_pPOpp3dControls->m_bPanelForce && pWPolar && pPOpp)
         {
-            double qDyn = 0.5*pPlPolar->density()*pPOpp->QInf()*pPOpp->QInf();
+            double qDyn = 0.5*pWPolar->density()*pPOpp->QInf()*pPOpp->QInf();
             lmin = Opp3dScalesCtrls::pressureMin();
             lmax = Opp3dScalesCtrls::pressureMax();
             if(pPOpp->isQuadMethod())
             {
                 gl::makePanelForces(m_Panel4Visible,
-                                    pPOpp->m_Cp, float(qDyn), pPlPolar->isVLM(),
+                                    pPOpp->m_Cp, float(qDyn), pWPolar->isVLM(),
                                     lmin, lmax, Opp3dScalesCtrls::s_bAutoPressureScale, Opp3dScalesCtrls::panelForceScale(),
                                     m_pglXPlaneBuffers->m_vboPanelForces);
             }
             else if (pPOpp->isTriUniformMethod())
             {
                 gl::makePanelForces(m_Panel3Visible,
-                                  pPOpp->m_Cp, float(qDyn),
-                                  lmin, lmax, Opp3dScalesCtrls::isAutoPressureScale(), Opp3dScalesCtrls::panelForceScale(),
-                                  m_pglXPlaneBuffers->m_vboPanelForces);
+                                    pPOpp->m_Cp, float(qDyn),
+                                    lmin, lmax, Opp3dScalesCtrls::isAutoPressureScale(), Opp3dScalesCtrls::panelForceScale(),
+                                    m_pglXPlaneBuffers->m_vboPanelForces);
             }
             else if (pPOpp->isTriLinearMethod())
             {
@@ -2620,11 +2616,13 @@ void gl3dXPlaneView::glMakeOppBuffers()
         s_bResetglPanelForce = false;
     }
 
-    if(pPlaneXfl)
+    if(pPlane->isXflType())
     {
+        PlaneXfl const * pPlaneXfl = dynamic_cast<PlaneXfl const*>(pPlane);
+
         if(s_bResetglLift || s_bResetglOpp)
         {
-            if(pPlPolar->isLLTMethod())
+            if(pWPolar->isLLTMethod())
             {
                 makeLLTLiftStrip(  pPlaneXfl, pPOpp);
                 makeLLTTransitions(pPlaneXfl, pPOpp, m_pglXPlaneBuffers->m_vboTrans);
@@ -2639,13 +2637,13 @@ void gl3dXPlaneView::glMakeOppBuffers()
 
         if(s_bResetglDrag || s_bResetglOpp)
         {
-            if(pPlPolar->isLLTMethod())
+            if(pWPolar->isLLTMethod())
             {
-                makeLLTDragStrip(pPlaneXfl, pPlPolar, pPOpp, m_pPOpp3dControls->m_bICd, m_pPOpp3dControls->m_bVCd);
+                makeLLTDragStrip(pPlaneXfl, pWPolar, pPOpp, m_pPOpp3dControls->m_bICd, m_pPOpp3dControls->m_bVCd);
             }
             else
             {
-                makeDragStrip(pPlaneXfl, pPlPolar, pPOpp, m_pPOpp3dControls->m_bICd, m_pPOpp3dControls->m_bVCd);
+                makeDragStrip(pPlaneXfl, pWPolar, pPOpp, m_pPOpp3dControls->m_bICd, m_pPOpp3dControls->m_bVCd);
             }
             s_bResetglDrag = false;
         }
@@ -2653,7 +2651,7 @@ void gl3dXPlaneView::glMakeOppBuffers()
         if(m_pPOpp3dControls->m_bDownwash && (s_bResetglDownwash || s_bResetglOpp))
         {
             QVector<Vector3d> points, arrows;
-            if(pPlPolar->isLLTMethod())
+            if(pWPolar->isLLTMethod())
             {
                 makeLLTDownwash(pPlaneXfl, pPOpp, points, arrows);
             }
@@ -2709,11 +2707,11 @@ void gl3dXPlaneView::glMakeOppBuffers()
                 bool bAuto = CrossFlowCtrls::s_bAutoOmegaScale;
 
                 gl::makeQuadColorMap(m_pglXPlaneBuffers->m_vboContourClrs, m_pCrossFlowCtrls->s_nVorticitySamples, m_pCrossFlowCtrls->s_nVorticitySamples,
-                                   m_pCrossFlowCtrls->m_GridNodesOmega, m_pCrossFlowCtrls->m_OmegaField,
-                                   lmin, lmax, bAuto);
+                                     m_pCrossFlowCtrls->m_GridNodesOmega, m_pCrossFlowCtrls->m_OmegaField,
+                                     lmin, lmax, bAuto);
 
                 gl::makeQuadContoursOnGrid(m_pglXPlaneBuffers->m_vboContourLines, m_pCrossFlowCtrls->s_nVorticitySamples, m_pCrossFlowCtrls->s_nVorticitySamples,
-                                         m_pCrossFlowCtrls->m_GridNodesOmega, m_pCrossFlowCtrls->m_OmegaField);
+                                           m_pCrossFlowCtrls->m_GridNodesOmega, m_pCrossFlowCtrls->m_OmegaField);
                 m_ColourLegend.setRange(lmin*1000.0, lmax*1000.0);
                 m_ColourLegend.setTitle(tr("Omega x1000.0"));
                 m_ColourLegend.makeLegend();
@@ -2882,6 +2880,8 @@ void gl3dXPlaneView::makeLLTTransitions(PlaneXfl const *pPlane, PlaneOpp const *
     {
         pWing->surfacePoint(sd.m_XTrTop.at(j), sd.m_StripPos.at(j), xfl::TOPSURFACE, top, N);
         pWing->surfacePoint(sd.m_XTrBot.at(j), sd.m_StripPos.at(j), xfl::BOTSURFACE, bot, N);
+        top.rotateY(pPOpp->alpha());
+        bot.rotateY(pPOpp->alpha());
         if(m>0)
         {
             pTransVertexArray[iv++] = lasttop.xf();
@@ -2944,12 +2944,12 @@ void gl3dXPlaneView::makeTransitions(const PlaneXfl *pPlane, const PlaneOpp *pPO
             for(int k=0; k<pWing->surfaceAt(j).NYPanels(); k++)
             {
                 yrel = pWing->ySectionRel(SD.m_StripPos.at(m));
-                pWing->surfaceAt(j).getSurfacePoint(SD.m_XTrTop.at(m), SD.m_XTrTop.at(m),yrel, xfl::TOPSURFACE, top, N);
-//                top.rotateY(pPOpp->alpha());
+                pWing->surfaceAt(j).getSurfacePoint(SD.m_XTrTop.at(m), SD.m_XTrTop.at(m), yrel, xfl::TOPSURFACE, top, N);
+                top.rotateY(pPOpp->alpha());
 
                 yrel = pWing->ySectionRel(SD.m_StripPos.at(m));
                 pWing->surfaceAt(j).getSurfacePoint(SD.m_XTrBot.at(m), SD.m_XTrBot.at(m), yrel, xfl::BOTSURFACE, bot, N);
-//                bot.rotateY(pPOpp->alpha());
+                bot.rotateY(pPOpp->alpha());
 
                 if(m>0)
                 {
@@ -2991,7 +2991,8 @@ void gl3dXPlaneView::makeDragStrip(const PlaneXfl *pPlane, const PlanePolar *pPl
         return;
     }
 
-    Vector3d winddir = pPOpp->aeroForces().CFWind().Idir();
+    Vector3d winddir(1,0,0);
+//    Vector3d winddir = pPOpp->aeroForces().CFWind().Idir();
 
     std::vector<Panel3> const &panel3 = pPlane->triPanels();
     std::vector<Panel4> const &panel4 = pPlane->quadMesh().panels();
@@ -3146,13 +3147,9 @@ void gl3dXPlaneView::makeLLTDragStrip(const PlaneXfl *pPlane, const PlanePolar *
 
     WingOpp const &wOpp = pPOpp->WOpp(0);
     SpanDistribs const &sd = wOpp.m_SpanDistrib;
-//    float cosa =  float(cos(pPOpp->alpha() * PI/180.0));
-//    float sina = -float(sin(pPOpp->alpha() * PI/180.0));
-//    float cosb =  float(cos(pPOpp->beta()*PI/180.0));
-//    float sinb =  float(sin(pPOpp->beta()*PI/180.0));
 
     float cosa(1.0f), cosb(1.0f);
-    float sina(1.0f), sinb(1.0f);
+    float sina(0.0f), sinb(0.0f);
 
     int bufferSize = sd.nStations()*6 + (sd.nStations()-1)*6;
     QVector<float> pICdVertexArray(bufferSize);
@@ -3301,7 +3298,7 @@ void gl3dXPlaneView::makeLiftStrip(PlaneXfl const*pPlane, PlaneOpp const*pPOpp)
                 C.rotateY(pPOpp->alpha());
                 F = SD.m_F.at(m);
 
-//                F.rotateY(pPOpp->alpha());
+                F.rotateY(pPOpp->alpha());
 
                 ptl = C + F*amp;
 
@@ -3373,7 +3370,7 @@ void gl3dXPlaneView::makeLLTLiftStrip(PlaneXfl const*pPlane, PlaneOpp const*pPOp
         amp = float(sd.m_Chord.at(j) / sd.m_StripArea.at(m) / pWing->MAC()) * Opp3dScalesCtrls::liftScale() * factor;
         C.x += sd.m_XCPSpanRel.at(m) * sd.m_Chord.at(j);
 
-//        C.rotateY(pPOpp->alpha());
+        C.rotateY(pPOpp->alpha());
 
         ptl = C + sd.m_F.at(m)*amp;
 
@@ -3427,7 +3424,7 @@ void gl3dXPlaneView::paintOverlay()
 }
 
 
-void gl3dXPlaneView::glMakeFlowBuffers()
+void gl3dXPlaneView::makeFlowBuffers()
 {
     Plane      const *pPlane   = s_pXPlane->m_pCurPlane;
     PlanePolar const *pPlPolar = s_pXPlane->m_pCurPlPolar;
@@ -3447,8 +3444,8 @@ void gl3dXPlaneView::glMakeFlowBuffers()
         m_pP3UniAnalysis->initializeAnalysis(s_pXPlane->curPlPolar(),0);
         m_pP3UniAnalysis->setTriMesh(s_pXPlane->curPlane()->triMesh());
         m_pP3UniAnalysis->setVortons(pPOpp->m_Vorton);
-//        m_pP3UniAnalysis->makeWakePanels(Vector3d(1.0,0,0), pPlPolar->bVortonWake());
-        m_pP3UniAnalysis->makeWakePanels(pPOpp->aeroForces().CFWind().Idir(), pPlPolar->bVortonWake());
+        m_pP3UniAnalysis->makeWakePanels(Vector3d(1.0,0,0), pPlPolar->bVortonWake());
+//        m_pP3UniAnalysis->makeWakePanels(pPOpp->aeroForces().CFWind().Idir(), pPlPolar->bVortonWake());
 
         // Create a VBO and an SSBO for the vortices
         // VBO is used for display and SSBO is used in the compute shader
@@ -3630,12 +3627,33 @@ void gl3dXPlaneView::glMakeFlowBuffers()
         int nBoids = FlowCtrls::s_FlowNGroups * GROUP_SIZE;
         m_Boid.resize(nBoids);
 
+        double mean = 0.0;
+        double sigma = 1.0;
+
+        std::random_device rd{};
+        std::mt19937 gen{rd()};
+        std::normal_distribution d{mean, sigma};
+
+        Vector3d poswind;
+
         for(int inboid=0; inboid<nBoids; inboid++)
         {
             Boid &boid = m_Boid[inboid];
-            boid.m_Position.x = FlowCtrls::flowTopLeft().x + QRandomGenerator::global()->generateDouble() * (FlowCtrls::flowBotRight().x-FlowCtrls::flowTopLeft().x);
-            boid.m_Position.y = FlowCtrls::flowTopLeft().y + QRandomGenerator::global()->generateDouble() * (FlowCtrls::flowBotRight().y-FlowCtrls::flowTopLeft().y);
-            boid.m_Position.z = FlowCtrls::flowTopLeft().z + QRandomGenerator::global()->generateDouble() * (FlowCtrls::flowBotRight().z-FlowCtrls::flowTopLeft().z);
+
+            poswind.x = FlowCtrls::flowTopLeft().x + QRandomGenerator::global()->generateDouble() * (FlowCtrls::flowBotRight().x-FlowCtrls::flowTopLeft().x);
+
+            if(FlowCtrls::bUniformSeed())
+            {
+                poswind.y = FlowCtrls::flowTopLeft().y + QRandomGenerator::global()->generateDouble() * (FlowCtrls::flowBotRight().y-FlowCtrls::flowTopLeft().y);
+                poswind.z = FlowCtrls::flowTopLeft().z + QRandomGenerator::global()->generateDouble() * (FlowCtrls::flowBotRight().z-FlowCtrls::flowTopLeft().z);
+            }
+            else
+            {
+                poswind.y = d(gen) * (FlowCtrls::flowBotRight().y-FlowCtrls::flowTopLeft().y)/2.0;
+                poswind.z = d(gen) * (FlowCtrls::flowBotRight().z-FlowCtrls::flowTopLeft().z)/2.0;
+            }
+
+            boid.m_Position = pPOpp->aeroForces().CFWind().localToGlobal(poswind);
 
             boid.Index = inboid;
             boid.m_Velocity.set(0,0,0);
@@ -3708,7 +3726,6 @@ void gl3dXPlaneView::glMakeFlowBuffers()
         m_vboTraces.bind();
         {
             m_vboTraces.allocate(BufferArray.data(), buffersize * sizeof(GLfloat));
-//            qDebug("Boids trace size = %.2f MB", float(m_vboTraces.size())/1024.0f/1024.0f);
         }
         m_vboTraces.release();
 
@@ -3723,19 +3740,32 @@ void gl3dXPlaneView::moveBoids()
 
     if(oglMajor()*10+oglMinor()<43) return;
 
-    PlanePolar const *pPlPolar     = s_pXPlane->curPlPolar();
+    PlanePolar const *pPlPolar  = s_pXPlane->curPlPolar();
     PlaneOpp   const *pPOpp     = s_pXPlane->curPOpp();
     if(!pPOpp || !pPOpp->isTriUniformMethod()) return;
 
     int NPanels = m_pP3UniAnalysis->nPanels();
     int NWakePanels = m_pP3UniAnalysis->nWakePanels();
 
-    Vector3d wind = pPOpp->aeroForces().CFWind().Idir() * pPOpp->QInf();
+/*    Vector3d wind = pPOpp->aeroForces().CFWind().Idir() * pPOpp->QInf();
+    Vector3d const &Iw = pPOpp->aeroForces().CFWind().Idir();
+    Vector3d const &Jw = pPOpp->aeroForces().CFWind().Jdir();
+    Vector3d const &Kw = pPOpp->aeroForces().CFWind().Kdir();*/
 
     m_shadFlow.bind();
     {
         m_shadFlow.setUniformValue(m_shadFlowLoc.m_NPanels,      NPanels+NWakePanels);
-        m_shadFlow.setUniformValue(m_shadFlowLoc.m_VInf,         QVector4D(wind.xf(), wind.yf(), wind.zf(), 0));
+/*        m_shadFlow.setUniformValue(m_shadFlowLoc.m_VInf,         QVector4D(wind.xf(), wind.yf(), wind.zf(), 0));
+        m_shadFlow.setUniformValue(m_shadFlowLoc.m_WindDir,      QVector4D(Iw.x, Iw.y, Iw.z, 0));
+        m_shadFlow.setUniformValue(m_shadFlowLoc.m_WindSide,     QVector4D(Jw.x, Jw.y, Jw.z, 0));
+        m_shadFlow.setUniformValue(m_shadFlowLoc.m_WindNormal,   QVector4D(Kw.x, Kw.y, Kw.z, 0));*/
+
+        m_shadFlow.setUniformValue(m_shadFlowLoc.m_VInf,         QVector4D(pPOpp->QInf(), 0, 0, 0));
+        m_shadFlow.setUniformValue(m_shadFlowLoc.m_WindDir,      QVector4D(1, 0, 0, 0));
+        m_shadFlow.setUniformValue(m_shadFlowLoc.m_WindSide,     QVector4D(0, 1, 0, 0));
+        m_shadFlow.setUniformValue(m_shadFlowLoc.m_WindNormal,   QVector4D(0, 0, 1, 0));
+
+        m_shadFlow.setUniformValue(m_shadFlowLoc.m_UniformSeed,  FlowCtrls::bUniformSeed() ? 1 : 0);
         m_shadFlow.setUniformValue(m_shadFlowLoc.m_NVorton,      pPOpp->vortonCount());
         m_shadFlow.setUniformValue(m_shadFlowLoc.m_VtnCoreSize,  float(pPlPolar->vortonCoreSize()*pPlPolar->referenceChordLength()));
         if     (pPlPolar->bGroundEffect())      m_shadFlow.setUniformValue(m_shadFlowLoc.m_HasGround, 1);
@@ -3750,12 +3780,12 @@ void gl3dXPlaneView::moveBoids()
             case FlowCtrls::RK4:    m_shadFlow.setUniformValue(m_shadFlowLoc.m_RK, 4);    break;
         }
 
-        m_shadFlow.setUniformValue(m_shadFlowLoc.m_Dt,           FlowCtrls::s_Flowdt);
+        m_shadFlow.setUniformValue(m_shadFlowLoc.m_Dt,          FlowCtrls::s_Flowdt);
 
         m_shadFlow.setUniformValue(m_shadFlowLoc.m_TopLeft,      QVector4D(FlowCtrls::flowTopLeft().x,  FlowCtrls::flowTopLeft().y,  FlowCtrls::flowTopLeft().z,  0.0));
         m_shadFlow.setUniformValue(m_shadFlowLoc.m_BotRight,     QVector4D(FlowCtrls::flowBotRight().x, FlowCtrls::flowBotRight().y, FlowCtrls::flowBotRight().z, 0.0));
 
-        m_shadFlow.setUniformValue(m_shadFlowLoc.m_HasUniColor,  1);
+        m_shadFlow.setUniformValue(m_shadFlowLoc.m_HasUniColor,  1); // unique setting for dynamic color for all cases is tricky
         m_shadFlow.setUniformValue(m_shadFlowLoc.m_UniColor,     xfl::fromfl5Clr(W3dPrefs::s_FlowStyle.m_Color));
 
         glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_ssboBoids.bufferId());
@@ -3823,171 +3853,4 @@ double gl3dXPlaneView::objectReferenceLength() const
     if(s_pXPlane->curPlane()) return s_pXPlane->curPlane()->span();
     return 1.0;
 }
-
-
-void gl3dXPlaneView::on3dBot()
-{
-    stopDynamicTimer();
-    m_QuatStart = m_ArcBall.m_Quat;
-
-    Quaternion qt1(180.0, Vector3d(0,1,0));
-    Quaternion qt2(-90.0, Vector3d(0,0,1));
-    Quaternion qtView = qt1*qt2;
-
-    PlaneOpp const *pPOpp = s_pXPlane->m_pCurPOpp;
-    if(pPOpp && !m_pPOpp3dControls->m_bGeomView)
-    {
-        Quaternion qtTB;
-        qtTB.fromTaitBryanAngles(0.0, pPOpp->alpha(), pPOpp->beta());
-        m_QuatEnd = qtView * qtTB;
-    }
-    else
-    {
-        m_QuatEnd = qtView;
-    }
-
-    m_ArcBall.setQuat(m_QuatEnd);
-
-    startRotationTimer();
-    emit viewModified();
-}
-
-
-void gl3dXPlaneView::on3dTop()
-{
-    stopDynamicTimer();
-    m_QuatStart = m_ArcBall.m_Quat;
-
-    Quaternion qtView(-90.0, Vector3d(0,0,1));
-
-    PlaneOpp const *pPOpp = s_pXPlane->m_pCurPOpp;
-    if(pPOpp && !m_pPOpp3dControls->m_bGeomView)
-    {
-        Quaternion qtTB;
-        qtTB.fromTaitBryanAngles(0.0, pPOpp->alpha(), pPOpp->beta());
-        m_QuatEnd = qtView * qtTB;
-    }
-    else
-    {
-        m_QuatEnd = qtView;
-    }
-
-    m_ArcBall.setQuat(m_QuatEnd);
-
-    startRotationTimer();
-    emit viewModified();
-}
-
-
-void gl3dXPlaneView::on3dLeft()
-{
-    stopDynamicTimer();
-    m_QuatStart = m_ArcBall.m_Quat;
-
-    Quaternion qtView(-90.0, Vector3d(1,0,0));
-
-    PlaneOpp const *pPOpp = s_pXPlane->m_pCurPOpp;
-    if(pPOpp && !m_pPOpp3dControls->m_bGeomView)
-    {
-        Quaternion qtTB;
-        qtTB.fromTaitBryanAngles(0.0, pPOpp->alpha(), pPOpp->beta());
-        m_QuatEnd = qtView * qtTB;
-    }
-    else
-    {
-        m_QuatEnd = qtView;
-    }
-
-    m_ArcBall.setQuat(m_QuatEnd);
-
-    startRotationTimer();
-    emit viewModified();
-}
-
-
-void gl3dXPlaneView::on3dRight()
-{
-    stopDynamicTimer();
-    m_QuatStart = m_ArcBall.m_Quat;
-
-    Quaternion qt4(-90.0, Vector3d(1,0,0));
-    Quaternion qt3(180.0, Vector3d(0,1,0));
-    Quaternion qtView = qt3*qt4;
-
-    PlaneOpp const *pPOpp = s_pXPlane->m_pCurPOpp;
-
-    if(pPOpp && !m_pPOpp3dControls->m_bGeomView)
-    {
-        Quaternion qtTB;
-        qtTB.fromTaitBryanAngles(0.0, pPOpp->alpha(), pPOpp->beta());
-        m_QuatEnd = qtView * qtTB;
-    }
-    else
-    {
-        m_QuatEnd = qtView;
-    }
-
-    m_ArcBall.setQuat(m_QuatEnd);
-
-    startRotationTimer();
-    emit viewModified();
-}
-
-
-void gl3dXPlaneView::on3dRear()
-{
-    stopDynamicTimer();
-    m_QuatStart = m_ArcBall.m_Quat;
-
-    Quaternion qt1( 90.0, Vector3d(0,1,0));
-    Quaternion qt2(-90.0, Vector3d(1,0,0));
-    Quaternion qt3(180.0, Vector3d(0,0,1));
-    Quaternion qtView = qt1*qt2*qt3;
-
-    PlaneOpp const *pPOpp = s_pXPlane->m_pCurPOpp;
-    if(pPOpp && !m_pPOpp3dControls->m_bGeomView)
-    {
-        Quaternion qtTB;
-        qtTB.fromTaitBryanAngles(0.0, pPOpp->alpha(), pPOpp->beta());
-        m_QuatEnd = qtView * qtTB;
-    }
-    else
-    {
-        m_QuatEnd = qtView;
-    }
-
-    m_ArcBall.setQuat(m_QuatEnd);
-
-    startRotationTimer();
-    emit viewModified();
-}
-
-
-void gl3dXPlaneView::on3dFront()
-{
-    stopDynamicTimer();
-    m_QuatStart = m_ArcBall.m_Quat;
-
-    Quaternion qt1( 90.0, Vector3d(0,1,0));
-    Quaternion qt2(-90.0, Vector3d(1,0,0));
-    Quaternion qtView = qt1*qt2;
-
-    PlaneOpp const *pPOpp = s_pXPlane->m_pCurPOpp;
-    if(pPOpp && !m_pPOpp3dControls->m_bGeomView)
-    {
-        Quaternion qtTB;
-        qtTB.fromTaitBryanAngles(0.0, pPOpp->alpha(), pPOpp->beta());
-        m_QuatEnd = qtView * qtTB;
-    }
-    else
-    {
-        m_QuatEnd = qtView;
-    }
-
-    m_ArcBall.setQuat(m_QuatEnd);
-
-    startRotationTimer();
-    emit viewModified();
-}
-
 

@@ -83,6 +83,8 @@ void gl3dTestPoints::glMake3dObjects()
 
 void gl3dTestPoints::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     QMatrix4x4 modelmat;
 //    modelmat.scale(0.25f, 0.25f, 0.25f);
     QMatrix4x4 vmMat(m_matView*m_matModel);

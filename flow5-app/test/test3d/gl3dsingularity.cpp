@@ -166,6 +166,8 @@ void gl3dSingularity::onUpdateData()
 
 void gl3dSingularity::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
 
     if(m_prbSource->isChecked())

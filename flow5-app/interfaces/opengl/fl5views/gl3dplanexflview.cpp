@@ -261,6 +261,8 @@ void gl3dPlaneXflView::glMake3dObjects()
 
 void gl3dPlaneXflView::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     if(!m_pPlaneXfl) return;
 
     QMatrix4x4 vmMat(m_matView*m_matModel);

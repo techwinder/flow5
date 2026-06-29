@@ -410,6 +410,8 @@ void gl3dOptim2d::saveSettings(QSettings &settings)
 
 void gl3dOptim2d::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     if(m_bDisplaySurface)
     {
         paintColourMap(m_vboSurface);

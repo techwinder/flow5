@@ -103,7 +103,6 @@ class POpp3dCtrls : public QTabWidget
         void onWindAxes();
         void onStabAxes();
 
-        void onAxesView();
 
         void onWakePanels();
         void onVortons();
@@ -130,8 +129,6 @@ class POpp3dCtrls : public QTabWidget
         QCheckBox *m_pchPOppAnimate;
         QSlider *m_pslAnimPOppSpeed;
 
-        QFrame *m_pfrView;
-        QRadioButton *m_prbGeom, *m_prbWind;
 
         bool m_bICd;                        /**< true if the induced drag forces should be displayed in the operating point or 3D view >*/
         bool m_bVCd;                        /**< true if the viscous drag forces should be displayed in the operating point or 3D view >*/
@@ -156,7 +153,6 @@ class POpp3dCtrls : public QTabWidget
         bool m_bAnimateWOppPlus;            /**< true if the animation is going in aoa crescending order */
         int m_posAnimateWOpp;       /**< the current animation aoa ind ex for WOpp animation */
 
-        bool m_bGeomView;
 
         QTimer *m_pTimerWOpp;         /**< A pointer to the timer which signals the animation in the operating point and 3d view */
 

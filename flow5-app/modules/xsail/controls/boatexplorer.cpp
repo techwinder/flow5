@@ -460,7 +460,6 @@ void BoatExplorer::onItemClicked(const QModelIndex &index)
     }
 
     s_pXSail->updateView();
-    emit s_pXSail->projectModified();
 }
 
 
@@ -468,7 +467,6 @@ void BoatExplorer::onItemDoubleClicked(const QModelIndex &filteredindex)
 {
     setObjectFromIndex(filteredindex);
 
-//    s_pXSail->m_pAnalysisControls->setAnalysisParams();
     s_pXSail->updateView();
     if(m_Selection==BoatExplorer::BOAT)
     {

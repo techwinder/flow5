@@ -133,8 +133,8 @@ class gl3dXPlaneView : public gl3dXflView
         void makeTriVelocityBlock( int iBlock, const QVector<Vector3d> &C, const double *mu, const double *sigma, Vector3d *VField) const;
 
         void glMake3dObjects() override;
-        void glMakeOppBuffers();
-        void glMakeFlowBuffers();
+        void makeOppBuffers();
+        void makeFlowBuffers();
 
         void computeP4VelocityVectors(const Opp3d *pPOpp, QVector<Vector3d> const &points, QVector<Vector3d> &velvectors, bool bMultithread=true);
         void computeP3VelocityVectors(const Opp3d *pPOpp, const QVector<Vector3d> &points, QVector<Vector3d> &velvectors, bool bMultithread=true);
@@ -149,13 +149,6 @@ class gl3dXPlaneView : public gl3dXflView
         void onUpdate3dScales();
         void onUpdate3dStreamlines();
 
-
-        void on3dBot() override;
-        void on3dTop() override;
-        void on3dLeft() override;
-        void on3dRight() override;
-        void on3dFront() override;
-        void on3dRear() override;
 
     private:
         static XPlane *s_pXPlane;
@@ -208,6 +201,8 @@ class gl3dXPlaneView : public gl3dXflView
         QTimer m_FlowTimer;
         QStack<int>m_stackInterval;
 
+
+        QMatrix4x4 m_matPOpp;
 
     public:
         static bool s_bResetglGeom;               /**< true if the geometry OpenGL list needs to be re-generated */

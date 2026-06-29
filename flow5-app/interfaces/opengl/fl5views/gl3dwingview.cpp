@@ -73,6 +73,8 @@ std::vector<Node> const &gl3dWingView::nodes() const {return m_pWing->nodes();}
 
 void gl3dWingView::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     if(!m_pWing) return;
 
     WingXfl *pWingXfl = dynamic_cast<WingXfl*>(m_pWing);

@@ -269,7 +269,7 @@ void BSpline3d::makeCurve()
 
         for (int j=0; j<outputSize(); j++)
         {
-            double u = bunchedParameter(m_BunchDist, m_BunchAmp, t);
+            double u = math::bunchedParameter(m_BunchDist, m_BunchAmp, t);
             splinePoint(u, m_Output[j]);
             t += increment;
         }

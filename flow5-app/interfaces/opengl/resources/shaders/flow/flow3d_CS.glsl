@@ -13,10 +13,20 @@
 uniform vec4 topleft;
 uniform vec4 botright;
 
+uniform int uniformseed;
+
+//uniform float x_start;
+//uniform float x_end;
+//uniform float y_sigma;
+//uniform float z_sigma;
 
 uniform int RK;  // 1=Euler 2=RK2 4=RK4
 
 uniform vec4 vinf;
+uniform vec4 winddir;
+uniform vec4 windside;
+uniform vec4 windnormal;
+
 uniform float dt;
 
 uniform int npanels;
@@ -348,6 +358,94 @@ vec4 getVelocity(vec4 pos)
 }
 
 
+float fmaf(float x, float y, float z)
+{
+    return x*y+z;
+}
+
+// approximate inverse of gaussian distribution function
+float erf_inv(float a)
+{
+    float p = 0;
+    float r = 0;
+    float t = fmaf (a, 0.0f - a, 1.0f); //Computes (x * y) + z as if to infinite precision and rounded only once to fit the result type.
+    t = log(t);
+    if (abs(t) > 6.125f)
+    { // maximum ulp error = 2.35793
+        p =              3.03697567e-10f; //  0x1.4deb44p-32
+        p = fmaf (p, t,  2.93243101e-8f); //  0x1.f7c9aep-26
+        p = fmaf (p, t,  1.22150334e-6f); //  0x1.47e512p-20
+        p = fmaf (p, t,  2.84108955e-5f); //  0x1.dca7dep-16
+        p = fmaf (p, t,  3.93552968e-4f); //  0x1.9cab92p-12
+        p = fmaf (p, t,  3.02698812e-3f); //  0x1.8cc0dep-9
+        p = fmaf (p, t,  4.83185798e-3f); //  0x1.3ca920p-8
+        p = fmaf (p, t, -2.64646143e-1f); // -0x1.0eff66p-2
+        p = fmaf (p, t,  8.40016484e-1f); //  0x1.ae16a4p-1
+    }
+    else
+    { // maximum ulp error = 2.35456
+        p =              5.43877832e-9f;  //  0x1.75c000p-28
+        p = fmaf (p, t,  1.43286059e-7f); //  0x1.33b458p-23
+        p = fmaf (p, t,  1.22775396e-6f); //  0x1.49929cp-20
+        p = fmaf (p, t,  1.12962631e-7f); //  0x1.e52bbap-24
+        p = fmaf (p, t, -5.61531961e-5f); // -0x1.d70c12p-15
+        p = fmaf (p, t, -1.47697705e-4f); // -0x1.35be9ap-13
+        p = fmaf (p, t,  2.31468701e-3f); //  0x1.2f6402p-9
+        p = fmaf (p, t,  1.15392562e-2f); //  0x1.7a1e4cp-7
+        p = fmaf (p, t, -2.32015476e-1f); // -0x1.db2aeep-3
+        p = fmaf (p, t,  8.86226892e-1f); //  0x1.c5bf88p-1
+    }
+    r = a * p;
+    return r;
+}
+
+
+vec4 startpos(vec4 oldpos)
+{
+    // raising the digits to get pseudo rands
+    float flt = 147.51861127f;
+    float randy = oldpos.y*flt-floor(oldpos.y*flt); // in [0, 1[
+    float randz = oldpos.z*flt-floor(oldpos.z*flt); // in [0, 1[
+
+    vec4 newpos;
+    float xw, yw, zw;
+
+    if(uniformseed==1)
+    {
+        xw = topleft.x;
+        yw = topleft.y + randy * (botright.y-topleft.y);
+        zw = topleft.z + randz * (botright.z-topleft.z);
+    }
+    else
+    {
+        float mean = 0.0;
+        float sigma = 1.0f;
+
+        /** @todo avoid rand 0 value since erf_inv is undefined */
+        randy = randy * 2.0 - 1.0f;
+        randy = erf_inv(randy) * sigma + mean;
+
+        randz = randz * 2.0 - 1.0f;
+        randz = erf_inv(randz) * sigma + mean;
+        if(HasGround==1)
+        {
+            randz = abs(randz);
+        }
+
+        float y_sigma = (topleft.y - botright.y)/2.0;
+        float z_sigma = (topleft.z - botright.z)/2.0;
+
+        xw = topleft.x;;
+        yw = randy*y_sigma;
+        zw = randz*z_sigma;
+    }
+
+    newpos = winddir * xw + windside * yw + windnormal * zw;
+    newpos.w = 1.0;
+    return newpos;
+}
+
+
 void main()
 {
     int inboid = int(gl_GlobalInvocationID.x);
@@ -365,6 +463,7 @@ void main()
         vec4 v2 = vinf + getVelocity(pos1);
         vec4 pos2 = oldpos + v2*dt;
         newpos = oldpos + v1*0.5*dt + v2*0.5*dt;
+        velocity = v2; // to calculate the color at the next step
     }
     else if(RK==4)
     {
@@ -376,6 +475,8 @@ void main()
         vec4 pos3 = oldpos + v2    *dt;
         vec4 v4 = vinf + getVelocity(pos3);
         newpos = oldpos + (v1 + v2*2.0 + v3*2.0 + v4)*dt/6.0;
+
+        velocity = v4; // to calculate the color at the next step
     }
     else
     {
@@ -387,13 +488,7 @@ void main()
     bool bResetTrace = false;
     if(newpos.x>botright.x)
     {
-        // raising the digits to get pseudo rand
-        float randy = oldpos.y*1000.0f-floor(oldpos.y*1000.0f);
-        float randz = oldpos.z*1000.0f-floor(oldpos.z*1000.0f);
-
-        newpos.x = topleft.x;
-        newpos.y = topleft.y + randy * (botright.y-topleft.y);
-        newpos.z = topleft.z + randz * (botright.z-topleft.z);
+        newpos = startpos(oldpos);
 
         velocity = vinf;
         bResetTrace = true;
@@ -408,7 +503,7 @@ void main()
         clr = UniformColor;
     else
     {
-        float tau = length(velocity)/3.0/length(vinf);
+        float tau = (length(velocity)-length(vinf))/length(vinf)*20.0f + 0.5f;
         clr = vec4(glGetRed(tau), glGetGreen(tau), glGetBlue(tau), 1.0);
     }
     BoidBuffer.data[inboid].clr = clr;

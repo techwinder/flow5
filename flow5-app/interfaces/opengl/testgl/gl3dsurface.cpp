@@ -60,6 +60,8 @@ gl3dSurface::gl3dSurface(QWidget *pParent) : gl3dTestGLView(pParent)
 
 void gl3dSurface::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     if(m_bDisplaySurface)
     {
         paintColourMap(m_vboSurface);

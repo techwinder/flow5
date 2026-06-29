@@ -138,6 +138,8 @@ void gl3dSurfacePlot::on3dBot()
 
 void gl3dSurfacePlot::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     if(m_bDisplaySurface)
     {
         paintColourMap(m_vboSurface);

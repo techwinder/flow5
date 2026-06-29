@@ -197,11 +197,11 @@ void gl3dFlowVtx::makeVortices()
 {
     m_Vortex.vertex(0).x = 0.0;
     m_Vortex.vertex(0).y = -1.0;
-    m_Vortex.vertex(0).z = 0.5;
+    m_Vortex.vertex(0).z = 0.0;
 
     m_Vortex.vertex(1).x = 0.0;
     m_Vortex.vertex(1).y = 1.0;
-    m_Vortex.vertex(1).z = 0.5;
+    m_Vortex.vertex(1).z = 0.0;
 
     m_Vortex.setCirculation(s_Gamma);
 }
@@ -210,17 +210,27 @@ void gl3dFlowVtx::makeVortices()
 void gl3dFlowVtx::makeBoids()
 {
     int NBoids = s_NGroups * GROUP_SIZE;
-     m_Boid.resize(NBoids);
+    m_Boid.resize(NBoids);
 
-     for(int inboid=0; inboid<NBoids; inboid++)
-     {
-         Boid & boid = m_Boid[inboid];
-         boid.m_Position.x = -REFLENGTH/2.0f+QRandomGenerator::global()->generateDouble()*REFLENGTH*3.0;
-         boid.m_Position.y = (QRandomGenerator::global()->generateDouble()*3.0-1.5)*REFLENGTH;
-         boid.m_Position.z = (QRandomGenerator::global()->generateDouble()*2.0-1.0)*REFLENGTH;
-         boid.Index = inboid;
-         boid.m_Velocity.set(0.1,0,0);
-     }
+    double mean = 0.0;
+    double sigma = 1.0;
+
+    std::random_device rd{};
+    std::mt19937 gen{rd()};
+    std::normal_distribution d{mean, sigma};
+
+    for(int inboid=0; inboid<NBoids; inboid++)
+    {
+        Boid & boid = m_Boid[inboid];
+        boid.m_Position.x = -REFLENGTH/2.0f+QRandomGenerator::global()->generateDouble()*REFLENGTH*3.5;
+//        boid.m_Position.y = (QRandomGenerator::global()->generateDouble()*3.0-1.5)*REFLENGTH;
+//        boid.m_Position.z = (QRandomGenerator::global()->generateDouble()*2.0-1.0)*REFLENGTH;
+        boid.m_Position.y =  d(gen) * REFLENGTH;
+        boid.m_Position.z =  d(gen) * REFLENGTH / 2.0;
+
+        boid.Index = inboid;
+        boid.m_Velocity.set(0.1,0,0);
+    }
 }
 
 
@@ -502,6 +512,8 @@ void gl3dFlowVtx::moveThem()
 
 void gl3dFlowVtx::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     m_matModel.setToIdentity();
     QMatrix4x4 vmMat(m_matView*m_matModel);
     QMatrix4x4 pvmMat(m_matProj*vmMat);
@@ -535,5 +547,10 @@ void gl3dFlowVtx::glRenderView()
         emit ready();
     }
 }
+
+
+
+
+
 
 

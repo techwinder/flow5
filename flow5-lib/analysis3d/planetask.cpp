@@ -1417,9 +1417,6 @@ PlaneOpp* PlaneTask::computePlane(double ctrl, double alpha, double beta, double
                 pWing->computeViscousForces(m_pPlPolar, alpha, beta, m_SpanDistFF[iw], m_PartAF[iw]);
                 m_AF.addProfileDrag(m_PartAF.at(iw).profileDrag());           //N/q
                 m_AF.addMv(m_PartAF.at(iw).Mv());                             //N.m/q
-
-//                m_PartAF[iw].setProfileDrag(pWing->AF().profileDrag());           //N/q
-//                m_PartAF[iw].setMv(pWing->AF().Mv());                             //N.m/q
             }
         }
         traceStdLog("             ...done.\n");
@@ -2659,7 +2656,7 @@ bool PlaneTask::computeViscousDrag(WingXfl *pWing, double alpha, double beta, do
 
             sd.m_Alpha_0[m] = Objects2d::getZeroLiftAngle(surf.foilA(), surf.foilB(), sd.m_Re[m], tau);
 
-            double CdA(0), CdB(0), XTrTopA(0), XTrTopB(0), XTrBotA(0), XTrBotB(0);
+            double CdA(0.0), CdB(0.0), XTrTopA(1.0), XTrTopB(1.0), XTrBotA(1.0), XTrBotB(1.0);
 
             if(pWPolar->isViscFromCl())
             {
@@ -2716,8 +2713,8 @@ bool PlaneTask::computeViscousDrag(WingXfl *pWing, double alpha, double beta, do
             if(bOutVar || bOutRe)
             {
                 sd.m_PCd[m]    = 0.0;
-                sd.m_XTrTop[m] = 0.0;
-                sd.m_XTrBot[m] = 0.0;
+                sd.m_XTrTop[m] = 1.0;
+                sd.m_XTrBot[m] = 1.0;
             }
 
             sd.m_PCd[m]    = CdA     * (1.0-tau) + CdB     * tau;

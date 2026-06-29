@@ -386,6 +386,8 @@ void gl3dHydrogen::glMake3dObjects()
 
 void gl3dHydrogen::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     QMatrix4x4 vmMat(m_matView*m_matModel);
     QMatrix4x4 pvmMat(m_matProj*vmMat);
 
@@ -477,7 +479,7 @@ void gl3dHydrogen::onHarmonic()
         for(int j=0; j<NLAT; j++)
         {
             double theta = double(j)/double(NLAT-1)*PI; //colatitude
-            std::complex<double> amp = LaplaceHarmonic(s_m, s_l, theta, phi);
+            std::complex<double> amp = math::LaplaceHarmonic(s_m, s_l, theta, phi);
             double r = amp.real();
 
             m_Pts[iv].x = fabs(r) * sin(theta)*cos(phi);
@@ -509,21 +511,17 @@ double gl3dHydrogen::psi_1s(double r, double, double)
 */
 double gl3dHydrogen::psi(double r, double theta, double phi) const
 {
-//    double hb = PLANCK/2.0/PI;  // Planck reduced
-//    double a0 = 4.0*PI * EPS0 * hb*hb / m_e / q_e / q_e; //  Bohr radius = 5.29177210903e-11
-//    double a0star = 5.2946541e-11; // reduced Bohr radius
     double rho = 2.0*r/double(s_n);
     double coef = 1.0;
     coef *= sqrt((2.0/double(s_n)/A0)*(2.0/double(s_n)/A0)*(2.0/double(s_n)/A0));
-//    double fact1 = dfactorial(s_n-s_l-1);
-//    double fact2 = dfactorial(s_n+s_l);
-    double fact1 = double(factorial(s_n-s_l-1));
-    double fact2 = double(factorial(s_n+s_l));
+
+    double fact1 = double(math::factorial(s_n-s_l-1));
+    double fact2 = double(math::factorial(s_n+s_l));
     coef *= sqrt(fact1/2.0/double(s_n)/fact2);
     coef *= exp(-rho/2);
     coef *= pow(rho, s_l);
-    coef *= Laguerre(2*s_l+1, s_n-s_l-1, rho);
-    std::complex<double> wavefunc =   coef * LaplaceHarmonic(s_m, s_l, theta, phi);
+    coef *= math::Laguerre(2*s_l+1, s_n-s_l-1, rho);
+    std::complex<double> wavefunc =   coef * math::LaplaceHarmonic(s_m, s_l, theta, phi);
     return wavefunc.real();
 }
 

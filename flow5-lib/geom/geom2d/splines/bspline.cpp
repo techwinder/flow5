@@ -60,10 +60,10 @@ void BSpline::makeCurve()
                     u = t;
                     break;
                 case Spline::SIGMOID:
-                    u = sigmoid(-m_BunchAmp, t);
+                    u = math::sigmoid(-m_BunchAmp, t);
                     break;
                 case Spline::DOUBLESIG:
-                    u = doubleSigmoid(-m_BunchAmp, t);
+                    u = math::doubleSigmoid(-m_BunchAmp, t);
                     break;
             }
 

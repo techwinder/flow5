@@ -410,6 +410,8 @@ void gl3dSagittarius::onMoveStars()
 
 void gl3dSagittarius::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     Vector3d pos;
     QMatrix4x4 vmMat, pvmMat;
 

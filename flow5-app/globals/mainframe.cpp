@@ -1374,6 +1374,14 @@ void MainFrame::keyPressEvent(QKeyEvent *pEvent)
                 pTestView->activateWindow();
                 break;
             }
+            case Qt::Key_F4:
+            {
+                gl3dFlowVtx *pTestView= new gl3dFlowVtx;
+                pTestView->setAttribute(Qt::WA_DeleteOnClose);
+                pTestView->show();
+                pTestView->activateWindow();
+                break;
+            }
             default:
                 pEvent->ignore();
                 return;

@@ -332,6 +332,7 @@ void GraphOptions::makeWidgets()
                     pXBoxLayout->addWidget(m_pchXMinGridShow,  3,1,Qt::AlignRight);
                     pXBoxLayout->addWidget(m_plbXMajGridStyle, 2,2);
                     pXBoxLayout->addWidget(m_plbXMinGridStyle, 3,2);
+                    pXBoxLayout->setColumnStretch(3,1);
                 }
                 pgbXBox->setLayout(pXBoxLayout);
             }
@@ -356,11 +357,11 @@ void GraphOptions::makeWidgets()
                         pYBoxLayout->addWidget(m_pchYMinGridShow[iy],  5,1,Qt::AlignRight);
                         pYBoxLayout->addWidget(m_plbYMajGridStyle[iy], 4,2);
                         pYBoxLayout->addWidget(m_plbYMinGridStyle[iy], 5,2);
+                        pYBoxLayout->setColumnStretch(3,1);
                     }
                     pgbYBox[iy]->setLayout(pYBoxLayout);
                 }
             }
-
 
             pAxisDataLayout->addWidget(pgbXBox);
             pAxisDataLayout->addWidget(pgbYBox[0]);

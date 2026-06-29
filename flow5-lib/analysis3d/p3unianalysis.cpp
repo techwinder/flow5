@@ -351,7 +351,7 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
                         yu[0]=Mu[j*rows+1];  yu[1]=Mu[j*rows+0];  yu[2]=Mu[j*rows+2];
 
                         au=0, bu=0;
-                        bRegu = linearRegression(3,x,yu,au,bu);
+                        bRegu = math::linearRegression(3,x,yu,au,bu);
                         if(bRegu)
                         {
                             localvel[j].x = -4.0*PI*au*U.x;

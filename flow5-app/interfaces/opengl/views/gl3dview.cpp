@@ -495,6 +495,7 @@ void gl3dView::makeStandardBuffers()
 
 void gl3dView::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
 }
 
 
@@ -1069,8 +1070,8 @@ void gl3dView::keyPressEvent(QKeyEvent *pEvent)
         }
         case Qt::Key_Y:
         {
-            if(bShift) on3dLeft();
-            else       on3dRight();
+            if(bShift) on3dRight();
+            else       on3dLeft();
             pEvent->accept();
             return;
         }
@@ -1396,8 +1397,6 @@ void gl3dView::paintGl3()
     m_matView.setToIdentity();
     m_matModel.setToIdentity();
 
-    m_matView = rotationMatrix();
-
     float s = 1.0;
     float width  = float(geometry().width());
     float height = float(geometry().height());
@@ -1405,26 +1404,9 @@ void gl3dView::paintGl3()
 
     if(m_bArcball)   paintArcBall();
 
-    if(m_bAxes)
-    {
-        // fixed scale for the axes
-        QMatrix4x4 vm(m_matView);
-        m_matView.scale(m_glScalef, m_glScalef, m_glScalef);
-        m_matView.translate(m_glRotCenter.xf(), m_glRotCenter.yf(), m_glRotCenter.zf());
-        m_matView.scale(0.5f/m_glScalef, 0.5f/m_glScalef, 0.5f/m_glScalef);
-        m_shadLine.bind();
-        {
-            m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView*m_matModel);
-            m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
-        }
-
-        paintAxes(W3dPrefs::s_AxisStyle, QString());
-        m_matView=vm; // leave things as they were
-    }
-
+    m_matView = rotationMatrix();
     m_matView.scale(m_glScalef, m_glScalef, m_glScalef);
     m_matView.translate(m_glRotCenter.xf(), m_glRotCenter.yf(), m_glRotCenter.zf());
-
 
     glRenderView();
 
@@ -1521,7 +1503,7 @@ void gl3dView::reset3dScale()
 
 
 void gl3dView::paintArcBall()
-{
+{    
     m_shadLine.bind();
     {
         m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
@@ -1961,8 +1943,19 @@ void gl3dView::paintAxes(LineStyle const &ls, QString const&suffix)
 {
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
 
+    QMatrix4x4 vm(m_matView);
+
+    m_matView = rotationMatrix(); // ignore translation and scaling
+
+    // fixed scale for the axes
+    m_matView.scale(m_glScalef, m_glScalef, m_glScalef);
+    m_matView.translate(m_glRotCenter.xf(), m_glRotCenter.yf(), m_glRotCenter.zf());
+    m_matView.scale(0.5f/m_glScalef, 0.5f/m_glScalef, 0.5f/m_glScalef);
     m_shadLine.bind();
     {
+        m_shadLine.setUniformValue(m_locLine.m_vmMatrix, m_matView*m_matModel);
+        m_shadLine.setUniformValue(m_locLine.m_pvmMatrix, m_matProj*m_matView*m_matModel);
+
         m_shadLine.setUniformValue(m_locLine.m_HasUniColor, 1);
         m_shadLine.setUniformValue(m_locLine.m_UniColor, xfl::fromfl5Clr(ls.m_Color));
         m_shadLine.setUniformValue(m_locLine.m_Pattern, gl::stipple(ls.m_Stipple));
@@ -1986,6 +1979,8 @@ void gl3dView::paintAxes(LineStyle const &ls, QString const&suffix)
     glRenderText(1.0+3.0*delta, 0.0+delta,     0.0+delta,     m_AxisTitle[0]+suffix, DisplayOptions::textColor());
     glRenderText(0.0+delta,     1.0+3.0*delta, 0.0+delta,     m_AxisTitle[1]+suffix, DisplayOptions::textColor());
     glRenderText(0.0+delta,     0.0+delta,     1.0+3.0*delta, m_AxisTitle[2]+suffix, DisplayOptions::textColor());
+
+    m_matView = vm; // leave things as they were
 }
 
 

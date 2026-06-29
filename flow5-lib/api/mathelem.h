@@ -46,44 +46,48 @@ namespace xfl {
 
 }
 
+namespace math {
 
-FL5LIB_EXPORT    bool LinBairstow(double *p, std::complex<double> *root, int n);
-FL5LIB_EXPORT    double Laguerre(int alpha, int k, double x);
-FL5LIB_EXPORT    int factorial(int n);
-FL5LIB_EXPORT    std::complex<double> LaplaceHarmonic(int m, int l, double theta, double phi);
-FL5LIB_EXPORT    void characteristicPol(double m[][4], double p[5]);
-FL5LIB_EXPORT    void sortComplex(std::complex<double>*array, int ub);
+    FL5LIB_EXPORT    bool LinBairstow(double *p, std::complex<double> *root, int n);
+    FL5LIB_EXPORT    double Laguerre(int alpha, int k, double x);
+    FL5LIB_EXPORT    int factorial(int n);
+    FL5LIB_EXPORT    std::complex<double> LaplaceHarmonic(int m, int l, double theta, double phi);
+    FL5LIB_EXPORT    void characteristicPol(double m[][4], double p[5]);
+    FL5LIB_EXPORT    void sortComplex(std::complex<double>*array, int ub);
 
-double LegendreAssociated( int m, int l, double x);
-int binomial(int n, int k);
-int compareComplex(std::complex<double> a, std::complex<double>b);
-void Legendre(int n, double *a);
-void testEigen();
+    double LegendreAssociated( int m, int l, double x);
+    int binomial(int n, int k);
+    int compareComplex(std::complex<double> a, std::complex<double>b);
+    void Legendre(int n, double *a);
+    void testEigen();
 
-bool cubicSplineInterpolation(int n, const double *x, const double *y, double *a, double *b, double *c, double *d);
+    bool cubicSplineInterpolation(int n, const double *x, const double *y, double *a, double *b, double *c, double *d);
 
 
 
-void testPointDistribution();
+    void testPointDistribution();
 
-double err_func(double x);
-double erf_inv(float a);
+    double err_func(double x);
+    double erf_inv(float a);
 
-double interpolateLine(double x, double x0, double y0, double x1, double y1);
+    double interpolateLine(double x, double x0, double y0, double x1, double y1);
 
-double interpolatePolyLine(double x, const std::vector<double> &xp, const std::vector<double> &yp, bool bExtend);
+    double interpolatePolyLine(double x, const std::vector<double> &xp, const std::vector<double> &yp, bool bExtend);
 
-inline bool isEven(int n) {return n%2==0;}
-inline bool isOdd(int n) {return n%2==1;}
+    inline bool isEven(int n) {return n%2==0;}
+    inline bool isOdd(int n) {return n%2==1;}
 
-bool isBetween(int f, int f1, int f2);
-bool isBetween(int f, double f1, double f2);
+    bool isBetween(int f, int f1, int f2);
+    bool isBetween(int f, double f1, double f2);
 
-FL5LIB_EXPORT    double bunchedParameter(double bunchdist, double bunchamp, double t);
+    FL5LIB_EXPORT    double bunchedParameter(double bunchdist, double bunchamp, double t);
 
-FL5LIB_EXPORT    double sigmoid(double amplitude, double t);
-FL5LIB_EXPORT    double doubleSigmoid(double amplitude, double t);
+    FL5LIB_EXPORT    double sigmoid(double amplitude, double t);
+    FL5LIB_EXPORT    double doubleSigmoid(double amplitude, double t);
 
-FL5LIB_EXPORT    bool linearRegression(int n, double const *x, double const*y, double &a, double &b);
+    FL5LIB_EXPORT    bool linearRegression(int n, double const *x, double const*y, double &a, double &b);
 
-FL5LIB_EXPORT    double HicksHenne(double x, double t1, double t2, double xmin, double xmax);
+    FL5LIB_EXPORT    double HicksHenne(double x, double t1, double t2, double xmin, double xmax);
+
+    void testNormal();
+}

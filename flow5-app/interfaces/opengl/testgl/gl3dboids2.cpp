@@ -496,6 +496,8 @@ void gl3dBoids2::glMake3dObjects()
 
 void gl3dBoids2::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
 #ifndef Q_OS_MAC
     m_matModel.setToIdentity();
 

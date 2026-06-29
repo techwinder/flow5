@@ -24,8 +24,9 @@
 
 #include <cassert>
 #include <cstring>
-#include <iostream>
 #include <format>
+#include <iostream>
+#include <random>
 
 #include <mathelem.h>
 #include <constants.h>
@@ -37,7 +38,7 @@
 * @param array the array of complex numbers to sort
 * @param ub the size of the array
 */
-void sortComplex(std::complex<double>*array, int n)
+void math::sortComplex(std::complex<double>*array, int n)
 {
     std::complex<double> temp, temp2;
     int flipped=0;
@@ -52,7 +53,7 @@ void sortComplex(std::complex<double>*array, int n)
         {
             temp  = array[indx2];
             temp2 = array[indx2 - 1];
-            if (compareComplex(temp2, temp) > 0)
+            if (math::compareComplex(temp2, temp) > 0)
             {
                 array[indx2 - 1] = temp;
                 array[indx2] = temp2;
@@ -69,7 +70,7 @@ void sortComplex(std::complex<double>*array, int n)
 *@param b second complex number
 *@return 1 if Real(a) > Real(b), -1 if Real(a)<Real(b); if Real(a)=Real(b), returns 1 if Imag(a)>Image(b), -1 otherwise.
 */
-int compareComplex(std::complex<double> a, std::complex<double>b)
+int math::compareComplex(std::complex<double> a, std::complex<double>b)
 {
     if(a.real()>b.real())       return  1;
     else if (a.real()<b.real()) return -1;
@@ -90,7 +91,7 @@ int compareComplex(std::complex<double> a, std::complex<double>b)
 *@param m the 4x4 matrix
 *@param p the array holding the 5 coefficients of the matrix characteristic polynomial
 */
-void characteristicPol(double m[][4], double p[5])
+void math::characteristicPol(double m[][4], double p[5])
 {
     // lambda^4
     p[4] =  1;
@@ -186,7 +187,7 @@ void characteristicPol(double m[][4], double p[5])
 *@param n the polynom's order
 *@return true if the extraction was successful
 */
-bool LinBairstow(double *p, std::complex<double> *root, int n)
+bool math::LinBairstow(double *p, std::complex<double> *root, int n)
 {
     double b[POLYNOMORDER], c[POLYNOMORDER];
     memset(b, 0, POLYNOMORDER*sizeof(double));
@@ -330,7 +331,7 @@ bool LinBairstow(double *p, std::complex<double> *root, int n)
 //    ...
 //      d[n-1]
 */
-bool cubicSplineInterpolation(int n, double const *x, double const *y, double *a, double *b, double *c, double *d)
+bool math::cubicSplineInterpolation(int n, double const *x, double const *y, double *a, double *b, double *c, double *d)
 {
     if(n>50) return false;
 
@@ -406,7 +407,8 @@ bool cubicSplineInterpolation(int n, double const *x, double const *y, double *a
     return true;
 }
 
-void testPointDistribution()
+
+void math::testPointDistribution()
 {
     std::vector<double> cos, sine, invsine, invsinh, tanh, exp, invexp;
     int nPanels = 50;
@@ -425,7 +427,7 @@ void testPointDistribution()
 
 
 /** @todo use std::erf instead */
-double err_func(double x)
+double math::err_func(double x)
 {
     // approximation from Abramowitz and Stegun (equations 7.1.25–28)
     double p = 0.3275911;
@@ -453,10 +455,10 @@ double err_func(double x)
 }
 
 /* compute inverse error functions with maximum error of 2.35793 ulp */
-double erf_inv(float a)
+double math::erf_inv(float a)
 {
     float p(0), r(0), t(0);
-    t = fmaf (a, 0.0f - a, 1.0f);
+    t = fmaf (a, 0.0f - a, 1.0f); //Computes (x * y) + z as if to infinite precision and rounded only once to fit the result type.
     t = log(t);
     if (fabsf(t) > 6.125f)
     { // maximum ulp error = 2.35793
@@ -492,7 +494,7 @@ double erf_inv(float a)
  * returns the ordinate y corresponding to coordinate x
  * on a line defined by points (x0,y0) and (x1,y1)
  */
-double interpolateLine(double x, double x0, double y0, double x1, double y1)
+double math::interpolateLine(double x, double x0, double y0, double x1, double y1)
 {
     if(fabs(x1-x0)<PRECISION) return 0.0;
     double a = (y1-y0)/(x1-x0);
@@ -503,7 +505,7 @@ double interpolateLine(double x, double x0, double y0, double x1, double y1)
 /** if bExtend is true, then interpolations will be made outside the interval defined by the x array
  * based on the end points
  * if false, then interpolation will return the first or last y-value */
-double interpolatePolyLine(double x, std::vector<double> const &xp, std::vector<double> const &yp, bool bExtend)
+double math::interpolatePolyLine(double x, std::vector<double> const &xp, std::vector<double> const &yp, bool bExtend)
 {
     if(xp.size() != yp.size()) return 0.0;
 
@@ -559,7 +561,7 @@ xfl::enumDistribution xfl::distributionType(const std::string &Dist)
 *@param f2 the second bound
 *@return true if f1<f<f2 or f2<f<f1
 */
-bool isBetween(int f, int f1, int f2)
+bool math::isBetween(int f, int f1, int f2)
 {
     if (f2 < f1)
     {
@@ -580,7 +582,7 @@ bool isBetween(int f, int f1, int f2)
  * @param f2 the second bound
  * @return true if f1<f<f2 or f2<f<f1
  */
-bool isBetween(int f, double f1, double f2)
+bool math::isBetween(int f, double f1, double f2)
 {
     double ff = f;
     if (f2 < f1)
@@ -599,7 +601,7 @@ bool isBetween(int f, double f1, double f2)
     BunchAmp:  k=0.0 --> uniform bunching, k=1-->full varying bunch
     BunchDist: k=0.0 --> uniform bunching, k=1 weigth on endpoints
 */
-double bunchedParameter(double bunchdist, double bunchamp, double t)
+double math::bunchedParameter(double bunchdist, double bunchamp, double t)
 {
     // complex mix of three functions
     // linear, tanh, and atanh
@@ -631,7 +633,7 @@ double bunchedParameter(double bunchdist, double bunchamp, double t)
  * ____/
  * 0  1/2   1
  */
-double sigmoid(double amplitude, double x)
+double math::sigmoid(double amplitude, double x)
 {
     x= 2.0*x-1;
     double y = (x-amplitude*x)/(amplitude-2*amplitude*fabs(x)+1);
@@ -651,7 +653,7 @@ double sigmoid(double amplitude, double x)
  * ___/
  * 0     1/2     1
  */
-double doubleSigmoid(double amplitude, double t)
+double math::doubleSigmoid(double amplitude, double t)
 {
     if(t<=0.5)
         return  sigmoid(amplitude*0.85, t*2)/2.0;
@@ -663,7 +665,7 @@ double doubleSigmoid(double amplitude, double t)
 /** Performs a linear regression of the array of n points (x_i, y_i) and
  * calculater the coefficients of line y = ax+b.
  * Returns true if the line could be calculated, false if not */
-bool linearRegression(int n, double const *x, double const*y, double &a, double &b)
+bool math::linearRegression(int n, double const *x, double const*y, double &a, double &b)
 {
     a = b = 0;
 
@@ -692,7 +694,7 @@ bool linearRegression(int n, double const *x, double const*y, double &a, double 
 /** Hicks-Henne bump function
  * parameter t1 controls the bump's position and t2 its width
  */
-double HicksHenne(double x, double t1, double t2, double xmin, double xmax)
+double math::HicksHenne(double x, double t1, double t2, double xmin, double xmax)
 {
     if(x<=xmin || x>=xmax) return 0.0;
     double xrel = (x-xmin)/(xmax-xmin);
@@ -705,7 +707,7 @@ double HicksHenne(double x, double t1, double t2, double xmin, double xmax)
  * Uses the recursive formula n.Pnp1(x) = (2n-1).x.Pnm1(x) - (n-1) Pnm2(x)
  * P0(x) = 1; P1(x) = x;
  */
-void Legendre(int n, double *a)
+void math::Legendre(int n, double *a)
 {
     if(n==0)
     {
@@ -732,7 +734,7 @@ void Legendre(int n, double *a)
 }
 
 
-double Laguerre(int alpha, int k, double x)
+double math::Laguerre(int alpha, int k, double x)
 {
     if(k==0) return 1.0;
     if(k==1) return double(1+alpha)-x;
@@ -740,7 +742,7 @@ double Laguerre(int alpha, int k, double x)
 }
 
 
-int factorial(int n)
+int math::factorial(int n)
 {
     if     (n==0) return 1;
     else if(n==1) return 1;
@@ -755,7 +757,7 @@ int factorial(int n)
 }
 
 
-int binomial(int n, int k)
+int math::binomial(int n, int k)
 {
     if(k==0) return 1;
     if(k==n) return 1;
@@ -763,7 +765,7 @@ int binomial(int n, int k)
 }
 
 
-double LegendreAssociated(int m, int l, double x)
+double math::LegendreAssociated(int m, int l, double x)
 {
     if(m<0)
         return -1.0* double(factorial(l+m))/double(factorial(l-m))*LegendreAssociated(-m, l, x);
@@ -782,7 +784,7 @@ double LegendreAssociated(int m, int l, double x)
 
 
 /** theta and phi in radians */
-std::complex<double> LaplaceHarmonic(int m, int l, double theta, double phi)
+std::complex<double> math::LaplaceHarmonic(int m, int l, double theta, double phi)
 {
     std::complex<double> harmonic(0,0);
     if(abs(m)>l) return harmonic;
@@ -796,7 +798,6 @@ std::complex<double> LaplaceHarmonic(int m, int l, double theta, double phi)
 
     return harmonic;
 }
-
 
 
 /**
@@ -814,8 +815,6 @@ void xfl::getPointDistribution(std::vector<double> &fraclist, int nPanels, xfl::
         fraclist.push_back(d);
     }
 }
-
-
 
 
 double xfl::getDistribFraction(double tau, xfl::enumDistribution DistType)
@@ -911,7 +910,60 @@ std::string xfl::distributionType(xfl::enumDistribution dist)
 
 
 
+void math::testNormal()
+{
+    int SIZE = 100;
+    float mean = 0.0;
+    float sigma = 1.0;
 
+    std::vector vec(SIZE, 0);
+
+/*    for(unsigned int k=0; k<SIZE; k++)
+{
+    float unif = (float(k+1)/float(SIZE+1))*2.0f - 1.0f; // in ]-1, 1[
+    float normal = erf_inv(unif) * sigma + mean;
+
+    std::cout << normal << '\n';
+}*/
+
+/*    std::random_device rd;  // a seed source for the random number engine
+    std::mt19937 gen(rd()); // mersenne_twister_engine seeded with rd()
+    std::uniform_int_distribution<> distrib(1, 6);
+
+    // Use distrib to transform the random unsigned int
+    // generated by gen into an int in [1, 6]
+    for (int n = 0; n != 10; ++n)
+        std::cout << distrib(gen) << ' ';
+    std::cout << '\n';*/
+
+    int max = 10000;
+    std::random_device rd;  // a seed source for the random number engine
+    std::mt19937 gen(rd()); // mersenne_twister_engine seeded with rd()
+    std::uniform_int_distribution<> distrib(1, max-1);
+
+
+    // histogram
+    for(int i=0; i<50000; i++)
+    {
+/*        uint32_t rnd = rand()+1; // avoid 0 and 1
+        uint32_t max = RAND_MAX+2;
+        float value = float(rnd)/float(max); // in ]0, 1[ */
+        float value = distrib(gen) / float(max); // in ]0, 1[
+
+        value = value * 2.0 - 1.0f;// in ]-1, 1[
+        float r = erf_inv(value) * sigma + mean;
+
+        r = (r+3.0) * float(SIZE);
+        int k = int(r/6.0);
+        if(k>=0 && k<SIZE)
+            vec[k]++;
+    }
+
+    for(int k=0; k<SIZE; k++)
+        std::cout << vec.at(k) << '\n';
+
+    std::cout << std::endl;
+}
 
 
 

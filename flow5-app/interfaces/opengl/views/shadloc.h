@@ -68,8 +68,13 @@ struct FlowLocations
     int m_NPanels{-1};
     int m_Dt{-1};
     int m_VInf{-1};
+    int m_WindDir{-1};
+    int m_WindSide{-1};
+    int m_WindNormal{-1};
 
     int m_TopLeft{-1}, m_BotRight{-1};
+
+    int m_UniformSeed{-1};
 
     int m_UniColor{-1};
     int m_HasUniColor{-1};

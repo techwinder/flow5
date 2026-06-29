@@ -302,6 +302,8 @@ void gl3dLorenz::onResetDefaults()
 
 void gl3dLorenz::glRenderView()
 {
+    if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
+
     QColor clr(xfl::fromfl5Clr(s_ls.m_Color));
     if(DisplayOptions::isLightTheme()) clr = clr.darker();
     else                              clr = clr.lighter();

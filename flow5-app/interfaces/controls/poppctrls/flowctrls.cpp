@@ -62,6 +62,7 @@ float FlowCtrls::s_Flowdt(0.01f);
 FlowCtrls::flowODE FlowCtrls::s_ODE(FlowCtrls::RK4);
 Vector3d FlowCtrls::s_FlowTopLeft{-1,-1,1};
 Vector3d FlowCtrls::s_FlowBotRight{5,1,-1};
+bool FlowCtrls::s_bUniform(true);
 
 
 FlowCtrls::FlowCtrls(QWidget *pParent) : QWidget(pParent)
@@ -140,6 +141,32 @@ void FlowCtrls::setupLayout()
             pgbBox->setLayout(pBoxLayout);
         }
 
+        QGroupBox *pgbSeed = new QGroupBox(tr("Seed"));
+        {
+            QHBoxLayout *pSeedLayout = new QHBoxLayout;
+            {
+                QButtonGroup *pGroup = new QButtonGroup(this);
+                {
+                    QString tip = tr("<p>If Uniform is selected, the particles are generated uniformly in the starting y-z face of the box</p>"
+                                     "<p>If Gaussian is selected, the particles are generated according to a normal distribution using the box limits "
+                                     "as the standard deviations in the y and z directions.</p>");
+                    m_prbUniform  = new QRadioButton(tr("Uniform"));
+                    m_prbGaussian = new QRadioButton(tr("Gaussian"));
+
+                    m_prbUniform->setToolTip(tip);
+                    m_prbGaussian->setToolTip(tip);
+
+                    pGroup->addButton(m_prbUniform);
+                    pGroup->addButton(m_prbGaussian);
+                }
+                pSeedLayout->addStretch();
+                pSeedLayout->addWidget(m_prbUniform);
+                pSeedLayout->addWidget(m_prbGaussian);
+                pSeedLayout->addStretch();
+            }
+            pgbSeed->setLayout(pSeedLayout);
+        }
+
         QGroupBox *pgbODE = new QGroupBox(tr("ODE"));
         {
             QVBoxLayout *pODELayout = new QVBoxLayout;
@@ -208,15 +235,16 @@ void FlowCtrls::setupLayout()
 
                     m_pieNGroups->setToolTip(str);
 
+                    m_plabNParticles = new QLabel;
+                    m_plabNParticles->setFont(DisplayOptions::tableFont());
+
                     pGroupsLayout->addWidget(plabNGroups);
                     pGroupsLayout->addWidget(m_pieNGroups);
+                    pGroupsLayout->addWidget(m_plabNParticles);
                     pGroupsLayout->addStretch();
                 }
 
-                m_plabNParticles = new QLabel;
-                m_plabNParticles->setFont(DisplayOptions::tableFont());
-
-                QHBoxLayout *pStyleLayout = new QHBoxLayout;
+                 QHBoxLayout *pStyleLayout = new QHBoxLayout;
                 {
                     QLabel *plabStyle = new QLabel(tr("Flow lines style:"));
                     m_plbFlowLines = new LineBtn(this);
@@ -228,7 +256,6 @@ void FlowCtrls::setupLayout()
                 }
 
                 pParticlesLayout->addLayout(pGroupsLayout);
-                pParticlesLayout->addWidget(m_plabNParticles);
                 pParticlesLayout->addLayout(pStyleLayout);
             }
             pgbParticles->setLayout(pParticlesLayout);
@@ -239,6 +266,7 @@ void FlowCtrls::setupLayout()
 
         pFlowLayout->addWidget(plabOGLVersion);
         pFlowLayout->addWidget(pgbBox);
+        pFlowLayout->addWidget(pgbSeed);
         pFlowLayout->addWidget(pgbODE);
 
         pFlowLayout->addWidget(pgbParticles);
@@ -260,6 +288,8 @@ void FlowCtrls::connectSignals()
     connect(m_pfeRight,            SIGNAL(floatChanged(float)),    SLOT(onFlowUpdate()));
     connect(m_pfeBot,              SIGNAL(floatChanged(float)),    SLOT(onFlowUpdate()));
     connect(m_pfeTop,              SIGNAL(floatChanged(float)),    SLOT(onFlowUpdate()));
+    connect(m_prbUniform,          SIGNAL(clicked()),              SLOT(onFlowUpdate()));
+    connect(m_prbGaussian,         SIGNAL(clicked()),              SLOT(onFlowUpdate()));
     connect(m_prbRK1,              SIGNAL(clicked()),              SLOT(onFlowUpdate()));
     connect(m_prbRK2,              SIGNAL(clicked()),              SLOT(onFlowUpdate()));
     connect(m_prbRK4,              SIGNAL(clicked()),              SLOT(onFlowUpdate()));
@@ -271,7 +301,9 @@ void FlowCtrls::initWidget()
 {
     updateUnits();
 
-    //flow
+    m_prbUniform->setChecked(s_bUniform);
+    m_prbGaussian->setChecked(!s_bUniform);
+
     m_pieNGroups->setValue(s_FlowNGroups);
     m_pfeDt->setValue(s_Flowdt);
 
@@ -294,14 +326,15 @@ void FlowCtrls::loadSettings(QSettings &settings)
         else if(iODE==1) s_ODE = RK2;
         else             s_ODE = RK4;
 
-        s_FlowTopLeft.x = settings.value("FlowTopLeft_x",   s_FlowTopLeft.x).toDouble();
-        s_FlowTopLeft.y = settings.value("FlowTopLeft_y",   s_FlowTopLeft.y).toDouble();
-        s_FlowTopLeft.z = settings.value("FlowTopLeft_z",   s_FlowTopLeft.z).toDouble();
+        s_FlowTopLeft.x  = settings.value("FlowTopLeft_x",   s_FlowTopLeft.x).toDouble();
+        s_FlowTopLeft.y  = settings.value("FlowTopLeft_y",   s_FlowTopLeft.y).toDouble();
+        s_FlowTopLeft.z  = settings.value("FlowTopLeft_z",   s_FlowTopLeft.z).toDouble();
 
         s_FlowBotRight.x = settings.value("FlowBotRight_x", s_FlowBotRight.x).toDouble();
         s_FlowBotRight.y = settings.value("FlowBotRight_y", s_FlowBotRight.y).toDouble();
         s_FlowBotRight.z = settings.value("FlowBotRight_z", s_FlowBotRight.z).toDouble();
 
+        s_bUniform       = settings.value("Uniform",        s_bUniform).toBool();
     }
     settings.endGroup();
 }
@@ -329,6 +362,7 @@ void FlowCtrls::saveSettings(QSettings &settings)
         settings.setValue("FlowBotRight_y", s_FlowBotRight.y);
         settings.setValue("FlowBotRight_z", s_FlowBotRight.z);
 
+        settings.setValue("Uniform",        s_bUniform);
     }
     settings.endGroup();
 }
@@ -360,7 +394,6 @@ void FlowCtrls::updateUnits()
     m_pfeEnd->setValue(s_FlowBotRight.x*Units::mtoUnit());
     m_pfeRight->setValue(s_FlowBotRight.y*Units::mtoUnit());
     m_pfeBot->setValue(s_FlowBotRight.z*Units::mtoUnit());
-
 }
 
 
@@ -396,6 +429,8 @@ void FlowCtrls::onFlowUpdate()
     s_FlowBotRight.y = m_pfeRight->value()/Units::mtoUnit();
     s_FlowBotRight.z = m_pfeBot->value()/Units::mtoUnit();
 
+    s_bUniform = m_prbUniform->isChecked();
+
     if     (m_prbRK1->isChecked()) s_ODE = EULER;
     else if(m_prbRK2->isChecked()) s_ODE = RK2;
     else if(m_prbRK4->isChecked()) s_ODE = RK4;
@@ -407,7 +442,7 @@ void FlowCtrls::onFlowUpdate()
 void FlowCtrls::updateFlowInfo()
 {
     int NBoids = s_FlowNGroups * GROUP_SIZE;
-    QString strange = QString::asprintf("%d groups x %d = %d particles", s_FlowNGroups, GROUP_SIZE, NBoids);
+    QString strange = QString::asprintf("<p>&times; %d = %d particles</p>", GROUP_SIZE, NBoids);
     m_plabNParticles->setText(strange);
 }
 
