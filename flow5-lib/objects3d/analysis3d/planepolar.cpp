@@ -1473,6 +1473,7 @@ std::string PlanePolar::exportToString(const std::string &separator) const
         for(int il=int(strange.length()); il<11; il++) strange+=" ";
         out <<  strange+sep;
     }
+    out <<  "\n";
 
     for(int i=0; i<dataSize(); i++)
     {
