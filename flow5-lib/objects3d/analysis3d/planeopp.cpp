@@ -1064,7 +1064,7 @@ void PlaneOpp::exportMainDataToString(Plane const*pPlane, std::string &poppdata,
     sstr << std::setw(17) <<  std::string("CoG_Iyy("+inertia+")");                 sstr << sep;
     sstr << std::setw(17) <<  std::string("CoG_Izz("+inertia+")");                 sstr << sep;
     sstr << std::setw(17) <<  std::string("CoG_Ixz("+inertia+")");                 sstr << sep;
-    poppdata +="\n";
+    sstr << "\n";
 
     strange = std::format("{:17g}", m_Mass*Units::kgtoUnit());            sstr << strange+sep;
     strange = std::format("{:17g}", m_CoG.x*Units::mtoUnit());            sstr << strange+sep;
