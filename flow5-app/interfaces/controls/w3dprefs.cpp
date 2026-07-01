@@ -100,7 +100,7 @@ LineStyle W3dPrefs::s_IDragStyle(   true, Line::DASH,    1, fl5Color(215,100,125
 LineStyle W3dPrefs::s_VDragStyle(   true, Line::DASH,    1, fl5Color(215,125,100),        Line::NOSYMBOL);
 LineStyle W3dPrefs::s_CpStyle(      true, Line::SOLID,   1, fl5Color(255,0,0),            Line::NOSYMBOL);
 LineStyle W3dPrefs::s_TransStyle(   true, Line::SOLID,   1, fl5Color(171, 103, 220),      Line::NOSYMBOL);
-LineStyle W3dPrefs::s_FlowStyle(    true, Line::SOLID,   2, fl5Color(101, 101, 231, 153), Line::NOSYMBOL);
+LineStyle W3dPrefs::s_FlowStyle(    true, Line::SOLID,   2, fl5Color(100, 149, 235, 255), Line::NOSYMBOL);
 QColor W3dPrefs::s_ForceColor  = QColor(113, 131, 149);
 QColor W3dPrefs::s_MomentColor = QColor(149, 131, 113);
 

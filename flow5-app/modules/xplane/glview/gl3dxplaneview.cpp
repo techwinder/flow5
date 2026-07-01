@@ -2781,10 +2781,10 @@ void gl3dXPlaneView::makeLLTDownwash(const PlaneXfl *pPlane, const PlaneOpp *pPO
     {
         pWing->surfacePoint(1, sd.m_StripPos.at(i), xfl::MIDSURFACE, points[i], N);
 
-//        points[i].rotateY(pPOpp->alpha());
+        points[i].rotateY(pPOpp->alpha());
 
         arrows[i] = sd.m_Vd.at(i);
-        arrows[i].rotate(pPOpp->aeroForces().CFWind().Jdir(), -pPOpp->alpha());
+//        arrows[i].rotate(pPOpp->aeroForces().CFWind().Jdir(), -pPOpp->alpha());
     }
 }
 
@@ -2821,7 +2821,6 @@ void gl3dXPlaneView::makeDownwash(const PlaneXfl *pPlane, const PlaneOpp *pPOpp,
         WingOpp const *pWOpp = &pPOpp->WOpp(iWing);
         SpanDistribs const &sd = pWOpp->spanResults();
 
-
         int npanels = 0;
         int i0 = -1;
         if(pPOpp->isQuadMethod())
@@ -2851,7 +2850,7 @@ void gl3dXPlaneView::makeDownwash(const PlaneXfl *pPlane, const PlaneOpp *pPOpp,
                 arrows[m].z = sd.m_Vd.at(i).z*cosa;*/
 
                 arrows[m] = sd.m_Vd.at(i);
-                arrows[m].rotate(pPOpp->aeroForces().CFWind().Jdir(), -pPOpp->alpha());
+//                arrows[m].rotate(pPOpp->aeroForces().CFWind().Jdir(), -pPOpp->alpha());
 
                 i++;
                 m++;
