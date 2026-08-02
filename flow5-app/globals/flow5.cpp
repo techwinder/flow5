@@ -300,13 +300,23 @@ void Flow5App::loadTranslations()
     appTrDir = qApp->applicationDirPath()+"/translations/";
 #endif
 #ifdef Q_OS_LINUX
-    appTrDir  = "/usr/local/share/flow5/translations/";
+    // Portable payloads (release tar.gz, AppImage) ship translations next
+    // to the executable; make install puts them in
+    // $$PREFIX/share/flow5/translations (see flow5-app.pro).
+    appTrDir = qApp->applicationDirPath()+"/translations/";
 #endif
 
     if(m_appTranslator.load(locale, QStringLiteral("flow5"), QStringLiteral("_"), appTrDir))
     {
         installTranslator(&m_appTranslator);
     }
+#ifdef Q_OS_LINUX
+    else if(m_appTranslator.load(locale, QStringLiteral("flow5"), QStringLiteral("_"),
+                                 QStringLiteral("/usr/local/share/flow5/translations/")))
+    {
+        installTranslator(&m_appTranslator);
+    }
+#endif
 }
 
 
