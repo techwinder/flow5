@@ -22,3 +22,6 @@ API_examples/PlaneRun6/.qtcreator/*
 
 
 
+
+# AppImage packaging output
+/dist/

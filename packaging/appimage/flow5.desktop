@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Flow5
+Comment=Airfoil and plane analysis tool
+Exec=flow5
+Icon=flow5
+Categories=Science;Engineering;
+Terminal=false
+StartupWMClass=flow5
