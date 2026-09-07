@@ -3878,7 +3878,7 @@ void XDirect::onImportXMLAnalysis()
     QString PathName;
     PathName = QFileDialog::getOpenFileName(s_pMainFrame, "Open XML File",
                                             SaveOptions::xmlPolarDirName(),
-                                            "Analysis XML file")+"(*.xml)";
+                                            "Analysis XML file (*.xml)");
     if(!PathName.length())        return ;
 
     QFile XFile(PathName);

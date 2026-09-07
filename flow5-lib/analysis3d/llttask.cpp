@@ -790,7 +790,7 @@ PlaneOpp* LLTTask::createPlaneOpp(double QInf, double Alpha, bool bWingOut)
     }
 
 
-    double q = 0.5*m_pPlPolar->density() * 1.0 * 1.0;
+//    double q = 0.5*m_pPlPolar->density() * 1.0 * 1.0;
 
     pNewPOpp->m_Alpha = Alpha;
     pNewPOpp->m_QInf  = QInf;
