@@ -615,12 +615,12 @@ void BatchPlaneDlg::calculate()
                 if(parentItem)
                 {
                     Plane *pPlane = Objects3d::plane(parentItem->name().toStdString());
-                    PlanePolar *pWPolar = Objects3d::wPolar(pPlane, pSelectedItem->name().toStdString());
-                    if(pPlane && pWPolar)
+                    PlanePolar *pPlPolar = Objects3d::wPolar(pPlane, pSelectedItem->name().toStdString());
+                    if(pPlane && pPlPolar)
                     {
                         if(!planelist.contains(pPlane)) planelist.append(pPlane);
                         pPlane->setActive(true);
-                        if(!polarlist.contains(pWPolar)) polarlist.append(pWPolar);
+                        if(!polarlist.contains(pPlPolar)) polarlist.append(pPlPolar);
                     }
                 }
             }

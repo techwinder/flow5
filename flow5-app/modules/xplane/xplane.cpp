@@ -2090,7 +2090,7 @@ void XPlane::onBatchAnalysis2()
     if(BatchDlg.bChanged())
     {
         m_pPlaneExplorer->updatePOpps();
-//        m_pPlaneTreeView->selectWPolar(m_pCurWPolar, false);
+        m_pPlaneExplorer->fillModelView();
         emit projectModified();
     }
     m_bResetCurves = true;

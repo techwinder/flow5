@@ -346,16 +346,16 @@ void PlanePolarDlg::makeCommonControls()
             plabPS->setPixmap(pixmap);
 
             pFuseDragLayout->addWidget(m_pchFuseDrag,           1,1);
-            pFuseDragLayout->addWidget(m_plabFuseDragFormula,   1,4, Qt::AlignCenter);
+            pFuseDragLayout->addWidget(m_plabFuseDragFormula,   1,4,     Qt::AlignCenter);
             pFuseDragLayout->addWidget(m_plabFuseWettedArea,    3,1);
-            pFuseDragLayout->addWidget(m_plabFuseFormFactor,    4,1, Qt::AlignVCenter);
+            pFuseDragLayout->addWidget(m_plabFuseFormFactor,    4,1,     Qt::AlignVCenter);
             pFuseDragLayout->addWidget(plabFF,                  4,4,1,2, Qt::AlignVCenter);
             pFuseDragLayout->addWidget(m_prbKSDrag,             6,1);
             pFuseDragLayout->addWidget(plabKS,                  6,4,1,2, Qt::AlignCenter);
             pFuseDragLayout->addWidget(m_prbPSDrag,             7,1);
             pFuseDragLayout->addWidget(plabPS,                  7,4,1,2, Qt::AlignCenter);
             pFuseDragLayout->addWidget(m_prbCustomFuseDrag,     8,1);
-            pFuseDragLayout->addWidget(plabCus,                 8,4, Qt::AlignRight);
+            pFuseDragLayout->addWidget(plabCus,                 8,4,     Qt::AlignRight);
             pFuseDragLayout->addWidget(m_pfeCustomFF,           8,5);
 
             pFuseDragLayout->setRowStretch(5,5);
@@ -1021,7 +1021,7 @@ void PlanePolarDlg::readFuseDragData()
     {
         s_PlPolar.setIncludeFuseDrag(m_pchFuseDrag->isChecked());
         //        s_WPolar.setFuseFormFactor(m_pPlane->fuse(0)->formFactor());
-        if     (m_prbKSDrag->isChecked())   s_PlPolar.setFuseDragMethod(PlanePolar::KARMANSCHOENHERR);
+        if     (m_prbKSDrag->isChecked()) s_PlPolar.setFuseDragMethod(PlanePolar::KARMANSCHOENHERR);
         else if(m_prbPSDrag->isChecked()) s_PlPolar.setFuseDragMethod(PlanePolar::PRANDTLSCHLICHTING);
         else if(m_prbCustomFuseDrag->isChecked())
         {

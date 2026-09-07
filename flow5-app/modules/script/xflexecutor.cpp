@@ -821,7 +821,7 @@ void XflExecutor::runPanelTask(PlaneTask *pPlaneTask)
         pPlaneTask->m_QueueVPW.pop();
 
 
-        if(report.m_bEndOpp)
+        if(report.m_bEndOpp && m_pEventDest)
         {
             PlaneOppEvent *pEvent = new PlaneOppEvent(report.m_pPlane, report.m_pPlanePolar, report.m_Ctrl);
             qApp->postEvent(m_pEventDest, pEvent);

@@ -41,6 +41,7 @@
 #include <api/fl5core.h>
 #include <api/llttask.h>
 #include <api/objects3d.h>
+#include <api/panelanalysis.h>
 #include <api/plane.h>
 #include <api/planepolar.h>
 #include <api/planetask.h>
@@ -1132,7 +1133,8 @@ void BatchXmlDlg::onAnalyze()
         AnalysisRange const &range = AnalysisRangeTable::t12Range().at(i);
         if(range.isActive())
         {
-            t12opps.insert(t12opps.end(), range.values().begin(), range.values().end());
+            std::vector<double> vals = range.values();
+            t12opps.insert(t12opps.end(), vals.begin(), vals.end());
             strange = QString::asprintf("   min=%11.3g   max=%11.3g   inc=%11.3g\n", range.m_vStart, range.m_vEnd, range.m_vInc);
             log += strange;
         }
@@ -1143,7 +1145,8 @@ void BatchXmlDlg::onAnalyze()
         AnalysisRange const &range = AnalysisRangeTable::t3Range().at(i);
         if(range.isActive())
         {
-            t3opps.insert(t3opps.end(), range.values().begin(), range.values().end());
+            std::vector<double> vals = range.values();
+            t3opps.insert(t3opps.end(), vals.begin(), vals.end());
             strange = QString::asprintf("   min=%11.3g   max=%11.3g   inc=%11.3g\n", range.m_vStart, range.m_vEnd, range.m_vInc);
             log += strange;
         }
@@ -1154,7 +1157,8 @@ void BatchXmlDlg::onAnalyze()
         AnalysisRange const &range = AnalysisRangeTable::t6Range().at(i);
         if(range.isActive())
         {
-            t6opps.insert(t6opps.end(), range.values().begin(), range.values().end());
+            std::vector<double> vals = range.values();
+            t6opps.insert(t6opps.end(), vals.begin(), vals.end());
             strange = QString::asprintf("   min=%11.3g   max=%11.3g   inc=%11.3g\n", range.m_vStart, range.m_vEnd, range.m_vInc);
             log += strange;
         }
@@ -1165,7 +1169,8 @@ void BatchXmlDlg::onAnalyze()
         AnalysisRange const &range = AnalysisRangeTable::t7Range().at(i);
         if(range.isActive())
         {
-            t7opps.insert(t7opps.end(), range.values().begin(), range.values().end());
+            std::vector<double> vals = range.values();
+            t7opps.insert(t7opps.end(), vals.begin(), vals.end());
             strange = QString::asprintf("   min=%11.3g   max=%11.3g   inc=%11.3g\n", range.m_vStart, range.m_vEnd, range.m_vInc);
             log += strange;
         }
@@ -1249,6 +1254,7 @@ void BatchXmlDlg::onAnalyze()
 
     Task3d::setCancelled(false);
     TriMesh::setCancelled(false);
+    PanelAnalysis::setMaxThreadCount(xfl::maxThreadCount());
 
     onMessage(QString::fromStdString(fl5::versionName(true)) + "\n");
     QDateTime dt = QDateTime::currentDateTime();
