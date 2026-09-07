@@ -3926,9 +3926,10 @@ void XDirect::importAnalysisFromXML(QFile &xmlFile)
         insertNewPolar(pPolar);
         setCurOpp(nullptr);
         setCurPolar(pPolar);
+        setPolar(pPolar);
 
         m_pFoilExplorer->updateObjectView();
-        m_pFoilTable->updateTable();
+//        m_pFoilTable->updateTable();
 
         emit projectModified();
         setControls();

@@ -113,6 +113,10 @@ bool XmlPolarReader::readPolar(Polar *pPolar)
         {
             pPolar->setNCrit(readElementText().toDouble());
         }
+        else if (name().toString().compare(QString("Theta"),Qt::CaseInsensitive) ==0)
+        {
+            pPolar->setTEFlapAngle(readElementText().toDouble());
+        }
         else
             skipCurrentElement();
     }

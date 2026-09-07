@@ -381,10 +381,10 @@ void FoilExplorer::setObjectFromIndex(const QModelIndex &index)
     else if(pSelectedItem->level()==2)
     {
         ObjectTreeItem const*pFoilItem = pSelectedItem->parentItem();
-        Foil *m_pFoil = Objects2d::foil(pFoilItem->name().toStdString());
-        Polar *m_pPolar = Objects2d::polar(m_pFoil, pSelectedItem->name().toStdString());
-        s_pXDirect->setFoil(m_pFoil);
-        s_pXDirect->setPolar(m_pPolar);
+        Foil *pFoil = Objects2d::foil(pFoilItem->name().toStdString());
+        Polar *pPolar = Objects2d::polar(pFoil, pSelectedItem->name().toStdString());
+        s_pXDirect->setFoil(pFoil);
+        s_pXDirect->setPolar(pPolar);
         XDirect::setCurOpp(nullptr);
         m_Selection = FoilExplorer::POLAR;
     }

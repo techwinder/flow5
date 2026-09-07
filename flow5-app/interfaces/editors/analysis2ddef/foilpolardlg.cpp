@@ -295,7 +295,7 @@ void FoilPolarDlg::initDialog(Foil const *pFoil, Polar *pPolar)
     if(pFoil->hasTEFlap())
     {
         m_pfeTheta->setEnabled(true);
-        m_pfeTheta->setValue(pFoil->TEFlapAngle());
+        m_pfeTheta->setValue(pPolar->TEFlapAngle());
     }
     else
     {
