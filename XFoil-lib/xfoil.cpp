@@ -30,6 +30,7 @@
 
 bool XFoil::s_bCancel = false;
 bool XFoil::s_bFullReport = false;
+// a global, deliberately not reset by the constructor or initialize(): setVAccel must stick between instances
 double XFoil::vaccel = 0.01;
 
 XFoil::XFoil()
@@ -82,8 +83,6 @@ XFoil::XFoil()
     matyp = 1;
     minf1 = 0.0;
 
-    // ---- drop tolerance for bl system solver
-    vaccel = 0.01;
     // ---- default viscous parameters
     retyp = 1;
     reinf1 = 0.0;
@@ -639,11 +638,6 @@ bool XFoil::initialize()
     xsref2 = 1.0;
     xpref1 = 1.0;
     xpref2 = 1.0;
-
-    // ---- drop tolerance for bl system solver
-    vaccel = 0.01;
-
-
 
     // ---- set minf, reinf, based on current cl-dependence
     mrcl(1.0, minf_cl, reinf_cl);
