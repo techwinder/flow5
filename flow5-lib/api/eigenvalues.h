@@ -26,7 +26,10 @@
 #pragma once
 
 
+#include <algorithm>
+#include <cmath>
 #include <complex>
+#include <vector>
 
 #include <objects_global.h>
 
@@ -59,24 +62,83 @@ struct EigenValues
             m_SpiralDampingT2 = 0.0;
         }
 
+        /**
+         * Sets the figures of the modes from the eigenvalues. The modes are identified by their character rather than by their
+         * index, since the eigenvalues are sorted on their real parts only: the short period is the complex pair of the
+         * longitudinal roots with the higher frequency and the phugoid the other pair; the Dutch roll is the complex pair of the
+         * lateral roots, the roll mode the most negative real root and the spiral the real root closest to zero. A mode that is not
+         * oscillatory (a phugoid split in two real roots, for instance) has zero frequency and damping, and is not replaced by
+         * another root.
+         */
         void computeModes()
         {
-            double OmegaN, Omega1, Dsi;
+            double omegaN(0), omega1(0), zeta(0);
             double pi = 3.141592654;
-            objects::modeProperties(m_EV[2], Omega1, OmegaN, Dsi);
-            m_PhugoidDamping   = Dsi;
-            m_PhugoidFrequency = Omega1/2.0/pi;
 
-            objects::modeProperties(m_EV[0], Omega1, OmegaN, Dsi);
-            m_ShortPeriodFrequency = Omega1/2.0/pi;
-            m_ShortPeriodDamping   = Dsi;
+            std::vector<std::complex<double>> pairs;
+            std::vector<double> reals;
 
-            objects::modeProperties(m_EV[5], Omega1, OmegaN, Dsi);
-            m_DutchRollFrequency = Omega1/2.0/pi;
-            m_DutchRollDamping   = Dsi;
+            splitRoots(m_EV, 4, pairs, reals);
+            m_ShortPeriodFrequency = m_ShortPeriodDamping = 0.0;
+            m_PhugoidFrequency = m_PhugoidDamping = 0.0;
+            if(pairs.size()>0)
+            {
+                objects::modeProperties(pairs.at(0), omegaN, omega1, zeta);
+                m_ShortPeriodFrequency = omegaN/2.0/pi;
+                m_ShortPeriodDamping   = zeta;
+            }
+            if(pairs.size()>1)
+            {
+                objects::modeProperties(pairs.at(1), omegaN, omega1, zeta);
+                m_PhugoidFrequency = omegaN/2.0/pi;
+                m_PhugoidDamping   = zeta;
+            }
 
-            m_RollDampingT2    = log(2.0)/fabs(m_EV[4].real());
-            m_SpiralDampingT2  = log(2.0)/fabs(m_EV[7].real());
+            splitRoots(m_EV+4, 4, pairs, reals);
+            m_DutchRollFrequency = m_DutchRollDamping = 0.0;
+            m_RollDampingT2 = m_SpiralDampingT2 = 0.0;
+            if(pairs.size()>0)
+            {
+                objects::modeProperties(pairs.at(0), omegaN, omega1, zeta);
+                m_DutchRollFrequency = omegaN/2.0/pi;
+                m_DutchRollDamping   = zeta;
+            }
+            std::sort(reals.begin(), reals.end());
+            if(reals.size()>0) m_RollDampingT2 = log(2.0)/fabs(reals.front());
+            if(reals.size()>1)
+            {
+                double spiral = reals.at(1);
+                for(unsigned int i=2; i<reals.size(); i++) if(fabs(reals.at(i))<fabs(spiral)) spiral = reals.at(i);
+                m_SpiralDampingT2 = log(2.0)/fabs(spiral);
+            }
+        }
+
+
+        /** Splits n eigenvalues into the complex conjugate pairs, one representative with a positive imaginary part for each and sorted by decreasing frequency, and the real roots */
+        static void splitRoots(std::complex<double> const *ev, int n, std::vector<std::complex<double>> &pairs, std::vector<double> &reals)
+        {
+            pairs.clear();
+            reals.clear();
+            std::vector<bool> used(n, false);
+            for(int i=0; i<n; i++)
+            {
+                if(used.at(i)) continue;
+                used[i] = true;
+                if(fabs(ev[i].imag())>1.e-15)
+                {
+                    for(int j=i+1; j<n; j++)
+                    {
+                        if(!used.at(j) && std::abs(std::conj(ev[j])-ev[i])<1.e-6*std::max(1.0, std::abs(ev[i])))
+                        {
+                            used[j] = true;
+                            break;
+                        }
+                    }
+                    pairs.push_back({ev[i].real(), fabs(ev[i].imag())});
+                }
+                else reals.push_back(ev[i].real());
+            }
+            std::sort(pairs.begin(), pairs.end(), [](std::complex<double> const &a, std::complex<double> const &b){return a.imag()>b.imag();});
         }
 
 
