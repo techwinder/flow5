@@ -560,6 +560,18 @@ void Panel3::translate(double tx, double ty, double tz)
 
 
 /**
+ * log(p + rho), rho = sqrt(p^2 + d). For negative p much larger than sqrt(d) (a long edge, a field point close to its line) p + rho
+ * cancels to rounding noise, or to zero, whose logarithm is -infinity: the NaN that collapsed the TRILINEAR solution (uav#70).
+ * Then p + rho = d/(rho - p) exactly.
+ */
+static inline double logPlusRho(double p, double rho, double d)
+{
+    if(p>=0.0) return log(p+rho);
+    return log(d) - log(rho-p);
+}
+
+
+/**
  * DEBUG ONLY
  */
 void Panel3::quadratureIntegrals(Vector3d Pt, double *I1, double *I3, double *I5) const
@@ -732,7 +744,7 @@ void Panel3::computeNFIntegrals_ref(Vector3d const &FieldPt, double *G1, double 
         gamma[i]  = atan2(-2.0*pii  *q[i]*eta*rho[i],   (q[i]*q[i]*rho[i]*rho[i]     -pii*pii  *eta*eta));
         gamma[i] -= atan2(-2.0*pii1 *q[i]*eta*rho[i+1], (q[i]*q[i]*rho[i+1]*rho[i+1] -pii1*pii1*eta*eta));
 
-        chi[i]     = log(pii+rho[i]) - log(pii1+rho[i+1]);
+        chi[i]     = logPlusRho(pii, rho[i], d[i]) - logPlusRho(pii1, rho[i+1], d[i]);
 
         delta[i]   = pii/rho[i] - pii1/rho[i+1];
         L[i]       = 1.0/rho[i] - 1.0/rho[i+1];
@@ -1112,7 +1124,7 @@ void Panel3::computeNFIntegrals(Vector3d const &FieldPtGlobal, double *G1, doubl
          gamma[i]  = atan2(-2.0*pii  *q[i]*eta*rho[i],   (q[i]*q[i]*rho[i]*rho[i]     -pii*pii  *eta*eta));
          gamma[i] -= atan2(-2.0*pii1 *q[i]*eta*rho[i+1], (q[i]*q[i]*rho[i+1]*rho[i+1] -pii1*pii1*eta*eta));
 
-         chi[i]     = log(pii+rho[i]) - log(pii1+rho[i+1]);
+         chi[i]     = logPlusRho(pii, rho[i], d[i]) - logPlusRho(pii1, rho[i+1], d[i]);
 
          delta[i]   = pii/rho[i] - pii1/rho[i+1];
          L[i]       = 1.0/rho[i] - 1.0/rho[i+1];
