@@ -116,7 +116,6 @@ class FL5LIB_EXPORT P3Analysis : public PanelAnalysis
         bool getZeroMomentAngle(Vector3d const &CoG, double &alphaeq, bool bFuseMi);
 
         double computeCm(const Vector3d &CoG, double Alpha, bool bFuseMi);
-        double stripArea(const Panel3 &p3, bool bThinSurfaces) const;
         int nextTopTrailingPanelIndex(const Panel3 &p3) const;
 
         void midWakePoint(const Panel3 *pWakePanel, Vector3d &midleft, Vector3d &midright) const;

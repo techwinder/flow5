@@ -419,8 +419,8 @@ void Objects3d::fillSectionCp3Uniform(PlaneXfl const* pPlaneXfl, PlaneOpp const*
         Cp.push_back(pPOpp->Cp(p3->index()*3));
         pts.push_back(p3->CoG());
         pts.back().setNormal(p3->normal());
-        if(p3->iPU()==-1) p3=nullptr;
-        else              p3=panels.data()+p3->index()+1;
+        if(p3->iUpstream()==-1) p3=nullptr;
+        else                    p3=panels.data()+p3->index()+1;
     }
     while (p3);
 }
@@ -577,8 +577,8 @@ void Objects3d::fillSectionCp3Uniform(Boat const *pBoat, BoatOpp const *pBtOpp, 
             Cp.push_back(pBtOpp->Cp(p3->index()*3));
             pts.push_back(p3->CoG());
             pts.back().setNormal(p3->normal());
-            if(p3->iPU()==-1) p3=nullptr;
-            else              p3=panel3.data()+p3->index()+1;
+            if(p3->iUpstream()==-1) p3=nullptr;
+            else                    p3=panel3.data()+p3->index()+1;
         }
         while (p3);
     }

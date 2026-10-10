@@ -2037,7 +2037,7 @@ void WingXfl::panel3ComputeStrips(std::vector<Panel3> const &panel3list, PlanePo
                     }
                     i3++;
 
-                    if(p3strip.iPU()<0) break; // break when no panel upstream = no panel downstream on top surface
+                    if(p3strip.iUpstream()<0) break; // break when no panel upstream = no panel downstream on top surface
                     if(p3strip.isSidePanel()) break; // not interested in sides panels, right tip has been reached
                 } while(i3<nPanel3()); // just a safety limit
 

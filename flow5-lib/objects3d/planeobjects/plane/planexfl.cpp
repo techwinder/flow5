@@ -1051,7 +1051,7 @@ void PlaneXfl::makeTriMesh(bool bThickSurfaces)
         }
 
         m_RefTriMesh.appendMesh(pWing->triMesh());
-        if(pWing->isFin()) m_RefTriMesh.lastPanel().m_iPD = -1; // because there is no right tip patch
+        if(pWing->isFin()) m_RefTriMesh.lastPanel().setDownstreamIndex(-1); // because there is no right tip patch
     }
 
     for(int in=0; in<m_RefTriMesh.nodeCount(); in++) m_RefTriMesh.node(in).setIndex(in);

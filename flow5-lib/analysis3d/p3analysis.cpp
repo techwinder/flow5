@@ -210,8 +210,8 @@ void P3Analysis::getDebugPotential(Vector3d const &C, bool bSelf, double const *
                         else                        phi += ( phiD[2]         *Mu[3*i3+1] + (phiD[0]+phiD[1])*Mu[3*i3+2]) *sign;
                     }
                     //is there another wake panel downstream?
-                    if(p3w->m_iPD>=0) p3w = m_WakePanel3.data() + p3w->m_iPD;
-                    else              p3w = nullptr;
+                    if(p3w->iDownstream()>=0) p3w = m_WakePanel3.data() + p3w->iDownstream();
+                    else                      p3w = nullptr;
                 }
                 while(p3w);
             }
@@ -335,8 +335,8 @@ void P3Analysis::velocityVectorBlock(int iBlock, Vector3d const &C, Vector3d *VT
                     VT->z += ( Vd[2].z       *mu3left + (Vd[0].z+Vd[1].z)*mu3right) *sign;
                 }
                 // is there another wake panel downstream?
-                if(p3w->m_iPD>=0) p3w = m_WakePanel3.data() + p3w->m_iPD;
-                else              p3w = nullptr;
+                if(p3w->iDownstream()>=0) p3w = m_WakePanel3.data() + p3w->iDownstream();
+                else                      p3w = nullptr;
 
 //                iRow++;
             }
@@ -429,8 +429,8 @@ double P3Analysis::getPotential(Vector3d const &C, double const *mu, double cons
                     phiT += ( phiBasis[2]*mu[3*i3+1] + (phiBasis[0]+phiBasis[1])*mu[3*i3+2]) *sign;
 
                 //is there another wake panel downstream?
-                if(p3w->m_iPD>=0) p3w = m_WakePanel3.data() + p3w->m_iPD;
-                else              p3w = nullptr;
+                if(p3w->iDownstream()>=0) p3w = m_WakePanel3.data() + p3w->iDownstream();
+                else                      p3w = nullptr;
 
  //               iRow++;
             }
@@ -552,25 +552,6 @@ void P3Analysis::makePanelDoubletSurfaceVelocity(int p, double const *Mu, Vector
 }
 
 
-double P3Analysis::stripArea(Panel3 const &p3, bool bThinSurfaces) const
-{
-    double striparea = 0.0;
-    //sum panel areas of bottom strip
-    int index = p3.index();
-    do
-    {
-        Panel3 const &p3k = m_Panel3.at(index);
-        striparea += p3k.area();
-        if(p3k.m_iPU>=0) index = p3k.m_iPU;
-        else             break;
-    }
-    while (index>=0); //  = while(true)
-    if(!bThinSurfaces) striparea /= 2;
-
-    return striparea;
-}
-
-
 int P3Analysis::nextTopTrailingPanelIndex(Panel3 const &p3) const
 {
     if(!p3.isBotPanel()) return -1;
@@ -594,18 +575,18 @@ void P3Analysis::trailingWakePanels(const Panel3 *pWakePanel, Panel3 &p3WU, Pane
 {
     do
     {
-        if(pWakePanel->m_iPD<0)
+        if(pWakePanel->iDownstream()<0)
         {
             break;
         }
-        else pWakePanel = m_WakePanel3.data() + pWakePanel->m_iPD;
+        else pWakePanel = m_WakePanel3.data() + pWakePanel->iDownstream();
     }
     while (pWakePanel);
 
     if(pWakePanel)
     {
         p3WD = m_WakePanel3[pWakePanel->index()];
-        p3WU = m_WakePanel3[pWakePanel->m_iPU];
+        p3WU = m_WakePanel3[pWakePanel->iUpstream()];
     }
 }
 
@@ -622,13 +603,13 @@ void P3Analysis::midWakePoint(Panel3 const*pWakePanel, Vector3d &midleft, Vector
 
     do
     {
-        if(pWakePanel->m_iPD<0)
+        if(pWakePanel->iDownstream()<0)
         {
             TA.set(pWakePanel->leftTrailingNode());
             TB.set(pWakePanel->rightTrailingNode());
             break;
         }
-        else pWakePanel = m_WakePanel3.data() + pWakePanel->m_iPD;
+        else pWakePanel = m_WakePanel3.data() + pWakePanel->iDownstream();
     }
     while (pWakePanel);
 
@@ -641,13 +622,13 @@ void P3Analysis::trailingWakePoint(Panel3 const*pWakePanel, Vector3d &left, Vect
 {
     do
     {
-        if(pWakePanel->m_iPD<0)
+        if(pWakePanel->iDownstream()<0)
         {
             left = pWakePanel->leftTrailingNode();
             right = pWakePanel->rightTrailingNode();
             break;
         }
-        else pWakePanel = m_WakePanel3.data() + pWakePanel->m_iPD;
+        else pWakePanel = m_WakePanel3.data() + pWakePanel->iDownstream();
     }
     while (pWakePanel);
 }
@@ -1340,7 +1321,7 @@ void P3Analysis::makeNegatingVortices(std::vector<Vortex> &negvortices)
     for(int iw=0; iw<nWakePanels(); iw++)
     {
         Panel3 const &p3w = m_WakePanel3.at(iw);
-        if(p3w.m_iPU<0)
+        if(p3w.iUpstream()<0)
         {
             // start of the wake column
             trailingWakePoint(&p3w, left, right);

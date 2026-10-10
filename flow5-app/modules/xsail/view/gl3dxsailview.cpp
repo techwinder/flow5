@@ -2293,7 +2293,7 @@ void gl3dXSailView::glMakeFlowBuffers()
                 {
                     gammw[p3w->index()] += pBtOpp->gamma(3*p3.index())*sign;
                     // is there another wake panel downstream?
-                    if(p3w->m_iPD>=0) p3w = &m_pP3UniAnalysis->wakePanelAt(p3w->m_iPD);
+                    if(p3w->iDownstream()>=0) p3w = &m_pP3UniAnalysis->wakePanelAt(p3w->iDownstream());
                     else
                     {
                         p3w = nullptr;

@@ -1144,8 +1144,8 @@ void Surface::makeTriPanels(std::vector<Panel3> &panel3list, std::vector<Node> &
                     p3T.setSurfaceIndex(m_Index);
                     p3T.setIndex(ip3start++);
                     p3T.m_bIsLeftWingPanel  = true;
-                    p3T.m_iPD = int(panel3list.size())-2;
-                    p3T.m_iPU = (l==m_NXPanels-1) ? -1 : int(panel3list.size());
+                    p3T.setDownstreamIndex(int(panel3list.size())-2);
+                    p3T.setUpstreamIndex((l==m_NXPanels-1) ? -1 : int(panel3list.size()));
                     if(m_bTEFlap && l<m_NXFlap)
                     {
                         addFlapPanel3Index(p3T.index());
@@ -1167,8 +1167,8 @@ void Surface::makeTriPanels(std::vector<Panel3> &panel3list, std::vector<Node> &
                     p3B.setSurfaceIndex(m_Index);
                     p3B.setIndex(ip3start++);
                     p3B.m_bIsLeftWingPanel  = true;
-                    p3B.m_iPD = int(panel3list.size())-2;
-                    p3B.m_iPU = int(panel3list.size());
+                    p3B.setDownstreamIndex(int(panel3list.size())-2);
+                    p3B.setUpstreamIndex(int(panel3list.size()));
                     if(m_bTEFlap && l<NXFlap())
                     {
                         addFlapPanel3Index(p3B.index());
@@ -1351,9 +1351,9 @@ void Surface::makeTriPanels(std::vector<Panel3> &panel3list, std::vector<Node> &
 
                 // note: UP and DOWN are defined on the developed surface
                 // i.e. UP direction is towards the TE on the top surface
-                p3D.m_iPD = int(panel3list.size())-2;
-                p3D.m_iPU = int(panel3list.size());
-                if(l==0)              p3D.m_iPD = -1;// no panel downstream
+                p3D.setDownstreamIndex(int(panel3list.size())-2);
+                p3D.setUpstreamIndex(int(panel3list.size()));
+                if(l==0) p3D.setDownstreamIndex(-1);// no panel downstream
                 if(m_bTEFlap &&  (l<NXFlap() || l>2*m_NXPanels-NXFlap()-1))
                 {
                     p3D.setFlapPanel(true);
@@ -1383,16 +1383,16 @@ void Surface::makeTriPanels(std::vector<Panel3> &panel3list, std::vector<Node> &
 
                 // note: UP and DOWN are defined on the developed surface - NO
                 // i.e. UP direction is towards the TE on the top surface - NO
-                p3U.m_iPD = int(panel3list.size())-2;
-                p3U.m_iPU = int(panel3list.size());
+                p3U.setDownstreamIndex(int(panel3list.size())-2);
+                p3U.setUpstreamIndex(int(panel3list.size()));
 
                 if(bThickSurfaces)
                 {
-                    if(l==2*m_NXPanels-1) p3U.m_iPU = -1;// no panel upstream
+                    if(l==2*m_NXPanels-1) p3U.setUpstreamIndex(-1);// no panel upstream
                 }
                 else
                 {
-                    if(l==m_NXPanels-1) p3U.m_iPU = -1;// no panel upstream
+                    if(l==m_NXPanels-1) p3U.setUpstreamIndex(-1);// no panel upstream
                 }
 
                 if(m_bTEFlap &&  (l<NXFlap() || l>2*m_NXPanels-NXFlap()-1))
@@ -1469,8 +1469,8 @@ void Surface::makeTriPanels(std::vector<Panel3> &panel3list, std::vector<Node> &
                     p3T.setSurfaceIndex(m_Index);
                     p3T.setIndex(ip3start++);
                     p3T.m_bIsLeftWingPanel  = true;
-                    p3T.m_iPD = int(panel3list.size())-2;
-                    p3T.m_iPU = (l==m_NXPanels-1) ? -1 : int(panel3list.size());
+                    p3T.setDownstreamIndex(int(panel3list.size())-2);
+                    p3T.setUpstreamIndex((l==m_NXPanels-1) ? -1 : int(panel3list.size()));
                     if(m_bTEFlap && l<m_NXFlap)
                     {
                         addFlapPanel3Index(p3T.index());
@@ -1495,8 +1495,8 @@ void Surface::makeTriPanels(std::vector<Panel3> &panel3list, std::vector<Node> &
                     p3B.setSurfaceIndex(m_Index);
                     p3B.setIndex(ip3start++);
                     p3B.m_bIsLeftWingPanel  = true;
-                    p3B.m_iPD = int(panel3list.size())-2;
-                    p3B.m_iPU = int(panel3list.size());
+                    p3B.setDownstreamIndex(int(panel3list.size())-2);
+                    p3B.setUpstreamIndex(int(panel3list.size()));
                     if(m_bTEFlap && l<m_NXFlap)
                     {
                         addFlapPanel3Index(p3B.index());

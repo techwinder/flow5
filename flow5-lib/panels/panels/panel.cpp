@@ -32,7 +32,6 @@ double Panel::s_RFF = 10.0;
 
 Panel::Panel() : m_Area{0}, m_index{-1}, m_iWake{-1}, m_iWakeColumn{-1}, m_MaxSize{0.0}, m_SurfaceIndex{-1},
                  m_bIsLeftWingPanel{false}, m_bFlapPanel{false}, m_bIsLeading{false}, m_bIsTrailing{false}, m_bIsInSymPlane{false},
-                 m_iPL{-1}, m_iPR{-1}, m_iPU{-1}, m_iPD{-1},
                  m_Pos{xfl::NOSURFACE}, m_bVisible{true}
 {
 }

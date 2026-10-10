@@ -124,6 +124,10 @@ class FL5LIB_EXPORT Panel4 : public Panel
         Segment3d rearEdge()  const {return Segment3d(m_Node[1], m_Node[2]);}  // TA-TB
         Segment3d rightEdge() const {return Segment3d(m_Node[3], m_Node[2]);}  // LB-TB
 
+        int iPL() const {return m_iPL;}
+        int iPR() const {return m_iPR;}
+        int iPU() const {return m_iPU;}
+        int iPD() const {return m_iPD;}
 
         Vector3d vortexForce(Vector3d const &wind) const;
 
@@ -151,6 +155,13 @@ class FL5LIB_EXPORT Panel4 : public Panel
         int m_iLB;                 /**< index of the leading right node in the node array */
         int m_iTA;                 /**< index of the trailing left node in the node array */
         int m_iTB;                 /**< index of the trailing right node in the node array */
+
+        int m_iPL;               /**< index of the panel which lies left of this panel, or -1 if none */
+        int m_iPR;               /**< index of the panel which lies right of this panel, or -1 if none */
+        int m_iPU;               /**< index of the panel which lies upstream of this panel, or -1 if none */
+        int m_iPD;               /**< index of the panel which lies downstream of this panel, or -1 if none */
+
+
         Vector3d m_CtrlPt;            /**< the position of the control point for VLM analysis or 3D/Thin panels analysis */
         Vector3d m_CollPt;            /**< the collocation point for 3d panel analysis */
         Vector3d m_VA;                /**< the left end point of the bound quarter-chord vortex on this panel */
@@ -189,6 +200,7 @@ inline void Panel4::reset()
     SMP = SMQ = 0.0;
 
     m_iLA = m_iLB = m_iTA = m_iTB = -1;
+    m_iPU = m_iPD = m_iPL = m_iPR = -1;
 
     m_iWake       = -1;
     m_iWakeColumn = -1;

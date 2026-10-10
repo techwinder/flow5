@@ -52,6 +52,7 @@ Panel3::Panel3() : Panel(), m_bNullTriangle{true}, m_bIsLeftPanel{false}, m_bFro
     m_S[1].setIndex(-1);
     m_S[2].setIndex(-1);
     m_Neighbour[0]=m_Neighbour[1]=m_Neighbour[2]=-1;
+    m_iUpstream = m_iDownstream = -1;
     memset(m_gmat, 0, 9*sizeof(double));
 }
 
@@ -247,7 +248,7 @@ void Panel3::makeGQCoeffs()
 }
 
 
-/** Initializes member variables to zero */
+/** Initializes member variables to their defaults */
 void Panel3::initialize()
 {
     m_bNullTriangle = true;
@@ -509,7 +510,7 @@ std::string Panel3::properties(bool bLong) const
 
     strange = std::format("  Neighbours:      {:4d}  {:4d}  {:4d}\n", m_Neighbour[0], m_Neighbour[1], m_Neighbour[2]);
     props += strange;
-    strange = std::format("                   PU={:d}  PD={:d}  PL={:d}  PR={:d}\n", m_iPU, m_iPD, m_iPL, m_iPR);
+    strange = std::format("                   iUpstream={:d}  iDownstream={:d} \n", m_iUpstream, m_iDownstream);
     props += strange;
 
     if(isPositiveOrientation()) props += "  Positive orientation";

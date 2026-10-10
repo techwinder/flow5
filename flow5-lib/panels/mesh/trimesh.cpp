@@ -390,16 +390,16 @@ void TriMesh::listPanels(bool bConnections)
 {
     std::string strange;
     if(bConnections)
-        std::cout << " Panel   neigh0  neigh1   neigh2  Surf" << std::endl;
+        std::cout << " Panel   neigh0  neigh1   neigh2  Surf\n";
     else
-        std::cout << " Panel     PU    PD    PL    PR  Surf" << std::endl;
+        std::cout << " Panel     PU    PD    Surf\n";
     for(int i3=0; i3<nPanels(); i3++)
     {
         Panel3 const &p3 = m_Panel3.at(i3);
         if(bConnections)
             strange = std::format(" {:4d}:  {:4d}  {:4d}  {:4d}", p3.index(), p3.neighbour(0), p3.neighbour(1), p3.neighbour(2));
         else
-            strange = std::format(" {:4d}:  {:4d}  {:4d}  {:4d}  {:4d}", p3.index(), p3.m_iPU, p3.m_iPD, p3.m_iPL, p3.m_iPR);
+            strange = std::format(" {:4d}:  {:4d}  {:4d}", p3.index(), p3.iUpstream(), p3.iDownstream());
 
         switch(p3.surfacePosition())
         {
@@ -425,7 +425,11 @@ void TriMesh::listPanels(bool bConnections)
                 strange += "  none";
                 break;
         }
+
+        std::cout << strange << "\n";
     }
+
+    std::cout << std::endl;
 }
 
 
@@ -1248,16 +1252,16 @@ int TriMesh::makeWakePanels(std::vector<Panel3> &Panel3List,
                         p3wU->setLeftWingPanel(true);
                         p3wU->setLeftPanel(true);
                         p3wU->setAsWakePanel();
-                        p3wU->m_iPU = nx>0? mw-1 : -1;
-                        p3wU->m_iPD = mw+1;
+                        p3wU->setUpstreamIndex(nx>0? mw-1 : -1);
+                        p3wU->setDownstreamIndex(mw+1);
 
                         p3wD->setFrame(Br1, Br, Bl1);
                         p3wD->setIndex(mw+1);
                         p3wD->setLeftWingPanel(true);
                         p3wD->setLeftPanel(false);
                         p3wD->setAsWakePanel();
-                        p3wD->m_iPU = mw;
-                        p3wD->m_iPD = nx<nxWakePanel4-1? mw+2 : -1;
+                        p3wD->setUpstreamIndex(mw);
+                        p3wD->setDownstreamIndex(nx<nxWakePanel4-1? mw+2 : -1);
                     }
                     else
                     {
@@ -1278,16 +1282,16 @@ int TriMesh::makeWakePanels(std::vector<Panel3> &Panel3List,
                         p3wU->setLeftWingPanel(false);
                         p3wU->setLeftPanel(false);
                         p3wU->setAsWakePanel();
-                        p3wU->m_iPU = nx>0? mw-1 : -1;
-                        p3wU->m_iPD = mw+1;
+                        p3wU->setUpstreamIndex(nx>0? mw-1 : -1);
+                        p3wU->setDownstreamIndex(mw+1);
 
                         p3wD->setFrame(Bl1, Br1, Bl);
                         p3wD->setIndex(mw+1);
                         p3wD->setLeftWingPanel(false);
                         p3wD->setLeftPanel(true);
                         p3wD->setAsWakePanel();
-                        p3wD->m_iPU = mw;
-                        p3wD->m_iPD = nx<nxWakePanel4-1? mw+2 : -1;
+                        p3wD->setUpstreamIndex(mw);
+                        p3wD->setDownstreamIndex(nx<nxWakePanel4-1? mw+2 : -1);
                     }
 
                     Tl = Tl1;
@@ -1853,10 +1857,8 @@ void TriMesh::appendMesh(TriMesh const &mesh)
 //            if(p3.neighbour(ine)>=0) p3.setNeighbour(ine, p3.neighbour(ine) + np0); // only if not equal to -1
 
         // the panel links are panel indexes: shift them like the neighbours
-        if(p3.m_iPL>=0) p3.m_iPL += np0;
-        if(p3.m_iPR>=0) p3.m_iPR += np0;
-        if(p3.m_iPU>=0) p3.m_iPU += np0;
-        if(p3.m_iPD>=0) p3.m_iPD += np0;
+        if(p3.iUpstream()>=0)   p3.setUpstreamIndex(p3.iUpstream() + np0);
+        if(p3.iDownstream()>=0) p3.setDownstreamIndex(p3.iDownstream() + np0);
     }
 }
 

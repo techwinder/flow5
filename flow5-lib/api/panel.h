@@ -116,11 +116,6 @@ class FL5LIB_EXPORT Panel
         Vector3d const &TELeftBisector()  const {return m_TELeftBisector;}
         Vector3d const &TERightBisector() const {return m_TERightBisector;}
 
-        int iPL() const {return m_iPL;}
-        int iPR() const {return m_iPR;}
-        int iPU() const {return m_iPU;}
-        int iPD() const {return m_iPD;}
-
         void setiWake(int idx) {m_iWake=idx;}
         int iWake() const {return m_iWake;}
         void setWakeColumn(int idx) {m_iWakeColumn=idx;}
@@ -160,10 +155,6 @@ class FL5LIB_EXPORT Panel
         bool m_bIsLeading;                /**< true if the panel is positioned on a leading edge */
         bool m_bIsTrailing;               /**< true if the panel is positioned on a trailing edge */
         bool m_bIsInSymPlane;             /**< true if the panel lies in the plane's xz plane of symetry at y=0*/
-        int m_iPL;               /**< index of the panel which lies left of this panel, or -1 if none */
-        int m_iPR;               /**< index of the panel which lies right of this panel, or -1 if none */
-        int m_iPU;               /**< index of the panel which lies upstream of this panel, or -1 if none */
-        int m_iPD;               /**< index of the panel which lies downstream of this panel, or -1 if none */
         xfl::enumSurfacePosition m_Pos;   /**< defines if the panel is positioned on a top, middle, bottom, side or body surface */
         Vector3d m_m, m_l;                    /**< the unit vectors which lie in the panel's plane. Cf. document NACA 4023 */
 

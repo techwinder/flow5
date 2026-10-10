@@ -187,7 +187,7 @@ void P3UniAnalysis::makeWakeMatrixBlock(int iBlock)
                         MatWakeContrib += phiB[0]+phiB[1]+phiB[2];
                     }
 
-                    if(m_WakePanel3.at(jWake).iPD()<0)
+                    if(m_WakePanel3.at(jWake).iDownstream()<0)
                     {
                         // no downstream panel
                         break; // the way out

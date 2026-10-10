@@ -366,8 +366,8 @@ bool P3LinAnalysis::scalarProductWake(Panel3 const &panel0, int iWake, double *s
                 }
             }
 
-            if(p3w.iPD()<0) break;
-            iWakeinitial = p3w.iPD();
+            if(p3w.iDownstream()<0) break;
+            iWakeinitial = p3w.iDownstream();
         } while(true && iter++<1000);
 //            assert(iter+1==m_pWPolar->m_nXWakePanel4*2);
 

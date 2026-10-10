@@ -229,6 +229,11 @@ class FL5LIB_EXPORT Panel3 : public Panel
         Node const &node(int in) const {return m_S[in];}
         void setNode(int in, Node const &nd) {m_S[in]=nd;}
 
+        int iUpstream()   const {return m_iUpstream;}
+        int iDownstream() const {return m_iDownstream;}
+        void setUpstreamIndex(int idx)   {m_iUpstream=idx;}
+        void setDownstreamIndex(int idx) {m_iDownstream=idx;}
+
         static void setRFF(double rff) {s_RFF=rff;}
         static bool usingNintcheuFataMethod() {return s_bUseNintcheuFata;}
         static void setNintcheuFataMethod(bool bUse) {s_bUseNintcheuFata=bUse;}
@@ -240,41 +245,42 @@ class FL5LIB_EXPORT Panel3 : public Panel
         static void makeGQCoeffs();
 
     public:
-        Vector3d m_Sl[3];             /**< The three triangle vertices, in local coordinates */
-        Vector3d m_CoG_l;              /**< the center of gravity's position in local coordinates */
+        Vector3d m_Sl[3];                 /**< The three triangle vertices, in local coordinates */
+        Vector3d m_CoG_l;                 /**< the center of gravity's position in local coordinates */
 
     private:
-        Node m_S[3];                  /**< the three triangle vertices, in global coordinates*/
-        int m_Neighbour[3];         /**< the indexes of the neighbour triangles sharing one of the edge; three at most; -1 if no neighbour */
+        Node m_S[3];                      /**< the three triangle vertices, in global coordinates*/
+        int m_Neighbour[3];               /**< the indexes of the neighbour triangles sharing one of the edge; three at most; -1 if no neighbour */
+        int m_iUpstream;                  /**< the index of the upstream panel on the strip; only of use in the case of the wake panels. */
+        int m_iDownstream;                /**< the index of the downstream panel on the strip; only of use in the case of the wake panels. */
 
-        double m_gmat[9];             /**< the transformation matrix from local coordinates to barycentric coordinates;*/
+        double m_gmat[9];                 /**< the transformation matrix from local coordinates to barycentric coordinates;*/
 
-        bool m_bNullTriangle;
+        bool m_bNullTriangle;             /**< true if the area is null, i.e.  one 0-length edge, or a flat triangle */
 
-        bool m_bIsLeftPanel;        /**< true if this panel is the left triangular panel of the quad quad */
+        bool m_bIsLeftPanel;              /**< true if this panel is the left triangular panel of the quad quad */
 
-        bool m_bFromSTL;            /**< true of the panel is part of an STL mesh */
-        int m_iOppositeIndex;       /**< In the case of a trailing edge panel, is the index of the panel on the opposite surface, -1 otherwise */
+        bool m_bFromSTL;                  /**< true of the panel is part of an STL mesh */
+        int m_iOppositeIndex;             /**< In the case of a trailing edge panel, is the index of the panel on the opposite surface, -1 otherwise */
 
-        Vector3d m_CoG_g;              /**< the center of gravity's position in global coordinates */
-        Vector3d m_O;                  /**< the origin of the local reference frame, in global coordinates */
-        Segment3d m_Edge[3];         /**< the three sides, in global coordinates */
+        Vector3d m_CoG_g;                 /**< the center of gravity's position in global coordinates */
+        Vector3d m_O;                     /**< the origin of the local reference frame, in global coordinates */
+        Segment3d m_Edge[3];              /**< the three sides, in global coordinates */
         Vector3d m_S01l, m_S02l, m_S12l;  /**< the three sides, in local coordinates */
 
-        double m_SignedArea;        /**< The panel's signed area; */
-        double m_Angle[3];           /** the three internal angles */
+        double m_SignedArea;              /**< The panel's signed area; */
+        double m_Angle[3];                /** the three internal angles */
 
         double bx[3], by[3];              /**< the integrals of x.b_i(x,y) and y.b_i(x,y) */
 
-        double m_mu[3];               /**< testing purposes only; linear doublet density coefs: mu = mu0 b0(x,y) + mu1 b1(x,y) + mu2 b2(x,y) */
-        double m_beta[3];             /**< testing purposes only; linear doublet density coefs: mu = beta0 + x beta1 + y beta2 */
+        double m_mu[3];                   /**< testing purposes only; linear doublet density coefs: mu = mu0 b0(x,y) + mu1 b1(x,y) + mu2 b2(x,y) */
+        double m_beta[3];                 /**< testing purposes only; linear doublet density coefs: mu = beta0 + x beta1 + y beta2 */
 
         static int s_iQuadratureOrder;
         static bool s_bUseNintcheuFata;
         static GQTriangle s_gq;     /** @todo check time gain if built on the stack */
         static double s_Quality;
 };
-
 
 
 inline void Panel3::clearConnections()
@@ -285,6 +291,8 @@ inline void Panel3::clearConnections()
         m_S[i].clearTriangles();
         m_S[i].clearNeighbourNodes();
     }
+
+    m_iUpstream = m_iDownstream = -1;
 }
 
 
