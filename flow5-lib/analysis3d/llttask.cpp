@@ -657,13 +657,11 @@ bool LLTTask::alphaLoop()
             bool bOut = computeWing(m_pPlPolar->velocity(), alpha, str);// generates wing results,
             traceStdLog(str);
             if (bOut) m_bWarning = true;
-            PlaneOpp *pPOpp = createPlaneOpp(QInf, alpha, bOut);
+            PlaneOpp *pPOpp = createPlaneOpp(QInf, alpha, bOut); // adds the point to the polar unless it is out of the envelope
 
             // store the results
             if(pPOpp)
             {
-                m_pPlPolar->addPlaneOpPointData(pPOpp);
-
                 if(m_bKeepOpps)
                 {
                     m_PlaneOppList.push_back(pPOpp);
@@ -832,7 +830,7 @@ PlaneOpp* LLTTask::createPlaneOpp(double QInf, double Alpha, bool bWingOut)
     for (int l=0; l<nStation; l++)
     {
         int ll = nStation-l;
-        maindist.m_StripPos[l]      = -m_SpanPos.at(ll);
+        maindist.m_StripPos[l]      =  m_SpanPos.at(ll);
         maindist.m_StripArea[l]     =  m_StripArea.at(ll);
         maindist.m_Ai[l]            =  m_Ai.at(ll);
         maindist.m_Cl[l]            =  m_Cl.at(ll);
@@ -848,12 +846,12 @@ PlaneOpp* LLTTask::createPlaneOpp(double QInf, double Alpha, bool bWingOut)
         maindist.m_XTrTop[l]        =  m_XTrTop.at(ll);
         maindist.m_XTrBot[l]        =  m_XTrBot.at(ll);
         maindist.m_BendingMoment[l] =  m_BendingMoment.at(ll);
-        maindist.m_F[l].set( 0,0,qDyn*m_StripArea.at(l)*m_Cl.at(ll));
+        maindist.m_F[l].set( 0,0,qDyn*m_StripArea.at(ll)*m_Cl.at(ll));
         maindist.m_Vd[l].set(0,0,QInf*tan(m_Ai[ll]*PI/180.0));
 
         m_pWing->surfacePoint(0.25, maindist.m_StripPos[l], xfl::MIDSURFACE, maindist.m_PtC4[l], N);
 
-        if(fabs(m_BendingMoment[l])>fabs(Cb)) Cb = m_BendingMoment[l];
+        if(fabs(m_BendingMoment[ll])>fabs(Cb)) Cb = m_BendingMoment[ll];
     }
     mainwopp.m_MaxBending = Cb;
 
