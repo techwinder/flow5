@@ -325,6 +325,9 @@ void Foil::setCamber(double xcamb, double camb)
     std::vector<Node2d> newc = m_BaseCbLine; // the new camber line
     double c0 = maxCamber();
     double xc0 = xCamber();
+    // a symmetric foil has no camber line to move or to scale, and the ratios below would divide by zero or blow numerical noise up:
+    // below 0.01% of the chord the camber is noise
+    if(m_BaseCbLine.size()<2 || fabs(c0) < 1.0e-4*fabs(m_BaseCbLine.back().x-m_BaseCbLine.front().x)) return;
     double cr = camb/c0;
     double xcr = xcamb/xc0;
 
