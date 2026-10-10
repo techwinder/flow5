@@ -797,26 +797,34 @@ PlaneOpp* LLTTask::createPlaneOpp(double QInf, double Alpha, bool bWingOut)
     pNewPOpp->m_bGround = false;
     pNewPOpp->m_GroundHeight = 0.0;
 
+    // m_CL, m_CDi, m_CDv and the moment coefficients are normalised by the wing's own planform area, span and MAC
+    // (computeWing). AeroForces divides by the polar's reference dimensions, which differ for a PROJECTED area
+    // with dihedral or a CUSTOM reference: store the forces and moments in N/q and N.m/q.
+    double wingArea = m_pWing->planformArea();
+    double wingSpan = m_pWing->planformSpan();
+    double wingMAC  = m_pWing->MAC();
+
     Vector3d FFF; // wind axis
-    FFF.x = m_CDi * m_pPlPolar->referenceArea();            // N/q
-    FFF.z = m_CL * m_pPlPolar->referenceArea();             // N/q
+    FFF.x = m_CDi * wingArea;            // N/q
+    FFF.z = m_CL  * wingArea;            // N/q
     // store in body axis
     double cosa = cos(Alpha*PI/180.0);
     double sina = sin(Alpha*PI/180.0);
     af.setFff({FFF.x*cosa-FFF.z*sina, 0.0, FFF.x*sina+FFF.z*cosa});
 
-    af.setProfileDrag(m_CDv* m_pPlPolar->referenceArea());
+    af.setProfileDrag(m_CDv * wingArea);
 
+    // the rolling and yawing moment coefficients are normalised by area x span, the pitching moment by area x MAC
     Vector3d Mi;
-    Mi.x = m_GRm * m_pPlPolar->referenceChordLength() * m_pPlPolar->referenceArea();            // N.m/q
-    Mi.y = m_ICm * m_pPlPolar->referenceChordLength() * m_pPlPolar->referenceArea();            // N.m/q
-    Mi.z = m_IYm * m_pPlPolar->referenceChordLength() * m_pPlPolar->referenceArea();            // N.m/q
+    Mi.x = m_GRm * wingArea * wingSpan;    // N.m/q
+    Mi.y = m_ICm * wingArea * wingMAC;     // N.m/q
+    Mi.z = m_IYm * wingArea * wingSpan;    // N.m/q
     af.setMi(Mi);
 
     Vector3d Mv;
     Mv.x = 0.0;
-    Mv.y = m_VCm * m_pPlPolar->referenceChordLength() * m_pPlPolar->referenceArea();            // N.m/q
-    Mv.z = m_VYm * m_pPlPolar->referenceChordLength() * m_pPlPolar->referenceArea();            // N.m/q
+    Mv.y = m_VCm * wingArea * wingMAC;     // N.m/q
+    Mv.z = m_VYm * wingArea * wingSpan;    // N.m/q
     af.setMv(Mv);
 
 //    af.setCP(m_CP);
