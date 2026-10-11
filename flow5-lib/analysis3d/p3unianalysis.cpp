@@ -510,7 +510,7 @@ void P3UniAnalysis::makeUnitRHSBlock(int iBlock)
         for(int k3=0; k3<nPanels(); k3++)
         {
             Panel3 const &p3k = m_Panel3.at(k3);
-            leverarm_k3.set(p3i.CoG()-m_pPolar3d->CoG());
+            leverarm_k3.set(p3k.CoG()-m_pPolar3d->CoG());
 
             if(p3k.isMidPanel())
             {
