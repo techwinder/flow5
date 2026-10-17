@@ -940,14 +940,15 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
 //        else
         CGM = pPanel->CoG() - CoG;
 
-        // a rotation of the plane about a vector is the opposite of a rotation of the freestream about this vector
-        Risp = is*CGM * (+rotationrate) + V0;
-        Rjsp = js*CGM * (+rotationrate) + V0;
-        Rksp = ks*CGM * (+rotationrate) + V0;
+        // a rotation of the plane about a vector is the opposite of a rotation of the freestream about this vector:
+        // the apparent air velocity is V0 - Omega x r = V0 + r x Omega, as in the unit RHS m_pRHS, m_qRHS, m_rRHS
+        Risp = CGM*is * (+rotationrate) + V0;
+        Rjsp = CGM*js * (+rotationrate) + V0;
+        Rksp = CGM*ks * (+rotationrate) + V0;
 
-        Rism = is*CGM * (-rotationrate) + V0;
-        Rjsm = js*CGM * (-rotationrate) + V0;
-        Rksm = ks*CGM * (-rotationrate) + V0;
+        Rism = CGM*is * (-rotationrate) + V0;
+        Rjsm = CGM*js * (-rotationrate) + V0;
+        Rksm = CGM*ks * (-rotationrate) + V0;
 
         VField[0][p] = Risp;
         VField[1][p] = Rjsp;
@@ -961,7 +962,7 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
         {
             Sigma[p+0*N] = -1.0/4.0/PI * Risp.dot(pPanel->normal());
             Sigma[p+1*N] = -1.0/4.0/PI * Rjsp.dot(pPanel->normal());
-            Sigma[p+2*N] = -1.0/4.0/PI * Rjsp.dot(pPanel->normal());
+            Sigma[p+2*N] = -1.0/4.0/PI * Rksp.dot(pPanel->normal());
 
             Sigma[p+3*N] = -1.0/4.0/PI * Rism.dot(pPanel->normal());
             Sigma[p+4*N] = -1.0/4.0/PI * Rjsm.dot(pPanel->normal());
