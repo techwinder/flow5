@@ -158,20 +158,20 @@ void gl3dQuadField::makeControls()
                     m_pcbVelDir->setCurrentIndex(s_iVelDir);
 
                     m_pchAutoScale = new QCheckBox("Auto scale");
-                    m_pdeVMin = new FloatEdit(this);
-                    m_pdeVMax = new FloatEdit(this);
+                    m_pfeVMin = new FloatEdit(this);
+                    m_pfeVMax = new FloatEdit(this);
                     m_pchAutoScale->setChecked(true);
                     m_pchAutoScale->setEnabled(false);
-                    m_pdeVMin->setEnabled(false);
-                    m_pdeVMax->setEnabled(false);
+                    m_pfeVMin->setEnabled(false);
+                    m_pfeVMax->setEnabled(false);
                     pParamsLayout->addWidget(m_pchContourPlane,    1, 1, 1, 2);
                     pParamsLayout->addWidget(new QLabel("V dir"),  2, 1, Qt::AlignRight|Qt::AlignVCenter);
                     pParamsLayout->addWidget(m_pcbVelDir,          2, 2);
                     pParamsLayout->addWidget(m_pchAutoScale,       3, 1, 1, 2);
                     pParamsLayout->addWidget(new QLabel("min"),    4, 1, Qt::AlignRight|Qt::AlignVCenter);
-                    pParamsLayout->addWidget(m_pdeVMin,            4, 2);
+                    pParamsLayout->addWidget(m_pfeVMin,            4, 2);
                     pParamsLayout->addWidget(new QLabel("max"),    5, 1, Qt::AlignRight|Qt::AlignVCenter);
-                    pParamsLayout->addWidget(m_pdeVMax,            5, 2);
+                    pParamsLayout->addWidget(m_pfeVMax,            5, 2);
                     pParamsLayout->setColumnStretch(3,1);
                 }
                 pContourBox->setLayout(pParamsLayout);
@@ -186,14 +186,14 @@ void gl3dQuadField::makeControls()
                     m_pchVectors->setChecked(s_bShowVectors);
                     m_pieNu = new IntEdit(s_Size_u);
                     m_pieNw = new IntEdit(s_Size_w);
-                    m_pdeVelScale  = new FloatEdit(s_VelScale);
-                    m_pdeRefLength = new FloatEdit(s_RefLength);
+                    m_pfeVelScale  = new FloatEdit(s_VelScale);
+                    m_pfeRefLength = new FloatEdit(s_RefLength);
 
                     pParamsLayout->addRow(m_pchVectors);
                     pParamsLayout->addRow("N_u",          m_pieNu);
                     pParamsLayout->addRow("N_w",          m_pieNw);
-                    pParamsLayout->addRow("Vector scale", m_pdeVelScale);
-                    pParamsLayout->addRow("RefLength",    m_pdeRefLength);
+                    pParamsLayout->addRow("Vector scale", m_pfeVelScale);
+                    pParamsLayout->addRow("RefLength",    m_pfeRefLength);
                 }
                 pViewBox->setLayout(pParamsLayout);
             }
@@ -217,16 +217,16 @@ void gl3dQuadField::makeControls()
 
     connect(m_pieNu,           SIGNAL(intChanged(int)),       SLOT(onMakeView()));
     connect(m_pieNw,           SIGNAL(intChanged(int)),       SLOT(onMakeView()));
-    connect(m_pdeVelScale,     SIGNAL(floatChanged(float)),       SLOT(onVelScale()));
-    connect(m_pdeRefLength,    SIGNAL(floatChanged(float)),       SLOT(onRefLength()));
+    connect(m_pfeVelScale,     SIGNAL(floatChanged(float)),       SLOT(onVelScale()));
+    connect(m_pfeRefLength,    SIGNAL(floatChanged(float)),       SLOT(onRefLength()));
     connect(m_pchContourPlane, SIGNAL(toggled(bool)),        SLOT(onContourPlane(bool)));
     connect(m_pcbPlaneDir,     SIGNAL(activated(int)),       SLOT(onMakeView()));
     connect(m_pslPlanePos,     SIGNAL(sliderMoved(int)),     SLOT(onPlanePosition(int)));
     connect(m_pcbVelDir,       SIGNAL(activated(int)),       SLOT(onMakeView()));
 
     connect(m_pchAutoScale,    SIGNAL(clicked(bool)),        SLOT(onLegendScale()));
-    connect(m_pdeVMin,         SIGNAL(floatChanged(float)),       SLOT(onLegendScale()));
-    connect(m_pdeVMax,         SIGNAL(floatChanged(float)),       SLOT(onLegendScale()));
+    connect(m_pfeVMin,         SIGNAL(floatChanged(float)),       SLOT(onLegendScale()));
+    connect(m_pfeVMax,         SIGNAL(floatChanged(float)),       SLOT(onLegendScale()));
 
     connect(m_pchVectors,      SIGNAL(clicked(bool)),        SLOT(update()));
 }
@@ -340,8 +340,8 @@ void gl3dQuadField::glMake3dObjects()
     if(m_bResetContour)
     {
         bool bAuto = m_pchAutoScale->isChecked();
-        double lmin = m_pdeVMin->value();
-        double lmax = m_pdeVMax->value();
+        double lmin = m_pfeVMin->value();
+        double lmax = m_pfeVMax->value();
 
         gl::makeQuadColorMap(m_vboClrMap,   m_nRows, m_nCols, m_Nodes, m_Values, lmin, lmax, bAuto);
         gl::makeQuadContoursOnGrid( m_vboContours, m_nRows, m_nCols, m_Nodes, m_Values);
@@ -390,8 +390,8 @@ void gl3dQuadField::onContourPlane(bool bChecked)
     m_pchAutoScale->setEnabled(bChecked);
     if(!bChecked)
     {
-        m_pdeVMin->setEnabled(false);
-        m_pdeVMax->setEnabled(false);
+        m_pfeVMin->setEnabled(false);
+        m_pfeVMax->setEnabled(false);
     }
 
     update();
@@ -410,16 +410,16 @@ void gl3dQuadField::onLegendScale()
             vmax = std::max(vmax, m_Values.at(iv));
         }
         m_LegendOverlay.setRange(vmin, vmax);
-        m_pdeVMin->setValue(vmin);
-        m_pdeVMax->setValue(vmax);
+        m_pfeVMin->setValue(vmin);
+        m_pfeVMax->setValue(vmax);
     }
     else
     {
-        m_LegendOverlay.setRange(m_pdeVMin->value(), m_pdeVMax->value());
+        m_LegendOverlay.setRange(m_pfeVMin->value(), m_pfeVMax->value());
     }
     m_LegendOverlay.makeLegend();
-    m_pdeVMin->setEnabled(!m_pchAutoScale->isChecked());
-    m_pdeVMax->setEnabled(!m_pchAutoScale->isChecked());
+    m_pfeVMin->setEnabled(!m_pchAutoScale->isChecked());
+    m_pfeVMax->setEnabled(!m_pchAutoScale->isChecked());
 
     m_bResetContour = true;
     update();
@@ -437,8 +437,8 @@ void gl3dQuadField::readData()
     s_Size_u = m_pieNu->value();
     s_Size_w = m_pieNw->value();
     s_iVelDir = m_pcbVelDir->currentIndex();
-    s_RefLength = m_pdeRefLength->value();
-    s_VelScale = m_pdeVelScale->value();
+    s_RefLength = m_pfeRefLength->value();
+    s_VelScale = m_pfeVelScale->value();
     s_iPlaneDir = m_pcbPlaneDir->currentIndex()%3;
 }
 
@@ -518,12 +518,12 @@ void gl3dQuadField::makeColorValues()
             vmax = std::max(vmax, m_Values.at(iv));
         }
         m_LegendOverlay.setRange(vmin, vmax);
-        m_pdeVMin->setValue(vmin);
-        m_pdeVMax->setValue(vmax);
+        m_pfeVMin->setValue(vmin);
+        m_pfeVMax->setValue(vmax);
     }
     else
     {
-        m_LegendOverlay.setRange(m_pdeVMin->value(), m_pdeVMax->value());
+        m_LegendOverlay.setRange(m_pfeVMin->value(), m_pfeVMax->value());
     }
     m_bResetContour = true;
 }

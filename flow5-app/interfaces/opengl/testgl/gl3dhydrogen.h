@@ -56,7 +56,7 @@ class gl3dHydrogen : public gl3dTestGLView
         void closeEvent(QCloseEvent *pEvent) override;
 
         double psi(double r, double theta, double phi) const;
-        double psi_1s(double r, double, double);
+        double psi_1s(double r, double, double) const;
 
         void collapseBlock(QWidget *pParent) const;
 
@@ -69,7 +69,7 @@ class gl3dHydrogen : public gl3dTestGLView
     private:
         IntEdit *m_piel, *m_piem, *m_pien;
         IntEdit *m_pieNObs;
-        FloatEdit *m_pdeObsRad;
+        FloatEdit *m_pfeObsRad;
 
         QRadioButton *m_prbPtShader, *m_prbSurfShader, *m_prbPt2Shader;
 

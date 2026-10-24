@@ -59,8 +59,8 @@ class WingScaleDlg : public QDialog
         QDialogButtonBox *m_pButtonBox;
         QCheckBox *m_pchSpan, *m_pchChord, *m_pchSweep, *m_pchTwist;
         QCheckBox *m_pchScaleArea, *m_pchScaleAR, *m_pchScaleTR;
-        FloatEdit *m_pdeNewSpan, *m_pdeNewChord, *m_pdeNewSweep, *m_pdeNewTwist;
-        FloatEdit *m_pdeNewArea, *m_pdeNewAR, *m_pdeNewTR;
+        FloatEdit *m_pfeNewSpan, *m_pfeNewChord, *m_pfeNewSweep, *m_pfeNewTwist;
+        FloatEdit *m_pfeNewArea, *m_pfeNewAR, *m_pfeNewTR;
         QLabel *m_plabRefSpan, *m_plabRefChord, *m_plabRefSweep, *m_plabRefTwist;
         QLabel *m_plabRefArea,*m_plabRefAR, *m_plabRefTR;
         QLabel *m_plabSpanRatio, *m_plabChordRatio, *m_plabSweepRatio, *m_plabTwistRatio;

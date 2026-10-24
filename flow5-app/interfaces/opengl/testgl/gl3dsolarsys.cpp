@@ -77,8 +77,8 @@ gl3dSolarSys::gl3dSolarSys(QWidget *pParent) : gl3dTestGLView(pParent)
             {
                 QLabel *pLabInc = new QLabel(QString::asprintf("Increment (days) @%.0f Hz:", QGuiApplication::primaryScreen()->refreshRate()));
                 pLabInc->setPalette(palette);
-                m_pdeDt = new FloatEdit(s_dt);
-                m_pdeDt->setPalette(palette);
+                m_pfeDt = new FloatEdit(s_dt);
+                m_pfeDt->setPalette(palette);
                 QLabel *pLabSize = new QLabel("Planet size factor:");
                 pLabSize->setPalette(palette);
                 m_pdePlanetSize = new FloatEdit;
@@ -86,7 +86,7 @@ gl3dSolarSys::gl3dSolarSys(QWidget *pParent) : gl3dTestGLView(pParent)
                 m_pdePlanetSize->setValue(s_PlanetSize);
 
                 pParamsLayout->addWidget(pLabInc,         1, 1);
-                pParamsLayout->addWidget(m_pdeDt,         1, 2);
+                pParamsLayout->addWidget(m_pfeDt,         1, 2);
                 pParamsLayout->addWidget(pLabSize,        2, 1);
                 pParamsLayout->addWidget(m_pdePlanetSize, 2, 2);
             }
@@ -369,7 +369,7 @@ void gl3dSolarSys::glMake3dObjects()
 
 void gl3dSolarSys::onRestart()
 {
-    s_dt = m_pdeDt->value();
+    s_dt = m_pfeDt->value();
     s_PlanetSize = m_pdePlanetSize->value();
 
     int period = int(1000.0/QGuiApplication::primaryScreen()->refreshRate());
@@ -550,7 +550,7 @@ void gl3dSolarSys::onMovePlanets()
 {
     s_PlanetSize = m_pdePlanetSize->value();
 
-    s_dt = m_pdeDt->value(); // days
+    s_dt = m_pfeDt->value(); // days
     m_Elapsed = m_Elapsed.addDays(s_dt);
     double dt = s_dt*24*3600;//seconds
     int nSteps = 20;

@@ -137,18 +137,18 @@ QFrame *VortonTestDlg::makeControls()
             {
                 QFormLayout *pVtnLayout = new QFormLayout;
                 {
-                    m_pdeWidth    = new FloatEdit(s_Width);
-                    m_pdeLength   = new FloatEdit(s_Length);
+                    m_pfeWidth    = new FloatEdit(s_Width);
+                    m_pfeLength   = new FloatEdit(s_Length);
                     m_pieNXPanels = new IntEdit(s_nXPanels);
                     m_pieNYPanels = new IntEdit(s_nYPanels);
                     m_pieVtnSide = new IntEdit(s_nVtnSide);
-                    m_pdeVtnCoreSize = new FloatEdit(0.1f);
-                    pVtnLayout->addRow("x-Length",         m_pdeLength);
-                    pVtnLayout->addRow("y-Width",          m_pdeWidth);
+                    m_pfeVtnCoreSize = new FloatEdit(0.1f);
+                    pVtnLayout->addRow("x-Length",         m_pfeLength);
+                    pVtnLayout->addRow("y-Width",          m_pfeWidth);
                     pVtnLayout->addRow("Nx Panels",        m_pieNXPanels);
                     pVtnLayout->addRow("Ny Panels",        m_pieNYPanels);
                     pVtnLayout->addRow("Vortons/side",     m_pieVtnSide);
-                    pVtnLayout->addRow("Vorton core size", m_pdeVtnCoreSize);
+                    pVtnLayout->addRow("Vorton core size", m_pfeVtnCoreSize);
                 }
                 pPanelBox->setLayout(pVtnLayout);
             }
@@ -159,24 +159,24 @@ QFrame *VortonTestDlg::makeControls()
                 {
                     QFormLayout *pGraphCtrlsLayout= new QFormLayout;
                     {
-                        m_pdeX0 = new FloatEdit(s_X0);
-                        m_pdeY0 = new FloatEdit(s_Y0);
-                        m_pdeZ0 = new FloatEdit(s_Z0);
-                        m_pdeX1 = new FloatEdit(s_X1);
-                        m_pdeY1 = new FloatEdit(s_Y1);
-                        m_pdeZ1 = new FloatEdit(s_Z1);
+                        m_pfeX0 = new FloatEdit(s_X0);
+                        m_pfeY0 = new FloatEdit(s_Y0);
+                        m_pfeZ0 = new FloatEdit(s_Z0);
+                        m_pfeX1 = new FloatEdit(s_X1);
+                        m_pfeY1 = new FloatEdit(s_Y1);
+                        m_pfeZ1 = new FloatEdit(s_Z1);
 
                         m_pcbVPlotDir = new QComboBox;
                         m_pcbVPlotDir->addItems({"X", "Y", "Z", "Norm"});
                         m_pcbVPlotDir->setCurrentIndex(s_iVPlotDir%4);
 
                         m_pieCurvePts = new IntEdit(s_nCurvePts);
-                        pGraphCtrlsLayout->addRow("X0", m_pdeX0);
-                        pGraphCtrlsLayout->addRow("Y0", m_pdeY0);
-                        pGraphCtrlsLayout->addRow("Z0", m_pdeZ0);
-                        pGraphCtrlsLayout->addRow("X1", m_pdeX1);
-                        pGraphCtrlsLayout->addRow("Y1", m_pdeY1);
-                        pGraphCtrlsLayout->addRow("Z1", m_pdeZ1);
+                        pGraphCtrlsLayout->addRow("X0", m_pfeX0);
+                        pGraphCtrlsLayout->addRow("Y0", m_pfeY0);
+                        pGraphCtrlsLayout->addRow("Z0", m_pfeZ0);
+                        pGraphCtrlsLayout->addRow("X1", m_pfeX1);
+                        pGraphCtrlsLayout->addRow("Y1", m_pfeY1);
+                        pGraphCtrlsLayout->addRow("Z1", m_pfeZ1);
                         pGraphCtrlsLayout->addRow("VDir", m_pcbVPlotDir);
                         pGraphCtrlsLayout->addRow("n graph pts", m_pieCurvePts);
                     }
@@ -243,20 +243,20 @@ QFrame *VortonTestDlg::makeControls()
 
 void VortonTestDlg::connectSignals()
 {
-    connect(m_pdeWidth,     SIGNAL(floatChanged(float)), SLOT(onMakePanels()));
-    connect(m_pdeLength,    SIGNAL(floatChanged(float)), SLOT(onMakePanels()));
+    connect(m_pfeWidth,     SIGNAL(floatChanged(float)), SLOT(onMakePanels()));
+    connect(m_pfeLength,    SIGNAL(floatChanged(float)), SLOT(onMakePanels()));
     connect(m_pieNXPanels,  SIGNAL(intChanged(int)),       SLOT(onMakePanels()));
     connect(m_pieNYPanels,  SIGNAL(intChanged(int)),       SLOT(onMakePanels()));
     connect(m_pieVtnSide,   SIGNAL(intChanged(int)),       SLOT(onMakePanels()));
 
-    connect(m_pdeVtnCoreSize, SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeVtnCoreSize, SIGNAL(floatChanged(float)), SLOT(onRecalc()));
 
-    connect(m_pdeX0,        SIGNAL(floatChanged(float)), SLOT(onRecalc()));
-    connect(m_pdeY0,        SIGNAL(floatChanged(float)), SLOT(onRecalc()));
-    connect(m_pdeZ0,        SIGNAL(floatChanged(float)), SLOT(onRecalc()));
-    connect(m_pdeX1,        SIGNAL(floatChanged(float)), SLOT(onRecalc()));
-    connect(m_pdeY1,        SIGNAL(floatChanged(float)), SLOT(onRecalc()));
-    connect(m_pdeZ1,        SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeX0,        SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeY0,        SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeZ0,        SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeX1,        SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeY1,        SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeZ1,        SIGNAL(floatChanged(float)), SLOT(onRecalc()));
     connect(m_pieCurvePts,  SIGNAL(intChanged(int)), SLOT(onRecalc()));
     connect(m_pcbVPlotDir,  SIGNAL(activated(int)),  SLOT(onRecalc()));
     connect(m_pcbGradDir,   SIGNAL(activated(int)),  SLOT(onRecalc()));
@@ -273,12 +273,12 @@ void VortonTestDlg::readData()
     m_pcbGradDir->setEnabled(s_bGradV);
     s_iGradDir = m_pcbGradDir->currentIndex();
 
-    s_X0 = m_pdeX0->value();
-    s_Y0 = m_pdeY0->value();
-    s_Z0 = m_pdeZ0->value();
-    s_X1 = m_pdeX1->value();
-    s_Y1 = m_pdeY1->value();
-    s_Z1 = m_pdeZ1->value();
+    s_X0 = m_pfeX0->value();
+    s_Y0 = m_pfeY0->value();
+    s_Z0 = m_pfeZ0->value();
+    s_X1 = m_pfeX1->value();
+    s_Y1 = m_pfeY1->value();
+    s_Z1 = m_pfeZ1->value();
 
     s_iVPlotDir = m_pcbVPlotDir->currentIndex();
     s_nCurvePts = m_pieCurvePts->value();
@@ -286,7 +286,7 @@ void VortonTestDlg::readData()
     if     (m_prbVelSrc[0]->isChecked()) s_iVelSrc=0;
     else if(m_prbVelSrc[1]->isChecked()) s_iVelSrc=1;
 
-    m_pglVortonField->setVortonCoreSize(m_pdeVtnCoreSize->value());
+    m_pglVortonField->setVortonCoreSize(m_pfeVtnCoreSize->value());
 }
 
 
@@ -412,8 +412,8 @@ void VortonTestDlg::onMakePanels()
 {
     s_nXPanels = m_pieNXPanels->value();
     s_nYPanels = m_pieNYPanels->value();
-    s_Length   = m_pdeLength->value();
-    s_Width    = m_pdeWidth->value();
+    s_Length   = m_pfeLength->value();
+    s_Width    = m_pfeWidth->value();
     s_nVtnSide = m_pieVtnSide->value();
     double xl = s_Length;
     double yl = s_Width/2.0;
@@ -509,7 +509,7 @@ void VortonTestDlg::makePanels(Node const *nd)
 
 void VortonTestDlg::makeGraph(Vector3d const &P0, Vector3d const &P1, int nPts)
 {
-    double coresize = m_pdeVtnCoreSize->value();
+    double coresize = m_pfeVtnCoreSize->value();
 
     Graph *pGraph = m_pGraphWt->graph();
     pGraph->deleteCurves();

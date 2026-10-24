@@ -120,19 +120,19 @@ class gl3dOptim2d : public gl3dSurface
         PlainTextOutput *m_ppt;
         IntEdit *m_piePopSize;
         IntEdit *m_pieUpdateDt;
-        FloatEdit *m_pdeMaxError;
+        FloatEdit *m_pfeMaxError;
         QTimer m_Timer;
         QRadioButton *m_prbMin, *m_prbMax;
 
         //PSO specific
-        FloatEdit *m_pdeInertiaWeight;
-        FloatEdit *m_pdeCognitiveWeight;
-        FloatEdit *m_pdeSocialWeight;
-        FloatEdit *m_pdePropRegenerate;
+        FloatEdit *m_pfeInertiaWeight;
+        FloatEdit *m_pfeCognitiveWeight;
+        FloatEdit *m_pfeSocialWeight;
+        FloatEdit *m_pfePropRegenerate;
         QPushButton *m_ppbSwarm;
 
         // GA specific
-        FloatEdit *m_pdeProbXOver, *m_pdeProbMutation, *m_pdeSigmaMutation;
+        FloatEdit *m_pfeProbXOver, *m_pfeProbMutation, *m_pfeSigmaMutation;
         QPushButton *m_ppbStartGA;
 
         // Simplex specific

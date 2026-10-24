@@ -73,8 +73,8 @@ class PanelCheckDlg : public QDialog
         void setupLayout();
 
     private:
-        FloatEdit *m_pdeQuality, *m_pdeMinAngle, *m_pdeMinArea, *m_pdeMinSize;
-        FloatEdit *m_pdeMaxQuadWarp;
+        FloatEdit *m_pfeQuality, *m_pfeMinAngle, *m_pfeMinArea, *m_pfeMinSize;
+        FloatEdit *m_pfeMaxQuadWarp;
         QCheckBox *m_pchCheckSkinny, *m_pchCheckAngle, *m_pchCheckArea, *m_pchCheckSize;
         QCheckBox *m_pchCheckQuadWarp;
         PlainTextOutput *m_pptePanelIndexes, *m_ppteNodeIndexes;

@@ -56,7 +56,7 @@ class PlaneStlInertiaDlg : public PlaneInertiaDlg
         PlaneSTL *m_pPlaneSTL;
 
         QCheckBox *m_pchAutoEstimation;
-        FloatEdit *m_pdeStructMass;
+        FloatEdit *m_pfeStructMass;
 };
 
 

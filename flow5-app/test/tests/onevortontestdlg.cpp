@@ -96,29 +96,29 @@ void OneVortonTestDlg::setupLayout()
                 {
                     QFormLayout *pGraphCtrlsLayout= new QFormLayout;
                     {
-                        m_pdeVtnCoreSize = new FloatEdit(0.1f);
+                        m_pfeVtnCoreSize = new FloatEdit(0.1f);
 
                         m_pcbVPlotDir = new QComboBox;
                         m_pcbVPlotDir->addItems({"X", "Y", "Z", "Norm"});
                         m_pcbVPlotDir->setCurrentIndex(s_iVPlotDir%4);
                         m_pieCurvePts = new IntEdit(s_nCurvePts);
 
-                        m_pdeX0 = new FloatEdit(s_X0);
-                        m_pdeY0 = new FloatEdit(s_Y0);
-                        m_pdeZ0 = new FloatEdit(s_Z0);
-                        m_pdeX1 = new FloatEdit(s_X1);
-                        m_pdeY1 = new FloatEdit(s_Y1);
-                        m_pdeZ1 = new FloatEdit(s_Z1);
+                        m_pfeX0 = new FloatEdit(s_X0);
+                        m_pfeY0 = new FloatEdit(s_Y0);
+                        m_pfeZ0 = new FloatEdit(s_Z0);
+                        m_pfeX1 = new FloatEdit(s_X1);
+                        m_pfeY1 = new FloatEdit(s_Y1);
+                        m_pfeZ1 = new FloatEdit(s_Z1);
 
-                        pGraphCtrlsLayout->addRow("Vorton core size", m_pdeVtnCoreSize);
+                        pGraphCtrlsLayout->addRow("Vorton core size", m_pfeVtnCoreSize);
                         pGraphCtrlsLayout->addRow("VDir", m_pcbVPlotDir);
                         pGraphCtrlsLayout->addRow("n curve pts", m_pieCurvePts);
-                        pGraphCtrlsLayout->addRow("X0", m_pdeX0);
-                        pGraphCtrlsLayout->addRow("Y0", m_pdeY0);
-                        pGraphCtrlsLayout->addRow("Z0", m_pdeZ0);
-                        pGraphCtrlsLayout->addRow("X1", m_pdeX1);
-                        pGraphCtrlsLayout->addRow("Y1", m_pdeY1);
-                        pGraphCtrlsLayout->addRow("Z1", m_pdeZ1);
+                        pGraphCtrlsLayout->addRow("X0", m_pfeX0);
+                        pGraphCtrlsLayout->addRow("Y0", m_pfeY0);
+                        pGraphCtrlsLayout->addRow("Z0", m_pfeZ0);
+                        pGraphCtrlsLayout->addRow("X1", m_pfeX1);
+                        pGraphCtrlsLayout->addRow("Y1", m_pfeY1);
+                        pGraphCtrlsLayout->addRow("Z1", m_pfeZ1);
                     }
 
                     QGroupBox *pVarSelBox = new QGroupBox("Show gradient");
@@ -174,15 +174,15 @@ void OneVortonTestDlg::setupLayout()
     }
     setLayout(pMainLayout);
 
-    connect(m_pdeVtnCoreSize, SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeVtnCoreSize, SIGNAL(floatChanged(float)), SLOT(onRecalc()));
     connect(m_pchbGradV,      SIGNAL(clicked()),      SLOT(onRecalc()));
     connect(m_pieCurvePts,    SIGNAL(intChanged(int)), SLOT(onRecalc()));
-    connect(m_pdeX0,          SIGNAL(floatChanged(float)), SLOT(onRecalc()));
-    connect(m_pdeY0,          SIGNAL(floatChanged(float)), SLOT(onRecalc()));
-    connect(m_pdeZ0,          SIGNAL(floatChanged(float)), SLOT(onRecalc()));
-    connect(m_pdeX1,          SIGNAL(floatChanged(float)), SLOT(onRecalc()));
-    connect(m_pdeY1,          SIGNAL(floatChanged(float)), SLOT(onRecalc()));
-    connect(m_pdeZ1,          SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeX0,          SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeY0,          SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeZ0,          SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeX1,          SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeY1,          SIGNAL(floatChanged(float)), SLOT(onRecalc()));
+    connect(m_pfeZ1,          SIGNAL(floatChanged(float)), SLOT(onRecalc()));
     connect(m_pchbDiff,       SIGNAL(clicked(bool)),  SLOT(onRecalc()));
     connect(m_pcbGradDir,     SIGNAL(activated(int)), SLOT(onRecalc()));
     connect(m_pcbVPlotDir,    SIGNAL(activated(int)), SLOT(onRecalc()));
@@ -223,16 +223,16 @@ void OneVortonTestDlg::readData()
     m_pchbDiff->setEnabled(s_iVPlotDir<3 && s_bGradV);
     m_pcbGradDir->setEnabled(s_iVPlotDir<3 && s_bGradV);
 
-    s_X0 = m_pdeX0->value();
-    s_Y0 = m_pdeY0->value();
-    s_Z0 = m_pdeZ0->value();
-    s_X1 = m_pdeX1->value();
-    s_Y1 = m_pdeY1->value();
-    s_Z1 = m_pdeZ1->value();
+    s_X0 = m_pfeX0->value();
+    s_Y0 = m_pfeY0->value();
+    s_Z0 = m_pfeZ0->value();
+    s_X1 = m_pfeX1->value();
+    s_Y1 = m_pfeY1->value();
+    s_Z1 = m_pfeZ1->value();
     Vector3d P0(s_X0, s_Y0, s_Z0);
     Vector3d P1(s_X1, s_Y1, s_Z1);
 
-    m_pglVortonField->setVortonCoreSize(m_pdeVtnCoreSize->value());
+    m_pglVortonField->setVortonCoreSize(m_pfeVtnCoreSize->value());
     m_pglVortonField->setPlotLine({P0, P1});
     m_pglVortonField->resetVectors();
     m_pglVortonField->makePlotLineVelocities(1, s_nCurvePts);
@@ -245,7 +245,7 @@ void OneVortonTestDlg::onRecalc()
 {
     readData();
 
-    double coresize = m_pdeVtnCoreSize->value();
+    double coresize = m_pfeVtnCoreSize->value();
 
     Vorton const &vorton = m_Vorton.front();
     Graph *pGraph = m_pGraphWt->graph();
@@ -318,7 +318,7 @@ void OneVortonTestDlg::onRecalc()
         Vector3d pt = P0 + (P1-P0)*t;
 
         double r = vorton.position().distanceTo(pt);
-        double moll = vorton.mollifiedInt(r/m_pdeVtnCoreSize->value());
+        double moll = vorton.mollifiedInt(r/m_pfeVtnCoreSize->value());
         if(pCurveMoll) pCurveMoll->appendPoint(t, moll);
 //qDebug("  %11g  %11g", t, moll);
 

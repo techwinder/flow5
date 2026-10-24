@@ -81,7 +81,7 @@ class gl3dSolarSys : public gl3dTestGLView
 
         QTimer m_Timer;
 
-        FloatEdit *m_pdeDt, *m_pdePlanetSize;
+        FloatEdit *m_pfeDt, *m_pdePlanetSize;
 
         QLabel *m_plabDate;
         QLabel *m_plabHalley;

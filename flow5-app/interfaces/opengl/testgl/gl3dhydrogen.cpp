@@ -139,8 +139,8 @@ gl3dHydrogen::gl3dHydrogen(QWidget *pParent) : gl3dTestGLView(pParent)
                                           "without noticeable rendering speed decrease.");
 
                     QLabel *plabObsDist = new QLabel("Observation radius=");
-                    m_pdeObsRad  = new FloatEdit(s_ObsRadius);
-                    m_pdeObsRad->setToolTip("This is an arbitrary limit used to reduce the time to calculate the collapsed positions.<br>"
+                    m_pfeObsRad  = new FloatEdit(s_ObsRadius);
+                    m_pfeObsRad->setToolTip("This is an arbitrary limit used to reduce the time to calculate the collapsed positions.<br>"
                                             "The radius should be as small as possible to reduce the computation times, "
                                             "but sufficiently large to include the most probable locations of the wave function.<br>"
                                             "Activate the checkbox to visualize the observation sphere.");
@@ -157,7 +157,7 @@ gl3dHydrogen::gl3dHydrogen(QWidget *pParent) : gl3dTestGLView(pParent)
                     pObsLayout->addWidget(plabNObs,     4,1, Qt::AlignRight);
                     pObsLayout->addWidget(m_pieNObs,    4,2);
                     pObsLayout->addWidget(plabObsDist,  5,1, Qt::AlignRight);
-                    pObsLayout->addWidget(m_pdeObsRad,  5,2);
+                    pObsLayout->addWidget(m_pfeObsRad,  5,2);
                     pObsLayout->addWidget(plabBohrRad,  5,3, Qt::AlignLeft);
                     pObsLayout->addWidget(m_ppbMake,    6,1,1,3);
                     pObsLayout->addWidget(m_plabNObs,   7,1,1,3);
@@ -499,7 +499,7 @@ void gl3dHydrogen::onHarmonic()
 /**
  *  Ground state wave function
  *  r is in Bohr radius units*/
-double gl3dHydrogen::psi_1s(double r, double, double)
+double gl3dHydrogen::psi_1s(double r, double, double) const
 {
     return 1.0/sqrt(PI*A0*A0*A0)*exp(-r);
 }
@@ -563,7 +563,7 @@ void gl3dHydrogen::onCollapse()
     }
 
     s_NObservations = m_pieNObs->value();
-    s_ObsRadius = m_pdeObsRad->value();
+    s_ObsRadius = m_pfeObsRad->value();
 
     setReferenceLength(s_ObsRadius);
 

@@ -76,9 +76,9 @@ class gl3dLorenz2 : public gl3dTestGLView
 
         QTimer m_Timer;
 
-        FloatEdit *m_pdeScatter;
-        FloatEdit *m_pdeX, *m_pdeY, *m_pdeZ;
-        FloatEdit *m_pdeDt;
+        FloatEdit *m_pfeScatter;
+        FloatEdit *m_pfeX, *m_pfeY, *m_pfeZ;
+        FloatEdit *m_pfeDt;
 
         IntEdit *m_pieNGroups;
         QLabel *m_plabNMaxGroups;
@@ -86,7 +86,7 @@ class gl3dLorenz2 : public gl3dTestGLView
 
         QLabel *m_plabFrameRate;
 
-        FloatEdit *m_pdeParticleSize;
+        FloatEdit *m_pfeParticleSize;
 
         QStack<int> m_stackInterval;
 

@@ -48,9 +48,9 @@ void TranslateDlg::setupLayout()
     QGridLayout *pPosLayout = new QGridLayout;
     {
         QLabel *plabTitle = new QLabel(tr("Enter the translation vector:"));
-        m_pdeX = new FloatEdit;
-        m_pdeY = new FloatEdit;
-        m_pdeZ = new FloatEdit;
+        m_pfeX = new FloatEdit;
+        m_pfeY = new FloatEdit;
+        m_pfeZ = new FloatEdit;
         QLabel *plabX = new QLabel(tr("x="));
         QLabel *plabY = new QLabel(tr("y="));
         QLabel *plabZ = new QLabel(tr("z="));
@@ -67,15 +67,15 @@ void TranslateDlg::setupLayout()
         pPosLayout->addWidget(plabTitle, 1,1,1,3);
 
         pPosLayout->addWidget(plabX,     2,1);
-        pPosLayout->addWidget(m_pdeX,    2,2);
+        pPosLayout->addWidget(m_pfeX,    2,2);
         pPosLayout->addWidget(pLenX,     2,3);
 
         pPosLayout->addWidget(plabY,     3,1);
-        pPosLayout->addWidget(m_pdeY,    3,2);
+        pPosLayout->addWidget(m_pfeY,    3,2);
         pPosLayout->addWidget(plenY,     3,3);
 
         pPosLayout->addWidget(plabZ,     4,1);
-        pPosLayout->addWidget(m_pdeZ,    4,2);
+        pPosLayout->addWidget(m_pfeZ,    4,2);
         pPosLayout->addWidget(plenZ,     4,3);
     }
 
@@ -93,9 +93,9 @@ void TranslateDlg::setupLayout()
 
 void TranslateDlg::accept()
 {
-    m_Translation.x = m_pdeX->value() / Units::mtoUnit();
-    m_Translation.y = m_pdeY->value() / Units::mtoUnit();
-    m_Translation.z = m_pdeZ->value() / Units::mtoUnit();
+    m_Translation.x = m_pfeX->value() / Units::mtoUnit();
+    m_Translation.y = m_pfeY->value() / Units::mtoUnit();
+    m_Translation.z = m_pfeZ->value() / Units::mtoUnit();
     QDialog::accept();
 }
 

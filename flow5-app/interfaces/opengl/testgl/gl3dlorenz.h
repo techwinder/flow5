@@ -79,10 +79,10 @@ class gl3dLorenz : public gl3dTestGLView
 
         QOpenGLBuffer m_vboTrace;
 
-        FloatEdit *m_pdeSigma, *m_pdeRho, *m_pdeBeta;
-        FloatEdit *m_pdeX, *m_pdeY, *m_pdeZ;
+        FloatEdit *m_pfeSigma, *m_pfeRho, *m_pfeBeta;
+        FloatEdit *m_pfeX, *m_pfeY, *m_pfeZ;
         IntEdit *m_pieIntervalms, *m_pieMaxPts;
-        FloatEdit *m_pdeDt;
+        FloatEdit *m_pfeDt;
         LineBtn *m_plbStyle;
 
         QLabel *m_plabFrameRate;

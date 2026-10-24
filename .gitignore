@@ -1,12 +1,6 @@
 *.pro.user
 *.pro.user*
 /.qtcreator/
-fl5-lib/*.pro.user
-fl5-lib/*.pro.user*
-fl5-app/*.pro.user
-fl5-app/*.pro.user*
-XFoil-lib/*.pro.user
-XFoil-lib/*.pro.user*
 XFoil-lib/.qtcreator/*
 flow5-lib/.qtcreator/*
 flow5-io-lib/.qtcreator/*

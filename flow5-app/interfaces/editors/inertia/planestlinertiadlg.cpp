@@ -77,11 +77,11 @@ void PlaneStlInertiaDlg::setupLayout()
                     m_pchAutoEstimation = new QCheckBox("Auto estimation");
                     QLabel *plabStructMass = new QLabel("Structural mass");
                     QLabel *pLabMassUnit = new QLabel(Units::massUnitQLabel());
-                    m_pdeStructMass = new FloatEdit;
+                    m_pfeStructMass = new FloatEdit;
                     pInputSourceLayout->addWidget(m_pchAutoEstimation);
                     pInputSourceLayout->addStretch();
                     pInputSourceLayout->addWidget(plabStructMass);
-                    pInputSourceLayout->addWidget(m_pdeStructMass);
+                    pInputSourceLayout->addWidget(m_pfeStructMass);
                     pInputSourceLayout->addWidget(pLabMassUnit);
                 }
                 m_pVSplitter = new QSplitter(Qt::Vertical);
@@ -135,7 +135,7 @@ void PlaneStlInertiaDlg::connectSignals()
 {
     connectBaseSignals();
     connect(m_pchAutoEstimation, SIGNAL(clicked(bool)),  SLOT(onAutoInertia()));
-    connect(m_pdeStructMass,     SIGNAL(floatChanged(float)), SLOT(onAutoInertia()));
+    connect(m_pfeStructMass,     SIGNAL(floatChanged(float)), SLOT(onAutoInertia()));
 }
 
 
@@ -145,7 +145,7 @@ void PlaneStlInertiaDlg::initDialog(Plane *pPlane)
     gl3dPlaneSTLView *pgl3dPlaneStlView = dynamic_cast<gl3dPlaneSTLView*>(m_pgl3dPlaneView);
     pgl3dPlaneStlView->setPlane(m_pPlaneSTL);
 
-    m_pdeStructMass->setValue(pPlane->inertia().structuralMass()*Units::kgtoUnit());
+    m_pfeStructMass->setValue(pPlane->inertia().structuralMass()*Units::kgtoUnit());
     m_pchAutoEstimation->setChecked(m_pPlaneSTL->bAutoInertia());
 
     PlaneInertiaDlg::initDialog(pPlane);
@@ -172,8 +172,8 @@ void PlaneStlInertiaDlg::onImportExisting()
 
     m_pPlaneSTL->setAutoInertia(false);
     m_pchAutoEstimation->setChecked(false);
-    m_pdeStructMass->setValue(pRefPlane->structuralMass()*Units::kgtoUnit());
-    m_pdeStructMass->setEnabled(false);
+    m_pfeStructMass->setValue(pRefPlane->structuralMass()*Units::kgtoUnit());
+    m_pfeStructMass->setEnabled(false);
     m_pStructInertiaModel->setInertia(&m_pPlane->inertia());
     m_pStructInertiaModel->updateData();
     m_pInertiaManTable->setEnabled(true);
@@ -199,12 +199,12 @@ void PlaneStlInertiaDlg::onExportToAVL()
 void PlaneStlInertiaDlg::onAutoInertia()
 {
     m_pPlaneSTL->setAutoInertia(m_pchAutoEstimation->isChecked());
-    m_pdeStructMass->setEnabled(m_pPlaneSTL->bAutoInertia());
+    m_pfeStructMass->setEnabled(m_pPlaneSTL->bAutoInertia());
     m_pInertiaManTable->setEnabled(!m_pPlaneSTL->bAutoInertia());
 
     if(m_pPlaneSTL->bAutoInertia())
     {
-        double mass = m_pdeStructMass->value()/Units::kgtoUnit();
+        double mass = m_pfeStructMass->value()/Units::kgtoUnit();
         m_pPlaneSTL->inertia().setStructuralMass(mass);
         m_pPlaneSTL->computeStructuralInertia();
         m_pStructInertiaModel->updateData();
@@ -215,7 +215,7 @@ void PlaneStlInertiaDlg::onAutoInertia()
     }
     else
     {
-        m_pPlaneSTL->inertia().setStructuralMass(m_pdeStructMass->value()/Units::kgtoUnit());
+        m_pPlaneSTL->inertia().setStructuralMass(m_pfeStructMass->value()/Units::kgtoUnit());
     }
     m_pInertiaManTable->update();
     updateTotalInertia();

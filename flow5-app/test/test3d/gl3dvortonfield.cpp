@@ -113,9 +113,9 @@ void gl3dVortonField::makeControls()
                     {
                         m_plabTitle    = new QLabel;
                         m_plabTitle->setStyleSheet("font: bold;");
-                        m_pdeVelScale  = new FloatEdit(s_VelScale);
+                        m_pfeVelScale  = new FloatEdit(s_VelScale);
                         pParamsLayout->addRow(m_plabTitle);
-                        pParamsLayout->addRow("Vector scale", m_pdeVelScale);
+                        pParamsLayout->addRow("Vector scale", m_pfeVelScale);
 
                     }
                     pVectorBox->setLayout(pParamsLayout);
@@ -123,9 +123,9 @@ void gl3dVortonField::makeControls()
 
                 QHBoxLayout *pViewLayout = new QHBoxLayout;
                 {
-                    m_pdeRefLength = new FloatEdit(s_RefLength);
+                    m_pfeRefLength = new FloatEdit(s_RefLength);
                     pViewLayout->addWidget(new QLabel("Ref. length"));
-                    pViewLayout->addWidget(m_pdeRefLength);
+                    pViewLayout->addWidget(m_pfeRefLength);
                     pViewLayout->addStretch();
                 }
                 pLeftLayout->addWidget(pVectorBox);
@@ -175,8 +175,8 @@ void gl3dVortonField::makeControls()
     m_LegendOverlay.setTitle("Omega");
     m_LegendOverlay.setVisible(bContourPlane);
 
-    connect(m_pdeVelScale,     SIGNAL(floatChanged(float)), SLOT(onVelScale()));
-    connect(m_pdeRefLength,    SIGNAL(floatChanged(float)), SLOT(onRefLength()));
+    connect(m_pfeVelScale,     SIGNAL(floatChanged(float)), SLOT(onVelScale()));
+    connect(m_pfeRefLength,    SIGNAL(floatChanged(float)), SLOT(onRefLength()));
     connect(m_pchContourPlane, SIGNAL(toggled(bool))    , SLOT(onContourPlane(bool)));
     connect(m_pcbPlaneDir,     SIGNAL(activated(int)),    SLOT(onMakeColorMap()));
     connect(m_pslPlanePos,     SIGNAL(sliderMoved(int)),  SLOT(onMakeColorMap()));
@@ -186,7 +186,7 @@ void gl3dVortonField::makeControls()
 
 void gl3dVortonField::onRefLength()
 {
-    s_RefLength = m_pdeRefLength->value();
+    s_RefLength = m_pfeRefLength->value();
     setReferenceLength(s_RefLength);
     reset3dScale();
 }
@@ -416,7 +416,7 @@ void gl3dVortonField::makePlotLineVelocities(int iSource, int nPts)
         default:    m_plabTitle->setText("Unknown velocity");           break;
     }
 
-    s_VelScale = m_pdeVelScale->value();
+    s_VelScale = m_pfeVelScale->value();
 
     m_PointArray.resize( nPts);
     m_VectorArray.resize(nPts);

@@ -64,7 +64,7 @@ class gl2dFractal : public gl2dView
     private:
         QRadioButton *m_prbMandelbrot, *m_prbJulia;
         IntEdit *m_pieMaxIter;
-        FloatEdit *m_pdeMaxLength;
+        FloatEdit *m_pfeMaxLength;
         QLabel *m_plabScale;
         QCheckBox *m_pchShowSeed;
         QSlider *m_pslTau;

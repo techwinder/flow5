@@ -47,7 +47,7 @@ class TranslateDlg : public XflDialog
     private:
 
         Vector3d m_Translation;
-        FloatEdit *m_pdeX, *m_pdeY, *m_pdeZ;
+        FloatEdit *m_pfeX, *m_pfeY, *m_pfeZ;
 
         static QByteArray s_WindowGeometry;
 };

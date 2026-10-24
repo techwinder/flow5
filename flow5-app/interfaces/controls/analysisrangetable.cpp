@@ -67,6 +67,11 @@ AnalysisRangeTable::AnalysisRangeTable(QWidget *pParent) : CPTableView(pParent)
     setCharSize(3,5);
     setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
     setEditable(true);
+    setEditTriggers(QAbstractItemView::DoubleClicked |
+                        QAbstractItemView::SelectedClicked |
+                        QAbstractItemView::EditKeyPressed |
+                        QAbstractItemView::AnyKeyPressed);
+
     horizontalHeader()->setStretchLastSection(true);
 
     m_pRangeModel = new QStandardItemModel(this);

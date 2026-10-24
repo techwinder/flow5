@@ -69,10 +69,10 @@ class OneVortonTestDlg : public QDialog
 
         std::vector<Vorton> m_Vorton;
 
-        FloatEdit *m_pdeVtnCoreSize;
+        FloatEdit *m_pfeVtnCoreSize;
 
-        FloatEdit *m_pdeX0, *m_pdeY0, *m_pdeZ0;
-        FloatEdit *m_pdeX1, *m_pdeY1, *m_pdeZ1;
+        FloatEdit *m_pfeX0, *m_pfeY0, *m_pfeZ0;
+        FloatEdit *m_pfeX1, *m_pfeY1, *m_pfeZ1;
 
         IntEdit *m_pieCurvePts;
 

@@ -104,11 +104,11 @@ void Fine3dControls::setupLayout()
         QHBoxLayout *pZAnimLayout = new QHBoxLayout;
         {
             m_pchZAnimate   = new QCheckBox("Auto z-rotation");
-            m_pdeZAnimAngle = new FloatEdit(gl3dView::zAnimAngle());
+            m_pfeZAnimAngle = new FloatEdit(gl3dView::zAnimAngle());
             QLabel *plabDeg = new QLabel(DEGch + "@60Hz");
 
             pZAnimLayout->addWidget(m_pchZAnimate);
-            pZAnimLayout->addWidget(m_pdeZAnimAngle);
+            pZAnimLayout->addWidget(m_pfeZAnimAngle);
             pZAnimLayout->addWidget(plabDeg);
             pZAnimLayout->addStretch();
         }
@@ -127,7 +127,7 @@ void Fine3dControls::connectSignals()
     connect(m_pslYView,        SIGNAL(valueChanged(int)), SLOT(onYView(int)));
     connect(m_pslZView,        SIGNAL(valueChanged(int)), SLOT(onZView(int)));
     connect(m_pchZAnimate,     SIGNAL(clicked(bool)), m_pgl3dView, SLOT(onZAnimate(bool)));
-    connect(m_pdeZAnimAngle,   SIGNAL(floatChanged(float)), this, SLOT(onZAnimAngle()));
+    connect(m_pfeZAnimAngle,   SIGNAL(floatChanged(float)), this, SLOT(onZAnimAngle()));
 }
 
 
@@ -153,7 +153,7 @@ void Fine3dControls::showEvent(QShowEvent *)
 
 void Fine3dControls::onZAnimAngle()
 {
-    gl3dView::setZAnimAngle(m_pdeZAnimAngle->value());
+    gl3dView::setZAnimAngle(m_pfeZAnimAngle->value());
 }
 
 

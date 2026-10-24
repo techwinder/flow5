@@ -60,10 +60,6 @@ void CPTableView::setEditable(bool bEditable)
     m_bIsEditable=bEditable;
     if(m_bIsEditable)
     {
-/*        setEditTriggers(QAbstractItemView::DoubleClicked |
-                        QAbstractItemView::SelectedClicked |
-                        QAbstractItemView::EditKeyPressed |
-                        QAbstractItemView::AnyKeyPressed);*/
         setEditTriggers(QAbstractItemView::AllEditTriggers);
     }
     else setEditTriggers(QAbstractItemView::NoEditTriggers);

@@ -161,8 +161,8 @@ QFrame* PanelAnalysisTest::makeControls()
                     QLabel *pLabLen1 = new QLabel(Units::lengthUnitQLabel());
                     pLabZMax->setPalette(palette);
                     pLabZInc->setPalette(palette);
-                    m_pdeZMax    = new FloatEdit(s_ZMax*Units::mtoUnit());
-                    m_pdeZInc    = new FloatEdit(s_ZInc*Units::mtoUnit());
+                    m_pfeZMax    = new FloatEdit(s_ZMax*Units::mtoUnit());
+                    m_pfeZInc    = new FloatEdit(s_ZInc*Units::mtoUnit());
 
                     m_pLineBtn = new LineBtn;
                     m_pLineBtn->setTheStyle(s_LS);
@@ -170,10 +170,10 @@ QFrame* PanelAnalysisTest::makeControls()
                     connect(m_pLineBtn, SIGNAL(clickedLB(LineStyle)), SLOT(onCurveStyle(LineStyle)));
 
                     pGraphDataLayout->addWidget(pLabZMax,       1, 1, Qt::AlignVCenter | Qt::AlignRight);
-                    pGraphDataLayout->addWidget(m_pdeZMax,      1, 2);
+                    pGraphDataLayout->addWidget(m_pfeZMax,      1, 2);
                     pGraphDataLayout->addWidget(pLabLen0,       1, 3, Qt::AlignLeft | Qt::AlignVCenter);
                     pGraphDataLayout->addWidget(pLabZInc ,      2, 1, Qt::AlignVCenter | Qt::AlignRight);
-                    pGraphDataLayout->addWidget(m_pdeZInc,      2, 2);
+                    pGraphDataLayout->addWidget(m_pfeZInc,      2, 2);
                     pGraphDataLayout->addWidget(pLabLen1,       2, 3, Qt::AlignLeft | Qt::AlignVCenter);
                     pGraphDataLayout->addWidget(m_pLineBtn,     3, 1, 1, 2);
                 }
@@ -192,8 +192,8 @@ QFrame* PanelAnalysisTest::makeControls()
     }
 
     connect(m_piePanelId,   SIGNAL(intChanged(int)), SLOT(onMakeGraph()));
-    connect(m_pdeZMax,      SIGNAL(floatChanged(float)), SLOT(onMakeGraph()));
-    connect(m_pdeZInc,      SIGNAL(floatChanged(float)), SLOT(onMakeGraph()));
+    connect(m_pfeZMax,      SIGNAL(floatChanged(float)), SLOT(onMakeGraph()));
+    connect(m_pfeZInc,      SIGNAL(floatChanged(float)), SLOT(onMakeGraph()));
     connect(m_prbVelocity,  SIGNAL(clicked(bool)),  SLOT(onMakeGraph()));
     connect(m_prbPotential, SIGNAL(clicked(bool)),  SLOT(onMakeGraph()));
     connect(m_pcbVcomp,     SIGNAL(activated(int)), SLOT(onMakeGraph()));
@@ -373,8 +373,8 @@ void PanelAnalysisTest::readData()
 {
     s_VComp   = m_pcbVcomp->currentIndex();
     s_PanelId = m_piePanelId->value();
-    s_ZMax    = m_pdeZMax->value()/Units::mtoUnit();
-    s_ZInc    = m_pdeZInc->value()/Units::mtoUnit();
+    s_ZMax    = m_pfeZMax->value()/Units::mtoUnit();
+    s_ZInc    = m_pfeZInc->value()/Units::mtoUnit();
     s_bPotential = m_prbPotential->isChecked();
 }
 

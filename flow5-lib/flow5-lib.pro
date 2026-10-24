@@ -137,8 +137,8 @@ win32-msvc {
 
 
 #--------------------- GMSH ------------------------
-    INCLUDEPATH += D:/bin/gmsh-4.14.1-Windows64-sdk/include/
-    LIBS += -L"D:/bin/gmsh-4.14.1-Windows64-sdk/lib"
+    INCLUDEPATH += D:/bin/gmsh-4.15.2-Windows64-sdk/include/
+    LIBS += -L"D:/bin/gmsh-4.15.2-Windows64-sdk/lib"
     LIBS += -lgmsh.dll  # the file name is gmsh.dll.lib
 
 

@@ -82,12 +82,12 @@ void gl3dPanelField::makeControls()
             {
 
                 m_pieNw = new IntEdit(s_nPoints);
-                m_pdeVelScale  = new FloatEdit(s_VelScale);
-                m_pdeRefLength = new FloatEdit(s_RefLength);
+                m_pfeVelScale  = new FloatEdit(s_VelScale);
+                m_pfeRefLength = new FloatEdit(s_RefLength);
 
                 pParamsLayout->addRow("Npoints",      m_pieNw);
-                pParamsLayout->addRow("Vector scale", m_pdeVelScale);
-                pParamsLayout->addRow("RefLength",    m_pdeRefLength);
+                pParamsLayout->addRow("Vector scale", m_pfeVelScale);
+                pParamsLayout->addRow("RefLength",    m_pfeRefLength);
             }
 
             pFrameLayout->addWidget(m_pLabInfo);
@@ -98,8 +98,8 @@ void gl3dPanelField::makeControls()
     }
 
     connect(m_pieNw,           SIGNAL(intChanged(int)),       SLOT(onMakeView()));
-    connect(m_pdeVelScale,     SIGNAL(floatChanged(float)),       SLOT(onMakeView()));
-    connect(m_pdeRefLength,    SIGNAL(floatChanged(float)),       SLOT(onRefLength()));
+    connect(m_pfeVelScale,     SIGNAL(floatChanged(float)),       SLOT(onMakeView()));
+    connect(m_pfeRefLength,    SIGNAL(floatChanged(float)),       SLOT(onRefLength()));
 }
 
 
@@ -155,8 +155,8 @@ void gl3dPanelField::onMakeView()
 void gl3dPanelField::readData()
 {
     s_nPoints = std::max(m_pieNw->value(),2);
-    s_RefLength = m_pdeRefLength->value();
-    s_VelScale = m_pdeVelScale->value();
+    s_RefLength = m_pfeRefLength->value();
+    s_VelScale = m_pfeVelScale->value();
 }
 
 

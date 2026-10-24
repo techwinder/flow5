@@ -58,11 +58,11 @@ PanelCheckDlg::PanelCheckDlg(bool bQuads)
 
     setupLayout();
 
-    m_pdeQuality->setValue(s_Quality);
-    m_pdeMinAngle->setValue(s_MinAngle);
-    m_pdeMinArea->setValue(s_MinArea*Units::m2toUnit());
-    m_pdeMinSize->setValue(s_MinSize*Units::mtoUnit());
-    m_pdeMaxQuadWarp->setValue(s_MaxQuadWarp);
+    m_pfeQuality->setValue(s_Quality);
+    m_pfeMinAngle->setValue(s_MinAngle);
+    m_pfeMinArea->setValue(s_MinArea*Units::m2toUnit());
+    m_pfeMinSize->setValue(s_MinSize*Units::mtoUnit());
+    m_pfeMaxQuadWarp->setValue(s_MaxQuadWarp);
 
     m_pchCheckSkinny->setEnabled(!m_bQuads);
     m_pchCheckQuadWarp->setEnabled(m_bQuads);
@@ -73,11 +73,11 @@ PanelCheckDlg::PanelCheckDlg(bool bQuads)
     m_pchCheckSize->setChecked(s_bCheckMinSize);
     m_pchCheckQuadWarp->setChecked(s_bCheckQuadWarp);
 
-    m_pdeQuality->setEnabled(s_bCheckSkinny);
-    m_pdeMinAngle->setEnabled(s_bCheckMinAngle);
-    m_pdeMaxQuadWarp->setEnabled(s_bCheckQuadWarp);
-    m_pdeMinSize->setEnabled(s_bCheckMinSize);
-    m_pdeMinArea->setEnabled(s_bCheckMinArea);
+    m_pfeQuality->setEnabled(s_bCheckSkinny);
+    m_pfeMinAngle->setEnabled(s_bCheckMinAngle);
+    m_pfeMaxQuadWarp->setEnabled(s_bCheckQuadWarp);
+    m_pfeMinSize->setEnabled(s_bCheckMinSize);
+    m_pfeMinArea->setEnabled(s_bCheckMinArea);
 }
 
 
@@ -101,11 +101,11 @@ void PanelCheckDlg::setupLayout()
             m_pchCheckSize     = new QCheckBox("Check small panels");
             m_pchCheckQuadWarp = new QCheckBox("Quad warp angle");
 
-            m_pdeQuality  = new FloatEdit(s_Quality,3);
-            m_pdeMinAngle = new FloatEdit(s_MinAngle,3);
-            m_pdeMinArea  = new FloatEdit(s_MinArea*Units::m2toUnit());
-            m_pdeMinSize  = new FloatEdit(s_MinSize*Units::mtoUnit());
-            m_pdeMaxQuadWarp = new FloatEdit(s_MaxQuadWarp,3);
+            m_pfeQuality  = new FloatEdit(s_Quality,3);
+            m_pfeMinAngle = new FloatEdit(s_MinAngle,3);
+            m_pfeMinArea  = new FloatEdit(s_MinArea*Units::m2toUnit());
+            m_pfeMinSize  = new FloatEdit(s_MinSize*Units::mtoUnit());
+            m_pfeMaxQuadWarp = new FloatEdit(s_MaxQuadWarp,3);
 
             QString qualitytip("<p>A triangle whose circumradius-to-shortest edge ratio is greater "
                                "than a minimum value B is said to be skinny.\n"
@@ -115,40 +115,40 @@ void PanelCheckDlg::setupLayout()
                                "and between 30° and 130° for Chew’s.<br>"
                                "J.R. Shewchuk in \"Delaunay Refinement Algorithms for Triangular Mesh Generation\"</p>");
             m_pchCheckSkinny->setToolTip(qualitytip);
-            m_pdeQuality->setToolTip(qualitytip);
+            m_pfeQuality->setToolTip(qualitytip);
 
             QString warptip = QString("<p>The minimum dihedral angle formed by the planes intersecting in the diagonals</p>");
             m_pchCheckQuadWarp->setToolTip(warptip);
-            m_pdeMaxQuadWarp->setToolTip(warptip);
+            m_pfeMaxQuadWarp->setToolTip(warptip);
 
             QString angletip = QString("<p>The panel's minimum internal angle</p>");
             m_pchCheckAngle->setToolTip(angletip);
-            m_pdeMinAngle->setToolTip(angletip);
+            m_pfeMinAngle->setToolTip(angletip);
 
             QString areatip = QString("The panel's area");
             m_pchCheckArea->setToolTip(areatip);
-            m_pdeMinArea->setToolTip(areatip);
+            m_pfeMinArea->setToolTip(areatip);
 
             QString sizetip = QString("The panel's minimum edge length");
             m_pchCheckSize->setToolTip(sizetip);
-            m_pdeMinSize->setToolTip(sizetip);
+            m_pfeMinSize->setToolTip(sizetip);
 
             pCheckLayout->addWidget(pLabTriangles,      1,1,1,4);
             pCheckLayout->addWidget(m_pchCheckSkinny,   2,2);
-            pCheckLayout->addWidget(m_pdeQuality,       2,3);
+            pCheckLayout->addWidget(m_pfeQuality,       2,3);
             pCheckLayout->addWidget(pLabQuads,          3,1,1,4);
             pCheckLayout->addWidget(m_pchCheckQuadWarp, 4,2);
-            pCheckLayout->addWidget(m_pdeMaxQuadWarp,   4,3);
+            pCheckLayout->addWidget(m_pfeMaxQuadWarp,   4,3);
             pCheckLayout->addWidget(pLabAngle1,         4,4);
             pCheckLayout->addWidget(pLabAll,            5,1,1,4);
             pCheckLayout->addWidget(m_pchCheckAngle,    6,2);
-            pCheckLayout->addWidget(m_pdeMinAngle,      6,3);
+            pCheckLayout->addWidget(m_pfeMinAngle,      6,3);
             pCheckLayout->addWidget(pLabAngle0,         6,4);
             pCheckLayout->addWidget(m_pchCheckSize,     7,2);
-            pCheckLayout->addWidget(m_pdeMinSize,       7,3);
+            pCheckLayout->addWidget(m_pfeMinSize,       7,3);
             pCheckLayout->addWidget(pLabSize,           7,4);
             pCheckLayout->addWidget(m_pchCheckArea,     8,2);
-            pCheckLayout->addWidget(m_pdeMinArea,       8,3);
+            pCheckLayout->addWidget(m_pfeMinArea,       8,3);
             pCheckLayout->addWidget(pLabArea,           8,4);
             pCheckLayout->setColumnStretch(4,1);
         }
@@ -197,11 +197,11 @@ void PanelCheckDlg::setupLayout()
 
 void PanelCheckDlg::accept()
 {
-    s_Quality     = m_pdeQuality->value();
-    s_MinAngle    = m_pdeMinAngle->value();
-    s_MinArea     = m_pdeMinArea->value()/Units::m2toUnit();
-    s_MinSize     = m_pdeMinSize->value()/Units::mtoUnit();
-    s_MaxQuadWarp = m_pdeMaxQuadWarp->value();
+    s_Quality     = m_pfeQuality->value();
+    s_MinAngle    = m_pfeMinAngle->value();
+    s_MinArea     = m_pfeMinArea->value()/Units::m2toUnit();
+    s_MinSize     = m_pfeMinSize->value()/Units::mtoUnit();
+    s_MaxQuadWarp = m_pfeMaxQuadWarp->value();
     QDialog::accept();
 }
 
@@ -209,35 +209,35 @@ void PanelCheckDlg::accept()
 void PanelCheckDlg::onCheckSkinny()
 {
     s_bCheckSkinny = m_pchCheckSkinny->isChecked();
-    m_pdeQuality->setEnabled(s_bCheckSkinny);
+    m_pfeQuality->setEnabled(s_bCheckSkinny);
 }
 
 
 void PanelCheckDlg::onCheckMinAngle()
 {
     s_bCheckMinAngle = m_pchCheckAngle->isChecked();
-    m_pdeMinAngle->setEnabled(s_bCheckMinAngle);
+    m_pfeMinAngle->setEnabled(s_bCheckMinAngle);
 }
 
 
 void PanelCheckDlg::onCheckMinArea()
 {
     s_bCheckMinArea  = m_pchCheckArea->isChecked();
-    m_pdeMinArea->setEnabled(s_bCheckMinArea);
+    m_pfeMinArea->setEnabled(s_bCheckMinArea);
 }
 
 
 void PanelCheckDlg::onCheckMinSize()
 {
     s_bCheckMinSize  = m_pchCheckSize->isChecked();
-    m_pdeMinSize->setEnabled(s_bCheckMinSize);
+    m_pfeMinSize->setEnabled(s_bCheckMinSize);
 }
 
 
 void PanelCheckDlg::onCheckQuadWarp()
 {
     s_bCheckQuadWarp = m_pchCheckQuadWarp->isChecked();
-    m_pdeMaxQuadWarp->setEnabled(m_bQuads && s_bCheckQuadWarp);
+    m_pfeMaxQuadWarp->setEnabled(m_bQuads && s_bCheckQuadWarp);
 }
 
 

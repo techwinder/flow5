@@ -78,8 +78,8 @@ class PanelAnalysisTest : public GraphWt
 
     private:
         IntEdit *m_piePanelId;
-        FloatEdit *m_pdeZMax;
-        FloatEdit *m_pdeZInc;
+        FloatEdit *m_pfeZMax;
+        FloatEdit *m_pfeZInc;
         PlainTextOutput *m_pptoOutput;
 
         gl3dXflView *m_pgl3dXflView;

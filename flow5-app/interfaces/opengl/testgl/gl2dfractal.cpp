@@ -90,14 +90,14 @@ gl2dFractal::gl2dFractal(QWidget *pParent) : gl2dView(pParent)
                 m_pieMaxIter = new IntEdit(s_MaxIter);
                 m_pieMaxIter->setToolTip("The number of iterations before bailing out.");
 
-                m_pdeMaxLength = new FloatEdit(s_MaxLength);
-                m_pdeMaxLength->setToolTip("The escape amplitude of z.");
+                m_pfeMaxLength = new FloatEdit(s_MaxLength);
+                m_pfeMaxLength->setToolTip("The escape amplitude of z.");
 
                 connect(m_pieMaxIter,   SIGNAL(intChanged(int)), SLOT(onMode()));
-                connect(m_pdeMaxLength, SIGNAL(floatChanged(float)), SLOT(onMode()));
+                connect(m_pfeMaxLength, SIGNAL(floatChanged(float)), SLOT(onMode()));
 
                 pParamLayout->addRow("Max. iterations:", m_pieMaxIter);
-                pParamLayout->addRow("Max. length:",     m_pdeMaxLength);
+                pParamLayout->addRow("Max. length:",     m_pfeMaxLength);
             }
 
             m_pchShowSeed = new QCheckBox("Show seed");
@@ -250,7 +250,7 @@ void gl2dFractal::glRenderView()
     {
         int stride = 2;
         s_MaxIter   = m_pieMaxIter->value();
-        s_MaxLength = m_pdeMaxLength->value();
+        s_MaxLength = m_pfeMaxLength->value();
         if(m_prbJulia->isChecked()) m_shadFrac.setUniformValue(m_locJulia,  1);
         else                        m_shadFrac.setUniformValue(m_locJulia,  0);
         m_shadFrac.setUniformValue(m_locParam,     s_Seed);

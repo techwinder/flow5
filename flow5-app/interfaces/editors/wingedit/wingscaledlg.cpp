@@ -69,13 +69,13 @@ void WingScaleDlg::setupLayout()
         m_pchScaleAR   = new QCheckBox(tr("Aspect ratio"));
         m_pchScaleTR   = new QCheckBox(tr("Taper ratio"));
 
-        m_pdeNewSpan  = new FloatEdit(0,3);
-        m_pdeNewChord = new FloatEdit(0,3);
-        m_pdeNewTwist = new FloatEdit(0,3);
-        m_pdeNewSweep = new FloatEdit(0,3);
-        m_pdeNewArea  = new FloatEdit(0,3);
-        m_pdeNewAR    = new FloatEdit(0,3);
-        m_pdeNewTR    = new FloatEdit(0,3);
+        m_pfeNewSpan  = new FloatEdit(0,3);
+        m_pfeNewChord = new FloatEdit(0,3);
+        m_pfeNewTwist = new FloatEdit(0,3);
+        m_pfeNewSweep = new FloatEdit(0,3);
+        m_pfeNewArea  = new FloatEdit(0,3);
+        m_pfeNewAR    = new FloatEdit(0,3);
+        m_pfeNewTR    = new FloatEdit(0,3);
 
         m_plabRefSpan  = new QLabel("0.000");
         m_plabRefChord = new QLabel("0.000");
@@ -121,37 +121,37 @@ void WingScaleDlg::setupLayout()
 
         pScaleLayout->addWidget(m_pchSpan,       2,1);
         pScaleLayout->addWidget(m_plabRefSpan,   2,2);
-        pScaleLayout->addWidget(m_pdeNewSpan,    2,3);
+        pScaleLayout->addWidget(m_pfeNewSpan,    2,3);
         pScaleLayout->addWidget(m_plabSpanRatio, 2,5);
 
         pScaleLayout->addWidget(m_pchChord,      3,1);
         pScaleLayout->addWidget(m_plabRefChord,  3,2);
-        pScaleLayout->addWidget(m_pdeNewChord,   3,3);
+        pScaleLayout->addWidget(m_pfeNewChord,   3,3);
         pScaleLayout->addWidget(m_plabChordRatio,3,5);
 
         pScaleLayout->addWidget(m_pchSweep,      4,1);
         pScaleLayout->addWidget(m_plabRefSweep,  4,2);
-        pScaleLayout->addWidget(m_pdeNewSweep,   4,3);
+        pScaleLayout->addWidget(m_pfeNewSweep,   4,3);
         pScaleLayout->addWidget(m_plabSweepRatio,4,5);
 
         pScaleLayout->addWidget(m_pchTwist,      5,1);
         pScaleLayout->addWidget(m_plabRefTwist,  5,2);
-        pScaleLayout->addWidget(m_pdeNewTwist,   5,3);
+        pScaleLayout->addWidget(m_pfeNewTwist,   5,3);
         pScaleLayout->addWidget(m_plabTwistRatio,5,5);
 
         pScaleLayout->addWidget(m_pchScaleArea,  6,1);
         pScaleLayout->addWidget(m_plabRefArea,   6,2);
-        pScaleLayout->addWidget(m_pdeNewArea,    6,3);
+        pScaleLayout->addWidget(m_pfeNewArea,    6,3);
         pScaleLayout->addWidget(m_plabAreaRatio, 6,5);
 
         pScaleLayout->addWidget(m_pchScaleAR,    7,1);
         pScaleLayout->addWidget(m_plabRefAR,     7,2);
-        pScaleLayout->addWidget(m_pdeNewAR,      7,3);
+        pScaleLayout->addWidget(m_pfeNewAR,      7,3);
         pScaleLayout->addWidget(m_plabARRatio,   7,5);
 
         pScaleLayout->addWidget(m_pchScaleTR,    8,1);
         pScaleLayout->addWidget(m_plabRefTR,     8,2);
-        pScaleLayout->addWidget(m_pdeNewTR,      8,3);
+        pScaleLayout->addWidget(m_pfeNewTR,      8,3);
         pScaleLayout->addWidget(m_plabTRRatio,   8,5);
 
         QString unitLabel = Units::lengthUnitQLabel();
@@ -194,13 +194,13 @@ void WingScaleDlg::setupLayout()
     connect(m_pchScaleAR,   SIGNAL(clicked()), this, SLOT(onClickedCheckBox()));
     connect(m_pchScaleTR,   SIGNAL(clicked()), this, SLOT(onClickedCheckBox()));
 
-    connect(m_pdeNewSpan,  SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
-    connect(m_pdeNewChord, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
-    connect(m_pdeNewSweep, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
-    connect(m_pdeNewTwist, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
-    connect(m_pdeNewArea, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
-    connect(m_pdeNewAR, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
-    connect(m_pdeNewTR, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
+    connect(m_pfeNewSpan,  SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
+    connect(m_pfeNewChord, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
+    connect(m_pfeNewSweep, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
+    connect(m_pfeNewTwist, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
+    connect(m_pfeNewArea, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
+    connect(m_pfeNewAR, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
+    connect(m_pfeNewTR, SIGNAL(editingFinished()), this, SLOT(onEditingFinished()));
 }
 
 
@@ -306,13 +306,13 @@ void WingScaleDlg::initDialog(double const &RefSpan, double const &RefChord, dou
     strong = QString ("%1").arg(m_RefTR , 8,'f',3);
     m_plabRefTR->setText(strong);
 
-    m_pdeNewSpan->setValue(m_NewSpan * Units::mtoUnit());
-    m_pdeNewChord->setValue(m_NewChord * Units::mtoUnit());
-    m_pdeNewSweep->setValue(m_NewSweep);
-    m_pdeNewTwist->setValue(m_NewTwist);
-    m_pdeNewArea->setValue(m_NewArea*Units::m2toUnit());
-    m_pdeNewAR->setValue(m_NewAR);
-    m_pdeNewTR->setValue(m_NewTR);
+    m_pfeNewSpan->setValue(m_NewSpan * Units::mtoUnit());
+    m_pfeNewChord->setValue(m_NewChord * Units::mtoUnit());
+    m_pfeNewSweep->setValue(m_NewSweep);
+    m_pfeNewTwist->setValue(m_NewTwist);
+    m_pfeNewArea->setValue(m_NewArea*Units::m2toUnit());
+    m_pfeNewAR->setValue(m_NewAR);
+    m_pfeNewTR->setValue(m_NewTR);
 
     setResults();
     enableControls();
@@ -343,14 +343,14 @@ void WingScaleDlg::onEditingFinished()
 
 void WingScaleDlg::enableControls()
 {
-    m_pdeNewTR->setEnabled(m_bTR);
+    m_pfeNewTR->setEnabled(m_bTR);
 
-    m_pdeNewSpan->setEnabled(m_bSpan);
-    m_pdeNewChord->setEnabled(m_bChord);
-    m_pdeNewSweep->setEnabled(m_bSweep);
-    m_pdeNewTwist->setEnabled(m_bTwist);
-    m_pdeNewArea->setEnabled(m_bArea);
-    m_pdeNewAR->setEnabled(m_bAR);
+    m_pfeNewSpan->setEnabled(m_bSpan);
+    m_pfeNewChord->setEnabled(m_bChord);
+    m_pfeNewSweep->setEnabled(m_bSweep);
+    m_pfeNewTwist->setEnabled(m_bTwist);
+    m_pfeNewArea->setEnabled(m_bArea);
+    m_pfeNewAR->setEnabled(m_bAR);
 }
 
 
@@ -364,13 +364,13 @@ void WingScaleDlg::readData()
     m_bAR    = m_pchScaleAR->isChecked();
     m_bTR    = m_pchScaleTR->isChecked();
 
-    m_NewSpan  = m_pdeNewSpan->value()  / Units::mtoUnit();
-    m_NewChord = m_pdeNewChord->value() / Units::mtoUnit();
-    m_NewSweep = m_pdeNewSweep->value();
-    m_NewTwist = m_pdeNewTwist->value();
-    m_NewArea  = m_pdeNewArea->value() /Units::m2toUnit();
-    m_NewAR    = m_pdeNewAR->value();
-    m_NewTR    = m_pdeNewTR->value();
+    m_NewSpan  = m_pfeNewSpan->value()  / Units::mtoUnit();
+    m_NewChord = m_pfeNewChord->value() / Units::mtoUnit();
+    m_NewSweep = m_pfeNewSweep->value();
+    m_NewTwist = m_pfeNewTwist->value();
+    m_NewArea  = m_pfeNewArea->value() /Units::m2toUnit();
+    m_NewAR    = m_pfeNewAR->value();
+    m_NewTR    = m_pfeNewTR->value();
 }
 
 

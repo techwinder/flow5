@@ -56,7 +56,7 @@ class LECircleDlg : public XflDialog
 
     private:
         QCheckBox *m_pchShow;
-        FloatEdit *m_pdeRadius;
+        FloatEdit *m_pfeRadius;
 
         double m_Radius;
         bool m_bShowRadius;

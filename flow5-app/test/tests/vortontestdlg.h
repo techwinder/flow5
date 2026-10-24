@@ -80,15 +80,15 @@ class VortonTestDlg : public QDialog
         GraphWt *m_pGraphWt;
         gl3dVortonField *m_pglVortonField;
 
-        FloatEdit *m_pdeWidth, *m_pdeLength;
+        FloatEdit *m_pfeWidth, *m_pfeLength;
         IntEdit *m_pieNXPanels, *m_pieNYPanels;
         IntEdit *m_pieVtnSide;
-        FloatEdit *m_pdeVtnCoreSize;
+        FloatEdit *m_pfeVtnCoreSize;
 
         IntEdit *m_pieCurvePts;
         QComboBox *m_pcbVPlotDir;
-        FloatEdit *m_pdeX0, *m_pdeY0, *m_pdeZ0;
-        FloatEdit *m_pdeX1, *m_pdeY1, *m_pdeZ1;
+        FloatEdit *m_pfeX0, *m_pfeY0, *m_pfeZ0;
+        FloatEdit *m_pfeX1, *m_pfeY1, *m_pfeZ1;
 
         QRadioButton *m_prbV, *m_prbGradV;
 

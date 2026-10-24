@@ -128,8 +128,8 @@ class gl3dVortonField : public gl3dXflView
         QFrame *m_pfrControls;
 
         QLabel *m_plabTitle;
-        FloatEdit *m_pdeVelScale;
-        FloatEdit *m_pdeRefLength;
+        FloatEdit *m_pfeVelScale;
+        FloatEdit *m_pfeRefLength;
 
         QCheckBox *m_pchContourPlane;
         QSlider *m_pslPlanePos;

@@ -48,7 +48,7 @@ void TargetCurveDlg::initDialog(bool bShowElliptic, bool bShowBell, bool bMaxCl,
 {
     m_pchShowEllipticCurve->setChecked(bShowElliptic);
     m_pchShowBellCurve->setChecked(bShowBell);
-    m_pdeExptEdit->setValue(curveExp);
+    m_pfeExptEdit->setValue(curveExp);
     m_prbRadio1->setChecked(bMaxCl);
     m_prbRadio2->setChecked(!bMaxCl);
     m_plbCurveStyle->setTheStyle(ls);
@@ -82,9 +82,9 @@ void TargetCurveDlg::setupLayout()
 
                 QLabel *pExpLabel = new QLabel(tr("Bell curve exponent:"));
                 pExpLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-                m_pdeExptEdit = new FloatEdit(1, 2);
+                m_pfeExptEdit = new FloatEdit(1, 2);
                 pBellLayout->addWidget(pExpLabel,2,1);
-                pBellLayout->addWidget(m_pdeExptEdit,2,2);
+                pBellLayout->addWidget(m_pfeExptEdit,2,2);
             }
             pBellBox->setLayout(pBellLayout);
         }
@@ -139,7 +139,7 @@ void TargetCurveDlg::onCurveStyle()
     m_plbCurveStyle->setTheStyle(lineMenu.theStyle());
 }
 
-double TargetCurveDlg::bellCurveExp() const {return m_pdeExptEdit->value();}
+double TargetCurveDlg::bellCurveExp() const {return m_pfeExptEdit->value();}
 
 bool TargetCurveDlg::bShowBellCurve() const {return m_pchShowBellCurve->isChecked();}
 bool TargetCurveDlg::bShowEllipticCurve() const {return m_pchShowEllipticCurve->isChecked();}

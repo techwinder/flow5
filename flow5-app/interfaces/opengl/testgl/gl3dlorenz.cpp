@@ -91,13 +91,13 @@ gl3dLorenz::gl3dLorenz(QWidget *pParent) : gl3dTestGLView (pParent)
             {
                 QGridLayout*pParamsLayout = new QGridLayout;
                 {
-                    m_pdeSigma = new FloatEdit(s_Sigma);
-                    m_pdeRho   = new FloatEdit(s_Rho);
-                    m_pdeBeta  = new FloatEdit(s_Beta);
-                    m_pdeX     = new FloatEdit(s_P.x);
-                    m_pdeY     = new FloatEdit(s_P.y);
-                    m_pdeZ     = new FloatEdit(s_P.z);
-                    m_pdeDt    = new FloatEdit(s_dt);
+                    m_pfeSigma = new FloatEdit(s_Sigma);
+                    m_pfeRho   = new FloatEdit(s_Rho);
+                    m_pfeBeta  = new FloatEdit(s_Beta);
+                    m_pfeX     = new FloatEdit(s_P.x);
+                    m_pfeY     = new FloatEdit(s_P.y);
+                    m_pfeZ     = new FloatEdit(s_P.z);
+                    m_pfeDt    = new FloatEdit(s_dt);
                     m_pieIntervalms = new IntEdit(s_RefreshInterval);
                     m_pieMaxPts     = new IntEdit(s_MaxPts);
 
@@ -127,13 +127,13 @@ gl3dLorenz::gl3dLorenz(QWidget *pParent) : gl3dTestGLView (pParent)
                     pParamsLayout->addWidget(plabLineStyle,  9, 1, Qt::AlignRight | Qt::AlignVCenter);
                     pParamsLayout->addWidget(plabRefresh,   10, 1, Qt::AlignRight | Qt::AlignVCenter);
 
-                    pParamsLayout->addWidget(m_pdeSigma,       1, 2);
-                    pParamsLayout->addWidget(m_pdeRho,         2, 2);
-                    pParamsLayout->addWidget(m_pdeBeta,        3, 2);
-                    pParamsLayout->addWidget(m_pdeX,           4, 2);
-                    pParamsLayout->addWidget(m_pdeY,           5, 2);
-                    pParamsLayout->addWidget(m_pdeZ,           6, 2);
-                    pParamsLayout->addWidget(m_pdeDt,          7, 2);
+                    pParamsLayout->addWidget(m_pfeSigma,       1, 2);
+                    pParamsLayout->addWidget(m_pfeRho,         2, 2);
+                    pParamsLayout->addWidget(m_pfeBeta,        3, 2);
+                    pParamsLayout->addWidget(m_pfeX,           4, 2);
+                    pParamsLayout->addWidget(m_pfeY,           5, 2);
+                    pParamsLayout->addWidget(m_pfeZ,           6, 2);
+                    pParamsLayout->addWidget(m_pfeDt,          7, 2);
                     pParamsLayout->addWidget(m_pieMaxPts,      8, 2);
                     pParamsLayout->addWidget(m_plbStyle,       9, 2);
                     pParamsLayout->addWidget(m_pieIntervalms, 10, 2);
@@ -278,15 +278,15 @@ void gl3dLorenz::onLineStyle(LineStyle)
 void gl3dLorenz::onResetDefaults()
 {
     s_P = Vector3d(13, 15, 30);
-    m_pdeX->setValue(s_P.x);
-    m_pdeY->setValue(s_P.y);
-    m_pdeZ->setValue(s_P.z);
+    m_pfeX->setValue(s_P.x);
+    m_pfeY->setValue(s_P.y);
+    m_pfeZ->setValue(s_P.z);
     s_Sigma = 10.0;
     s_Beta  = 8.0/3.0;
     s_Rho   = 28.0;
-    m_pdeSigma->setValue(s_Sigma);
-    m_pdeRho->setValue(s_Rho);
-    m_pdeBeta->setValue(s_Beta);
+    m_pfeSigma->setValue(s_Sigma);
+    m_pfeRho->setValue(s_Rho);
+    m_pfeBeta->setValue(s_Beta);
 
     s_RefreshInterval = 16; //ms --> 60Hz
     m_pieIntervalms->setValue(s_RefreshInterval);
@@ -295,7 +295,7 @@ void gl3dLorenz::onResetDefaults()
     m_pieMaxPts->setValue(s_MaxPts);
 
     s_dt = 0.003;
-    m_pdeDt->setValue(s_dt);
+    m_pfeDt->setValue(s_dt);
     onRestart();
 }
 
@@ -384,7 +384,7 @@ double gl3dLorenz::h(double x, double y, double z) const {return x*y-s_Beta*z;}
 
 void gl3dLorenz::moveIt()
 {
-    s_dt = m_pdeDt->value();
+    s_dt = m_pfeDt->value();
     s_RefreshInterval = m_pieIntervalms->value();
 
     if(m_pTimer)
@@ -462,15 +462,15 @@ void gl3dLorenz::moveIt()
 
 void gl3dLorenz::onRestart()
 {
-    s_P = Vector3d(m_pdeX->value(), m_pdeY->value(), m_pdeZ->value());
+    s_P = Vector3d(m_pfeX->value(), m_pfeY->value(), m_pfeZ->value());
 
-    s_Sigma = m_pdeSigma->value();
-    s_Beta  = m_pdeBeta->value();
-    s_Rho   = m_pdeRho->value();
+    s_Sigma = m_pfeSigma->value();
+    s_Beta  = m_pfeBeta->value();
+    s_Rho   = m_pfeRho->value();
 
     // initialize the array
     s_MaxPts = m_pieMaxPts->value();
-    s_dt = m_pdeDt->value();
+    s_dt = m_pfeDt->value();
     s_RefreshInterval = m_pieIntervalms->value();
 
     m_Trace.resize(s_MaxPts);

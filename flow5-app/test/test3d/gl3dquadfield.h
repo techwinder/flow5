@@ -101,14 +101,14 @@ class gl3dQuadField : public gl3dXflView
 
         QRadioButton *m_prbSource, *m_prbDoublet, *m_prbVortex;
 
-        FloatEdit *m_pdeVelScale;
-        FloatEdit *m_pdeRefLength;
+        FloatEdit *m_pfeVelScale;
+        FloatEdit *m_pfeRefLength;
         IntEdit *m_pieNu, *m_pieNw;
 
         QCheckBox *m_pchContourPlane;
         QComboBox *m_pcbPlaneDir;
         QCheckBox *m_pchAutoScale;
-        FloatEdit *m_pdeVMin, *m_pdeVMax;
+        FloatEdit *m_pfeVMin, *m_pfeVMax;
 
         QCheckBox *m_pchVectors;
         QComboBox *m_pcbVelDir;

@@ -226,11 +226,11 @@ QFrame* Panel3TestDlg::makeControls()
                     m_pcbVortexModel->addItems(items);
                     m_pcbVortexModel->setCurrentIndex(s_VortexModel);
 
-                    m_pdeCoreRadius = new FloatEdit(s_CoreRadius);
+                    m_pfeCoreRadius = new FloatEdit(s_CoreRadius);
                     pSingLayout->addWidget(m_prbSource,                1,1);
                     pSingLayout->addWidget(m_prbDoublet,               1,2);
                     pSingLayout->addWidget(new QLabel("Core radius="), 2,1, Qt::AlignVCenter | Qt::AlignRight);
-                    pSingLayout->addWidget(m_pdeCoreRadius,            2,2);
+                    pSingLayout->addWidget(m_pfeCoreRadius,            2,2);
                     pSingLayout->addWidget(pLabVortexModel,            3,1);
                     pSingLayout->addWidget(m_pcbVortexModel,           3,2);
                     pSingLayout->setColumnStretch(3,1);
@@ -282,12 +282,12 @@ QFrame* Panel3TestDlg::makeControls()
 
                 QGridLayout *pGraphCtrlsLayout= new QGridLayout;
                 {
-                    m_pdeX0 = new FloatEdit(s_X0);
-                    m_pdeY0 = new FloatEdit(s_Y0);
-                    m_pdeZ0 = new FloatEdit(s_Z0);
-                    m_pdeX1 = new FloatEdit(s_X1);
-                    m_pdeY1 = new FloatEdit(s_Y1);
-                    m_pdeZ1 = new FloatEdit(s_Z1);
+                    m_pfeX0 = new FloatEdit(s_X0);
+                    m_pfeY0 = new FloatEdit(s_Y0);
+                    m_pfeZ0 = new FloatEdit(s_Z0);
+                    m_pfeX1 = new FloatEdit(s_X1);
+                    m_pfeY1 = new FloatEdit(s_Y1);
+                    m_pfeZ1 = new FloatEdit(s_Z1);
 
                     m_pieCurvePts = new IntEdit(s_nCurvePts);
 
@@ -299,12 +299,12 @@ QFrame* Panel3TestDlg::makeControls()
                     pGraphCtrlsLayout->addWidget(new QLabel("X1="), 1,4, Qt::AlignRight);
                     pGraphCtrlsLayout->addWidget(new QLabel("Y1="), 2,4, Qt::AlignRight);
                     pGraphCtrlsLayout->addWidget(new QLabel("Z1="), 3,4, Qt::AlignRight);
-                    pGraphCtrlsLayout->addWidget(m_pdeX0,1,2);
-                    pGraphCtrlsLayout->addWidget(m_pdeY0,2,2);
-                    pGraphCtrlsLayout->addWidget(m_pdeZ0,3,2);
-                    pGraphCtrlsLayout->addWidget(m_pdeX1,1,5);
-                    pGraphCtrlsLayout->addWidget(m_pdeY1,2,5);
-                    pGraphCtrlsLayout->addWidget(m_pdeZ1,3,5);
+                    pGraphCtrlsLayout->addWidget(m_pfeX0,1,2);
+                    pGraphCtrlsLayout->addWidget(m_pfeY0,2,2);
+                    pGraphCtrlsLayout->addWidget(m_pfeZ0,3,2);
+                    pGraphCtrlsLayout->addWidget(m_pfeX1,1,5);
+                    pGraphCtrlsLayout->addWidget(m_pfeY1,2,5);
+                    pGraphCtrlsLayout->addWidget(m_pfeZ1,3,5);
                     pGraphCtrlsLayout->addWidget(new QLabel("Curve size="), 5, 1, Qt::AlignRight);
                     pGraphCtrlsLayout->addWidget(m_pieCurvePts,5,2,1,2);
                     pGraphCtrlsLayout->addWidget(m_pLineBtn,5,4,1,3);
@@ -343,7 +343,7 @@ void Panel3TestDlg::connectSignals()
     connect(m_pieNXPanels,    SIGNAL(intChanged(int)),            SLOT(onMakeViews()));
     connect(m_pieNYPanels,    SIGNAL(intChanged(int)),            SLOT(onMakeViews()));
     connect(m_pcbVortexModel, SIGNAL(currentIndexChanged(int)),  SLOT(onMakeViews()));
-    connect(m_pdeCoreRadius,  SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
+    connect(m_pfeCoreRadius,  SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
     connect(m_prbSource,      SIGNAL(clicked(bool)),             SLOT(onMakeViews()));
     connect(m_prbDoublet,     SIGNAL(clicked(bool)),             SLOT(onMakeViews()));
     connect(m_prbVelocity,    SIGNAL(clicked(bool)),             SLOT(onMakeViews()));
@@ -355,12 +355,12 @@ void Panel3TestDlg::connectSignals()
     connect(m_prbVortex,      SIGNAL(clicked(bool)),             SLOT(onMakeViews()));
 
 
-    connect(m_pdeX0,          SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
-    connect(m_pdeY0,          SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
-    connect(m_pdeZ0,          SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
-    connect(m_pdeX1,          SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
-    connect(m_pdeY1,          SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
-    connect(m_pdeZ1,          SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
+    connect(m_pfeX0,          SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
+    connect(m_pfeY0,          SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
+    connect(m_pfeZ0,          SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
+    connect(m_pfeX1,          SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
+    connect(m_pfeY1,          SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
+    connect(m_pfeZ1,          SIGNAL(floatChanged(float)),            SLOT(onMakeViews()));
     connect(m_pieCurvePts,    SIGNAL(intChanged(int)),            SLOT(onMakeViews()));
     connect(m_pLineBtn,       SIGNAL(clickedLB(LineStyle)), SLOT(onCurveStyle(LineStyle)));
 }
@@ -657,7 +657,7 @@ void Panel3TestDlg::readData()
     s_NYPanels = m_pieNYPanels->value();
 
     s_bSource    = m_prbSource->isChecked();
-    s_CoreRadius = m_pdeCoreRadius->value();
+    s_CoreRadius = m_pfeCoreRadius->value();
 
     switch(m_pcbVortexModel->currentIndex())
     {
@@ -673,12 +673,12 @@ void Panel3TestDlg::readData()
     s_VComp      = m_pcbVcomp->currentIndex();
     s_bPotential = m_prbPotential->isChecked();
 
-    s_X0 = m_pdeX0->value();
-    s_Y0 = m_pdeY0->value();
-    s_Z0 = m_pdeZ0->value();
-    s_X1 = m_pdeX1->value();
-    s_Y1 = m_pdeY1->value();
-    s_Z1 = m_pdeZ1->value();
+    s_X0 = m_pfeX0->value();
+    s_Y0 = m_pfeY0->value();
+    s_Z0 = m_pfeZ0->value();
+    s_X1 = m_pfeX1->value();
+    s_Y1 = m_pfeY1->value();
+    s_Z1 = m_pfeZ1->value();
     s_nCurvePts = m_pieCurvePts->value();
 
     if     (m_prbBasis->isChecked())  s_Method=BASIS;

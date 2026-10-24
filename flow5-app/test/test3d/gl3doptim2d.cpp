@@ -148,7 +148,7 @@ void gl3dOptim2d::setupLayout()
 
                 QLabel *pLabMaxError = new QLabel("Max. error:");
 //                pLabMaxError->setAttribute(Qt::WA_NoSystemBackground);
-                m_pdeMaxError = new FloatEdit(s_MaxError);
+                m_pfeMaxError = new FloatEdit(s_MaxError);
 
                 QLabel *pLabUpdate = new QLabel("Update interval:");
 //                pLabUpdate->setAttribute(Qt::WA_NoSystemBackground);
@@ -163,7 +163,7 @@ void gl3dOptim2d::setupLayout()
                 pCommonCtrlsLayout->addWidget(m_piePopSize,         1, 2);
 
                 pCommonCtrlsLayout->addWidget(pLabMaxError,         2, 1);
-                pCommonCtrlsLayout->addWidget(m_pdeMaxError,        2, 2);
+                pCommonCtrlsLayout->addWidget(m_pfeMaxError,        2, 2);
 
                 pCommonCtrlsLayout->addWidget(pLabUpdate,           3, 1);
                 pCommonCtrlsLayout->addWidget(m_pieUpdateDt,        3, 2);
@@ -210,40 +210,40 @@ void gl3dOptim2d::setupLayout()
                         QGridLayout *pInputLayout = new QGridLayout;
                         {
                             QLabel *pLabInertia = new QLabel("Inertia weight w:");
-                            m_pdeInertiaWeight = new FloatEdit(s_InertiaWeight);
-                            m_pdeInertiaWeight->setToolTip("<p>The inertia weight determines the influence of the particle's "
+                            m_pfeInertiaWeight = new FloatEdit(s_InertiaWeight);
+                            m_pfeInertiaWeight->setToolTip("<p>The inertia weight determines the influence of the particle's "
                                                            "current velocity on its updated velocity.<br>"
                                                            "Recommendation: 0.3</p>");
 
                             QLabel *pLabCognitive = new QLabel("Cognitive weight c1:");
-                            m_pdeCognitiveWeight = new FloatEdit(s_CognitiveWeight);
-                            m_pdeCognitiveWeight->setToolTip("<p>The cognitive weight determines the influence of the particle's best position.<br>"
+                            m_pfeCognitiveWeight = new FloatEdit(s_CognitiveWeight);
+                            m_pfeCognitiveWeight->setToolTip("<p>The cognitive weight determines the influence of the particle's best position.<br>"
                                                              "Recommendation: 0.7</p>");
 
                             QLabel *pLabSocial = new QLabel("Social weight c2:");
-                            m_pdeSocialWeight = new FloatEdit(s_SocialWeight);
-                            m_pdeSocialWeight->setToolTip("<p>The social weight determines the influence of the global best-known position.<br>"
+                            m_pfeSocialWeight = new FloatEdit(s_SocialWeight);
+                            m_pfeSocialWeight->setToolTip("<p>The social weight determines the influence of the global best-known position.<br>"
                                                           "Recommendation: 0.7</p<");
 
                             QLabel *pLabRegen = new QLabel("Regeneration probability:");
-                            m_pdePropRegenerate = new FloatEdit(s_ProbRegenerate*100.0);
-                            m_pdePropRegenerate->setRange(0.0, 100.0);
-                            m_pdePropRegenerate->setToolTip("<p>The probability that a particle will be re-created at a random position at each iteration.<br>"
+                            m_pfePropRegenerate = new FloatEdit(s_ProbRegenerate*100.0);
+                            m_pfePropRegenerate->setRange(0.0, 100.0);
+                            m_pfePropRegenerate->setToolTip("<p>The probability that a particle will be re-created at a random position at each iteration.<br>"
                                                         "Increases the likelyhood that the swarm will not get stuck on a local minimum.<br>"
                                                         "Recommendation: 5% to 25%</p>");
                             QLabel *pLabPercent = new QLabel("%");
 
                             pInputLayout->addWidget(pLabInertia,          3, 1);
-                            pInputLayout->addWidget(m_pdeInertiaWeight,   3, 2);
+                            pInputLayout->addWidget(m_pfeInertiaWeight,   3, 2);
 
                             pInputLayout->addWidget(pLabCognitive,        4, 1);
-                            pInputLayout->addWidget(m_pdeCognitiveWeight, 4, 2);
+                            pInputLayout->addWidget(m_pfeCognitiveWeight, 4, 2);
 
                             pInputLayout->addWidget(pLabSocial,           5, 1);
-                            pInputLayout->addWidget(m_pdeSocialWeight,    5, 2);
+                            pInputLayout->addWidget(m_pfeSocialWeight,    5, 2);
 
                             pInputLayout->addWidget(pLabRegen,            6, 1);
-                            pInputLayout->addWidget(m_pdePropRegenerate,  6, 2);
+                            pInputLayout->addWidget(m_pfePropRegenerate,  6, 2);
                             pInputLayout->addWidget(pLabPercent,          6, 3);
 
                             pInputLayout->setColumnStretch(1,3);
@@ -275,29 +275,29 @@ void gl3dOptim2d::setupLayout()
                         QGridLayout *pInputLayout = new QGridLayout;
                         {
                             QLabel *pLabXOver = new QLabel("Cross-over probability:");
-                            m_pdeProbXOver = new FloatEdit(s_ProbXOver*100.0);
-                            m_pdeProbXOver->setRange(0.0, 100.0);
+                            m_pfeProbXOver = new FloatEdit(s_ProbXOver*100.0);
+                            m_pfeProbXOver->setRange(0.0, 100.0);
                             QLabel *plabPercent0 = new QLabel("%");
 
                             QLabel *pLabProbMute = new QLabel("Mutation probability:");
-                            m_pdeProbMutation = new FloatEdit(s_ProbMutation*100.0);
-                            m_pdeProbMutation->setRange(0.0, 100.0);
+                            m_pfeProbMutation = new FloatEdit(s_ProbMutation*100.0);
+                            m_pfeProbMutation->setRange(0.0, 100.0);
                             QLabel *plabPercent1 = new QLabel("%");
 
                             QLabel *pLabSigMute = new QLabel("Mutation standard deviation:");
-                            m_pdeSigmaMutation = new FloatEdit(s_SigmaMutation);
-                            m_pdeSigmaMutation->setRange(0.0, 1.0); // absolute value
+                            m_pfeSigmaMutation = new FloatEdit(s_SigmaMutation);
+                            m_pfeSigmaMutation->setRange(0.0, 1.0); // absolute value
 
                             pInputLayout->addWidget(pLabXOver,            1, 1);
-                            pInputLayout->addWidget(m_pdeProbXOver,       1, 2);
+                            pInputLayout->addWidget(m_pfeProbXOver,       1, 2);
                             pInputLayout->addWidget(plabPercent0,         1, 3);
 
                             pInputLayout->addWidget(pLabProbMute,         2, 1);
-                            pInputLayout->addWidget(m_pdeProbMutation,    2, 2);
+                            pInputLayout->addWidget(m_pfeProbMutation,    2, 2);
                             pInputLayout->addWidget(plabPercent1,         2, 3);
 
                             pInputLayout->addWidget(pLabSigMute,          3, 1);
-                            pInputLayout->addWidget(m_pdeSigmaMutation,   3, 2);
+                            pInputLayout->addWidget(m_pfeSigmaMutation,   3, 2);
 
                             pInputLayout->setColumnStretch(1,3);
                             pInputLayout->setColumnStretch(2,2);
@@ -516,26 +516,26 @@ void gl3dOptim2d::onResetPSODefaults()
 
     m_pieUpdateDt->setValue(s_Dt);
     m_piePopSize->setValue(s_PopSize);
-    m_pdeMaxError->setValue(s_MaxError);
-    m_pdeInertiaWeight->setValue(s_InertiaWeight);
-    m_pdeCognitiveWeight->setValue(s_CognitiveWeight);
-    m_pdeSocialWeight->setValue(s_SocialWeight);
-    m_pdePropRegenerate->setValue(s_ProbRegenerate*100.0);
+    m_pfeMaxError->setValue(s_MaxError);
+    m_pfeInertiaWeight->setValue(s_InertiaWeight);
+    m_pfeCognitiveWeight->setValue(s_CognitiveWeight);
+    m_pfeSocialWeight->setValue(s_SocialWeight);
+    m_pfePropRegenerate->setValue(s_ProbRegenerate*100.0);
 }
 
 
 void gl3dOptim2d::readData()
 {
-    s_CognitiveWeight = m_pdeCognitiveWeight->value();
+    s_CognitiveWeight = m_pfeCognitiveWeight->value();
     s_Dt              = m_pieUpdateDt->value();
-    s_InertiaWeight   = m_pdeInertiaWeight->value();
-    s_MaxError        = m_pdeMaxError->value();
+    s_InertiaWeight   = m_pfeInertiaWeight->value();
+    s_MaxError        = m_pfeMaxError->value();
     s_PopSize         = m_piePopSize->value();
-    s_ProbMutation    = m_pdeProbMutation->value()/100.0;
-    s_ProbXOver       = m_pdeProbXOver->value()/100.0;
-    s_SigmaMutation   = m_pdeSigmaMutation->value();
-    s_SocialWeight    = m_pdeSocialWeight->value();
-    s_ProbRegenerate  = m_pdePropRegenerate->value()/100.0;
+    s_ProbMutation    = m_pfeProbMutation->value()/100.0;
+    s_ProbXOver       = m_pfeProbXOver->value()/100.0;
+    s_SigmaMutation   = m_pfeSigmaMutation->value();
+    s_SocialWeight    = m_pfeSocialWeight->value();
+    s_ProbRegenerate  = m_pfePropRegenerate->value()/100.0;
     s_bMinimum        = m_prbMin->isChecked();
 }
 
@@ -866,11 +866,11 @@ void gl3dOptim2d::onResetGADefaults()
     s_SigmaMutation   = 0.5;
     s_PopSize         = 29;
     m_piePopSize->setValue(s_PopSize);
-    m_pdeProbXOver->setValue(s_ProbXOver*100.0);
-    m_pdeProbMutation->setValue(s_ProbMutation*100.0);
-    m_pdeSigmaMutation->setValue(s_SigmaMutation);
+    m_pfeProbXOver->setValue(s_ProbXOver*100.0);
+    m_pfeProbMutation->setValue(s_ProbMutation*100.0);
+    m_pfeSigmaMutation->setValue(s_SigmaMutation);
     m_pieUpdateDt->setValue(s_Dt);
-    m_pdeMaxError->setValue(s_MaxError);
+    m_pfeMaxError->setValue(s_MaxError);
 }
 
 

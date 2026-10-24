@@ -71,6 +71,6 @@ class Fine3dControls : public QFrame
     private:
         QSlider *m_pslXView, *m_pslYView, *m_pslZView;
         QCheckBox *m_pchZAnimate;
-        FloatEdit *m_pdeZAnimAngle;
+        FloatEdit *m_pfeZAnimAngle;
 };
 

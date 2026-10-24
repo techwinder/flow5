@@ -109,21 +109,21 @@ gl3dLorenz2::gl3dLorenz2(QWidget *pParent) : gl3dTestGLView(pParent)
                 QLabel *plabX = new QLabel("x<sub>0</sub> =");
                 QLabel *plabY = new QLabel("y<sub>0</sub> =");
                 QLabel *plabZ = new QLabel("z<sub>0</sub> =");
-                m_pdeX = new FloatEdit(s_X0);
-                m_pdeY = new FloatEdit(s_Y0);
-                m_pdeZ = new FloatEdit(s_Z0);
-                m_pdeX->setToolTip("This defines the starting average position of the particles");
-                m_pdeY->setToolTip("This defines the starting average position of the particles");
-                m_pdeZ->setToolTip("This defines the starting average position of the particles");
+                m_pfeX = new FloatEdit(s_X0);
+                m_pfeY = new FloatEdit(s_Y0);
+                m_pfeZ = new FloatEdit(s_Z0);
+                m_pfeX->setToolTip("This defines the starting average position of the particles");
+                m_pfeY->setToolTip("This defines the starting average position of the particles");
+                m_pfeZ->setToolTip("This defines the starting average position of the particles");
 
                 QLabel *plabScatt = new QLabel("Initial scatter=");
-                m_pdeScatter = new FloatEdit(s_Scatter);
-                m_pdeScatter->setToolTip("This defines the max. deviation of the particles around the average starting position");
+                m_pfeScatter = new FloatEdit(s_Scatter);
+                m_pfeScatter->setToolTip("This defines the max. deviation of the particles around the average starting position");
 
 
                 QLabel *plabDt = new QLabel("dt=");
-                m_pdeDt = new FloatEdit(s_dt);
-                m_pdeDt->setToolTip("This defines the time step of the RK4 method");
+                m_pfeDt = new FloatEdit(s_dt);
+                m_pfeDt->setToolTip("This defines the time step of the RK4 method");
 
                 QPushButton *ppbRestart = new QPushButton("Restart attractor");
                 connect(ppbRestart, SIGNAL(clicked(bool)), SLOT(onRestart()));
@@ -132,8 +132,8 @@ gl3dLorenz2::gl3dLorenz2(QWidget *pParent) : gl3dTestGLView(pParent)
                 m_plabFrameRate->setFont(DisplayOptions::tableFont());
 
                 QLabel *plabSize = new QLabel("Particle size =");
-                m_pdeParticleSize = new FloatEdit(s_Size);
-                connect(m_pdeParticleSize, SIGNAL(floatChanged(float)), SLOT(onParticleSize()));
+                m_pfeParticleSize = new FloatEdit(s_Size);
+                connect(m_pfeParticleSize, SIGNAL(floatChanged(float)), SLOT(onParticleSize()));
 
                 QCheckBox *pchAxes = new QCheckBox("Axes");
                 pchAxes->setChecked(true);
@@ -148,22 +148,22 @@ gl3dLorenz2::gl3dLorenz2(QWidget *pParent) : gl3dTestGLView(pParent)
 
                 pMainLayout->addWidget(pLabAttractor,     7,  1, 1, 2);
                 pMainLayout->addWidget(plabX,             8,  1);
-                pMainLayout->addWidget(m_pdeX,            8,  2);
+                pMainLayout->addWidget(m_pfeX,            8,  2);
                 pMainLayout->addWidget(plabY,             9,  1);
-                pMainLayout->addWidget(m_pdeY,            9,  2);
+                pMainLayout->addWidget(m_pfeY,            9,  2);
                 pMainLayout->addWidget(plabZ,             10,  1);
-                pMainLayout->addWidget(m_pdeZ,            10,  2);
+                pMainLayout->addWidget(m_pfeZ,            10,  2);
 
                 pMainLayout->addWidget(plabScatt,         11,  1);
-                pMainLayout->addWidget(m_pdeScatter,      11,  2);
+                pMainLayout->addWidget(m_pfeScatter,      11,  2);
 
                 pMainLayout->addWidget(plabDt,            12,  1);
-                pMainLayout->addWidget(m_pdeDt,           12,  2);
+                pMainLayout->addWidget(m_pfeDt,           12,  2);
 
                 pMainLayout->addWidget(ppbRestart,        13, 1, 1, 2);
 
                 pMainLayout->addWidget(plabSize,          14, 1);
-                pMainLayout->addWidget(m_pdeParticleSize, 14, 2);
+                pMainLayout->addWidget(m_pfeParticleSize, 14, 2);
 
                 pMainLayout->addWidget(pchAxes,           15, 1, 1, 2);
                 pMainLayout->addWidget(m_plabFrameRate,   16, 1, 1, 2);
@@ -279,13 +279,13 @@ void gl3dLorenz2::initializeGL()
 
 void gl3dLorenz2::onRestart()
 {
-    s_X0 = m_pdeX->value();
-    s_Y0 = m_pdeY->value();
-    s_Z0 = m_pdeZ->value();
+    s_X0 = m_pfeX->value();
+    s_Y0 = m_pfeY->value();
+    s_Z0 = m_pfeZ->value();
     s_NGroups = m_pieNGroups->value();
-    s_Scatter = m_pdeScatter->value();
-    s_dt = m_pdeDt->value();
-    s_Size = m_pdeParticleSize->value();
+    s_Scatter = m_pfeScatter->value();
+    s_dt = m_pfeDt->value();
+    s_Size = m_pfeParticleSize->value();
 
     m_bResetParticles = true;
 }
@@ -293,7 +293,7 @@ void gl3dLorenz2::onRestart()
 
 void gl3dLorenz2::onParticleSize()
 {
-    s_Size = m_pdeParticleSize->value();
+    s_Size = m_pfeParticleSize->value();
 }
 
 
@@ -308,9 +308,9 @@ void gl3dLorenz2::glMake3dObjects()
 
         float state(0.0f);
 
-        double X = m_pdeX->value();
-        double Y = m_pdeY->value();
-        double Z = m_pdeZ->value();
+        double X = m_pfeX->value();
+        double Y = m_pfeY->value();
+        double Z = m_pfeZ->value();
         Vector3d start(X,Y,Z);
 
         for(int i=0; i<nParticles; i++)
@@ -361,7 +361,7 @@ void gl3dLorenz2::glRenderView()
 
     m_shadLorenz2.bind();
     {
-        s_dt = m_pdeDt->value();
+        s_dt = m_pfeDt->value();
         m_shadLorenz2.setUniformValue(m_locRadius, 10.0f);
         m_shadLorenz2.setUniformValue(m_locDt, float(s_dt));
 

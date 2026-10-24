@@ -45,13 +45,13 @@ void LECircleDlg::setupLayout()
 {
     QHBoxLayout *pLERadiusLayout = new QHBoxLayout;
     {
-        m_pdeRadius = new FloatEdit(0.0,3);
+        m_pfeRadius = new FloatEdit(0.0,3);
         QLabel *plab0 = new QLabel("r=");
         QLabel *plab1 = new QLabel(tr("% Chord"));
         plab0->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         pLERadiusLayout->addStretch(1);
         pLERadiusLayout->addWidget(plab0);
-        pLERadiusLayout->addWidget(m_pdeRadius);
+        pLERadiusLayout->addWidget(m_pfeRadius);
         pLERadiusLayout->addWidget(plab1);
     }
 
@@ -74,14 +74,14 @@ void LECircleDlg::setupLayout()
 
 void LECircleDlg::initDialog()
 {
-    m_pdeRadius->setValue(m_Radius*100.0);
+    m_pfeRadius->setValue(m_Radius*100.0);
     m_pchShow->setChecked(m_bShowRadius);
 }
 
 
 void LECircleDlg::accept()
 {
-    m_Radius = m_pdeRadius->value()/100.0;
+    m_Radius = m_pfeRadius->value()/100.0;
     m_bShowRadius = m_pchShow->isChecked();
     XflDialog::accept();
 }

@@ -108,8 +108,8 @@ class gl3dPanelField: public gl3dXflView
 
         QLabel *m_pLabInfo;
 
-        FloatEdit *m_pdeVelScale;
-        FloatEdit *m_pdeRefLength;
+        FloatEdit *m_pfeVelScale;
+        FloatEdit *m_pfeRefLength;
         IntEdit *m_pieNw;
 
         QFrame *m_pFrame;

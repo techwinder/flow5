@@ -53,7 +53,7 @@ class TargetCurveDlg : public QDialog
         void onCurveStyle();
 
     private:
-        FloatEdit *m_pdeExptEdit;
+        FloatEdit *m_pfeExptEdit;
         QRadioButton *m_prbRadio1, *m_prbRadio2;
         QCheckBox *m_pchShowBellCurve, *m_pchShowEllipticCurve;
 
