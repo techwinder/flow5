@@ -23,7 +23,7 @@
                 <br>
                 <br>
                 <h3>
-                    flow5 v7.58, , 2026
+                    flow5 v7.58, October 25, 2026
                 </h3>
                 <ul>
                     <li>General
@@ -35,58 +35,59 @@
                         <ul>
                             <li>removed the fuselage advanced editor</li>
                             <li>changed the panel connection method for wings to use node indexes instead of positions for faster response</li>
-                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/87">issue #87</a></li>
-                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/89">issue #89</a></li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/87">issue #87</a> which caused duplicated wing instances in the plane editor to be linked</li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/89">issue #89</a>; typo correction in the foil T.E. gap editor</li>
                         </ul>
                     </li>
                     <li>Analysis
                         <ul>
-                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/76">issue #76</a></li>
-                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/81">issue #81</a></li>
-                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/82">issue #82</a></li>
-                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/83">issue #83</a></li>
-                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/111">issue #111</a></li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/76">issue #76</a> which caused plane batch calculations to crash</li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/81">issue #81</a> which prevented the import of foil analyses defined in XML files</li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/82">issue #82</a>: restores the missing T.E. flap data in foil analysis XML files.</li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/83">issue #83</a>: adds the export and import of foil T6 analyses to XML files</li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/111">issue #111</a>; restores the thread count limit in foil batch analyses</li>
                             <li><a href="https://github.com/techwinder/flow5/pull/92">pull request #92</a>,
                                 <a href="https://github.com/techwinder/flow5/pull/97">pull request #97</a> and
                                 <a href="https://github.com/techwinder/flow5/issues/113">issue #113</a>; <br>
                                 These changes fix a bunch of minor and major issues in the calculation of stability derivatives.<br>
                                 The <a href="https://flow5.tech/docs/flow5_doc/Validation/Stability.html">benchmark against AVL</a> has been updated.
                             </li>
-                            <li>merged <a href="https://github.com/techwinder/flow5/pull/93">pull request #93</a></li>
-                            <li>merged <a href="https://github.com/techwinder/flow5/pull/98">pull request #98</a></li>
-                            <li>merged <a href="https://github.com/techwinder/flow5/pull/99">pull request #99</a>;<br>
+                            <li>merged <a href="https://github.com/techwinder/flow5/pull/99">pull request #99</a>;
                                 this PR fixes occasional numerical fails in the tri-linear method</li>
                             <li>added an option to set a sideslip angle in type 1 plane polars</li>
-                            <li>merged <a href="https://github.com/techwinder/flow5/pull/101">pull request #101</a>;<br>
+                            <li>merged <a href="https://github.com/techwinder/flow5/pull/101">pull request #101</a>;
                                 this PR fixes the inverted span positions of the operating point resulting from an LLT calculation in the case of an asymmetric wing</li>
-                            <li>merged <a href="https://github.com/techwinder/flow5/pull/102">pull request #102</a>;<br>
+                            <li>merged <a href="https://github.com/techwinder/flow5/pull/102">pull request #102</a>;
                                 this PR fixes incorrect results when using custom dimensions in an LLT calculation</li>
                         </ul>
                     </li>
                     <li>Source code and API
                         <ul>
-                            <li></li>
+                            <li>merged <a href="https://github.com/techwinder/flow5/pull/93">pull request #93</a> - code cleaning</li>
+                            <li>merged <a href="https://github.com/techwinder/flow5/pull/98">pull request #98</a> - code cleaning</li>
                         </ul>
                     </li>
                     <li>Post-processing
                         <ul>
-                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/66">issue #66</a></li>
-                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/67">issue #67</a></li>
-                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/96">issue #96</a></li>
-                            <li>merged <a href="https://github.com/techwinder/flow5/issues/94">pull request #94</a></li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/66">issue #66</a>; restored missing EOL character in the export of plane polar exports to text files</li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/67">issue #67</a> restored missing EOL character in the export of plane operating point exports to text files</li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/96">issue #96</a>: addition of the wall shear stress in the foil boundary layer graphs</li>
                             <li>added the display of wind and stability axes to the 3d view</li>
-                            <li>merged <a href="https://github.com/techwinder/flow5/pull/103">pull request #103</a>;<br>
+                            <li>merged <a href="https://github.com/techwinder/flow5/pull/103">pull request #103</a>;
                                 this PR makes the identification of the stability modes more robust</li>
+                            <li>fixed <a href="https://github.com/techwinder/flow5/issues/114">issue #114</a> which caused data loss in the serialization of plane external polars</li>
                         </ul>
                     </li>
                     <li>UI
                         <ul>
-                            <li></li>
+                            <li>merged <a href="https://github.com/techwinder/flow5/issues/94">pull request #94</a> which could cause an occasional crash in the display of streamlines in the case of a trilinear polar</li>
                         </ul>
                     </li>
                     <li>Other
                         <ul>
-                            <li></li>
+                            <li> The binary package of v7.58 for Windows has been upgraded with OpenCascade v8.0.1, Gmsh 4.15.2, MKL 2026.0.2 and Qt 6.12.0</li>
+                            <li> The MacOS package of v7.58 will be the last one built for x86</li>
+                            <li> There will be no future releases of packages for Linux</li>
                         </ul>
                     </li>
                 </ul>
