@@ -9,7 +9,7 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs depr
 TEMPLATE = app
 TARGET = flow5
 
-VERSION = 7.57
+VERSION = 7.59
 
 QT += opengl widgets xml
 
