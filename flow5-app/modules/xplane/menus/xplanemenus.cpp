@@ -54,7 +54,7 @@ void XPlaneMenus::createMenus()
     createPlaneSubMenus();
     createMainBarMenus();
     create3dCtxMenus();
-    createWPolarCtxMenus();
+    createPlanePolarCtxMenus();
     createPOppCtxMenus();
 }
 
@@ -67,7 +67,7 @@ void XPlaneMenus::create3dCtxMenus()
     {
         m_p3dCtxMenu->addMenu(m_pCurrentPlaneMenu);
         m_p3dCtxMenu->addSeparator();
-        m_p3dCtxMenu->addMenu(m_pCurWPlrMenu);
+        m_p3dCtxMenu->addMenu(m_pCurPlanePolarMenu);
         m_p3dCtxMenu->addSeparator();
         m_p3dCtxMenu->addMenu(m_pCurPOppMenu);
         m_p3dCtxMenu->addSeparator();
@@ -98,23 +98,23 @@ void XPlaneMenus::create3dCtxMenus()
 }
 
 
-void XPlaneMenus::createWPolarCtxMenus()
+void XPlaneMenus::createPlanePolarCtxMenus()
 {
     XPlaneActions *pActions = m_pXPlane->m_pActions;
     //Polar View Context Menu
-    m_pWPlrCtxMenu = new QMenu(tr("Context Menu"), m_pMainFrame);
+    m_pPolarCtxMenu = new QMenu(tr("Context Menu"), m_pMainFrame);
     {
-        m_pWPlrCtxMenu->addMenu(m_pCurrentPlaneMenu);
-        m_pWPlrCtxMenu->addSeparator();
-        m_pWPlrCtxMenu->addMenu(m_pCurWPlrMenu);
-        m_pWPlrCtxMenu->addSeparator();
-        QMenu *pAllPolars = m_pWPlrCtxMenu->addMenu(tr("All polars"));
+        m_pPolarCtxMenu->addMenu(m_pCurrentPlaneMenu);
+        m_pPolarCtxMenu->addSeparator();
+        m_pPolarCtxMenu->addMenu(m_pCurPlanePolarMenu);
+        m_pPolarCtxMenu->addSeparator();
+        QMenu *pAllPolars = m_pPolarCtxMenu->addMenu(tr("All polars"));
         {
-            pAllPolars->addAction(pActions->m_pHideAllWPlrs);
-            pAllPolars->addAction(pActions->m_pShowAllWPlrs);
-            pAllPolars->addAction(pActions->m_pExportAllWPolars);
+            pAllPolars->addAction(pActions->m_pHideAllPlanePolars);
+            pAllPolars->addAction(pActions->m_pShowAllPlanePolars);
+            pAllPolars->addAction(pActions->m_pExportAllPlanePolars);
         }
-        QMenu *pCurGraphCtxMenu = m_pWPlrCtxMenu->addMenu(tr("Graph"));
+        QMenu *pCurGraphCtxMenu = m_pPolarCtxMenu->addMenu(tr("Graph"));
         {
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pResetGraphSplitter);
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pResetCurGraphScales);
@@ -130,9 +130,9 @@ void XPlaneMenus::createWPolarCtxMenus()
             pCurGraphCtxMenu->addSeparator();
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pOpenGraphInNewWindow);
         }
-        m_pWPlrCtxMenu->addSeparator();
-        m_pWPlrCtxMenu->addAction(m_pMainFrame->m_pViewLogFile);
-        m_pWPlrCtxMenu->addAction(m_pMainFrame->m_pSaveViewToImageFileAct);
+        m_pPolarCtxMenu->addSeparator();
+        m_pPolarCtxMenu->addAction(m_pMainFrame->m_pViewLogFile);
+        m_pPolarCtxMenu->addAction(m_pMainFrame->m_pSaveViewToImageFileAct);
     }
 }
 
@@ -141,9 +141,9 @@ void XPlaneMenus::createPOppCtxMenus()
 {
     XPlaneActions *pActions = m_pXPlane->m_pActions;
     //WOpp View Context Menu
-    m_pWOppCtxMenu = new QMenu(tr("Context Menu"), m_pMainFrame);
+    m_pPOppCtxMenu = new QMenu(tr("Context Menu"), m_pMainFrame);
     {
-        m_pCurrentPlaneCtxMenu = m_pWOppCtxMenu->addMenu(tr("Active plane"));
+        m_pCurrentPlaneCtxMenu = m_pPOppCtxMenu->addMenu(tr("Active plane"));
         {
             m_pCurrentPlaneCtxMenu->addAction(pActions->m_pEditPlaneAct);
             m_pCurrentPlaneCtxMenu->addAction(pActions->m_pEditPlaneDescriptionAct);
@@ -178,7 +178,7 @@ void XPlaneMenus::createPOppCtxMenus()
                 pAnalysisMenu->addAction(pActions->m_pDefineT123578Polar);
                 pAnalysisMenu->addAction(pActions->m_pDefineT6Polar);
                 pAnalysisMenu->addAction(pActions->m_pDefineT7Polar);
-                pAnalysisMenu->addAction(pActions->m_pDuplicateWPolar);
+                pAnalysisMenu->addAction(pActions->m_pDuplicatePlanePolar);
                 pAnalysisMenu->addSeparator();
                 pAnalysisMenu->addAction(pActions->m_pBatchAnalysis);
                 pAnalysisMenu->addAction(pActions->m_pBatchAnalysisOld);
@@ -190,81 +190,80 @@ void XPlaneMenus::createPOppCtxMenus()
             m_pCurrentPlaneCtxMenu->addSeparator();
             QMenu *pPolarMenu = m_pCurrentPlaneCtxMenu->addMenu(tr("Associated polars"));
             {
-                pPolarMenu->addAction(pActions->m_pShowPlaneWPlrs);
-                pPolarMenu->addAction(pActions->m_pHidePlaneWPlrs);
-                pPolarMenu->addAction(pActions->m_pDeletePlaneWPlrs);
+                pPolarMenu->addAction(pActions->m_pShowPlanePolars);
+                pPolarMenu->addAction(pActions->m_pHidePlanePolars);
+                pPolarMenu->addAction(pActions->m_pDeletePlanePolars);
                 pPolarMenu->addSeparator();
-                pPolarMenu->addAction(pActions->m_pShowPlaneWPlrsOnly);
+                pPolarMenu->addAction(pActions->m_pShowPlanePolarsOnly);
             }
 
             m_pCurrentPlaneCtxMenu->addSeparator();
             QMenu *pPOppMenu = m_pCurrentPlaneCtxMenu->addMenu(tr("Associated operating points"));
             {
-                pPOppMenu->addAction(pActions->m_pShowPlaneWOpps);
-                pPOppMenu->addAction(pActions->m_pHidePlaneWOpps);
-                pPOppMenu->addAction(pActions->m_pDeletePlaneWOpps);
+                pPOppMenu->addAction(pActions->m_pShowPlanePOpps);
+                pPOppMenu->addAction(pActions->m_pHidePlanePOpps);
+                pPOppMenu->addAction(pActions->m_pDeletePlanePOpps);
             }
-        }
-        //m_pWOppCtxMenu->addMenu(m_pCurrentPlaneMenu);
-        m_pWOppCtxMenu->addSeparator();
-        m_pCurWPlrCtxMenu = m_pWOppCtxMenu->addMenu(tr("Active Polar"));
-//        m_pCurWPlrCtxMenu->setWindowFlags(Qt::Tool);
-        m_pCurWPlrCtxMenu->setWindowTitle(tr("Active Polar"));
-        {
-            m_pCurWPlrCtxMenu->addAction(pActions->m_pEditWPolarDef);
-            m_pCurWPlrCtxMenu->addAction(pActions->m_pEditExtraDrag);
-            m_pCurWPlrCtxMenu->addAction(pActions->m_pEditWPolarPts);
-            m_pCurWPlrCtxMenu->addSeparator();
-            m_pCurWPlrCtxMenu->addAction(pActions->m_pRenameCurWPolar);
-            m_pCurWPlrCtxMenu->addAction(pActions->m_pDuplicateCurWPolar);
-            m_pCurWPlrCtxMenu->addAction(pActions->m_pDeleteCurWPolar);
-            m_pCurWPlrCtxMenu->addAction(pActions->m_pResetCurWPolar);
-            m_pCurWPlrCtxMenu->addAction(pActions->m_pShowOnlyCurPolar);
-            m_pCurWPlrCtxMenu->addSeparator();
-            QMenu *pPOppMenu = m_pCurWPlrCtxMenu->addMenu(tr("Associated operating points"));
-            {
-                pPOppMenu->addAction(pActions->m_pShowWPlrPOpps);
-                pPOppMenu->addAction(pActions->m_pHideAllWPlrOpps);
-                pPOppMenu->addAction(pActions->m_pDeleteWPlrPOpps);
-                pPOppMenu->addSeparator();
-                pPOppMenu->addAction(pActions->m_pShowWPlrOppsOnly);
-            }
-            m_pCurWPlrCtxMenu->addSeparator();
-            QMenu *pExportMenu = m_pCurWPlrCtxMenu->addMenu(tr("Export data"));
-            {
-                pExportMenu->addAction(pActions->m_pExportCurWPolar);
-                pExportMenu->addAction(pActions->m_pCopyCurWPolarData);
-            }
-            m_pCurWPlrCtxMenu->addAction(pActions->m_pExportAnalysisToXML);
-            m_pCurWPlrCtxMenu->addSeparator();
-            m_pCurWPlrCtxMenu->addAction(pActions->m_pShowPolarProps);
         }
 
-        //m_pWOppCtxMenu->addMenu(m_pCurWPlrMenu);
-        m_pWOppCtxMenu->addSeparator();
-        m_pCurPOppCtxMenu = m_pWOppCtxMenu->addMenu(tr("Active operating point"));
+        m_pPOppCtxMenu->addSeparator();
+        m_pCurPlanePolarCtxMenu = m_pPOppCtxMenu->addMenu(tr("Active Polar"));
+//        m_pCurWPlrCtxMenu->setWindowFlags(Qt::Tool);
+        m_pCurPlanePolarCtxMenu->setWindowTitle(tr("Active Polar"));
         {
-            m_pCurPOppCtxMenu->addAction(pActions->m_pShowWOppProps);
+            m_pCurPlanePolarCtxMenu->addAction(pActions->m_pEditPlanePolarDef);
+            m_pCurPlanePolarCtxMenu->addAction(pActions->m_pEditExtraDrag);
+            m_pCurPlanePolarCtxMenu->addAction(pActions->m_pEditPlanePolarPts);
+            m_pCurPlanePolarCtxMenu->addSeparator();
+            m_pCurPlanePolarCtxMenu->addAction(pActions->m_pRenameCurPlanePolar);
+            m_pCurPlanePolarCtxMenu->addAction(pActions->m_pDuplicateCurPlanePolar);
+            m_pCurPlanePolarCtxMenu->addAction(pActions->m_pDeleteCurPlanePolar);
+            m_pCurPlanePolarCtxMenu->addAction(pActions->m_pResetCurPlanePolar);
+            m_pCurPlanePolarCtxMenu->addAction(pActions->m_pShowOnlyCurPolar);
+            m_pCurPlanePolarCtxMenu->addSeparator();
+            QMenu *pPOppMenu = m_pCurPlanePolarCtxMenu->addMenu(tr("Associated operating points"));
+            {
+                pPOppMenu->addAction(pActions->m_pShowPolarPOpps);
+                pPOppMenu->addAction(pActions->m_pHidePolarPOpps);
+                pPOppMenu->addAction(pActions->m_pDeletePolarPOpps);
+                pPOppMenu->addSeparator();
+                pPOppMenu->addAction(pActions->m_pShowPolarOppsOnly);
+            }
+            m_pCurPlanePolarCtxMenu->addSeparator();
+            QMenu *pExportMenu = m_pCurPlanePolarCtxMenu->addMenu(tr("Export data"));
+            {
+                pExportMenu->addAction(pActions->m_pExportCurPlanePolar);
+                pExportMenu->addAction(pActions->m_pCopyCurPlanePolarData);
+            }
+            m_pCurPlanePolarCtxMenu->addAction(pActions->m_pExportAnalysisToXML);
+            m_pCurPlanePolarCtxMenu->addSeparator();
+            m_pCurPlanePolarCtxMenu->addAction(pActions->m_pShowPolarProps);
+        }
+
+        m_pPOppCtxMenu->addSeparator();
+        m_pCurPOppCtxMenu = m_pPOppCtxMenu->addMenu(tr("Active operating point"));
+        {
+            m_pCurPOppCtxMenu->addAction(pActions->m_pShowPOppProps);
             QMenu *pExportMenu = m_pCurPOppCtxMenu->addMenu(tr("Export data"));
             {
                 pExportMenu->addAction(pActions->m_pExportCurPOpp);
                 pExportMenu->addAction(pActions->m_pCopyCurPOppData);
             }
 
-            m_pCurPOppCtxMenu->addAction(pActions->m_pDeleteCurWOpp);
+            m_pCurPOppCtxMenu->addAction(pActions->m_pDeleteCurPOpp);
         }
         //m_pWOppCtxMenu->addMenu(m_pCurWOppMenu);
-        m_pWOppCtxMenu->addSeparator();
-        QMenu *pOpMenu = m_pWOppCtxMenu->addMenu(tr("Operating points"));
+        m_pPOppCtxMenu->addSeparator();
+        QMenu *pOpMenu = m_pPOppCtxMenu->addMenu(tr("Operating points"));
         {
-            pOpMenu->addAction(pActions->m_pShowCurWOppOnly);
-            pOpMenu->addAction(pActions->m_pShowAllWOpps);
-            pOpMenu->addAction(pActions->m_pHideAllWOpps);
-            pOpMenu->addAction(pActions->m_pDeleteAllWOpps);
+            pOpMenu->addAction(pActions->m_pShowCurPOppOnly);
+            pOpMenu->addAction(pActions->m_pShowAllPOpps);
+            pOpMenu->addAction(pActions->m_pHideAllPOpps);
+            pOpMenu->addAction(pActions->m_pDeleteAllPOpps);
         }
 
-        m_pWOppCtxMenu->addSeparator();
-        QMenu *pCurGraphCtxMenu = m_pWOppCtxMenu->addMenu(tr("Graph"));
+        m_pPOppCtxMenu->addSeparator();
+        QMenu *pCurGraphCtxMenu = m_pPOppCtxMenu->addMenu(tr("Graph"));
         {
             pCurGraphCtxMenu->addAction(pActions->m_pWingSelection);
             pCurGraphCtxMenu->addAction(pActions->m_pShowTargetCurve);
@@ -284,9 +283,9 @@ void XPlaneMenus::createPOppCtxMenus()
             pCurGraphCtxMenu->addSeparator();
             pCurGraphCtxMenu->addAction(m_pMainFrame->m_pOpenGraphInNewWindow);
         }
-        m_pWOppCtxMenu->addSeparator();
-        m_pWOppCtxMenu->addAction(m_pMainFrame->m_pViewLogFile);
-        m_pWOppCtxMenu->addAction(m_pMainFrame->m_pSaveViewToImageFileAct);
+        m_pPOppCtxMenu->addSeparator();
+        m_pPOppCtxMenu->addAction(m_pMainFrame->m_pViewLogFile);
+        m_pPOppCtxMenu->addAction(m_pMainFrame->m_pSaveViewToImageFileAct);
     }
 
     //WOpp View Context Menu
@@ -294,7 +293,7 @@ void XPlaneMenus::createPOppCtxMenus()
     {
         m_pWCpCtxMenu->addMenu(m_pCurrentPlaneMenu);
         m_pWCpCtxMenu->addSeparator();
-        m_pWCpCtxMenu->addMenu(m_pCurWPlrMenu);
+        m_pWCpCtxMenu->addMenu(m_pCurPlanePolarMenu);
         m_pWCpCtxMenu->addSeparator();
         m_pWCpCtxMenu->addMenu(m_pCurPOppMenu);
 
@@ -325,7 +324,7 @@ void XPlaneMenus::createPOppCtxMenus()
     {
         m_pWTimeCtxMenu->addMenu(m_pCurrentPlaneMenu);
         m_pWTimeCtxMenu->addSeparator();
-        m_pWTimeCtxMenu->addMenu(m_pCurWPlrMenu);
+        m_pWTimeCtxMenu->addMenu(m_pCurPlanePolarMenu);
         m_pWTimeCtxMenu->addSeparator();
         m_pWTimeCtxMenu->addMenu(m_pCurPOppMenu);
         m_pWTimeCtxMenu->addSeparator();
@@ -444,9 +443,9 @@ void XPlaneMenus::createMainBarMenus()
 
     m_pXPlaneViewMenu = m_pMainFrame->menuBar()->addMenu(tr("&View"));
     {
-        m_pXPlaneViewMenu->addAction(pActions->m_pWOppAct);
-        m_pXPlaneViewMenu->addAction(pActions->m_pWPolarAct);
-        m_pXPlaneViewMenu->addAction(pActions->m_pW3dAct);
+        m_pXPlaneViewMenu->addAction(pActions->m_pPOppAct);
+        m_pXPlaneViewMenu->addAction(pActions->m_pPlanePolarAct);
+        m_pXPlaneViewMenu->addAction(pActions->m_pPlane3dAct);
         m_pXPlaneViewMenu->addAction(pActions->m_pCpViewAct);
         m_pXPlaneViewMenu->addAction(pActions->m_pStabTimeAct);
         m_pXPlaneViewMenu->addAction(pActions->m_pRootLocusAct);
@@ -496,7 +495,7 @@ void XPlaneMenus::createMainBarMenus()
                 pAnalysisMenu->addAction(pActions->m_pDefineT123578Polar);
                 pAnalysisMenu->addAction(pActions->m_pDefineT6Polar);
                 pAnalysisMenu->addAction(pActions->m_pDefineT7Polar);
-                pAnalysisMenu->addAction(pActions->m_pDuplicateWPolar);
+                pAnalysisMenu->addAction(pActions->m_pDuplicatePlanePolar);
                 pAnalysisMenu->addSeparator();
                 pAnalysisMenu->addAction(pActions->m_pBatchAnalysis);
                 pAnalysisMenu->addAction(pActions->m_pBatchAnalysisOld);
@@ -508,18 +507,18 @@ void XPlaneMenus::createMainBarMenus()
             m_pCurrentPlaneMenu->addSeparator();
             QMenu *pPolarMenu = m_pCurrentPlaneMenu->addMenu(tr("Associated polars"));
             {
-                pPolarMenu->addAction(pActions->m_pShowPlaneWPlrs);
-                pPolarMenu->addAction(pActions->m_pHidePlaneWPlrs);
-                pPolarMenu->addAction(pActions->m_pDeletePlaneWPlrs);
+                pPolarMenu->addAction(pActions->m_pShowPlanePolars);
+                pPolarMenu->addAction(pActions->m_pHidePlanePolars);
+                pPolarMenu->addAction(pActions->m_pDeletePlanePolars);
                 pPolarMenu->addSeparator();
-                pPolarMenu->addAction(pActions->m_pShowPlaneWPlrsOnly);
+                pPolarMenu->addAction(pActions->m_pShowPlanePolarsOnly);
             }
             m_pCurrentPlaneMenu->addSeparator();
             QMenu *pPOppMenu = m_pCurrentPlaneMenu->addMenu(tr("Associated operating points"));
             {
-                pPOppMenu->addAction(pActions->m_pShowPlaneWOpps);
-                pPOppMenu->addAction(pActions->m_pHidePlaneWOpps);
-                pPOppMenu->addAction(pActions->m_pDeletePlaneWOpps);
+                pPOppMenu->addAction(pActions->m_pShowPlanePOpps);
+                pPOppMenu->addAction(pActions->m_pHidePlanePOpps);
+                pPOppMenu->addAction(pActions->m_pDeletePlanePOpps);
             }
         }
         m_pPlaneMenu->addSeparator();
@@ -530,74 +529,74 @@ void XPlaneMenus::createMainBarMenus()
         }
     }
 
-    m_pXPlaneWPlrMenu = m_pMainFrame->menuBar()->addMenu(tr("&Polars"));
+    m_pXPlanePlanePolarMenu = m_pMainFrame->menuBar()->addMenu(tr("&Polars"));
     {
-        m_pCurWPlrMenu = m_pXPlaneWPlrMenu->addMenu(tr("Active polar"));
+        m_pCurPlanePolarMenu = m_pXPlanePlanePolarMenu->addMenu(tr("Active polar"));
         {
-            m_pCurWPlrMenu->addAction(pActions->m_pEditWPolarDef);
-            m_pCurWPlrMenu->addAction(pActions->m_pEditExtraDrag);
-            m_pCurWPlrMenu->addAction(pActions->m_pEditWPolarPts);
-            m_pCurWPlrMenu->addSeparator();
-            m_pCurWPlrMenu->addAction(pActions->m_pRenameCurWPolar);
-            m_pCurWPlrMenu->addAction(pActions->m_pDuplicateCurWPolar);
-            m_pCurWPlrMenu->addAction(pActions->m_pDeleteCurWPolar);
-            m_pCurWPlrMenu->addAction(pActions->m_pResetCurWPolar);
-            m_pCurWPlrMenu->addAction(pActions->m_pShowOnlyCurPolar);
-            m_pCurWPlrMenu->addSeparator();
-            QMenu *pPOppMenu = m_pCurWPlrMenu->addMenu(tr("Associated operating points"));
+            m_pCurPlanePolarMenu->addAction(pActions->m_pEditPlanePolarDef);
+            m_pCurPlanePolarMenu->addAction(pActions->m_pEditExtraDrag);
+            m_pCurPlanePolarMenu->addAction(pActions->m_pEditPlanePolarPts);
+            m_pCurPlanePolarMenu->addSeparator();
+            m_pCurPlanePolarMenu->addAction(pActions->m_pRenameCurPlanePolar);
+            m_pCurPlanePolarMenu->addAction(pActions->m_pDuplicateCurPlanePolar);
+            m_pCurPlanePolarMenu->addAction(pActions->m_pDeleteCurPlanePolar);
+            m_pCurPlanePolarMenu->addAction(pActions->m_pResetCurPlanePolar);
+            m_pCurPlanePolarMenu->addAction(pActions->m_pShowOnlyCurPolar);
+            m_pCurPlanePolarMenu->addSeparator();
+            QMenu *pPOppMenu = m_pCurPlanePolarMenu->addMenu(tr("Associated operating points"));
             {
-                pPOppMenu->addAction(pActions->m_pShowWPlrPOpps);
-                pPOppMenu->addAction(pActions->m_pHideAllWPlrOpps);
-                pPOppMenu->addAction(pActions->m_pDeleteWPlrPOpps);
+                pPOppMenu->addAction(pActions->m_pShowPolarPOpps);
+                pPOppMenu->addAction(pActions->m_pHidePolarPOpps);
+                pPOppMenu->addAction(pActions->m_pDeletePolarPOpps);
                 pPOppMenu->addSeparator();
-                pPOppMenu->addAction(pActions->m_pShowWPlrOppsOnly);
+                pPOppMenu->addAction(pActions->m_pShowPolarOppsOnly);
             }
-            m_pCurWPlrMenu->addSeparator();
-            QMenu *pExportMenu = m_pCurWPlrMenu->addMenu(tr("Export data"));
+            m_pCurPlanePolarMenu->addSeparator();
+            QMenu *pExportMenu = m_pCurPlanePolarMenu->addMenu(tr("Export data"));
             {
-                pExportMenu->addAction(pActions->m_pExportCurWPolar);
-                pExportMenu->addAction(pActions->m_pCopyCurWPolarData);
+                pExportMenu->addAction(pActions->m_pExportCurPlanePolar);
+                pExportMenu->addAction(pActions->m_pCopyCurPlanePolarData);
             }
-            m_pCurWPlrMenu->addSeparator();
-            m_pCurWPlrMenu->addAction(pActions->m_pExportAnalysisToXML);
-            m_pCurWPlrMenu->addSeparator();
-            m_pCurWPlrMenu->addAction(pActions->m_pShowPolarProps);
+            m_pCurPlanePolarMenu->addSeparator();
+            m_pCurPlanePolarMenu->addAction(pActions->m_pExportAnalysisToXML);
+            m_pCurPlanePolarMenu->addSeparator();
+            m_pCurPlanePolarMenu->addAction(pActions->m_pShowPolarProps);
         }
 
-        QMenu *pAllPolars = m_pXPlaneWPlrMenu->addMenu(tr("All polars"));
+        QMenu *pAllPolars = m_pXPlanePlanePolarMenu->addMenu(tr("All polars"));
         {
-            pAllPolars->addAction(pActions->m_pHideAllWPlrs);
-            pAllPolars->addAction(pActions->m_pShowAllWPlrs);
-            pAllPolars->addAction(pActions->m_pExportAllWPolars);
+            pAllPolars->addAction(pActions->m_pHideAllPlanePolars);
+            pAllPolars->addAction(pActions->m_pShowAllPlanePolars);
+            pAllPolars->addAction(pActions->m_pExportAllPlanePolars);
         }
-        m_pXPlaneWPlrMenu->addSeparator();
-        m_pXPlaneWPlrMenu->addAction(pActions->m_pImportXmlAnalyses);
-        m_pXPlaneWPlrMenu->addAction(pActions->m_pImportPolarData);
+        m_pXPlanePlanePolarMenu->addSeparator();
+        m_pXPlanePlanePolarMenu->addAction(pActions->m_pImportXmlAnalyses);
+        m_pXPlanePlanePolarMenu->addAction(pActions->m_pImportPolarData);
     }
 
-    m_pXPlaneWOppMenu = m_pMainFrame->menuBar()->addMenu(tr("&Operating point"));
+    m_pXPlanePOppMenu = m_pMainFrame->menuBar()->addMenu(tr("&Operating point"));
     {
-        m_pCurPOppMenu = m_pXPlaneWOppMenu->addMenu(tr("Active operating point"));
+        m_pCurPOppMenu = m_pXPlanePOppMenu->addMenu(tr("Active operating point"));
         {
-            m_pCurPOppMenu->addAction(pActions->m_pShowWOppProps);
+            m_pCurPOppMenu->addAction(pActions->m_pShowPOppProps);
             QMenu *pExportMenu = m_pCurPOppMenu->addMenu(tr("Export data"));
             {
                 pExportMenu->addAction(pActions->m_pExportCurPOpp);
                 pExportMenu->addAction(pActions->m_pCopyCurPOppData);
             }
-            m_pCurPOppMenu->addAction(pActions->m_pDeleteCurWOpp);
+            m_pCurPOppMenu->addAction(pActions->m_pDeleteCurPOpp);
         }
-        m_pXPlaneWOppMenu->addSeparator();
-        QMenu *pOpMenu = m_pXPlaneWOppMenu->addMenu(tr("Operating points"));
+        m_pXPlanePOppMenu->addSeparator();
+        QMenu *pOpMenu = m_pXPlanePOppMenu->addMenu(tr("Operating points"));
         {
-            pOpMenu->addAction(pActions->m_pShowCurWOppOnly);
-            pOpMenu->addAction(pActions->m_pShowAllWOpps);
-            pOpMenu->addAction(pActions->m_pHideAllWOpps);
-            pOpMenu->addAction(pActions->m_pDeleteAllWOpps);
+            pOpMenu->addAction(pActions->m_pShowCurPOppOnly);
+            pOpMenu->addAction(pActions->m_pShowAllPOpps);
+            pOpMenu->addAction(pActions->m_pHideAllPOpps);
+            pOpMenu->addAction(pActions->m_pDeleteAllPOpps);
         }
-        m_pXPlaneWOppMenu->addSeparator();
-        m_pXPlaneWOppMenu->addAction(pActions->m_pWingSelection);
-        m_pXPlaneWOppMenu->addAction(pActions->m_pShowTargetCurve);
+        m_pXPlanePOppMenu->addSeparator();
+        m_pXPlanePOppMenu->addAction(pActions->m_pWingSelection);
+        m_pXPlanePOppMenu->addAction(pActions->m_pShowTargetCurve);
     }
 
     //XPlane Analysis Menu
@@ -606,14 +605,14 @@ void XPlaneMenus::createMainBarMenus()
         m_pXPlaneAnalysisMenu->addAction(pActions->m_pDefineT123578Polar);
         m_pXPlaneAnalysisMenu->addAction(pActions->m_pDefineT6Polar);
         m_pXPlaneAnalysisMenu->addAction(pActions->m_pDefineT7Polar);
-        m_pXPlaneAnalysisMenu->addAction(pActions->m_pDuplicateWPolar);
+        m_pXPlaneAnalysisMenu->addAction(pActions->m_pDuplicatePlanePolar);
         m_pXPlaneAnalysisMenu->addSeparator();
         m_pXPlaneAnalysisMenu->addAction(pActions->m_pBatchAnalysis);
         m_pXPlaneAnalysisMenu->addAction(pActions->m_pBatchAnalysisOld);
         m_pXPlaneAnalysisMenu->addSeparator();
 
         m_pXPlaneAnalysisMenu->addSeparator();
-        m_pXPlaneAnalysisMenu->addAction(pActions->m_pWPolarNameAct);
+        m_pXPlaneAnalysisMenu->addAction(pActions->m_pPlanePolarNameAct);
         m_pXPlaneAnalysisMenu->addSeparator();
         m_pXPlaneAnalysisMenu->addAction(pActions->m_pImportXmlAnalyses);
         m_pXPlaneAnalysisMenu->addAction(pActions->m_pShowAnalysisWindow);

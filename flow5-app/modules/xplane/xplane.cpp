@@ -493,8 +493,8 @@ void XPlane::checkActions()
     m_pMenus->m_pCurrentPlaneMenu->setEnabled(m_pCurPlane && !m_pCurPlane->isLocked());
     m_pMenus->m_pCurrentPlaneCtxMenu->setEnabled(m_pCurPlane && !m_pCurPlane->isLocked());
 
-    m_pMenus->m_pCurWPlrMenu->setEnabled(m_pCurPlane && m_pCurPlPolar && !m_pCurPlane->isLocked());
-    m_pMenus->m_pCurWPlrCtxMenu->setEnabled(m_pCurPlane && m_pCurPlPolar && !m_pCurPlane->isLocked());
+    m_pMenus->m_pCurPlanePolarMenu->setEnabled(m_pCurPlane && m_pCurPlPolar && !m_pCurPlane->isLocked());
+    m_pMenus->m_pCurPlanePolarCtxMenu->setEnabled(m_pCurPlane && m_pCurPlPolar && !m_pCurPlane->isLocked());
 
     m_pMenus->m_pCurPOppMenu->setEnabled(m_pCurPlane && m_pCurPOpp && !m_pCurPlane->isLocked());
     m_pMenus->m_pCurPOppCtxMenu->setEnabled(m_pCurPlane && m_pCurPOpp && !m_pCurPlane->isLocked());
@@ -3596,7 +3596,7 @@ void XPlane::onHideAllWPlrOpps()
 
     if(m_pCurPlane)
     {
-        for (int i=0; i< Objects3d::nPOpps(); i++)
+        for (int i=0; i<Objects3d::nPOpps(); i++)
         {
             PlaneOpp *pPOpp = Objects3d::POppAt(i);
             if (pPOpp->planeName() == m_pCurPlPolar->planeName() &&
@@ -3618,7 +3618,7 @@ void XPlane::onHideAllPOpps()
 {
     m_bCurPOppOnly = false;
 
-    for (int i=0; i< Objects3d::nPOpps(); i++)
+    for (int i=0; i<Objects3d::nPOpps(); i++)
     {
         PlaneOpp *pPOpp = Objects3d::POppAt(i);
         pPOpp->setVisible(false);
@@ -3659,10 +3659,9 @@ void XPlane::onHidePlaneWPolars()
     if(m_pCurPlane)     PlaneName = QString::fromStdString(m_pCurPlane->name());
     else return;
 
-    PlanePolar *pWPolar;
     for (int i=0; i<Objects3d::nPolars(); i++)
     {
-        pWPolar = Objects3d::planePolarAt(i);
+        PlanePolar *pWPolar = Objects3d::planePolarAt(i);
         if (pWPolar->planeName() == PlaneName.toStdString())
         {
             pWPolar->setVisible(false);
@@ -3950,9 +3949,9 @@ void XPlane::onShowAllPOpps()
 {
     //Switch all WOpps view to on for all Plane and WPolar
     m_bCurPOppOnly = false;
-    m_pActions->m_pShowCurWOppOnly->setChecked(false);
+    m_pActions->m_pShowCurPOppOnly->setChecked(false);
 
-    for (int i=0; i< Objects3d::nPOpps(); i++)
+    for (int i=0; i<Objects3d::nPOpps(); i++)
     {
         PlaneOpp *pPOpp = Objects3d::POppAt(i);
         pPOpp->setVisible(true);
@@ -4004,15 +4003,14 @@ void XPlane::onShowOnlyCurPlPolar()
 void XPlane::onShowPlaneWPolars()
 {
     if(!m_pCurPlane) return;
-    int i;
+
     QString PlaneName;
     if(m_pCurPlane)     PlaneName = QString::fromStdString(m_pCurPlane->name());
     else return;
 
-    PlanePolar *pWPolar;
-    for (i=0; i<Objects3d::nPolars(); i++)
+    for (int i=0; i<Objects3d::nPolars(); i++)
     {
-        pWPolar = Objects3d::planePolarAt(i);
+        PlanePolar *pWPolar = Objects3d::planePolarAt(i);
         if (pWPolar->planeName()==PlaneName.toStdString()) pWPolar->setVisible(true);
     }
 
@@ -4027,7 +4025,7 @@ void XPlane::onShowPlaneWPolars()
 void XPlane::onShowPlaneOpps()
 {
     if(!m_pCurPlane) return;
-    for (int i=0; i< Objects3d::nPOpps(); i++)
+    for (int i=0; i<Objects3d::nPOpps(); i++)
     {
         PlaneOpp *pPOpp = Objects3d::POppAt(i);
         if (pPOpp->planeName() == m_pCurPlane->name())
@@ -4045,22 +4043,19 @@ void XPlane::onShowPlaneOpps()
 
 void XPlane::onShowWPlrPOpps()
 {
-    int i;
-    //Switch all WOpps view to on for the current Plane and WPolar
     m_bCurPOppOnly = false;
 
-    PlaneOpp *pPOpp;
-    if(m_pCurPlane)
+    if(!m_pCurPlane || !m_pCurPlPolar) return;
+
+    for (int i=0; i<Objects3d::nPOpps(); i++)
     {
-        for (i=0; i< Objects3d::nPOpps(); i++)
+        PlaneOpp *pPOpp = Objects3d::POppAt(i);
+        if (m_pCurPlPolar->hasPOpp(pPOpp))
         {
-            pPOpp = Objects3d::POppAt(i);
-            if (m_pCurPlPolar->hasPOpp(pPOpp))
-            {
-                pPOpp->setVisible(true);
-            }
+            pPOpp->setVisible(true);
         }
     }
+
     emit projectModified();
     m_pPlaneExplorer->updateVisibilityBoxes();
 

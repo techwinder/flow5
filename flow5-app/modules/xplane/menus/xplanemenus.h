@@ -48,20 +48,20 @@ class XPlaneMenus
         void createMenus();
         void createMainBarMenus();
         void create3dCtxMenus();
-        void createWPolarCtxMenus();
+        void createPlanePolarCtxMenus();
         void createPOppCtxMenus();
         void createPlaneSubMenus();
 
     private:
-        QMenu *m_pXPlaneViewMenu, *m_pPlaneMenu, *m_pXPlaneAnalysisMenu, *m_pXPlaneWPlrMenu, *m_pXPlaneWOppMenu;
+        QMenu *m_pXPlaneViewMenu, *m_pPlaneMenu, *m_pXPlaneAnalysisMenu, *m_pXPlanePlanePolarMenu, *m_pXPlanePOppMenu;
         QMenu *m_pSubWingMenu, *m_pSubStabMenu, *m_pSubFinMenu, *m_pSubFuseMenu;
 
-        QMenu *m_pCurrentPlaneMenu, *m_pCurWPlrMenu, *m_pCurPOppMenu;
+        QMenu *m_pCurrentPlaneMenu, *m_pCurPlanePolarMenu, *m_pCurPOppMenu;
         QMenu *m_pCurrentPlaneCtxMenu;
-        QMenu *m_pCurWPlrCtxMenu;
+        QMenu *m_pCurPlanePolarCtxMenu;
         QMenu *m_pCurPOppCtxMenu;
 
-        QMenu *m_pWPlrCtxMenu, *m_pWOppCtxMenu, *m_p3dCtxMenu, *m_pWCpCtxMenu, *m_pWTimeCtxMenu;
+        QMenu *m_pPolarCtxMenu, *m_pPOppCtxMenu, *m_p3dCtxMenu, *m_pWCpCtxMenu, *m_pWTimeCtxMenu;
 
         XPlane *m_pXPlane;
         MainFrame *m_pMainFrame;

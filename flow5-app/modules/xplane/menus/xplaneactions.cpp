@@ -49,17 +49,17 @@ XPlaneActions::XPlaneActions(XPlane *pXPlane) : QObject(pXPlane)
 
 void XPlaneActions::makeActions()
 {
-    m_pWOppAct = new QAction(QIcon(":/icons/OnWOppView.png"), tr("Operating point view\tF5"), m_pXPlane);
-    m_pWOppAct->setShortcut(Qt::Key_F5);
-    m_pWOppAct->setCheckable(true);
-    m_pWOppAct->setStatusTip(tr("Switch to the operating point view"));
-    connect(m_pWOppAct, SIGNAL(triggered()), m_pXPlane, SLOT(onPlaneOppView()));
+    m_pPOppAct = new QAction(QIcon(":/icons/OnWOppView.png"), tr("Operating point view\tF5"), m_pXPlane);
+    m_pPOppAct->setShortcut(Qt::Key_F5);
+    m_pPOppAct->setCheckable(true);
+    m_pPOppAct->setStatusTip(tr("Switch to the operating point view"));
+    connect(m_pPOppAct, SIGNAL(triggered()), m_pXPlane, SLOT(onPlaneOppView()));
 
-    m_pWPolarAct = new QAction(QIcon(":/icons/OnPolarView.png"), tr("Polar view\tF8"), m_pXPlane);
-    m_pWPolarAct->setShortcut(Qt::Key_F8);
-    m_pWPolarAct->setCheckable(true);
-    m_pWPolarAct->setStatusTip(tr("Switch to the polar view"));
-    connect(m_pWPolarAct, SIGNAL(triggered()), m_pXPlane, SLOT(onPolarView()));
+    m_pPlanePolarAct = new QAction(QIcon(":/icons/OnPolarView.png"), tr("Polar view\tF8"), m_pXPlane);
+    m_pPlanePolarAct->setShortcut(Qt::Key_F8);
+    m_pPlanePolarAct->setCheckable(true);
+    m_pPlanePolarAct->setStatusTip(tr("Switch to the polar view"));
+    connect(m_pPlanePolarAct, SIGNAL(triggered()), m_pXPlane, SLOT(onPolarView()));
 
     m_pStabTimeAct = new QAction(QIcon(":/icons/OnStabView.png"), tr("Time response view"), m_pXPlane);
     m_pStabTimeAct->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_F8));
@@ -73,11 +73,11 @@ void XPlaneActions::makeActions()
     m_pRootLocusAct->setStatusTip(tr("Switch to root locus view"));
     connect(m_pRootLocusAct, SIGNAL(triggered()), m_pXPlane, SLOT(onRootLocusView()));
 
-    m_pW3dAct = new QAction(QIcon(":/icons/On3DView.png"), tr("3d view\tF4"), m_pXPlane);
-    m_pW3dAct->setShortcut(Qt::Key_F4);
-    m_pW3dAct->setCheckable(true);
-    m_pW3dAct->setStatusTip(tr("Switch to the 3D view"));
-    connect(m_pW3dAct, SIGNAL(triggered()), m_pXPlane, SLOT(on3dView()));
+    m_pPlane3dAct = new QAction(QIcon(":/icons/On3DView.png"), tr("3d view\tF4"), m_pXPlane);
+    m_pPlane3dAct->setShortcut(Qt::Key_F4);
+    m_pPlane3dAct->setCheckable(true);
+    m_pPlane3dAct->setStatusTip(tr("Switch to the 3D view"));
+    connect(m_pPlane3dAct, SIGNAL(triggered()), m_pXPlane, SLOT(on3dView()));
 
     m_pCpViewAct = new QAction(QIcon(":/icons/OnCpView.png"), tr("Cp view\tF9"), m_pXPlane);
     m_pCpViewAct->setShortcut(Qt::Key_F9);
@@ -305,45 +305,45 @@ void XPlaneActions::makeActions()
     m_pResetFuseMesh->setStatusTip(tr("Resets the triangular mesh based on the uncut fuse"));
     connect(m_pResetFuseMesh, SIGNAL(triggered()), m_pXPlane, SLOT(onResetFuseMesh()));
 
-    m_pExportAllWPolars = new QAction(tr("Export"), m_pXPlane);
-    m_pExportAllWPolars->setStatusTip(tr("Export all available polars to text files"));
-    connect(m_pExportAllWPolars, SIGNAL(triggered()), m_pXPlane, SLOT(onExportAllPlPolars()));
+    m_pExportAllPlanePolars = new QAction(tr("Export"), m_pXPlane);
+    m_pExportAllPlanePolars->setStatusTip(tr("Export all available polars to text files"));
+    connect(m_pExportAllPlanePolars, SIGNAL(triggered()), m_pXPlane, SLOT(onExportAllPlPolars()));
 
     m_pPlaneInertia = new QAction(tr("Inertia\tF12"), m_pXPlane);
     m_pPlaneInertia->setStatusTip(tr("Define the inertia for the active plane"));
     connect(m_pPlaneInertia, SIGNAL(triggered()), m_pXPlane, SLOT(onPlaneInertia()));
 
-    m_pShowCurWOppOnly = new QAction(tr("Show active only"), m_pXPlane);
-    m_pShowCurWOppOnly->setStatusTip(tr("Hide all the curves except for the one corresponding to the active operating point"));
-    m_pShowCurWOppOnly->setCheckable(true);
-    connect(m_pShowCurWOppOnly, SIGNAL(triggered()), m_pXPlane, SLOT(onCurPOppOnly()));
+    m_pShowCurPOppOnly = new QAction(tr("Show active only"), m_pXPlane);
+    m_pShowCurPOppOnly->setStatusTip(tr("Hide all the curves except for the one corresponding to the active operating point"));
+    m_pShowCurPOppOnly->setCheckable(true);
+    connect(m_pShowCurPOppOnly, SIGNAL(triggered()), m_pXPlane, SLOT(onCurPOppOnly()));
 
-    m_pShowAllWOpps = new QAction(tr("Show all"), m_pXPlane);
-    m_pShowAllWOpps->setStatusTip(tr("Show the graph curves of all operating points"));
-    connect(m_pShowAllWOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onShowAllPOpps()));
+    m_pShowAllPOpps = new QAction(tr("Show all"), m_pXPlane);
+    m_pShowAllPOpps->setStatusTip(tr("Show the graph curves of all operating points"));
+    connect(m_pShowAllPOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onShowAllPOpps()));
 
-    m_pHideAllWOpps = new QAction(tr("Hide all"), m_pXPlane);
-    m_pHideAllWOpps->setStatusTip(tr("Hide the graph curves of all operating points"));
-    connect(m_pHideAllWOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onHideAllPOpps()));
+    m_pHideAllPOpps = new QAction(tr("Hide all"), m_pXPlane);
+    m_pHideAllPOpps->setStatusTip(tr("Hide the graph curves of all operating points"));
+    connect(m_pHideAllPOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onHideAllPOpps()));
 
-    m_pDeleteAllWOpps = new QAction(tr("Delete all"), m_pXPlane);
-    m_pDeleteAllWOpps->setStatusTip(tr("Delete all the operating points of all planes and polars"));
-    connect(m_pDeleteAllWOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onDeleteAllPOpps()));
+    m_pDeleteAllPOpps = new QAction(tr("Delete all"), m_pXPlane);
+    m_pDeleteAllPOpps->setStatusTip(tr("Delete all the operating points of all planes and polars"));
+    connect(m_pDeleteAllPOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onDeleteAllPOpps()));
 
-    m_pShowWPlrPOpps = new QAction(tr("Show"), m_pXPlane);
-    m_pShowWPlrPOpps->setStatusTip(tr("Show the curves of all the operating points of the active polar"));
-    connect(m_pShowWPlrPOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onShowWPlrPOpps()));
+    m_pShowPolarPOpps = new QAction(tr("Show"), m_pXPlane);
+    m_pShowPolarPOpps->setStatusTip(tr("Show the curves of all the operating points of the active polar"));
+    connect(m_pShowPolarPOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onShowWPlrPOpps()));
 
-    m_pHideAllWPlrOpps = new QAction(tr("Hide"), m_pXPlane);
-    m_pHideAllWPlrOpps->setStatusTip(tr("Hide the curves of all the operating points of the active polar"));
-    connect(m_pHideAllWPlrOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onHideAllWPlrOpps()));
+    m_pHidePolarPOpps = new QAction(tr("Hide"), m_pXPlane);
+    m_pHidePolarPOpps->setStatusTip(tr("Hide the curves of all the operating points of the active polar"));
+    connect(m_pHidePolarPOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onHideAllWPlrOpps()));
 
-    m_pDeleteWPlrPOpps = new QAction(tr("Delete"), m_pXPlane);
-    m_pDeleteWPlrPOpps->setStatusTip(tr("Delete all the operating points of the active polar"));
-    connect(m_pDeleteWPlrPOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onDeleteWPlrPOpps()));
+    m_pDeletePolarPOpps = new QAction(tr("Delete"), m_pXPlane);
+    m_pDeletePolarPOpps->setStatusTip(tr("Delete all the operating points of the active polar"));
+    connect(m_pDeletePolarPOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onDeleteWPlrPOpps()));
 
-    m_pShowWPlrOppsOnly = new QAction(tr("Show only the polar's operating points"), m_pXPlane);
-    connect(m_pShowWPlrOppsOnly, SIGNAL(triggered()), m_pXPlane, SLOT(onShowWPolarOppsOnly()));
+    m_pShowPolarOppsOnly = new QAction(tr("Show only the polar's operating points"), m_pXPlane);
+    connect(m_pShowPolarOppsOnly, SIGNAL(triggered()), m_pXPlane, SLOT(onShowWPolarOppsOnly()));
 
     m_pShowTargetCurve = new QAction(tr("Show target curve"), m_pXPlane);
     m_pShowTargetCurve->setCheckable(false);
@@ -364,9 +364,9 @@ void XPlaneActions::makeActions()
     m_pDefineT7Polar->setStatusTip(tr("Define a stability analysis for the current wing or plane"));
     connect(m_pDefineT7Polar, SIGNAL(triggered()), m_pXPlane, SLOT(onDefineT7Polar()));
 
-    m_pDuplicateWPolar = new QAction(tr("Duplicate existing analyses"), m_pXPlane);
-    m_pDuplicateWPolar->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_D));
-    connect(m_pDuplicateWPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onDuplicateAnalyses()));
+    m_pDuplicatePlanePolar = new QAction(tr("Duplicate existing analyses"), m_pXPlane);
+    m_pDuplicatePlanePolar->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_D));
+    connect(m_pDuplicatePlanePolar, SIGNAL(triggered()), m_pXPlane, SLOT(onDuplicateAnalyses()));
 
     m_pBatchAnalysis = new QAction(tr("Batch analysis (1)"), m_pXPlane);
     m_pBatchAnalysis->setShortcut(QKeySequence(Qt::Key_F7));
@@ -376,18 +376,18 @@ void XPlaneActions::makeActions()
     m_pBatchAnalysisOld->setShortcut(QKeySequence(Qt::ALT|Qt::Key_F7));
     connect(m_pBatchAnalysisOld, SIGNAL(triggered()), m_pXPlane, SLOT(onBatchAnalysis2()));
 
-    m_pEditWPolarDef = new QAction(tr("Edit"), m_pXPlane);
-    m_pEditWPolarDef->setStatusTip(tr("Modify the analysis parameters of this polar"));
-    m_pEditWPolarDef->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_E));
-    connect(m_pEditWPolarDef, SIGNAL(triggered()), m_pXPlane, SLOT(onEditCurPlPolar()));
+    m_pEditPlanePolarDef = new QAction(tr("Edit"), m_pXPlane);
+    m_pEditPlanePolarDef->setStatusTip(tr("Modify the analysis parameters of this polar"));
+    m_pEditPlanePolarDef->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_E));
+    connect(m_pEditPlanePolarDef, SIGNAL(triggered()), m_pXPlane, SLOT(onEditCurPlPolar()));
 
     m_pEditExtraDrag = new QAction(tr("Edit extra drag"), m_pXPlane);
-    m_pEditWPolarDef->setStatusTip(tr("Modify the extra drag parameters and the AVL-type parabolic drag without recalculating the polar."));
+    m_pEditPlanePolarDef->setStatusTip(tr("Modify the extra drag parameters and the AVL-type parabolic drag without recalculating the polar."));
     connect(m_pEditExtraDrag, SIGNAL(triggered()), m_pXPlane, SLOT(onEditExtraDrag()));
 
-    m_pEditWPolarPts = new QAction(tr("Edit data points"), m_pXPlane);
-    m_pEditWPolarPts->setStatusTip(tr("Modify the data points of this polar"));
-    connect(m_pEditWPolarPts, SIGNAL(triggered()), m_pXPlane, SLOT(onEditCurPlPolarPts()));
+    m_pEditPlanePolarPts = new QAction(tr("Edit data points"), m_pXPlane);
+    m_pEditPlanePolarPts->setStatusTip(tr("Modify the data points of this polar"));
+    connect(m_pEditPlanePolarPts, SIGNAL(triggered()), m_pXPlane, SLOT(onEditCurPlPolarPts()));
 
     m_pImportXmlAnalyses = new QAction(tr("Import analyses from xml"), m_pXPlane);
     m_pImportXmlAnalyses->setStatusTip(tr("Import one or more analyses defined by xml files."));
@@ -397,45 +397,45 @@ void XPlaneActions::makeActions()
     m_pImportPolarData->setStatusTip(tr("Create a polar and import its data from an external source."));
     connect(m_pImportPolarData, SIGNAL(triggered()), m_pXPlane, SLOT(onImportExternalPolar()));
 
-    m_pWPolarNameAct = new QAction(tr("Analysis auto name options"), m_pXPlane);
-    m_pWPolarNameAct->setStatusTip(tr("Set the default options for automatic naming of polars"));
-    connect(m_pWPolarNameAct, SIGNAL(triggered()), m_pXPlane, SLOT(onAutoWPolarNameOptions()));
+    m_pPlanePolarNameAct = new QAction(tr("Analysis auto name options"), m_pXPlane);
+    m_pPlanePolarNameAct->setStatusTip(tr("Set the default options for automatic naming of polars"));
+    connect(m_pPlanePolarNameAct, SIGNAL(triggered()), m_pXPlane, SLOT(onAutoWPolarNameOptions()));
 
-    m_pHidePlaneWPlrs = new QAction(tr("Hide"), m_pXPlane);
-    m_pHidePlaneWPlrs->setStatusTip(tr("Hide all the polar curves associated to the active wing or plane"));
-    connect(m_pHidePlaneWPlrs, SIGNAL(triggered()), m_pXPlane, SLOT(onHidePlaneWPolars()));
+    m_pHidePlanePolars = new QAction(tr("Hide"), m_pXPlane);
+    m_pHidePlanePolars->setStatusTip(tr("Hide all the polar curves associated to the active wing or plane"));
+    connect(m_pHidePlanePolars, SIGNAL(triggered()), m_pXPlane, SLOT(onHidePlaneWPolars()));
 
-    m_pShowPlaneWPlrs = new QAction(tr("Show"), m_pXPlane);
-    m_pShowPlaneWPlrs->setStatusTip(tr("Show all the polar curves associated to the active wing or plane"));
-    connect(m_pShowPlaneWPlrs, SIGNAL(triggered()), m_pXPlane, SLOT(onShowPlaneWPolars()));
+    m_pShowPlanePolars = new QAction(tr("Show"), m_pXPlane);
+    m_pShowPlanePolars->setStatusTip(tr("Show all the polar curves associated to the active wing or plane"));
+    connect(m_pShowPlanePolars, SIGNAL(triggered()), m_pXPlane, SLOT(onShowPlaneWPolars()));
 
-    m_pDeletePlaneWPlrs = new QAction(tr("Delete"), m_pXPlane);
-    m_pDeletePlaneWPlrs->setStatusTip(tr("Delete all the polars associated to the active wing or plane"));
-    connect(m_pDeletePlaneWPlrs, SIGNAL(triggered()), m_pXPlane, SLOT(onDeletePlaneWPolars()));
+    m_pDeletePlanePolars = new QAction(tr("Delete"), m_pXPlane);
+    m_pDeletePlanePolars->setStatusTip(tr("Delete all the polars associated to the active wing or plane"));
+    connect(m_pDeletePlanePolars, SIGNAL(triggered()), m_pXPlane, SLOT(onDeletePlaneWPolars()));
 
-    m_pShowPlaneWPlrsOnly = new QAction(tr("Show only plane polars"), m_pXPlane);
-    m_pShowPlaneWPlrsOnly->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_U));
-    connect(m_pShowPlaneWPlrsOnly, SIGNAL(triggered()), m_pXPlane, SLOT(onShowPlaneWPolarsOnly()));
+    m_pShowPlanePolarsOnly = new QAction(tr("Show only plane polars"), m_pXPlane);
+    m_pShowPlanePolarsOnly->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_U));
+    connect(m_pShowPlanePolarsOnly, SIGNAL(triggered()), m_pXPlane, SLOT(onShowPlaneWPolarsOnly()));
 
-    m_pHideAllWPlrs = new QAction(tr("Hide"), m_pXPlane);
-    m_pHideAllWPlrs->setStatusTip(tr("Hide all the polar curves of all wings and planes"));
-    connect(m_pHideAllWPlrs, SIGNAL(triggered()), m_pXPlane, SLOT(onHideAllPlPolars()));
+    m_pHideAllPlanePolars = new QAction(tr("Hide"), m_pXPlane);
+    m_pHideAllPlanePolars->setStatusTip(tr("Hide all the polar curves of all wings and planes"));
+    connect(m_pHideAllPlanePolars, SIGNAL(triggered()), m_pXPlane, SLOT(onHideAllPlPolars()));
 
-    m_pShowAllWPlrs = new QAction(tr("Show"), m_pXPlane);
-    m_pShowAllWPlrs->setStatusTip(tr("<p>Show all the polar curves of all wings and planes</p>"));
-    connect(m_pShowAllWPlrs, SIGNAL(triggered()), m_pXPlane, SLOT(onShowAllPlPolars()));
+    m_pShowAllPlanePolars = new QAction(tr("Show"), m_pXPlane);
+    m_pShowAllPlanePolars->setStatusTip(tr("<p>Show all the polar curves of all wings and planes</p>"));
+    connect(m_pShowAllPlanePolars, SIGNAL(triggered()), m_pXPlane, SLOT(onShowAllPlPolars()));
 
-    m_pHidePlaneWOpps = new QAction(tr("Hide"), m_pXPlane);
-    m_pHidePlaneWOpps->setStatusTip(tr("<p>Hide all the operating point curves of the active wing or plane</p>"));
-    connect(m_pHidePlaneWOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onHidePlaneOpps()));
+    m_pHidePlanePOpps = new QAction(tr("Hide"), m_pXPlane);
+    m_pHidePlanePOpps->setStatusTip(tr("<p>Hide all the operating point curves of the active wing or plane</p>"));
+    connect(m_pHidePlanePOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onHidePlaneOpps()));
 
-    m_pShowPlaneWOpps = new QAction(tr("Show"), m_pXPlane);
-    m_pShowPlaneWOpps->setStatusTip(tr("Show all the operating point curves of the active wing or plane"));
-    connect(m_pShowPlaneWOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onShowPlaneOpps()));
+    m_pShowPlanePOpps = new QAction(tr("Show"), m_pXPlane);
+    m_pShowPlanePOpps->setStatusTip(tr("Show all the operating point curves of the active wing or plane"));
+    connect(m_pShowPlanePOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onShowPlaneOpps()));
 
-    m_pDeletePlaneWOpps = new QAction(tr("Delete"), m_pXPlane);
-    m_pDeletePlaneWOpps->setStatusTip(tr("<p>Delete all the operating points of the active wing or plane</p>"));
-    connect(m_pDeletePlaneWOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onDeletePlanePOpps()));
+    m_pDeletePlanePOpps = new QAction(tr("Delete"), m_pXPlane);
+    m_pDeletePlanePOpps->setStatusTip(tr("<p>Delete all the operating points of the active wing or plane</p>"));
+    connect(m_pDeletePlanePOpps, SIGNAL(triggered()), m_pXPlane, SLOT(onDeletePlanePOpps()));
 
     m_pDeleteCurPlane = new QAction(tr("Delete"), m_pXPlane);
 //    m_pDeleteCurPlane->setShortcut(Qt::Key_Delete);
@@ -451,37 +451,37 @@ void XPlaneActions::makeActions()
     m_pSavePlaneAsProjectAct->setStatusTip(tr("Save the active wing or plane as a new separate project"));
     connect(m_pSavePlaneAsProjectAct, SIGNAL(triggered()), m_pXPlane->s_pMainFrame, SLOT(onSavePlaneAsProject()));
 
-    m_pRenameCurWPolar = new QAction(tr("Rename\tShift+F2"), m_pXPlane);
-    m_pRenameCurWPolar->setStatusTip(tr("Rename the active polar"));
-    connect(m_pRenameCurWPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onRenameCurPlPolar()));
+    m_pRenameCurPlanePolar = new QAction(tr("Rename\tShift+F2"), m_pXPlane);
+    m_pRenameCurPlanePolar->setStatusTip(tr("Rename the active polar"));
+    connect(m_pRenameCurPlanePolar, SIGNAL(triggered()), m_pXPlane, SLOT(onRenameCurPlPolar()));
 
-    m_pDuplicateCurWPolar = new QAction(tr("Duplicate"), m_pXPlane);
-    m_pDuplicateCurWPolar->setShortcut(QKeySequence(Qt::SHIFT|Qt::Key_D));
-    connect(m_pDuplicateCurWPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onDuplicateCurAnalysis()));
+    m_pDuplicateCurPlanePolar = new QAction(tr("Duplicate"), m_pXPlane);
+    m_pDuplicateCurPlanePolar->setShortcut(QKeySequence(Qt::SHIFT|Qt::Key_D));
+    connect(m_pDuplicateCurPlanePolar, SIGNAL(triggered()), m_pXPlane, SLOT(onDuplicateCurAnalysis()));
 
-    m_pExportCurWPolar = new QAction(tr("to file"), m_pXPlane);
-    m_pExportCurWPolar->setStatusTip(tr("Export the active polar to a text or csv file"));
-    connect(m_pExportCurWPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onExportWPolarToFile()));
+    m_pExportCurPlanePolar = new QAction(tr("to file"), m_pXPlane);
+    m_pExportCurPlanePolar->setStatusTip(tr("Export the active polar to a text or csv file"));
+    connect(m_pExportCurPlanePolar, SIGNAL(triggered()), m_pXPlane, SLOT(onExportWPolarToFile()));
 
-    m_pCopyCurWPolarData = new QAction(tr("to clipboard"), m_pXPlane);
-    m_pCopyCurWPolarData->setShortcut(QKeySequence(Qt::ALT|Qt::Key_X));
-    connect(m_pCopyCurWPolarData, SIGNAL(triggered()), m_pXPlane, SLOT(onExportPlPolarToClipboard()));
+    m_pCopyCurPlanePolarData = new QAction(tr("to clipboard"), m_pXPlane);
+    m_pCopyCurPlanePolarData->setShortcut(QKeySequence(Qt::ALT|Qt::Key_X));
+    connect(m_pCopyCurPlanePolarData, SIGNAL(triggered()), m_pXPlane, SLOT(onExportPlPolarToClipboard()));
 
-    m_pResetCurWPolar = new QAction(tr("Reset"), m_pXPlane);
-    m_pResetCurWPolar->setStatusTip(tr("Delete all the points of the active polar, but keep the analysis settings"));
-    connect(m_pResetCurWPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onResetCurPlPolar()));
+    m_pResetCurPlanePolar = new QAction(tr("Reset"), m_pXPlane);
+    m_pResetCurPlanePolar->setStatusTip(tr("Delete all the points of the active polar, but keep the analysis settings"));
+    connect(m_pResetCurPlanePolar, SIGNAL(triggered()), m_pXPlane, SLOT(onResetCurPlPolar()));
 
     m_pShowOnlyCurPolar = new QAction(tr("Show only active polar"), m_pXPlane);
     m_pShowOnlyCurPolar->setShortcut(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_U));
     connect(m_pShowOnlyCurPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onShowOnlyCurPlPolar()));
 
-    m_pDeleteCurWPolar = new QAction(tr("Delete"), m_pXPlane);
-    m_pDeleteCurWPolar->setStatusTip(tr("Delete the active polar"));
-    connect(m_pDeleteCurWPolar, SIGNAL(triggered()), m_pXPlane, SLOT(onDeleteCurPlPolar()));
+    m_pDeleteCurPlanePolar = new QAction(tr("Delete"), m_pXPlane);
+    m_pDeleteCurPlanePolar->setStatusTip(tr("Delete the active polar"));
+    connect(m_pDeleteCurPlanePolar, SIGNAL(triggered()), m_pXPlane, SLOT(onDeleteCurPlPolar()));
 
-    m_pDeleteCurWOpp = new QAction(tr("Delete"), m_pXPlane);
-    m_pDeleteCurWOpp->setStatusTip(tr("Delete the active operating point"));
-    connect(m_pDeleteCurWOpp, SIGNAL(triggered()), m_pXPlane, SLOT(onDeleteCurPOpp()));
+    m_pDeleteCurPOpp = new QAction(tr("Delete"), m_pXPlane);
+    m_pDeleteCurPOpp->setStatusTip(tr("Delete the active operating point"));
+    connect(m_pDeleteCurPOpp, SIGNAL(triggered()), m_pXPlane, SLOT(onDeleteCurPOpp()));
 
     m_pShowAnalysisWindow = new QAction(tr("Open the analysis window"), m_pXPlane);
     m_pShowAnalysisWindow->setShortcut(QKeySequence(Qt::SHIFT|Qt::Key_A));
@@ -496,10 +496,10 @@ void XPlaneActions::makeActions()
     m_pShowPolarProps->setShortcut(QKeySequence(Qt::ALT | Qt::Key_Return));
     connect(m_pShowPolarProps, SIGNAL(triggered()), m_pXPlane, SLOT(onPolarProperties()));
 
-    m_pShowWOppProps = new QAction(tr("Properties"), m_pXPlane);
-    m_pShowWOppProps->setStatusTip(tr("Show the properties of the active operating point"));
-    m_pShowWOppProps->setShortcut(QKeySequence(Qt::ALT | Qt::SHIFT | Qt::Key_Return));
-    connect(m_pShowWOppProps, SIGNAL(triggered()), m_pXPlane, SLOT(onPlaneOppProperties()));
+    m_pShowPOppProps = new QAction(tr("Properties"), m_pXPlane);
+    m_pShowPOppProps->setStatusTip(tr("Show the properties of the active operating point"));
+    m_pShowPOppProps->setShortcut(QKeySequence(Qt::ALT | Qt::SHIFT | Qt::Key_Return));
+    connect(m_pShowPOppProps, SIGNAL(triggered()), m_pXPlane, SLOT(onPlaneOppProperties()));
 
     m_pImportPlaneFromXml= new QAction(tr("From an xml file"), m_pXPlane);
     connect(m_pImportPlaneFromXml, SIGNAL(triggered()), m_pXPlane, SLOT(onImportPlanesfromXML()));
@@ -572,28 +572,28 @@ void XPlaneActions::makeExportActions()
 void XPlaneActions::checkActions()
 {
     m_pCpViewAct->setChecked(   m_pXPlane->isCpView());
-    m_pW3dAct->setChecked(      m_pXPlane->is3dView());
-    m_pWOppAct->setChecked(     m_pXPlane->isPOppView());
-    m_pWPolarAct->setChecked(   m_pXPlane->isPolarView());
+    m_pPlane3dAct->setChecked(      m_pXPlane->is3dView());
+    m_pPOppAct->setChecked(     m_pXPlane->isPOppView());
+    m_pPlanePolarAct->setChecked(   m_pXPlane->isPolarView());
     m_pStabTimeAct->setChecked( m_pXPlane->isStabTimeView());
     m_pRootLocusAct->setChecked(m_pXPlane->isStabPolarView());
 
-    m_pShowCurWOppOnly->setEnabled(m_pXPlane->isPOppView());
-    m_pShowAllWOpps->setEnabled(m_pXPlane->isPOppView());
-    m_pHideAllWOpps->setEnabled(m_pXPlane->isPOppView());
+    m_pShowCurPOppOnly->setEnabled(m_pXPlane->isPOppView());
+    m_pShowAllPOpps->setEnabled(m_pXPlane->isPOppView());
+    m_pHideAllPOpps->setEnabled(m_pXPlane->isPOppView());
     m_pShowTargetCurve->setEnabled(m_pXPlane->isPOppView());
 
-    m_pShowWPlrPOpps->setEnabled(m_pXPlane->isPOppView());
-    m_pHideAllWPlrOpps->setEnabled(m_pXPlane->isPOppView());
-    m_pShowPlaneWPlrsOnly->setEnabled(m_pXPlane->isPolarView());
-    m_pShowPlaneWPlrs->setEnabled(m_pXPlane->isPolarView());
-    m_pHidePlaneWPlrs->setEnabled(m_pXPlane->isPolarView());
-    m_pShowPlaneWOpps->setEnabled(m_pXPlane->isPOppView());
-    m_pHidePlaneWOpps->setEnabled(m_pXPlane->isPOppView());
+    m_pShowPolarPOpps->setEnabled(m_pXPlane->isPOppView());
+    m_pHidePolarPOpps->setEnabled(m_pXPlane->isPOppView());
+    m_pShowPlanePolarsOnly->setEnabled(m_pXPlane->isPolarView());
+    m_pShowPlanePolars->setEnabled(m_pXPlane->isPolarView());
+    m_pHidePlanePolars->setEnabled(m_pXPlane->isPolarView());
+    m_pShowPlanePOpps->setEnabled(m_pXPlane->isPOppView());
+    m_pHidePlanePOpps->setEnabled(m_pXPlane->isPOppView());
 
     m_pDefineT123578Polar->setEnabled(m_pXPlane->curPlane());
     m_pDefineT6Polar->setEnabled(m_pXPlane->curPlane());
-    m_pDuplicateWPolar->setEnabled(m_pXPlane->curPlane());
+    m_pDuplicatePlanePolar->setEnabled(m_pXPlane->curPlane());
 
     m_pExporttoAVL->setEnabled(m_pXPlane->curPlane() && m_pXPlane->curPlane()->isXflType());
     m_pExportPlaneToXML->setEnabled(m_pXPlane->curPlane() && m_pXPlane->curPlane()->isXflType());
@@ -602,10 +602,10 @@ void XPlaneActions::checkActions()
 
     m_pEditPlaneAct->setEnabled(m_pXPlane->curPlane() && !m_pXPlane->curPlane()->isLocked());
 
-    m_pEditWPolarDef->setEnabled(m_pXPlane->curPlPolar() && !m_pXPlane->curPlPolar()->isExternalPolar());
-    m_pEditWPolarPts->setEnabled(m_pXPlane->curPlane() && !m_pXPlane->curPlane()->isLocked());
+    m_pEditPlanePolarDef->setEnabled(m_pXPlane->curPlPolar() && !m_pXPlane->curPlPolar()->isExternalPolar());
+    m_pEditPlanePolarPts->setEnabled(m_pXPlane->curPlane() && !m_pXPlane->curPlane()->isLocked());
 
-    m_pShowCurWOppOnly->setChecked(m_pXPlane->m_bCurPOppOnly);
+    m_pShowCurPOppOnly->setChecked(m_pXPlane->m_bCurPOppOnly);
 
     m_pCheckFreeEdges->setEnabled(m_pXPlane->curPlPolar());
 }

@@ -1086,9 +1086,9 @@ void MainFrame::createMenus()
     m_pPolarTiles->setContextMenu(m_pXDirect->m_pMenus->m_pOperPolarCtxMenu);
 
     m_pXPlane->m_pMenus->createMenus();
-    m_pPOppTiles->setContextMenu(m_pXPlane->m_pMenus->m_pWOppCtxMenu);
-    m_pWPolarTiles->setContextMenu(m_pXPlane->m_pMenus->m_pWPlrCtxMenu);
-    m_pStabPolarTiles->setContextMenu(m_pXPlane->m_pMenus->m_pWPlrCtxMenu);
+    m_pPOppTiles->setContextMenu(m_pXPlane->m_pMenus->m_pPOppCtxMenu);
+    m_pWPolarTiles->setContextMenu(m_pXPlane->m_pMenus->m_pPolarCtxMenu);
+    m_pStabPolarTiles->setContextMenu(m_pXPlane->m_pMenus->m_pPolarCtxMenu);
     m_pStabTimeTiles->setContextMenu(m_pXPlane->m_pMenus->m_pWTimeCtxMenu);
 
     m_pXSail->m_pMenus->createMenus();
@@ -1178,9 +1178,9 @@ void MainFrame::createXPlaneToolbar()
     m_ptbXPlane = addToolBar(tr("PlaneToolBar"));
     {
         m_ptbXPlane->setObjectName("PlaneToolBar");
-        m_ptbXPlane->addAction(pActions->m_pWOppAct);
-        m_ptbXPlane->addAction(pActions->m_pWPolarAct);
-        m_ptbXPlane->addAction(pActions->m_pW3dAct);
+        m_ptbXPlane->addAction(pActions->m_pPOppAct);
+        m_ptbXPlane->addAction(pActions->m_pPlanePolarAct);
+        m_ptbXPlane->addAction(pActions->m_pPlane3dAct);
         m_ptbXPlane->addAction(pActions->m_pCpViewAct);
         m_ptbXPlane->addAction(pActions->m_pRootLocusAct);
         m_ptbXPlane->addAction(pActions->m_pStabTimeAct);
@@ -3158,8 +3158,8 @@ void MainFrame::setMenus()
             {
                 menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlaneViewMenu);
                 menuBar()->addMenu(m_pXPlane->m_pMenus->m_pPlaneMenu);
-                menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlaneWPlrMenu);
-                menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlaneWOppMenu);
+                menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlanePlanePolarMenu);
+                menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlanePOppMenu);
                 menuBar()->addMenu(m_pXPlane->m_pMenus->m_pXPlaneAnalysisMenu);
             }
             break;

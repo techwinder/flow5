@@ -52,16 +52,16 @@ class XPlaneActions : public QObject
 
         //XPlane Actions
 
-        QAction *m_pWPolarAct, *m_pWOppAct, *m_pW3dAct, *m_pCpViewAct, *m_pStabTimeAct, *m_pRootLocusAct;
+        QAction *m_pPlanePolarAct, *m_pPOppAct, *m_pPlane3dAct, *m_pCpViewAct, *m_pStabTimeAct, *m_pRootLocusAct;
         QAction *m_p3dLightAct, *m_pResetScale;
         QAction *m_pDefineDefaultPlaneAct, *m_pDefineEmptyPlaneAct, *m_pSTLPlaneAct;
         QAction *m_pSavePlaneAsProjectAct, *m_pRenameCurPlaneAct, *m_pDeleteCurPlane, *m_pDuplicateCurPlane;
-        QAction *m_pEditWPolarPts, *m_pExportCurWPolar, *m_pCopyCurWPolarData, *m_pResetCurWPolar;
+        QAction *m_pEditPlanePolarPts, *m_pExportCurPlanePolar, *m_pCopyCurPlanePolarData, *m_pResetCurPlanePolar;
         QAction *m_pShowOnlyCurPolar;
-        QAction *m_pEditWPolarDef, *m_pEditExtraDrag;
-        QAction *m_pShowPolarProps, *m_pShowWOppProps;
-        QAction *m_pRenameCurWPolar, *m_pDeleteCurWPolar, *m_pDuplicateCurWPolar;
-        QAction *m_pDeleteCurWOpp;
+        QAction *m_pEditPlanePolarDef, *m_pEditExtraDrag;
+        QAction *m_pShowPolarProps, *m_pShowPOppProps;
+        QAction *m_pRenameCurPlanePolar, *m_pDeleteCurPlanePolar, *m_pDuplicateCurPlanePolar;
+        QAction *m_pDeleteCurPOpp;
         QAction *m_pWingSelection;
         QAction *m_pMeshInfo, *m_pConnectPanels, *m_pCheckPanels, *m_pClearHighlightedPanels, *m_pCheckFreeEdges;
         QAction *m_pCenterOnPanel;
@@ -72,21 +72,22 @@ class XPlaneActions : public QObject
         QAction *m_pImportPlaneFromXml, *m_pExportPlaneToXML, *m_pExportAnalysisToXML;
         QAction *m_pImportXmlAnalyses, *m_pImportPolarData;
 
-        QAction *m_pHideAllWPlrs, *m_pShowAllWPlrs;
-        QAction *m_pHidePlaneWPlrs, *m_pShowPlaneWPlrs, *m_pShowPlaneWPlrsOnly, *m_pDeletePlaneWPlrs;
-        QAction *m_pHidePlaneWOpps, *m_pShowPlaneWOpps, *m_pDeletePlaneWOpps;
+        QAction *m_pHideAllPlanePolars, *m_pShowAllPlanePolars;
+        QAction *m_pHidePlanePolars, *m_pShowPlanePolars, *m_pShowPlanePolarsOnly, *m_pDeletePlanePolars;
+        QAction *m_pHidePlanePOpps, *m_pShowPlanePOpps, *m_pDeletePlanePOpps;
         QAction *m_pExportCurPOpp, *m_pCopyCurPOppData;
-        QAction *m_pShowCurWOppOnly, *m_pHideAllWOpps, *m_pShowAllWOpps, *m_pDeleteAllWOpps;
-        QAction *m_pShowWPlrPOpps, *m_pHideAllWPlrOpps, * m_pDeleteWPlrPOpps, *m_pShowWPlrOppsOnly;
-        QAction *m_pDefineT123578Polar, *m_pDefineT6Polar, *m_pDefineT7Polar, *m_pDuplicateWPolar;
+        QAction *m_pShowCurPOppOnly, *m_pHideAllPOpps, *m_pShowAllPOpps, *m_pDeleteAllPOpps;
+        QAction *m_pShowPolarPOpps, *m_pHidePolarPOpps, * m_pDeletePolarPOpps, *m_pShowPolarOppsOnly;
+        QAction *m_pDefineT123578Polar, *m_pDefineT6Polar, *m_pDefineT7Polar;
+        QAction *m_pDuplicatePlanePolar;
         QAction *m_pBatchAnalysis, *m_pBatchAnalysisOld;
-        QAction *m_pWPolarNameAct;
+        QAction *m_pPlanePolarNameAct;
 
         QAction *m_pShowAnalysisWindow, *m_pAnalysis3dSettings;
         QAction *m_pShowTargetCurve;
         QAction *m_pExporttoAVL;
         QAction *m_pExporttoSTL, *m_pExportMeshtoSTL;
-        QAction *m_pExportAllWPolars, *m_pPlaneInertia;
+        QAction *m_pExportAllPlanePolars, *m_pPlaneInertia;
 
         QAction *m_pEditPlaneAct, *m_pEditPlaneDescriptionAct;
         QAction *m_pScalePlaneAct, *m_pTranslatePlaneAct;

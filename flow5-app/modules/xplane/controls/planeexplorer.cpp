@@ -847,7 +847,7 @@ void PlaneExplorer::contextMenuEvent(QContextMenuEvent *pEvent)
     if     (m_Selection==PlaneExplorer::PLANEOPP && pPOpp)
         s_pXPlane->m_pMenus->m_pCurPOppCtxMenu->exec(pEvent->globalPos());
     else if(m_Selection==PlaneExplorer::PLANEPOLAR && pPlPolar)
-        s_pXPlane->m_pMenus->m_pCurWPlrCtxMenu->exec(pEvent->globalPos());
+        s_pXPlane->m_pMenus->m_pCurPlanePolarCtxMenu->exec(pEvent->globalPos());
     else if(m_Selection==PlaneExplorer::PLANE && pPlane)
         s_pXPlane->m_pMenus->m_pCurrentPlaneCtxMenu->exec(pEvent->globalPos());
 
