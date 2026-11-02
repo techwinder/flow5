@@ -3633,10 +3633,12 @@ void XPlane::onHideAllPOpps()
 
 void XPlane::onHidePlaneOpps()
 {
-    for (int i=0; i< Objects3d::nPOpps(); i++)
+    if(!m_pCurPlane) return;
+
+    for (int i=0; i<Objects3d::nPOpps(); i++)
     {
         PlaneOpp *pPOpp = Objects3d::POppAt(i);
-        if (pPOpp->planeName() == m_pCurPlPolar->planeName())
+        if (pPOpp->planeName() == m_pCurPlane->name())
         {
             pPOpp->setVisible(false);
         }
@@ -4024,12 +4026,11 @@ void XPlane::onShowPlaneWPolars()
 
 void XPlane::onShowPlaneOpps()
 {
-    PlaneOpp *pPOpp;
-    int i;
-    for (i=0; i< Objects3d::nPOpps(); i++)
+    if(!m_pCurPlane) return;
+    for (int i=0; i< Objects3d::nPOpps(); i++)
     {
-        pPOpp = Objects3d::POppAt(i);
-        if (pPOpp->planeName() == m_pCurPlPolar->planeName())
+        PlaneOpp *pPOpp = Objects3d::POppAt(i);
+        if (pPOpp->planeName() == m_pCurPlane->name())
         {
             pPOpp->setVisible(true);
         }
