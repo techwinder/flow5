@@ -1402,9 +1402,10 @@ void gl3dView::paintGl3()
     float height = float(geometry().height());
     m_matProj.ortho(-s, s, -(height*s)/width, (height*s)/width, -1.0e3*s, 1.0e3*s);
 
+    m_matView = rotationMatrix();
+
     if(m_bArcball)   paintArcBall();
 
-    m_matView = rotationMatrix();
     m_matView.scale(m_glScalef, m_glScalef, m_glScalef);
     m_matView.translate(m_glRotCenter.xf(), m_glRotCenter.yf(), m_glRotCenter.zf());
 
