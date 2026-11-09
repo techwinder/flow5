@@ -41,13 +41,10 @@
 
 
 #include <core/displayoptions.h>
-
 #include <core/saveoptions.h>
-#include <core/stlreaderdlg.h>
 #include <core/xflcore.h>
 #include <globals/mainframe.h>
 #include <interfaces/controls/analysisrangetable.h>
-#include <interfaces/controls/poppctrls/crossflowctrls.h>
 #include <interfaces/controls/poppctrls/crossflowctrls.h>
 #include <interfaces/controls/poppctrls/flowctrls.h>
 #include <interfaces/controls/poppctrls/opp3dscalesctrls.h>
@@ -72,9 +69,10 @@
 #include <interfaces/editors/planeedit/planestldlg.h>
 #include <interfaces/editors/planeedit/planexfldlg.h>
 #include <interfaces/editors/translatedlg.h>
-#include <interfaces/editors/wingedit/wingxfldlg.h>
 #include <interfaces/editors/wingedit/wingscaledlg.h>
+#include <interfaces/editors/wingedit/wingxfldlg.h>
 #include <interfaces/exchange/cadexportdlg.h>
+#include <interfaces/exchange/stlreaderdlg.h>
 #include <interfaces/exchange/stlwriterdlg.h>
 #include <interfaces/exchange/wingexportdlg.h>
 #include <interfaces/graphs/containers/graphwt.h>
@@ -82,7 +80,6 @@
 #include <interfaces/graphs/controls/graphtilevariableset.h>
 #include <interfaces/graphs/graph/curve.h>
 #include <interfaces/graphs/graph/graph.h>
-
 #include <interfaces/mesh/panelcheckdlg.h>
 #include <interfaces/opengl/controls/fine3dcontrols.h>
 #include <interfaces/opengl/controls/gllightdlg.h>
@@ -93,6 +90,7 @@
 #include <interfaces/widgets/customdlg/objectpropsdlg.h>
 #include <interfaces/widgets/customdlg/textdlg.h>
 #include <interfaces/widgets/line/linemenu.h>
+
 #include <modules/xobjects.h>
 #include <modules/xplane/analysis/analysis3dsettings.h>
 #include <modules/xplane/analysis/batchplanedlg.h>

@@ -37,8 +37,8 @@
 #include <api/utils.h>
 
 #include <core/xflcore.h>
-#include <core/stlreaderdlg.h>
 #include <interfaces/controls/w3dprefs.h>
+#include <interfaces/exchange/stlreaderdlg.h>
 #include <interfaces/opengl/globals/gl_globals.h>
 #include <interfaces/widgets/customwts/floatedit.h>
 #include <interfaces/widgets/customwts/plaintextoutput.h>

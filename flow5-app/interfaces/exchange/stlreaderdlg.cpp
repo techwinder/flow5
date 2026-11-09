@@ -264,14 +264,13 @@ bool StlReaderDlg::importTrianglesFromMeshFile(QString const &FileName, double u
 }
 
 
-
 /** Used to read internal resources only since the OCCT reader does not recognize internal paths;
     Do not move to flow5-io*/
 bool StlReaderDlg::importStlBinaryFile(QDataStream &binstream, double unitfactor, std::vector<Triangle3d> &trianglelist,
                                        std::string &solidname)
 {
     QString strong;
-    qint8  ch=0;
+    qint8  ch(0);
 
     binstream.setByteOrder(QDataStream::LittleEndian);
 
@@ -291,13 +290,13 @@ bool StlReaderDlg::importStlBinaryFile(QDataStream &binstream, double unitfactor
     trianglelist.reserve(nTriangles);
 
     Vector3d N, v[3];
-    float xmin=1.e10, xmax=-1.0e10;
-    float ymin=1.e10, ymax=-1.0e10;
-    float zmin=1.e10, zmax=-1.0e10;
-    float x=0, y=0, z=0;
-    float nx=0, ny=0, nz=0;
+    float xmin=LARGEVALUE, xmax=-LARGEVALUE;
+    float ymin=LARGEVALUE, ymax=-LARGEVALUE;
+    float zmin=LARGEVALUE, zmax=-LARGEVALUE;
+    float x(0), y(0), z(0);
+    float nx(0), ny(0), nz(0);
     char buffer[12];
-    int nNegTriangles=0;
+    int nNegTriangles(0);
 
     for (int j=0; j<nTriangles; j++)
     {

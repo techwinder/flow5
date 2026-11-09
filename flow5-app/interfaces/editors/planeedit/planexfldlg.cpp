@@ -78,7 +78,7 @@
 #include <core/xflcore.h>
 
 #include <core/saveoptions.h>
-#include <core/stlreaderdlg.h>
+#include <interfaces/exchange/stlreaderdlg.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/fuseedit/fusemesherdlg.h>
 #include <interfaces/editors/fuseedit/fuseoccdlg.h>

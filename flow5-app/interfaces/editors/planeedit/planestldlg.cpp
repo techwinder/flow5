@@ -38,10 +38,8 @@
 
 
 #include <core/xflcore.h>
-
-#include <core/stlreaderdlg.h>
-#include <core/xflcore.h>
 #include <interfaces/editors/inertia/planestlinertiadlg.h>
+#include <interfaces/exchange/stlreaderdlg.h>
 #include <interfaces/graphs/graph/curve.h>
 #include <interfaces/mesh/panelcheckdlg.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>

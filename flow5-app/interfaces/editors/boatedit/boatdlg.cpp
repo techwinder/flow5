@@ -48,10 +48,10 @@
 #include "boatdlg.h"
 
 #include <api/boat.h>
-#include <core/flow5events.h>
 #include <api/fuseocc.h>
 #include <api/fusestl.h>
 #include <api/fusexfl.h>
+#include <api/gmesh_globals.h>
 #include <api/occ_globals.h>
 #include <api/planexfl.h>
 #include <api/quad3d.h>
@@ -67,10 +67,9 @@
 #include <api/xmlfusereader.h>
 #include <api/xmlsailreader.h>
 
-#include <core/xflcore.h>
 
+#include <core/flow5events.h>
 #include <core/saveoptions.h>
-#include <core/stlreaderdlg.h>
 #include <core/xflcore.h>
 #include <interfaces/editors/boatedit/sailcadreaderdlg.h>
 #include <interfaces/editors/boatedit/sailnurbsdlg.h>
@@ -82,7 +81,7 @@
 #include <interfaces/editors/fuseedit/fuseoccdlg.h>
 #include <interfaces/editors/fuseedit/fusestldlg.h>
 #include <interfaces/editors/fuseedit/xflfuseedit/fusexfldlg.h>
-#include <api/gmesh_globals.h>
+#include <interfaces/exchange/stlreaderdlg.h>
 #include <interfaces/opengl/controls/gl3dgeomcontrols.h>
 #include <interfaces/opengl/fl5views/gl3dboatview.h>
 #include <interfaces/widgets/customdlg/newnamedlg.h>

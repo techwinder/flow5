@@ -14,15 +14,13 @@ HEADERS += \
     $$PWD/flow5events.h \
     $$PWD/fontstruct.h \
     $$PWD/saveoptions.h \
-    $$PWD/stlreaderdlg.h \
+    $$PWD/trace.h \
     $$PWD/xflcore.h \
     $$PWD/xflsvgwriter.h \
-    $$PWD/trace.h \
 
 SOURCES += \
     $$PWD/displayoptions.cpp \
     $$PWD/saveoptions.cpp \
-    $$PWD/stlreaderdlg.cpp \
+    $$PWD/trace.cpp \
     $$PWD/xflcore.cpp \
     $$PWD/xflsvgwriter.cpp \
-    $$PWD/trace.cpp \

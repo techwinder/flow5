@@ -31,21 +31,14 @@
 
 #include "gl3dflightview.h"
 
+#include <core/displayoptions.h>
+#include <interfaces/controls/w3dprefs.h>
+#include <interfaces/exchange/stlreaderdlg.h>
 #include <interfaces/opengl/controls/gllightdlg.h>
 #include <interfaces/opengl/globals/gl_globals.h>
-#include <interfaces/controls/w3dprefs.h>
-#include <api/geom_global.h>
-#include <core/displayoptions.h>
-#include <core/stlreaderdlg.h>
-#include <api/fuseocc.h>
-#include <api/fusesections.h>
-#include <api/fusestl.h>
-#include <api/fusexfl.h>
-#include <api/objects3d.h>
-#include <api/planestl.h>
-#include <api/planestl.h>
-#include <api/planexfl.h>
 #include <interfaces/widgets/globals/wt_globals.h>
+
+#include <api/planestl.h>
 
 double gl3dFlightView::s_PlaneScale = 50.0;
 LineStyle gl3dFlightView::s_ls = {true, Line::SOLID, 2, fl5Color(200,150,0), Line::NOSYMBOL};

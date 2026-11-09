@@ -50,7 +50,7 @@ class FuseXflDlg : public FuseDlg
         ~FuseXflDlg() override;
 
         void setBody(FuseXfl *pFuseXfl=nullptr);
-        void initDialog(Fuse *pFuse);
+        void initDialog(Fuse *pFuse) override;
 
         static bool loadSettings(QSettings &settings);
         static bool saveSettings(QSettings &settings);
@@ -88,7 +88,7 @@ class FuseXflDlg : public FuseDlg
         void clearStack(int pos=0);
         void takePicture();
 
-        void updateView();
+        void updateView() override;
         void makeCommonWts();
 
         void updateFuseXfl();
