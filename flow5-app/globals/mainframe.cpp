@@ -2618,7 +2618,7 @@ bool MainFrame::loadSettings()
             return false;
         }
 
-        PrefsDlg::setStyleName(settings.value("Style", PrefsDlg::styleName()).toString());
+        PrefsDlg::setStyleName(settings.value("StyleName", PrefsDlg::styleName()).toString());
 
         DisplayOptions::setStyleSheetOverride(settings.value("bStyleSheet", DisplayOptions::bStyleSheetOverride()).toBool());
 
@@ -2912,15 +2912,15 @@ void MainFrame::saveSettings()
 
     settings.beginGroup("MainFrame");
     {
-        settings.setValue("geometry", saveGeometry());
-        settings.setValue("windowState", saveState());
+        settings.setValue("geometry",       saveGeometry());
+        settings.setValue("windowState",    saveState());
         settings.setValue("SettingsFormat", SETTINGSFORMAT);
 
-        settings.setValue("Style",       PrefsDlg::styleName());
-        settings.setValue("bStyleSheet", DisplayOptions::bStyleSheetOverride());
+        settings.setValue("StyleName",      PrefsDlg::styleName());
+        settings.setValue("bStyleSheet",    DisplayOptions::bStyleSheetOverride());
 
         if (xfl::exportFileType()==xfl::TXT) settings.setValue("ExportFileType", 0);
-        else                                         settings.setValue("ExportFileType", 1);
+        else                                 settings.setValue("ExportFileType", 1);
 
         settings.setValue("GraphExportFilter", m_GraphExportFilter);
 

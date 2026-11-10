@@ -455,8 +455,9 @@ void PrefsDlg::setupLayout()
 
 void PrefsDlg::initWidgets()
 {
-    if(m_pcbStyles->findText(s_StyleName)>=0)
-        m_pcbStyles->setCurrentIndex(m_pcbStyles->findText(s_StyleName));
+    int index = m_pcbStyles->findText(s_StyleName);
+    if(index>=0)
+        m_pcbStyles->setCurrentIndex(index);
 
     m_pchStyleSheetOverride->setChecked(DisplayOptions::bStyleSheetOverride());
 
@@ -600,6 +601,8 @@ void PrefsDlg::saveSettings(QSettings &settings)
 
 void PrefsDlg::readData()
 {
+    s_StyleName = m_pcbStyles->currentText();
+
     DisplayOptions::setScaleFactor(m_pfeScaleFactor->value()/100.0);
     DisplayOptions::setIconSize(m_pieIconSize->value());
     xfl::setLocalized(m_pchLocale->isChecked());
