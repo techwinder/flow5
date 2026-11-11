@@ -264,7 +264,7 @@ void gl3dFlowVtx::initializeGL()
 {
     gl3dTestGLView::initializeGL();
 
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     QString csrc, strange;
 
     csrc = ":/shaders/flow/flowVtx_CS.glsl";
@@ -482,7 +482,7 @@ void gl3dFlowVtx::glMake3dObjects()
 
 void gl3dFlowVtx::moveThem()
 {
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     s_dt        = m_pfeDt->valuef();
     s_Gamma     = m_pfeGamma->valuef();
     s_VInf      = m_pfeVInf->valuef();

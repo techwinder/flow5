@@ -38,7 +38,7 @@
 //#  define sleep(s) Sleep((s)*1000)
 #endif
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     #  include <unistd.h>
 #endif
 
@@ -123,7 +123,7 @@ Flow5App::Flow5App(int &argc, char** argv) : QApplication(argc, argv)
     QString StyleName;
     QString str;
 
-#if defined Q_OS_MAC
+#if defined Q_OS_MACOS
     QSettings settings(QSettings::IniFormat,QSettings::UserScope,"flow5", "flow5");
 #elif defined Q_OS_LINUX
     QSettings settings(QSettings::NativeFormat,QSettings::UserScope,"flow5", "flow5");
@@ -195,7 +195,7 @@ Flow5App::Flow5App(int &argc, char** argv) : QApplication(argc, argv)
     QStringList arguments = QApplication::arguments();
 
 
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     bool bProjectFile = false;
 
     if(arguments.size()>1)
@@ -258,7 +258,7 @@ Flow5App::Flow5App(int &argc, char** argv) : QApplication(argc, argv)
 
 void Flow5App::loadTranslations()
 {
-#if defined Q_OS_MAC
+#if defined Q_OS_MACOS
     QSettings settings(QSettings::IniFormat,QSettings::UserScope,"flow5", "flow5");
 #elif defined Q_OS_LINUX
     QSettings settings(QSettings::NativeFormat,QSettings::UserScope,"flow5", "flow5");
@@ -293,7 +293,7 @@ void Flow5App::loadTranslations()
 
     QString appTrDir;
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     appTrDir = qApp->applicationDirPath()+"/translations/";
 #endif
 #ifdef Q_OS_WIN

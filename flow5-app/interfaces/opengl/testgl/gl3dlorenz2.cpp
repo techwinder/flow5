@@ -224,7 +224,7 @@ void gl3dLorenz2::initializeGL()
 {
     gl3dTestGLView::initializeGL();
 
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     QString csrc, strange;
 
     csrc = ":/shaders/lorenz2/lorenz2_CS.glsl";
@@ -356,7 +356,7 @@ void gl3dLorenz2::glRenderView()
 {
     if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
 
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
 
     m_shadLorenz2.bind();

@@ -419,7 +419,7 @@ void OpenGlDlg::setupLayout()
                 QAction *pSagittariusAct = new QAction(tr("Sagittarius A*"),           this);
                 QAction *pSpaceAct       = new QAction(tr("The final frontier"),       this);
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
                 pFlowAct->setEnabled(false);
                 pLorenz2Act->setEnabled(false);
                 pBoids2Act->setEnabled(false);

@@ -174,14 +174,16 @@ win32-msvc {
 
 
 macx {
-    # Specifies the hard minimum version of macOS that the application supports.
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 13.3   # needed for c++20 / std::format and compatibility with flow5-libs
+    # Deployment target:
+    #    13.3 needed for c++20 / std::format
+    #    Qt 6.12.0 binaries are built for 14.4
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 14.4
 
     # This variable is used on macOS when building universal binaries.
     QMAKE_MAC_SDK = macosx
 
     # Specifies a list of architectures to build for.
-    QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+    QMAKE_APPLE_DEVICE_ARCHS = arm64
 
     DEFINES += GL_SILENCE_DEPRECATION   #Shame
 
@@ -231,14 +233,21 @@ macx {
     flow5-io-lib.path = Contents/Frameworks
     QMAKE_BUNDLE_DATA += flow5-io-lib
 
-    #-------------OPENCASCADE--------------------------
-    # set the paths to the OpenCascade header and lib directories
+    #-------------OPENCASCADE -----------------
+    # INCLUDEPATH += /opt/homebrew/Cellar/opencascade/7.9.3_1/include/opencascade
+    # LIBS += -L/opt/homebrew/Cellar/opencascade/7.9.3_1/lib
     INCLUDEPATH += /usr/local/include/opencascade
     LIBS += -L/usr/local/lib
 
+
     #_____________GMSH__________________
-    INCLUDEPATH += /usr/local/include
+    # INCLUDEPATH += /opt/homebrew/Cellar/gmsh/4.15.2/include
+    # LIBS += -L/opt/homebrew/Cellar/gmsh/4.15.2/lib
+    INCLUDEPATH += /usr/local/include/
     LIBS += -lgmsh
+
+
+
 
     #-------------vecLib -----------------
     DEFINES += ACCELERATE_NEW_LAPACK

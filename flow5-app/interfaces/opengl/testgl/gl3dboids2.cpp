@@ -338,7 +338,7 @@ void gl3dBoids2::keyPressEvent(QKeyEvent *pEvent)
 void gl3dBoids2::initializeGL()
 {
     gl3dTestGLView::initializeGL();
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     QString csrc, strange;
 
     csrc = ":/shaders/boids2/boids2_CS.glsl";
@@ -498,7 +498,7 @@ void gl3dBoids2::glRenderView()
 {
     if(m_bAxes) paintAxes(W3dPrefs::s_AxisStyle, QString());
 
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     m_matModel.setToIdentity();
 
     // move the flock at each frame update

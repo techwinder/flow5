@@ -272,7 +272,7 @@ void XSailDisplayCtrls::setControls()
     m_pchCp->setEnabled(        s_pXSail->curBtOpp());
     m_pchGamma->setEnabled(     s_pXSail->curBtOpp());
     m_pchStream->setEnabled(    s_pXSail->curBtOpp());
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     m_pchFlow->setEnabled(false);
 #else
     m_pchFlow->setEnabled(      s_pXSail->curBtOpp() && s_pXSail->curBtOpp()->isTriUniformMethod());

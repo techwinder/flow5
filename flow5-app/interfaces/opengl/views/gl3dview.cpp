@@ -323,7 +323,7 @@ void gl3dView::initializeGL()
     m_shadSurf.release();
 
     //--------- setup the shader to paint stippled large points -----------
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     vsrc = ":/shaders/point/point_VS.glsl";
     m_shadPoint.addShaderFromSourceFile(QOpenGLShader::Vertex, vsrc);
     if(m_shadPoint.log().length())
@@ -1241,7 +1241,7 @@ void gl3dView::glSetupLight()
         m_shadSurf.setUniformValue(m_shadSurf.uniformLocation("Kq"),                       s_Light.m_Attenuation.m_Quadratic);
     }
     m_shadSurf.release();
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     m_shadPoint.bind();
     {
         if(isLightOn()) m_shadPoint.setUniformValue(m_locPoint.m_Light, 1);
@@ -1340,7 +1340,6 @@ QMatrix4x4 gl3dView::rotationMatrix() const
                       float(m[4]),  float(m[5]),  float(m[6]),  float(m[7]),
                       float(m[8]),  float(m[9]),  float(m[10]), float(m[11]),
                       float(m[12]), float(m[13]), float(m[14]), float(m[15]));
-
 }
 
 
@@ -1445,6 +1444,7 @@ void gl3dView::paintGl3()
     }
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
+
 }
 
 

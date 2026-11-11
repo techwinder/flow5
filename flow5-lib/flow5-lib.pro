@@ -155,14 +155,16 @@ macx {
     # No Qt macro, make our own
     DEFINES += MAC_OS
 
-    # Specifies the hard minimum version of macOS that the application supports.
-    QMAKE_MACOSX_DEPLOYMENT_TARGET = 13.3   # needed for c++20 / std::format
+    # Deployment target:
+    #    13.3 needed for c++20 / std::format
+    #    Qt 6.12.0 binaries are built for 14.4
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 14.4
 
     # This variable is used on macOS when building universal binaries.
     QMAKE_MAC_SDK = macosx
 
     # Specifies a list of architectures to build for.
-    QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+    QMAKE_APPLE_DEVICE_ARCHS = arm64
 
     # If defined, the value of this variable is used as a path to be prepended to
     # the built shared library's SONAME identifier.
@@ -192,12 +194,16 @@ macx {
 
 
     #-------------OPENCASCADE -----------------
+    # INCLUDEPATH += /opt/homebrew/Cellar/opencascade/7.9.3_1/include/opencascade
+    # LIBS += -L/opt/homebrew/Cellar/opencascade/7.9.3_1/lib
     INCLUDEPATH += /usr/local/include/opencascade
     LIBS += -L/usr/local/lib
 
 
     #_____________GMSH__________________
-    INCLUDEPATH += /usr/local/include
+    # INCLUDEPATH += /opt/homebrew/Cellar/gmsh/4.15.2/include
+    # LIBS += -L/opt/homebrew/Cellar/gmsh/4.15.2/lib
+    INCLUDEPATH += /usr/local/include/
     LIBS += -lgmsh
 
 

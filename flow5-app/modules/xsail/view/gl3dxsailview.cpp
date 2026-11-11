@@ -732,7 +732,7 @@ void gl3dXSailView::initializeGL()
         return;
     }
 
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     // flow Compute shader
     QString csrc = ":/shaders/flow/flow3d_CS.glsl";
     m_shadFlow.addShaderFromSourceFile(QOpenGLShader::Compute, csrc);
@@ -2492,7 +2492,7 @@ void gl3dXSailView::makeBoids()
 
 void gl3dXSailView::moveBoids()
 {
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
 
     if(oglMajor()*10+oglMinor()<43) return;
 

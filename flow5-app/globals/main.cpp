@@ -73,7 +73,7 @@ void customLogHandler(QtMsgType type, const QMessageLogContext& context, const Q
 /** OpenGL Default format must be set prior to app construction if Qt::AA_ShareOpenGLContexts is set */
 void setOGLDefaultFormat(int version)
 {
-#if defined Q_OS_MAC
+#if defined Q_OS_MACOS
     QSettings settings(QSettings::IniFormat,QSettings::UserScope,"flow5", "flow5");
 #elif defined Q_OS_LINUX
     QSettings settings(QSettings::NativeFormat,QSettings::UserScope,"flow5", "flow5");

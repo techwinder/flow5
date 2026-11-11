@@ -523,7 +523,7 @@ QPoint gl2dView::worldToScreen(float xf, float yf) const
 void gl2dView::paintPoints(QOpenGLBuffer &vbo, float width, int iShape, bool bLight, QColor const &clr, int stride)
 {
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
-#if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
+#if defined(Q_OS_MACOS) || defined(Q_OS_LINUX)
     (void)vbo;
     (void)width;
     (void)iShape;
@@ -1012,7 +1012,7 @@ void gl2dView::initializeGL()
         m_shadLine.release();
     }
 
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     vsrc = ":/shaders/point/point_VS.glsl";
     m_shadPoint.addShaderFromSourceFile(QOpenGLShader::Vertex, vsrc);
     if(m_shadPoint.log().length())

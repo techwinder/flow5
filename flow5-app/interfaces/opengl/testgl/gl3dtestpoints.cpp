@@ -114,7 +114,7 @@ void gl3dTestPoints::glRenderView()
     if(m_iRenderer==0)
     {
 
-#if defined(Q_OS_MAC) || defined(Q_OS_LINUX)
+#if defined(Q_OS_MACOS) || defined(Q_OS_LINUX)
 #else
         m_shadPoint.bind();
         {

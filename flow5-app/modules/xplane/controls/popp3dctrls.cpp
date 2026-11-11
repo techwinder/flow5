@@ -322,7 +322,7 @@ void POpp3dCtrls::setControls()
     m_pchStream->setEnabled(          pPOpp && !pPOpp->isLLTMethod());
     m_pchPickPanel->setEnabled(       pPlPolar);
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     m_pchFlow->setEnabled(false);
 #else
     int oglmajor = gl3dView::oglMajor();

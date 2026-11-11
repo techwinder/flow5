@@ -498,12 +498,12 @@ void MainFrame::aboutQt()
 {
 #ifndef QT_NO_MESSAGEBOX
     QMessageBox::aboutQt(
-            #ifdef Q_OS_MAC
+            #ifdef Q_OS_MACOS
                 this
             #else
                 //            activeWindow()
                 this
-            #endif // Q_OS_MAC
+            #endif // Q_OS_MACOS
                 );
 #endif // QT_NO_MESSAGEBOX
 }
@@ -1823,7 +1823,7 @@ void MainFrame::onResetSettings()
     if(resp == QMessageBox::Yes)
     {
         QMessageBox::warning(this, tr("Default Settings"), tr("The settings will be reset at the next session"));
-#if defined Q_OS_MAC
+#if defined Q_OS_MACOS
         QSettings settings(QSettings::IniFormat,QSettings::UserScope,"flow5", "flow5");
 #elif defined Q_OS_LINUX
         QSettings settings(QSettings::NativeFormat,QSettings::UserScope,"flow5", "flow5");
@@ -2601,7 +2601,7 @@ bool MainFrame::loadSettings()
 {
     int SettingsFormat=0;
 
-#if defined Q_OS_MAC
+#if defined Q_OS_MACOS
     QSettings settings(QSettings::IniFormat,QSettings::UserScope,"flow5", "flow5");
 #elif defined Q_OS_LINUX
     QSettings settings(QSettings::NativeFormat,QSettings::UserScope,"flow5", "flow5");
@@ -2902,7 +2902,7 @@ void MainFrame::saveSettings()
 
     displayMessage("Saving settings\n\n", false);
 
-#if defined Q_OS_MAC
+#if defined Q_OS_MACOS
     QSettings settings(QSettings::IniFormat,QSettings::UserScope,"flow5", "flow5");
 #elif defined Q_OS_LINUX
     QSettings settings(QSettings::NativeFormat,QSettings::UserScope,"flow5", "flow5");

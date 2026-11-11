@@ -1084,7 +1084,7 @@ void gl3dXPlaneView::initializeGL()
         return;
     }
 
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
     // flow Compute shader
     QString csrc = ":/shaders/flow/flow3d_CS.glsl";
     m_shadFlow.addShaderFromSourceFile(QOpenGLShader::Compute, csrc);
@@ -3692,7 +3692,7 @@ void gl3dXPlaneView::makeFlowBuffers()
 
 void gl3dXPlaneView::moveBoids()
 {
-#ifndef Q_OS_MAC
+#ifndef Q_OS_MACOS
 
     if(oglMajor()*10+oglMinor()<43) return;
 

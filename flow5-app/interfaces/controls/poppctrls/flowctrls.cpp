@@ -449,7 +449,7 @@ void FlowCtrls::updateFlowInfo()
 
 void FlowCtrls::enableFlowControls()
 {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
     return;
 #endif
 

@@ -261,7 +261,7 @@ void PrefsDlg::setupLayout()
                     m_pchConfirmDiscard = new QCheckBox(tr("Confirm discard command when exiting editors"));
 
                     m_pchDontUseNativeMacDlg  = new QCheckBox(tr("Don't use native color and font dialog (macOS)"));
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
                     m_pchDontUseNativeMacDlg->setEnabled(true);
                     QString tip ="Currently, the native dialog for font selection is never used, but this is likely to change in future Qt releases.";
                     m_pchDontUseNativeMacDlg->setToolTip(tip);
@@ -366,7 +366,7 @@ void PrefsDlg::setupLayout()
                 QLabel *plabPriorityDisable = new QLabel(tr("Linux OS does not support thread priority"));
                 plabPriorityDisable->setStyleSheet("font: italic");
                 plabPriorityDisable->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
-#if defined Q_OS_MAC
+#if defined Q_OS_MACOS
                 plabPriorityDisable->hide();
 #elif defined Q_OS_LINUX
                 plabPriorityDisable->show();

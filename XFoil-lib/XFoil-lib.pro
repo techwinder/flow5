@@ -59,7 +59,8 @@ win32 {
 macx{
     QMAKE_SONAME_PREFIX = @executable_path/../Frameworks
     QMAKE_MAC_SDK = macosx
-    QMAKE_APPLE_DEVICE_ARCHS = x86_64 arm64
+    QMAKE_APPLE_DEVICE_ARCHS = arm64
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 14.4   # for compatibility with other flow5 modules
 
 
     isEmpty(PREFIX){

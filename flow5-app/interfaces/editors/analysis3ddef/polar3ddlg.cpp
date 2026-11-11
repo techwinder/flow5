@@ -360,7 +360,7 @@ void Polar3dDlg::makeBaseCommonControls()
                 QGridLayout *pWakeIterationsLayout = new QGridLayout;
                 {
                     QFont fixedfnt(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
                     fixedfnt.setPointSize(std::max(fixedfnt.pointSize(),14));
 #endif
                     QLabel *pLab0 = new QLabel(tr("Buffer wake panel length:"));
