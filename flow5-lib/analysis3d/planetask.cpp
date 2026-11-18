@@ -2220,19 +2220,12 @@ bool PlaneTask::T123458Loop()
 
         m_pPA->combineLocalVelocities(m_Alpha, m_Beta, VLocal);
 
-/*        // change in v7.59
-        if(m_pPolar3d->isVLM())
-        {
-            // Cf. https://github.com/techwinder/flow5/issues/127
-            // Up to v7.58, in the case of the VLM, Cp coefficients were calculated later
-            // when evaluating each WingXfl's panel forces and ignoring the local velocities.
-            // This mod homogenizes the VLM with the Panel methods.
-            m_pP4A->computeOnBodyCp_VLM(m_QInf, objects::windDirection(m_Alpha, m_Beta), m_pPA->m_Cp);
-        }
-        else */
-            m_pPA->computeOnBodyCp(VInf, VLocal, m_pPA->m_Cp);
+        m_pPA->computeOnBodyCp(VInf, VLocal, m_pPA->m_Cp);
 
+        //change in v7.59: results are scaled AFTER computing the on-body Cp
+        //                 the change is required to accomodate the VLM
         scaleResultsToSpeed(1.0, m_QInf);
+
         if (isCancelled()) return true;
 
 

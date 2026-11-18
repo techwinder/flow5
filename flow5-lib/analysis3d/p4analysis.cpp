@@ -1653,11 +1653,20 @@ void P4Analysis::computeOnBodyCp(const std::vector<Vector3d> &VInf,
 
         if(m_pPolar3d->isVLM())
         {
+            // Change in v7.59 to address issue 127: in the case of the VLM, Cp is now calculated in this method
+            // to include the local velocity when evaluating the force acting on the vortices.
+
             Vector3d VelPanel = VInf.at(i4);
+
+            // Although the lift force applies to the vortex at the 3/4 chord length of the panel,
+            // the calculation of the velocity is exact only at the ctrl point located at the 1/4 chord length.
+            // Vn is non-zero elsewhere on the panel which violates the non-penetration condition.
             getVelocityVector(p4.ctrlPt(true), m_Mu.data(), m_Sigma.data(), Vl, Vortex::coreRadius(), false, true);
             VelPanel += Vl;
+
             // sanity check: normal component should be 0
             //  std::cout << std::format("P4_{:3d}: Vn={:11g}", p4.index(), VelPanel.dot(p4.normal())) << std::endl;
+
             Vector3d PanelForce  = VelPanel * p4.trailingVortex();
 
             QInf = VInf.at(i4).norm();
@@ -1707,29 +1716,6 @@ void P4Analysis::computeOnBodyCp(const std::vector<Vector3d> &VInf,
                 Cp[i4] = 1.0-Speed2/QInf/QInf;
             }
         }
-    }
-}
-
-
-/**
-* Calculates the Cp coefficient on each panel in the case of the VLM, using the vortex circulations
-*/
-void P4Analysis::computeOnBodyCp_VLM(double QInf, Vector3d const &WindDirection, std::vector<double>&Cp) const
-{
-    for (int i4=0; i4<nPanels(); i4++)
-    {
-        Panel4 const &p4 = m_Panel4.at(i4);
-
-        Vector3d PanelForce  = WindDirection * p4.trailingVortex();
-        PanelForce *= 2.0 * m_Mu[i4] /QInf;                                 //Newtons/q
-
-        if(m_pPolar3d->isVLM2() && !p4.isLeading())
-        {
-            Vector3d Force = WindDirection * p4.trailingVortex();
-            Force      *= 2.0 * m_Mu[i4+1] /QInf;                          //Newtons/q
-            PanelForce -= Force;
-        }
-        Cp[i4] = -PanelForce.dot(p4.normal())/p4.area();
     }
 }
 
