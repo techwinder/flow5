@@ -131,6 +131,8 @@ class FL5LIB_EXPORT P4Analysis : public PanelAnalysis
         void computeOnBodyCp(std::vector<Vector3d> const &VInf,
                              std::vector<Vector3d> const &VLocal, std::vector<double>&Cp) const override;
 
+        void computeOnBodyCp_VLM(double QInf, const Vector3d &WindDirection, std::vector<double> &Cp) const;
+
         double computeCm(const Vector3d &CoG, double Alpha, bool bFuseMi);
         bool computeTrimmedConditions(double mass, const Vector3d &CoG, double &alphaeq, double &u0, bool bFuseMi) override;
         bool getZeroMomentAngle(const Vector3d &CoG, double &alphaeq, bool bFuseMi);

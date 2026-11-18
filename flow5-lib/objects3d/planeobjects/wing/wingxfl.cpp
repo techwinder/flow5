@@ -1738,7 +1738,7 @@ void WingXfl::panel4ComputeInviscidForces(std::vector<Panel4> const &panel4list,
                 Force      *= 2.0 * gamma[index+1] /QInf;                          //Newtons/q
                 PanelForce -= Force;
             }
-            Cp4[index] = -PanelForce.dot(p4.normal())/p4.area();    //
+//            Cp4[index] = -PanelForce.dot(p4.normal())/p4.area();    //
         }
 
         PartM0 += ForcePt * PanelForce.dot(WindNormal);
