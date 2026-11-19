@@ -857,7 +857,7 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
 * The downwash is evaluated far downstream (i.e. where the inluence of the bounded vortices is negligible)
 */
 void P3Analysis::forces(double const *Mu3, double const *Sigma3, double alpha, double beta, Vector3d const &CoG, bool bFuseMi,
-                        std::vector<Vector3d> const &VInf, Vector3d &Force, Vector3d &Moment)
+                        std::vector<Vector3d> const &VInf, Vector3d &Force, Vector3d &Moment) const
 {
     if(!m_pPolar3d) return;
 
@@ -876,8 +876,6 @@ void P3Analysis::forces(double const *Mu3, double const *Sigma3, double alpha, d
     viscousDrag = 0.0;
     viscousMoment.set(0.0,0.0,0.0);
 
-//    int m=0;
-
     for(int i3=0; i3<nPanels(); i3++)
     {
         Panel3 const &p3 = m_Panel3.at(i3);
@@ -888,7 +886,7 @@ void P3Analysis::forces(double const *Mu3, double const *Sigma3, double alpha, d
             {
                 // get the last triangle of the wake column
                 assert(p3.iWake()>=0 && p3.iWake()<nWakePanels());
-                Panel3 *p3W = m_WakePanel3.data() + p3.iWake();
+                Panel3 const *p3W = m_WakePanel3.data() + p3.iWake();
                 trailingWakePoint(p3W, left, right);
                 mid = (left + right)/2.0;
 
@@ -905,8 +903,6 @@ void P3Analysis::forces(double const *Mu3, double const *Sigma3, double alpha, d
                 stripforce  =  Wg * vortex;
                 stripforce *= GammaStrip * m_pPolar3d->density();     // N
                 Force += stripforce;
-
- //               m++;
             }
         }
         else if(p3.isTrailing() && p3.isBotPanel())
@@ -918,7 +914,7 @@ void P3Analysis::forces(double const *Mu3, double const *Sigma3, double alpha, d
             //Get the strip's lifting force
 
             // get the last triangle of the wake column
-            Panel3 *p3W = m_WakePanel3.data() + p3.iWake();
+            Panel3 const *p3W = m_WakePanel3.data() + p3.iWake();
             trailingWakePoint(p3W, left, right);
             mid = (left + right)/2.0;
 
@@ -937,7 +933,6 @@ void P3Analysis::forces(double const *Mu3, double const *Sigma3, double alpha, d
             stripforce *= GammaStrip * m_pPolar3d->density();     // N
 
             Force += stripforce;
-//            m++;
         }
     }
 
@@ -1048,7 +1043,6 @@ void P3Analysis::moments(double *Mu3, double alpha, double beta, Vector3d CoG,
 /**
  * Returns the geometric pitching moment coefficient for the specified angle of attack
  * The effect of the viscous drag is not included.
- * @param Alpha the aoa for which Cm is calculated
  */
 double P3Analysis::computeCm(Vector3d const &CoG, double Alpha, bool bFuseMi)
 {
@@ -1068,7 +1062,6 @@ double P3Analysis::computeCm(Vector3d const &CoG, double Alpha, bool bFuseMi)
     double VFreeStream = 1.0; // using a unit freestream velocity since results have not been scaled at this stage
     computeOnBodyCp(VFreeStream, VInf, VLocal, m_Cp);
 
-    bool bTrace = false;
     double Cm = 0.0;
     for(int i3=0; i3<nPanels(); i3++)
     {
@@ -1088,8 +1081,6 @@ double P3Analysis::computeCm(Vector3d const &CoG, double Alpha, bool bFuseMi)
             //next calculate the force acting on the panel
             ForcePt = p3.CoG();
             PanelForce = p3.normal() * (-Cp) * p3.area();      // Newtons/q
-if(bTrace) std::cout << std::format("  {:3d}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}  {:13g}",
-                  i3, ForcePt.x, ForcePt.y, ForcePt.z, PanelForce.x, PanelForce.y, PanelForce.z)<<std::endl;
 
             PanelLeverArm.x = ForcePt.x - CoG.x;
             PanelLeverArm.y = ForcePt.y - CoG.y;
@@ -1155,7 +1146,7 @@ bool P3Analysis::getZeroMomentAngle(Vector3d const &CoG, double &alphaeq, bool b
         a1 *=0.9;
         Cm0 = computeCm(CoG, a0*180.0/PI, bFuseMi);
         Cm1 = computeCm(CoG, a1*180.0/PI, bFuseMi);
-//        qDebug(" iter={:3d},  {:11g}   {:11g},  {:11g}   {:11g}", iter, a0*180.0/PI, a1*180.0/PI, Cm0, Cm1);
+
         iter++;
         if(isCancelled()) break;
     }
@@ -1251,8 +1242,8 @@ bool P3Analysis::computeTrimmedConditions(double mass, Vector3d const &CoG, doub
         u0 = -100.0;
         std::string strong;
         strong = "        Found a negative lift for " + ALPHAstr;
-        strong = std::format("=%.5f", alphaeq) + DEGstr;
-        strong = ".... skipping the angle...\n";
+        strong += std::format("={:.5f}", alphaeq) + DEGstr;
+        strong += ".... skipping the angle...\n";
         m_bWarning = true;
         traceStdLog("\n"+strong);
         return false;
@@ -1261,7 +1252,7 @@ bool P3Analysis::computeTrimmedConditions(double mass, Vector3d const &CoG, doub
     {
         u0 = sqrt(9.81 * mass / Force.z);
 
-        if(fabs(m_pPolar3d->phi())>PRECISION)
+        if(fabs(m_pPolar3d->phi())>AOAPRECISION)
         {
         }
     }
@@ -1287,8 +1278,6 @@ void P3Analysis::makeInfluenceMatrix()
         {
             threads[iBlock].join();
         }
-//        std::cout << "P3Analysis::makeInfluenceMatrix joined all " << m_nBlocks << " threads" <<std::endl;
-
     }
     else
     {
@@ -1316,8 +1305,6 @@ void P3Analysis::makeInfluenceMatrix()
  */
 void P3Analysis::makeNegatingVortices(std::vector<Vortex> &negvortices)
 {
-/*    s_DebugPts.clear();
-    s_DebugVecs.clear();*/
     Vector3d left, right;
     negvortices.clear();
     for(int iw=0; iw<nWakePanels(); iw++)
@@ -1328,8 +1315,6 @@ void P3Analysis::makeNegatingVortices(std::vector<Vortex> &negvortices)
             // start of the wake column
             trailingWakePoint(&p3w, left, right);
             negvortices.push_back({left, right});
-/*            s_DebugPts.push_back(left);
-            s_DebugVecs.push_back(negvortices.back().segment());*/
         }
     }
 }
@@ -1402,8 +1387,6 @@ void P3Analysis::combineLocalVelocities(double alpha, double beta, std::vector<V
         VLocal[i].y = cosa*cosb* m_uVLocal.at(i).y + sinb*m_vVLocal.at(i).y + sina*cosb* m_wVLocal.at(i).y;
         VLocal[i].z = cosa*cosb* m_uVLocal.at(i).z + sinb*m_vVLocal.at(i).z + sina*cosb* m_wVLocal.at(i).z;
     }
-
-//    for(int i=0; i<VLocal.size(); i++)        qDebug("  {:11g}  {:11g}  {:11g}", VLocal.at(i).x, VLocal.at(i).y, VLocal.at(i).z);
 }
 
 

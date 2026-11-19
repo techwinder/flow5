@@ -1008,7 +1008,7 @@ void P4Analysis::VLMGetVortexInfluence(Panel4 const &p4, Vector3d const &C, doub
 * @param Moment the resulting moment vector
 */
 void P4Analysis::forces(double const *Mu4, double const *Sigma4, double alpha, double beta, Vector3d const &CoG, bool ,
-                        std::vector<Vector3d> const &VInf, Vector3d &Force, Vector3d &Moment)
+                        std::vector<Vector3d> const &VInf, Vector3d &Force, Vector3d &Moment) const
 {
     if(!m_pPolar3d) return;
 
@@ -1030,7 +1030,7 @@ void P4Analysis::forces(double const *Mu4, double const *Sigma4, double alpha, d
 //    int m=0;
     for(int i4=0; i4<nPanels(); i4++)
     {
-        Panel4 &p4 = m_Panel4[i4];
+        Panel4 const &p4 = m_Panel4[i4];
 
         if(!m_pPolar3d->isVLM())
         {

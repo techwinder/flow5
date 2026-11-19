@@ -94,7 +94,7 @@ class FL5LIB_EXPORT P4Analysis : public PanelAnalysis
         void VLMGetVortexInfluence(const Panel4 &pPanel, Vector3d const &C, double *phi, Vector3d *V, bool bIncludingBound, double fardist) const;
 
 
-        void forces(double const *Mu, double const *Sigma, double alpha, double beta, Vector3d const&CoG, bool bFuseMi, const std::vector<Vector3d> &VInf, Vector3d &Force, Vector3d &Moment) override;
+        void forces(double const *Mu, double const *Sigma, double alpha, double beta, Vector3d const&CoG, bool bFuseMi, const std::vector<Vector3d> &VInf, Vector3d &Force, Vector3d &Moment) const override;
 
         void makeMu(int qrhs) override;
 
