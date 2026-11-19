@@ -1640,13 +1640,18 @@ void P4Analysis::trefftzDrag(int nPanels, double QInf, double alpha, double beta
 
 
 /**
-* Calculates the Cp coefficient on each panel in the case of the panel methods, using the local velocities
+* Calculates the Cp coefficient on each panel in the case of the panel methods,
+* including the contribution of the local velocities
 */
-void P4Analysis::computeOnBodyCp(const std::vector<Vector3d> &VInf,
+void P4Analysis::computeOnBodyCp(double VFreeStream, const std::vector<Vector3d> &VInf,
                                  std::vector<Vector3d> const &VLocal, std::vector<double>&Cp) const
 {
-    double QInf(0), Speed2(0), CpSup(0), CpInf(0);
+    double Speed2(0), CpSup(0), CpInf(0);
     Vector3d Vl, Vtot, Vtotsup, Vtotinf;
+
+    double rho  = m_pPolar3d->density();
+    double qDyn = 0.5 * rho * VFreeStream *VFreeStream;
+
     for (int i4=0; i4<nPanels(); i4++)
     {
         Panel4 const &p4 = m_Panel4.at(i4);
@@ -1654,30 +1659,31 @@ void P4Analysis::computeOnBodyCp(const std::vector<Vector3d> &VInf,
         if(m_pPolar3d->isVLM())
         {
             // Change in v7.59 to address issue 127: in the case of the VLM, Cp is now calculated in this method
-            // to include the local velocity when evaluating the force acting on the vortices.
+            // so as to include the local velocity when evaluating the forces acting on the vortices.
 
             Vector3d VelPanel = VInf.at(i4);
 
             // Although the lift force applies to the vortex at the 3/4 chord length of the panel,
             // the calculation of the velocity is exact only at the ctrl point located at the 1/4 chord length.
-            // Vn is non-zero elsewhere on the panel which violates the non-penetration condition.
+            // Vn is non-zero elsewhere on the panel which violates Neumann's non-penetration condition.
             getVelocityVector(p4.ctrlPt(true), m_Mu.data(), m_Sigma.data(), Vl, Vortex::coreRadius(), false, true);
             VelPanel += Vl;
 
             // sanity check: normal component should be 0
-            //  std::cout << std::format("P4_{:3d}: Vn={:11g}", p4.index(), VelPanel.dot(p4.normal())) << std::endl;
+            // std::cout << std::format("P4_{:3d}: Vn={:11g}", p4.index(), VelPanel.dot(p4.normal())) << std::endl;
 
-            Vector3d PanelForce  = VelPanel * p4.trailingVortex();
-
-            QInf = VInf.at(i4).norm();
-            PanelForce *= 2.0 * m_Mu[i4] /QInf;                                 //Newtons/q
+            // use Jutta-Joukowsky theorem
+            Vector3d PanelForce = VelPanel * p4.trailingVortex() * rho * m_Mu[i4];         // Newtons
 
             if(m_pPolar3d->isVLM2() && !p4.isLeading())
             {
-                Vector3d Force = VInf.at(i4) * p4.trailingVortex();
-                Force      *= 2.0 * m_Mu[i4+1] /QInf;                          //Newtons/q
+                // use Jutta-Joukowsky theorem
+                Vector3d Force = VelPanel * p4.trailingVortex() * rho* m_Mu[i4+1];         // Newtons
                 PanelForce -= Force;
             }
+
+            PanelForce *= 1.0/qDyn;                                            // Newtons/qDyn
+
             Cp[i4] = -PanelForce.dot(p4.normal())/p4.area();
         }
         else
@@ -1687,7 +1693,6 @@ void P4Analysis::computeOnBodyCp(const std::vector<Vector3d> &VInf,
             Vl.z = m_Sigma.at(i4)*4.0*PI;
             Vtot.set(p4.globalToLocal(VInf.at(i4)));
 
-            QInf = VInf.at(i4).norm();
             if(p4.isMidPanel())
             {
             /* Correction made in v7.12 May 2021
@@ -1701,11 +1706,11 @@ void P4Analysis::computeOnBodyCp(const std::vector<Vector3d> &VInf,
 
                 Vtotsup = Vtot + Vl*0.5;
                 Speed2 = Vtotsup.x*Vtotsup.x + Vtotsup.y*Vtotsup.y;
-                CpSup = 1.0-Speed2/QInf/QInf;
+                CpSup = 1.0-Speed2/VFreeStream/VFreeStream;
 
                 Vtotinf = Vtot - Vl*0.5;
                 Speed2 = Vtotinf.x*Vtotinf.x + Vtotinf.y*Vtotinf.y;
-                CpInf = 1.0-Speed2/QInf/QInf;
+                CpInf = 1.0-Speed2/VFreeStream/VFreeStream;
 
                 Cp[i4] = CpSup-CpInf;
             }
@@ -1713,7 +1718,7 @@ void P4Analysis::computeOnBodyCp(const std::vector<Vector3d> &VInf,
             {
                 Vtot  += Vl;
                 Speed2 = Vtot.x*Vtot.x + Vtot.y*Vtot.y;
-                Cp[i4] = 1.0-Speed2/QInf/QInf;
+                Cp[i4] = 1.0-Speed2/VFreeStream/VFreeStream;
             }
         }
     }

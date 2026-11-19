@@ -311,7 +311,7 @@ void BoatTask::loop()
         traceStdLog("      Computing on body Cp...");
         if(!m_pPolar3d->isVLM())
         {
-            m_pPA->computeOnBodyCp(VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
+            m_pPA->computeOnBodyCp(qinf, VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
         }
         if (isCancelled()) return;
         traceStdLog(" done\n");

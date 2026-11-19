@@ -997,7 +997,7 @@ bool PlaneTask::T6Loop()
                                    m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0, 0)*m_QInf); // only using first
 
         std::fill(VField.begin(), VField.end(), objects::windDirection(0, 0)*QInfStab);
-        m_pPA->computeOnBodyCp(VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
+        m_pPA->computeOnBodyCp(QInfStab, VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
 
         strange = std::format("      Calculating plane for control parameter={:.3f}\n", m_Ctrl);
         traceStdLog(strange);
@@ -2220,7 +2220,8 @@ bool PlaneTask::T123458Loop()
 
         m_pPA->combineLocalVelocities(m_Alpha, m_Beta, VLocal);
 
-        m_pPA->computeOnBodyCp(VInf, VLocal, m_pPA->m_Cp);
+        double VFreeStream = 1.0; // using a unit freestream velocity since results have not been scaled at this stage
+        m_pPA->computeOnBodyCp(VFreeStream, VInf, VLocal, m_pPA->m_Cp);
 
         //change in v7.59: results are scaled AFTER computing the on-body Cp
         //                 the change is required to accomodate the VLM
@@ -2461,7 +2462,7 @@ void PlaneTask::computeControlDerivatives(double t7ctrl, double alphaeq, double 
             }
 
             std::fill(VField.begin(), VField.end(), VInf);
-            m_pPA->computeOnBodyCp(VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
+            m_pPA->computeOnBodyCp(u0, VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
             m_pPA->forces(muc, sigma, alphaeq, 0.0, CoG, m_pPlPolar->bFuseMi(), VField, Force, Moment);
         }
 

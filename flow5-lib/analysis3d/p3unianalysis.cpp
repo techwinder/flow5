@@ -688,18 +688,18 @@ void P3UniAnalysis::checkThinSurfaceSolution()
  * Assumes that the unit velocity vectors induced by doublet densities at the panel nodes have been calculated at
  * the previous stage.
  */
-void P3UniAnalysis::computeOnBodyCp(std::vector<Vector3d> const &VInf,
+void P3UniAnalysis::computeOnBodyCp(double VFreeStream, std::vector<Vector3d> const &VInf,
                                     std::vector<Vector3d> const &VLocal, std::vector<double>&Cp) const
 {
-    double QInf(0), Speed2(0), CpSup(0), CpInf(0);
+    double Speed2(0), CpSup(0), CpInf(0);
     Vector3d VStream, VPanel0, VPanel1, VPanel2;
     Vector3d Vtotsup, Vtotinf;
+
     for(int i3=0; i3<nPanels(); i3++)
     {
         Panel3 const &p3 = m_Panel3.at(i3);
 
         VStream = p3.globalToLocal(VInf.at(i3));
-        QInf = VInf.at(i3).norm();
 
         if(p3.isMidPanel())
         {
@@ -716,11 +716,11 @@ void P3UniAnalysis::computeOnBodyCp(std::vector<Vector3d> const &VInf,
             {
                 Vtotsup = VStream + VLocal.at(3*i3+k) *0.5;
                 Speed2 = Vtotsup.x*Vtotsup.x + Vtotsup.y*Vtotsup.y;
-                CpSup = 1.0-Speed2/QInf/QInf;
+                CpSup = 1.0-Speed2/VFreeStream/VFreeStream;
 
                 Vtotinf = VStream - VLocal.at(3*i3+k) *0.5;
                 Speed2 = Vtotinf.x*Vtotinf.x + Vtotinf.y*Vtotinf.y;
-                CpInf = 1.0-Speed2/QInf/QInf;
+                CpInf = 1.0-Speed2/VFreeStream/VFreeStream;
 
                 Cp[3*i3+k] = CpSup-CpInf;
             }
@@ -730,9 +730,9 @@ void P3UniAnalysis::computeOnBodyCp(std::vector<Vector3d> const &VInf,
             VPanel0 = VStream + VLocal.at(3*i3);
             VPanel1 = VStream + VLocal.at(3*i3+1);
             VPanel2 = VStream + VLocal.at(3*i3+2);
-            Cp[3*i3]   = 1.0-(VPanel0.x*VPanel0.x + VPanel0.y*VPanel0.y)/QInf/QInf;
-            Cp[3*i3+1] = 1.0-(VPanel1.x*VPanel1.x + VPanel1.y*VPanel1.y)/QInf/QInf;
-            Cp[3*i3+2] = 1.0-(VPanel2.x*VPanel2.x + VPanel2.y*VPanel2.y)/QInf/QInf;
+            Cp[3*i3]   = 1.0-(VPanel0.x*VPanel0.x + VPanel0.y*VPanel0.y)/VFreeStream/VFreeStream;
+            Cp[3*i3+1] = 1.0-(VPanel1.x*VPanel1.x + VPanel1.y*VPanel1.y)/VFreeStream/VFreeStream;
+            Cp[3*i3+2] = 1.0-(VPanel2.x*VPanel2.x + VPanel2.y*VPanel2.y)/VFreeStream/VFreeStream;
         }
     }
 }

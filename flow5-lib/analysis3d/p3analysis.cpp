@@ -1055,7 +1055,7 @@ double P3Analysis::computeCm(Vector3d const &CoG, double Alpha, bool bFuseMi)
     Vector3d PanelLeverArm, ForcePt, PanelForce, WindDirection;
     double Cp=0;
 
-    // Define the wind axis
+    // Define the wind axes
     double beta=0;
     double cosa = cos(Alpha*PI/180.0);
     double sina = sin(Alpha*PI/180.0);
@@ -1064,7 +1064,9 @@ double P3Analysis::computeCm(Vector3d const &CoG, double Alpha, bool bFuseMi)
     std::vector<Vector3d> VLocal(nPanels()*3);
     std::vector<Vector3d> VInf(nPanels(), WindDirection);
     combineLocalVelocities(Alpha, beta, VLocal);
-    computeOnBodyCp(VInf, VLocal, m_Cp);
+
+    double VFreeStream = 1.0; // using a unit freestream velocity since results have not been scaled at this stage
+    computeOnBodyCp(VFreeStream, VInf, VLocal, m_Cp);
 
     bool bTrace = false;
     double Cm = 0.0;

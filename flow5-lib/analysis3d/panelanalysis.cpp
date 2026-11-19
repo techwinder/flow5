@@ -752,7 +752,7 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
             mup = m_cRHS.data();
         }
 
-        computeOnBodyCp(VInf, m_uVLocal, m_Cp);
+        computeOnBodyCp(u0, VInf, m_uVLocal, m_Cp);
         forces(mup, Sigma.data()+6*N, alpha, beta, CoG, bFuseMi, VField.at(6), Force0, Moment0);
     }
 
@@ -796,10 +796,10 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
             mum = m_UmRHS.data();
         }
 
-        computeOnBodyCp(VField.at(0), m_uVLocal, m_Cp);
+        computeOnBodyCp(u0, VField.at(0), m_uVLocal, m_Cp);
         forces(mup, Sigma.data()+0*N, alpha, beta, CoG, bFuseMi, VField.at(0), Forcep, Momentp);
 
-        computeOnBodyCp(VField.at(3), m_wVLocal, m_Cp);
+        computeOnBodyCp(u0, VField.at(3), m_wVLocal, m_Cp);
         forces(mum, Sigma.data()+3*N, alpha, beta, CoG, bFuseMi, VField.at(3), Forcem, Momentm);
     }
 
@@ -835,10 +835,10 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
             mum = m_VmRHS.data();
         }
 
-        computeOnBodyCp(VField.at(1), m_uVLocal, m_Cp);
+        computeOnBodyCp(u0, VField.at(1), m_uVLocal, m_Cp);
         forces(mup, Sigma.data()+1*N, alpha, beta, CoG, bFuseMi, VField.at(1), Forcep, Momentp);
 
-        computeOnBodyCp(VField.at(4), m_wVLocal, m_Cp);
+        computeOnBodyCp(u0, VField.at(4), m_wVLocal, m_Cp);
         forces(mum, Sigma.data()+4*N, alpha, beta, CoG, bFuseMi, VField.at(4), Forcem, Momentm);
     }
     SD.Yv = (Forcem - Forcep).dot(js)   /deltaspeed/2.0;
@@ -871,10 +871,10 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
             mum = m_WmRHS.data();
         }
 
-        computeOnBodyCp(VField.at(2), m_uVLocal, m_Cp);
+        computeOnBodyCp(u0, VField.at(2), m_uVLocal, m_Cp);
         forces(mup, Sigma.data()+2*N, alpha, beta, CoG, bFuseMi, VField.at(2), Forcep, Momentp);
 
-        computeOnBodyCp(VField.at(5), m_wVLocal, m_Cp);
+        computeOnBodyCp(u0, VField.at(5), m_wVLocal, m_Cp);
         forces(mum, Sigma.data()+5*N, alpha, beta, CoG, bFuseMi, VField.at(5), Forcem, Momentm);
     }
     SD.Xw = (Forcem - Forcep).dot(is)   /deltaspeed/2.0;
@@ -1016,9 +1016,9 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
             mup = m_UpRHS.data();
             mum = m_UmRHS.data();
         }
-        computeOnBodyCp(VField.at(0), m_uVLocal, m_Cp);
+        computeOnBodyCp(u0, VField.at(0), m_uVLocal, m_Cp);
         forces(mup, Sigma.data()+0*N, alphaeq, beta, CoG, bFuseMi, VField.at(0), Forcep, Momentp);
-        computeOnBodyCp(VField.at(3), m_wVLocal, m_Cp);
+        computeOnBodyCp(u0, VField.at(3), m_wVLocal, m_Cp);
         forces(mum, Sigma.data()+3*N, alphaeq, beta, CoG, bFuseMi, VField.at(3), Forcem, Momentm);
     }
     SD.Yp = (Forcep -Forcem ).dot(js) /rotationrate/2.0;
@@ -1049,9 +1049,9 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
             mup = m_VpRHS.data();
             mum = m_VmRHS.data();
         }
-        computeOnBodyCp(VField.at(1), m_uVLocal, m_Cp);
+        computeOnBodyCp(u0, VField.at(1), m_uVLocal, m_Cp);
         forces(mup, Sigma.data()+1*N, alphaeq, beta, CoG, bFuseMi, VField.at(1), Forcep, Momentp);
-        computeOnBodyCp(VField.at(4), m_wVLocal, m_Cp);
+        computeOnBodyCp(u0, VField.at(4), m_wVLocal, m_Cp);
         forces(mum, Sigma.data()+4*N, alphaeq, beta, CoG, bFuseMi, VField.at(4), Forcem, Momentm);
     }
     SD.Xq = (Forcep -Forcem ).dot(is) /rotationrate/2.0;
@@ -1082,9 +1082,9 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
             mup = m_WpRHS.data();
             mum = m_WmRHS.data();
         }
-        computeOnBodyCp(VField.at(2), m_uVLocal, m_Cp);
+        computeOnBodyCp(u0, VField.at(2), m_uVLocal, m_Cp);
         forces(mup, Sigma.data()+2*N, alphaeq, beta, CoG, bFuseMi, VField.at(2), Forcep, Momentp);
-        computeOnBodyCp(VField.at(5), m_wVLocal, m_Cp);
+        computeOnBodyCp(u0, VField.at(5), m_wVLocal, m_Cp);
         forces(mum, Sigma.data()+5*N, alphaeq, beta, CoG, bFuseMi, VField.at(5), Forcem, Momentm);
     }
 
