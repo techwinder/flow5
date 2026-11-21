@@ -1696,7 +1696,7 @@ int WingXfl::nTriangles() const
 
 void WingXfl::panel4ComputeInviscidForces(std::vector<Panel4> const &panel4list,
                                           PlanePolar const *pWPolar, Vector3d const &cog, double alpha, double beta, double QInf,
-                                          double *Cp4, double const*gamma,
+                                          double const *Cp4, double const*gamma,
                                           AeroForces &AF) const
 {
     Vector3d leverArmPanelCoG;
@@ -1742,7 +1742,11 @@ void WingXfl::panel4ComputeInviscidForces(std::vector<Panel4> const &panel4list,
             }
 
             PanelForce *= 1.0/qDyn;                                 //Newtons/q
-            Cp4[index] = -PanelForce.dot(p4.normal())/p4.area();
+
+            // Change in v7.59 to address issue 127: in the case of the VLM, Cp is now calculated
+            // in P4Analysis::computeOnBodyCp() to include the local velocity when evaluating the
+            // force acting on the vortices.
+            // Cp4[index] = -PanelForce.dot(p4.normal())/p4.area();
         }
 
         PartM0 += ForcePt * PanelForce.dot(WindNormal);

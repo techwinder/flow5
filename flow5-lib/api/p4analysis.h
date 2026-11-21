@@ -128,7 +128,7 @@ class FL5LIB_EXPORT P4Analysis : public PanelAnalysis
         std::vector<Panel4> const &wakePanels() const {return m_WakePanel4;}
 
 
-        void computeOnBodyCp(std::vector<Vector3d> const &VInf,
+        void computeOnBodyCp(const double VFreeStream, std::vector<Vector3d> const &VInf,
                              std::vector<Vector3d> const &VLocal, std::vector<double>&Cp) const override;
 
         double computeCm(const Vector3d &CoG, double Alpha, bool bFuseMi);

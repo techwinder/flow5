@@ -1064,7 +1064,7 @@ double P3Analysis::computeCm(Vector3d const &CoG, double Alpha, bool bFuseMi)
     std::vector<Vector3d> VLocal(nPanels()*3);
     std::vector<Vector3d> VInf(nPanels(), WindDirection);
     combineLocalVelocities(Alpha, beta, VLocal);
-    computeOnBodyCp(VInf, VLocal, m_Cp);
+    computeOnBodyCp(1.0, VInf, VLocal, m_Cp);
 
     bool bTrace = false;
     double Cm = 0.0;

@@ -742,9 +742,9 @@ void P3LinAnalysis::makeNodeDoubletSurfaceVelocity(int iNode, std::vector<double
  * UNLIKE IN UNIFORM METHODS, CALCULATIONS ARE MADE IN GLOBAL COORDINATES
  * VLOCAL IS IN GLOBAL COORDINATES
  */
-void P3LinAnalysis::computeOnBodyCp(const std::vector<Vector3d> &VInf, std::vector<Vector3d> const &VGLOBAL, std::vector<double>&Cp) const
+void P3LinAnalysis::computeOnBodyCp(const double VFreeStream, const std::vector<Vector3d> &VInf, std::vector<Vector3d> const &VGLOBAL, std::vector<double>&Cp) const
 {
-    double QInf(0), Speed2(0), CpSup(0), CpInf(0);
+    double Speed2(0), CpSup(0), CpInf(0);
     Vector3d VPanel;
     Vector3d Vtotsup, Vtotinf;
     for(int i3=0; i3<nPanels(); i3++)
@@ -754,11 +754,9 @@ void P3LinAnalysis::computeOnBodyCp(const std::vector<Vector3d> &VInf, std::vect
         {
             Vector3d const &n0 = p3.vertexAt(ivtx).normal();
 
-            QInf = VInf.at(i3).norm();
-
             if(p3.isMidPanel())
             {
-            /* Correction made in v7.12 May 2021
+                /* Correction made in v7.12 May 2021
              * NASA TN4023 paragraph 3.4 p.56:
              * Patches with IDENT=3 include both upper and lower surface velocity and pressure output.
              * On these patches the doublet gradient (Eq. (49)) provides the jump in tangential velocity
@@ -769,11 +767,11 @@ void P3LinAnalysis::computeOnBodyCp(const std::vector<Vector3d> &VInf, std::vect
 
                 Vtotsup = VInf.at(i3) + VGLOBAL.at(3*i3+ivtx) *0.5;
                 Speed2 = Vtotsup.x*Vtotsup.x + Vtotsup.y*Vtotsup.y;
-                CpSup = 1.0-Speed2/QInf/QInf;
+                CpSup = 1.0-Speed2/VFreeStream/VFreeStream;
 
                 Vtotinf = VInf.at(i3) - VGLOBAL.at(3*i3+ivtx) *0.5;
                 Speed2 = Vtotinf.x*Vtotinf.x + Vtotinf.y*Vtotinf.y;
-                CpInf = 1.0-Speed2/QInf/QInf;
+                CpInf = 1.0-Speed2/VFreeStream/VFreeStream;
 
                 if(p3.vertexAt(ivtx).surfacePosition()!=xfl::NOSURFACE)
                     Cp[3*i3+ivtx] = CpSup-CpInf;
@@ -788,7 +786,7 @@ void P3LinAnalysis::computeOnBodyCp(const std::vector<Vector3d> &VInf, std::vect
                 VPanel -= n0*VPanel.dot(n0);
 
                 if(p3.vertexAt(ivtx).surfacePosition()!=xfl::NOSURFACE)
-                    Cp[3*i3+ivtx] = 1.0-(VPanel.x*VPanel.x + VPanel.y*VPanel.y + VPanel.z*VPanel.z)/QInf/QInf;
+                    Cp[3*i3+ivtx] = 1.0-(VPanel.x*VPanel.x + VPanel.y*VPanel.y + VPanel.z*VPanel.z)/VFreeStream/VFreeStream;
                 else
                     Cp[3*i3+ivtx] = 0.0;
             }

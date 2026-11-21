@@ -1629,47 +1629,87 @@ void P4Analysis::trefftzDrag(int nPanels, double QInf, double alpha, double beta
 * @param VDelta the increment value of the input parameter, either aoa for type 1 & 2 polars or velocity for type 4
 * @param nval the number of values in the sequence
 */
-void P4Analysis::computeOnBodyCp(const std::vector<Vector3d> &VInf,
+void P4Analysis::computeOnBodyCp(double const VFreeStream, const std::vector<Vector3d> &VInf,
                                  std::vector<Vector3d> const &VLocal, std::vector<double>&Cp) const
 {
-    double QInf(0), Speed2(0), CpSup(0), CpInf(0);
+    double Speed2(0), CpSup(0), CpInf(0);
     Vector3d Vl, Vtot, Vtotsup, Vtotinf;
+
+
+    double qDyn = 0.5 * VFreeStream *VFreeStream; // Pa/rho
+
     for (int i4=0; i4<nPanels(); i4++)
     {
         Panel4 const &p4 = m_Panel4.at(i4);
 
-        Vl.x = VLocal.at(i4).x;
-        Vl.y = VLocal.at(i4).y;
-        Vl.z = m_Sigma.at(i4)*4.0*PI;
-        Vtot.set(p4.globalToLocal(VInf.at(i4)));
 
-        QInf = VInf.at(i4).norm();
-        if(p4.isMidPanel())
+        if(m_pPolar3d->isVLM())
         {
-        /* Correction made in v7.12 May 2021
-         * NASA TN4023 paragraph 3.4 p.56:
-         * Patches with IDENT=3 include both upper and lower surface velocity and pressure output.
-         * On these patches the doublet gradient (Eq. (49)) provides the jump in tangential velocity
-         * component between the upper and lower surfaces.
-         * The program first computes the mean velocity (i.e., excluding the local panel's contribution)
-         * at the panel's center then adds to this one half of the tangential velocity jump for the upper
-         * surface and similarly subtracts for the lower surface.*/
+            // Change in v7.59 to address issue 127: in the case of the VLM, Cp is now calculated in this method
+            // so as to include the local velocity when evaluating the forces acting on the vortices.
 
-            Vtotsup = Vtot + Vl*0.5;
-            Speed2 = Vtotsup.x*Vtotsup.x + Vtotsup.y*Vtotsup.y;
-            CpSup = 1.0-Speed2/QInf/QInf;
+            Vector3d VelPanel = VInf.at(i4);
 
-            Vtotinf = Vtot - Vl*0.5;
-            Speed2 = Vtotinf.x*Vtotinf.x + Vtotinf.y*Vtotinf.y;
-            CpInf = 1.0-Speed2/QInf/QInf;
+            // way too slow
+            // getVelocityVector(p4.ctrlPt(true), m_Mu.data(), m_Sigma.data(), Vl, Vortex::coreRadius(), false, true);
+            // VelPanel += Vl;
 
-            Cp[i4] = CpSup-CpInf;
+            VelPanel += VLocal.at(i4);
+
+            // sanity check: normal component should be 0 within single precision
+            //std::cout << std::format("P4_{:3d}: Vn={:11g}", p4.index(), VelPanel.dot(p4.normal())) << std::endl;
+
+            // use Kutta-Joukowski
+            Vector3d PanelForce = VelPanel * p4.trailingVortex() * m_Mu[i4];         // Newtons/rho
+
+            if(m_pPolar3d->isVLM2() && !p4.isLeading())
+            {
+                // use Kutta-Joukowski
+                Vector3d Force = VelPanel * p4.trailingVortex() * m_Mu[i4+1];         // Newtons/rho
+                PanelForce -= Force;
+            }
+
+            PanelForce *= 1.0/qDyn;                                            // Newtons/qDyn
+
+            // sanity check: tangent component should be 0 within single precision
+            //std::cout << std::format("P4_{:3d}: Ftan={:11g}", p4.index(), (PanelForce * p4.normal()).norm()) << std::endl;
+
+            Cp[i4] = -PanelForce.dot(p4.normal())/p4.area();
         }
         else
         {
-            Vtot  += Vl;
-            Speed2 = Vtot.x*Vtot.x + Vtot.y*Vtot.y;
-            Cp[i4] = 1.0-Speed2/QInf/QInf;
+            Vl.x = VLocal.at(i4).x;
+            Vl.y = VLocal.at(i4).y;
+            Vl.z = m_Sigma.at(i4)*4.0*PI;
+            Vtot.set(p4.globalToLocal(VInf.at(i4)));
+
+            if(p4.isMidPanel())
+            {
+            /* Correction made in v7.12 May 2021
+             * NASA TN4023 paragraph 3.4 p.56:
+             * Patches with IDENT=3 include both upper and lower surface velocity and pressure output.
+             * On these patches the doublet gradient (Eq. (49)) provides the jump in tangential velocity
+             * component between the upper and lower surfaces.
+             * The program first computes the mean velocity (i.e., excluding the local panel's contribution)
+             * at the panel's center then adds to this one half of the tangential velocity jump for the upper
+             * surface and similarly subtracts for the lower surface.*/
+
+                Vtotsup = Vtot + Vl*0.5;
+                Speed2 = Vtotsup.x*Vtotsup.x + Vtotsup.y*Vtotsup.y;
+                CpSup = 1.0-Speed2/VFreeStream/VFreeStream;
+
+                Vtotinf = Vtot - Vl*0.5;
+                Speed2 = Vtotinf.x*Vtotinf.x + Vtotinf.y*Vtotinf.y;
+                CpInf = 1.0-Speed2/VFreeStream/VFreeStream;
+
+                Cp[i4] = CpSup-CpInf;
+            }
+            else
+            {
+                Vtot  += Vl;
+                Speed2 = Vtot.x*Vtot.x + Vtot.y*Vtot.y;
+                Cp[i4] = 1.0-Speed2/VFreeStream/VFreeStream;
+            }
         }
     }
 }

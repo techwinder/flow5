@@ -88,7 +88,7 @@ class FL5LIB_EXPORT PanelAnalysis
                                          std::vector<Vector3d> &uVLocal, std::vector<Vector3d> &vVLocal, std::vector<Vector3d> &wVLocal,
                                          Vector3d const &WindDirection) const = 0;
         virtual void combineLocalVelocities(double alpha, double beta, std::vector<Vector3d> &VLocal) const = 0;
-        virtual void computeOnBodyCp(std::vector<Vector3d> const &VInf, std::vector<Vector3d> const &VLocal, std::vector<double>&Cp) const = 0;
+        virtual void computeOnBodyCp(double const VFreeStream, std::vector<Vector3d> const &VInf, std::vector<Vector3d> const &VLocal, std::vector<double>&Cp) const = 0;
         virtual bool computeTrimmedConditions(double mass, Vector3d const &CoG, double &alphaeq, double &u0, bool bFuseMi) = 0;
         virtual void forces(double const *Mu, double const *Sigma, double alpha, double beta, Vector3d const &CoG, bool bFuseMi, std::vector<Vector3d> const &VInf,
                             Vector3d &Force, Vector3d &Moment) const = 0;

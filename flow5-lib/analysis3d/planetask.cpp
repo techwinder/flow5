@@ -997,7 +997,7 @@ bool PlaneTask::T6Loop()
                                    m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0, 0)*m_QInf); // only using first
 
         std::fill(VField.begin(), VField.end(), objects::windDirection(0, 0)*QInfStab);
-        m_pPA->computeOnBodyCp(VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
+        m_pPA->computeOnBodyCp(QInfStab, VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
 
         strange = std::format("      Calculating plane for control parameter={:.3f}\n", m_Ctrl);
         traceStdLog(strange);
@@ -2111,7 +2111,6 @@ bool PlaneTask::T123458Loop()
     if(!setLinearSolution()) return false;     // the matrix could not be built or factorized: no operating point can be computed
 
     traceStdLog("   Making unit panel velocities... ");
-    int N = int(m_pPA->m_uVLocal.size());
 
     m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0,0));
 
@@ -2208,8 +2207,6 @@ bool PlaneTask::T123458Loop()
 
         if(m_QInf<0) continue;
 
-        scaleResultsToSpeed(1.0, m_QInf);
-
         if (isCancelled()) return true;
 
         traceStdLog("       Calculating on-body pressure coefficients...\n");
@@ -2218,8 +2215,10 @@ bool PlaneTask::T123458Loop()
         std::fill(VInf.begin(), VInf.end(), objects::windDirection(m_Alpha, m_Beta));
 
         m_pPA->combineLocalVelocities(m_Alpha, m_Beta, VLocal);
-        m_pPA->computeOnBodyCp(VInf, VLocal, m_pPA->m_Cp);
+        m_pPA->computeOnBodyCp(1.0, VInf, VLocal, m_pPA->m_Cp);
         if (isCancelled()) return true;
+
+        scaleResultsToSpeed(1.0, m_QInf);
 
         str = "       Calculating plane\n";
         traceStdLog(str);
@@ -2271,7 +2270,6 @@ void PlaneTask::storePOpp(PlaneOpp *pPOpp)
 
 void PlaneTask::outputNDStabDerivatives(double u0, StabDerivatives const &SD)
 {
-
     double q = 1./2. * m_pPlPolar->density() * u0 * u0;
     double b   = m_pPlPolar->referenceSpanLength();
     double S   = m_pPlPolar->referenceArea();
@@ -2451,7 +2449,7 @@ void PlaneTask::computeControlDerivatives(double t7ctrl, double alphaeq, double 
             }
 
             std::fill(VField.begin(), VField.end(), VInf);
-            m_pPA->computeOnBodyCp(VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
+            m_pPA->computeOnBodyCp(u0, VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
             m_pPA->forces(muc, sigma, alphaeq, 0.0, CoG, m_pPlPolar->bFuseMi(), VField, Force, Moment);
         }
 
