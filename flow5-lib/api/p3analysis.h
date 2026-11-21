@@ -88,7 +88,8 @@ class FL5LIB_EXPORT P3Analysis : public PanelAnalysis
         void combineLocalVelocities(double alpha, double beta, std::vector<Vector3d> &VLocal) const override;
 
 
-        void forces(const double *Mu3, const double *Sigma3, double alpha, double beta, const Vector3d &CoG, bool bFuseMi, std::vector<Vector3d> const &VInf, Vector3d &Force, Vector3d &Moment) override;
+        void forces(const double *Mu3, const double *Sigma3, double alpha, double beta, const Vector3d &CoG, bool bFuseMi, std::vector<Vector3d> const &VInf,
+                    Vector3d &Force, Vector3d &Moment) const override;
         void inducedForce(int nPanel3, double QInf, double alpha, double beta, int pos3, Vector3d &ForceBodyAxes, SpanDistribs &distribFF) const override;
         void trefftzDrag(int nPanel3, double QInf, double alpha, double beta, int pos3, Vector3d &Drag, SpanDistribs &distribFF) const override;
 

@@ -546,13 +546,6 @@ void P3LinAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, const s
         TriMesh::makeNodeValues(m_pRefTriMesh->nodes(), m_Panel3, vRHS, vNodes, valmin, valmax, coef);
     }
 
-    if(vRHS.size())
-    {
-        vNodes.resize(nNodes());
-        vGlobal.resize(nNodes());
-        TriMesh::makeNodeValues(m_pRefTriMesh->nodes(), m_Panel3, vRHS, vNodes, valmin, valmax, coef);
-    }
-
     if(wRHS.size())
     {
         wNodes.resize(nNodes());

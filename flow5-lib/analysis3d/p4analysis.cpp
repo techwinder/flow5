@@ -1008,7 +1008,7 @@ void P4Analysis::VLMGetVortexInfluence(Panel4 const &p4, Vector3d const &C, doub
 * @param Moment the resulting moment vector
 */
 void P4Analysis::forces(double const *Mu4, double const *Sigma4, double alpha, double beta, Vector3d const &CoG, bool ,
-                        std::vector<Vector3d> const &VInf, Vector3d &Force, Vector3d &Moment)
+                        std::vector<Vector3d> const &VInf, Vector3d &Force, Vector3d &Moment) const
 {
     if(!m_pPolar3d) return;
 
@@ -1017,7 +1017,7 @@ void P4Analysis::forces(double const *Mu4, double const *Sigma4, double alpha, d
     Vector3d  C, WindDirection, WindNormal, PanelLeverArm, Wg, vortex;
     Vector3d Velocity, viscousMoment, PanelForce;
 
-    //   Define the wind axis
+    //   Define the wind axes
     WindNormal = objects::windNormal(alpha, beta);
     WindDirection = objects::windDirection(alpha, beta);
 
@@ -1030,7 +1030,7 @@ void P4Analysis::forces(double const *Mu4, double const *Sigma4, double alpha, d
 //    int m=0;
     for(int i4=0; i4<nPanels(); i4++)
     {
-        Panel4 &p4 = m_Panel4[i4];
+        Panel4 const &p4 = m_Panel4[i4];
 
         if(!m_pPolar3d->isVLM())
         {
@@ -2085,7 +2085,7 @@ double P4Analysis::computeCm(Vector3d const &CoG, double Alpha, bool bFuseMi)
     Vector3d VInf, Force, PanelLeverArm, ForcePt, PanelForce, WindDirection, VLocal;
     double Speed2=0.0, Cp=0.0;
 
-    // Define the wind axis
+    // Define the wind axes
     cosa = cos(Alpha*PI/180.0);
     sina = sin(Alpha*PI/180.0);
     WindDirection.set( cosa, 0.0, sina);

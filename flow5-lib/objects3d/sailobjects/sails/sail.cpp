@@ -250,7 +250,7 @@ void Sail::panel3ComputeInviscidForces(std::vector<Panel3> const &panel3list,
     Vector3d leverArmPanelCoG;
     Vector3d ForcePt, PanelForce;
 
-    // Define the wind axis
+    // Define the wind axes
     double alpha = 0.0;
     //    Vector3d WindDirection = windDirection(alpha, beta);
     Vector3d WindNormal    = objects::windNormal(alpha, beta);

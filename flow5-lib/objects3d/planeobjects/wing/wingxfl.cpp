@@ -1823,7 +1823,7 @@ void WingXfl::panel4ComputeStrips(std::vector<Panel4> const &panel4list, PlanePo
     if(pWPolar->bThinSurfaces()) coef = 1;    // only mid-surface
     else                         coef = 2;    // top and bottom surfaces
 
-    // Define the wind axis
+    // Define the wind axes
     Vector3d WindDirection = objects::windDirection(alpha, beta);
 //    Vector3d WindNormal    = objects::windNormal(alpha, beta);
     Vector3d WindSide      = objects::windSide(alpha, beta);
@@ -2072,7 +2072,7 @@ void WingXfl::panel3ComputeStrips(std::vector<Panel3> const &panel3list, PlanePo
 /** compute resultant viscous force and moments from strip drag */
 void WingXfl::computeViscousForces(PlanePolar const *pWPolar, double alpha, double beta, SpanDistribs &SpanResFF, AeroForces &AF) const
 {
-    // Define the wind axis
+    // Define the wind axes
     Vector3d winddirection = objects::windDirection(alpha, beta);
 
     Vector3d Fv;
@@ -2085,7 +2085,7 @@ void WingXfl::computeViscousForces(PlanePolar const *pWPolar, double alpha, doub
         Mv += stripleverarm * dragvector;
     }
 
-    //project on wind axis
+    // project on wind axes
     AF.setProfileDrag(Fv.dot(winddirection));    // N/q
     AF.setMv(Mv);    // N.m/q
 }

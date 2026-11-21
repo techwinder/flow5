@@ -770,7 +770,7 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
     Vector3d ForceBodyAxes; // Strip and global forces, body axes
     double gLeft(0), gRight(0), gMid(0);
 
-    //   Define wind axis
+    //   Define wind axes
     Vector3d winddir = objects::windDirection(alpha, beta);
 
     //dynamic pressure, kg/m³
@@ -857,7 +857,7 @@ void P3Analysis::trefftzDrag(int nPanel3, double QInf, double alpha, double beta
 * The downwash is evaluated far downstream (i.e. where the inluence of the bounded vortices is negligible)
 */
 void P3Analysis::forces(double const *Mu3, double const *Sigma3, double alpha, double beta, Vector3d const &CoG, bool bFuseMi,
-                        std::vector<Vector3d> const &VInf, Vector3d &Force, Vector3d &Moment)
+                        std::vector<Vector3d> const &VInf, Vector3d &Force, Vector3d &Moment) const
 {
     if(!m_pPolar3d) return;
 
@@ -867,7 +867,7 @@ void P3Analysis::forces(double const *Mu3, double const *Sigma3, double alpha, d
     Vector3d WindDirection, WindNormal, PanelLeverArm, Wg;
     Vector3d Velocity, stripforce, viscousMoment, PanelForce;
 
-    //   Define the wind axis
+    //   Define the wind axes
     WindNormal = objects::windNormal(alpha, beta);
     WindDirection = objects::windDirection(alpha, beta);
 
@@ -888,7 +888,7 @@ void P3Analysis::forces(double const *Mu3, double const *Sigma3, double alpha, d
             {
                 // get the last triangle of the wake column
                 assert(p3.iWake()>=0 && p3.iWake()<nWakePanels());
-                Panel3 *p3W = m_WakePanel3.data() + p3.iWake();
+                Panel3 const *p3W = m_WakePanel3.data() + p3.iWake();
                 trailingWakePoint(p3W, left, right);
                 mid = (left + right)/2.0;
 
@@ -918,7 +918,7 @@ void P3Analysis::forces(double const *Mu3, double const *Sigma3, double alpha, d
             //Get the strip's lifting force
 
             // get the last triangle of the wake column
-            Panel3 *p3W = m_WakePanel3.data() + p3.iWake();
+            Panel3 const *p3W = m_WakePanel3.data() + p3.iWake();
             trailingWakePoint(p3W, left, right);
             mid = (left + right)/2.0;
 
@@ -1001,7 +1001,7 @@ void P3Analysis::moments(double *Mu3, double alpha, double beta, Vector3d CoG,
     Vector3d WindDirection, WindNormal, PanelLeverArm, Wg;
     Vector3d Velocity, viscousMoment, PanelForce;
 
-    //   Define the wind axis
+    //   Define the wind axes
     WindNormal = objects::windNormal(alpha, beta);
     WindDirection = objects::windDirection(alpha, beta);
 
@@ -1055,7 +1055,7 @@ double P3Analysis::computeCm(Vector3d const &CoG, double Alpha, bool bFuseMi)
     Vector3d PanelLeverArm, ForcePt, PanelForce, WindDirection;
     double Cp=0;
 
-    // Define the wind axis
+    // Define the wind axes
     double beta=0;
     double cosa = cos(Alpha*PI/180.0);
     double sina = sin(Alpha*PI/180.0);

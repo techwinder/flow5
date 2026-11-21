@@ -145,10 +145,10 @@ class FL5LIB_EXPORT PlaneTask : public Task3d
         std::vector<T8Opp> m_T8Opps;
 
         std::vector<SpanDistribs> m_SpanDistFF; /**< the array of span distributions of the wings */
-        std::vector<Vector3d> m_WingForce;   /**< The array of calculated resulting forces acting on the wings in wind axis (N/q) */
+        std::vector<Vector3d> m_WingForce;   /**< The array of calculated resulting forces acting on the wings in wind axes (N/q) */
 
-        Vector3d m_Force0;  /** The calculated equilibrium force  @todo check body or wind axis*/
-        Vector3d m_Moment0; /** The calculated equilibrium moment @todo check body or wind axis */
+        Vector3d m_Force0;  /** The calculated equilibrium force  @todo check body or wind axes*/
+        Vector3d m_Moment0; /** The calculated equilibrium moment @todo check body or wind axes */
 
         // temp variables used to create the operating point
         AeroForces m_AF;               /** the overall aero forces acting on the plane */
