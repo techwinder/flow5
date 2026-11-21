@@ -412,6 +412,13 @@ bool PlaneTask::initializeTask()
     strange += std::format("Matrix size = {:d}\n\n",  m_pPA->matSize());
     traceStdLog(strange);
 
+    unsigned int memsize = 0;
+    memsize += m_pPA->m_aijd.size()  * sizeof(double);
+    memsize += m_pPA->m_aijf.size()  * sizeof(float);
+    memsize += m_pPA->m_ipiv.size()  * sizeof(int);
+    strange  = std::format("Memory footprint of the influence matrices = {:.2f} MB\n\n", float(memsize)/1024.0/1024.0);
+    traceStdLog(strange);
+
     if(isCancelled()) return false;
 
     traceStdLog("Allocating result arrays\n");

@@ -85,7 +85,7 @@ bool PanelAnalysis::allocateMatrix(int N)
     unsigned int matSize = unsigned(N);
 
     unsigned int size2 = matSize * matSize;
-    double gb=0;
+    double megabytes=0;
 
     try
     {
@@ -95,7 +95,7 @@ bool PanelAnalysis::allocateMatrix(int N)
             memset(m_aijd.data(), 0, size2 * sizeof(double));
             m_aijf.clear();
 
-            gb = double(size2 * sizeof(double)) /1024.0/1024.0;
+            megabytes = double(size2 * sizeof(double)) /1024.0/1024.0;
         }
         else
         {
@@ -103,26 +103,27 @@ bool PanelAnalysis::allocateMatrix(int N)
             memset(m_aijf.data(), 0, size2 * sizeof(float));
             m_aijd.clear();
 
-            gb = double(size2 * sizeof(float)) /1024.0/1024.0;
+            megabytes = double(size2 * sizeof(float)) /1024.0/1024.0;
         }
     }
     catch(std::bad_alloc &exception)
     {
         std::string strong(exception.what());
         strong += ": error allocating memory for the influence matrix\n";
-        strong += std::format("Request for {:7.2f} Mb failed\n", gb);
+        strong += std::format("Request for {:7.2f} Mb failed\n", megabytes);
         traceStdLog(strong);
         return false;
     }
     catch(...)
     {
         std::string strong("Undetermined error during memory allocation for the influence matrix\n");
-        strong += std::format("Request for {:7.2f} Mb failed\n", gb);
+        strong += std::format("Request for {:7.2f} Mb failed\n", megabytes);
         traceStdLog(strong);
         return false;
     }
 
-    gb += matSize * sizeof(int)/1024/1024;
+    // pivot indexes
+    megabytes += matSize * sizeof(int)/1024/1024;
 
     return true;
 }
