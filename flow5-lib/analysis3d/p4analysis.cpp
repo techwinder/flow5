@@ -93,30 +93,13 @@ void P4Analysis::makeLocalVelocities(std::vector<double> const &uRHS, const std:
 {
     double Cp(0);
 
+    if(m_pPolar3d->isVLM()) return;
+
     for (int i4=0; i4<nPanels(); i4++)
     {
-        if(!m_Panel4.at(i4).isMidPanel() || !m_pPolar3d->isVLM())
-        {
-            getDoubletDerivative(i4, uRHS.data(), Cp, uVLocal[i4], WindDirection);
-        }
-        if(isCancelled()) return;
-    }
-
-    for (unsigned int i4=0; i4<vRHS.size(); i4++)
-    {
-        if(!m_Panel4.at(i4).isMidPanel() || !m_pPolar3d->isVLM())
-        {
-            getDoubletDerivative(i4, vRHS.data(), Cp, vVLocal[i4], WindDirection);
-        }
-        if(isCancelled()) return;
-    }
-
-    for (unsigned int i4=0; i4<wRHS.size(); i4++)
-    {
-        if(!m_Panel4.at(i4).isMidPanel() || !m_pPolar3d->isVLM())
-        {
-            getDoubletDerivative(i4, wRHS.data(), Cp, wVLocal[i4], WindDirection);
-        }
+        getDoubletDerivative(i4, uRHS.data(), Cp, uVLocal[i4], WindDirection);
+        getDoubletDerivative(i4, vRHS.data(), Cp, vVLocal[i4], WindDirection);
+        getDoubletDerivative(i4, wRHS.data(), Cp, wVLocal[i4], WindDirection);
         if(isCancelled()) return;
     }
 }

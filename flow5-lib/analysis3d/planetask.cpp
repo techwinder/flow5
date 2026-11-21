@@ -2112,7 +2112,7 @@ bool PlaneTask::T123458Loop()
 
     traceStdLog("   Making unit panel velocities... ");
     int N = int(m_pPA->m_uVLocal.size());
-//    std::vector<Vector3d> uVLocal(N), vVLocal(N), wVLocal(N); // keep a copy since these velocity arrays are modified during the calculation of derivatives
+
     m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0,0));
 
     traceStdLog("     done\n");
