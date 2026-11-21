@@ -1711,6 +1711,8 @@ void WingXfl::panel4ComputeInviscidForces(std::vector<Panel4> const &panel4list,
 
     Vector3d PartM0;
 
+    double qDyn = 1.0/2.0 * QInf * QInf; // Pa/rho
+
     for(int i4=0; i4<m_nPanel4; i4++)
     {
         Panel4 const & p4 = panel4list.at(i4+m_FirstPanel4Index);
@@ -1725,20 +1727,22 @@ void WingXfl::panel4ComputeInviscidForces(std::vector<Panel4> const &panel4list,
             ForcePt = p4.m_CollPt;
             PanelForce = p4.normal() * (-Cp4[index]) * p4.area();      // Newtons/q
         }
-        else  // if(pWPolar->isVLMMethod() && p4.isMidPanel())  // is mid panel
+        else
         {
             // for each panel along the chord, add the lift coef
             ForcePt = p4.vortexPosition();
-            PanelForce  = WindDirection * p4.trailingVortex();
-            PanelForce *= 2.0 * gamma[index] /QInf;                                 //Newtons/q
+
+            // Kutta-Joukowski on downstream vortex
+            PanelForce  = (WindDirection*QInf) * (p4.trailingVortex()* gamma[index]); // N/rho
 
             if(pWPolar->isVLM2() && !p4.isLeading())
             {
-                Vector3d Force = WindDirection * p4.trailingVortex();
-                Force      *= 2.0 * gamma[index+1] /QInf;                          //Newtons/q
-                PanelForce -= Force;
+                // Kutta-Joukowski on upstream vortex
+                PanelForce -= (WindDirection*QInf) * (p4.trailingVortex()* gamma[index+1]); // N/rho
             }
-            Cp4[index] = -PanelForce.dot(p4.normal())/p4.area();    //
+
+            PanelForce *= 1.0/qDyn;                                 //Newtons/q
+            Cp4[index] = -PanelForce.dot(p4.normal())/p4.area();
         }
 
         PartM0 += ForcePt * PanelForce.dot(WindNormal);
