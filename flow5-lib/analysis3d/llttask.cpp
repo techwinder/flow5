@@ -802,7 +802,7 @@ PlaneOpp* LLTTask::createPlaneOpp(double QInf, double Alpha, bool bWingOut)
     double wingSpan = m_pWing->planformSpan();
     double wingMAC  = m_pWing->MAC();
 
-    Vector3d FFF; // wind axis
+    Vector3d FFF; // wind axes
     FFF.x = m_CDi * wingArea;            // N/q
     FFF.z = m_CL  * wingArea;            // N/q
     // store in body axis

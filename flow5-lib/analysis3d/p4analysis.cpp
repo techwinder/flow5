@@ -93,30 +93,13 @@ void P4Analysis::makeLocalVelocities(std::vector<double> const &uRHS, const std:
 {
     double Cp(0);
 
+    if(m_pPolar3d->isVLM()) return;
+
     for (int i4=0; i4<nPanels(); i4++)
     {
-        if(!m_Panel4.at(i4).isMidPanel() || !m_pPolar3d->isVLM())
-        {
-            getDoubletDerivative(i4, uRHS.data(), Cp, uVLocal[i4], WindDirection);
-        }
-        if(isCancelled()) return;
-    }
-
-    for (unsigned int i4=0; i4<vRHS.size(); i4++)
-    {
-        if(!m_Panel4.at(i4).isMidPanel() || !m_pPolar3d->isVLM())
-        {
-            getDoubletDerivative(i4, vRHS.data(), Cp, vVLocal[i4], WindDirection);
-        }
-        if(isCancelled()) return;
-    }
-
-    for (unsigned int i4=0; i4<wRHS.size(); i4++)
-    {
-        if(!m_Panel4.at(i4).isMidPanel() || !m_pPolar3d->isVLM())
-        {
-            getDoubletDerivative(i4, wRHS.data(), Cp, wVLocal[i4], WindDirection);
-        }
+        getDoubletDerivative(i4, uRHS.data(), Cp, uVLocal[i4], WindDirection);
+        getDoubletDerivative(i4, vRHS.data(), Cp, vVLocal[i4], WindDirection);
+        getDoubletDerivative(i4, wRHS.data(), Cp, wVLocal[i4], WindDirection);
         if(isCancelled()) return;
     }
 }
@@ -1017,7 +1000,7 @@ void P4Analysis::forces(double const *Mu4, double const *Sigma4, double alpha, d
     Vector3d  C, WindDirection, WindNormal, PanelLeverArm, Wg, vortex;
     Vector3d Velocity, viscousMoment, PanelForce;
 
-    //   Define the wind axis
+    //   Define the wind axes
     WindNormal = objects::windNormal(alpha, beta);
     WindDirection = objects::windDirection(alpha, beta);
 
@@ -1640,21 +1623,25 @@ void P4Analysis::trefftzDrag(int nPanels, double QInf, double alpha, double beta
 
 
 /**
-* Calculates the Cp coefficient on each panel in the case of the panel methods,
-* including the contribution of the local velocities
+* Calculates the Cp coefficient on each panel, using the vortex circulations or the doublet strengths,
+* depending on the analysis method.
+* @param V0 the first value in the sequence, either aoa for type 1 & 2 polars or velocity for type 4
+* @param VDelta the increment value of the input parameter, either aoa for type 1 & 2 polars or velocity for type 4
+* @param nval the number of values in the sequence
 */
-void P4Analysis::computeOnBodyCp(double VFreeStream, const std::vector<Vector3d> &VInf,
+void P4Analysis::computeOnBodyCp(double const VFreeStream, const std::vector<Vector3d> &VInf,
                                  std::vector<Vector3d> const &VLocal, std::vector<double>&Cp) const
 {
     double Speed2(0), CpSup(0), CpInf(0);
     Vector3d Vl, Vtot, Vtotsup, Vtotinf;
 
-    double rho  = m_pPolar3d->density();
-    double qDyn = 0.5 * rho * VFreeStream *VFreeStream;
+
+    double qDyn = 0.5 * VFreeStream *VFreeStream; // Pa/rho
 
     for (int i4=0; i4<nPanels(); i4++)
     {
         Panel4 const &p4 = m_Panel4.at(i4);
+
 
         if(m_pPolar3d->isVLM())
         {
@@ -1663,26 +1650,29 @@ void P4Analysis::computeOnBodyCp(double VFreeStream, const std::vector<Vector3d>
 
             Vector3d VelPanel = VInf.at(i4);
 
-            // Although the lift force applies to the vortex at the 3/4 chord length of the panel,
-            // the calculation of the velocity is exact only at the ctrl point located at the 1/4 chord length.
-            // Vn is non-zero elsewhere on the panel which violates Neumann's non-penetration condition.
-            getVelocityVector(p4.ctrlPt(true), m_Mu.data(), m_Sigma.data(), Vl, Vortex::coreRadius(), false, true);
-            VelPanel += Vl;
+            // way too slow
+            // getVelocityVector(p4.ctrlPt(true), m_Mu.data(), m_Sigma.data(), Vl, Vortex::coreRadius(), false, true);
+            // VelPanel += Vl;
 
-            // sanity check: normal component should be 0
-            // std::cout << std::format("P4_{:3d}: Vn={:11g}", p4.index(), VelPanel.dot(p4.normal())) << std::endl;
+            VelPanel += VLocal.at(i4);
 
-            // use Jutta-Joukowsky theorem
-            Vector3d PanelForce = VelPanel * p4.trailingVortex() * rho * m_Mu[i4];         // Newtons
+            // sanity check: normal component should be 0 within single precision
+            //std::cout << std::format("P4_{:3d}: Vn={:11g}", p4.index(), VelPanel.dot(p4.normal())) << std::endl;
+
+            // use Kutta-Joukowski
+            Vector3d PanelForce = VelPanel * p4.trailingVortex() * m_Mu[i4];         // Newtons/rho
 
             if(m_pPolar3d->isVLM2() && !p4.isLeading())
             {
-                // use Jutta-Joukowsky theorem
-                Vector3d Force = VelPanel * p4.trailingVortex() * rho* m_Mu[i4+1];         // Newtons
+                // use Kutta-Joukowski
+                Vector3d Force = VelPanel * p4.trailingVortex() * m_Mu[i4+1];         // Newtons/rho
                 PanelForce -= Force;
             }
 
             PanelForce *= 1.0/qDyn;                                            // Newtons/qDyn
+
+            // sanity check: tangent component should be 0 within single precision
+            //std::cout << std::format("P4_{:3d}: Ftan={:11g}", p4.index(), (PanelForce * p4.normal()).norm()) << std::endl;
 
             Cp[i4] = -PanelForce.dot(p4.normal())/p4.area();
         }
@@ -2118,7 +2108,7 @@ double P4Analysis::computeCm(Vector3d const &CoG, double Alpha, bool bFuseMi)
     Vector3d VInf, Force, PanelLeverArm, ForcePt, PanelForce, WindDirection, VLocal;
     double Speed2=0.0, Cp=0.0;
 
-    // Define the wind axis
+    // Define the wind axes
     cosa = cos(Alpha*PI/180.0);
     sina = sin(Alpha*PI/180.0);
     WindDirection.set( cosa, 0.0, sina);

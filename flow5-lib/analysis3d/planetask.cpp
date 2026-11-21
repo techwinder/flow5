@@ -412,6 +412,13 @@ bool PlaneTask::initializeTask()
     strange += std::format("Matrix size = {:d}\n\n",  m_pPA->matSize());
     traceStdLog(strange);
 
+    unsigned int memsize = 0;
+    memsize += m_pPA->m_aijd.size()  * sizeof(double);
+    memsize += m_pPA->m_aijf.size()  * sizeof(float);
+    memsize += m_pPA->m_ipiv.size()  * sizeof(int);
+    strange  = std::format("Memory footprint of the influence matrices = {:.2f} MB\n\n", float(memsize)/1024.0/1024.0);
+    traceStdLog(strange);
+
     if(isCancelled()) return false;
 
     traceStdLog("Allocating result arrays\n");
@@ -2111,9 +2118,8 @@ bool PlaneTask::T123458Loop()
     if(!setLinearSolution()) return false;     // the matrix could not be built or factorized: no operating point can be computed
 
     traceStdLog("   Making unit panel velocities... ");
-    int N = int(m_pPA->m_uVLocal.size());
-    std::vector<Vector3d> uVLocal(N), vVLocal(N), wVLocal(N); // keep a copy since these velocity arrays are modified during the calculation of derivatives
-    m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, uVLocal, vVLocal, wVLocal, objects::windDirection(0,0));
+
+    m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0,0));
 
     traceStdLog("     done\n");
 
@@ -2208,29 +2214,18 @@ bool PlaneTask::T123458Loop()
 
         if(m_QInf<0) continue;
 
+        if (isCancelled()) return true;
+
         traceStdLog("       Calculating on-body pressure coefficients...\n");
         std::vector<Vector3d> VLocal;
         std::vector<Vector3d> VInf(m_pPA->nPanels());
         std::fill(VInf.begin(), VInf.end(), objects::windDirection(m_Alpha, m_Beta));
 
-        // Save a little time by restoring the unit velocty fields instead of recalculating them
-        m_pPA->m_uVLocal = uVLocal;
-        m_pPA->m_vVLocal = vVLocal;
-        m_pPA->m_wVLocal = wVLocal;
-
         m_pPA->combineLocalVelocities(m_Alpha, m_Beta, VLocal);
+        m_pPA->computeOnBodyCp(1.0, VInf, VLocal, m_pPA->m_Cp);
+        if (isCancelled()) return true;
 
-        double VFreeStream = 1.0; // using a unit freestream velocity since results have not been scaled at this stage
-        m_pPA->computeOnBodyCp(VFreeStream, VInf, VLocal, m_pPA->m_Cp);
-
-        //change in v7.59: results are scaled AFTER computing the on-body Cp
-        //                 the change is required to accomodate the VLM
         scaleResultsToSpeed(1.0, m_QInf);
-
-        if (isCancelled()) return true;
-
-
-        if (isCancelled()) return true;
 
         str = "       Calculating plane\n";
         traceStdLog(str);
@@ -2282,7 +2277,6 @@ void PlaneTask::storePOpp(PlaneOpp *pPOpp)
 
 void PlaneTask::outputNDStabDerivatives(double u0, StabDerivatives const &SD)
 {
-
     double q = 1./2. * m_pPlPolar->density() * u0 * u0;
     double b   = m_pPlPolar->referenceSpanLength();
     double S   = m_pPlPolar->referenceArea();

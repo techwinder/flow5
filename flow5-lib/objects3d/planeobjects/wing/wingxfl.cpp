@@ -1696,7 +1696,7 @@ int WingXfl::nTriangles() const
 
 void WingXfl::panel4ComputeInviscidForces(std::vector<Panel4> const &panel4list,
                                           PlanePolar const *pWPolar, Vector3d const &cog, double alpha, double beta, double QInf,
-                                          double *Cp4, double const*gamma,
+                                          double const *Cp4, double const*gamma,
                                           AeroForces &AF) const
 {
     Vector3d leverArmPanelCoG;
@@ -1710,6 +1710,8 @@ void WingXfl::panel4ComputeInviscidForces(std::vector<Panel4> const &panel4list,
     Vector3d MiBodyAxes(0.0,0.0,0.0); // inviscid moment of pressure forces, body axes
 
     Vector3d PartM0;
+
+    double qDyn = 1.0/2.0 * QInf * QInf; // Pa/rho
 
     for(int i4=0; i4<m_nPanel4; i4++)
     {
@@ -1725,19 +1727,21 @@ void WingXfl::panel4ComputeInviscidForces(std::vector<Panel4> const &panel4list,
             ForcePt = p4.m_CollPt;
             PanelForce = p4.normal() * (-Cp4[index]) * p4.area();      // Newtons/q
         }
-        else  // if(pWPolar->isVLMMethod() && p4.isMidPanel())  // is mid panel
+        else
         {
             // for each panel along the chord, add the lift coef
             ForcePt = p4.vortexPosition();
-            PanelForce  = WindDirection * p4.trailingVortex();
-            PanelForce *= 2.0 * gamma[index] /QInf;                                 //Newtons/q
+
+            // Kutta-Joukowski on downstream vortex
+            PanelForce  = (WindDirection*QInf) * (p4.trailingVortex()* gamma[index]); // N/rho
 
             if(pWPolar->isVLM2() && !p4.isLeading())
             {
-                Vector3d Force = WindDirection * p4.trailingVortex();
-                Force      *= 2.0 * gamma[index+1] /QInf;                          //Newtons/q
-                PanelForce -= Force;
+                // Kutta-Joukowski on upstream vortex
+                PanelForce -= (WindDirection*QInf) * (p4.trailingVortex()* gamma[index+1]); // N/rho
             }
+
+            PanelForce *= 1.0/qDyn;                                 //Newtons/q
 
             // Change in v7.59 to address issue 127: in the case of the VLM, Cp is now calculated
             // in P4Analysis::computeOnBodyCp() to include the local velocity when evaluating the
@@ -1827,7 +1831,7 @@ void WingXfl::panel4ComputeStrips(std::vector<Panel4> const &panel4list, PlanePo
     if(pWPolar->bThinSurfaces()) coef = 1;    // only mid-surface
     else                         coef = 2;    // top and bottom surfaces
 
-    // Define the wind axis
+    // Define the wind axes
     Vector3d WindDirection = objects::windDirection(alpha, beta);
 //    Vector3d WindNormal    = objects::windNormal(alpha, beta);
     Vector3d WindSide      = objects::windSide(alpha, beta);
@@ -2076,7 +2080,7 @@ void WingXfl::panel3ComputeStrips(std::vector<Panel3> const &panel3list, PlanePo
 /** compute resultant viscous force and moments from strip drag */
 void WingXfl::computeViscousForces(PlanePolar const *pWPolar, double alpha, double beta, SpanDistribs &SpanResFF, AeroForces &AF) const
 {
-    // Define the wind axis
+    // Define the wind axes
     Vector3d winddirection = objects::windDirection(alpha, beta);
 
     Vector3d Fv;
@@ -2089,7 +2093,7 @@ void WingXfl::computeViscousForces(PlanePolar const *pWPolar, double alpha, doub
         Mv += stripleverarm * dragvector;
     }
 
-    //project on wind axis
+    // project on wind axes
     AF.setProfileDrag(Fv.dot(winddirection));    // N/q
     AF.setMv(Mv);    // N.m/q
 }

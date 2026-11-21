@@ -546,13 +546,6 @@ void P3LinAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, const s
         TriMesh::makeNodeValues(m_pRefTriMesh->nodes(), m_Panel3, vRHS, vNodes, valmin, valmax, coef);
     }
 
-    if(vRHS.size())
-    {
-        vNodes.resize(nNodes());
-        vGlobal.resize(nNodes());
-        TriMesh::makeNodeValues(m_pRefTriMesh->nodes(), m_Panel3, vRHS, vNodes, valmin, valmax, coef);
-    }
-
     if(wRHS.size())
     {
         wNodes.resize(nNodes());
@@ -749,7 +742,7 @@ void P3LinAnalysis::makeNodeDoubletSurfaceVelocity(int iNode, std::vector<double
  * UNLIKE IN UNIFORM METHODS, CALCULATIONS ARE MADE IN GLOBAL COORDINATES
  * VLOCAL IS IN GLOBAL COORDINATES
  */
-void P3LinAnalysis::computeOnBodyCp(double VFreeStream, const std::vector<Vector3d> &VInf, std::vector<Vector3d> const &VGLOBAL, std::vector<double>&Cp) const
+void P3LinAnalysis::computeOnBodyCp(const double VFreeStream, const std::vector<Vector3d> &VInf, std::vector<Vector3d> const &VGLOBAL, std::vector<double>&Cp) const
 {
     double Speed2(0), CpSup(0), CpInf(0);
     Vector3d VPanel;
@@ -763,7 +756,7 @@ void P3LinAnalysis::computeOnBodyCp(double VFreeStream, const std::vector<Vector
 
             if(p3.isMidPanel())
             {
-            /* Correction made in v7.12 May 2021
+                /* Correction made in v7.12 May 2021
              * NASA TN4023 paragraph 3.4 p.56:
              * Patches with IDENT=3 include both upper and lower surface velocity and pressure output.
              * On these patches the doublet gradient (Eq. (49)) provides the jump in tangential velocity

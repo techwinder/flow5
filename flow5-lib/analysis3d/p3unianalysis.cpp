@@ -688,13 +688,12 @@ void P3UniAnalysis::checkThinSurfaceSolution()
  * Assumes that the unit velocity vectors induced by doublet densities at the panel nodes have been calculated at
  * the previous stage.
  */
-void P3UniAnalysis::computeOnBodyCp(double VFreeStream, std::vector<Vector3d> const &VInf,
+void P3UniAnalysis::computeOnBodyCp(const double VFreeStream, std::vector<Vector3d> const &VInf,
                                     std::vector<Vector3d> const &VLocal, std::vector<double>&Cp) const
 {
     double Speed2(0), CpSup(0), CpInf(0);
     Vector3d VStream, VPanel0, VPanel1, VPanel2;
     Vector3d Vtotsup, Vtotinf;
-
     for(int i3=0; i3<nPanels(); i3++)
     {
         Panel3 const &p3 = m_Panel3.at(i3);
@@ -703,7 +702,7 @@ void P3UniAnalysis::computeOnBodyCp(double VFreeStream, std::vector<Vector3d> co
 
         if(p3.isMidPanel())
         {
-        /* Correction made in v7.12 May 2021
+            /* Correction made in v7.12 May 2021
          * NASA TN4023 paragraph 3.4 p.56:
          * Patches with IDENT=3 include both upper and lower surface velocity and pressure output.
          * On these patches the doublet gradient (Eq. (49)) provides the jump in tangential velocity
