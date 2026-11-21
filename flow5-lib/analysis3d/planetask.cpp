@@ -2112,8 +2112,8 @@ bool PlaneTask::T123458Loop()
 
     traceStdLog("   Making unit panel velocities... ");
     int N = int(m_pPA->m_uVLocal.size());
-    std::vector<Vector3d> uVLocal(N), vVLocal(N), wVLocal(N); // keep a copy since these velocity arrays are modified during the calculation of derivatives
-    m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, uVLocal, vVLocal, wVLocal, objects::windDirection(0,0));
+//    std::vector<Vector3d> uVLocal(N), vVLocal(N), wVLocal(N); // keep a copy since these velocity arrays are modified during the calculation of derivatives
+    m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0,0));
 
     traceStdLog("     done\n");
 
@@ -2216,11 +2216,6 @@ bool PlaneTask::T123458Loop()
         std::vector<Vector3d> VLocal;
         std::vector<Vector3d> VInf(m_pPA->nPanels());
         std::fill(VInf.begin(), VInf.end(), objects::windDirection(m_Alpha, m_Beta));
-
-        // Save a little time by restoring the unit velocty fields instead of recalculating them
-        m_pPA->m_uVLocal = uVLocal;
-        m_pPA->m_vVLocal = vVLocal;
-        m_pPA->m_wVLocal = wVLocal;
 
         m_pPA->combineLocalVelocities(m_Alpha, m_Beta, VLocal);
         m_pPA->computeOnBodyCp(VInf, VLocal, m_pPA->m_Cp);
