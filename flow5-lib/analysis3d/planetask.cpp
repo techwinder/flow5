@@ -416,6 +416,9 @@ bool PlaneTask::initializeTask()
     memsize += m_pPA->m_aijd.size()  * sizeof(double);
     memsize += m_pPA->m_aijf.size()  * sizeof(float);
     memsize += m_pPA->m_ipiv.size()  * sizeof(int);
+    memsize += m_pPA->m_Vij_x.size() * sizeof(float);
+    memsize += m_pPA->m_Vij_y.size() * sizeof(float);
+    memsize += m_pPA->m_Vij_z.size() * sizeof(float);
     strange  = std::format("Memory footprint of the influence matrices = {:.2f} MB\n\n", float(memsize)/1024.0/1024.0);
     traceStdLog(strange);
 
@@ -1000,8 +1003,7 @@ bool PlaneTask::T6Loop()
         computeInducedDrag(0, 0, QInfStab);
 
 
-        m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS,
-                                   m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0, 0)*m_QInf); // only using first
+        m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, objects::windDirection(0, 0)*m_QInf); // only using first
 
         std::fill(VField.begin(), VField.end(), objects::windDirection(0, 0)*QInfStab);
         m_pPA->computeOnBodyCp(QInfStab, VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
@@ -1984,7 +1986,7 @@ bool PlaneTask::T7Loop()
         if(!setLinearSolution()) continue;     // the matrix could not be built or factorized: no solution for this control value
 
         traceStdLog("   Making unit panel velocities...");
-        m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0,0));
+        m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, objects::windDirection(0,0));
         traceStdLog("   done\n");
 
         Vector3d CoG = m_pPlPolar->CoGCtrl(m_Ctrl);
@@ -2119,7 +2121,7 @@ bool PlaneTask::T123458Loop()
 
     traceStdLog("   Making unit panel velocities... ");
 
-    m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0,0));
+    m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, objects::windDirection(0,0));
 
     traceStdLog("     done\n");
 
@@ -2443,7 +2445,7 @@ void PlaneTask::computeControlDerivatives(double t7ctrl, double alphaeq, double 
         else if(m_pPlPolar->isTriangleMethod())
         {
             std::vector<double> notanrhs(m_pPA->m_cRHS.size());
-            m_pPA->makeLocalVelocities(m_pPA->m_cRHS, notanrhs, notanrhs, m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(alphaeq, 0.0));
+            m_pPA->makeLocalVelocities(m_pPA->m_cRHS, notanrhs, notanrhs, objects::windDirection(alphaeq, 0.0));
             if(m_pPlPolar->isTriUniformMethod() && m_pP3A)
             {
                 cRHSVertex.resize(3*N);

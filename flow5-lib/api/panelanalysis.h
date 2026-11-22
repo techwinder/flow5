@@ -84,9 +84,7 @@ class FL5LIB_EXPORT PanelAnalysis
         virtual void makeWakeMatrixBlock(int iBlock) = 0;
 
         virtual void makeMu(int qrhs) = 0;
-        virtual void makeLocalVelocities(std::vector<double> const &uRHS, std::vector<double> const &vRHS, std::vector<double> const &wRHS,
-                                         std::vector<Vector3d> &uVLocal, std::vector<Vector3d> &vVLocal, std::vector<Vector3d> &wVLocal,
-                                         Vector3d const &WindDirection) const = 0;
+        virtual void makeLocalVelocities(std::vector<double> const &uRHS, std::vector<double> const &vRHS, std::vector<double> const &wRHS, Vector3d const &WindDirection) = 0;
         virtual void combineLocalVelocities(double alpha, double beta, std::vector<Vector3d> &VLocal) const = 0;
         virtual void computeOnBodyCp(double VFreeStream, std::vector<Vector3d> const &VInf, std::vector<Vector3d> const &VLocal, std::vector<double>&Cp) const = 0;
         virtual bool computeTrimmedConditions(double mass, Vector3d const &CoG, double &alphaeq, double &u0, bool bFuseMi) = 0;
@@ -158,6 +156,13 @@ class FL5LIB_EXPORT PanelAnalysis
         std::vector<double> m_aijd;  /**< the matrix of panel influences - double precision; std::vector is limited to 2 GB and is unusable*/
         std::vector<float>  m_aijf;  /**< the matrix of panel influences - single precision; std::vector is limited to 2 GB and is unusable*/
         std::vector<int>    m_ipiv;  /** the array of pivot indices for the LAPACK LU solver */
+
+        /** The matrices of velocity influences;
+         *  Introduced in v7.59 to address issue 127;
+         *  Only used in the case of the VLM to avoid calling lengthy getVelocityVector() in moment calculations
+         *  Vij is the influence on panel i of a unit vortex acting on panel j.
+         *  Stored in single precision to minimize memory footprint */
+        std::vector<float> m_Vij_x, m_Vij_y, m_Vij_z; // cannot array Vector3d which is double precision
 
 
         // unit RHS for the 6 motion d.o.f
