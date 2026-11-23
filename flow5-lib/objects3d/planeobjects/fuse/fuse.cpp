@@ -345,9 +345,8 @@ void Fuse::computeAero(std::vector<Panel3> const &panel3, const double *Cp3Vtx,
     double panellift=0.0, totallift=0.0;
     Vector3d PanelForce, LeverArm;
 
-
-    //   Define wind axis
-    Vector3d WindDirection = objects::windDirection(Alpha, 0.0);
+    //   Define wind axes
+//    Vector3d WindDirection = objects::windDirection(Alpha, 0.0);
     Vector3d WindNormal = objects::windNormal(Alpha, 0.0);
 
     // Inviscid pressure forces

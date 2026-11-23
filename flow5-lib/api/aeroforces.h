@@ -168,8 +168,8 @@ struct FL5LIB_EXPORT  AeroForces
         double m_RefChord;
 
         double m_ProfileDrag;         /**< The viscous profile drag in wind axes (N/q) = VCD.refArea - Only non-zero component is Fv.x */
-        double m_FuseDrag;            /**< The viscous fuse drag in wind axis (N/q) = Cf.wettedArea m_AVLDrag- Only non-zero component is Fv.x */
-        double m_ExtraDrag;           /**< The viscous extra drag + AVL type drag in wind axis (N/q) = Sum(coefs*area) - Only non-zero component is Fv.x */
+        double m_FuseDrag;            /**< The viscous fuse drag in wind axes (N/q) = Cf.wettedArea m_AVLDrag- Only non-zero component is Fv.x */
+        double m_ExtraDrag;           /**< The viscous extra drag + AVL type drag in wind axes (N/q) = Sum(coefs*area) - Only non-zero component is Fv.x */
 
         Vector3d m_M0;                /**< = Sum(Fi_j.r_j) =used to calculated the position of the center of pressure  (N.m/q) */
 
