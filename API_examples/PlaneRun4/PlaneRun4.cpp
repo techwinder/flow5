@@ -157,6 +157,7 @@ int main()
     {
         std::cout << logmsg <<std::endl << std::endl;
         std::cout << "Aborting.\n";
+        globals::deleteObjects();
         return 0;
     }
     else
@@ -222,6 +223,7 @@ int main()
     {
         std::cout << logmsg <<std::endl << std::endl;
         std::cout << "Aborting.\n";
+        globals::deleteObjects();
         return 0;
     }
     else

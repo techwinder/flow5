@@ -109,6 +109,7 @@ int main()
     {
         std::cerr << "failed to import the plane... aborting"<< std::endl;
         std::cout <<"_____Done_____" << std::endl<<std::endl;
+        globals::deleteObjects();
         return 0;
     }
     else
@@ -144,6 +145,7 @@ int main()
             std::cout << std::endl;
             std::cerr << " error connecting panels ...aborting\n\n";
             delete pPlane;
+            globals::deleteObjects();
             return 0;
         }
         else
@@ -164,6 +166,7 @@ int main()
             std::cout << logmsg;
             std::cerr << "Error guessing trailing edge... aborting" <<std::endl;
             delete pPlane;
+            globals::deleteObjects();
             return 0;
         }
         std::cout << logmsg << std::endl;
