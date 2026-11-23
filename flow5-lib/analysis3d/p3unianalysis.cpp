@@ -232,8 +232,7 @@ void P3UniAnalysis::makeWakeMatrixBlock(int iBlock)
  *     all the doublet vlaues at the CoG of this panel and its neighbours
  */
 void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::vector<double> const &vRHS, std::vector<double> const &wRHS,
-                                        std::vector<Vector3d> &uLocal, std::vector<Vector3d> &vLocal, std::vector<Vector3d> &wLocal,
-                                        Vector3d const &) const
+                                        Vector3d const &)
 {
     std::vector<int> SingleNeighbourPanels;
 
@@ -362,9 +361,9 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
 
                     }
 
-                    uLocal[3*i3] = uLocal[3*i3+1] = uLocal[3*i3+2] = localvel[0];
-                    vLocal[3*i3] = vLocal[3*i3+1] = vLocal[3*i3+2] = localvel[1];
-                    wLocal[3*i3] = wLocal[3*i3+1] = wLocal[3*i3+2] = localvel[2];
+                    m_uVLocal[3*i3] = m_uVLocal[3*i3+1] = m_uVLocal[3*i3+2] = localvel[0];
+                    m_vVLocal[3*i3] = m_vVLocal[3*i3+1] = m_vVLocal[3*i3+2] = localvel[1];
+                    m_wVLocal[3*i3] = m_wVLocal[3*i3+1] = m_wVLocal[3*i3+2] = localvel[2];
 
                     continue;
                 }
@@ -431,9 +430,9 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
                 localvel[j].z = 0.0;
             }
         }
-        uLocal[3*i3] = uLocal[3*i3+1] = uLocal[3*i3+2] = localvel[0];
-        vLocal[3*i3] = vLocal[3*i3+1] = vLocal[3*i3+2] = localvel[1];
-        wLocal[3*i3] = wLocal[3*i3+1] = wLocal[3*i3+2] = localvel[2];
+        m_uVLocal[3*i3] = m_uVLocal[3*i3+1] = m_uVLocal[3*i3+2] = localvel[0];
+        m_vVLocal[3*i3] = m_vVLocal[3*i3+1] = m_vVLocal[3*i3+2] = localvel[1];
+        m_wVLocal[3*i3] = m_wVLocal[3*i3+1] = m_wVLocal[3*i3+2] = localvel[2];
     }
 
     Vector3d ug,vg, wg;
@@ -454,14 +453,14 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
         Panel3 const &p3n = m_Panel3.at(in);
 
         // convert the neighbour's local velocities to global
-        p3n.localToGlobal(uLocal.at(3*in), ug);
-        p3n.localToGlobal(vLocal.at(3*in), vg);
-        p3n.localToGlobal(wLocal.at(3*in), wg);
+        p3n.localToGlobal(m_uVLocal.at(3*in), ug);
+        p3n.localToGlobal(m_vVLocal.at(3*in), vg);
+        p3n.localToGlobal(m_wVLocal.at(3*in), wg);
 
         //convert the velocities to the local system of the base panel
-        uLocal[3*index] = uLocal[3*index+1] = uLocal[3*index+2] = p3.globalToLocal(ug);
-        vLocal[3*index] = vLocal[3*index+1] = vLocal[3*index+2] = p3.globalToLocal(vg);
-        wLocal[3*index] = wLocal[3*index+1] = wLocal[3*index+2] = p3.globalToLocal(wg);
+        m_uVLocal[3*index] = m_uVLocal[3*index+1] = m_uVLocal[3*index+2] = p3.globalToLocal(ug);
+        m_vVLocal[3*index] = m_vVLocal[3*index+1] = m_vVLocal[3*index+2] = p3.globalToLocal(vg);
+        m_wVLocal[3*index] = m_wVLocal[3*index+1] = m_wVLocal[3*index+2] = p3.globalToLocal(wg);
     }
 }
 

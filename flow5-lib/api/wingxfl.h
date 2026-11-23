@@ -130,7 +130,7 @@ class FL5LIB_EXPORT WingXfl : public Part
                                  const PlanePolar *pWPolar, const Vector3d &CoG, double alpha, double beta, double QInf, const double *Cp, const double *Gamma, SpanDistribs &SpanResSum);
         void panel3ComputeStrips(const std::vector<Panel3> &panel3list,  PlanePolar const *pWPolar, const Vector3d &CoG, double alpha, double beta, double QInf, const double *Cp3Vtx, SpanDistribs &SpanResSum);
 
-        void panel4ComputeInviscidForces(std::vector<Panel4> const &panel4list, const PlanePolar *pWPolar, const Vector3d &cog, double alpha, double beta, double QInf, const double *Cp4, const double *Gamma, AeroForces &AF) const;
+        void panel4ComputeInviscidForces(std::vector<Panel4> const &panel4list, const PlanePolar *pWPolar, const Vector3d &cog, double alpha, double beta, double QInf, double const *Cp4, const double *Gamma, AeroForces &AF) const;
         void panel3ComputeInviscidForces(std::vector<Panel3> const &panel3list, const PlanePolar *pWPolar, const Vector3d &cog, double alpha, double beta, const double *Cp3Vtx, AeroForces &AF) const;
         void computeViscousForces(const PlanePolar *pWPolar, double alpha, double beta, SpanDistribs &SpanResFF, AeroForces &AF) const;
 

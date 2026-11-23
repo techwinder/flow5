@@ -105,6 +105,19 @@ bool PanelAnalysis::allocateMatrix(int N)
 
             megabytes = double(size2 * sizeof(float)) /1024.0/1024.0;
         }
+
+        if(m_pPolar3d->isVLM())
+        {
+            m_Vij_x.resize(size2);
+            m_Vij_y.resize(size2);
+            m_Vij_z.resize(size2);
+            std::fill(m_Vij_x.begin(), m_Vij_x.end(), 0);
+            std::fill(m_Vij_y.begin(), m_Vij_y.end(), 0);
+            std::fill(m_Vij_z.begin(), m_Vij_z.end(), 0);
+
+            megabytes += double(3* size2 * sizeof(float))/1024.0/1024.0;
+        }
+
     }
     catch(std::bad_alloc &exception)
     {
@@ -741,7 +754,7 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
         // Make the Cp coefficients necessary to calculate the moments
         // Re-use the methods implemented for unit calculations,
         // but this time for the delta+ and delta- solutions
-        makeLocalVelocities(m_cRHS, notanrhs, notanrhs, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0));
+        makeLocalVelocities(m_cRHS, notanrhs, notanrhs, objects::windDirection(alphaeq, 0.0));
 
         if(m_pPolar3d->isTriUniformMethod())
         {
@@ -782,7 +795,7 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
         // Make the Cp coefficients necessary to calculate the moments
         // Re-use the methods implemented for unit calculations,
         // but this time for the delta+ and delta- solutions
-        makeLocalVelocities(m_UpRHS, notanrhs, m_UmRHS, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0)); // two at a time
+        makeLocalVelocities(m_UpRHS, notanrhs, m_UmRHS, objects::windDirection(alphaeq, 0.0)); // two at a time
 
         if(m_pPolar3d->isTriUniformMethod())
         {
@@ -821,7 +834,7 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
     }
     else if(m_pPolar3d->isTriangleMethod())
     {
-        makeLocalVelocities(m_VpRHS, notanrhs, m_VmRHS, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0));
+        makeLocalVelocities(m_VpRHS, notanrhs, m_VmRHS, objects::windDirection(alphaeq, 0.0));
 
         if(m_pPolar3d->isTriUniformMethod())
         {
@@ -858,7 +871,7 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
     }
     else if(m_pPolar3d->isTriangleMethod())
     {
-        makeLocalVelocities(m_WpRHS, notanrhs, m_WmRHS, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0));
+        makeLocalVelocities(m_WpRHS, notanrhs, m_WmRHS, objects::windDirection(alphaeq, 0.0));
         if(m_pPolar3d->isTriUniformMethod())
         {
             makeVertexDoubletDensities(m_WpRHS, uRHSVertex);
@@ -1003,7 +1016,7 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
         // Make the Cp coefficients necessary to calculate the moments
         // Re-use the methods implemented for unit calculations,
         // but this time for the delta+ and delta- solutions
-        makeLocalVelocities(m_UpRHS, notanrhs, m_UmRHS, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0));
+        makeLocalVelocities(m_UpRHS, notanrhs, m_UmRHS, objects::windDirection(alphaeq, 0.0));
 
         if(m_pPolar3d->isTriUniformMethod())
         {
@@ -1036,7 +1049,7 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
     }
     else if(m_pPolar3d->isTriangleMethod())
     {
-        makeLocalVelocities(m_VpRHS, notanrhs, m_VmRHS, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0));
+        makeLocalVelocities(m_VpRHS, notanrhs, m_VmRHS, objects::windDirection(alphaeq, 0.0));
 
         if(m_pPolar3d->isTriUniformMethod())
         {
@@ -1069,7 +1082,7 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
     }
     else if(m_pPolar3d->isTriangleMethod())
     {
-        makeLocalVelocities(m_WpRHS, notanrhs, m_WmRHS, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0));
+        makeLocalVelocities(m_WpRHS, notanrhs, m_WmRHS, objects::windDirection(alphaeq, 0.0));
 
         if(m_pPolar3d->isTriUniformMethod())
         {

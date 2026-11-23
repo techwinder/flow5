@@ -93,6 +93,7 @@ class FL5LIB_EXPORT P4Analysis : public PanelAnalysis
 
         void VLMGetVortexInfluence(const Panel4 &pPanel, Vector3d const &C, double *phi, Vector3d *V, bool bIncludingBound, double fardist) const;
 
+        void VLMinducedVelocity(double const *gamma, std::vector<Vector3d> &VInduced) const;
 
         void forces(double const *Mu, double const *Sigma, double alpha, double beta, Vector3d const&CoG, bool bFuseMi, const std::vector<Vector3d> &VInf, Vector3d &Force, Vector3d &Moment) const override;
 
@@ -128,7 +129,7 @@ class FL5LIB_EXPORT P4Analysis : public PanelAnalysis
         std::vector<Panel4> const &wakePanels() const {return m_WakePanel4;}
 
 
-        void computeOnBodyCp(const double VFreeStream, std::vector<Vector3d> const &VInf,
+        void computeOnBodyCp(double VFreeStream, std::vector<Vector3d> const &VInf,
                              std::vector<Vector3d> const &VLocal, std::vector<double>&Cp) const override;
 
         double computeCm(const Vector3d &CoG, double Alpha, bool bFuseMi);
@@ -139,9 +140,7 @@ class FL5LIB_EXPORT P4Analysis : public PanelAnalysis
         void scaleResultsToSpeed(double ratio) override;
         void makeUnitDoubletStrengths(double alpha, double beta) override;
         void combineLocalVelocities(double alpha, double beta, std::vector<Vector3d> &VLocal) const override;
-        void makeLocalVelocities(std::vector<double> const &uRHS, std::vector<double> const &vRHS, std::vector<double> const &wRHS,
-                                 std::vector<Vector3d> &uVLocal, std::vector<Vector3d> &vVLocal, std::vector<Vector3d> &wVLocal,
-                                 Vector3d const &WindDirection) const override;
+        void makeLocalVelocities(std::vector<double> const &uRHS, std::vector<double> const &vRHS, std::vector<double> const &wRHS, Vector3d const &WindDirection) override;
 //        void combineLocalVelocities(double alpha, double beta, std::vector<Vector3d> &VLocal) const override;
 
         void sumPanelForces(double *Cp, double Alpha, double &Lift, double &Drag);

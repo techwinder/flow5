@@ -87,9 +87,7 @@ void P4Analysis::makeMu(int qrhs)
 }
 
 
-void P4Analysis::makeLocalVelocities(std::vector<double> const &uRHS, const std::vector<double> &vRHS, std::vector<double> const &wRHS,
-                                     std::vector<Vector3d> &uVLocal, std::vector<Vector3d> &vVLocal, std::vector<Vector3d> &wVLocal,
-                                     Vector3d const &WindDirection) const
+void P4Analysis::makeLocalVelocities(std::vector<double> const &uRHS, const std::vector<double> &vRHS, std::vector<double> const &wRHS, Vector3d const &WindDirection)
 {
     double Cp(0);
 
@@ -97,9 +95,9 @@ void P4Analysis::makeLocalVelocities(std::vector<double> const &uRHS, const std:
 
     for (int i4=0; i4<nPanels(); i4++)
     {
-        getDoubletDerivative(i4, uRHS.data(), Cp, uVLocal[i4], WindDirection);
-        getDoubletDerivative(i4, vRHS.data(), Cp, vVLocal[i4], WindDirection);
-        getDoubletDerivative(i4, wRHS.data(), Cp, wVLocal[i4], WindDirection);
+        getDoubletDerivative(i4, uRHS.data(), Cp, m_uVLocal[i4], WindDirection);
+        getDoubletDerivative(i4, vRHS.data(), Cp, m_vVLocal[i4], WindDirection);
+        getDoubletDerivative(i4, wRHS.data(), Cp, m_wVLocal[i4], WindDirection);
         if(isCancelled()) return;
     }
 }
@@ -256,6 +254,13 @@ void P4Analysis::makeMatrixBlock(int iBlock)
                     traceStdLog(strange);
                     m_bMatrixError = true;
                     return;
+                }
+
+                if(m_pPolar3d->isVLM())
+                {
+                    m_Vij_x[i4*N+k4] = V.xf();
+                    m_Vij_y[i4*N+k4] = V.yf();
+                    m_Vij_z[i4*N+k4] = V.zf();
                 }
 
                 double d =  V.dot(p4i.normal());
@@ -1103,6 +1108,14 @@ void P4Analysis::forces(double const *Mu4, double const *Sigma4, double alpha, d
     //On-Body moment
     Vector3d VLocal, ForcePt;
     Moment.set(0.0,0.0,0.0);
+
+    std::vector<Vector3d> VInduced(nPanels());
+    if(m_pPolar3d->isVLM())
+    {
+        // Compute induced velocities
+        VLMinducedVelocity(Mu4, VInduced);
+    }
+
     for(int i4=0; i4<nPanels(); i4++)
     {
         Panel4 const &p4 = m_Panel4.at(i4);
@@ -1117,18 +1130,18 @@ void P4Analysis::forces(double const *Mu4, double const *Sigma4, double alpha, d
         }
         else
         {
-            // for each panel along the chord, add the lift coef
+            Velocity += VInduced.at(i4);
+
+            // sanity check: normal component should be 0 within single precision
+            // std::cout << std::format("P4_{:3d}: Vn={:11g}  |V|={:11g}", p4.index(), Velocity.dot(p4.normal()), Velocity.norm()) << std::endl;
+
             ForcePt = p4.vortexPosition();
-            PanelForce  = WindDirection * p4.trailingVortex();
-            PanelForce *= 2.0 * Mu4[i4] /QInf;                                 //Newtons/q
+            PanelForce  = Velocity * (p4.trailingVortex()*Mu4[i4]);   // Newtons/rho
 
             if(m_pPolar3d->isVLM() && m_pPolar3d->isVLM2() && !p4.isLeading())
             {
-                Vector3d Force = WindDirection * p4.trailingVortex();
-                Force      *= 2.0 * Mu4[i4+1] /QInf;                          //Newtons/q
-                PanelForce -= Force;
+                PanelForce -= Velocity * (p4.trailingVortex()*Mu4[i4+1]);   // Newtons/rho
             }
-            PanelForce *= 0.5*QInf*QInf;  // N/rho
             PanelLeverArm = ForcePt - CoG;
         }
         Moment += PanelLeverArm * PanelForce ;                     // N.m/rho
@@ -1638,6 +1651,12 @@ void P4Analysis::computeOnBodyCp(double const VFreeStream, const std::vector<Vec
 
     double qDyn = 0.5 * VFreeStream *VFreeStream; // Pa/rho
 
+    std::vector<Vector3d> VInduced(nPanels());
+    if(m_pPolar3d->isVLM())
+    {
+        VLMinducedVelocity(m_Mu.data(), VInduced);
+    }
+
     for (int i4=0; i4<nPanels(); i4++)
     {
         Panel4 const &p4 = m_Panel4.at(i4);
@@ -1649,15 +1668,10 @@ void P4Analysis::computeOnBodyCp(double const VFreeStream, const std::vector<Vec
             // so as to include the local velocity when evaluating the forces acting on the vortices.
 
             Vector3d VelPanel = VInf.at(i4);
-
-            // way too slow
-            // getVelocityVector(p4.ctrlPt(true), m_Mu.data(), m_Sigma.data(), Vl, Vortex::coreRadius(), false, true);
-            // VelPanel += Vl;
-
-            VelPanel += VLocal.at(i4);
+            VelPanel +=  VInduced.at(i4);
 
             // sanity check: normal component should be 0 within single precision
-            //std::cout << std::format("P4_{:3d}: Vn={:11g}", p4.index(), VelPanel.dot(p4.normal())) << std::endl;
+            // std::cout << std::format("P4_{:3d}: Vn={:11g}  |V|={:11g}", p4.index(), VelPanel.dot(p4.normal()), VelPanel.norm()) << std::endl;
 
             // use Kutta-Joukowski
             Vector3d PanelForce = VelPanel * p4.trailingVortex() * m_Mu[i4];         // Newtons/rho
@@ -2277,9 +2291,6 @@ void P4Analysis::makeVortons(double dl, double const *Mu4,
  */
 void P4Analysis::makeNegatingVortices(std::vector<Vortex> &negvortices)
 {
-/*    s_DebugPts.clear();
-    s_DebugVecs.clear();*/
-
     negvortices.clear();
     for(int iw=0; iw<nWakePanels(); iw++)
     {
@@ -2289,9 +2300,30 @@ void P4Analysis::makeNegatingVortices(std::vector<Vortex> &negvortices)
             // start of the wake column
             Panel4 const *p4w_t = trailingWakePanel(&p4w);
             negvortices.push_back({p4w_t->TA(), p4w_t->TB()});
-/*            s_DebugPts.append(p4w_t->TA());
-            s_DebugVecs.append(negvortices.back().segment());*/
         }
     }
+}
+
+
+/** Fills the array of velocity vectors induced at each panel's control point by a distribution of vortex circulations.
+ *  Only applicable and of use in the case of the VLM.
+ *  Much faster than calling getVelocityVector() at each control point.
+ */
+void P4Analysis::VLMinducedVelocity(double const *gamma, std::vector<Vector3d> &VInduced) const
+{
+    unsigned int N = nPanels();
+
+    std::vector<float> Ux(N, 0), Uy(N, 0), Uz(N, 0);
+    std::vector<float> Mu(N, 0);
+
+    for(unsigned int i4=0; i4<N; i4++) Mu[i4] = float(gamma[i4]); // convert to float for LAPACK
+
+    matrix::matVecMultLapack(m_Vij_x.data(), Mu.data(), Ux.data(), N, N);
+    matrix::matVecMultLapack(m_Vij_y.data(), Mu.data(), Uy.data(), N, N);
+    matrix::matVecMultLapack(m_Vij_z.data(), Mu.data(), Uz.data(), N, N);
+
+    for (unsigned int i4=0; i4<N; i4++)
+        VInduced[i4].set(Ux.at(i4), Uy.at(i4), Uz.at(i4));;
+
 }
 

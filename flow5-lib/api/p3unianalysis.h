@@ -40,10 +40,8 @@ class FL5LIB_EXPORT P3UniAnalysis : public P3Analysis
 
         void makeRHSBlock(int iBlock, double *RHS, std::vector<Vector3d> const &VField, Vector3d const*normals) const override;
 
-        void makeLocalVelocities(std::vector<double> const &uRHS, std::vector<double> const &vRHS, const std::vector<double> &wRHS,
-                                 std::vector<Vector3d> &uLocal, std::vector<Vector3d> &vLocal, std::vector<Vector3d> &wLocal,
-                                 Vector3d const &WindDirection) const override;
-        void computeOnBodyCp(double const VFreeStream, std::vector<Vector3d> const &VInf, const std::vector<Vector3d> &VLocal, std::vector<double> &Cp) const override;
+        void makeLocalVelocities(std::vector<double> const &uRHS, std::vector<double> const &vRHS, const std::vector<double> &wRHS, Vector3d const &WindDirection) override;
+        void computeOnBodyCp(double VFreeStream, std::vector<Vector3d> const &VInf, const std::vector<Vector3d> &VLocal, std::vector<double> &Cp) const override;
 
         void makeWakeMatrixBlock(int iBlock) override;
 
