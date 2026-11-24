@@ -140,9 +140,9 @@ class FL5LIB_EXPORT P4Analysis : public PanelAnalysis
         void scaleResultsToSpeed(double ratio) override;
         void makeUnitDoubletStrengths(double alpha, double beta) override;
         void combineLocalVelocities(double alpha, double beta, std::vector<Vector3d> &VLocal) const override;
-        void makeLocalVelocities(std::vector<double> const &uRHS, std::vector<double> const &vRHS, std::vector<double> const &wRHS, Vector3d const &WindDirection) override;
-//        void combineLocalVelocities(double alpha, double beta, std::vector<Vector3d> &VLocal) const override;
-
+        void makeLocalVelocities(std::vector<double> const &uRHS, std::vector<double> const &vRHS, std::vector<double> const &wRHS,
+                                 std::vector<Vector3d> &uVLocal, std::vector<Vector3d> &vVLocal, std::vector<Vector3d> &wVLocal,
+                                 Vector3d const &WindDirection) const override;
         void sumPanelForces(double *Cp, double Alpha, double &Lift, double &Drag);
         void getVortexCp(const int &p, double *Gamma, double *Cp, Vector3d &VInf);
 

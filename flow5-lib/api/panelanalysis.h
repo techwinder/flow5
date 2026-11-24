@@ -84,7 +84,9 @@ class FL5LIB_EXPORT PanelAnalysis
         virtual void makeWakeMatrixBlock(int iBlock) = 0;
 
         virtual void makeMu(int qrhs) = 0;
-        virtual void makeLocalVelocities(std::vector<double> const &uRHS, std::vector<double> const &vRHS, std::vector<double> const &wRHS, Vector3d const &WindDirection) = 0;
+        virtual void makeLocalVelocities(std::vector<double> const &uRHS, std::vector<double> const &vRHS, std::vector<double> const &wRHS,
+                                         std::vector<Vector3d> &uVLocal, std::vector<Vector3d> &vVLocal, std::vector<Vector3d> &wVLocal,
+                                         Vector3d const &WindDirection) const = 0;
         virtual void combineLocalVelocities(double alpha, double beta, std::vector<Vector3d> &VLocal) const = 0;
         virtual void computeOnBodyCp(double VFreeStream, std::vector<Vector3d> const &VInf, std::vector<Vector3d> const &VLocal, std::vector<double>&Cp) const = 0;
         virtual bool computeTrimmedConditions(double mass, Vector3d const &CoG, double &alphaeq, double &u0, bool bFuseMi) = 0;

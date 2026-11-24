@@ -232,7 +232,8 @@ void P3UniAnalysis::makeWakeMatrixBlock(int iBlock)
  *     all the doublet vlaues at the CoG of this panel and its neighbours
  */
 void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::vector<double> const &vRHS, std::vector<double> const &wRHS,
-                                        Vector3d const &)
+                                        std::vector<Vector3d> &uLocal, std::vector<Vector3d> &vLocal, std::vector<Vector3d> &wLocal,
+                                        Vector3d const &) const
 {
     std::vector<int> SingleNeighbourPanels;
 
@@ -257,7 +258,7 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
 
         if(p3.neighbourCount()<1)
         {
-//            assert(false); // should never occur; each panel has at least one neighbour - except for messy STL meshes
+            //            assert(false); // should never occur; each panel has at least one neighbour - except for messy STL meshes
         }
         else if (p3.neighbourCount()<=1)  // one
         {
@@ -337,7 +338,7 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
                 double sintheta = (V01.x*V02.y-V01.y*V02.x)/V01.norm()/V02.norm();
 
                 // if the CoG of the 3 panels are aligned whithin less than a thereshold angle, make a regression line out of three points
-//                if(fabs(sintheta)<15.0*PI/180.0) //--> beta17
+                //                if(fabs(sintheta)<15.0*PI/180.0) //--> beta17
                 if(fabs(sintheta)<fabs(sin(35.0*PI/180.0)))
                 {
                     U = V02-V01;
@@ -361,9 +362,9 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
 
                     }
 
-                    m_uVLocal[3*i3] = m_uVLocal[3*i3+1] = m_uVLocal[3*i3+2] = localvel[0];
-                    m_vVLocal[3*i3] = m_vVLocal[3*i3+1] = m_vVLocal[3*i3+2] = localvel[1];
-                    m_wVLocal[3*i3] = m_wVLocal[3*i3+1] = m_wVLocal[3*i3+2] = localvel[2];
+                    uLocal[3*i3] = uLocal[3*i3+1] = uLocal[3*i3+2] = localvel[0];
+                    vLocal[3*i3] = vLocal[3*i3+1] = vLocal[3*i3+2] = localvel[1];
+                    wLocal[3*i3] = wLocal[3*i3+1] = wLocal[3*i3+2] = localvel[2];
 
                     continue;
                 }
@@ -379,12 +380,12 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
             char trans = 'N';
 
 #ifdef OPENBLAS
-    #ifdef LAPACK_FORTRAN_STRLEN_END
-                // https://github.com/OpenMathLib/OpenBLAS/issues/3877
-                dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info,1);
-    #else
-                dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info);
-    #endif
+#ifdef LAPACK_FORTRAN_STRLEN_END
+            // https://github.com/OpenMathLib/OpenBLAS/issues/3877
+            dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info,1);
+#else
+            dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info);
+#endif
 #elif defined INTEL_MKL
             dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, &wkopt, &lwork, &info);
 #elif defined ACCELERATE_NEW_LAPACK
@@ -398,12 +399,12 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
                 work.resize(lwork);
 
 #ifdef OPENBLAS
-    #ifdef LAPACK_FORTRAN_STRLEN_END
-                    // https://github.com/OpenMathLib/OpenBLAS/issues/3877
-                    dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info,1);
-    #else
-                    dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info);
-    #endif
+#ifdef LAPACK_FORTRAN_STRLEN_END
+                // https://github.com/OpenMathLib/OpenBLAS/issues/3877
+                dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info,1);
+#else
+                dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info);
+#endif
 #elif defined INTEL_MKL
                 dgels_(&trans, &m, &n, &nrhs, A.data(), &lda, Mu.data(), &ldb, work.data(), &lwork, &info);
 #elif defined ACCELERATE_NEW_LAPACK
@@ -430,9 +431,9 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
                 localvel[j].z = 0.0;
             }
         }
-        m_uVLocal[3*i3] = m_uVLocal[3*i3+1] = m_uVLocal[3*i3+2] = localvel[0];
-        m_vVLocal[3*i3] = m_vVLocal[3*i3+1] = m_vVLocal[3*i3+2] = localvel[1];
-        m_wVLocal[3*i3] = m_wVLocal[3*i3+1] = m_wVLocal[3*i3+2] = localvel[2];
+        uLocal[3*i3] = uLocal[3*i3+1] = uLocal[3*i3+2] = localvel[0];
+        vLocal[3*i3] = vLocal[3*i3+1] = vLocal[3*i3+2] = localvel[1];
+        wLocal[3*i3] = wLocal[3*i3+1] = wLocal[3*i3+2] = localvel[2];
     }
 
     Vector3d ug,vg, wg;
@@ -453,14 +454,14 @@ void P3UniAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, std::ve
         Panel3 const &p3n = m_Panel3.at(in);
 
         // convert the neighbour's local velocities to global
-        p3n.localToGlobal(m_uVLocal.at(3*in), ug);
-        p3n.localToGlobal(m_vVLocal.at(3*in), vg);
-        p3n.localToGlobal(m_wVLocal.at(3*in), wg);
+        p3n.localToGlobal(uLocal.at(3*in), ug);
+        p3n.localToGlobal(vLocal.at(3*in), vg);
+        p3n.localToGlobal(wLocal.at(3*in), wg);
 
         //convert the velocities to the local system of the base panel
-        m_uVLocal[3*index] = m_uVLocal[3*index+1] = m_uVLocal[3*index+2] = p3.globalToLocal(ug);
-        m_vVLocal[3*index] = m_vVLocal[3*index+1] = m_vVLocal[3*index+2] = p3.globalToLocal(vg);
-        m_wVLocal[3*index] = m_wVLocal[3*index+1] = m_wVLocal[3*index+2] = p3.globalToLocal(wg);
+        uLocal[3*index] = uLocal[3*index+1] = uLocal[3*index+2] = p3.globalToLocal(ug);
+        vLocal[3*index] = vLocal[3*index+1] = vLocal[3*index+2] = p3.globalToLocal(vg);
+        wLocal[3*index] = wLocal[3*index+1] = wLocal[3*index+2] = p3.globalToLocal(wg);
     }
 }
 

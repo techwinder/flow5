@@ -87,7 +87,9 @@ void P4Analysis::makeMu(int qrhs)
 }
 
 
-void P4Analysis::makeLocalVelocities(std::vector<double> const &uRHS, const std::vector<double> &vRHS, std::vector<double> const &wRHS, Vector3d const &WindDirection)
+void P4Analysis::makeLocalVelocities(std::vector<double> const &uRHS, const std::vector<double> &vRHS, std::vector<double> const &wRHS,
+                                     std::vector<Vector3d> &uVLocal, std::vector<Vector3d> &vVLocal, std::vector<Vector3d> &wVLocal,
+                                     Vector3d const &WindDirection) const
 {
     double Cp(0);
 
@@ -95,9 +97,9 @@ void P4Analysis::makeLocalVelocities(std::vector<double> const &uRHS, const std:
 
     for (int i4=0; i4<nPanels(); i4++)
     {
-        getDoubletDerivative(i4, uRHS.data(), Cp, m_uVLocal[i4], WindDirection);
-        getDoubletDerivative(i4, vRHS.data(), Cp, m_vVLocal[i4], WindDirection);
-        getDoubletDerivative(i4, wRHS.data(), Cp, m_wVLocal[i4], WindDirection);
+        getDoubletDerivative(i4, uRHS.data(), Cp, uVLocal[i4], WindDirection);
+        getDoubletDerivative(i4, vRHS.data(), Cp, vVLocal[i4], WindDirection);
+        getDoubletDerivative(i4, wRHS.data(), Cp, wVLocal[i4], WindDirection);
         if(isCancelled()) return;
     }
 }

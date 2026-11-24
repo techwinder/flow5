@@ -634,6 +634,8 @@ void PanelAnalysis::computeStabilityDerivatives(double alphaeq, double u0, Vecto
 }
 
 
+
+
 void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vector3d const &CoG, bool bFuseMi,
                                                   StabDerivatives &SD, Vector3d &Force0, Vector3d &Moment0)
 {
@@ -655,8 +657,8 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
     else
         rhssize = m_pPolar3d->isTriUniformMethod() ? nPanels() : nPanels()*3;
 
-    std::vector<double> m_UmRHS(rhssize), m_VmRHS(rhssize), m_WmRHS(rhssize);
-    std::vector<double> m_UpRHS(rhssize), m_VpRHS(rhssize), m_WpRHS(rhssize);
+    std::vector<double> UmRHS(rhssize), VmRHS(rhssize), WmRHS(rhssize);
+    std::vector<double> UpRHS(rhssize), VpRHS(rhssize), WpRHS(rhssize);
     std::vector<double> notanrhs(rhssize);
 
     std::vector<double> Sigma(7*N, 0);
@@ -717,12 +719,12 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
 
     Vector3d Omega;
 
-    combineUnitRHS(m_UpRHS, Vip, Omega);
-    combineUnitRHS(m_VpRHS, Vjp, Omega);
-    combineUnitRHS(m_WpRHS, Vkp, Omega);
-    combineUnitRHS(m_UmRHS, Vim, Omega);
-    combineUnitRHS(m_VmRHS, Vjm, Omega);
-    combineUnitRHS(m_WmRHS, Vkm, Omega);
+    combineUnitRHS(UpRHS, Vip, Omega);
+    combineUnitRHS(VpRHS, Vjp, Omega);
+    combineUnitRHS(WpRHS, Vkp, Omega);
+    combineUnitRHS(UmRHS, Vim, Omega);
+    combineUnitRHS(VmRHS, Vjm, Omega);
+    combineUnitRHS(WmRHS, Vkm, Omega);
 
     // cRHS used to calculate force0 and moment0 used later as the reference for control derivatives
     combineUnitRHS(m_cRHS, V0, Omega);
@@ -754,7 +756,7 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
         // Make the Cp coefficients necessary to calculate the moments
         // Re-use the methods implemented for unit calculations,
         // but this time for the delta+ and delta- solutions
-        makeLocalVelocities(m_cRHS, notanrhs, notanrhs, objects::windDirection(alphaeq, 0.0));
+        makeLocalVelocities(m_cRHS, notanrhs, notanrhs, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0));
 
         if(m_pPolar3d->isTriUniformMethod())
         {
@@ -774,7 +776,7 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
     // 1st ORDER STABILITY DERIVATIVES
     // x-derivatives________________________
 
-//    alpha = atan2(Vim.z, Vim.x) * 180.0/PI;// =alphaeq....
+    //    alpha = atan2(Vim.z, Vim.x) * 180.0/PI;// =alphaeq....
     alpha = alphaeq;
 
     if(m_pPolar3d->isTriUniformMethod())
@@ -785,9 +787,9 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
 
     if(m_pPolar3d->isQuadMethod())
     {
-        mup = m_UpRHS.data();
+        mup = UpRHS.data();
         forces(mup, Sigma.data()+0*N, alpha, beta, CoG, bFuseMi, VField.at(0), Forcep, Momentp);
-        mum = m_UmRHS.data();
+        mum = UmRHS.data();
         forces(mum, Sigma.data()+3*N, alpha, beta, CoG, bFuseMi, VField.at(3), Forcem, Momentm);
     }
     else if(m_pPolar3d->isTriangleMethod())
@@ -795,19 +797,19 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
         // Make the Cp coefficients necessary to calculate the moments
         // Re-use the methods implemented for unit calculations,
         // but this time for the delta+ and delta- solutions
-        makeLocalVelocities(m_UpRHS, notanrhs, m_UmRHS, objects::windDirection(alphaeq, 0.0)); // two at a time
+        makeLocalVelocities(UpRHS, notanrhs, UmRHS, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0)); // two at a time
 
         if(m_pPolar3d->isTriUniformMethod())
         {
-            makeVertexDoubletDensities(m_UpRHS, uRHSVertex);
-            makeVertexDoubletDensities(m_UmRHS, pRHSVertex);
+            makeVertexDoubletDensities(UpRHS, uRHSVertex);
+            makeVertexDoubletDensities(UmRHS, pRHSVertex);
             mup = uRHSVertex.data();
             mum = pRHSVertex.data();
         }
         else if(m_pPolar3d->isTriLinearMethod())
         {
-            mup = m_UpRHS.data();
-            mum = m_UmRHS.data();
+            mup = UpRHS.data();
+            mum = UmRHS.data();
         }
 
         computeOnBodyCp(u0, VField.at(0), m_uVLocal, m_Cp);
@@ -823,30 +825,30 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
 
 
     // y-derivatives________________________
-//    alpha = atan2(Vjm.z, Vjm.x)*180.0/PI;// =alphaeq....
+    //    alpha = atan2(Vjm.z, Vjm.x)*180.0/PI;// =alphaeq....
     alpha = alphaeq;
     if(m_pPolar3d->isQuadMethod())
     {
-        mup = m_VpRHS.data();
+        mup = VpRHS.data();
         forces(mup, Sigma.data()+1*N, alpha, beta, CoG, bFuseMi, VField.at(1), Forcep, Momentp);
-        mum = m_VmRHS.data();
+        mum = VmRHS.data();
         forces(mum, Sigma.data()+4*N, alpha, beta, CoG, bFuseMi, VField.at(4), Forcem, Momentm);
     }
     else if(m_pPolar3d->isTriangleMethod())
     {
-        makeLocalVelocities(m_VpRHS, notanrhs, m_VmRHS, objects::windDirection(alphaeq, 0.0));
+        makeLocalVelocities(VpRHS, notanrhs, VmRHS, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0));
 
         if(m_pPolar3d->isTriUniformMethod())
         {
-            makeVertexDoubletDensities(m_VpRHS, uRHSVertex);
-            makeVertexDoubletDensities(m_VmRHS, pRHSVertex);
+            makeVertexDoubletDensities(VpRHS, uRHSVertex);
+            makeVertexDoubletDensities(VmRHS, pRHSVertex);
             mup = uRHSVertex.data();
             mum = pRHSVertex.data();
         }
         else if(m_pPolar3d->isTriLinearMethod())
         {
-            mup = m_VpRHS.data();
-            mum = m_VmRHS.data();
+            mup = VpRHS.data();
+            mum = VmRHS.data();
         }
 
         computeOnBodyCp(u0, VField.at(1), m_uVLocal, m_Cp);
@@ -860,29 +862,29 @@ void PanelAnalysis::computeTranslationDerivatives(double alphaeq, double u0, Vec
     SD.Nv = (Momentm - Momentp).dot(ks) /deltaspeed/2.0;
 
     // z-derivatives________________________
-//    alpha = atan2(Vkm.z, Vkm.x)* 180.0/PI;
+    //    alpha = atan2(Vkm.z, Vkm.x)* 180.0/PI;
     alpha = alphaeq;
     if(m_pPolar3d->isQuadMethod())
     {
-        mup = m_WpRHS.data();
+        mup = WpRHS.data();
         forces(mup, Sigma.data()+2*N, alpha, beta, CoG, bFuseMi, VField.at(2), Forcep, Momentp);
-        mum = m_WmRHS.data();
+        mum = WmRHS.data();
         forces(mum, Sigma.data()+5*N, alpha, beta, CoG, bFuseMi, VField.at(5), Forcem, Momentm);
     }
     else if(m_pPolar3d->isTriangleMethod())
     {
-        makeLocalVelocities(m_WpRHS, notanrhs, m_WmRHS, objects::windDirection(alphaeq, 0.0));
+        makeLocalVelocities(WpRHS, notanrhs, WmRHS, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0));
         if(m_pPolar3d->isTriUniformMethod())
         {
-            makeVertexDoubletDensities(m_WpRHS, uRHSVertex);
-            makeVertexDoubletDensities(m_WmRHS, pRHSVertex);
+            makeVertexDoubletDensities(WpRHS, uRHSVertex);
+            makeVertexDoubletDensities(WmRHS, pRHSVertex);
             mup = uRHSVertex.data();
             mum = pRHSVertex.data();
         }
         else if(m_pPolar3d->isTriLinearMethod())
         {
-            mup = m_WpRHS.data();
-            mum = m_WmRHS.data();
+            mup = WpRHS.data();
+            mum = WmRHS.data();
         }
 
         computeOnBodyCp(u0, VField.at(2), m_uVLocal, m_Cp);
@@ -915,8 +917,8 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
     else
         rhssize = m_pPolar3d->isTriUniformMethod() ? nPanels() : nPanels()*3;
 
-    std::vector<double> m_UmRHS(rhssize), m_VmRHS(rhssize), m_WmRHS(rhssize);
-    std::vector<double> m_UpRHS(rhssize), m_VpRHS(rhssize), m_WpRHS(rhssize);
+    std::vector<double> UmRHS(rhssize), VmRHS(rhssize), WmRHS(rhssize);
+    std::vector<double> UpRHS(rhssize), VpRHS(rhssize), WpRHS(rhssize);
     std::vector<double> notanrhs(rhssize);
 
     std::vector<double> Sigma(6*N);
@@ -949,8 +951,8 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
     for (int p=0; p<N; p++)
     {
         Panel const* pPanel = panelAt(p);
-//        if(p3->m_Pos==MIDSURFACE) CGM = p3->VortexPos - m_CoG;
-//        else
+        //        if(p3->m_Pos==MIDSURFACE) CGM = p3->VortexPos - m_CoG;
+        //        else
         CGM = pPanel->CoG() - CoG;
 
         // a rotation of the plane about a vector is the opposite of a rotation of the freestream about this vector:
@@ -983,12 +985,12 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
         }
     }
 
-    combineUnitRHS(m_UpRHS, V0, is*rotationrate);
-    combineUnitRHS(m_VpRHS, V0, js*rotationrate);
-    combineUnitRHS(m_WpRHS, V0, ks*rotationrate);
-    combineUnitRHS(m_UmRHS, V0, is*(-rotationrate));
-    combineUnitRHS(m_VmRHS, V0, js*(-rotationrate));
-    combineUnitRHS(m_WmRHS, V0, ks*(-rotationrate));
+    combineUnitRHS(UpRHS, V0, is*rotationrate);
+    combineUnitRHS(VpRHS, V0, js*rotationrate);
+    combineUnitRHS(WpRHS, V0, ks*rotationrate);
+    combineUnitRHS(UmRHS, V0, is*(-rotationrate));
+    combineUnitRHS(VmRHS, V0, js*(-rotationrate));
+    combineUnitRHS(WmRHS, V0, ks*(-rotationrate));
 
     //________________________________________________
     // 1st ORDER STABILITY DERIVATIVES
@@ -1001,14 +1003,14 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
         pRHSVertex.resize(3*N);
     }
 
-//    std::vector<Vector3d> VInf(nPanels(), windDirection(alphaeq, 0.0) * u0);
+    //    std::vector<Vector3d> VInf(nPanels(), windDirection(alphaeq, 0.0) * u0);
 
     // p-derivatives
     if(m_pPolar3d->isQuadMethod())
     {
-        mup = m_UpRHS.data();
+        mup = UpRHS.data();
         forces(mup, Sigma.data()+0*N, alphaeq, beta, CoG, bFuseMi, VField.at(0), Forcep, Momentp);
-        mum = m_UmRHS.data();
+        mum = UmRHS.data();
         forces(mum, Sigma.data()+3*N, alphaeq, beta, CoG, bFuseMi, VField.at(3), Forcem, Momentm);
     }
     else if(m_pPolar3d->isTriangleMethod())
@@ -1016,19 +1018,19 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
         // Make the Cp coefficients necessary to calculate the moments
         // Re-use the methods implemented for unit calculations,
         // but this time for the delta+ and delta- solutions
-        makeLocalVelocities(m_UpRHS, notanrhs, m_UmRHS, objects::windDirection(alphaeq, 0.0));
+        makeLocalVelocities(UpRHS, notanrhs, UmRHS, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0));
 
         if(m_pPolar3d->isTriUniformMethod())
         {
-            makeVertexDoubletDensities(m_UpRHS, uRHSVertex);
-            makeVertexDoubletDensities(m_UmRHS, pRHSVertex);
+            makeVertexDoubletDensities(UpRHS, uRHSVertex);
+            makeVertexDoubletDensities(UmRHS, pRHSVertex);
             mup = uRHSVertex.data();
             mum = pRHSVertex.data();
         }
         else if(m_pPolar3d->isTriLinearMethod())
         {
-            mup = m_UpRHS.data();
-            mum = m_UmRHS.data();
+            mup = UpRHS.data();
+            mum = UmRHS.data();
         }
         computeOnBodyCp(u0, VField.at(0), m_uVLocal, m_Cp);
         forces(mup, Sigma.data()+0*N, alphaeq, beta, CoG, bFuseMi, VField.at(0), Forcep, Momentp);
@@ -1042,26 +1044,26 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
     // q-derivatives
     if(m_pPolar3d->isQuadMethod())
     {
-        mup = m_VpRHS.data();
+        mup = VpRHS.data();
         forces(mup, Sigma.data()+1*N, alphaeq, beta, CoG, bFuseMi, VField.at(1), Forcep, Momentp);
-        mum = m_VmRHS.data();
+        mum = VmRHS.data();
         forces(mum, Sigma.data()+4*N, alphaeq, beta, CoG, bFuseMi, VField.at(4), Forcem, Momentm);
     }
     else if(m_pPolar3d->isTriangleMethod())
     {
-        makeLocalVelocities(m_VpRHS, notanrhs, m_VmRHS, objects::windDirection(alphaeq, 0.0));
+        makeLocalVelocities(VpRHS, notanrhs, VmRHS, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0));
 
         if(m_pPolar3d->isTriUniformMethod())
         {
-            makeVertexDoubletDensities(m_VpRHS, uRHSVertex);
-            makeVertexDoubletDensities(m_VmRHS, pRHSVertex);
+            makeVertexDoubletDensities(VpRHS, uRHSVertex);
+            makeVertexDoubletDensities(VmRHS, pRHSVertex);
             mup = uRHSVertex.data();
             mum = pRHSVertex.data();
         }
         else if(m_pPolar3d->isTriLinearMethod())
         {
-            mup = m_VpRHS.data();
-            mum = m_VmRHS.data();
+            mup = VpRHS.data();
+            mum = VmRHS.data();
         }
         computeOnBodyCp(u0, VField.at(1), m_uVLocal, m_Cp);
         forces(mup, Sigma.data()+1*N, alphaeq, beta, CoG, bFuseMi, VField.at(1), Forcep, Momentp);
@@ -1075,26 +1077,26 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
     // r-derivatives
     if(m_pPolar3d->isQuadMethod())
     {
-        mup = m_WpRHS.data();
+        mup = WpRHS.data();
         forces(mup, Sigma.data()+2*N, alphaeq, beta, CoG, bFuseMi, VField.at(2), Forcep, Momentp);
-        mum = m_WmRHS.data();
+        mum = WmRHS.data();
         forces(mum, Sigma.data()+5*N, alphaeq, beta, CoG, bFuseMi, VField.at(5), Forcem, Momentm);
     }
     else if(m_pPolar3d->isTriangleMethod())
     {
-        makeLocalVelocities(m_WpRHS, notanrhs, m_WmRHS, objects::windDirection(alphaeq, 0.0));
+        makeLocalVelocities(WpRHS, notanrhs, WmRHS, m_uVLocal, m_vVLocal, m_wVLocal, objects::windDirection(alphaeq, 0.0));
 
         if(m_pPolar3d->isTriUniformMethod())
         {
-            makeVertexDoubletDensities(m_WpRHS, uRHSVertex);
-            makeVertexDoubletDensities(m_WmRHS, pRHSVertex);
+            makeVertexDoubletDensities(WpRHS, uRHSVertex);
+            makeVertexDoubletDensities(WmRHS, pRHSVertex);
             mup = uRHSVertex.data();
             mum = pRHSVertex.data();
         }
         else if(m_pPolar3d->isTriLinearMethod())
         {
-            mup = m_WpRHS.data();
-            mum = m_WmRHS.data();
+            mup = WpRHS.data();
+            mum = WmRHS.data();
         }
         computeOnBodyCp(u0, VField.at(2), m_uVLocal, m_Cp);
         forces(mup, Sigma.data()+2*N, alphaeq, beta, CoG, bFuseMi, VField.at(2), Forcep, Momentp);
@@ -1106,6 +1108,7 @@ void PanelAnalysis::computeAngularDerivatives(double alphaeq, double u0, Vector3
     SD.Lr = (Momentp-Momentm).dot(is) /rotationrate/2.0;
     SD.Nr = (Momentp-Momentm).dot(ks) /rotationrate/2.0;
 }
+
 
 /** Sets the vortons from a pre-calculated PlaneOpp.
  * Used when calculating streamlines and surface velocities */

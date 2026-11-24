@@ -527,7 +527,8 @@ void P3LinAnalysis::sourceToRHS(std::vector<double> const &sigma, std::vector<do
  * Unlike in uniform methods, vVelocity vectors are in
  * __global__ coordinates because there are no reference frames at the nodes.
  */
-void P3LinAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, const std::vector<double> &vRHS, const std::vector<double> &wRHS, Vector3d const &)
+void P3LinAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, const std::vector<double> &vRHS, const std::vector<double> &wRHS,
+                                        std::vector<Vector3d> &uVLocal, std::vector<Vector3d> &vVLocal, std::vector<Vector3d> &wVLocal, Vector3d const &) const
 {
     // build the values at the nodes to calculate local velocities
     double valmin=0, valmax=0, coef=1.0;
@@ -538,6 +539,13 @@ void P3LinAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, const s
 
     /** @todo should use modified node array instead in case of T67 polars*/
     TriMesh::makeNodeValues(m_pRefTriMesh->nodes(), m_Panel3, uRHS, uNodes, valmin, valmax, coef);
+    if(vRHS.size())
+    {
+        vNodes.resize(nNodes());
+        vGlobal.resize(nNodes());
+        TriMesh::makeNodeValues(m_pRefTriMesh->nodes(), m_Panel3, vRHS, vNodes, valmin, valmax, coef);
+    }
+
     if(vRHS.size())
     {
         vNodes.resize(nNodes());
@@ -565,13 +573,12 @@ void P3LinAnalysis::makeLocalVelocities(std::vector<double> const &uRHS, const s
         {
             int nidx = p3.nodeIndex(k);
 
-            m_uVLocal[3*idx+k] = uGlobal.at(nidx);
-            m_vVLocal[3*idx+k] = vGlobal.at(nidx);
-            m_wVLocal[3*idx+k] = wGlobal.at(nidx);
+            uVLocal[3*idx+k] = uGlobal.at(nidx);
+            vVLocal[3*idx+k] = vGlobal.at(nidx);
+            wVLocal[3*idx+k] = wGlobal.at(nidx);
         }
     }
 }
-
 
 /**
  * This method calculates the Cp coefficient at a node based on the distribution of doublet strengths.

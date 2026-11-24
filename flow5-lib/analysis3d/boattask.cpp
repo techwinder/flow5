@@ -304,7 +304,8 @@ void BoatTask::loop()
 
 
         traceStdLog("      Making local velocities...");
-        m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, VFree);
+        m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, VFree);
+
         if (isCancelled()) return;
         traceStdLog(" done\n");
 

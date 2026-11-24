@@ -1002,8 +1002,8 @@ bool PlaneTask::T6Loop()
 
         computeInducedDrag(0, 0, QInfStab);
 
-
-        m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, objects::windDirection(0, 0)*m_QInf); // only using first
+        m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS,
+                                   m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0, 0)*m_QInf); // only using first
 
         std::fill(VField.begin(), VField.end(), objects::windDirection(0, 0)*QInfStab);
         m_pPA->computeOnBodyCp(QInfStab, VField, m_pPA->m_uVLocal, m_pPA->m_Cp);
@@ -1985,8 +1985,8 @@ bool PlaneTask::T7Loop()
 
         if(!setLinearSolution()) continue;     // the matrix could not be built or factorized: no solution for this control value
 
-        traceStdLog("   Making unit panel velocities...");
-        m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, objects::windDirection(0,0));
+        traceStdLog("   Making unit panel velocities...");        
+        m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(0,0));
         traceStdLog("   done\n");
 
         Vector3d CoG = m_pPlPolar->CoGCtrl(m_Ctrl);
@@ -2075,9 +2075,8 @@ bool PlaneTask::computeStability(PlaneOpp *pPOpp, bool bOutput)
     else
     {
         traceStdLog("          Calculating eigenthings\n");
-        // Compute inertia in stability axes
-        m_pPlPolar->Ixx();
 
+        // Compute inertia in stability axes
         pPOpp->computeStabilityInertia(m_pPlPolar->inertia());
 
         pPOpp->buildStateMatrices(m_pPlPolar->nAVLCtrls());
@@ -2121,7 +2120,9 @@ bool PlaneTask::T123458Loop()
 
     traceStdLog("   Making unit panel velocities... ");
 
-    m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, objects::windDirection(0,0));
+    int N = int(m_pPA->m_uVLocal.size());
+    std::vector<Vector3d> uVLocal(N), vVLocal(N), wVLocal(N); // keep a copy since these velocity arrays are modified during the calculation of derivatives
+    m_pPA->makeLocalVelocities(m_pPA->m_uRHS, m_pPA->m_vRHS, m_pPA->m_wRHS, uVLocal, vVLocal, wVLocal, objects::windDirection(0,0));
 
     traceStdLog("     done\n");
 
@@ -2223,6 +2224,10 @@ bool PlaneTask::T123458Loop()
         std::vector<Vector3d> VInf(m_pPA->nPanels());
         std::fill(VInf.begin(), VInf.end(), objects::windDirection(m_Alpha, m_Beta));
 
+        // Save a little time by restoring the unit velocty fields instead of recalculating them
+        m_pPA->m_uVLocal = uVLocal;
+        m_pPA->m_vVLocal = vVLocal;
+        m_pPA->m_wVLocal = wVLocal;
         m_pPA->combineLocalVelocities(m_Alpha, m_Beta, VLocal);
         m_pPA->computeOnBodyCp(1.0, VInf, VLocal, m_pPA->m_Cp);
         if (isCancelled()) return true;
@@ -2445,7 +2450,7 @@ void PlaneTask::computeControlDerivatives(double t7ctrl, double alphaeq, double 
         else if(m_pPlPolar->isTriangleMethod())
         {
             std::vector<double> notanrhs(m_pPA->m_cRHS.size());
-            m_pPA->makeLocalVelocities(m_pPA->m_cRHS, notanrhs, notanrhs, objects::windDirection(alphaeq, 0.0));
+            m_pPA->makeLocalVelocities(m_pPA->m_cRHS, notanrhs, notanrhs, m_pPA->m_uVLocal, m_pPA->m_vVLocal, m_pPA->m_wVLocal, objects::windDirection(alphaeq, 0.0));
             if(m_pPlPolar->isTriUniformMethod() && m_pP3A)
             {
                 cRHSVertex.resize(3*N);
