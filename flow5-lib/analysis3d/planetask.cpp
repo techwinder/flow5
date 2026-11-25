@@ -1257,7 +1257,7 @@ void PlaneTask::outputStateMatrices(PlaneOpp const *pPOpp)
 
 
 PlaneOpp* PlaneTask::computePlane(double ctrl, double alpha, double beta, double phi, double QInf, double mass,
-                                  Vector3d const &CoG, bool bInGeomAxes)
+                                  Vector3d const &CoG, bool bIsTilted)
 {
     if(QInf<PRECISION)
     {
@@ -1268,7 +1268,7 @@ PlaneOpp* PlaneTask::computePlane(double ctrl, double alpha, double beta, double
 
     m_QInf = QInf;
     Vector3d windD,windN;
-    if(bInGeomAxes)
+    if(bIsTilted)
     {
         windD.set(1.0,0.0,0.0);
         windN.set(0.0,0.0,1.0);
@@ -1319,7 +1319,7 @@ PlaneOpp* PlaneTask::computePlane(double ctrl, double alpha, double beta, double
         for(int iw=0; iw<nWings; iw++)
         {
 
-            if(bInGeomAxes) partforce = objects::windToGeomAxes(m_WingForce.at(iw), alpha, beta);
+            if(bIsTilted) partforce = objects::windToGeomAxes(m_WingForce.at(iw), alpha, beta);
             else            partforce = m_WingForce[iw];
 
 //            if(m_pWPolar->isT6Polar()) partforce.y *= -1.0; // removed in v7.24 to be consistent with AVL
@@ -1342,16 +1342,32 @@ PlaneOpp* PlaneTask::computePlane(double ctrl, double alpha, double beta, double
             //Compute aero forces and span distributions
             if(m_pPlPolar->isQuadMethod())
             {
-                pWing->panel4ComputeInviscidForces(m_pP4A->m_Panel4, m_pPlPolar, CoG, alpha, beta, QInf, cp4, mu4, m_PartAF[iw]);
-                pWing->panel4ComputeStrips(m_pP4A->m_Panel4, m_pPlPolar, CoG, alpha, beta, QInf, cp4, mu4, m_SpanDistFF[iw]);
+                if(bIsTilted)
+                {
+                    pWing->panel4ComputeInviscidForces(m_pP4A->m_Panel4, m_pPlPolar, CoG, 0.0, 0.0, QInf, cp4, mu4, m_PartAF[iw]);
+                    pWing->panel4ComputeStrips(m_pP4A->m_Panel4, m_pPlPolar, CoG, 0.0, 0.0, QInf, cp4, mu4, m_SpanDistFF[iw]);
+                }
+                else
+                {
+                    pWing->panel4ComputeInviscidForces(m_pP4A->m_Panel4, m_pPlPolar, CoG, alpha, beta, QInf, cp4, mu4, m_PartAF[iw]);
+                    pWing->panel4ComputeStrips(m_pP4A->m_Panel4, m_pPlPolar, CoG, alpha, beta, QInf, cp4, mu4, m_SpanDistFF[iw]);
+                }
             }
             else if(m_pPlPolar->isTriangleMethod())
             {
-                pWing->panel3ComputeInviscidForces(m_pP3A->m_Panel3, m_pPlPolar, CoG, alpha, beta, Cp3Vtx, m_PartAF[iw]);
-                pWing->panel3ComputeStrips(m_pP3A->m_Panel3, m_pPlPolar, CoG, alpha, beta, QInf, Cp3Vtx, m_SpanDistFF[iw]);
+                if(bIsTilted)
+                {
+                    pWing->panel3ComputeInviscidForces(m_pP3A->m_Panel3, m_pPlPolar, CoG, 0.0, 0.0, Cp3Vtx, m_PartAF[iw]);
+                    pWing->panel3ComputeStrips(m_pP3A->m_Panel3, m_pPlPolar, CoG, 0.0, 0.0, QInf, Cp3Vtx, m_SpanDistFF[iw]);
+                }
+                else
+                {
+                    pWing->panel3ComputeInviscidForces(m_pP3A->m_Panel3, m_pPlPolar, CoG, alpha, beta, Cp3Vtx, m_PartAF[iw]);
+                    pWing->panel3ComputeStrips(m_pP3A->m_Panel3, m_pPlPolar, CoG, alpha, beta, QInf, Cp3Vtx, m_SpanDistFF[iw]);
+                }
             }
 
-            if(bInGeomAxes)
+            if(bIsTilted)
             {
                 partforce = objects::windToGeomAxes(m_PartAF.at(iw).Fsum(), alpha, beta);
                 partmi    = objects::windToGeomAxes(m_PartAF.at(iw).Mi(), alpha, beta);
@@ -1444,7 +1460,7 @@ PlaneOpp* PlaneTask::computePlane(double ctrl, double alpha, double beta, double
                 else if(m_pPlPolar->isQuadMethod())
                     pFuse->computeAero(m_pP4A->m_Panel4, cp4,    m_pPlPolar, alpha, PlaneCP, Force, Moment);
 
-                if(bInGeomAxes)
+                if(bIsTilted)
                 {
                     partforce = objects::windToGeomAxes(Force,  alpha, beta);
                     partmi    = objects::windToGeomAxes(Moment, alpha, beta);
@@ -1484,7 +1500,7 @@ PlaneOpp* PlaneTask::computePlane(double ctrl, double alpha, double beta, double
     if(m_pPlane->isSTLType())
     {
         //PlaneSTL
-        if(bInGeomAxes)
+        if(bIsTilted)
             Force += objects::windToGeomAxes(m_WingForce.at(0), alpha, beta);
         else
             Force += m_WingForce.at(0);                           // (N/q), body axes

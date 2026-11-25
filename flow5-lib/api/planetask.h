@@ -100,7 +100,7 @@ class FL5LIB_EXPORT PlaneTask : public Task3d
         double computeGlideSpeed(double Alpha, double mass, std::string &log);
         void computeControlDerivatives(double t7ctrl, double alphaeq, double u0, StabDerivatives &SD);
         void outputNDStabDerivatives(double u0, const StabDerivatives &SD);
-        PlaneOpp *computePlane(double ctrl, double Alpha, double Beta, double phi, double QInf, double mass, const Vector3d &CoG, bool bInGeomAxes);
+        PlaneOpp *computePlane(double ctrl, double Alpha, double Beta, double phi, double QInf, double mass, const Vector3d &CoG, bool bIsTilted);
         void computeInviscidAero(const std::vector<Panel3> &panel3, const double *Cp3Vtx, const PlanePolar *pWPolar, double Alpha, AeroForces &AF) const;
         void computeInducedForces(double alpha, double beta, double QInf);
         void computeInducedDrag(double alpha, double beta, double QInf);
